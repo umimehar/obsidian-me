@@ -1,54 +1,85 @@
 #!/bin/sh
-# Masking guard — blocks commits that contain unmasked sensitive data.
+# Personal-vault pre-commit — two guards in one hook:
+#   1. Masking guard   — blocks commits containing unmasked sensitive data (always).
+#   2. Board guardrail — runs the kanban hygiene selectors + guardrail tests, but only when the
+#      staged changes touch orchestrator state, a project board/ticket, or the obsidian-loop skill.
 #
-# Scans only the ADDED lines of the staged diff for:
-#   - label + long digit run: a line naming SIN / social insurance / passport / card /
-#     account / IBAN / routing / transit / institution / national id / tax file / driver's
-#     licence AND containing a run of 6+ digits (a masked "****" value has no such run, so it passes)
-#   - grouped high-confidence formats: SIN  ddd-ddd-ddd  and card  dddd-dddd-dddd-dddd
-#
-# Mask the value with **** (keep the label, e.g. `SIN: ****`) and re-commit.
-#
-# Escape hatch (use only when you are SURE the match is not a real secret):
-#   SKIP_MASK_HOOK=1 git commit ...   (or)   git commit --no-verify
+# Escape hatches (use only when you are SURE):
+#   SKIP_MASK_HOOK=1   git commit ...   — skip the masking guard
+#   SKIP_KANBAN_HOOK=1 git commit ...   — skip the board guardrail
+#   git commit --no-verify              — skip the whole hook
 #
 # Install on a device:  git config core.hooksPath config/git-hooks
+#
+# Note: the Obsidian Git plugin uses isomorphic-git and does NOT run native hooks, so vault
+# auto-backup commits bypass this by design. It guards CLI / agent commits.
 
-[ "$SKIP_MASK_HOOK" = "1" ] && exit 0
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+fail=0
 
-# Added lines only (drop the +++ file header), from added/copied/modified files.
-# Scan note content only — exclude the Obsidian app dir and binary/minified assets, which
-# carry long digit runs (minified JS, hashes) that are not secrets.
-added=$(git diff --cached -U0 --no-color --diff-filter=ACM -- \
-  ':(exclude).obsidian/**' \
-  ':(exclude)*.js' ':(exclude)*.css' ':(exclude)*.svg' \
-  ':(exclude)*.png' ':(exclude)*.jpg' ':(exclude)*.jpeg' \
-  ':(exclude)*.pdf' ':(exclude)*.woff' ':(exclude)*.woff2' \
-  | grep '^+' | grep -v '^+++')
-[ -z "$added" ] && exit 0
+# ---------------------------------------------------------------------------
+# 1. Masking guard
+# ---------------------------------------------------------------------------
+if [ "$SKIP_MASK_HOOK" != "1" ]; then
+  # Added lines only (drop the +++ header). Exclude the Obsidian app dir and binary/minified
+  # assets, whose long digit runs (minified JS, hashes) are not secrets.
+  added=$(git diff --cached -U0 --no-color --diff-filter=ACM -- \
+    ':(exclude).obsidian/**' \
+    ':(exclude)*.js' ':(exclude)*.css' ':(exclude)*.svg' \
+    ':(exclude)*.png' ':(exclude)*.jpg' ':(exclude)*.jpeg' \
+    ':(exclude)*.pdf' ':(exclude)*.woff' ':(exclude)*.woff2' \
+    | grep '^+' | grep -v '^+++')
 
-label='(SIN|social insurance|assurance sociale|passport|passeport|credit card|card number|account number|account no|iban|sort code|routing number|transit number|institution number|national id|tax file number|driver.?s? licen[cs]e)'
-
-hits=""
-
-# Pass 1: sensitive label on the same line as a 6+ digit run.
-p1=$(printf '%s\n' "$added" | grep -iE "$label" | grep -E '[0-9]{6,}')
-[ -n "$p1" ] && hits="$hits$p1
+  if [ -n "$added" ]; then
+    label='(SIN|social insurance|assurance sociale|passport|passeport|credit card|card number|account number|account no|iban|sort code|routing number|transit number|institution number|national id|tax file number|driver.?s? licen[cs]e)'
+    hits=""
+    p1=$(printf '%s\n' "$added" | grep -iE "$label" | grep -E '[0-9]{6,}')
+    [ -n "$p1" ] && hits="$hits$p1
 "
-
-# Pass 2: grouped high-confidence formats (SIN / card), regardless of label.
-p2=$(printf '%s\n' "$added" | grep -E '\b[0-9]{3}[ -][0-9]{3}[ -][0-9]{3}\b|\b[0-9]{4}[ -][0-9]{4}[ -][0-9]{4}[ -][0-9]{4}\b')
-[ -n "$p2" ] && hits="$hits$p2
+    p2=$(printf '%s\n' "$added" | grep -E '\b[0-9]{3}[ -][0-9]{3}[ -][0-9]{3}\b|\b[0-9]{4}[ -][0-9]{4}[ -][0-9]{4}[ -][0-9]{4}\b')
+    [ -n "$p2" ] && hits="$hits$p2
 "
-
-if [ -n "$hits" ]; then
-  echo "masking guard: possible UNMASKED sensitive data in staged changes:"
-  echo "----------------------------------------------------------------"
-  printf '%s' "$hits" | sed 's/^+/  /'
-  echo "----------------------------------------------------------------"
-  echo "Replace the value with **** (keep the label, e.g. 'SIN: ****') and re-commit."
-  echo "If this is a false positive, bypass with:  SKIP_MASK_HOOK=1 git commit ..."
-  exit 1
+    if [ -n "$hits" ]; then
+      echo "masking guard: possible UNMASKED sensitive data in staged changes:"
+      echo "----------------------------------------------------------------"
+      printf '%s' "$hits" | sed 's/^+/  /'
+      echo "----------------------------------------------------------------"
+      echo "Replace the value with **** (keep the label, e.g. 'SIN: ****') and re-commit."
+      echo "If this is a false positive, bypass with:  SKIP_MASK_HOOK=1 git commit ..."
+      fail=1
+    fi
+  fi
 fi
 
+# ---------------------------------------------------------------------------
+# 2. Kanban board guardrail (only when board/orchestrator/loop state is staged)
+# ---------------------------------------------------------------------------
+if [ "$SKIP_KANBAN_HOOK" != "1" ]; then
+  SELECTOR="$ROOT/config/claude/skills/obsidian-loop/select-tickets.mjs"
+  changed=$(git diff --cached --name-only --diff-filter=ACMR)
+  if echo "$changed" | grep -Eq '^(orchestrator/|projects/[^/]+/board\.md$|projects/[^/]+/tickets/|config/claude/skills/obsidian-loop/)'; then
+    if ! command -v node >/dev/null 2>&1; then
+      echo "kanban hook: node not found on PATH — skipping board guardrail (install node to enable it)."
+    else
+      for mode in lint schema coverage card-presence status-drift stale; do
+        out=$(node "$SELECTOR" --"$mode" --vault "$ROOT" 2>&1) || { echo "kanban hook: selector --$mode errored:"; echo "$out"; fail=1; continue; }
+        if [ "$out" != "[]" ]; then
+          echo "kanban hook: --$mode found issues:"
+          echo "$out"
+          fail=1
+        fi
+      done
+      if ! sh "$ROOT/config/claude/skills/run-tests.sh" >/dev/null 2>&1; then
+        echo "kanban hook: guardrail tests failed — run: sh config/claude/skills/run-tests.sh"
+        fail=1
+      fi
+    fi
+  fi
+fi
+
+if [ "$fail" != 0 ]; then
+  echo ""
+  echo "pre-commit failed. Fix the issues above, or bypass intentionally with the escape hatch noted for that guard (or git commit --no-verify)."
+  exit 1
+fi
 exit 0
