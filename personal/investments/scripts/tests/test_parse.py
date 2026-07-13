@@ -59,3 +59,16 @@ def test_discover_csvs_sorted_no_dotfiles(tmp_source_dir: Path):
     found = discover_csvs(tmp_source_dir)
     assert all(p.suffix == ".csv" for p in found)
     assert found == sorted(found)
+
+
+def test_parse_csv_raises_on_field_count_mismatch(tmp_path: Path):
+    import pytest
+
+    content = (
+        '"date","transaction","description","amount","balance","currency"\n'
+        '"2026-06-02","DIV","short row","1.0"\n'
+    )
+    path = tmp_path / "X-2026-06-01-monthly-statement-transactions-XX0TEST900CAD.csv"
+    path.write_text(content, encoding="utf-8")
+    with pytest.raises(ValueError, match=path.name):
+        parse_csv(path)

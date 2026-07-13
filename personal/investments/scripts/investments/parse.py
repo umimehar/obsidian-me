@@ -46,7 +46,9 @@ def parse_csv(path: Path) -> list[RawRow]:
         for record in reader:
             if not any(cell.strip() for cell in record):
                 continue
-            fields = dict(zip(keys, record, strict=False))
+            if len(record) != len(keys):
+                raise ValueError(f"{path.name}: row has {len(record)} fields, expected {len(keys)}")
+            fields = dict(zip(keys, record, strict=True))
             rows.append(RawRow(source_file=path.name, schema=schema, fields=fields))
         return rows
 

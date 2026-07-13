@@ -6,6 +6,7 @@ fills so they adapt to the active theme. No templating engine, no external
 resources, no network access at view time.
 """
 
+from collections import defaultdict
 from html import escape as _std_escape
 
 CSS_HREF = "../../_assets/personal.css"
@@ -183,16 +184,59 @@ def _page(title: str, active: str, body: str, footer: str = "") -> str:
     )
 
 
+def _by_currency(rows: list[dict], label_key: str, value_key: str) -> dict[str, dict[str, float]]:
+    """Aggregate value_key by (currency, label_key), never adding two currencies together."""
+    out: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
+    for row in rows:
+        out[row["currency"]][row[label_key]] += row[value_key]
+    return out
+
+
+def _currency_charts(title: str, rows: list[dict], label_key: str, value_key: str) -> str:
+    """Render one chart per currency present in rows, headed by the currency code.
+
+    A single currency renders as one chart under the plain title, matching the
+    previous single-currency layout; multiple currencies each get their own
+    chart so amounts are never summed across currencies.
+    """
+    grouped = _by_currency(rows, label_key, value_key)
+    if len(grouped) <= 1:
+        series = next(iter(grouped.values()), {})
+        chart = svg_bar_chart([(label, series[label]) for label in sorted(series)])
+        return _section(title, chart)
+    blocks = []
+    for currency in sorted(grouped):
+        series = grouped[currency]
+        chart = svg_bar_chart([(label, series[label]) for label in sorted(series)])
+        blocks.append(_section(f"{title} — {currency}", chart))
+    return "".join(blocks)
+
+
+def _totals_by_currency(rows: list[dict], value_key: str) -> dict[str, float]:
+    """Sum value_key per currency, keeping currencies separate."""
+    totals: dict[str, float] = defaultdict(float)
+    for row in rows:
+        totals[row["currency"]] += row[value_key]
+    return dict(totals)
+
+
 def render_index(store: dict, analytics: dict) -> str:
     """Overview: datastore meta, headline KPIs, and links into the other pages."""
     meta = store["meta"]
     rng = meta["source_range"]
     total_contrib = sum(r["total"] for r in analytics["contributions"]["by_registered_year"])
-    total_income = sum(r["total"] for r in analytics["income"]["by_month"])
+    income_by_currency = _totals_by_currency(analytics["income"]["by_month"], "total")
+    if len(income_by_currency) <= 1:
+        income_kpis = [("Total income", _money(next(iter(income_by_currency.values()), 0.0)))]
+    else:
+        income_kpis = [
+            (f"Total income ({currency})", _money(total))
+            for currency, total in sorted(income_by_currency.items())
+        ]
     kpis = _kpi_row(
         [
             ("Total contributions", _money(total_contrib)),
-            ("Total income", _money(total_income)),
+            *income_kpis,
             ("Holdings", str(len(analytics["holdings"]))),
         ]
     )
@@ -231,10 +275,7 @@ def render_index(store: dict, analytics: dict) -> str:
 def render_growth(store: dict, analytics: dict) -> str:
     """Portfolio balance over time, aggregated per month across accounts."""
     balances = analytics["balances"]
-    by_month: dict[str, float] = {}
-    for bal in balances:
-        by_month[bal["month"]] = by_month.get(bal["month"], 0.0) + bal["balance"]
-    chart = svg_bar_chart([(m, by_month[m]) for m in sorted(by_month)])
+    charts = _currency_charts("Portfolio balance by month", balances, "month", "balance")
     rows = [
         [
             bal["account_id"],
@@ -245,9 +286,7 @@ def render_growth(store: dict, analytics: dict) -> str:
         for bal in balances
     ]
     tbl = _table(["Account", "Month", "Balance", "Basis"], rows)
-    return _section("Portfolio balance by month", chart) + _section(
-        "Monthly balances", tbl, _caveat()
-    )
+    return charts + _section("Monthly balances", tbl, _caveat())
 
 
 def render_contributions(store: dict, analytics: dict) -> str:
@@ -283,10 +322,7 @@ def render_contributions(store: dict, analytics: dict) -> str:
 def render_cash_flow(store: dict, analytics: dict) -> str:
     """Net cash movement per month plus the exact inflow/outflow ledger."""
     flows = analytics["cash_flow"]
-    by_month: dict[str, float] = {}
-    for flow in flows:
-        by_month[flow["month"]] = by_month.get(flow["month"], 0.0) + flow["net"]
-    chart = svg_bar_chart([(m, by_month[m]) for m in sorted(by_month)])
+    charts = _currency_charts("Net cash flow by month", flows, "month", "net")
     rows = [
         [
             flow["account_id"],
@@ -298,13 +334,13 @@ def render_cash_flow(store: dict, analytics: dict) -> str:
         for flow in flows
     ]
     tbl = _table(["Account", "Month", "Inflow", "Outflow", "Net"], rows)
-    return _section("Net cash flow by month", chart) + _section("Cash movements", tbl, _caveat())
+    return charts + _section("Cash movements", tbl, _caveat())
 
 
 def render_income(store: dict, analytics: dict) -> str:
     """Dividend and interest income, by month and by paying symbol."""
     inc = analytics["income"]
-    chart = svg_bar_chart([(r["month"], r["total"]) for r in inc["by_month"]])
+    charts = _currency_charts("Income by month", inc["by_month"], "month", "total")
     by_month = _table(
         ["Month", "Income"],
         [[r["month"], _money(r["total"], r["currency"])] for r in inc["by_month"]],
@@ -313,17 +349,13 @@ def render_income(store: dict, analytics: dict) -> str:
         ["Symbol", "Income"],
         [[r["symbol"], _money(r["total"], r["currency"])] for r in inc["by_symbol"]],
     )
-    return (
-        _section("Income by month", chart)
-        + _section("By month", by_month)
-        + _section("By symbol", by_symbol)
-    )
+    return charts + _section("By month", by_month) + _section("By symbol", by_symbol)
 
 
 def render_holdings(store: dict, analytics: dict) -> str:
     """Current positions with recorded cost base (market value not implied)."""
     holdings = analytics["holdings"]
-    chart = svg_bar_chart([(h["symbol"], h["total_buy_cost"]) for h in holdings])
+    charts = _currency_charts("Cost base by holding", holdings, "symbol", "total_buy_cost")
     rows = [
         [
             h["account_id"],
@@ -334,7 +366,7 @@ def render_holdings(store: dict, analytics: dict) -> str:
         for h in holdings
     ]
     tbl = _table(["Account", "Symbol", "Quantity", "Buy cost"], rows)
-    return _section("Cost base by holding", chart) + _section("Positions", tbl, _caveat())
+    return charts + _section("Positions", tbl, _caveat())
 
 
 def render_pages(store: dict, analytics: dict) -> dict[str, str]:

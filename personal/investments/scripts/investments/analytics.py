@@ -69,11 +69,18 @@ def _contributions(store: dict, kinds: dict[str, str]) -> dict:
     }
 
 
-def _cash_flow(store: dict) -> list[dict]:
-    """Sum inflows and outflows per account-month-currency, excluding zero-amount noise."""
+def _cash_flow(store: dict, kinds: dict[str, str]) -> list[dict]:
+    """Sum inflows and outflows per account-month-currency, excluding zero-amount noise.
+
+    Credit card accounts use inverted signs (purchase positive, payment negative), so
+    their real cash movement shows up as the chequing-side payment instead; the card
+    account itself is excluded entirely to avoid counting purchases as inflow.
+    """
     flow: dict[tuple[str, str, str], list[float]] = defaultdict(lambda: [0.0, 0.0])
     for txn in store["transactions"]:
         if txn["type"] in {"LENDING", "REORG"} or txn["amount"] == 0:
+            continue
+        if kinds.get(txn["account_id"]) == "CreditCard":
             continue
         bucket = flow[(txn["account_id"], _month(txn["date"]), txn["currency"])]
         if txn["amount"] >= 0:
@@ -173,7 +180,7 @@ def compute_analytics(store: dict) -> dict:
     kinds = _kinds(store)
     return {
         "contributions": _contributions(store, kinds),
-        "cash_flow": _cash_flow(store),
+        "cash_flow": _cash_flow(store, kinds),
         "income": _income(store),
         "holdings": _holdings(store),
         "balances": _balances(store),

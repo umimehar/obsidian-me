@@ -698,62 +698,6 @@
       "net": -0.01
     },
     {
-      "account_id": "acct_8367cd66",
-      "month": "2025-12",
-      "currency": "CAD",
-      "inflow": 426.28,
-      "outflow": -332.74,
-      "net": 93.54
-    },
-    {
-      "account_id": "acct_8367cd66",
-      "month": "2026-01",
-      "currency": "CAD",
-      "inflow": 1179.18,
-      "outflow": -1252.72,
-      "net": -73.54
-    },
-    {
-      "account_id": "acct_8367cd66",
-      "month": "2026-02",
-      "currency": "CAD",
-      "inflow": 2846.18,
-      "outflow": -2865.18,
-      "net": -19.0
-    },
-    {
-      "account_id": "acct_8367cd66",
-      "month": "2026-03",
-      "currency": "CAD",
-      "inflow": 516.79,
-      "outflow": -365.12,
-      "net": 151.67
-    },
-    {
-      "account_id": "acct_8367cd66",
-      "month": "2026-04",
-      "currency": "CAD",
-      "inflow": 1236.27,
-      "outflow": -1388.94,
-      "net": -152.67
-    },
-    {
-      "account_id": "acct_8367cd66",
-      "month": "2026-05",
-      "currency": "CAD",
-      "inflow": 372.21,
-      "outflow": -249.37,
-      "net": 122.84
-    },
-    {
-      "account_id": "acct_8367cd66",
-      "month": "2026-06",
-      "currency": "CAD",
-      "inflow": 783.92,
-      "outflow": -847.01,
-      "net": -63.09
-    },
-    {
       "account_id": "acct_8cd3372e",
       "month": "2025-09",
       "currency": "CAD",

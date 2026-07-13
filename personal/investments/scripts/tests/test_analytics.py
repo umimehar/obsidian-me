@@ -98,3 +98,18 @@ def test_cash_flow_inflow_outflow():
     assert row["inflow"] == 500.0
     assert row["outflow"] == -2.0
     assert row["net"] == 498.0
+
+
+def test_cash_flow_excludes_credit_card_account():
+    accounts = [
+        {"masked_id": "acct_a", "kind": "TFSA", "currency": "CAD"},
+        {"masked_id": "acct_card", "kind": "CreditCard", "currency": "CAD"},
+    ]
+    txns = [
+        _txn("acct_card", "2025-03-05", "CARD_PURCHASE", 37.4),
+        _txn("acct_card", "2025-03-06", "CARD_PAYMENT", -14.91),
+    ]
+    out = compute_analytics(_store(txns, accounts=accounts))
+    card_rows = [r for r in out["cash_flow"] if r["account_id"] == "acct_card"]
+    assert card_rows == []
+    assert not any(r["inflow"] == 37.4 for r in out["cash_flow"])

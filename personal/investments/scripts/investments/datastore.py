@@ -5,7 +5,6 @@ from __future__ import annotations
 from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from investments.classify import classify
 from investments.mask import (
@@ -15,7 +14,7 @@ from investments.mask import (
     mask_account_code,
     redact,
 )
-from investments.parse import SCHEMA_CARD, discover_csvs, parse_csv
+from investments.parse import SCHEMA_CARD, RawRow, discover_csvs, parse_csv
 
 SCHEMA_VERSION = 1
 
@@ -31,7 +30,7 @@ def _to_float(value: str) -> float | None:
         return None
 
 
-def _row_to_txn(row: Any, account_id: str, red: Redactions) -> dict:
+def _row_to_txn(row: RawRow, account_id: str, red: Redactions) -> dict:
     """Build a JSON-ready transaction dict from a RawRow."""
     is_card = row.schema == SCHEMA_CARD
     date = row.fields["transaction_date"] if is_card else row.fields["date"]
