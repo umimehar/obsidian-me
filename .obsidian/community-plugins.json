@@ -3,5 +3,7 @@
   "obsidian-git",
   "templater-obsidian",
   "calendar",
-  "dataview"
+  "dataview",
+  "obsidian-kanban",
+  "show-all-hidden-files"
 ]
