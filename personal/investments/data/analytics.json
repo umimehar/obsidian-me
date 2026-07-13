@@ -5119,6 +5119,13 @@
     },
     {
       "account_id": "acct_1f9a1df3",
+      "symbol": "N/A",
+      "quantity": 0.1788,
+      "total_buy_cost": 0.0,
+      "currency": "N/A"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
       "symbol": "NDAQ",
       "quantity": 0.6281,
       "total_buy_cost": 69.23,
@@ -5906,6 +5913,13 @@
       "symbol": "CHPS",
       "quantity": 6.5625,
       "total_buy_cost": 606.47,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "symbol": "GOLD",
+      "quantity": 0.6003,
+      "total_buy_cost": 3952.55,
       "currency": "CAD"
     },
     {

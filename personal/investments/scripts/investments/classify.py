@@ -42,8 +42,11 @@ _TYPE_MAP: dict[str, str] = {
 
 _SIGN_BASED = {"EFT"}
 
-_SYMBOL_RE = re.compile(r"^([A-Z0-9][A-Z0-9.]*)\s+-\s+")
-_SHARES_RE = re.compile(r"(?:Bought|Sold)\s+([\d.]+)\s+shares?(?:\s+at\s+\$([\d.]+))?")
+_SYMBOL_RE = re.compile(r"^([A-Z0-9][A-Z0-9./]*)\s+-\s+")
+_SHARES_RE = re.compile(
+    r"(?:Bought|Sold)\s+([\d.]+)\s+(?:shares?|ounces?|units?|coins?)"
+    r"(?:\s+at\s+\$([\d.]+)\s+per\s+\w+)?"
+)
 _CRYPTO_RE = re.compile(r"(?:Purchase|Sale) of ([\d.]+)\s+([A-Z]{2,10})\b")
 _STKDIV_RE = re.compile(r"distribution of ([\d.]+)\s+units.*?valued at \$([\d.]+)")
 _FX_RE = re.compile(r"FX Rate:\s*([\d.]+)")

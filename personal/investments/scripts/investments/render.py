@@ -145,10 +145,34 @@ def _account_label(account: dict) -> str:
     return f"{account['kind']} · {account['masked_id'][5:11]}"
 
 
+_METRIC_EXPLAIN = {
+    "balance": (
+        "Cash balance",
+        "Month-end cash held across the selected accounts. Exact for cash accounts; "
+        "approximate for investment accounts (statements record cash, not market value).",
+    ),
+    "contrib": (
+        "Contributions",
+        "Deposits coded as contributions. Internal transfers between your own accounts "
+        "are not counted, so registered room usage is not overstated.",
+    ),
+    "income": (
+        "Income",
+        "Dividends, interest, and distributions received in cash.",
+    ),
+    "net": (
+        "Net cash flow",
+        "Money in minus money out for the period. Card purchases and payments, plus "
+        "zero-amount securities-lending entries, are excluded.",
+    ),
+}
+
+
 def _explorer(
     title: str, metric: str, agg: str, ctype: str, color: str, accounts: list[dict]
 ) -> str:
     """Interactive controls plus mount points; JavaScript fills the chart and KPIs."""
+    label, explain = _METRIC_EXPLAIN.get(metric, (title, ""))
     chips = '<button type="button" class="chip on" data-id="all">All accounts</button>' + "".join(
         f'<button type="button" class="chip" data-id="{_html_escape(a["masked_id"])}">'
         f"{_html_escape(_account_label(a))}</button>"
@@ -165,8 +189,10 @@ def _explorer(
     )
     return (
         f'<section class="section explorer" data-metric="{metric}" data-agg="{agg}" '
-        f'data-type="{ctype}" data-color="{color}"><div class="card"><div class="card-inner">'
-        f'<h2 class="section-title">{_html_escape(title)}</h2>{controls}'
+        f'data-type="{ctype}" data-color="{color}" data-label="{_html_escape(label)}" '
+        f'data-explain="{_html_escape(explain)}"><div class="card"><div class="card-inner">'
+        f'<h2 class="section-title">{_html_escape(title)}</h2>'
+        f'<p class="section-note">{_html_escape(explain)}</p>{controls}'
         '<div class="ex-kpis kpi-row"></div>'
         '<div class="ex-chart"><div class="ex-tip"></div>'
         '<noscript><p class="caveat">Enable JavaScript for the interactive chart; '

@@ -3,7 +3,7 @@
   var dataEl = document.getElementById("ex-data");
   if (!dataEl) { return; }
   var DATA = JSON.parse(dataEl.textContent);
-  var SERIES = DATA.series, ACCOUNTS = DATA.accounts;
+  var SERIES = DATA.series;
 
   function fmt(v, cur) {
     var s = (v < 0 ? "-" : "") + "$" + Math.abs(v).toLocaleString("en-CA",
@@ -50,18 +50,35 @@
     return Object.keys(set).sort();
   }
 
-  function kpis(cfg, points) {
-    if (!points.length) { return [["No data", "—"]]; }
+  function scope(state) {
+    if (!state.accounts) { return "all accounts"; }
+    return state.accounts.length + (state.accounts.length === 1 ? " account" : " accounts");
+  }
+
+  function kpis(cfg, points, state) {
+    if (!points.length) { return [["No data", "—", "No rows match the current filter."]]; }
     var total = points.reduce(function (s, p) { return s + p.value; }, 0);
     var peak = points.reduce(function (m, p) { return p.value > m.value ? p : m; }, points[0]);
     var last = points[points.length - 1];
+    var lbl = cfg.label.toLowerCase();
     if (cfg.agg === "last") {
-      return [["Latest", fmt(last.value, cfg.cur)], ["Peak", fmt(peak.value, cfg.cur)],
-        [cfg.periodsLabel, String(points.length)]];
+      return [
+        ["Latest", fmt(last.value, cfg.cur),
+          "The " + lbl + " at the most recent period (" + last.key + ") for " + scope(state) + "."],
+        ["Peak", fmt(peak.value, cfg.cur),
+          "The highest " + lbl + " reached in any period (" + peak.key + ")."],
+        [cfg.periodsLabel, String(points.length),
+          "Number of " + cfg.unit + "s with data in the current view."]
+      ];
     }
-    return [["Total", fmt(total, cfg.cur)],
-      ["Best " + cfg.unit, fmt(peak.value, cfg.cur) + " (" + peak.key + ")"],
-      ["Average", fmt(total / points.length, cfg.cur)]];
+    return [
+      ["Total", fmt(total, cfg.cur),
+        "Sum of " + lbl + " across every " + cfg.unit + " shown, for " + scope(state) + "."],
+      ["Best " + cfg.unit, fmt(peak.value, cfg.cur) + " (" + peak.key + ")",
+        "The single " + cfg.unit + " with the highest " + lbl + "."],
+      ["Average", fmt(total / points.length, cfg.cur),
+        "Mean " + lbl + " per " + cfg.unit + " across the " + points.length + " shown."]
+    ];
   }
 
   var NS = "http://www.w3.org/2000/svg";
@@ -69,6 +86,13 @@
     var e = document.createElementNS(NS, tag);
     for (var k in attrs) { e.setAttribute(k, attrs[k]); }
     return e;
+  }
+
+  function axisLabel(svg, x, base, text) {
+    var t = el("text", { x: x.toFixed(1), y: base + 16, "text-anchor": "middle",
+      class: "chart-label" });
+    t.textContent = text;
+    svg.appendChild(t);
   }
 
   function drawBars(svg, points, cfg, W, H) {
@@ -79,46 +103,44 @@
     svg.appendChild(el("line", { x1: padL, y1: base, x2: W - padR, y2: base,
       stroke: "var(--chart-axis)", "stroke-width": 1 }));
     var band = pw / points.length, bw = Math.max(band - 10, 3);
+    var xAt = function (i) { return padL + i * band + band / 2; };
+    var tops = [];
     points.forEach(function (p, i) {
       var h = Math.abs(p.value) / maxV * ph;
-      var x = padL + i * band + (band - bw) / 2, y = p.value < 0 ? base : base - h;
+      var x = xAt(i) - bw / 2, y = p.value < 0 ? base : base - h;
+      tops.push(p.value < 0 ? base : base - h);
       var color = p.value < 0 ? "var(--data-outflow)" : cfg.color;
       var rect = el("rect", { x: x.toFixed(1), y: y.toFixed(1), width: bw.toFixed(1),
         height: Math.max(h, 0).toFixed(1), rx: 3, fill: color, class: "ex-bar" });
       rect.style.transformOrigin = x + "px " + base + "px";
       if (!REDUCED) { rect.style.transform = "scaleY(0)"; }
-      var t = el("title", {});
-      t.textContent = p.key + ": " + fmt(p.value, cfg.cur);
-      rect.appendChild(t);
       svg.appendChild(rect);
       if (!REDUCED) {
         requestAnimationFrame(function () { rect.style.transform = "scaleY(1)"; });
       }
       if (points.length <= 18 || i % Math.ceil(points.length / 12) === 0) {
-        var tx = el("text", { x: (x + bw / 2).toFixed(1), y: base + 16,
-          "text-anchor": "middle", class: "chart-label" });
-        tx.textContent = p.key.length > 4 ? p.key.slice(5) : p.key;
-        svg.appendChild(tx);
+        axisLabel(svg, xAt(i), base, p.key.length > 4 ? p.key.slice(5) : p.key);
       }
     });
+    return { xAt: xAt, yAt: function (i) { return tops[i]; }, base: base, top: padT };
   }
 
-  function drawArea(svg, points, cfg, W, H, host) {
+  function drawArea(svg, points, cfg, W, H) {
     var padL = 8, padR = 8, padB = 26, padT = 10;
     var pw = W - padL - padR, ph = H - padT - padB, base = padT + ph;
     var vals = points.map(function (p) { return p.value; });
     var maxV = Math.max.apply(null, vals.concat([1]));
     var minV = Math.min.apply(null, vals.concat([0]));
     var span = (maxV - minV) || 1;
-    var xs = function (i) {
+    var xAt = function (i) {
       return padL + (points.length === 1 ? pw / 2 : i / (points.length - 1) * pw);
     };
-    var ys = function (v) { return base - (v - minV) / span * ph; };
+    var yAt = function (i) { return base - (points[i].value - minV) / span * ph; };
     var line = points.map(function (p, i) {
-      return (i ? "L" : "M") + xs(i).toFixed(1) + " " + ys(p.value).toFixed(1);
+      return (i ? "L" : "M") + xAt(i).toFixed(1) + " " + yAt(i).toFixed(1);
     }).join(" ");
-    var area = "M" + xs(0).toFixed(1) + " " + base + " " + line.replace("M", "L") +
-      " L" + xs(points.length - 1).toFixed(1) + " " + base + " Z";
+    var area = "M" + xAt(0).toFixed(1) + " " + base + " " + line.replace("M", "L") +
+      " L" + xAt(points.length - 1).toFixed(1) + " " + base + " Z";
     svg.appendChild(el("path", { d: area, fill: "url(#ex-grad)", class: "ex-area" }));
     var path = el("path", { d: line, fill: "none", stroke: cfg.color, "stroke-width": 2.4,
       "stroke-linejoin": "round", "stroke-linecap": "round", class: "ex-line" });
@@ -131,42 +153,54 @@
     }
     points.forEach(function (p, i) {
       if (points.length <= 18 || i % Math.ceil(points.length / 12) === 0) {
-        var tx = el("text", { x: xs(i).toFixed(1), y: base + 16,
-          "text-anchor": "middle", class: "chart-label" });
-        tx.textContent = p.key.length > 4 ? p.key.slice(2) : p.key;
-        svg.appendChild(tx);
+        axisLabel(svg, xAt(i), base, p.key.length > 4 ? p.key.slice(2) : p.key);
       }
     });
-    wireScrubber(svg, points, cfg, xs, ys, base, padT, host);
+    return { xAt: xAt, yAt: yAt, base: base, top: padT };
   }
 
-  function wireScrubber(svg, points, cfg, xs, ys, base, padT, host) {
-    var vline = el("line", { y1: padT, y2: base, stroke: "var(--chart-axis)",
+  function tipHtml(points, i, cfg) {
+    var p = points[i];
+    var period = document.createElement("span");
+    period.className = "ex-tip-period";
+    period.textContent = (cfg.unit === "year" ? "Year " : "") + p.key;
+    var value = document.createElement("strong");
+    value.className = "ex-tip-value";
+    value.textContent = fmt(p.value, cfg.cur);
+    var meta = document.createElement("span");
+    meta.className = "ex-tip-meta";
+    var deltaTxt = cfg.label;
+    if (i > 0) {
+      var d = p.value - points[i - 1].value;
+      var arrow = d > 0 ? "▲" : (d < 0 ? "▼" : "·");
+      deltaTxt += " · " + arrow + " " + fmt(Math.abs(d), cfg.cur) + " vs prev";
+    }
+    meta.textContent = deltaTxt;
+    return [period, value, meta];
+  }
+
+  function wirePointer(svg, points, cfg, geom, host) {
+    var vline = el("line", { y1: geom.top, y2: geom.base, stroke: "var(--chart-axis)",
       "stroke-width": 1, class: "ex-scrub" });
     var dot = el("circle", { r: 4.5, fill: cfg.color, stroke: "var(--surface)",
       "stroke-width": 2, class: "ex-scrub" });
     svg.appendChild(vline);
     svg.appendChild(dot);
     var tip = host.querySelector(".ex-tip");
-    tip.textContent = "";
-    var tipKey = document.createElement("span");
-    var tipVal = document.createElement("strong");
-    tip.appendChild(tipKey);
-    tip.appendChild(tipVal);
     svg.addEventListener("pointermove", function (ev) {
       var box = svg.getBoundingClientRect();
       var rel = (ev.clientX - box.left) / box.width * svg.viewBox.baseVal.width;
       var i = 0, best = 1e9;
       points.forEach(function (p, j) {
-        var d = Math.abs(xs(j) - rel);
+        var d = Math.abs(geom.xAt(j) - rel);
         if (d < best) { best = d; i = j; }
       });
-      var px = xs(i), py = ys(points[i].value);
+      var px = geom.xAt(i), py = geom.yAt(i);
       vline.setAttribute("x1", px); vline.setAttribute("x2", px);
       dot.setAttribute("cx", px); dot.setAttribute("cy", py);
       svg.classList.add("scrubbing");
-      tipKey.textContent = points[i].key;
-      tipVal.textContent = fmt(points[i].value, cfg.cur);
+      tip.textContent = "";
+      tipHtml(points, i, cfg).forEach(function (n) { tip.appendChild(n); });
       tip.style.left = (px / svg.viewBox.baseVal.width * 100) + "%";
       tip.classList.add("show");
     });
@@ -176,29 +210,47 @@
     });
   }
 
-  function render(section, cfg, state) {
-    cfg.cur = state.currency;
-    var points = aggregate(cfg, state);
-    var kpiHost = section.querySelector(".ex-kpis");
-    kpiHost.textContent = "";
-    kpis(cfg, points).forEach(function (k) {
+  function renderKpis(section, cfg, points, state) {
+    var host = section.querySelector(".ex-kpis");
+    host.textContent = "";
+    kpis(cfg, points, state).forEach(function (k) {
       var tile = document.createElement("div");
       tile.className = "kpi";
-      var lab = document.createElement("span");
-      lab.className = "kpi-label";
-      lab.textContent = k[0];
+      var head = document.createElement("span");
+      head.className = "kpi-label";
+      head.textContent = k[0];
+      if (k[2]) {
+        var hint = document.createElement("span");
+        hint.className = "kpi-hint";
+        hint.setAttribute("tabindex", "0");
+        hint.setAttribute("role", "note");
+        hint.setAttribute("aria-label", k[2]);
+        hint.textContent = "i";
+        var bubble = document.createElement("span");
+        bubble.className = "kpi-bubble";
+        bubble.textContent = k[2];
+        hint.appendChild(bubble);
+        head.appendChild(hint);
+      }
       var val = document.createElement("span");
       val.className = "kpi-value";
       val.textContent = k[1];
-      tile.appendChild(lab);
+      tile.appendChild(head);
       tile.appendChild(val);
-      kpiHost.appendChild(tile);
+      host.appendChild(tile);
     });
+  }
+
+  function render(section, cfg, state) {
+    cfg.cur = state.currency;
+    var points = aggregate(cfg, state);
+    renderKpis(section, cfg, points, state);
     var host = section.querySelector(".ex-chart");
     host.querySelectorAll("svg").forEach(function (s) { s.remove(); });
     var W = 720, H = 260;
     var svg = el("svg", { viewBox: "0 0 " + W + " " + H, width: "100%", height: H,
       class: "chart", preserveAspectRatio: "xMidYMid meet", role: "img" });
+    svg.setAttribute("aria-label", cfg.label + " by " + cfg.unit);
     var defs = el("defs", {});
     var grad = el("linearGradient", { id: "ex-grad", x1: 0, y1: 0, x2: 0, y2: 1 });
     grad.appendChild(el("stop", { offset: "0%", "stop-color": cfg.color, "stop-opacity": 0.28 }));
@@ -209,11 +261,13 @@
       var t = el("text", { x: W / 2, y: H / 2, "text-anchor": "middle", class: "chart-empty" });
       t.textContent = "no data for this selection";
       svg.appendChild(t);
-    } else if (cfg.type === "area") {
-      drawArea(svg, points, cfg, W, H, host);
-    } else {
-      drawBars(svg, points, cfg, W, H);
+      host.insertBefore(svg, host.firstChild);
+      return;
     }
+    var geom = cfg.type === "area"
+      ? drawArea(svg, points, cfg, W, H)
+      : drawBars(svg, points, cfg, W, H);
+    wirePointer(svg, points, cfg, geom, host);
     host.insertBefore(svg, host.firstChild);
   }
 
@@ -270,6 +324,8 @@
       metric: section.getAttribute("data-metric"), agg: section.getAttribute("data-agg"),
       type: section.getAttribute("data-type"),
       color: "var(--data-" + section.getAttribute("data-color") + ")",
+      label: section.getAttribute("data-label") || "value",
+      explain: section.getAttribute("data-explain") || "",
       unit: "year", periodsLabel: "Years"
     };
     var curs = currenciesFor({ accounts: null });

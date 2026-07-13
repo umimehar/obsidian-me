@@ -17,6 +17,19 @@ def _account_row(transaction: str, description: str, amount: str) -> RawRow:
     )
 
 
+def test_classify_gold_ounces_extracts_qty_and_price():
+    row = _account_row(
+        "BUY",
+        "GOLD - Physically backed gold: Bought 0.2273 ounces at $6942.54 per ounce "
+        "(executed at 2026-05-01)",
+        "-1578.00",
+    )
+    out = classify(row)
+    assert out.symbol == "GOLD"
+    assert out.quantity == 0.2273
+    assert out.unit_price == 6942.54
+
+
 def test_normalize_maps_fplint_to_int():
     assert normalize_type("FPLINT", 1.0, SCHEMA_ACCOUNT) == "INT"
 
