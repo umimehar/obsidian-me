@@ -37,7 +37,7 @@ def sample_card_csv(tmp_path: Path) -> Path:
     """Write a credit-card style statement and return its path."""
     name = (
         "Wealthsimple-credit-card-2026-06-01-credit-card-statement-transactions-"
-        "ca-credit-card-exusOFBgLg.csv"
+        "ca-credit-card-XXTEST002.csv"
     )
     path = tmp_path / name
     path.write_text(CARD_CSV, encoding="utf-8")
