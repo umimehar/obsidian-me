@@ -1,0 +1,54 @@
+#!/bin/sh
+# Masking guard — blocks commits that contain unmasked sensitive data.
+#
+# Scans only the ADDED lines of the staged diff for:
+#   - label + long digit run: a line naming SIN / social insurance / passport / card /
+#     account / IBAN / routing / transit / institution / national id / tax file / driver's
+#     licence AND containing a run of 6+ digits (a masked "****" value has no such run, so it passes)
+#   - grouped high-confidence formats: SIN  ddd-ddd-ddd  and card  dddd-dddd-dddd-dddd
+#
+# Mask the value with **** (keep the label, e.g. `SIN: ****`) and re-commit.
+#
+# Escape hatch (use only when you are SURE the match is not a real secret):
+#   SKIP_MASK_HOOK=1 git commit ...   (or)   git commit --no-verify
+#
+# Install on a device:  git config core.hooksPath config/git-hooks
+
+[ "$SKIP_MASK_HOOK" = "1" ] && exit 0
+
+# Added lines only (drop the +++ file header), from added/copied/modified files.
+# Scan note content only — exclude the Obsidian app dir and binary/minified assets, which
+# carry long digit runs (minified JS, hashes) that are not secrets.
+added=$(git diff --cached -U0 --no-color --diff-filter=ACM -- \
+  ':(exclude).obsidian/**' \
+  ':(exclude)*.js' ':(exclude)*.css' ':(exclude)*.svg' \
+  ':(exclude)*.png' ':(exclude)*.jpg' ':(exclude)*.jpeg' \
+  ':(exclude)*.pdf' ':(exclude)*.woff' ':(exclude)*.woff2' \
+  | grep '^+' | grep -v '^+++')
+[ -z "$added" ] && exit 0
+
+label='(SIN|social insurance|assurance sociale|passport|passeport|credit card|card number|account number|account no|iban|sort code|routing number|transit number|institution number|national id|tax file number|driver.?s? licen[cs]e)'
+
+hits=""
+
+# Pass 1: sensitive label on the same line as a 6+ digit run.
+p1=$(printf '%s\n' "$added" | grep -iE "$label" | grep -E '[0-9]{6,}')
+[ -n "$p1" ] && hits="$hits$p1
+"
+
+# Pass 2: grouped high-confidence formats (SIN / card), regardless of label.
+p2=$(printf '%s\n' "$added" | grep -E '\b[0-9]{3}[ -][0-9]{3}[ -][0-9]{3}\b|\b[0-9]{4}[ -][0-9]{4}[ -][0-9]{4}[ -][0-9]{4}\b')
+[ -n "$p2" ] && hits="$hits$p2
+"
+
+if [ -n "$hits" ]; then
+  echo "masking guard: possible UNMASKED sensitive data in staged changes:"
+  echo "----------------------------------------------------------------"
+  printf '%s' "$hits" | sed 's/^+/  /'
+  echo "----------------------------------------------------------------"
+  echo "Replace the value with **** (keep the label, e.g. 'SIN: ****') and re-commit."
+  echo "If this is a false positive, bypass with:  SKIP_MASK_HOOK=1 git commit ..."
+  exit 1
+fi
+
+exit 0

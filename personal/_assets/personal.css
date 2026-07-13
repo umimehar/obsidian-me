@@ -1,0 +1,294 @@
+/* Shared stylesheet for all personal/ projects — editorial monochrome, light/dark via data-theme */
+
+:root {
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --surface-alt: #f9f9f8;
+  --border: #eaeaea;
+  --ink: #111111;
+  --ink-soft: #2f3437;
+  --muted: #787774;
+  --pale-red-bg: #fdebec;   --pale-red-tx: #9f2f2d;
+  --pale-blue-bg: #e1f3fe;  --pale-blue-tx: #1f6c9f;
+  --pale-green-bg: #edf3ec; --pale-green-tx: #346538;
+  --pale-yellow-bg: #fbf3db;--pale-yellow-tx: #956400;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] {
+  --bg: #161513;
+  --surface: #1e1d1a;
+  --surface-alt: #23221f;
+  --border: #2e2c28;
+  --ink: #f1efe9;
+  --ink-soft: #d9d6cd;
+  --muted: #97938a;
+  --pale-red-bg: #3a2323;   --pale-red-tx: #e4a4a2;
+  --pale-blue-bg: #1e2f3a;  --pale-blue-tx: #93c8e8;
+  --pale-green-bg: #22301f; --pale-green-tx: #a4c9a4;
+  --pale-yellow-bg: #383016;--pale-yellow-tx: #dfc07a;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-family: "SF Pro Display", "Geist Sans", "Helvetica Neue", "Switzer", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 32px 120px;
+}
+
+/* ---------- header ---------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0 0;
+}
+
+.crumb {
+  font-family: "Geist Mono", "SF Mono", "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.theme-toggle {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.theme-toggle:active { transform: scale(0.98); }
+
+.hero { padding: 72px 0 24px; }
+
+.hero h1 {
+  font-family: "Newsreader", "Playfair Display", "Instrument Serif", Georgia, serif;
+  font-size: clamp(38px, 6vw, 58px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin: 0 0 20px;
+  font-weight: 500;
+}
+
+.hero p.lede {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 640px;
+  margin: 0;
+}
+
+/* ---------- sections ---------- */
+
+section { padding: 56px 0 8px; }
+
+h2 {
+  font-family: "Newsreader", "Playfair Display", Georgia, serif;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+
+.section-kicker {
+  font-family: "Geist Mono", "SF Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+h3 {
+  font-size: 17px;
+  color: var(--ink);
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+p { margin: 0 0 14px; }
+
+/* ---------- tags ---------- */
+
+.tag {
+  display: inline-block;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+.tag.green  { background: var(--pale-green-bg);  color: var(--pale-green-tx); }
+.tag.blue   { background: var(--pale-blue-bg);   color: var(--pale-blue-tx); }
+.tag.yellow { background: var(--pale-yellow-bg); color: var(--pale-yellow-tx); }
+.tag.red    { background: var(--pale-red-bg);    color: var(--pale-red-tx); }
+
+/* ---------- verdict banner ---------- */
+
+.verdict {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--pale-green-tx);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 32px 36px;
+  margin-top: 40px;
+  box-shadow: var(--shadow);
+}
+.verdict h2 { margin-bottom: 12px; }
+.verdict p { color: var(--ink-soft); }
+.verdict .cost {
+  font-family: "Geist Mono", "SF Mono", monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---------- option cards (bento) ---------- */
+
+.bento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+@media (max-width: 720px) { .bento { grid-template-columns: 1fr; } }
+
+.card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 28px;
+  transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: var(--shadow); }
+
+.card .head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.card .price {
+  font-family: "Geist Mono", "SF Mono", monospace;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.card ul { margin: 0; padding-left: 18px; }
+.card li { margin-bottom: 6px; font-size: 14.5px; }
+
+.card .verdict-line {
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+  padding-top: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.card .verdict-line strong { color: var(--ink); }
+
+/* ---------- tables ---------- */
+
+.table-wrap { overflow-x: auto; margin-top: 20px; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+th {
+  text-align: left;
+  font-family: "Geist Mono", "SF Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  padding: 12px 16px;
+  background: var(--surface-alt);
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+td.app-name { font-weight: 600; color: var(--ink); white-space: nowrap; }
+td.num { font-family: "Geist Mono", "SF Mono", monospace; font-size: 13px; white-space: nowrap; }
+
+/* ---------- phase plan ---------- */
+
+.phase {
+  border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 24px;
+}
+.phase:last-of-type { border-bottom: none; }
+@media (max-width: 600px) { .phase { grid-template-columns: 1fr; gap: 8px; } }
+
+.phase .when {
+  font-family: "Geist Mono", "SF Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 3px;
+}
+
+/* ---------- footnotes / sources ---------- */
+
+.sources { margin-top: 16px; font-size: 13.5px; }
+.sources a { color: var(--pale-blue-tx); text-decoration: none; }
+.sources a:hover { text-decoration: underline; }
+.sources li { margin-bottom: 4px; }
+
+.footnote { font-size: 13px; color: var(--muted); margin-top: 12px; }
+
+/* ---------- reveal animation ---------- */
+
+/* hidden state applies only when JS marks the page as animatable */
+html.js-anim .reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html.js-anim .reveal.visible { opacity: 1; transform: none; }
+
+@media print {
+  html.js-anim .reveal { opacity: 1 !important; transform: none !important; }
+}

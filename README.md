@@ -2,14 +2,14 @@
 title: Vault README
 tags: [meta/system]
 created: 2026-04-15
-updated: 2026-04-15
+updated: 2026-07-13
 status: active
 type: permanent
 ---
 
 # Obsidian — Personal Vault (me)
 
-Personal second brain and knowledge base. Uses the Karpathy LLM Wiki pattern for compounding knowledge across Claude Code sessions.
+Personal life-management vault and second brain. Organized personal-first: everyday endeavors (taxes, applications, certifications, admin, life areas) live under `personal/`, and personal code projects live under `projects/`. Uses the same system as the `dev` vault with its own standalone Claude Code config.
 
 ## New Machine Setup
 
@@ -17,117 +17,86 @@ Personal second brain and knowledge base. Uses the Karpathy LLM Wiki pattern for
 
 ```bash
 mkdir -p ~/obsidian
-git clone git@github.com:umimehar/obsidian-me.git ~/obsidian/me
+git clone git@github.com:umimehar/obsidian-me.git ~/obsidian/obsidian-me
 ```
+
+The clone directory must be named `obsidian-me` (hooks and skills resolve the vault at `~/obsidian/obsidian-me`).
 
 ### 2. Open in Obsidian
 
-Open Obsidian > "Open folder as vault" > select `~/obsidian/me`
+Open Obsidian > "Open folder as vault" > select `~/obsidian/obsidian-me`
 
 ### 3. Enable community plugins
 
-Go to Settings > Community Plugins > Turn off Restricted Mode, then install:
+Settings > Community Plugins > turn off Restricted Mode, then install:
 
 - **Obsidian Git** — auto-commit and sync every 5 minutes
-  - Settings: Auto backup interval: `5`, Auto pull interval: `5`, Pull on startup: `on`, Push on backup: `on`
-- **Local REST API** — enables Claude Code MCP connection
-  - Copy the API key from Settings > Local REST API after enabling
+- **Local REST API** — enables Claude Code MCP connection. Copy this vault's API key from Settings > Local REST API (it is **different** from the `dev` vault's key).
+- Templater, Calendar, Dataview — recommended. Kanban — optional, only for the orchestrator board UI.
 
-### 4. Set up Claude Code MCP
-
-Add to `~/.mcp.json`:
-
-```json
-"obsidian": {
-  "command": "uvx",
-  "args": ["mcp-obsidian"],
-  "env": {
-    "OBSIDIAN_API_KEY": "<your-api-key-from-local-rest-api-plugin>"
-  }
-}
-```
-
-Add `"obsidian"` to `enabledMcpjsonServers` in `~/.claude/settings.json`.
-
-### 5. Install Claude Code skills
+### 4. Install the git hooks (masking guard)
 
 ```bash
-mkdir -p ~/.claude/skills/obsidian-resume ~/.claude/skills/obsidian-save
-cp ~/obsidian/me/skills/obsidian-resume.md ~/.claude/skills/obsidian-resume/SKILL.md
-cp ~/obsidian/me/skills/obsidian-save.md ~/.claude/skills/obsidian-save/SKILL.md
+cd ~/obsidian/obsidian-me
+git config core.hooksPath config/git-hooks
 ```
 
-Remove the `> **To install...** ` line from the top of each copied SKILL.md.
+This enables `config/git-hooks/pre-commit`, which blocks commits containing unmasked sensitive data (SIN, passport, card, account numbers).
+
+### 5. Set up Claude Code MCP + config
+
+This vault ships its own config at `config/claude/`:
+
+```bash
+cd ~/obsidian/obsidian-me/config/claude
+cp .env.example .env && $EDITOR .env   # fill OBSIDIAN_API_KEY with THIS vault's Local REST API key
+```
+
+MCP servers are defined in `config/claude/mcp/mcp.json` (obsidian, reddit, context7, sequential-thinking). The obsidian MCP connects to whichever vault has the Local REST API plugin active, so open this vault in Obsidian when working here.
 
 ### 6. Verify
 
 1. Restart Claude Code
-2. Run `/resume` — should pull and show recent context
-3. Run `/save` — should commit and push
+2. Run `/obsidian-resume` — should pull and show recent context
+3. Run `/obsidian-save` — should commit and push
 
 ## Vault Structure
 
 ```
-me/
+obsidian-me/
   CLAUDE.md              Claude's orientation document
-  usage.md               Complete usage guide with all prompts
-  inbox/                 Raw captures, brain dumps, research
-  wiki/
-    hot.md               Session context cache (read first)
-    index.md             Master wiki index
-    concepts/            Core ideas, patterns, mental models
-    entities/            People, tools, services
-    sources/             Processed articles, books, talks
-  projects/              Active project context and decisions
-  daily-notes/           One note per day (YYYY-MM-DD.md)
-  references/            Evergreen cheat sheets and stable docs
+  hot.md                 Active endeavors and recent session context
+  personal/              One folder per non-coding endeavor (primary content)
+    _assets/personal.css Shared stylesheet for all personal HTML pages
+    [endeavor]/README.md · log/ · notes/ · tracking.md
+  projects/              Personal code projects
+    _template/           Copy this to create a new project
+  orchestrator/          Kanban orchestrator (design.md, board.md, control.md, dashboard.md, devices/, tickets/)
+  knowledge/             Cross-endeavor patterns, tools, snippets, lessons
+  standup/               Daily cross-endeavor summaries
+  retros/                Retros and learnings
   templates/             Note templates
-  skills/                Claude Code skill references
+  config/claude/         This vault's standalone Claude Code config (MCP + skills)
+  config/git-hooks/      Pre-commit masking guard
 ```
-
-## Key Files
-
-| File | Purpose |
-|------|---------|
-| `CLAUDE.md` | Claude reads this for vault conventions and rules |
-| `usage.md` | Complete guide with every prompt you can use |
-| `wiki/hot.md` | Recent session context — always read first |
-| `wiki/index.md` | Master directory of all wiki pages |
 
 ## Session Workflow
 
 ```
-/resume    Pull from GitHub, load context, summarize where you left off
-/save      Save daily note + hot cache, commit, push to GitHub
+/obsidian-resume    Pull from GitHub, load context, summarize where you left off
+/obsidian-save      Save log + hot cache, commit, push to GitHub
 ```
 
-## Sync Architecture
+## Creating a New Endeavor
 
-| Scenario | How it syncs |
-|----------|-------------|
-| Editing in Obsidian | Obsidian Git plugin auto-commits every 5 min |
-| Claude Code session start | `/resume` runs `git pull --rebase` |
-| Claude Code session end | `/save` runs `git commit + push` |
-| Opening on another device | Obsidian Git pulls on startup |
+- **Personal:** `personal/<name>/README.md` (`type: personal`, `personal: <name>`, `#personal/<name>`) + an empty `log/`. Or tell Claude: `"Create a personal endeavor for my 2026 tax return"`.
+- **Project:** `cp -r projects/_template projects/my-app`, then fill in `README.md`.
 
 ## Conventions
 
-- `[[wikilinks]]` for internal links (never markdown links)
-- YAML frontmatter on every note
-- Kebab-case filenames: `auth-flow-design.md`
-- Tag format: `#category/subcategory`
-- One concept per wiki page (atomic notes)
-- Minimum 2 wikilinks per note
-
-## Recommended Plugins
-
-| Plugin | Purpose |
-|--------|---------|
-| Obsidian Git | Auto-commit + push every 5 min |
-| Local REST API | MCP connection for Claude Code |
-| Templater | Auto-fill templates with dates and titles |
-| Calendar | Navigate daily notes visually |
-| Dataview | Query notes with SQL-like syntax |
+- `[[wikilinks]]` for internal links · YAML frontmatter on every note · kebab-case filenames
+- Never commit unmasked sensitive data — mask values with `****`
+- One endeavor folder = one self-contained endeavor
 
 ## GitHub Repo
 

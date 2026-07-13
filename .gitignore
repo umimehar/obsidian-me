@@ -4,3 +4,16 @@
 .trash/
 .DS_Store
 *.swp
+
+# Claude config — per-device secrets, never commit
+config/claude/.env
+
+# ...but track the orchestrator's superpowers specs/plans so they sync across devices
+!orchestrator/.superpowers/
+
+# Python artifacts (skill helpers + their tests)
+__pycache__/
+*.pyc
+
+# Impeccable local hook cache
+.impeccable/
