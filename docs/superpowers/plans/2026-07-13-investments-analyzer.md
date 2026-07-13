@@ -179,7 +179,7 @@ def sample_card_csv(tmp_path: Path) -> Path:
     """Write a credit-card style statement and return its path."""
     name = (
         "Wealthsimple-credit-card-2026-06-01-credit-card-statement-transactions-"
-        "ca-credit-card-exusOFBgLg.csv"
+        "ca-credit-card-XXCARD0001.csv"
     )
     path = tmp_path / name
     path.write_text(CARD_CSV, encoding="utf-8")
@@ -759,7 +759,7 @@ def test_account_code_from_filename():
 
 
 def test_account_code_from_card_filename():
-    name = "Wealthsimple-credit-card-2026-06-01-credit-card-statement-transactions-ca-credit-card-exusOFBgLg.csv"
+    name = "Wealthsimple-credit-card-2026-06-01-credit-card-statement-transactions-ca-credit-card-XXCARD0001.csv"
     assert account_code_from_filename(name) == "card"
 
 
@@ -770,7 +770,7 @@ def test_detect_kind_variants():
     assert detect_kind("Person’s-RRSP-...-XXRRSP001CAD.csv") == "RRSP"
     assert detect_kind("Family-RESP-...-XXRESP001CAD.csv") == "RESP"
     assert detect_kind("Crypto-...-XXCRYP001CAD.csv") == "Crypto"
-    assert detect_kind("Wealthsimple-credit-card-...-exusOFBgLg.csv") == "CreditCard"
+    assert detect_kind("Wealthsimple-credit-card-...-XXCARD0001.csv") == "CreditCard"
 
 
 def test_redact_removes_names(tmp_path: Path):

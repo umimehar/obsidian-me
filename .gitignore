@@ -17,3 +17,6 @@ __pycache__/
 
 # Impeccable local hook cache
 .impeccable/
+
+# Superpowers SDD scratch (briefs, reports, diffs, ledger)
+.superpowers/
