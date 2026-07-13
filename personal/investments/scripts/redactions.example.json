@@ -1,0 +1,4 @@
+{
+  "names": ["First Last", "First", "Second Person"],
+  "account_label_people": {"First": "Person A", "Second": "Person B"}
+}
