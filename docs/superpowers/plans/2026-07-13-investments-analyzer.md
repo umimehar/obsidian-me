@@ -13,7 +13,7 @@
 - Python 3.13+, managed with `uv venv` / `uv run`. Standard library only for runtime code; `pytest`/`ruff`/`ty` are dev-only.
 - Code limits: <=100 lines/function, cyclomatic complexity <=8, <=5 positional params, 100-char lines, absolute imports only, Google-style docstrings on non-trivial public APIs.
 - `ruff check` and `ty check` must be clean; zero warnings.
-- Real account codes (e.g. `WK1V04QK2CAD`) MUST NEVER be written to any file under `personal/investments/`. Masked ids only.
+- Real account codes (the trailing `<PREFIX><alnum>CAD/USD` token in each source filename) MUST NEVER be written to any file under `personal/investments/`. Masked ids only.
 - Source CSV directory (constant): `~/Downloads/monthly-statements-2022-01-to-2026-07/`. Never committed.
 - Parsing MUST use Python's `csv` module (descriptions contain embedded commas and newlines).
 - Endeavor is journal-only: no orchestrator/board/loop wiring.
@@ -112,17 +112,27 @@ scripts/.venv/
 scripts/**/__pycache__/
 scripts/.pytest_cache/
 scripts/.ruff_cache/
+scripts/redactions.json
 ```
 
-- [ ] **Step 3: Create the redactions list**
+- [ ] **Step 3: Create the redaction list (example committed, real gitignored)**
 
-`personal/investments/scripts/redactions.json`:
+The real names must never enter git. Commit only a placeholder example; the real `redactions.json` is created locally and gitignored (Step 2). `build.py` fails fast if the real file is missing.
+
+`personal/investments/scripts/redactions.example.json` (committed):
 
 ```json
 {
-  "names": ["Umar farooq Aslam", "Umar Farooq Aslam", "Umar", "Maham"],
-  "account_label_people": {"Umar": "Person A", "Maham": "Person B"}
+  "names": ["First Last", "First", "Second Person"],
+  "account_label_people": {"First": "Person A", "Second": "Person B"}
 }
+```
+
+Then create the real local file (not committed):
+
+```bash
+cp personal/investments/scripts/redactions.example.json personal/investments/scripts/redactions.json
+# edit personal/investments/scripts/redactions.json to hold the real names to scrub
 ```
 
 - [ ] **Step 4: Create test fixtures**
@@ -140,9 +150,11 @@ ACCOUNT_CSV = (
     '"date","transaction","description","amount","balance","currency"\n'
     '"2026-06-03","BUY","L - Loblaw Cos. Ltd.: Bought 1.0000 shares at $61.49 '
     'per share (executed at 2026-06-02)","-61.49","932.23","CAD"\n'
-    '"2026-06-05","CONT","Contribution (executed at 2026-06-05)","500.0","1432.23","CAD"\n'
-    '"2026-06-05","E_TRFIN","Interac e-Transfer® Received from Umar farooq '
-    'Aslam","660.0","2092.23","CAD"\n'
+    '"2026-06-04","BUY","VFV - Vanguard S&P 500: Bought 0.5000 shares '
+    '(executed at 2026-06-03)","-40.0","892.23","CAD"\n'
+    '"2026-06-05","CONT","Contribution (executed at 2026-06-05)","500.0","1392.23","CAD"\n'
+    '"2026-06-05","E_TRFIN","Interac e-Transfer® Received from Test Person '
+    'Name","660.0","2052.23","CAD"\n'
     '"2026-06-02","DIV","ZAG - BMO Aggregate Bond Index ETF: Cash dividend '
     'distribution, received on 2026-06-02","1.04","19.72","CAD"\n'
 )
@@ -157,7 +169,7 @@ CARD_CSV = (
 @pytest.fixture
 def sample_account_csv(tmp_path: Path) -> Path:
     """Write a Managed (TFSA) style statement and return its path."""
-    path = tmp_path / "Managed (TFSA)-2026-06-01-monthly-statement-transactions-WK1V04QK2CAD.csv"
+    path = tmp_path / "Managed (TFSA)-2026-06-01-monthly-statement-transactions-XX0TEST001CAD.csv"
     path.write_text(ACCOUNT_CSV, encoding="utf-8")
     return path
 
@@ -248,7 +260,7 @@ Expected: venv created; `pytest` collects 0 tests and exits 0 (no test files yet
 - [ ] **Step 7: Commit**
 
 ```bash
-git add personal/investments/.gitignore personal/investments/README.md personal/investments/log personal/investments/scripts/pyproject.toml personal/investments/scripts/redactions.json personal/investments/scripts/investments/__init__.py personal/investments/scripts/tests/conftest.py
+git add personal/investments/.gitignore personal/investments/README.md personal/investments/log personal/investments/scripts/pyproject.toml personal/investments/scripts/redactions.example.json personal/investments/scripts/investments/__init__.py personal/investments/scripts/tests/conftest.py
 git commit -m "feat: scaffold investments endeavor and pipeline project"
 ```
 
@@ -322,7 +334,7 @@ def test_parse_handles_multiline_description(tmp_path: Path):
         '"2026-06-02","DIV","Line one,\nline two with comma, still one field",'
         '"1.0","2.0","CAD"\n'
     )
-    path = tmp_path / "X-2026-06-01-monthly-statement-transactions-WK0000000CAD.csv"
+    path = tmp_path / "X-2026-06-01-monthly-statement-transactions-XX0TEST900CAD.csv"
     path.write_text(content, encoding="utf-8")
     rows = parse_csv(path)
     assert len(rows) == 1
@@ -516,6 +528,36 @@ def test_classify_stkdiv_extracts_qty_and_price():
     out = classify(row)
     assert out.quantity == 0.0314
     assert out.unit_price == 7.13
+
+
+def test_classify_buy_without_price_derives_unit_price():
+    row = _account_row(
+        "BUY",
+        "VFV - Vanguard S&P 500: Bought 0.5000 shares (executed at 2026-06-03)",
+        "-40.0",
+    )
+    out = classify(row)
+    assert out.symbol == "VFV"
+    assert out.quantity == 0.5
+    assert out.unit_price == 80.0
+
+
+def test_normalize_unknown_code_is_other():
+    assert normalize_type("MYSTERY", 1.0, SCHEMA_ACCOUNT) == "OTHER"
+
+
+def test_card_refund_is_card_refund():
+    from investments.parse import RawRow
+
+    row = RawRow(
+        source_file="c.csv",
+        schema=SCHEMA_CARD,
+        fields={
+            "transaction_date": "2026-05-01", "post_date": "2026-05-02",
+            "type": "Refund settled", "details": "AMZN", "amount": "-9.99", "currency": "CAD",
+        },
+    )
+    assert classify(row).type == "CARD_REFUND"
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -562,14 +604,18 @@ _TYPE_MAP: dict[str, str] = {
     "CASHBACK": "REWARD",
     "REIMB": "REWARD",
     "REFER": "REWARD",
+    "GIVEAWAY": "REWARD",
+    "AFFILIATE": "REWARD",
     "SPEND": "CARD_PURCHASE",
+    "DEP": "TRANSFER_IN",
+    "P2P_SENT": "TRANSFER_OUT",
+    "ROC": "OTHER",
 }
 
 _SIGN_BASED = {"EFT"}
-_CARD_MAP = {"purchase": "CARD_PURCHASE", "payment": "CARD_PAYMENT"}
 
 _SYMBOL_RE = re.compile(r"^([A-Z0-9][A-Z0-9.]*)\s+-\s+")
-_SHARES_RE = re.compile(r"(?:Bought|Sold)\s+([\d.]+)\s+shares?\s+at\s+\$([\d.]+)")
+_SHARES_RE = re.compile(r"(?:Bought|Sold)\s+([\d.]+)\s+shares?(?:\s+at\s+\$([\d.]+))?")
 _CRYPTO_RE = re.compile(r"(?:Purchase|Sale) of ([\d.]+)\s+([A-Z]{2,10})\b")
 _STKDIV_RE = re.compile(r"distribution of ([\d.]+)\s+units.*?valued at \$([\d.]+)")
 _FX_RE = re.compile(r"FX Rate:\s*([\d.]+)")
@@ -586,10 +632,22 @@ class Extracted:
     fx_rate: float | None
 
 
+def _card_type(raw_type: str) -> str:
+    """Map a credit-card transaction label to a normalized type."""
+    lowered = raw_type.strip().lower()
+    if lowered.startswith("purchase"):
+        return "CARD_PURCHASE"
+    if lowered.startswith("payment"):
+        return "CARD_PAYMENT"
+    if lowered.startswith("refund"):
+        return "CARD_REFUND"
+    return "REWARD"
+
+
 def normalize_type(raw_type: str, amount: float, schema: str) -> str:
     """Map a raw transaction code to a normalized type, using sign where ambiguous."""
     if schema == SCHEMA_CARD:
-        return _CARD_MAP.get(raw_type.strip().lower(), "REWARD")
+        return _card_type(raw_type)
     code = raw_type.strip().upper()
     if code in _SIGN_BASED:
         return "TRANSFER_IN" if amount >= 0 else "TRANSFER_OUT"
@@ -604,13 +662,27 @@ def _extract_details(description: str) -> tuple[str | None, float | None, float 
     if match := _SYMBOL_RE.search(description):
         symbol = match.group(1)
     if match := _SHARES_RE.search(description):
-        quantity, unit_price = float(match.group(1)), float(match.group(2))
+        quantity = float(match.group(1))
+        unit_price = float(match.group(2)) if match.group(2) else None
     elif match := _STKDIV_RE.search(description):
         quantity, unit_price = float(match.group(1)), float(match.group(2))
     elif match := _CRYPTO_RE.search(description):
         quantity, symbol = float(match.group(1)), match.group(2)
     fx = float(m.group(1)) if (m := _FX_RE.search(description)) else None
     return symbol, quantity, unit_price, fx
+
+
+def _derive_unit_price(
+    quantity: float | None, unit_price: float | None, amount: float, fx_rate: float | None
+) -> float | None:
+    """Derive a per-unit price from amount/quantity when the description omits it.
+
+    Only applied to same-currency rows (no FX conversion) since a converted
+    amount and a native-currency price cannot be divided directly.
+    """
+    if unit_price is not None or quantity in (None, 0) or fx_rate is not None or amount == 0:
+        return unit_price
+    return round(abs(amount) / quantity, 4)
 
 
 def classify(row: RawRow) -> Extracted:
@@ -622,6 +694,7 @@ def classify(row: RawRow) -> Extracted:
     amount = float(row.fields["amount"] or 0)
     ttype = normalize_type(raw_type, amount, row.schema)
     symbol, quantity, unit_price, fx_rate = _extract_details(description)
+    unit_price = _derive_unit_price(quantity, unit_price, amount, fx_rate)
     return Extracted(
         type=ttype, symbol=symbol, quantity=quantity, unit_price=unit_price, fx_rate=fx_rate
     )
@@ -630,7 +703,7 @@ def classify(row: RawRow) -> Extracted:
 - [ ] **Step 4: Run test to verify it passes**
 
 Run: `cd personal/investments/scripts && uv run pytest tests/test_classify.py -v`
-Expected: PASS (8 tests).
+Expected: PASS (12 tests).
 
 - [ ] **Step 5: Commit**
 
@@ -673,16 +746,16 @@ from investments.mask import (
 
 
 def test_mask_is_stable_and_prefixed():
-    a = mask_account_code("WK1V04QK2CAD")
-    b = mask_account_code("WK1V04QK2CAD")
+    a = mask_account_code("XX0TEST001CAD")
+    b = mask_account_code("XX0TEST001CAD")
     assert a == b
     assert a.startswith("acct_")
-    assert mask_account_code("WK1V04QK2CAD") != mask_account_code("HQ51705K2CAD")
+    assert mask_account_code("XX0TEST001CAD") != mask_account_code("XX0TEST002CAD")
 
 
 def test_account_code_from_filename():
-    name = "Managed (TFSA)-2026-06-01-monthly-statement-transactions-WK1V04QK2CAD.csv"
-    assert account_code_from_filename(name) == "WK1V04QK2CAD"
+    name = "Managed (TFSA)-2026-06-01-monthly-statement-transactions-XX0TEST001CAD.csv"
+    assert account_code_from_filename(name) == "XX0TEST001CAD"
 
 
 def test_account_code_from_card_filename():
@@ -691,28 +764,28 @@ def test_account_code_from_card_filename():
 
 
 def test_detect_kind_variants():
-    assert detect_kind("Home-2026-06-01-...-HQ75YWF61CAD.csv") == "FHSA"
-    assert detect_kind("Managed (TFSA)-...-WK1V04QK2CAD.csv") == "ManagedTFSA"
-    assert detect_kind("TFSA-...-HQ51705K2CAD.csv") == "TFSA"
-    assert detect_kind("Umar’s-RRSP-...-HQ8PX8W46CAD.csv") == "RRSP"
-    assert detect_kind("Family-RESP-...-HQ9MF9DQ2CAD.csv") == "RESP"
-    assert detect_kind("Crypto-...-HQBVPFH15CAD.csv") == "Crypto"
+    assert detect_kind("Home-2026-06-01-...-XXHOME001CAD.csv") == "FHSA"
+    assert detect_kind("Managed (TFSA)-...-XXMGD0001CAD.csv") == "ManagedTFSA"
+    assert detect_kind("TFSA-...-XXTFSA001CAD.csv") == "TFSA"
+    assert detect_kind("Person’s-RRSP-...-XXRRSP001CAD.csv") == "RRSP"
+    assert detect_kind("Family-RESP-...-XXRESP001CAD.csv") == "RESP"
+    assert detect_kind("Crypto-...-XXCRYP001CAD.csv") == "Crypto"
     assert detect_kind("Wealthsimple-credit-card-...-exusOFBgLg.csv") == "CreditCard"
 
 
 def test_redact_removes_names(tmp_path: Path):
-    red = Redactions(names=["Umar farooq Aslam", "Maham"], account_label_people={})
-    text = "Received from Umar farooq Aslam and Maham"
-    assert "Umar" not in redact(text, red)
-    assert "Maham" not in redact(text, red)
+    red = Redactions(names=["Test Person Name", "Second"], account_label_people={})
+    text = "Received from Test Person Name and Second"
+    assert "Test Person" not in redact(text, red)
+    assert "Second" not in redact(text, red)
 
 
 def test_load_redactions(tmp_path: Path):
     path = tmp_path / "redactions.json"
-    path.write_text('{"names": ["Umar"], "account_label_people": {"Umar": "Person A"}}')
+    path.write_text('{"names": ["First"], "account_label_people": {"First": "Person A"}}')
     red = load_redactions(path)
-    assert red.names == ["Umar"]
-    assert red.account_label_people == {"Umar": "Person A"}
+    assert red.names == ["First"]
+    assert red.account_label_people == {"First": "Person A"}
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -752,7 +825,6 @@ _KIND_RULES: list[tuple[str, str]] = [
     ("us dollars", "USD"),
     ("us_dollars", "USD"),
     ("crypto", "Crypto"),
-    ("—pe", "PE"),
 ]
 
 
@@ -786,7 +858,7 @@ def detect_kind(filename: str) -> str:
     for needle, kind in _KIND_RULES:
         if needle in lowered:
             return kind
-    if re.match(r"^pe-", lowered):
+    if lowered.startswith("pe-"):
         return "PE"
     return "Other"
 
@@ -824,7 +896,7 @@ git commit -m "feat: add account masking, name redaction, and kind detection"
 
 ---
 
-### Task 5: Datastore assembly and deduplication
+### Task 5: Datastore assembly
 
 **Files:**
 - Create: `personal/investments/scripts/investments/datastore.py`
@@ -833,9 +905,9 @@ git commit -m "feat: add account masking, name redaction, and kind detection"
 **Interfaces:**
 - Consumes: `parse.RawRow`, `parse.discover_csvs`, `parse.parse_csv`, `classify.classify`, `mask.*`.
 - Produces:
-  - `Transaction` TypedDict and `Account` TypedDict (JSON-ready dicts).
   - `build_datastore(source_dir: Path, redactions: Redactions) -> dict` with keys `meta`, `accounts`, `transactions`.
-  - `dedup_key(txn: dict) -> tuple` used internally; exposed for testing.
+
+**Note on deduplication (deliberately omitted):** Wealthsimple monthly statements never overlap in date range, so there are no genuine cross-file duplicate rows. Meanwhile, legitimate identical rows recur *within* a single statement (e.g. repeated `NRT -0.01` lines the same day, repeated `DIV`/`FEE`/`SELL`), so any content-based dedup key silently drops real transactions. The pipeline therefore keeps every parsed data row. The row-count reconciliation in Task 8 guards against accidental loss.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -847,7 +919,7 @@ from pathlib import Path
 from investments.datastore import build_datastore
 from investments.mask import Redactions
 
-RED = Redactions(names=["Umar farooq Aslam"], account_label_people={})
+RED = Redactions(names=["Test Person Name"], account_label_people={})
 
 
 def test_build_datastore_shape(tmp_source_dir: Path):
@@ -860,14 +932,14 @@ def test_build_datastore_shape(tmp_source_dir: Path):
 def test_no_real_codes_in_datastore(tmp_source_dir: Path):
     store = build_datastore(tmp_source_dir, RED)
     blob = str(store)
-    assert "WK1V04QK2CAD" not in blob
+    assert "XX0TEST001CAD" not in blob
     assert all(a["masked_id"].startswith("acct_") for a in store["accounts"])
 
 
 def test_names_are_redacted(tmp_source_dir: Path):
     store = build_datastore(tmp_source_dir, RED)
     blob = str(store)
-    assert "Umar farooq Aslam" not in blob
+    assert "Test Person Name" not in blob
 
 
 def test_contrib_and_types_present(tmp_source_dir: Path):
@@ -877,15 +949,16 @@ def test_contrib_and_types_present(tmp_source_dir: Path):
     assert "BUY" in types
 
 
-def test_dedup_collapses_identical_rows(tmp_path: Path):
+def test_identical_rows_are_all_kept(tmp_path: Path):
     content = (
         '"date","transaction","description","amount","balance","currency"\n'
-        '"2026-06-01","DIV","ZAG - x","1.0","2.0","CAD"\n'
+        '"2026-06-01","NRT","Non-resident tax (executed at 2026-06-01)","-0.01","2.0","CAD"\n'
+        '"2026-06-01","NRT","Non-resident tax (executed at 2026-06-01)","-0.01","1.99","CAD"\n'
+        '"2026-06-01","NRT","Non-resident tax (executed at 2026-06-01)","-0.01","1.98","CAD"\n'
     )
-    (tmp_path / "A-2026-06-01-transactions-WK0000001CAD.csv").write_text(content)
-    (tmp_path / "A-2026-07-01-transactions-WK0000001CAD.csv").write_text(content)
+    (tmp_path / "A-2026-06-01-transactions-XX0TEST700CAD.csv").write_text(content)
     store = build_datastore(tmp_path, RED)
-    assert store["meta"]["txn_count"] == 1
+    assert store["meta"]["txn_count"] == 3
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -902,6 +975,7 @@ Expected: FAIL with `ModuleNotFoundError: No module named 'investments.datastore
 
 from __future__ import annotations
 
+from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -955,33 +1029,33 @@ def _row_to_txn(row: Any, account_id: str, red: Redactions) -> dict:
     }
 
 
-def _dedup_key(txn: dict) -> tuple:
-    """Return a stable identity key so overlapping monthly files do not double-count."""
-    return (
-        txn["account_id"],
-        txn["date"],
-        txn["raw_type"],
-        txn["amount"],
-        txn["description_redacted"],
+_KNOWN_OTHER = {"ROC"}
+
+
+def _collect_warnings(transactions: list[dict]) -> dict:
+    """Report raw transaction codes that fell through to OTHER, for triage."""
+    unmapped = Counter(
+        t["raw_type"]
+        for t in transactions
+        if t["type"] == "OTHER" and t["raw_type"].strip().upper() not in _KNOWN_OTHER
     )
+    return {"unmapped_types": dict(unmapped)}
 
 
 def build_datastore(source_dir: Path, redactions: Redactions) -> dict:
-    """Build the full masked datastore dict from a directory of statement CSVs."""
+    """Build the full masked datastore dict from a directory of statement CSVs.
+
+    Every parsed data row is kept; statements do not overlap, so no
+    deduplication is applied (see the task note).
+    """
     files = discover_csvs(source_dir)
     accounts: dict[str, dict] = {}
-    seen: set[tuple] = set()
     transactions: list[dict] = []
     for path in files:
-        real_code = account_code_from_filename(path.name)
-        account_id = mask_account_code(real_code)
+        account_id = mask_account_code(account_code_from_filename(path.name))
         kind = detect_kind(path.name)
         for row in parse_csv(path):
             txn = _row_to_txn(row, account_id, redactions)
-            key = _dedup_key(txn)
-            if key in seen:
-                continue
-            seen.add(key)
             transactions.append(txn)
             _touch_account(accounts, account_id, kind, txn)
     return {
@@ -991,6 +1065,7 @@ def build_datastore(source_dir: Path, redactions: Redactions) -> dict:
             "file_count": len(files),
             "txn_count": len(transactions),
             "source_range": _range(transactions),
+            "warnings": _collect_warnings(transactions),
         },
         "accounts": sorted(accounts.values(), key=lambda a: a["kind"]),
         "transactions": transactions,
@@ -1030,7 +1105,7 @@ Expected: PASS (5 tests).
 
 ```bash
 git add personal/investments/scripts/investments/datastore.py personal/investments/scripts/tests/test_datastore.py
-git commit -m "feat: assemble deduplicated masked datastore"
+git commit -m "feat: assemble masked datastore from statements"
 ```
 
 ---
@@ -1044,13 +1119,14 @@ git commit -m "feat: assemble deduplicated masked datastore"
 **Interfaces:**
 - Consumes: a datastore dict (`build_datastore` output).
 - Produces: `compute_analytics(store: dict) -> dict` with keys:
-  - `contributions`: `{ by_account_year: list[{account_id, kind, year, total}], by_registered_year: list[{group, year, total}], resp_grants: list[{year, total}], limits: dict[str, dict[str, float]] }`
-  - `cash_flow`: `list[{account_id, month, inflow, outflow, net}]`
-  - `income`: `{ by_month: list[{month, total}], by_symbol: list[{symbol, total}] }`
-  - `holdings`: `list[{account_id, symbol, quantity, cost_basis}]`
-  - `balances`: `list[{account_id, month, balance, approximate: bool}]`
+  - `contributions`: `{ by_account_year: list[{account_id, kind, year, total, currency}], by_registered_year: list[{group, year, total}], resp_grants: list[{year, total}], limits: dict[str, dict[str, float]] }`
+  - `cash_flow`: `list[{account_id, month, currency, inflow, outflow, net}]`
+  - `income`: `{ by_month: list[{month, currency, total}], by_symbol: list[{symbol, currency, total}] }`
+  - `holdings`: `list[{account_id, symbol, quantity, total_buy_cost, currency}]`
+  - `balances`: `list[{account_id, month, balance, currency, approximate: bool}]`
 - Registered group map: ManagedTFSA and TFSA -> "TFSA"; FHSA -> "FHSA"; RRSP -> "RRSP"; RESP -> "RESP".
-- Annual limits constant `CONTRIBUTION_LIMITS` (labelled context only).
+- Currency handling: every aggregation is keyed by currency so CAD and USD amounts are never summed together (the Direct Indexing and US-dollar accounts carry USD rows). Registered contribution rollups filter to CAD (CONT rows are CAD). `total_buy_cost` is the sum of buy-side outlay, not an adjusted cost base after sells; it is labelled as such on the page.
+- Annual limits constant `CONTRIBUTION_LIMITS` (labelled context only; the RESP figure is the CESG-matched annual amount, not a legal limit).
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1073,6 +1149,7 @@ def _txn(account_id, date, ttype, amount, **kw):
         "account_id": account_id, "date": date, "type": ttype, "amount": amount,
         "symbol": kw.get("symbol"), "quantity": kw.get("quantity"),
         "unit_price": kw.get("unit_price"), "balance": kw.get("balance"),
+        "currency": kw.get("currency", "CAD"),
     }
     return base
 
@@ -1111,12 +1188,23 @@ def test_income_by_symbol_and_month():
     ]
     out = compute_analytics(_store(txns))
     by_symbol = {r["symbol"]: r["total"] for r in out["income"]["by_symbol"]}
-    by_month = {r["month"]: r["total"] for r in out["income"]["by_month"]}
+    by_month = {(r["month"], r["currency"]): r["total"] for r in out["income"]["by_month"]}
     assert by_symbol["ZAG"] == 3.0
-    assert by_month["2025-03"] == 3.0
+    assert by_month[("2025-03", "CAD")] == 3.0
 
 
-def test_holdings_net_quantity_and_cost_basis():
+def test_income_does_not_mix_currencies():
+    txns = [
+        _txn("acct_a", "2025-03-01", "DIV", 1.0, symbol="ZAG", currency="CAD"),
+        _txn("acct_a", "2025-03-02", "DIV", 2.0, symbol="WEC", currency="USD"),
+    ]
+    out = compute_analytics(_store(txns))
+    by_month = {(r["month"], r["currency"]): r["total"] for r in out["income"]["by_month"]}
+    assert by_month[("2025-03", "CAD")] == 1.0
+    assert by_month[("2025-03", "USD")] == 2.0
+
+
+def test_holdings_net_quantity_and_total_buy_cost():
     txns = [
         _txn("acct_a", "2025-03-01", "BUY", -60.0, symbol="L", quantity=1.0, unit_price=60.0),
         _txn("acct_a", "2025-04-01", "BUY", -20.0, symbol="L", quantity=0.5, unit_price=40.0),
@@ -1125,7 +1213,7 @@ def test_holdings_net_quantity_and_cost_basis():
     out = compute_analytics(_store(txns))
     holding = next(h for h in out["holdings"] if h["symbol"] == "L")
     assert holding["quantity"] == 1.0
-    assert holding["cost_basis"] == 80.0
+    assert holding["total_buy_cost"] == 80.0
 
 
 def test_cash_flow_inflow_outflow():
@@ -1165,11 +1253,13 @@ _REGISTERED_GROUP = {
 }
 _INCOME_TYPES = {"DIV", "STKDIV", "INT"}
 
+# Annual context figures. RESP is the CESG-matched annual amount (grant maxes at
+# 20% of $2,500), not the $50,000 lifetime contribution limit.
 CONTRIBUTION_LIMITS: dict[str, dict[str, float]] = {
-    "TFSA": {"2025": 7000.0, "2026": 7000.0},
-    "FHSA": {"2025": 8000.0, "2026": 8000.0},
-    "RRSP": {"2025": 32490.0, "2026": 33810.0},
-    "RESP": {"2025": 2500.0, "2026": 2500.0},
+    "TFSA": {"2022": 6000.0, "2023": 6500.0, "2024": 7000.0, "2025": 7000.0, "2026": 7000.0},
+    "FHSA": {"2023": 8000.0, "2024": 8000.0, "2025": 8000.0, "2026": 8000.0},
+    "RRSP": {"2022": 29210.0, "2023": 30780.0, "2024": 31560.0, "2025": 32490.0, "2026": 33810.0},
+    "RESP": {"2022": 2500.0, "2023": 2500.0, "2024": 2500.0, "2025": 2500.0, "2026": 2500.0},
 }
 
 
@@ -1187,23 +1277,23 @@ def _kinds(store: dict) -> dict[str, str]:
 
 def _contributions(store: dict, kinds: dict[str, str]) -> dict:
     """Aggregate CONTRIB rows per account-year and per registered group-year, plus RESP grants."""
-    per_acct: dict[tuple[str, int], float] = defaultdict(float)
+    per_acct: dict[tuple[str, int, str], float] = defaultdict(float)
     per_group: dict[tuple[str, int], float] = defaultdict(float)
     grants: dict[int, float] = defaultdict(float)
     for txn in store["transactions"]:
         year = _year(txn["date"])
         if txn["type"] == "CONTRIB":
-            acct = txn["account_id"]
-            per_acct[(acct, year)] += txn["amount"]
+            acct, currency = txn["account_id"], txn["currency"]
+            per_acct[(acct, year, currency)] += txn["amount"]
             group = _REGISTERED_GROUP.get(kinds.get(acct, ""))
-            if group:
+            if group and currency == "CAD":
                 per_group[(group, year)] += txn["amount"]
         elif txn["type"] == "GRANT":
             grants[year] += txn["amount"]
     return {
         "by_account_year": [
-            {"account_id": a, "kind": kinds.get(a, "Other"), "year": y, "total": round(v, 2)}
-            for (a, y), v in sorted(per_acct.items())
+            {"account_id": a, "kind": kinds.get(a, "Other"), "year": y, "currency": c, "total": round(v, 2)}
+            for (a, y, c), v in sorted(per_acct.items())
         ],
         "by_registered_year": [
             {"group": g, "year": y, "total": round(v, 2)}
@@ -1215,12 +1305,12 @@ def _contributions(store: dict, kinds: dict[str, str]) -> dict:
 
 
 def _cash_flow(store: dict) -> list[dict]:
-    """Sum inflows and outflows per account-month, excluding zero-amount lending noise."""
-    flow: dict[tuple[str, str], list[float]] = defaultdict(lambda: [0.0, 0.0])
+    """Sum inflows and outflows per account-month-currency, excluding zero-amount noise."""
+    flow: dict[tuple[str, str, str], list[float]] = defaultdict(lambda: [0.0, 0.0])
     for txn in store["transactions"]:
         if txn["type"] in {"LENDING", "REORG"} or txn["amount"] == 0:
             continue
-        bucket = flow[(txn["account_id"], _month(txn["date"]))]
+        bucket = flow[(txn["account_id"], _month(txn["date"]), txn["currency"])]
         if txn["amount"] >= 0:
             bucket[0] += txn["amount"]
         else:
@@ -1229,48 +1319,61 @@ def _cash_flow(store: dict) -> list[dict]:
         {
             "account_id": a,
             "month": m,
+            "currency": c,
             "inflow": round(inflow, 2),
             "outflow": round(outflow, 2),
             "net": round(inflow + outflow, 2),
         }
-        for (a, m), (inflow, outflow) in sorted(flow.items())
+        for (a, m, c), (inflow, outflow) in sorted(flow.items())
     ]
 
 
 def _income(store: dict) -> dict:
-    """Aggregate dividend/interest/distribution income by month and by symbol."""
-    by_month: dict[str, float] = defaultdict(float)
-    by_symbol: dict[str, float] = defaultdict(float)
+    """Aggregate income by month and by symbol, keyed by currency so totals never mix."""
+    by_month: dict[tuple[str, str], float] = defaultdict(float)
+    by_symbol: dict[tuple[str, str], float] = defaultdict(float)
     for txn in store["transactions"]:
         if txn["type"] not in _INCOME_TYPES or txn["amount"] <= 0:
             continue
-        by_month[_month(txn["date"])] += txn["amount"]
-        by_symbol[txn["symbol"] or "(cash)"] += txn["amount"]
+        currency = txn["currency"]
+        by_month[(_month(txn["date"]), currency)] += txn["amount"]
+        by_symbol[(txn["symbol"] or "(cash)", currency)] += txn["amount"]
     return {
-        "by_month": [{"month": m, "total": round(v, 2)} for m, v in sorted(by_month.items())],
+        "by_month": [
+            {"month": m, "currency": c, "total": round(v, 2)}
+            for (m, c), v in sorted(by_month.items())
+        ],
         "by_symbol": [
-            {"symbol": s, "total": round(v, 2)}
-            for s, v in sorted(by_symbol.items(), key=lambda kv: -kv[1])
+            {"symbol": s, "currency": c, "total": round(v, 2)}
+            for (s, c), v in sorted(by_symbol.items(), key=lambda kv: -kv[1])
         ],
     }
 
 
 def _holdings(store: dict) -> list[dict]:
-    """Derive net quantity and buy-side cost basis per account-symbol."""
+    """Derive net quantity and buy-side outlay per account-symbol (not adjusted cost base)."""
     qty: dict[tuple[str, str], float] = defaultdict(float)
     cost: dict[tuple[str, str], float] = defaultdict(float)
+    currencies: dict[tuple[str, str], str] = {}
     for txn in store["transactions"]:
         symbol = txn["symbol"]
         if not symbol or txn["quantity"] is None:
             continue
         key = (txn["account_id"], symbol)
+        currencies.setdefault(key, txn["currency"])
         if txn["type"] in {"BUY", "STKDIV"}:
             qty[key] += txn["quantity"]
             cost[key] += -txn["amount"] if txn["amount"] < 0 else 0.0
         elif txn["type"] == "SELL":
             qty[key] -= txn["quantity"]
     return [
-        {"account_id": a, "symbol": s, "quantity": round(qty[(a, s)], 6), "cost_basis": round(cost[(a, s)], 2)}
+        {
+            "account_id": a,
+            "symbol": s,
+            "quantity": round(qty[(a, s)], 6),
+            "total_buy_cost": round(cost[(a, s)], 2),
+            "currency": currencies[(a, s)],
+        }
         for (a, s) in sorted(qty)
         if round(qty[(a, s)], 6) != 0
     ]
@@ -1280,22 +1383,23 @@ def _balances(store: dict) -> list[dict]:
     """Take the last known balance per account-month; approximate for investment accounts."""
     kinds = _kinds(store)
     exact_kinds = {"Chequing", "Savings", "USD"}
-    last: dict[tuple[str, str], tuple[str, float]] = {}
+    last: dict[tuple[str, str], tuple[str, float, str]] = {}
     for txn in store["transactions"]:
         if txn["balance"] is None:
             continue
         key = (txn["account_id"], _month(txn["date"]))
         prev = last.get(key)
         if prev is None or txn["date"] >= prev[0]:
-            last[key] = (txn["date"], txn["balance"])
+            last[key] = (txn["date"], txn["balance"], txn["currency"])
     return [
         {
             "account_id": a,
             "month": m,
             "balance": round(bal, 2),
+            "currency": cur,
             "approximate": kinds.get(a, "") not in exact_kinds,
         }
-        for (a, m), (_, bal) in sorted(last.items())
+        for (a, m), (_, bal, cur) in sorted(last.items())
     ]
 
 
@@ -1314,7 +1418,7 @@ def compute_analytics(store: dict) -> dict:
 - [ ] **Step 4: Run test to verify it passes**
 
 Run: `cd personal/investments/scripts && uv run pytest tests/test_analytics.py -v`
-Expected: PASS (6 tests).
+Expected: PASS (7 tests).
 
 - [ ] **Step 5: Commit**
 
@@ -1352,14 +1456,14 @@ from investments.render import render_pages, svg_bar_chart
 def _analytics():
     return {
         "contributions": {
-            "by_account_year": [{"account_id": "acct_a", "kind": "TFSA", "year": 2025, "total": 750.0}],
+            "by_account_year": [{"account_id": "acct_a", "kind": "TFSA", "year": 2025, "currency": "CAD", "total": 750.0}],
             "by_registered_year": [{"group": "TFSA", "year": 2025, "total": 750.0}],
             "resp_grants": [], "limits": {"TFSA": {"2025": 7000.0}},
         },
-        "cash_flow": [{"account_id": "acct_a", "month": "2025-03", "inflow": 500.0, "outflow": -2.0, "net": 498.0}],
-        "income": {"by_month": [{"month": "2025-03", "total": 3.0}], "by_symbol": [{"symbol": "ZAG", "total": 3.0}]},
-        "holdings": [{"account_id": "acct_a", "symbol": "L", "quantity": 1.0, "cost_basis": 80.0}],
-        "balances": [{"account_id": "acct_a", "month": "2025-03", "balance": 498.0, "approximate": True}],
+        "cash_flow": [{"account_id": "acct_a", "month": "2025-03", "currency": "CAD", "inflow": 500.0, "outflow": -2.0, "net": 498.0}],
+        "income": {"by_month": [{"month": "2025-03", "currency": "CAD", "total": 3.0}], "by_symbol": [{"symbol": "ZAG", "currency": "CAD", "total": 3.0}]},
+        "holdings": [{"account_id": "acct_a", "symbol": "L", "quantity": 1.0, "total_buy_cost": 80.0, "currency": "CAD"}],
+        "balances": [{"account_id": "acct_a", "month": "2025-03", "balance": 498.0, "currency": "CAD", "approximate": True}],
     }
 
 
@@ -1409,7 +1513,8 @@ def test_contributions_page_shows_values():
 def test_no_real_account_code_in_pages():
     pages = render_pages(_store(), _analytics())
     for html in pages.values():
-        assert "WK1V04QK2CAD" not in html
+        assert "acct_a" in html or "TFSA" in html
+        assert "XX0TEST001CAD" not in html
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -1471,14 +1576,15 @@ def test_end_to_end_build_writes_outputs(tmp_source_dir, tmp_path, monkeypatch):
     (out_root / "data").mkdir(parents=True)
     (out_root / "notes").mkdir(parents=True)
     monkeypatch.setattr(build, "ENDEAVOR_ROOT", out_root)
-    monkeypatch.setattr(build, "REDACTIONS_PATH", build.SCRIPTS_DIR / "redactions.json")
+    # Use the committed example list (redactions.json is gitignored and may be absent in CI).
+    monkeypatch.setattr(build, "REDACTIONS_PATH", build.SCRIPTS_DIR / "redactions.example.json")
     rc = build.main(source_dir=tmp_source_dir)
     assert rc == 0
     store = json.loads((out_root / "data" / "datastore.json").read_text())
     assert store["meta"]["txn_count"] > 0
     assert (out_root / "notes" / "index.html").exists()
     blob = (out_root / "data" / "datastore.json").read_text()
-    assert "WK1V04QK2CAD" not in blob
+    assert "XX0TEST001CAD" not in blob
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
@@ -1502,6 +1608,7 @@ from pathlib import Path
 from investments.analytics import compute_analytics
 from investments.datastore import build_datastore
 from investments.mask import load_redactions
+from investments.parse import discover_csvs, parse_csv
 from investments.render import render_pages
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
@@ -1510,11 +1617,24 @@ REDACTIONS_PATH = SCRIPTS_DIR / "redactions.json"
 DEFAULT_SOURCE = Path.home() / "Downloads" / "monthly-statements-2022-01-to-2026-07"
 
 
+def _reconcile(source: Path, txn_count: int) -> tuple[int, bool]:
+    """Independently count parsed data rows and confirm none were dropped."""
+    parsed = sum(len(parse_csv(p)) for p in discover_csvs(source))
+    return parsed, parsed == txn_count
+
+
 def main(source_dir: Path | None = None) -> int:
     """Build the datastore, analytics, and pages; return a process exit code."""
     source = source_dir or DEFAULT_SOURCE
     if not source.is_dir():
         print(f"Source directory not found: {source}", file=sys.stderr)
+        return 1
+    if not REDACTIONS_PATH.is_file():
+        print(
+            f"Missing {REDACTIONS_PATH.name}. Copy redactions.example.json to "
+            "redactions.json and fill in the real names to scrub.",
+            file=sys.stderr,
+        )
         return 1
     redactions = load_redactions(REDACTIONS_PATH)
     store = build_datastore(source, redactions)
@@ -1527,11 +1647,17 @@ def main(source_dir: Path | None = None) -> int:
     (data_dir / "analytics.json").write_text(json.dumps(analytics, indent=2), encoding="utf-8")
     for name, html in render_pages(store, analytics).items():
         (notes_dir / name).write_text(html, encoding="utf-8")
+    parsed, ok = _reconcile(source, store["meta"]["txn_count"])
     print(
         f"Built {store['meta']['txn_count']} transactions across "
         f"{len(store['accounts'])} accounts from {store['meta']['file_count']} files."
     )
-    return 0
+    print(f"Reconciliation: parsed {parsed} rows, stored {store['meta']['txn_count']} "
+          f"({'OK' if ok else 'MISMATCH'}).")
+    warnings = store["meta"]["warnings"]["unmapped_types"]
+    if warnings:
+        print(f"Warning: unmapped transaction codes seen: {warnings}", file=sys.stderr)
+    return 0 if ok else 2
 
 
 if __name__ == "__main__":
@@ -1561,7 +1687,7 @@ Run:
 cd personal/investments/scripts && uv run python build.py
 ```
 
-Expected: prints a build summary with a transaction count in the thousands and ~20 accounts.
+Expected: prints a build summary with a transaction count in the thousands and ~20 accounts, plus a `Reconciliation: ... (OK)` line. If any unmapped transaction codes are reported, add them to `_TYPE_MAP` in `classify.py` and rebuild.
 
 - [ ] **Step 7: Verify no real account codes leaked and reconcile counts**
 
@@ -1592,4 +1718,6 @@ git commit -m "feat: build investments datastore, analytics, and pages from stat
 
 **Placeholder scan:** Task 7 Step 3 intentionally delegates final CSS/markup authoring to the `high-end-visual-design` skill rather than inlining a full stylesheet, but specifies every function, its signature, required substrings, and behavior, and is bounded by concrete tests. All other steps contain complete runnable code.
 
-**Type consistency:** `RawRow`, `Extracted`, `Redactions`, and the datastore/analytics dict shapes are used consistently across tasks. `build_datastore(source_dir, redactions)`, `compute_analytics(store)`, `render_pages(store, analytics)`, and `svg_bar_chart(series, ...)` signatures match every call site. Registered group map (ManagedTFSA+TFSA -> TFSA) is consistent between spec and Task 6.
+**Type consistency:** `RawRow`, `Extracted`, `Redactions`, and the datastore/analytics dict shapes are used consistently across tasks. `build_datastore(source_dir, redactions)`, `compute_analytics(store)`, `render_pages(store, analytics)`, and `svg_bar_chart(series, ...)` signatures match every call site. Registered group map (ManagedTFSA+TFSA -> TFSA) is consistent between spec and Task 6. Analytics rows carry `currency`; holdings use `total_buy_cost`; the Task 7 render fixtures match these shapes.
+
+**Fable review incorporated (2026-07-13):** deduplication removed (statements never overlap; a content key dropped ~173 real rows) with a reconciliation guard added in Task 8; shares regex made price-optional with derived unit price; expanded transaction-code map (`DEP`, `P2P_SENT`, `GIVEAWAY`, `AFFILIATE`, `ROC`) and card refunds routed to `CARD_REFUND`, unmapped codes collected and reported; all test fixtures switched to fake `XX`-prefixed codes and fake names so the privacy grep passes; real names moved out of git into a gitignored `redactions.json` with a committed `redactions.example.json` and a fail-fast check; analytics keyed by currency so CAD/USD never sum; `cost_basis` renamed `total_buy_cost`; contribution limits extended to 2022 and RESP figure relabelled; dead `—pe` rule removed. Not adopted: a salt for the masked-id hash (a gitignored salt would break cross-device id stability in this git-synced vault; accepted low risk for a private repo).

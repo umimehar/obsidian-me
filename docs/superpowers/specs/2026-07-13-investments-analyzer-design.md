@@ -17,9 +17,9 @@ Two CSV schemas:
 1. Account statements — `date, transaction, description, amount, balance, currency`. Applies to all investment and cash accounts.
 2. Credit card — `transaction_date, post_date, type, details, amount, currency`.
 
-Real account codes live in the filenames (e.g. `WK1V04QK2CAD`). Personal names appear inside descriptions and account labels ("Umar farooq Aslam", "Maham", "Umar's RRSP").
+Real account codes live in the filenames (the trailing alphanumeric token). Personal names appear inside descriptions and account labels (owner and family first/last names, and possessive account labels like "<name>'s RRSP").
 
-Accounts observed (label | real-code family): Managed (TFSA), TFSA, Home (FHSA), Chequing, RRSP, Direct Indexing (USD), Umar's RRSP, PE, Non-registered, xyzbytes, US dollars, Family-RESP, Maham's RRSP, Savings, Crypto, Wealthsimple credit card.
+Accounts observed (by label): Managed (TFSA), TFSA, Home (FHSA), Chequing, RRSP, Direct Indexing (USD), a personal RRSP, PE, Non-registered, xyzbytes, US dollars, Family-RESP, a spousal RRSP, Savings, Crypto, Wealthsimple credit card.
 
 Transaction codes present (counts, whole corpus): BUY 2978, DIV 1147, LOAN 759, RECALL 745, NRT 671, SELL 652, TRFOUT 187, CONT 130, FEE 103, TRFIN 90, FPLINT 76, FXCONVERSION 55, TRFOUTTF 36, AFT_IN 25, TRFINTF 24, E_TRFIN 24, STKREORG 16, EFT 12, STKDIV 6, REIMB 6, SPEND 5, CASHBACK 5, REFER 4, INT 3, GRANT 3, E_TRFOUT 3. Some descriptions contain embedded commas and newlines, so parsing MUST use Python's `csv` module (proper quoted multi-line field handling), never line/awk splitting.
 
@@ -57,7 +57,7 @@ personal/_assets/personal.css   shared stylesheet (vault convention)
 Decision: masked everywhere, real codes never persisted.
 
 - Real account codes -> stable masked id derived by hashing the real code (e.g. `acct_a1b2`). Same account always maps to the same id across rebuilds. The real code is used only in memory during a build and is never written to any committed file.
-- Personal names in descriptions and account labels -> redacted to role labels via `scripts/redactions.json` (e.g. `Umar's RRSP` -> `Person A's RRSP`, `Received from Umar farooq Aslam` -> `Received from [redacted]`). The redaction list is data-driven and editable.
+- Personal names in descriptions and account labels -> redacted to a marker via a data-driven list. The real list lives in `scripts/redactions.json`, which is gitignored so the actual names never enter git; a placeholder `scripts/redactions.example.json` is committed, and the build fails fast if the real file is missing.
 - Kept (not sensitive per vault policy, and the analytical value): dates, amounts, balances, quantities, prices, FX rates, holding symbols, merchant names on card purchases. No SIN/passport/card-number patterns occur in this data.
 - The vault `pre-commit` guard remains authoritative; nothing here bypasses it.
 
@@ -76,9 +76,9 @@ Precomputed so pages stay simple (pure render, no heavy JS math):
 
 - Monthly cash flow per account and combined; savings rate.
 - Cumulative contributions.
-- Contributions block (first-class): per account x per calendar year totals, plus rollups grouped by registered type (TFSA, FHSA, RRSP, RESP) and non-registered separately. Genuine external contributions (`CONT`, external inbound transfers) are distinguished from internal transfers between the owner's own accounts so registered-room usage is not overstated. RESP `GRANT` tracked as its own line. Yearly totals shown next to the known annual contribution limit for the account type as labelled context (available room depends on prior-year carryforward not present in this data).
+- Contributions block (first-class): per account x per calendar year totals, plus rollups grouped by registered type (TFSA, FHSA, RRSP, RESP) and non-registered separately. Contributions are the explicitly coded `CONT` transactions only; internal transfers between the owner's own accounts are not counted, so registered-room usage is not overstated. RESP `GRANT` tracked as its own line. Yearly totals shown next to the known annual contribution figure for the account type as labelled context (available room depends on prior-year carryforward not present in this data; the RESP figure is the CESG-matched annual amount, not the lifetime limit).
 - Income: dividends, interest, distributions by month and by holding; passive-income trend.
-- Holdings: current holdings derived from BUY/SELL/STKDIV/STKREORG, allocation by account and asset, cost basis where derivable.
+- Holdings: current holdings derived from BUY/SELL/STKDIV, allocation by account and asset, and total buy-side outlay per holding (labelled as such, not an adjusted cost base after sells).
 - Balance / market-value trend: exact for cash accounts; approximate for investment accounts (only valued-at prices embedded in descriptions are available, not daily marks). Clearly labelled approximate wherever shown.
 
 ## HTML output and design
@@ -94,8 +94,9 @@ Precomputed so pages stay simple (pure render, no heavy JS math):
 - Python 3.13, `uv` venv, standard library only (`csv`, `json`, `hashlib`, `re`, `pathlib`, `datetime`). `ruff` clean, `ty` clean.
 - Reusable and idempotent: re-run whenever new statements are dropped into the source directory. Rebuilds `datastore.json` + `analytics.json` and regenerates the HTML pages.
 - Steps: discover CSVs -> detect schema -> parse (csv module) -> classify + extract fields -> mask + redact -> deduplicate -> write datastore -> compute analytics -> render HTML.
-- Deduplication keys on (account_id, date, raw_type, amount, description) so overlapping monthly files do not double-count.
-- Fails fast with a clear message on an unrecognized schema or an unmapped account family, rather than silently dropping rows.
+- No deduplication: monthly statements never overlap in date range, and legitimately identical rows recur within a single statement (repeated NRT/DIV/FEE lines), so a content-based dedup key would drop real transactions. Every parsed data row is kept, guarded by a row-count reconciliation at build time.
+- All monetary aggregations are keyed by currency so CAD and USD amounts (the Direct Indexing and US-dollar accounts carry USD rows) are never summed together.
+- Fails fast with a clear message on an unrecognized schema, an unmapped account family, or a missing local `redactions.json`. Unmapped transaction codes are collected and reported rather than silently dropped.
 - Source directory path is a constant near the top of the script, easy to change.
 
 ## Non-goals
