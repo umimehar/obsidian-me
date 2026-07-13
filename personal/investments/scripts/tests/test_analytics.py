@@ -113,3 +113,25 @@ def test_cash_flow_excludes_credit_card_account():
     card_rows = [r for r in out["cash_flow"] if r["account_id"] == "acct_card"]
     assert card_rows == []
     assert not any(r["inflow"] == 37.4 for r in out["cash_flow"])
+
+
+def test_monthly_series_rolls_metrics_per_account_month():
+    txns = [
+        _txn("acct_a", "2025-03-01", "CONTRIB", 500.0, balance=500.0),
+        _txn("acct_a", "2025-03-15", "DIV", 3.0, symbol="ZAG", balance=503.0),
+        _txn("acct_a", "2025-04-01", "DIV", 2.0, symbol="ZAG", balance=505.0),
+    ]
+    series = compute_analytics(_store(txns))["monthly_series"]
+    march = next(r for r in series if r["account_id"] == "acct_a" and r["month"] == "2025-03")
+    assert march["contrib"] == 500.0
+    assert march["income"] == 3.0
+    assert march["net"] == 503.0
+    assert march["balance"] == 503.0
+    assert march["currency"] == "CAD"
+
+
+def test_monthly_series_excludes_credit_card_from_net():
+    accounts = [{"masked_id": "acct_card", "kind": "CreditCard", "currency": "CAD"}]
+    txns = [_txn("acct_card", "2025-03-05", "CARD_PURCHASE", 37.4)]
+    series = compute_analytics(_store(txns, accounts=accounts))["monthly_series"]
+    assert all(r["net"] == 0.0 for r in series)

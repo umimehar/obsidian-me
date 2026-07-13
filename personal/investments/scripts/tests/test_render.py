@@ -49,6 +49,18 @@ def _analytics():
                 "approximate": True,
             }
         ],
+        "monthly_series": [
+            {
+                "account_id": "acct_a",
+                "kind": "TFSA",
+                "currency": "CAD",
+                "month": "2025-03",
+                "income": 3.0,
+                "contrib": 750.0,
+                "net": 498.0,
+                "balance": 498.0,
+            }
+        ],
     }
 
 
@@ -115,6 +127,34 @@ def test_no_real_account_code_in_pages():
     pages = render_pages(_store(), _analytics())
     for html in pages.values():
         assert "XX0TEST001CAD" not in html
+
+
+def test_pages_embed_interactive_series_and_controls():
+    pages = render_pages(_store(), _analytics())
+    for name in ("index.html", "growth.html", "cash-flow.html", "income.html"):
+        html = pages[name]
+        assert 'id="ex-data"' in html
+        assert 'class="section explorer"' in html
+        assert 'data-period="year"' in html
+        assert 'data-period="month"' in html
+        assert '"month": "2025-03"' in html
+
+
+def test_index_total_contributions_covers_all_accounts():
+    store = _store()
+    analytics = _analytics()
+    analytics["contributions"]["by_account_year"] = [
+        {"account_id": "acct_a", "kind": "TFSA", "year": 2025, "currency": "CAD", "total": 7000.0},
+        {
+            "account_id": "acct_c",
+            "kind": "NonRegistered",
+            "year": 2025,
+            "currency": "CAD",
+            "total": 3000.0,
+        },
+    ]
+    html = render_pages(store, analytics)["index.html"]
+    assert "$10,000.00" in html
 
 
 def _multi_currency_analytics():

@@ -1,13 +1,17 @@
 """Render the masked datastore and analytics into self-contained offline HTML pages.
 
-Every page is a full document that links the shared stylesheet, ships an inline
-light/dark toggle, and draws its charts as inline SVG with CSS custom-property
-fills so they adapt to the active theme. No templating engine, no external
+Every page is a full document that links the shared stylesheet and ships inline
+vanilla JavaScript: a theme toggle plus an interactive "explorer" that reads an
+embedded JSON series and lets the reader switch Year/Month, filter accounts, and
+scrub an animated chart. Server-rendered tables carry the same figures so the
+pages still work with JavaScript disabled. No templating engine, no external
 resources, no network access at view time.
 """
 
 from collections import defaultdict
 from html import escape as _std_escape
+from json import dumps as _json_dumps
+from pathlib import Path
 
 CSS_HREF = "../../_assets/personal.css"
 
@@ -37,9 +41,13 @@ _THEME_SCRIPT = """<script>
     var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
     root.setAttribute("data-theme", next);
     localStorage.setItem(key, next);
+    window.dispatchEvent(new Event("themechange"));
   });
 })();
 </script>"""
+
+_EXPLORER_JS = (Path(__file__).parent / "explorer.js").read_text(encoding="utf-8")
+_EXPLORER_SCRIPT = f"<script>{_EXPLORER_JS}</script>"
 
 
 def _html_escape(text: object) -> str:
@@ -132,6 +140,41 @@ def _section(title: str, *blocks: str) -> str:
     )
 
 
+def _account_label(account: dict) -> str:
+    """Short human label for an account chip: kind plus a masked id tail."""
+    return f"{account['kind']} · {account['masked_id'][5:11]}"
+
+
+def _explorer(
+    title: str, metric: str, agg: str, ctype: str, color: str, accounts: list[dict]
+) -> str:
+    """Interactive controls plus mount points; JavaScript fills the chart and KPIs."""
+    chips = '<button type="button" class="chip on" data-id="all">All accounts</button>' + "".join(
+        f'<button type="button" class="chip" data-id="{_html_escape(a["masked_id"])}">'
+        f"{_html_escape(_account_label(a))}</button>"
+        for a in accounts
+    )
+    controls = (
+        '<div class="ex-controls">'
+        '<div class="seg ex-seg" role="group" aria-label="Period">'
+        '<button type="button" class="seg-btn on" data-period="year">Year</button>'
+        '<button type="button" class="seg-btn" data-period="month">Month</button></div>'
+        '<div class="seg ex-cur" role="group" aria-label="Currency"></div>'
+        "</div>"
+        f'<div class="chips ex-chips" role="group" aria-label="Accounts">{chips}</div>'
+    )
+    return (
+        f'<section class="section explorer" data-metric="{metric}" data-agg="{agg}" '
+        f'data-type="{ctype}" data-color="{color}"><div class="card"><div class="card-inner">'
+        f'<h2 class="section-title">{_html_escape(title)}</h2>{controls}'
+        '<div class="ex-kpis kpi-row"></div>'
+        '<div class="ex-chart"><div class="ex-tip"></div>'
+        '<noscript><p class="caveat">Enable JavaScript for the interactive chart; '
+        "the tables below carry the same figures.</p></noscript></div>"
+        "</div></div></section>"
+    )
+
+
 def _quick_links() -> str:
     links = "".join(
         f'<a class="quick-link" href="{href}">{_html_escape(label)}'
@@ -171,45 +214,29 @@ def _scope(store: dict) -> str:
     return f'<footer class="scope">Scope: {tags or "no accounts"}</footer>'
 
 
+def _series_json(store: dict, analytics: dict) -> str:
+    """Embed the compact monthly series and account list for the interactive layer."""
+    payload = {
+        "accounts": [
+            {"account_id": a["masked_id"], "kind": a["kind"], "currency": a["currency"]}
+            for a in store["accounts"]
+        ],
+        "series": analytics.get("monthly_series", []),
+    }
+    return f'<script type="application/json" id="ex-data">{_json_dumps(payload)}</script>'
+
+
 def _page(title: str, active: str, body: str, footer: str = "") -> str:
     """Wrap a body string in the full offline document shell."""
     return (
         "<!DOCTYPE html>\n"
-        '<html lang="en" data-theme="light">\n<head>\n<meta charset="utf-8">\n'
+        '<html lang="en" data-theme="dark">\n<head>\n<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
         f"<title>{_html_escape(title)} - Investments</title>\n"
         f'<link rel="stylesheet" href="{CSS_HREF}">\n</head>\n<body>\n'
         f'{_topbar(title, active)}<main class="page">{body}{footer}</main>\n'
         f"{_THEME_SCRIPT}\n</body>\n</html>\n"
     )
-
-
-def _by_currency(rows: list[dict], label_key: str, value_key: str) -> dict[str, dict[str, float]]:
-    """Aggregate value_key by (currency, label_key), never adding two currencies together."""
-    out: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
-    for row in rows:
-        out[row["currency"]][row[label_key]] += row[value_key]
-    return out
-
-
-def _currency_charts(title: str, rows: list[dict], label_key: str, value_key: str) -> str:
-    """Render one chart per currency present in rows, headed by the currency code.
-
-    A single currency renders as one chart under the plain title, matching the
-    previous single-currency layout; multiple currencies each get their own
-    chart so amounts are never summed across currencies.
-    """
-    grouped = _by_currency(rows, label_key, value_key)
-    if len(grouped) <= 1:
-        series = next(iter(grouped.values()), {})
-        chart = svg_bar_chart([(label, series[label]) for label in sorted(series)])
-        return _section(title, chart)
-    blocks = []
-    for currency in sorted(grouped):
-        series = grouped[currency]
-        chart = svg_bar_chart([(label, series[label]) for label in sorted(series)])
-        blocks.append(_section(f"{title} — {currency}", chart))
-    return "".join(blocks)
 
 
 def _totals_by_currency(rows: list[dict], value_key: str) -> dict[str, float]:
@@ -220,34 +247,31 @@ def _totals_by_currency(rows: list[dict], value_key: str) -> dict[str, float]:
     return dict(totals)
 
 
+def _currency_kpis(label: str, totals: dict[str, float]) -> list[tuple[str, str]]:
+    """One KPI per currency, or a single unlabelled KPI when only one is present."""
+    if len(totals) <= 1:
+        return [(label, _money(next(iter(totals.values()), 0.0)))]
+    return [(f"{label} ({cur})", _money(total)) for cur, total in sorted(totals.items())]
+
+
 def render_index(store: dict, analytics: dict) -> str:
-    """Overview: datastore meta, headline KPIs, and links into the other pages."""
+    """Overview: headline KPIs across every account, an interactive summary, and links."""
     meta = store["meta"]
     rng = meta["source_range"]
-    total_contrib = sum(r["total"] for r in analytics["contributions"]["by_registered_year"])
-    income_by_currency = _totals_by_currency(analytics["income"]["by_month"], "total")
-    if len(income_by_currency) <= 1:
-        income_kpis = [("Total income", _money(next(iter(income_by_currency.values()), 0.0)))]
-    else:
-        income_kpis = [
-            (f"Total income ({currency})", _money(total))
-            for currency, total in sorted(income_by_currency.items())
-        ]
+    contrib_totals = _totals_by_currency(analytics["contributions"]["by_account_year"], "total")
+    income_totals = _totals_by_currency(analytics["income"]["by_month"], "total")
     kpis = _kpi_row(
-        [
-            ("Total contributions", _money(total_contrib)),
-            *income_kpis,
-            ("Holdings", str(len(analytics["holdings"]))),
-        ]
+        _currency_kpis("Total contributions", contrib_totals)
+        + _currency_kpis("Total income", income_totals)
+        + [("Holdings", str(len(analytics["holdings"]))), ("Accounts", str(len(store["accounts"])))]
     )
     meta_tbl = _table(
         ["Metric", "Value"],
         [
-            ["Generated", meta["generated_at"]],
             ["Date range", f"{rng['start']} to {rng['end']}"],
             ["Transactions", meta["txn_count"]],
-            ["Accounts", len(store["accounts"])],
             ["Source files", meta.get("file_count", "")],
+            ["Generated", meta["generated_at"]],
         ],
     )
     accounts_tbl = _table(
@@ -266,6 +290,7 @@ def render_index(store: dict, analytics: dict) -> str:
     )
     return (
         _section("At a glance", kpis)
+        + _explorer("Cash balance", "balance", "last", "area", "balance", store["accounts"])
         + _section("Datastore", meta_tbl, _caveat())
         + _section("Accounts", accounts_tbl)
         + _section("Explore", _quick_links())
@@ -273,28 +298,26 @@ def render_index(store: dict, analytics: dict) -> str:
 
 
 def render_growth(store: dict, analytics: dict) -> str:
-    """Portfolio balance over time, aggregated per month across accounts."""
+    """Interactive portfolio balance plus the exact monthly balance ledger."""
     balances = analytics["balances"]
-    charts = _currency_charts("Portfolio balance by month", balances, "month", "balance")
+    explorer = _explorer("Cash balance", "balance", "last", "area", "balance", store["accounts"])
     rows = [
         [
-            bal["account_id"],
-            bal["month"],
-            _money(bal["balance"], bal["currency"]),
-            "approximate" if bal["approximate"] else "exact",
+            b["account_id"],
+            b["month"],
+            _money(b["balance"], b["currency"]),
+            "approximate" if b["approximate"] else "exact",
         ]
-        for bal in balances
+        for b in balances
     ]
     tbl = _table(["Account", "Month", "Balance", "Basis"], rows)
-    return charts + _section("Monthly balances", tbl, _caveat())
+    return explorer + _section("Monthly balances", tbl, _caveat())
 
 
 def render_contributions(store: dict, analytics: dict) -> str:
-    """Registered contributions by year, per-account detail, room, and RESP grants."""
+    """Interactive contributions plus registered rollups, room, and RESP grants."""
     c = analytics["contributions"]
-    chart = svg_bar_chart(
-        [(f"{r['group']} {r['year']}", r["total"]) for r in c["by_registered_year"]]
-    )
+    explorer = _explorer("Contributions", "contrib", "sum", "bar", "contrib", store["accounts"])
     detail = _table(
         ["Account", "Kind", "Year", "Contributed"],
         [
@@ -302,8 +325,13 @@ def render_contributions(store: dict, analytics: dict) -> str:
             for r in c["by_account_year"]
         ],
     )
+    registered = _table(
+        ["Group", "Year", "Contributed"],
+        [[r["group"], r["year"], _money(r["total"])] for r in c["by_registered_year"]],
+    )
     blocks = [
-        _section("Registered contributions by year", chart),
+        explorer,
+        _section("Registered accounts by year", registered),
         _section("Contributions by account", detail),
     ]
     limit_rows = [
@@ -320,27 +348,27 @@ def render_contributions(store: dict, analytics: dict) -> str:
 
 
 def render_cash_flow(store: dict, analytics: dict) -> str:
-    """Net cash movement per month plus the exact inflow/outflow ledger."""
+    """Interactive net cash flow plus the exact inflow/outflow ledger."""
     flows = analytics["cash_flow"]
-    charts = _currency_charts("Net cash flow by month", flows, "month", "net")
+    explorer = _explorer("Net cash flow", "net", "sum", "bar", "net", store["accounts"])
     rows = [
         [
-            flow["account_id"],
-            flow["month"],
-            _money(flow["inflow"], flow["currency"]),
-            _money(flow["outflow"], flow["currency"]),
-            _money(flow["net"], flow["currency"]),
+            f["account_id"],
+            f["month"],
+            _money(f["inflow"], f["currency"]),
+            _money(f["outflow"], f["currency"]),
+            _money(f["net"], f["currency"]),
         ]
-        for flow in flows
+        for f in flows
     ]
     tbl = _table(["Account", "Month", "Inflow", "Outflow", "Net"], rows)
-    return charts + _section("Cash movements", tbl, _caveat())
+    return explorer + _section("Cash movements", tbl, _caveat())
 
 
 def render_income(store: dict, analytics: dict) -> str:
-    """Dividend and interest income, by month and by paying symbol."""
+    """Interactive income by period plus by-month and by-symbol ledgers."""
     inc = analytics["income"]
-    charts = _currency_charts("Income by month", inc["by_month"], "month", "total")
+    explorer = _explorer("Investment income", "income", "sum", "bar", "income", store["accounts"])
     by_month = _table(
         ["Month", "Income"],
         [[r["month"], _money(r["total"], r["currency"])] for r in inc["by_month"]],
@@ -349,13 +377,16 @@ def render_income(store: dict, analytics: dict) -> str:
         ["Symbol", "Income"],
         [[r["symbol"], _money(r["total"], r["currency"])] for r in inc["by_symbol"]],
     )
-    return charts + _section("By month", by_month) + _section("By symbol", by_symbol)
+    return explorer + _section("By month", by_month) + _section("By symbol", by_symbol)
 
 
 def render_holdings(store: dict, analytics: dict) -> str:
     """Current positions with recorded cost base (market value not implied)."""
     holdings = analytics["holdings"]
-    charts = _currency_charts("Cost base by holding", holdings, "symbol", "total_buy_cost")
+    totals = _totals_by_currency(holdings, "total_buy_cost")
+    kpis = _kpi_row(_currency_kpis("Total buy cost", totals) + [("Positions", str(len(holdings)))])
+    top = sorted(holdings, key=lambda h: -h["total_buy_cost"])[:14]
+    chart = svg_bar_chart([(h["symbol"], h["total_buy_cost"]) for h in top])
     rows = [
         [
             h["account_id"],
@@ -366,12 +397,17 @@ def render_holdings(store: dict, analytics: dict) -> str:
         for h in holdings
     ]
     tbl = _table(["Account", "Symbol", "Quantity", "Buy cost"], rows)
-    return charts + _section("Positions", tbl, _caveat())
+    return (
+        _section("At a glance", kpis)
+        + _section("Cost base by holding (top positions)", chart)
+        + _section("Positions", tbl, _caveat())
+    )
 
 
 def render_pages(store: dict, analytics: dict) -> dict[str, str]:
     """Render every analysis page as a full HTML document keyed by filename."""
-    foot = _scope(store)
+    data = _series_json(store, analytics)
+    foot = _scope(store) + data + _EXPLORER_SCRIPT
     return {
         "index.html": _page("Overview", "index.html", render_index(store, analytics), foot),
         "growth.html": _page("Growth", "growth.html", render_growth(store, analytics), foot),

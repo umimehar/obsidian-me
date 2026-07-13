@@ -13,6 +13,12 @@ _REGISTERED_GROUP = {
 }
 _INCOME_TYPES = {"DIV", "STKDIV", "INT"}
 
+# Wealthsimple reuses the "currency" column to carry the security symbol on
+# stock-dividend rows (whose amount is 0 and whose balance is a unit count, not
+# cash). Only these are real settlement currencies; anything else is skipped
+# from currency-keyed aggregations so tickers never appear as a "currency".
+_CASH_CURRENCIES = {"CAD", "USD"}
+
 # Annual context figures. RESP is the CESG-matched annual amount (grant maxes at
 # 20% of $2,500), not the $50,000 lifetime contribution limit.
 CONTRIBUTION_LIMITS: dict[str, dict[str, float]] = {
@@ -41,6 +47,8 @@ def _contributions(store: dict, kinds: dict[str, str]) -> dict:
     per_group: dict[tuple[str, int], float] = defaultdict(float)
     grants: dict[int, float] = defaultdict(float)
     for txn in store["transactions"]:
+        if txn["currency"] not in _CASH_CURRENCIES:
+            continue
         year = _year(txn["date"])
         if txn["type"] == "CONTRIB":
             acct, currency = txn["account_id"], txn["currency"]
@@ -80,6 +88,8 @@ def _cash_flow(store: dict, kinds: dict[str, str]) -> list[dict]:
     for txn in store["transactions"]:
         if txn["type"] in {"LENDING", "REORG"} or txn["amount"] == 0:
             continue
+        if txn["currency"] not in _CASH_CURRENCIES:
+            continue
         if kinds.get(txn["account_id"]) == "CreditCard":
             continue
         bucket = flow[(txn["account_id"], _month(txn["date"]), txn["currency"])]
@@ -106,6 +116,8 @@ def _income(store: dict) -> dict:
     by_symbol: dict[tuple[str, str], float] = defaultdict(float)
     for txn in store["transactions"]:
         if txn["type"] not in _INCOME_TYPES or txn["amount"] <= 0:
+            continue
+        if txn["currency"] not in _CASH_CURRENCIES:
             continue
         currency = txn["currency"]
         by_month[(_month(txn["date"]), currency)] += txn["amount"]
@@ -157,7 +169,7 @@ def _balances(store: dict) -> list[dict]:
     exact_kinds = {"Chequing", "Savings", "USD"}
     last: dict[tuple[str, str], tuple[str, float, str]] = {}
     for txn in store["transactions"]:
-        if txn["balance"] is None:
+        if txn["balance"] is None or txn["currency"] not in _CASH_CURRENCIES:
             continue
         key = (txn["account_id"], _month(txn["date"]))
         prev = last.get(key)
@@ -175,6 +187,49 @@ def _balances(store: dict) -> list[dict]:
     ]
 
 
+def _monthly_series(store: dict, kinds: dict[str, str]) -> list[dict]:
+    """One compact record per account-month-currency for client-side interactive views.
+
+    Carries the four headline metrics (income, contrib, net cash flow, month-end
+    balance) so the pages can re-aggregate by year or month and filter by account
+    without re-reading the raw transactions. Credit card accounts are excluded from
+    net cash flow for the same reason as _cash_flow.
+    """
+    acc: dict[tuple[str, str, str], dict[str, float]] = defaultdict(
+        lambda: {"income": 0.0, "contrib": 0.0, "net": 0.0}
+    )
+    bal: dict[tuple[str, str, str], tuple[str, float]] = {}
+    for txn in store["transactions"]:
+        if txn["currency"] not in _CASH_CURRENCIES:
+            continue
+        key = (txn["account_id"], _month(txn["date"]), txn["currency"])
+        rec = acc[key]
+        ttype, amount = txn["type"], txn["amount"]
+        if ttype in _INCOME_TYPES and amount > 0:
+            rec["income"] += amount
+        if ttype == "CONTRIB":
+            rec["contrib"] += amount
+        if ttype not in {"LENDING", "REORG"} and amount != 0 and kinds.get(key[0]) != "CreditCard":
+            rec["net"] += amount
+        if txn["balance"] is not None:
+            prev = bal.get(key)
+            if prev is None or txn["date"] >= prev[0]:
+                bal[key] = (txn["date"], txn["balance"])
+    return [
+        {
+            "account_id": a,
+            "kind": kinds.get(a, "Other"),
+            "currency": c,
+            "month": m,
+            "income": round(v["income"], 2),
+            "contrib": round(v["contrib"], 2),
+            "net": round(v["net"], 2),
+            "balance": round(bal[(a, m, c)][1], 2) if (a, m, c) in bal else None,
+        }
+        for (a, m, c), v in sorted(acc.items())
+    ]
+
+
 def compute_analytics(store: dict) -> dict:
     """Compute all analytic aggregations from a datastore dict."""
     kinds = _kinds(store)
@@ -184,4 +239,5 @@ def compute_analytics(store: dict) -> dict:
         "income": _income(store),
         "holdings": _holdings(store),
         "balances": _balances(store),
+        "monthly_series": _monthly_series(store, kinds),
     }
