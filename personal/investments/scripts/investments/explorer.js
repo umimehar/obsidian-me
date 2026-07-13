@@ -221,13 +221,13 @@
       head.textContent = k[0];
       if (k[2]) {
         var hint = document.createElement("span");
-        hint.className = "kpi-hint";
+        hint.className = "hint";
         hint.setAttribute("tabindex", "0");
         hint.setAttribute("role", "note");
         hint.setAttribute("aria-label", k[2]);
         hint.textContent = "i";
         var bubble = document.createElement("span");
-        bubble.className = "kpi-bubble";
+        bubble.className = "hint-bubble";
         bubble.textContent = k[2];
         hint.appendChild(bubble);
         head.appendChild(hint);

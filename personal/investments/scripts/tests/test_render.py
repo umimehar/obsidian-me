@@ -129,15 +129,22 @@ def test_no_real_account_code_in_pages():
         assert "XX0TEST001CAD" not in html
 
 
-def test_pages_embed_interactive_series_and_controls():
+def test_subpages_embed_interactive_series_and_controls():
     pages = render_pages(_store(), _analytics())
-    for name in ("index.html", "growth.html", "cash-flow.html", "income.html"):
+    for name in ("growth.html", "cash-flow.html", "income.html"):
         html = pages[name]
         assert 'id="ex-data"' in html
         assert 'class="section explorer"' in html
         assert 'data-period="year"' in html
         assert 'data-period="month"' in html
         assert '"month": "2025-03"' in html
+
+
+def test_index_is_the_ledger_dashboard():
+    html = render_pages(_store(), _analytics())["index.html"]
+    assert "The Ledger" in html
+    assert 'id="ledger-data"' in html
+    assert 'id="ld-chart"' in html
 
 
 def test_index_total_contributions_covers_all_accounts():
@@ -154,7 +161,7 @@ def test_index_total_contributions_covers_all_accounts():
         },
     ]
     html = render_pages(store, analytics)["index.html"]
-    assert "$10,000.00" in html
+    assert "$10,000" in html
 
 
 def _multi_currency_analytics():
@@ -259,9 +266,10 @@ def test_render_cash_flow_does_not_sum_currencies():
     assert "797" not in html
 
 
-def test_render_index_income_kpi_does_not_sum_currencies():
+def test_render_index_income_does_not_sum_currencies():
+    # The dashboard reports CAD figures; USD income is not folded into the CAD
+    # total, so the cross-currency sum never appears.
     pages = render_pages(_multi_currency_store(), _multi_currency_analytics())
     html = pages["index.html"]
-    assert "100" in html
-    assert "50" in html
-    assert "150" not in html
+    assert "$100" in html
+    assert "$150" not in html
