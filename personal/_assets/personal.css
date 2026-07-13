@@ -1,0 +1,327 @@
+/* Shared stylesheet for every personal HTML page.
+   Premium light/dark financial dashboard. Theme switches on [data-theme] set by
+   each page's inline toggle; charts read the --chart-* tokens so inline SVG
+   fills adapt to the active theme. Palette derived from the validated dataviz
+   reference instance. No external resources. */
+
+:root {
+  --page:        #f4f2ec;
+  --surface:     #fcfcfb;
+  --surface-2:   #f6f5f1;
+  --shell:       rgba(11, 11, 11, 0.04);
+  --hairline:    rgba(11, 11, 11, 0.10);
+  --ink:         #16150f;
+  --ink-2:       #52514e;
+  --muted:       #898781;
+  --accent:      #2a78d6;
+  --good:        #006300;
+
+  --chart-1:     #2a78d6;
+  --chart-axis:  #c3c2b7;
+  --chart-grid:  #e1e0d9;
+
+  --radius-lg:   28px;
+  --radius-md:   20px;
+  --radius-sm:   12px;
+  --shadow:      0 24px 60px -32px rgba(20, 19, 12, 0.35);
+  --ease:        cubic-bezier(0.32, 0.72, 0, 1);
+
+  --serif: ui-serif, "New York", Georgia, "Times New Roman", serif;
+  --sans:  system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+[data-theme="dark"] {
+  --page:        #0b0b0a;
+  --surface:     #1a1a19;
+  --surface-2:   #201f1d;
+  --shell:       rgba(255, 255, 255, 0.05);
+  --hairline:    rgba(255, 255, 255, 0.10);
+  --ink:         #f6f5ef;
+  --ink-2:       #c3c2b7;
+  --muted:       #8f8d86;
+  --accent:      #3987e5;
+  --good:        #0ca30c;
+
+  --chart-1:     #3987e5;
+  --chart-axis:  #383835;
+  --chart-grid:  #2c2c2a;
+  --shadow:      0 30px 70px -34px rgba(0, 0, 0, 0.75);
+}
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background:
+    radial-gradient(120% 90% at 12% -10%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 60%),
+    var(--page);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  transition: background 0.6s var(--ease), color 0.6s var(--ease);
+}
+
+/* Topbar --------------------------------------------------------------- */
+.topbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 56px 24px 20px;
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: var(--ink-2);
+}
+
+.brand-title {
+  margin: 14px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 18px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.14);
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+.theme-toggle:hover { border-color: var(--accent); }
+.theme-toggle:active { transform: scale(0.97); }
+
+.theme-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 22%, transparent);
+}
+
+/* Nav ------------------------------------------------------------------ */
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.nav-link {
+  padding: 8px 15px;
+  border-radius: 999px;
+  color: var(--ink-2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease);
+}
+.nav-link:hover { background: var(--shell); color: var(--ink); }
+.nav-link.active {
+  background: var(--ink);
+  color: var(--page);
+}
+
+/* Page + cards --------------------------------------------------------- */
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 28px 24px 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.card {
+  padding: 7px;
+  border-radius: var(--radius-lg);
+  background: var(--shell);
+  border: 1px solid var(--hairline);
+}
+
+.card-inner {
+  padding: clamp(20px, 3vw, 34px);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--shadow), inset 0 1px 1px rgba(255, 255, 255, 0.16);
+}
+
+.section-title {
+  margin: 0 0 18px;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+/* KPI tiles ------------------------------------------------------------ */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.kpi {
+  padding: 20px 22px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.kpi-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+.kpi-value {
+  font-family: var(--serif);
+  font-size: 1.9rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quick links ---------------------------------------------------------- */
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+.quick-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 500;
+  transition: transform 0.5s var(--ease), border-color 0.5s var(--ease);
+}
+.quick-link:hover { transform: translateY(-2px); border-color: var(--accent); }
+.quick-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--shell);
+  color: var(--ink-2);
+}
+
+/* Tables --------------------------------------------------------------- */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+thead th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  background: var(--surface-2);
+}
+tbody td {
+  padding: 12px 16px;
+  border-top: 1px solid var(--hairline);
+  color: var(--ink-2);
+}
+tbody tr:hover td { color: var(--ink); background: var(--surface-2); }
+
+/* Charts --------------------------------------------------------------- */
+.chart {
+  display: block;
+  width: 100%;
+  margin-bottom: 4px;
+  overflow: visible;
+}
+.chart-label {
+  fill: var(--muted);
+  font-family: var(--sans);
+  font-size: 11px;
+}
+.chart-empty {
+  fill: var(--muted);
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+/* Caveat --------------------------------------------------------------- */
+.caveat {
+  margin: 16px 0 0;
+  padding: 12px 16px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 12.5px;
+}
+
+/* Scope footer -------------------------------------------------------- */
+.scope {
+  margin-top: 4px;
+  padding: 14px 4px 0;
+  color: var(--muted);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 40px 16px 16px;
+  }
+  .nav { padding: 0 16px; }
+  .page { padding: 22px 16px 72px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
