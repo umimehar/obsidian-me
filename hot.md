@@ -13,7 +13,7 @@ Scannable cache of active endeavors and recent session context. Read this first.
 
 ## Active endeavors
 
-_None yet. Create one under `personal/<name>/` (taxes, applications, certifications) or a code project under `projects/<name>/`._
+- **[[personal/investments/README|investments]]** — Wealthsimple statement pipeline (parse, classify, mask, datastore, analytics, render) built and run against real statements: 8050 transactions across 18 accounts, six HTML pages in `notes/`. See `personal/investments/log/2026-07-13.md`.
 
 ## Recent sessions
 

@@ -62,8 +62,7 @@ def _contributions(store: dict, kinds: dict[str, str]) -> dict:
             for (a, y, c), v in sorted(per_acct.items())
         ],
         "by_registered_year": [
-            {"group": g, "year": y, "total": round(v, 2)}
-            for (g, y), v in sorted(per_group.items())
+            {"group": g, "year": y, "total": round(v, 2)} for (g, y), v in sorted(per_group.items())
         ],
         "resp_grants": [{"year": y, "total": round(v, 2)} for y, v in sorted(grants.items())],
         "limits": CONTRIBUTION_LIMITS,

@@ -102,8 +102,12 @@ def test_card_refund_is_card_refund():
         source_file="c.csv",
         schema=SCHEMA_CARD,
         fields={
-            "transaction_date": "2026-05-01", "post_date": "2026-05-02",
-            "type": "Refund settled", "details": "AMZN", "amount": "-9.99", "currency": "CAD",
+            "transaction_date": "2026-05-01",
+            "post_date": "2026-05-02",
+            "type": "Refund settled",
+            "details": "AMZN",
+            "amount": "-9.99",
+            "currency": "CAD",
         },
     )
     assert classify(row).type == "CARD_REFUND"

@@ -11,9 +11,14 @@ def _store(transactions, accounts=None):
 
 def _txn(account_id, date, ttype, amount, **kw):
     base = {
-        "account_id": account_id, "date": date, "type": ttype, "amount": amount,
-        "symbol": kw.get("symbol"), "quantity": kw.get("quantity"),
-        "unit_price": kw.get("unit_price"), "balance": kw.get("balance"),
+        "account_id": account_id,
+        "date": date,
+        "type": ttype,
+        "amount": amount,
+        "symbol": kw.get("symbol"),
+        "quantity": kw.get("quantity"),
+        "unit_price": kw.get("unit_price"),
+        "balance": kw.get("balance"),
         "currency": kw.get("currency", "CAD"),
     }
     return base

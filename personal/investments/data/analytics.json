@@ -1,0 +1,7608 @@
+{
+  "contributions": {
+    "by_account_year": [
+      {
+        "account_id": "acct_231879ac",
+        "kind": "RRSP",
+        "year": 2025,
+        "currency": "CAD",
+        "total": 3000.0
+      },
+      {
+        "account_id": "acct_231879ac",
+        "kind": "RRSP",
+        "year": 2026,
+        "currency": "CAD",
+        "total": 11400.0
+      },
+      {
+        "account_id": "acct_91b82482",
+        "kind": "Other",
+        "year": 2026,
+        "currency": "CAD",
+        "total": 20000.0
+      },
+      {
+        "account_id": "acct_97100dd9",
+        "kind": "ManagedTFSA",
+        "year": 2023,
+        "currency": "CAD",
+        "total": 1000.0
+      },
+      {
+        "account_id": "acct_97100dd9",
+        "kind": "ManagedTFSA",
+        "year": 2024,
+        "currency": "CAD",
+        "total": 100.0
+      },
+      {
+        "account_id": "acct_97100dd9",
+        "kind": "ManagedTFSA",
+        "year": 2025,
+        "currency": "CAD",
+        "total": 3568.25
+      },
+      {
+        "account_id": "acct_97100dd9",
+        "kind": "ManagedTFSA",
+        "year": 2026,
+        "currency": "CAD",
+        "total": 856.75
+      },
+      {
+        "account_id": "acct_97ab4cb2",
+        "kind": "RRSP",
+        "year": 2026,
+        "currency": "CAD",
+        "total": 13600.0
+      },
+      {
+        "account_id": "acct_c2e9345e",
+        "kind": "RESP",
+        "year": 2026,
+        "currency": "CAD",
+        "total": 2550.0
+      },
+      {
+        "account_id": "acct_d6d9fb4a",
+        "kind": "PE",
+        "year": 2025,
+        "currency": "CAD",
+        "total": 12000.0
+      },
+      {
+        "account_id": "acct_d6d9fb4a",
+        "kind": "PE",
+        "year": 2026,
+        "currency": "CAD",
+        "total": 8000.0
+      },
+      {
+        "account_id": "acct_d77c33c7",
+        "kind": "TFSA",
+        "year": 2023,
+        "currency": "CAD",
+        "total": 2388.0
+      },
+      {
+        "account_id": "acct_d77c33c7",
+        "kind": "TFSA",
+        "year": 2024,
+        "currency": "CAD",
+        "total": 3933.0
+      },
+      {
+        "account_id": "acct_d77c33c7",
+        "kind": "TFSA",
+        "year": 2025,
+        "currency": "CAD",
+        "total": 21431.75
+      },
+      {
+        "account_id": "acct_d77c33c7",
+        "kind": "TFSA",
+        "year": 2026,
+        "currency": "CAD",
+        "total": 6143.25
+      },
+      {
+        "account_id": "acct_e2ec057d",
+        "kind": "FHSA",
+        "year": 2024,
+        "currency": "CAD",
+        "total": 8000.0
+      },
+      {
+        "account_id": "acct_e2ec057d",
+        "kind": "FHSA",
+        "year": 2025,
+        "currency": "CAD",
+        "total": 8000.0
+      },
+      {
+        "account_id": "acct_e2ec057d",
+        "kind": "FHSA",
+        "year": 2026,
+        "currency": "CAD",
+        "total": 8000.0
+      }
+    ],
+    "by_registered_year": [
+      {
+        "group": "FHSA",
+        "year": 2024,
+        "total": 8000.0
+      },
+      {
+        "group": "FHSA",
+        "year": 2025,
+        "total": 8000.0
+      },
+      {
+        "group": "FHSA",
+        "year": 2026,
+        "total": 8000.0
+      },
+      {
+        "group": "RESP",
+        "year": 2026,
+        "total": 2550.0
+      },
+      {
+        "group": "RRSP",
+        "year": 2025,
+        "total": 3000.0
+      },
+      {
+        "group": "RRSP",
+        "year": 2026,
+        "total": 25000.0
+      },
+      {
+        "group": "TFSA",
+        "year": 2023,
+        "total": 3388.0
+      },
+      {
+        "group": "TFSA",
+        "year": 2024,
+        "total": 4033.0
+      },
+      {
+        "group": "TFSA",
+        "year": 2025,
+        "total": 25000.0
+      },
+      {
+        "group": "TFSA",
+        "year": 2026,
+        "total": 7000.0
+      }
+    ],
+    "resp_grants": [
+      {
+        "year": 2026,
+        "total": 550.0
+      }
+    ],
+    "limits": {
+      "TFSA": {
+        "2022": 6000.0,
+        "2023": 6500.0,
+        "2024": 7000.0,
+        "2025": 7000.0,
+        "2026": 7000.0
+      },
+      "FHSA": {
+        "2023": 8000.0,
+        "2024": 8000.0,
+        "2025": 8000.0,
+        "2026": 8000.0
+      },
+      "RRSP": {
+        "2022": 29210.0,
+        "2023": 30780.0,
+        "2024": 31560.0,
+        "2025": 32490.0,
+        "2026": 33810.0
+      },
+      "RESP": {
+        "2022": 2500.0,
+        "2023": 2500.0,
+        "2024": 2500.0,
+        "2025": 2500.0,
+        "2026": 2500.0
+      }
+    }
+  },
+  "cash_flow": [
+    {
+      "account_id": "acct_18a334f1",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 500.0,
+      "outflow": 0.0,
+      "net": 500.0
+    },
+    {
+      "account_id": "acct_18a334f1",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 1700.0,
+      "outflow": -700.0,
+      "net": 1000.0
+    },
+    {
+      "account_id": "acct_18a334f1",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 2000.0,
+      "outflow": -2400.0,
+      "net": -400.0
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2025-10",
+      "currency": "CAD",
+      "inflow": 6000.0,
+      "outflow": -4984.72,
+      "net": 1015.28
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2025-11",
+      "currency": "CAD",
+      "inflow": 9662.64,
+      "outflow": -10147.72,
+      "net": -485.08
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2025-12",
+      "currency": "CAD",
+      "inflow": 2234.27,
+      "outflow": -2240.19,
+      "net": -5.92
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 8529.49,
+      "outflow": -8501.75,
+      "net": 27.74
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 4288.59,
+      "outflow": -4505.05,
+      "net": -216.46
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 8181.39,
+      "outflow": -7935.26,
+      "net": 246.13
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 1030.95,
+      "outflow": -1073.55,
+      "net": -42.6
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 1266.53,
+      "outflow": -1059.37,
+      "net": 207.16
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 1625.68,
+      "outflow": -1787.19,
+      "net": -161.51
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2025-09",
+      "currency": "CAD",
+      "inflow": 3996.4,
+      "outflow": -3996.4,
+      "net": -0.0
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2025-10",
+      "currency": "CAD",
+      "inflow": 1009.21,
+      "outflow": -995.06,
+      "net": 14.15
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2025-11",
+      "currency": "CAD",
+      "inflow": 20.23,
+      "outflow": -34.38,
+      "net": -14.15
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2025-12",
+      "currency": "CAD",
+      "inflow": 9.3,
+      "outflow": -9.3,
+      "net": 0.0
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2025-12",
+      "currency": "USD",
+      "inflow": 0.01,
+      "outflow": 0.0,
+      "net": 0.01
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 1074.58,
+      "outflow": -1074.57,
+      "net": 0.01
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 12.56,
+      "outflow": -12.56,
+      "net": 0.0
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 3006.88,
+      "outflow": -2500.01,
+      "net": 506.87
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 905.77,
+      "outflow": -812.65,
+      "net": 93.12
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 6111.43,
+      "outflow": -681.01,
+      "net": 5430.42
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 3335.22,
+      "outflow": -8636.47,
+      "net": -5301.25
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-06",
+      "currency": "USD",
+      "inflow": 6755.13,
+      "outflow": -5976.26,
+      "net": 778.87
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-07",
+      "currency": "CAD",
+      "inflow": 7349.39,
+      "outflow": -5860.87,
+      "net": 1488.52
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-08",
+      "currency": "CAD",
+      "inflow": 7290.51,
+      "outflow": -6782.98,
+      "net": 507.53
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-09",
+      "currency": "CAD",
+      "inflow": 4869.37,
+      "outflow": -5412.76,
+      "net": -543.39
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-10",
+      "currency": "CAD",
+      "inflow": 27458.06,
+      "outflow": -7500.0,
+      "net": 19958.06
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-11",
+      "currency": "CAD",
+      "inflow": 4740.22,
+      "outflow": -20000.0,
+      "net": -15259.78
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-12",
+      "currency": "CAD",
+      "inflow": 6404.93,
+      "outflow": -4352.06,
+      "net": 2052.87
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 7046.39,
+      "outflow": -14192.31,
+      "net": -7145.92
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 10081.67,
+      "outflow": -10277.17,
+      "net": -195.5
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 6493.4,
+      "outflow": -7128.5,
+      "net": -635.1
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 6543.47,
+      "outflow": -6312.06,
+      "net": 231.41
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 6229.77,
+      "outflow": -6492.88,
+      "net": -263.11
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 7316.97,
+      "outflow": -7356.94,
+      "net": -39.97
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2025-11",
+      "currency": "USD",
+      "inflow": 1431.66,
+      "outflow": -1431.62,
+      "net": 0.04
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2025-12",
+      "currency": "CAD",
+      "inflow": 1469.32,
+      "outflow": -966.3,
+      "net": 503.02
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2025-12",
+      "currency": "USD",
+      "inflow": 4.49,
+      "outflow": -4.49,
+      "net": 0.0
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 11109.5,
+      "outflow": -9012.51,
+      "net": 2096.99
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-01",
+      "currency": "USD",
+      "inflow": 575.52,
+      "outflow": -575.47,
+      "net": 0.05
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 6300.0,
+      "outflow": -8900.01,
+      "net": -2600.01
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-02",
+      "currency": "USD",
+      "inflow": 3078.9,
+      "outflow": -2859.86,
+      "net": 219.04
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 5026.96,
+      "outflow": -4518.01,
+      "net": 508.95
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-03",
+      "currency": "USD",
+      "inflow": 1.8,
+      "outflow": -219.39,
+      "net": -217.59
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 1018.04,
+      "outflow": -1026.99,
+      "net": -8.95
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-04",
+      "currency": "USD",
+      "inflow": 56.71,
+      "outflow": -50.28,
+      "net": 6.43
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 1813.31,
+      "outflow": -935.79,
+      "net": 877.52
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-05",
+      "currency": "USD",
+      "inflow": 0.0,
+      "outflow": -7.91,
+      "net": -7.91
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 2381.77,
+      "outflow": -3203.77,
+      "net": -822.0
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-06",
+      "currency": "USD",
+      "inflow": 4568.4,
+      "outflow": -4563.64,
+      "net": 4.76
+    },
+    {
+      "account_id": "acct_375fd2ca",
+      "month": "2023-07",
+      "currency": "CAD",
+      "inflow": 5.0,
+      "outflow": -5.0,
+      "net": 0.0
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-07",
+      "currency": "USD",
+      "inflow": 1418.98,
+      "outflow": 0.0,
+      "net": 1418.98
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-08",
+      "currency": "USD",
+      "inflow": 0.23,
+      "outflow": 0.0,
+      "net": 0.23
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-09",
+      "currency": "USD",
+      "inflow": 3.95,
+      "outflow": 0.0,
+      "net": 3.95
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-10",
+      "currency": "USD",
+      "inflow": 4.01,
+      "outflow": 0.0,
+      "net": 4.01
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-11",
+      "currency": "USD",
+      "inflow": 4.49,
+      "outflow": -1431.66,
+      "net": -1427.17
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-12",
+      "currency": "USD",
+      "inflow": 3.31,
+      "outflow": -3.31,
+      "net": 0.0
+    },
+    {
+      "account_id": "acct_3b7b8244",
+      "month": "2023-07",
+      "currency": "USD",
+      "inflow": 769.82,
+      "outflow": -769.81,
+      "net": 0.01
+    },
+    {
+      "account_id": "acct_3b7b8244",
+      "month": "2023-08",
+      "currency": "USD",
+      "inflow": 4.02,
+      "outflow": -4.03,
+      "net": -0.01
+    },
+    {
+      "account_id": "acct_8367cd66",
+      "month": "2025-12",
+      "currency": "CAD",
+      "inflow": 426.28,
+      "outflow": -332.74,
+      "net": 93.54
+    },
+    {
+      "account_id": "acct_8367cd66",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 1179.18,
+      "outflow": -1252.72,
+      "net": -73.54
+    },
+    {
+      "account_id": "acct_8367cd66",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 2846.18,
+      "outflow": -2865.18,
+      "net": -19.0
+    },
+    {
+      "account_id": "acct_8367cd66",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 516.79,
+      "outflow": -365.12,
+      "net": 151.67
+    },
+    {
+      "account_id": "acct_8367cd66",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 1236.27,
+      "outflow": -1388.94,
+      "net": -152.67
+    },
+    {
+      "account_id": "acct_8367cd66",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 372.21,
+      "outflow": -249.37,
+      "net": 122.84
+    },
+    {
+      "account_id": "acct_8367cd66",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 783.92,
+      "outflow": -847.01,
+      "net": -63.09
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2025-09",
+      "currency": "CAD",
+      "inflow": 23270.0,
+      "outflow": -3000.0,
+      "net": 20270.0
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2025-10",
+      "currency": "CAD",
+      "inflow": 24516.18,
+      "outflow": -20270.0,
+      "net": 4246.18
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2025-11",
+      "currency": "CAD",
+      "inflow": 1056.13,
+      "outflow": 0.0,
+      "net": 1056.13
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2025-12",
+      "currency": "CAD",
+      "inflow": 1046.46,
+      "outflow": 0.0,
+      "net": 1046.46
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 859.63,
+      "outflow": -24647.98,
+      "net": -23788.35
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 3760.99,
+      "outflow": -3591.41,
+      "net": 169.58
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 1481.94,
+      "outflow": -4379.62,
+      "net": -2897.68
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 22266.0,
+      "outflow": -2702.32,
+      "net": 19563.68
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 2800.0,
+      "outflow": -22400.0,
+      "net": -19600.0
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 0.0,
+      "outflow": -66.0,
+      "net": -66.0
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 20000.0,
+      "outflow": -0.49,
+      "net": 19999.51
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 5000.0,
+      "outflow": -24944.36,
+      "net": -19944.36
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 17099.48,
+      "outflow": -16962.03,
+      "net": 137.45
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 2000.0,
+      "outflow": -2081.64,
+      "net": -81.64
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 0.0,
+      "outflow": -17.75,
+      "net": -17.75
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 3343.91,
+      "outflow": -3199.38,
+      "net": 144.53
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-07",
+      "currency": "CAD",
+      "inflow": 1398.32,
+      "outflow": -894.99,
+      "net": 503.33
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-08",
+      "currency": "CAD",
+      "inflow": 825.54,
+      "outflow": -1326.31,
+      "net": -500.77
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-09",
+      "currency": "CAD",
+      "inflow": 3.56,
+      "outflow": -0.64,
+      "net": 2.92
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-10",
+      "currency": "CAD",
+      "inflow": 2.86,
+      "outflow": -3.7,
+      "net": -0.84
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-11",
+      "currency": "CAD",
+      "inflow": 222.25,
+      "outflow": -223.78,
+      "net": -1.53
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-12",
+      "currency": "CAD",
+      "inflow": 3.78,
+      "outflow": -0.62,
+      "net": 3.16
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-01",
+      "currency": "CAD",
+      "inflow": 5.64,
+      "outflow": -7.23,
+      "net": -1.59
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-02",
+      "currency": "CAD",
+      "inflow": 1.79,
+      "outflow": -0.59,
+      "net": 1.2
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-03",
+      "currency": "CAD",
+      "inflow": 3.37,
+      "outflow": -4.88,
+      "net": -1.51
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-04",
+      "currency": "CAD",
+      "inflow": 2.69,
+      "outflow": -4.23,
+      "net": -1.54
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-05",
+      "currency": "CAD",
+      "inflow": 1.66,
+      "outflow": -0.65,
+      "net": 1.01
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-06",
+      "currency": "CAD",
+      "inflow": 4.08,
+      "outflow": -0.97,
+      "net": 3.11
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-07",
+      "currency": "CAD",
+      "inflow": 18.18,
+      "outflow": -22.09,
+      "net": -3.91
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-08",
+      "currency": "CAD",
+      "inflow": 1.7,
+      "outflow": -0.68,
+      "net": 1.02
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-09",
+      "currency": "CAD",
+      "inflow": 27.35,
+      "outflow": -27.24,
+      "net": 0.11
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-10",
+      "currency": "CAD",
+      "inflow": 204.04,
+      "outflow": -204.09,
+      "net": -0.05
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-11",
+      "currency": "CAD",
+      "inflow": 2.09,
+      "outflow": -0.78,
+      "net": 1.31
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-12",
+      "currency": "CAD",
+      "inflow": 266.27,
+      "outflow": -266.54,
+      "net": -0.27
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-01",
+      "currency": "CAD",
+      "inflow": 55.43,
+      "outflow": -56.03,
+      "net": -0.6
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-02",
+      "currency": "CAD",
+      "inflow": 74.93,
+      "outflow": -74.77,
+      "net": 0.16
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-03",
+      "currency": "CAD",
+      "inflow": 79.48,
+      "outflow": -76.67,
+      "net": 2.81
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-04",
+      "currency": "CAD",
+      "inflow": 1353.65,
+      "outflow": -1348.61,
+      "net": 5.04
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-05",
+      "currency": "CAD",
+      "inflow": 102.85,
+      "outflow": -107.07,
+      "net": -4.22
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-06",
+      "currency": "CAD",
+      "inflow": 164.56,
+      "outflow": -104.24,
+      "net": 60.32
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-07",
+      "currency": "CAD",
+      "inflow": 506.41,
+      "outflow": -165.56,
+      "net": 340.85
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-08",
+      "currency": "CAD",
+      "inflow": 253.41,
+      "outflow": -651.86,
+      "net": -398.45
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-09",
+      "currency": "CAD",
+      "inflow": 1386.61,
+      "outflow": -1376.27,
+      "net": 10.34
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-10",
+      "currency": "CAD",
+      "inflow": 1988.0,
+      "outflow": -1980.31,
+      "net": 7.69
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-11",
+      "currency": "CAD",
+      "inflow": 17.85,
+      "outflow": -19.2,
+      "net": -1.35
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-12",
+      "currency": "CAD",
+      "inflow": 417.31,
+      "outflow": -412.75,
+      "net": 4.56
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 885.43,
+      "outflow": -901.19,
+      "net": -15.76
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 2.07,
+      "outflow": -2.45,
+      "net": -0.38
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 16.54,
+      "outflow": -2.98,
+      "net": 13.56
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 13.19,
+      "outflow": -27.33,
+      "net": -14.14
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 23.79,
+      "outflow": -21.72,
+      "net": 2.07
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 58.74,
+      "outflow": -42.35,
+      "net": 16.39
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 2003.83,
+      "outflow": -1296.98,
+      "net": 706.85
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 1700.0,
+      "outflow": -1699.71,
+      "net": 0.29
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 8300.0,
+      "outflow": -7981.17,
+      "net": 318.83
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 1684.64,
+      "outflow": -1831.43,
+      "net": -146.79
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 2500.0,
+      "outflow": -2383.61,
+      "net": 116.39
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 500.0,
+      "outflow": -282.21,
+      "net": 217.79
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 53.23,
+      "outflow": -384.18,
+      "net": -330.95
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 13.42,
+      "outflow": -6.64,
+      "net": 6.78
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 200.0,
+      "outflow": -42.25,
+      "net": 157.75
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 302.5,
+      "outflow": -167.76,
+      "net": 134.74
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2025-11",
+      "currency": "CAD",
+      "inflow": 12000.0,
+      "outflow": -11953.48,
+      "net": 46.52
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2025-12",
+      "currency": "CAD",
+      "inflow": 11963.34,
+      "outflow": -11947.52,
+      "net": 15.82
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 0.0,
+      "outflow": -4.59,
+      "net": -4.59
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 0.0,
+      "outflow": -4.14,
+      "net": -4.14
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 0.0,
+      "outflow": -4.55,
+      "net": -4.55
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 81.8,
+      "outflow": -8.86,
+      "net": 72.94
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 8000.0,
+      "outflow": -7968.86,
+      "net": 31.14
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 12430.95,
+      "outflow": -12424.67,
+      "net": 6.28
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-07",
+      "currency": "CAD",
+      "inflow": 2200.0,
+      "outflow": -1900.0,
+      "net": 300.0
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-08",
+      "currency": "CAD",
+      "inflow": 97.5,
+      "outflow": -397.49,
+      "net": -299.99
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-09",
+      "currency": "CAD",
+      "inflow": 13.96,
+      "outflow": -11.6,
+      "net": 2.36
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-10",
+      "currency": "CAD",
+      "inflow": 107.57,
+      "outflow": -109.94,
+      "net": -2.37
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-11",
+      "currency": "CAD",
+      "inflow": 6.39,
+      "outflow": -6.38,
+      "net": 0.01
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-12",
+      "currency": "CAD",
+      "inflow": 17.68,
+      "outflow": -16.0,
+      "net": 1.68
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-01",
+      "currency": "CAD",
+      "inflow": 111.23,
+      "outflow": -11.91,
+      "net": 99.32
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-02",
+      "currency": "CAD",
+      "inflow": 205.21,
+      "outflow": -306.22,
+      "net": -101.01
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-03",
+      "currency": "CAD",
+      "inflow": 19.32,
+      "outflow": -19.26,
+      "net": 0.06
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-04",
+      "currency": "CAD",
+      "inflow": 9.53,
+      "outflow": -8.26,
+      "net": 1.27
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-05",
+      "currency": "CAD",
+      "inflow": 6.84,
+      "outflow": -8.11,
+      "net": -1.27
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-06",
+      "currency": "CAD",
+      "inflow": 18.15,
+      "outflow": -18.07,
+      "net": 0.08
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-07",
+      "currency": "CAD",
+      "inflow": 118.01,
+      "outflow": -116.85,
+      "net": 1.16
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-08",
+      "currency": "CAD",
+      "inflow": 1158.01,
+      "outflow": -1157.6,
+      "net": 0.41
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-09",
+      "currency": "CAD",
+      "inflow": 515.15,
+      "outflow": -505.5,
+      "net": 9.65
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-10",
+      "currency": "CAD",
+      "inflow": 829.01,
+      "outflow": -813.56,
+      "net": 15.45
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-11",
+      "currency": "CAD",
+      "inflow": 1052.06,
+      "outflow": -1076.12,
+      "net": -24.06
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-12",
+      "currency": "CAD",
+      "inflow": 1686.01,
+      "outflow": -1682.63,
+      "net": 3.38
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-01",
+      "currency": "CAD",
+      "inflow": 399.0,
+      "outflow": -385.29,
+      "net": 13.71
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-02",
+      "currency": "CAD",
+      "inflow": 379.09,
+      "outflow": -378.23,
+      "net": 0.86
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-03",
+      "currency": "CAD",
+      "inflow": 3947.25,
+      "outflow": -3940.02,
+      "net": 7.23
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-04",
+      "currency": "CAD",
+      "inflow": 3081.49,
+      "outflow": -3108.06,
+      "net": -26.57
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-05",
+      "currency": "CAD",
+      "inflow": 54.73,
+      "outflow": -54.73,
+      "net": 0.0
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-06",
+      "currency": "CAD",
+      "inflow": 401.19,
+      "outflow": -377.18,
+      "net": 24.01
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-07",
+      "currency": "CAD",
+      "inflow": 3588.29,
+      "outflow": -1881.52,
+      "net": 1706.77
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-08",
+      "currency": "CAD",
+      "inflow": 7058.73,
+      "outflow": -8469.41,
+      "net": -1410.68
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-09",
+      "currency": "CAD",
+      "inflow": 2324.41,
+      "outflow": -1836.79,
+      "net": 487.62
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-10",
+      "currency": "CAD",
+      "inflow": 4178.36,
+      "outflow": -3215.65,
+      "net": 962.71
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-10",
+      "currency": "USD",
+      "inflow": 596.94,
+      "outflow": -558.28,
+      "net": 38.66
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-11",
+      "currency": "CAD",
+      "inflow": 62.43,
+      "outflow": -1832.71,
+      "net": -1770.28
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-11",
+      "currency": "USD",
+      "inflow": 415.81,
+      "outflow": -453.73,
+      "net": -37.92
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-12",
+      "currency": "CAD",
+      "inflow": 115.75,
+      "outflow": -92.73,
+      "net": 23.02
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-12",
+      "currency": "USD",
+      "inflow": 2065.05,
+      "outflow": -2064.27,
+      "net": 0.78
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 23998.11,
+      "outflow": -22795.94,
+      "net": 1202.17
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-01",
+      "currency": "USD",
+      "inflow": 3368.44,
+      "outflow": -3369.96,
+      "net": -1.52
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 734.41,
+      "outflow": -1956.24,
+      "net": -1221.83
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-02",
+      "currency": "USD",
+      "inflow": 1041.68,
+      "outflow": -1041.6,
+      "net": 0.08
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 41.31,
+      "outflow": -33.6,
+      "net": 7.71
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-03",
+      "currency": "USD",
+      "inflow": 3.9,
+      "outflow": -0.58,
+      "net": 3.32
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 8924.77,
+      "outflow": -837.76,
+      "net": 8087.01
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-04",
+      "currency": "USD",
+      "inflow": 3118.12,
+      "outflow": -3121.52,
+      "net": -3.4
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 10262.13,
+      "outflow": -15743.32,
+      "net": -5481.19
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-05",
+      "currency": "USD",
+      "inflow": 0.06,
+      "outflow": 0.0,
+      "net": 0.06
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 3005.67,
+      "outflow": -4586.98,
+      "net": -1581.31
+    },
+    {
+      "account_id": "acct_e2d627ff",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 1060.0,
+      "outflow": -1010.0,
+      "net": 50.0
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2024-12",
+      "currency": "CAD",
+      "inflow": 9001.8,
+      "outflow": -9001.8,
+      "net": -0.0
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-01",
+      "currency": "CAD",
+      "inflow": 76.16,
+      "outflow": -60.4,
+      "net": 15.76
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-02",
+      "currency": "CAD",
+      "inflow": 2.51,
+      "outflow": -18.26,
+      "net": -15.75
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-03",
+      "currency": "CAD",
+      "inflow": 5320.02,
+      "outflow": -5301.08,
+      "net": 18.94
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-04",
+      "currency": "CAD",
+      "inflow": 3516.21,
+      "outflow": -3524.1,
+      "net": -7.89
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-05",
+      "currency": "CAD",
+      "inflow": 25.9,
+      "outflow": -24.1,
+      "net": 1.8
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-06",
+      "currency": "CAD",
+      "inflow": 37.08,
+      "outflow": -29.45,
+      "net": 7.63
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-07",
+      "currency": "CAD",
+      "inflow": 2009.47,
+      "outflow": -2029.61,
+      "net": -20.14
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-08",
+      "currency": "CAD",
+      "inflow": 135.35,
+      "outflow": -88.93,
+      "net": 46.42
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-09",
+      "currency": "CAD",
+      "inflow": 692.9,
+      "outflow": -734.25,
+      "net": -41.35
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-10",
+      "currency": "CAD",
+      "inflow": 81.04,
+      "outflow": -86.43,
+      "net": -5.39
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-10",
+      "currency": "USD",
+      "inflow": 42.29,
+      "outflow": -35.16,
+      "net": 7.13
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-11",
+      "currency": "CAD",
+      "inflow": 0.01,
+      "outflow": 0.0,
+      "net": 0.01
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-11",
+      "currency": "USD",
+      "inflow": 40.18,
+      "outflow": -45.93,
+      "net": -5.75
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-12",
+      "currency": "CAD",
+      "inflow": 1.87,
+      "outflow": -1.86,
+      "net": 0.01
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-12",
+      "currency": "USD",
+      "inflow": 1116.98,
+      "outflow": -1118.36,
+      "net": -1.38
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-01",
+      "currency": "CAD",
+      "inflow": 23128.47,
+      "outflow": -21126.43,
+      "net": 2002.04
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-01",
+      "currency": "USD",
+      "inflow": 3439.62,
+      "outflow": -4334.81,
+      "net": -895.19
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-02",
+      "currency": "CAD",
+      "inflow": 2568.01,
+      "outflow": -4425.05,
+      "net": -1857.04
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-02",
+      "currency": "USD",
+      "inflow": 1390.99,
+      "outflow": -495.8,
+      "net": 895.19
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-03",
+      "currency": "CAD",
+      "inflow": 15.88,
+      "outflow": -145.05,
+      "net": -129.17
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-03",
+      "currency": "USD",
+      "inflow": 0.01,
+      "outflow": 0.0,
+      "net": 0.01
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-04",
+      "currency": "CAD",
+      "inflow": 2543.15,
+      "outflow": -663.61,
+      "net": 1879.54
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-05",
+      "currency": "CAD",
+      "inflow": 0.01,
+      "outflow": -901.71,
+      "net": -901.7
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-06",
+      "currency": "CAD",
+      "inflow": 1953.23,
+      "outflow": -747.07,
+      "net": 1206.16
+    }
+  ],
+  "income": {
+    "by_month": [
+      {
+        "month": "2023-08",
+        "currency": "USD",
+        "total": 4.02
+      },
+      {
+        "month": "2023-09",
+        "currency": "CAD",
+        "total": 17.52
+      },
+      {
+        "month": "2023-10",
+        "currency": "CAD",
+        "total": 10.43
+      },
+      {
+        "month": "2023-11",
+        "currency": "CAD",
+        "total": 8.54
+      },
+      {
+        "month": "2023-12",
+        "currency": "CAD",
+        "total": 21.4
+      },
+      {
+        "month": "2024-01",
+        "currency": "CAD",
+        "total": 15.87
+      },
+      {
+        "month": "2024-02",
+        "currency": "CAD",
+        "total": 6.98
+      },
+      {
+        "month": "2024-03",
+        "currency": "CAD",
+        "total": 22.59
+      },
+      {
+        "month": "2024-04",
+        "currency": "CAD",
+        "total": 12.21
+      },
+      {
+        "month": "2024-05",
+        "currency": "CAD",
+        "total": 8.5
+      },
+      {
+        "month": "2024-06",
+        "currency": "CAD",
+        "total": 22.11
+      },
+      {
+        "month": "2024-07",
+        "currency": "CAD",
+        "total": 21.95
+      },
+      {
+        "month": "2024-08",
+        "currency": "CAD",
+        "total": 8.8
+      },
+      {
+        "month": "2024-09",
+        "currency": "CAD",
+        "total": 28.9
+      },
+      {
+        "month": "2024-10",
+        "currency": "CAD",
+        "total": 26.25
+      },
+      {
+        "month": "2024-11",
+        "currency": "CAD",
+        "total": 34.13
+      },
+      {
+        "month": "2024-12",
+        "currency": "CAD",
+        "total": 42.54
+      },
+      {
+        "month": "2025-01",
+        "currency": "CAD",
+        "total": 149.58
+      },
+      {
+        "month": "2025-02",
+        "currency": "CAD",
+        "total": 28.33
+      },
+      {
+        "month": "2025-03",
+        "currency": "CAD",
+        "total": 56.79
+      },
+      {
+        "month": "2025-04",
+        "currency": "CAD",
+        "total": 203.18
+      },
+      {
+        "month": "2025-05",
+        "currency": "CAD",
+        "total": 83.45
+      },
+      {
+        "month": "2025-06",
+        "currency": "CAD",
+        "total": 129.0
+      },
+      {
+        "month": "2025-07",
+        "currency": "CAD",
+        "total": 169.31
+      },
+      {
+        "month": "2025-08",
+        "currency": "CAD",
+        "total": 425.68
+      },
+      {
+        "month": "2025-08",
+        "currency": "USD",
+        "total": 0.23
+      },
+      {
+        "month": "2025-09",
+        "currency": "CAD",
+        "total": 423.21
+      },
+      {
+        "month": "2025-09",
+        "currency": "USD",
+        "total": 3.95
+      },
+      {
+        "month": "2025-10",
+        "currency": "CAD",
+        "total": 294.94
+      },
+      {
+        "month": "2025-10",
+        "currency": "USD",
+        "total": 241.57
+      },
+      {
+        "month": "2025-11",
+        "currency": "CAD",
+        "total": 173.0
+      },
+      {
+        "month": "2025-11",
+        "currency": "USD",
+        "total": 173.41
+      },
+      {
+        "month": "2025-12",
+        "currency": "CAD",
+        "total": 256.0
+      },
+      {
+        "month": "2025-12",
+        "currency": "USD",
+        "total": 173.96
+      },
+      {
+        "month": "2026-01",
+        "currency": "CAD",
+        "total": 261.94
+      },
+      {
+        "month": "2026-01",
+        "currency": "USD",
+        "total": 64.06
+      },
+      {
+        "month": "2026-02",
+        "currency": "CAD",
+        "total": 29.96
+      },
+      {
+        "month": "2026-02",
+        "currency": "USD",
+        "total": 9.9
+      },
+      {
+        "month": "2026-03",
+        "currency": "CAD",
+        "total": 239.71
+      },
+      {
+        "month": "2026-03",
+        "currency": "USD",
+        "total": 5.71
+      },
+      {
+        "month": "2026-04",
+        "currency": "CAD",
+        "total": 198.53
+      },
+      {
+        "month": "2026-04",
+        "currency": "USD",
+        "total": 9.44
+      },
+      {
+        "month": "2026-05",
+        "currency": "CAD",
+        "total": 30.07
+      },
+      {
+        "month": "2026-05",
+        "currency": "USD",
+        "total": 0.06
+      },
+      {
+        "month": "2026-06",
+        "currency": "CAD",
+        "total": 711.26
+      },
+      {
+        "month": "2026-06",
+        "currency": "USD",
+        "total": 6.07
+      }
+    ],
+    "by_symbol": [
+      {
+        "symbol": "JEPQ",
+        "currency": "CAD",
+        "total": 522.46
+      },
+      {
+        "symbol": "MSTY",
+        "currency": "CAD",
+        "total": 495.34
+      },
+      {
+        "symbol": "BCE",
+        "currency": "CAD",
+        "total": 348.12
+      },
+      {
+        "symbol": "MSTY",
+        "currency": "USD",
+        "total": 291.59
+      },
+      {
+        "symbol": "(cash)",
+        "currency": "CAD",
+        "total": 243.39
+      },
+      {
+        "symbol": "XEQT",
+        "currency": "CAD",
+        "total": 198.69
+      },
+      {
+        "symbol": "VFV",
+        "currency": "CAD",
+        "total": 182.98
+      },
+      {
+        "symbol": "IEFA",
+        "currency": "CAD",
+        "total": 178.5
+      },
+      {
+        "symbol": "QCN",
+        "currency": "CAD",
+        "total": 175.78
+      },
+      {
+        "symbol": "JEPQ",
+        "currency": "USD",
+        "total": 165.79
+      },
+      {
+        "symbol": "HMAX",
+        "currency": "CAD",
+        "total": 161.59
+      },
+      {
+        "symbol": "QMAX",
+        "currency": "CAD",
+        "total": 147.23
+      },
+      {
+        "symbol": "VOO",
+        "currency": "CAD",
+        "total": 111.94
+      },
+      {
+        "symbol": "CONY",
+        "currency": "USD",
+        "total": 105.27
+      },
+      {
+        "symbol": "CONY",
+        "currency": "CAD",
+        "total": 99.31
+      },
+      {
+        "symbol": "CAD",
+        "currency": "CAD",
+        "total": 81.8
+      },
+      {
+        "symbol": "AMZH",
+        "currency": "CAD",
+        "total": 81.41
+      },
+      {
+        "symbol": "TSLY",
+        "currency": "CAD",
+        "total": 80.68
+      },
+      {
+        "symbol": "UNH",
+        "currency": "CAD",
+        "total": 75.81
+      },
+      {
+        "symbol": "TSLY",
+        "currency": "USD",
+        "total": 75.35
+      },
+      {
+        "symbol": "TXF",
+        "currency": "CAD",
+        "total": 73.99
+      },
+      {
+        "symbol": "PSA",
+        "currency": "CAD",
+        "total": 59.98
+      },
+      {
+        "symbol": "SCHD",
+        "currency": "CAD",
+        "total": 59.87
+      },
+      {
+        "symbol": "ACWV",
+        "currency": "CAD",
+        "total": 55.94
+      },
+      {
+        "symbol": "EEMV",
+        "currency": "CAD",
+        "total": 52.0
+      },
+      {
+        "symbol": "CALL",
+        "currency": "CAD",
+        "total": 51.67
+      },
+      {
+        "symbol": "AP.UN",
+        "currency": "CAD",
+        "total": 38.77
+      },
+      {
+        "symbol": "VGRO",
+        "currency": "CAD",
+        "total": 37.74
+      },
+      {
+        "symbol": "BX",
+        "currency": "CAD",
+        "total": 36.05
+      },
+      {
+        "symbol": "ENB",
+        "currency": "CAD",
+        "total": 32.56
+      },
+      {
+        "symbol": "ZFL",
+        "currency": "CAD",
+        "total": 31.33
+      },
+      {
+        "symbol": "TD",
+        "currency": "CAD",
+        "total": 29.88
+      },
+      {
+        "symbol": "NPI",
+        "currency": "CAD",
+        "total": 28.41
+      },
+      {
+        "symbol": "ZEA",
+        "currency": "CAD",
+        "total": 28.07
+      },
+      {
+        "symbol": "XFN",
+        "currency": "CAD",
+        "total": 27.42
+      },
+      {
+        "symbol": "BAM",
+        "currency": "CAD",
+        "total": 25.7
+      },
+      {
+        "symbol": "QUU",
+        "currency": "CAD",
+        "total": 24.62
+      },
+      {
+        "symbol": "ZAG",
+        "currency": "CAD",
+        "total": 24.22
+      },
+      {
+        "symbol": "(cash)",
+        "currency": "USD",
+        "total": 17.7
+      },
+      {
+        "symbol": "GSWO",
+        "currency": "CAD",
+        "total": 15.51
+      },
+      {
+        "symbol": "L",
+        "currency": "CAD",
+        "total": 14.16
+      },
+      {
+        "symbol": "MSFT",
+        "currency": "CAD",
+        "total": 13.01
+      },
+      {
+        "symbol": "QQQY",
+        "currency": "CAD",
+        "total": 12.54
+      },
+      {
+        "symbol": "GLOV",
+        "currency": "CAD",
+        "total": 11.98
+      },
+      {
+        "symbol": "SCHD",
+        "currency": "USD",
+        "total": 11.08
+      },
+      {
+        "symbol": "ZCB",
+        "currency": "CAD",
+        "total": 9.7
+      },
+      {
+        "symbol": "ZCS",
+        "currency": "CAD",
+        "total": 9.51
+      },
+      {
+        "symbol": "ORCL",
+        "currency": "USD",
+        "total": 9.38
+      },
+      {
+        "symbol": "META",
+        "currency": "USD",
+        "total": 8.64
+      },
+      {
+        "symbol": "BABA",
+        "currency": "CAD",
+        "total": 7.19
+      },
+      {
+        "symbol": "CNQ",
+        "currency": "CAD",
+        "total": 7.04
+      },
+      {
+        "symbol": "TQQQ",
+        "currency": "USD",
+        "total": 5.64
+      },
+      {
+        "symbol": "ZMMK",
+        "currency": "CAD",
+        "total": 4.91
+      },
+      {
+        "symbol": "QQC",
+        "currency": "CAD",
+        "total": 4.86
+      },
+      {
+        "symbol": "GOOG",
+        "currency": "CAD",
+        "total": 4.61
+      },
+      {
+        "symbol": "ZUAG.F",
+        "currency": "CAD",
+        "total": 4.39
+      },
+      {
+        "symbol": "ZHY",
+        "currency": "CAD",
+        "total": 4.06
+      },
+      {
+        "symbol": "XOM",
+        "currency": "CAD",
+        "total": 4.02
+      },
+      {
+        "symbol": "AAPL",
+        "currency": "CAD",
+        "total": 3.69
+      },
+      {
+        "symbol": "AVGO",
+        "currency": "CAD",
+        "total": 3.33
+      },
+      {
+        "symbol": "JNJ",
+        "currency": "CAD",
+        "total": 3.13
+      },
+      {
+        "symbol": "CVX",
+        "currency": "CAD",
+        "total": 2.98
+      },
+      {
+        "symbol": "VZ",
+        "currency": "CAD",
+        "total": 2.88
+      },
+      {
+        "symbol": "NVDA",
+        "currency": "CAD",
+        "total": 2.84
+      },
+      {
+        "symbol": "PFE",
+        "currency": "CAD",
+        "total": 2.67
+      },
+      {
+        "symbol": "PG",
+        "currency": "CAD",
+        "total": 2.65
+      },
+      {
+        "symbol": "ABBV",
+        "currency": "CAD",
+        "total": 2.37
+      },
+      {
+        "symbol": "PEP",
+        "currency": "CAD",
+        "total": 2.3
+      },
+      {
+        "symbol": "GS",
+        "currency": "CAD",
+        "total": 2.18
+      },
+      {
+        "symbol": "PGR",
+        "currency": "CAD",
+        "total": 2.12
+      },
+      {
+        "symbol": "BAC",
+        "currency": "CAD",
+        "total": 2.06
+      },
+      {
+        "symbol": "NKE",
+        "currency": "CAD",
+        "total": 1.99
+      },
+      {
+        "symbol": "WFC",
+        "currency": "CAD",
+        "total": 1.89
+      },
+      {
+        "symbol": "HD",
+        "currency": "CAD",
+        "total": 1.83
+      },
+      {
+        "symbol": "GOOGL",
+        "currency": "CAD",
+        "total": 1.77
+      },
+      {
+        "symbol": "PM",
+        "currency": "CAD",
+        "total": 1.55
+      },
+      {
+        "symbol": "UPS",
+        "currency": "CAD",
+        "total": 1.54
+      },
+      {
+        "symbol": "APO",
+        "currency": "USD",
+        "total": 1.53
+      },
+      {
+        "symbol": "XEG",
+        "currency": "CAD",
+        "total": 1.5
+      },
+      {
+        "symbol": "UNP",
+        "currency": "CAD",
+        "total": 1.38
+      },
+      {
+        "symbol": "AMGN",
+        "currency": "CAD",
+        "total": 1.37
+      },
+      {
+        "symbol": "MCD",
+        "currency": "CAD",
+        "total": 1.33
+      },
+      {
+        "symbol": "CME",
+        "currency": "CAD",
+        "total": 1.33
+      },
+      {
+        "symbol": "SO",
+        "currency": "CAD",
+        "total": 1.32
+      },
+      {
+        "symbol": "LLY",
+        "currency": "CAD",
+        "total": 1.3
+      },
+      {
+        "symbol": "KO",
+        "currency": "CAD",
+        "total": 1.29
+      },
+      {
+        "symbol": "CSCO",
+        "currency": "CAD",
+        "total": 1.25
+      },
+      {
+        "symbol": "MRK",
+        "currency": "CAD",
+        "total": 1.24
+      },
+      {
+        "symbol": "PLD",
+        "currency": "CAD",
+        "total": 1.22
+      },
+      {
+        "symbol": "NEE",
+        "currency": "CAD",
+        "total": 1.2
+      },
+      {
+        "symbol": "META",
+        "currency": "CAD",
+        "total": 1.19
+      },
+      {
+        "symbol": "EXR",
+        "currency": "CAD",
+        "total": 1.17
+      },
+      {
+        "symbol": "ETR",
+        "currency": "CAD",
+        "total": 1.16
+      },
+      {
+        "symbol": "COP",
+        "currency": "CAD",
+        "total": 1.15
+      },
+      {
+        "symbol": "BLK",
+        "currency": "CAD",
+        "total": 1.14
+      },
+      {
+        "symbol": "EXC",
+        "currency": "CAD",
+        "total": 1.11
+      },
+      {
+        "symbol": "V",
+        "currency": "CAD",
+        "total": 1.1
+      },
+      {
+        "symbol": "TXN",
+        "currency": "CAD",
+        "total": 1.08
+      },
+      {
+        "symbol": "KHC",
+        "currency": "CAD",
+        "total": 1.07
+      },
+      {
+        "symbol": "WMT",
+        "currency": "CAD",
+        "total": 1.05
+      },
+      {
+        "symbol": "DOW",
+        "currency": "CAD",
+        "total": 1.04
+      },
+      {
+        "symbol": "GILD",
+        "currency": "CAD",
+        "total": 1.03
+      },
+      {
+        "symbol": "SPG",
+        "currency": "CAD",
+        "total": 1.02
+      },
+      {
+        "symbol": "C",
+        "currency": "CAD",
+        "total": 1.01
+      },
+      {
+        "symbol": "QCOM",
+        "currency": "CAD",
+        "total": 1.0
+      },
+      {
+        "symbol": "WEC",
+        "currency": "CAD",
+        "total": 1.0
+      },
+      {
+        "symbol": "JPM",
+        "currency": "CAD",
+        "total": 0.95
+      },
+      {
+        "symbol": "RTX",
+        "currency": "CAD",
+        "total": 0.93
+      },
+      {
+        "symbol": "T",
+        "currency": "CAD",
+        "total": 0.92
+      },
+      {
+        "symbol": "MO",
+        "currency": "CAD",
+        "total": 0.91
+      },
+      {
+        "symbol": "LMT",
+        "currency": "CAD",
+        "total": 0.85
+      },
+      {
+        "symbol": "IBM",
+        "currency": "CAD",
+        "total": 0.84
+      },
+      {
+        "symbol": "BMY",
+        "currency": "CAD",
+        "total": 0.84
+      },
+      {
+        "symbol": "ABT",
+        "currency": "CAD",
+        "total": 0.83
+      },
+      {
+        "symbol": "SBUX",
+        "currency": "CAD",
+        "total": 0.83
+      },
+      {
+        "symbol": "USB",
+        "currency": "CAD",
+        "total": 0.83
+      },
+      {
+        "symbol": "EOG",
+        "currency": "CAD",
+        "total": 0.82
+      },
+      {
+        "symbol": "TRV",
+        "currency": "CAD",
+        "total": 0.8
+      },
+      {
+        "symbol": "CVS",
+        "currency": "CAD",
+        "total": 0.78
+      },
+      {
+        "symbol": "COF",
+        "currency": "CAD",
+        "total": 0.76
+      },
+      {
+        "symbol": "TFC",
+        "currency": "CAD",
+        "total": 0.75
+      },
+      {
+        "symbol": "ITW",
+        "currency": "CAD",
+        "total": 0.75
+      },
+      {
+        "symbol": "AEP",
+        "currency": "CAD",
+        "total": 0.74
+      },
+      {
+        "symbol": "EQIX",
+        "currency": "CAD",
+        "total": 0.74
+      },
+      {
+        "symbol": "GEN",
+        "currency": "CAD",
+        "total": 0.74
+      },
+      {
+        "symbol": "LIN",
+        "currency": "CAD",
+        "total": 0.69
+      },
+      {
+        "symbol": "HON",
+        "currency": "CAD",
+        "total": 0.68
+      },
+      {
+        "symbol": "WMB",
+        "currency": "CAD",
+        "total": 0.68
+      },
+      {
+        "symbol": "TJX",
+        "currency": "CAD",
+        "total": 0.68
+      },
+      {
+        "symbol": "GPN",
+        "currency": "CAD",
+        "total": 0.65
+      },
+      {
+        "symbol": "GPC",
+        "currency": "CAD",
+        "total": 0.64
+      },
+      {
+        "symbol": "MS",
+        "currency": "CAD",
+        "total": 0.63
+      },
+      {
+        "symbol": "TMUS",
+        "currency": "CAD",
+        "total": 0.59
+      },
+      {
+        "symbol": "SLB",
+        "currency": "CAD",
+        "total": 0.56
+      },
+      {
+        "symbol": "MDT",
+        "currency": "CAD",
+        "total": 0.56
+      },
+      {
+        "symbol": "CAT",
+        "currency": "CAD",
+        "total": 0.56
+      },
+      {
+        "symbol": "WELL",
+        "currency": "CAD",
+        "total": 0.55
+      },
+      {
+        "symbol": "NDAQ",
+        "currency": "CAD",
+        "total": 0.55
+      },
+      {
+        "symbol": "TGT",
+        "currency": "CAD",
+        "total": 0.54
+      },
+      {
+        "symbol": "COST",
+        "currency": "CAD",
+        "total": 0.52
+      },
+      {
+        "symbol": "KVUE",
+        "currency": "CAD",
+        "total": 0.52
+      },
+      {
+        "symbol": "AMT",
+        "currency": "CAD",
+        "total": 0.51
+      },
+      {
+        "symbol": "ADI",
+        "currency": "CAD",
+        "total": 0.49
+      },
+      {
+        "symbol": "DLR",
+        "currency": "CAD",
+        "total": 0.49
+      },
+      {
+        "symbol": "NOC",
+        "currency": "CAD",
+        "total": 0.48
+      },
+      {
+        "symbol": "D",
+        "currency": "CAD",
+        "total": 0.46
+      },
+      {
+        "symbol": "AMAT",
+        "currency": "CAD",
+        "total": 0.44
+      },
+      {
+        "symbol": "CI",
+        "currency": "CAD",
+        "total": 0.44
+      },
+      {
+        "symbol": "ZWB",
+        "currency": "CAD",
+        "total": 0.44
+      },
+      {
+        "symbol": "DIS",
+        "currency": "CAD",
+        "total": 0.43
+      },
+      {
+        "symbol": "GD",
+        "currency": "CAD",
+        "total": 0.43
+      },
+      {
+        "symbol": "AWK",
+        "currency": "CAD",
+        "total": 0.43
+      },
+      {
+        "symbol": "CMCSA",
+        "currency": "CAD",
+        "total": 0.43
+      },
+      {
+        "symbol": "AFL",
+        "currency": "CAD",
+        "total": 0.42
+      },
+      {
+        "symbol": "PSX",
+        "currency": "CAD",
+        "total": 0.42
+      },
+      {
+        "symbol": "O",
+        "currency": "CAD",
+        "total": 0.41
+      },
+      {
+        "symbol": "VOOG",
+        "currency": "USD",
+        "total": 0.41
+      },
+      {
+        "symbol": "ACN",
+        "currency": "CAD",
+        "total": 0.4
+      },
+      {
+        "symbol": "KMI",
+        "currency": "CAD",
+        "total": 0.39
+      },
+      {
+        "symbol": "EMR",
+        "currency": "CAD",
+        "total": 0.39
+      },
+      {
+        "symbol": "ECL",
+        "currency": "CAD",
+        "total": 0.39
+      },
+      {
+        "symbol": "ETN",
+        "currency": "CAD",
+        "total": 0.38
+      },
+      {
+        "symbol": "F",
+        "currency": "CAD",
+        "total": 0.37
+      },
+      {
+        "symbol": "LOW",
+        "currency": "CAD",
+        "total": 0.37
+      },
+      {
+        "symbol": "FANG",
+        "currency": "CAD",
+        "total": 0.37
+      },
+      {
+        "symbol": "BNY",
+        "currency": "CAD",
+        "total": 0.37
+      },
+      {
+        "symbol": "OKE",
+        "currency": "CAD",
+        "total": 0.36
+      },
+      {
+        "symbol": "HIG",
+        "currency": "CAD",
+        "total": 0.36
+      },
+      {
+        "symbol": "EBAY",
+        "currency": "CAD",
+        "total": 0.36
+      },
+      {
+        "symbol": "SPGI",
+        "currency": "CAD",
+        "total": 0.35
+      },
+      {
+        "symbol": "OMC",
+        "currency": "CAD",
+        "total": 0.35
+      },
+      {
+        "symbol": "CARR",
+        "currency": "CAD",
+        "total": 0.34
+      },
+      {
+        "symbol": "SCHW",
+        "currency": "CAD",
+        "total": 0.34
+      },
+      {
+        "symbol": "NEM",
+        "currency": "CAD",
+        "total": 0.34
+      },
+      {
+        "symbol": "KEY",
+        "currency": "CAD",
+        "total": 0.33
+      },
+      {
+        "symbol": "CB",
+        "currency": "CAD",
+        "total": 0.33
+      },
+      {
+        "symbol": "VLO",
+        "currency": "CAD",
+        "total": 0.32
+      },
+      {
+        "symbol": "ICE",
+        "currency": "CAD",
+        "total": 0.32
+      },
+      {
+        "symbol": "ELV",
+        "currency": "CAD",
+        "total": 0.32
+      },
+      {
+        "symbol": "AIG",
+        "currency": "CAD",
+        "total": 0.32
+      },
+      {
+        "symbol": "LEN.B",
+        "currency": "CAD",
+        "total": 0.31
+      },
+      {
+        "symbol": "DELL",
+        "currency": "CAD",
+        "total": 0.31
+      },
+      {
+        "symbol": "WM",
+        "currency": "CAD",
+        "total": 0.3
+      },
+      {
+        "symbol": "BDX",
+        "currency": "CAD",
+        "total": 0.3
+      },
+      {
+        "symbol": "GLW",
+        "currency": "CAD",
+        "total": 0.29
+      },
+      {
+        "symbol": "OXY",
+        "currency": "CAD",
+        "total": 0.29
+      },
+      {
+        "symbol": "CL",
+        "currency": "CAD",
+        "total": 0.29
+      },
+      {
+        "symbol": "VRSN",
+        "currency": "CAD",
+        "total": 0.29
+      },
+      {
+        "symbol": "CMI",
+        "currency": "CAD",
+        "total": 0.28
+      },
+      {
+        "symbol": "ROST",
+        "currency": "CAD",
+        "total": 0.28
+      },
+      {
+        "symbol": "DRI",
+        "currency": "CAD",
+        "total": 0.28
+      },
+      {
+        "symbol": "UMAX",
+        "currency": "CAD",
+        "total": 0.28
+      },
+      {
+        "symbol": "EQR",
+        "currency": "CAD",
+        "total": 0.27
+      },
+      {
+        "symbol": "GE",
+        "currency": "CAD",
+        "total": 0.27
+      },
+      {
+        "symbol": "APO",
+        "currency": "CAD",
+        "total": 0.26
+      },
+      {
+        "symbol": "KLAC",
+        "currency": "CAD",
+        "total": 0.26
+      },
+      {
+        "symbol": "MA",
+        "currency": "CAD",
+        "total": 0.26
+      },
+      {
+        "symbol": "EQH",
+        "currency": "CAD",
+        "total": 0.26
+      },
+      {
+        "symbol": "CCI",
+        "currency": "CAD",
+        "total": 0.26
+      },
+      {
+        "symbol": "KKR",
+        "currency": "CAD",
+        "total": 0.25
+      },
+      {
+        "symbol": "PCAR",
+        "currency": "CAD",
+        "total": 0.25
+      },
+      {
+        "symbol": "CSX",
+        "currency": "CAD",
+        "total": 0.25
+      },
+      {
+        "symbol": "DUK",
+        "currency": "CAD",
+        "total": 0.25
+      },
+      {
+        "symbol": "NTRS",
+        "currency": "CAD",
+        "total": 0.25
+      },
+      {
+        "symbol": "KMB",
+        "currency": "CAD",
+        "total": 0.25
+      },
+      {
+        "symbol": "DE",
+        "currency": "CAD",
+        "total": 0.25
+      },
+      {
+        "symbol": "TRGP",
+        "currency": "CAD",
+        "total": 0.25
+      },
+      {
+        "symbol": "LYB",
+        "currency": "CAD",
+        "total": 0.25
+      },
+      {
+        "symbol": "SSNC",
+        "currency": "CAD",
+        "total": 0.25
+      },
+      {
+        "symbol": "MMM",
+        "currency": "CAD",
+        "total": 0.24
+      },
+      {
+        "symbol": "DOV",
+        "currency": "CAD",
+        "total": 0.24
+      },
+      {
+        "symbol": "MKC",
+        "currency": "CAD",
+        "total": 0.24
+      },
+      {
+        "symbol": "RCL",
+        "currency": "CAD",
+        "total": 0.24
+      },
+      {
+        "symbol": "AMCR",
+        "currency": "CAD",
+        "total": 0.24
+      },
+      {
+        "symbol": "BKNG",
+        "currency": "CAD",
+        "total": 0.24
+      },
+      {
+        "symbol": "ZWE",
+        "currency": "CAD",
+        "total": 0.24
+      },
+      {
+        "symbol": "ODFL",
+        "currency": "CAD",
+        "total": 0.23
+      },
+      {
+        "symbol": "PAYX",
+        "currency": "CAD",
+        "total": 0.23
+      },
+      {
+        "symbol": "PH",
+        "currency": "CAD",
+        "total": 0.22
+      },
+      {
+        "symbol": "SYY",
+        "currency": "CAD",
+        "total": 0.22
+      },
+      {
+        "symbol": "AMP",
+        "currency": "CAD",
+        "total": 0.22
+      },
+      {
+        "symbol": "MRSH",
+        "currency": "CAD",
+        "total": 0.22
+      },
+      {
+        "symbol": "MDLZ",
+        "currency": "CAD",
+        "total": 0.22
+      },
+      {
+        "symbol": "KR",
+        "currency": "CAD",
+        "total": 0.21
+      },
+      {
+        "symbol": "TT",
+        "currency": "CAD",
+        "total": 0.21
+      },
+      {
+        "symbol": "MSCI",
+        "currency": "CAD",
+        "total": 0.21
+      },
+      {
+        "symbol": "BF.A",
+        "currency": "CAD",
+        "total": 0.21
+      },
+      {
+        "symbol": "BR",
+        "currency": "CAD",
+        "total": 0.21
+      },
+      {
+        "symbol": "FOX",
+        "currency": "CAD",
+        "total": 0.21
+      },
+      {
+        "symbol": "FCX",
+        "currency": "CAD",
+        "total": 0.2
+      },
+      {
+        "symbol": "ZTS",
+        "currency": "CAD",
+        "total": 0.19
+      },
+      {
+        "symbol": "ROK",
+        "currency": "CAD",
+        "total": 0.19
+      },
+      {
+        "symbol": "MAR",
+        "currency": "CAD",
+        "total": 0.19
+      },
+      {
+        "symbol": "ALL",
+        "currency": "CAD",
+        "total": 0.19
+      },
+      {
+        "symbol": "LRCX",
+        "currency": "CAD",
+        "total": 0.19
+      },
+      {
+        "symbol": "JCI",
+        "currency": "CAD",
+        "total": 0.19
+      },
+      {
+        "symbol": "SCCO",
+        "currency": "CAD",
+        "total": 0.18
+      },
+      {
+        "symbol": "BSY",
+        "currency": "CAD",
+        "total": 0.18
+      },
+      {
+        "symbol": "ROP",
+        "currency": "CAD",
+        "total": 0.18
+      },
+      {
+        "symbol": "MET",
+        "currency": "CAD",
+        "total": 0.18
+      },
+      {
+        "symbol": "CEG",
+        "currency": "CAD",
+        "total": 0.17
+      },
+      {
+        "symbol": "ARES",
+        "currency": "CAD",
+        "total": 0.17
+      },
+      {
+        "symbol": "PEG",
+        "currency": "CAD",
+        "total": 0.17
+      },
+      {
+        "symbol": "FDX",
+        "currency": "CAD",
+        "total": 0.17
+      },
+      {
+        "symbol": "APH",
+        "currency": "CAD",
+        "total": 0.17
+      },
+      {
+        "symbol": "NSC",
+        "currency": "CAD",
+        "total": 0.17
+      },
+      {
+        "symbol": "XEL",
+        "currency": "CAD",
+        "total": 0.16
+      },
+      {
+        "symbol": "IP",
+        "currency": "CAD",
+        "total": 0.16
+      },
+      {
+        "symbol": "SW",
+        "currency": "CAD",
+        "total": 0.16
+      },
+      {
+        "symbol": "LNG",
+        "currency": "CAD",
+        "total": 0.15
+      },
+      {
+        "symbol": "GM",
+        "currency": "CAD",
+        "total": 0.15
+      },
+      {
+        "symbol": "HCA",
+        "currency": "CAD",
+        "total": 0.15
+      },
+      {
+        "symbol": "APD",
+        "currency": "CAD",
+        "total": 0.15
+      },
+      {
+        "symbol": "BK",
+        "currency": "CAD",
+        "total": 0.14
+      },
+      {
+        "symbol": "GWW",
+        "currency": "CAD",
+        "total": 0.14
+      },
+      {
+        "symbol": "DG",
+        "currency": "CAD",
+        "total": 0.14
+      },
+      {
+        "symbol": "AXP",
+        "currency": "CAD",
+        "total": 0.14
+      },
+      {
+        "symbol": "CRH",
+        "currency": "CAD",
+        "total": 0.14
+      },
+      {
+        "symbol": "CTSH",
+        "currency": "CAD",
+        "total": 0.13
+      },
+      {
+        "symbol": "EQT",
+        "currency": "CAD",
+        "total": 0.13
+      },
+      {
+        "symbol": "SHW",
+        "currency": "CAD",
+        "total": 0.13
+      },
+      {
+        "symbol": "TEL",
+        "currency": "CAD",
+        "total": 0.13
+      },
+      {
+        "symbol": "INTU",
+        "currency": "CAD",
+        "total": 0.13
+      },
+      {
+        "symbol": "NRG",
+        "currency": "CAD",
+        "total": 0.12
+      },
+      {
+        "symbol": "DHI",
+        "currency": "CAD",
+        "total": 0.12
+      },
+      {
+        "symbol": "MCO",
+        "currency": "CAD",
+        "total": 0.12
+      },
+      {
+        "symbol": "YUM",
+        "currency": "CAD",
+        "total": 0.12
+      },
+      {
+        "symbol": "ADP",
+        "currency": "CAD",
+        "total": 0.12
+      },
+      {
+        "symbol": "STX",
+        "currency": "CAD",
+        "total": 0.12
+      },
+      {
+        "symbol": "VTR",
+        "currency": "CAD",
+        "total": 0.12
+      },
+      {
+        "symbol": "FERG",
+        "currency": "CAD",
+        "total": 0.12
+      },
+      {
+        "symbol": "CCL",
+        "currency": "CAD",
+        "total": 0.11
+      },
+      {
+        "symbol": "HSY",
+        "currency": "CAD",
+        "total": 0.11
+      },
+      {
+        "symbol": "MSI",
+        "currency": "CAD",
+        "total": 0.11
+      },
+      {
+        "symbol": "MPC",
+        "currency": "CAD",
+        "total": 0.1
+      },
+      {
+        "symbol": "FIS",
+        "currency": "CAD",
+        "total": 0.1
+      },
+      {
+        "symbol": "STT",
+        "currency": "CAD",
+        "total": 0.1
+      },
+      {
+        "symbol": "MU",
+        "currency": "CAD",
+        "total": 0.1
+      },
+      {
+        "symbol": "PCG",
+        "currency": "CAD",
+        "total": 0.1
+      },
+      {
+        "symbol": "SRE",
+        "currency": "CAD",
+        "total": 0.1
+      },
+      {
+        "symbol": "GEV",
+        "currency": "CAD",
+        "total": 0.1
+      },
+      {
+        "symbol": "PNC",
+        "currency": "CAD",
+        "total": 0.1
+      },
+      {
+        "symbol": "GRMN",
+        "currency": "CAD",
+        "total": 0.1
+      },
+      {
+        "symbol": "NWS",
+        "currency": "CAD",
+        "total": 0.1
+      },
+      {
+        "symbol": "REGN",
+        "currency": "CAD",
+        "total": 0.09
+      },
+      {
+        "symbol": "RMD",
+        "currency": "CAD",
+        "total": 0.09
+      },
+      {
+        "symbol": "AME",
+        "currency": "CAD",
+        "total": 0.09
+      },
+      {
+        "symbol": "CAH",
+        "currency": "CAD",
+        "total": 0.09
+      },
+      {
+        "symbol": "PRU",
+        "currency": "CAD",
+        "total": 0.08
+      },
+      {
+        "symbol": "CTAS",
+        "currency": "CAD",
+        "total": 0.08
+      },
+      {
+        "symbol": "PHM",
+        "currency": "CAD",
+        "total": 0.08
+      },
+      {
+        "symbol": "MPWR",
+        "currency": "CAD",
+        "total": 0.08
+      },
+      {
+        "symbol": "ARE",
+        "currency": "CAD",
+        "total": 0.08
+      },
+      {
+        "symbol": "DHR",
+        "currency": "CAD",
+        "total": 0.08
+      },
+      {
+        "symbol": "MCHP",
+        "currency": "CAD",
+        "total": 0.08
+      },
+      {
+        "symbol": "STE",
+        "currency": "CAD",
+        "total": 0.08
+      },
+      {
+        "symbol": "KDP",
+        "currency": "CAD",
+        "total": 0.08
+      },
+      {
+        "symbol": "HWM",
+        "currency": "CAD",
+        "total": 0.07
+      },
+      {
+        "symbol": "MCK",
+        "currency": "CAD",
+        "total": 0.07
+      },
+      {
+        "symbol": "RJF",
+        "currency": "CAD",
+        "total": 0.07
+      },
+      {
+        "symbol": "SYK",
+        "currency": "CAD",
+        "total": 0.07
+      },
+      {
+        "symbol": "COR",
+        "currency": "CAD",
+        "total": 0.07
+      },
+      {
+        "symbol": "NUE",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "AON",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "LHX",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "OTIS",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "EFX",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "VST",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "MRVL",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "LH",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "IBKR",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "LVS",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "DAL",
+        "currency": "CAD",
+        "total": 0.06
+      },
+      {
+        "symbol": "EA",
+        "currency": "CAD",
+        "total": 0.05
+      },
+      {
+        "symbol": "DGX",
+        "currency": "CAD",
+        "total": 0.05
+      },
+      {
+        "symbol": "URI",
+        "currency": "CAD",
+        "total": 0.04
+      },
+      {
+        "symbol": "CTVA",
+        "currency": "CAD",
+        "total": 0.04
+      },
+      {
+        "symbol": "AJG",
+        "currency": "CAD",
+        "total": 0.04
+      },
+      {
+        "symbol": "TMO",
+        "currency": "CAD",
+        "total": 0.04
+      },
+      {
+        "symbol": "ORCL",
+        "currency": "CAD",
+        "total": 0.04
+      },
+      {
+        "symbol": "BKR",
+        "currency": "CAD",
+        "total": 0.03
+      },
+      {
+        "symbol": "FAST",
+        "currency": "CAD",
+        "total": 0.03
+      },
+      {
+        "symbol": "WAB",
+        "currency": "CAD",
+        "total": 0.03
+      },
+      {
+        "symbol": "HLT",
+        "currency": "CAD",
+        "total": 0.03
+      },
+      {
+        "symbol": "HPE",
+        "currency": "CAD",
+        "total": 0.03
+      },
+      {
+        "symbol": "HUM",
+        "currency": "CAD",
+        "total": 0.03
+      },
+      {
+        "symbol": "ZBH",
+        "currency": "CAD",
+        "total": 0.03
+      },
+      {
+        "symbol": "WST",
+        "currency": "CAD",
+        "total": 0.03
+      },
+      {
+        "symbol": "TRU",
+        "currency": "CAD",
+        "total": 0.03
+      },
+      {
+        "symbol": "TPL",
+        "currency": "CAD",
+        "total": 0.02
+      },
+      {
+        "symbol": "WDC",
+        "currency": "CAD",
+        "total": 0.02
+      },
+      {
+        "symbol": "VRT",
+        "currency": "CAD",
+        "total": 0.02
+      },
+      {
+        "symbol": "IR",
+        "currency": "CAD",
+        "total": 0.02
+      },
+      {
+        "symbol": "PYPL",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "LII",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "RSG",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "HEI",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "NTAP",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "A",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "GEHC",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "LPLA",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "PWR",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "ENTG",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "MAS",
+        "currency": "CAD",
+        "total": 0.01
+      },
+      {
+        "symbol": "HUBB",
+        "currency": "CAD",
+        "total": 0.01
+      }
+    ]
+  },
+  "holdings": [
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AAPL",
+      "quantity": 4.6954,
+      "total_buy_cost": 1748.05,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ABBV",
+      "quantity": 0.6418,
+      "total_buy_cost": 242.02,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ABNB",
+      "quantity": 0.1724,
+      "total_buy_cost": 47.56,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ABT",
+      "quantity": 0.7444,
+      "total_buy_cost": 205.33,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ACGL",
+      "quantity": 0.1895,
+      "total_buy_cost": 30.71,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ADI",
+      "quantity": 0.1237,
+      "total_buy_cost": 67.65,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ADP",
+      "quantity": 0.288,
+      "total_buy_cost": 157.89,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ADSK",
+      "quantity": 0.3764,
+      "total_buy_cost": 155.97,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AEP",
+      "quantity": 0.2536,
+      "total_buy_cost": 40.3,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AFL",
+      "quantity": 0.165,
+      "total_buy_cost": 43.48,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AIG",
+      "quantity": 0.2391,
+      "total_buy_cost": 30.72,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ALAB",
+      "quantity": 0.0726,
+      "total_buy_cost": 41.79,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ALL",
+      "quantity": 0.1029,
+      "total_buy_cost": 28.99,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ALNY",
+      "quantity": 0.0295,
+      "total_buy_cost": 37.17,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AMAT",
+      "quantity": 0.2284,
+      "total_buy_cost": 79.43,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AMCR",
+      "quantity": 0.254,
+      "total_buy_cost": 44.29,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AMD",
+      "quantity": 0.5562,
+      "total_buy_cost": 273.27,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AME",
+      "quantity": 0.0762,
+      "total_buy_cost": 21.53,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AMGN",
+      "quantity": 0.2006,
+      "total_buy_cost": 90.27,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AMT",
+      "quantity": 0.1118,
+      "total_buy_cost": 32.65,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AMZN",
+      "quantity": 3.0011,
+      "total_buy_cost": 1308.09,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ANET",
+      "quantity": 0.1337,
+      "total_buy_cost": 127.95,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AON",
+      "quantity": 0.0387,
+      "total_buy_cost": 37.83,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "APD",
+      "quantity": 0.1126,
+      "total_buy_cost": 86.19,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "APH",
+      "quantity": 0.3752,
+      "total_buy_cost": 89.27,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "APP",
+      "quantity": 0.1066,
+      "total_buy_cost": 114.83,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AVGO",
+      "quantity": 1.5211,
+      "total_buy_cost": 730.94,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AWK",
+      "quantity": 0.178,
+      "total_buy_cost": 37.24,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "AZO",
+      "quantity": 0.0073,
+      "total_buy_cost": 40.87,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BA",
+      "quantity": 0.0475,
+      "total_buy_cost": 123.58,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BAC",
+      "quantity": 3.8838,
+      "total_buy_cost": 387.49,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BDX",
+      "quantity": 0.1244,
+      "total_buy_cost": 63.3,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BE",
+      "quantity": 0.1072,
+      "total_buy_cost": 28.9,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BIIB",
+      "quantity": 0.0291,
+      "total_buy_cost": 7.61,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BK",
+      "quantity": 0.5065,
+      "total_buy_cost": 79.57,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BKNG",
+      "quantity": 0.0162,
+      "total_buy_cost": 205.24,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BKR",
+      "quantity": 0.3164,
+      "total_buy_cost": 33.81,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BLK",
+      "quantity": 0.1397,
+      "total_buy_cost": 312.23,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BMY",
+      "quantity": 0.7606,
+      "total_buy_cost": 54.0,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BRK.B",
+      "quantity": 0.7667,
+      "total_buy_cost": 623.44,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BSX",
+      "quantity": 0.7076,
+      "total_buy_cost": 123.0,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "BX",
+      "quantity": 0.7347,
+      "total_buy_cost": 183.53,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "C",
+      "quantity": 0.5574,
+      "total_buy_cost": 81.28,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CAH",
+      "quantity": 0.0747,
+      "total_buy_cost": 20.39,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CARR",
+      "quantity": 0.4884,
+      "total_buy_cost": 35.91,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CAT",
+      "quantity": 0.171,
+      "total_buy_cost": 153.97,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CB",
+      "quantity": 0.1923,
+      "total_buy_cost": 82.91,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CCI",
+      "quantity": 0.0809,
+      "total_buy_cost": 28.63,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CDNS",
+      "quantity": 0.3441,
+      "total_buy_cost": 166.38,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CEG",
+      "quantity": 0.2308,
+      "total_buy_cost": 147.74,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CI",
+      "quantity": 0.0819,
+      "total_buy_cost": 39.02,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CIEN",
+      "quantity": 0.0125,
+      "total_buy_cost": 8.03,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CL",
+      "quantity": 0.3405,
+      "total_buy_cost": 49.79,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CMCSA",
+      "quantity": 0.9435,
+      "total_buy_cost": 103.85,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CME",
+      "quantity": 0.106,
+      "total_buy_cost": 63.68,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CMI",
+      "quantity": 0.0474,
+      "total_buy_cost": 33.85,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "COF",
+      "quantity": 0.4875,
+      "total_buy_cost": 289.59,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "COHR",
+      "quantity": 0.0594,
+      "total_buy_cost": 32.7,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "COIN",
+      "quantity": 0.1346,
+      "total_buy_cost": 47.87,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "COP",
+      "quantity": 0.3317,
+      "total_buy_cost": 72.08,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "COST",
+      "quantity": 0.1344,
+      "total_buy_cost": 196.6,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CPNG",
+      "quantity": 1.5426,
+      "total_buy_cost": 58.61,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CRCL",
+      "quantity": 0.0936,
+      "total_buy_cost": 15.2,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CRDO",
+      "quantity": 0.1025,
+      "total_buy_cost": 25.04,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CRH",
+      "quantity": 0.155,
+      "total_buy_cost": 112.25,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CRWD",
+      "quantity": 0.008,
+      "total_buy_cost": 188.08,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CRWV",
+      "quantity": 0.1784,
+      "total_buy_cost": 25.11,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CSCO",
+      "quantity": 1.4168,
+      "total_buy_cost": 149.38,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CSX",
+      "quantity": 0.5954,
+      "total_buy_cost": 29.55,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CTVA",
+      "quantity": 0.1017,
+      "total_buy_cost": 16.4,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CVNA",
+      "quantity": 0.0604,
+      "total_buy_cost": 27.3,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CVS",
+      "quantity": 0.5052,
+      "total_buy_cost": 69.61,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "CVX",
+      "quantity": 0.6935,
+      "total_buy_cost": 199.53,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DAL",
+      "quantity": 0.214,
+      "total_buy_cost": 25.97,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DDOG",
+      "quantity": 0.229,
+      "total_buy_cost": 42.3,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DE",
+      "quantity": 0.0729,
+      "total_buy_cost": 48.29,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DELL",
+      "quantity": 0.3718,
+      "total_buy_cost": 77.79,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DG",
+      "quantity": 0.0919,
+      "total_buy_cost": 12.53,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DGX",
+      "quantity": 0.0521,
+      "total_buy_cost": 13.59,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DHI",
+      "quantity": 0.0981,
+      "total_buy_cost": 43.64,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DLR",
+      "quantity": 0.135,
+      "total_buy_cost": 29.77,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DOV",
+      "quantity": 0.1214,
+      "total_buy_cost": 58.0,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DOW",
+      "quantity": 0.7241,
+      "total_buy_cost": 22.04,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DRI",
+      "quantity": 0.0675,
+      "total_buy_cost": 17.18,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DUK",
+      "quantity": 0.4448,
+      "total_buy_cost": 94.01,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "DXCM",
+      "quantity": 0.1524,
+      "total_buy_cost": 17.37,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "EA",
+      "quantity": 0.0962,
+      "total_buy_cost": 26.96,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "EBAY",
+      "quantity": 0.4305,
+      "total_buy_cost": 72.35,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ECL",
+      "quantity": 0.1916,
+      "total_buy_cost": 76.84,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ELV",
+      "quantity": 0.0585,
+      "total_buy_cost": 73.42,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "EMR",
+      "quantity": 0.2288,
+      "total_buy_cost": 41.49,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ENTG",
+      "quantity": 0.0625,
+      "total_buy_cost": 11.67,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "EOG",
+      "quantity": 0.2972,
+      "total_buy_cost": 44.78,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "EQIX",
+      "quantity": 0.0442,
+      "total_buy_cost": 66.3,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "EQR",
+      "quantity": 0.1367,
+      "total_buy_cost": 33.2,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "EQT",
+      "quantity": 0.2488,
+      "total_buy_cost": 18.16,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ETN",
+      "quantity": 0.0902,
+      "total_buy_cost": 79.66,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ETR",
+      "quantity": 0.6148,
+      "total_buy_cost": 81.81,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "EW",
+      "quantity": 0.1453,
+      "total_buy_cost": 16.71,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "EXC",
+      "quantity": 0.8975,
+      "total_buy_cost": 137.84,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "EXR",
+      "quantity": 0.0414,
+      "total_buy_cost": 72.87,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "F",
+      "quantity": 0.8493,
+      "total_buy_cost": 42.35,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FANG",
+      "quantity": 0.1271,
+      "total_buy_cost": 26.22,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FCX",
+      "quantity": 0.4797,
+      "total_buy_cost": 33.85,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FDX",
+      "quantity": 0.0628,
+      "total_buy_cost": 24.45,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FERG",
+      "quantity": 0.0846,
+      "total_buy_cost": 26.65,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FI",
+      "quantity": 0.0466,
+      "total_buy_cost": 8.13,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FICO",
+      "quantity": 0.0092,
+      "total_buy_cost": 32.39,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FISV",
+      "quantity": -0.0466,
+      "total_buy_cost": 45.84,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FLEX",
+      "quantity": 0.194,
+      "total_buy_cost": 18.67,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FOX",
+      "quantity": 0.5295,
+      "total_buy_cost": 64.02,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FTNT",
+      "quantity": 0.5117,
+      "total_buy_cost": 101.44,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "FWONA",
+      "quantity": 0.3691,
+      "total_buy_cost": 64.97,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GD",
+      "quantity": 0.0995,
+      "total_buy_cost": 48.6,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GE",
+      "quantity": 0.2051,
+      "total_buy_cost": 263.66,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GEV",
+      "quantity": 0.0804,
+      "total_buy_cost": 68.2,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GILD",
+      "quantity": 0.3957,
+      "total_buy_cost": 68.46,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GLW",
+      "quantity": 0.3188,
+      "total_buy_cost": 37.37,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GM",
+      "quantity": 0.2429,
+      "total_buy_cost": 24.92,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GOOGL",
+      "quantity": 3.4874,
+      "total_buy_cost": 1377.59,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GPN",
+      "quantity": 0.9051,
+      "total_buy_cost": 89.36,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GRMN",
+      "quantity": 0.0375,
+      "total_buy_cost": 17.77,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GS",
+      "quantity": 0.0965,
+      "total_buy_cost": 207.03,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "GWW",
+      "quantity": 0.0181,
+      "total_buy_cost": 25.37,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HCA",
+      "quantity": 0.0467,
+      "total_buy_cost": 30.48,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HD",
+      "quantity": 0.304,
+      "total_buy_cost": 362.57,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HEI.A",
+      "quantity": 0.3489,
+      "total_buy_cost": 123.77,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HIG",
+      "quantity": 0.223,
+      "total_buy_cost": 41.99,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HLT",
+      "quantity": 0.0755,
+      "total_buy_cost": 28.81,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HON",
+      "quantity": 0.0802,
+      "total_buy_cost": 89.47,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HONA",
+      "quantity": 0.0802,
+      "total_buy_cost": 0.0,
+      "currency": "HONA"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HOOD",
+      "quantity": 0.5334,
+      "total_buy_cost": 112.27,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HSY",
+      "quantity": 0.0298,
+      "total_buy_cost": 9.44,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HUBB",
+      "quantity": 0.0057,
+      "total_buy_cost": 3.77,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "HWM",
+      "quantity": 0.1774,
+      "total_buy_cost": 51.45,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ICE",
+      "quantity": 0.1944,
+      "total_buy_cost": 92.77,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "INSM",
+      "quantity": 0.0368,
+      "total_buy_cost": 7.62,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "INTC",
+      "quantity": 1.4579,
+      "total_buy_cost": 99.96,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "IP",
+      "quantity": 0.1276,
+      "total_buy_cost": 10.59,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "IR",
+      "quantity": 0.3552,
+      "total_buy_cost": 42.2,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ISRG",
+      "quantity": 0.1126,
+      "total_buy_cost": 256.84,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ITW",
+      "quantity": 0.3367,
+      "total_buy_cost": 152.59,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "JCI",
+      "quantity": 0.2243,
+      "total_buy_cost": 35.52,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "JNJ",
+      "quantity": 0.9709,
+      "total_buy_cost": 286.21,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "JPM",
+      "quantity": 0.685,
+      "total_buy_cost": 658.87,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KDP",
+      "quantity": 0.2806,
+      "total_buy_cost": 10.98,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KEY",
+      "quantity": 0.3826,
+      "total_buy_cost": 9.41,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KEYS",
+      "quantity": 0.0051,
+      "total_buy_cost": 26.22,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KHC",
+      "quantity": 0.9614,
+      "total_buy_cost": 31.67,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KKR",
+      "quantity": 0.7596,
+      "total_buy_cost": 164.03,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KLAC",
+      "quantity": 0.039,
+      "total_buy_cost": 68.24,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KMB",
+      "quantity": 0.0711,
+      "total_buy_cost": 16.63,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KMI",
+      "quantity": 0.7015,
+      "total_buy_cost": 27.82,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KO",
+      "quantity": 1.7462,
+      "total_buy_cost": 176.69,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KR",
+      "quantity": 0.1318,
+      "total_buy_cost": 17.57,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "KVUE",
+      "quantity": 0.8933,
+      "total_buy_cost": 21.24,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "L",
+      "quantity": 0.0582,
+      "total_buy_cost": 8.19,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LEN.B",
+      "quantity": 0.3427,
+      "total_buy_cost": 81.52,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LH",
+      "quantity": 0.031,
+      "total_buy_cost": 11.74,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LII",
+      "quantity": 0.0015,
+      "total_buy_cost": 25.42,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LIN",
+      "quantity": 0.1673,
+      "total_buy_cost": 159.86,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LITE",
+      "quantity": 0.0311,
+      "total_buy_cost": 36.72,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LLY",
+      "quantity": 0.2484,
+      "total_buy_cost": 335.0,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LMT",
+      "quantity": 0.072,
+      "total_buy_cost": 50.03,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LNG",
+      "quantity": 0.0765,
+      "total_buy_cost": 43.97,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LOW",
+      "quantity": 0.056,
+      "total_buy_cost": 135.35,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LRCX",
+      "quantity": 0.4675,
+      "total_buy_cost": 122.56,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LVS",
+      "quantity": 0.136,
+      "total_buy_cost": 25.89,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LYB",
+      "quantity": 0.126,
+      "total_buy_cost": 7.52,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "LYV",
+      "quantity": 0.0794,
+      "total_buy_cost": 14.39,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MAR",
+      "quantity": 0.0648,
+      "total_buy_cost": 25.72,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MAS",
+      "quantity": 0.0239,
+      "total_buy_cost": 2.34,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MCD",
+      "quantity": 0.2557,
+      "total_buy_cost": 140.25,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MCHP",
+      "quantity": 0.0039,
+      "total_buy_cost": 18.44,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MCK",
+      "quantity": 0.0359,
+      "total_buy_cost": 43.85,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MDLN",
+      "quantity": 0.2192,
+      "total_buy_cost": 13.18,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MDLZ",
+      "quantity": 0.3458,
+      "total_buy_cost": 58.11,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MDT",
+      "quantity": 0.4445,
+      "total_buy_cost": 127.57,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "META",
+      "quantity": 0.6326,
+      "total_buy_cost": 843.45,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MMC",
+      "quantity": 0.0774,
+      "total_buy_cost": 29.08,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MNST",
+      "quantity": 0.1069,
+      "total_buy_cost": 15.7,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MO",
+      "quantity": 0.3521,
+      "total_buy_cost": 40.9,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MPWR",
+      "quantity": 0.0166,
+      "total_buy_cost": 38.2,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MRK",
+      "quantity": 0.9204,
+      "total_buy_cost": 132.83,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MRSH",
+      "quantity": -0.0774,
+      "total_buy_cost": 26.98,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MRVL",
+      "quantity": 0.3001,
+      "total_buy_cost": 47.69,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MSCI",
+      "quantity": 0.0558,
+      "total_buy_cost": 60.5,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MSFT",
+      "quantity": 1.9225,
+      "total_buy_cost": 1970.89,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MSI",
+      "quantity": 0.0663,
+      "total_buy_cost": 67.17,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MSTR",
+      "quantity": 0.1536,
+      "total_buy_cost": 43.01,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "MU",
+      "quantity": 0.4076,
+      "total_buy_cost": 220.73,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NDAQ",
+      "quantity": 0.6281,
+      "total_buy_cost": 69.23,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NEE",
+      "quantity": 0.5953,
+      "total_buy_cost": 68.7,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NEM",
+      "quantity": 0.3665,
+      "total_buy_cost": 58.53,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NET",
+      "quantity": 0.1194,
+      "total_buy_cost": 32.33,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NFLX",
+      "quantity": 0.6823,
+      "total_buy_cost": 260.87,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NOC",
+      "quantity": 0.0562,
+      "total_buy_cost": 46.8,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NOW",
+      "quantity": 0.2194,
+      "total_buy_cost": 278.63,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NRG",
+      "quantity": 0.0925,
+      "total_buy_cost": 20.31,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NSC",
+      "quantity": 0.0322,
+      "total_buy_cost": 12.87,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NTRS",
+      "quantity": 0.1071,
+      "total_buy_cost": 19.66,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NUE",
+      "quantity": 0.0651,
+      "total_buy_cost": 14.48,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NVDA",
+      "quantity": 7.5915,
+      "total_buy_cost": 2136.66,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NWS",
+      "quantity": 0.7096,
+      "total_buy_cost": 33.57,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "NXPI",
+      "quantity": 0.0515,
+      "total_buy_cost": 77.39,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "O",
+      "quantity": 0.1806,
+      "total_buy_cost": 51.09,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ODFL",
+      "quantity": 0.1898,
+      "total_buy_cost": 36.09,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "OKE",
+      "quantity": 0.0895,
+      "total_buy_cost": 14.07,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ON",
+      "quantity": 0.0353,
+      "total_buy_cost": 6.47,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ORLY",
+      "quantity": 0.3171,
+      "total_buy_cost": 48.89,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "OXY",
+      "quantity": 0.4202,
+      "total_buy_cost": 24.58,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PANW",
+      "quantity": 0.0296,
+      "total_buy_cost": 194.01,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PCAR",
+      "quantity": 0.1842,
+      "total_buy_cost": 28.98,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PCG",
+      "quantity": 1.0715,
+      "total_buy_cost": 36.23,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PEP",
+      "quantity": 0.5441,
+      "total_buy_cost": 130.24,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PFE",
+      "quantity": 2.9232,
+      "total_buy_cost": 102.55,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PG",
+      "quantity": 1.0245,
+      "total_buy_cost": 209.07,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PGR",
+      "quantity": 0.1156,
+      "total_buy_cost": 75.65,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PH",
+      "quantity": 0.0317,
+      "total_buy_cost": 35.13,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PHM",
+      "quantity": 0.1102,
+      "total_buy_cost": 18.66,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PLD",
+      "quantity": 0.3402,
+      "total_buy_cost": 59.87,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PLTR",
+      "quantity": 0.895,
+      "total_buy_cost": 327.41,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PM",
+      "quantity": 0.4594,
+      "total_buy_cost": 98.48,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PSX",
+      "quantity": 0.0995,
+      "total_buy_cost": 18.79,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PTC",
+      "quantity": 0.5969,
+      "total_buy_cost": 146.12,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "PWR",
+      "quantity": 0.0775,
+      "total_buy_cost": 46.43,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "QCOM",
+      "quantity": 0.6328,
+      "total_buy_cost": 186.38,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "RCL",
+      "quantity": 0.1071,
+      "total_buy_cost": 48.49,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "REGN",
+      "quantity": 0.031,
+      "total_buy_cost": 31.55,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "RKLB",
+      "quantity": 0.1293,
+      "total_buy_cost": 22.41,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "RMD",
+      "quantity": 0.0366,
+      "total_buy_cost": 17.06,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ROK",
+      "quantity": 0.0404,
+      "total_buy_cost": 48.04,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ROP",
+      "quantity": 0.0665,
+      "total_buy_cost": 84.94,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ROST",
+      "quantity": 0.16,
+      "total_buy_cost": 36.49,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "RPRX",
+      "quantity": 0.1965,
+      "total_buy_cost": 15.07,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "RTX",
+      "quantity": 0.4021,
+      "total_buy_cost": 101.45,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SBUX",
+      "quantity": 0.4274,
+      "total_buy_cost": 52.14,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SCCO",
+      "quantity": 0.0934,
+      "total_buy_cost": 34.08,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SHW",
+      "quantity": 0.0424,
+      "total_buy_cost": 98.11,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SLB",
+      "quantity": 0.6913,
+      "total_buy_cost": 34.75,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SMCI",
+      "quantity": 0.2718,
+      "total_buy_cost": 16.78,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SNDK",
+      "quantity": 0.0554,
+      "total_buy_cost": 156.42,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SO",
+      "quantity": 0.6189,
+      "total_buy_cost": 92.3,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SPG",
+      "quantity": 0.1504,
+      "total_buy_cost": 45.23,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SPGI",
+      "quantity": 0.2119,
+      "total_buy_cost": 218.15,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "STX",
+      "quantity": 0.0661,
+      "total_buy_cost": 28.98,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SW",
+      "quantity": 0.1333,
+      "total_buy_cost": 7.03,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SYK",
+      "quantity": 0.0997,
+      "total_buy_cost": 179.42,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "SYY",
+      "quantity": 0.1871,
+      "total_buy_cost": 24.58,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "T",
+      "quantity": 2.1139,
+      "total_buy_cost": 137.64,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TDG",
+      "quantity": 0.084,
+      "total_buy_cost": 184.26,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TEL",
+      "quantity": 0.0628,
+      "total_buy_cost": 40.98,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TER",
+      "quantity": 0.034,
+      "total_buy_cost": 29.79,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TFC",
+      "quantity": 0.729,
+      "total_buy_cost": 299.1,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TGT",
+      "quantity": 0.1508,
+      "total_buy_cost": 29.45,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TJX",
+      "quantity": 0.718,
+      "total_buy_cost": 151.46,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TMO",
+      "quantity": 0.2004,
+      "total_buy_cost": 216.02,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TMUS",
+      "quantity": 0.1983,
+      "total_buy_cost": 77.59,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TPL",
+      "quantity": 0.0149,
+      "total_buy_cost": 10.54,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TRGP",
+      "quantity": 0.076,
+      "total_buy_cost": 18.2,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TRMB",
+      "quantity": 1.1458,
+      "total_buy_cost": 134.8,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TRV",
+      "quantity": 0.2326,
+      "total_buy_cost": 92.37,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TSLA",
+      "quantity": 0.8724,
+      "total_buy_cost": 540.05,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TT",
+      "quantity": 0.0738,
+      "total_buy_cost": 63.91,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TWLO",
+      "quantity": 0.0817,
+      "total_buy_cost": 12.08,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "TXN",
+      "quantity": 0.2765,
+      "total_buy_cost": 84.56,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "UBER",
+      "quantity": 0.6709,
+      "total_buy_cost": 178.91,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ULTA",
+      "quantity": 0.0223,
+      "total_buy_cost": 16.91,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "UNH",
+      "quantity": 0.3032,
+      "total_buy_cost": 230.04,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "UNP",
+      "quantity": 0.2415,
+      "total_buy_cost": 75.71,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "UPS",
+      "quantity": 0.2709,
+      "total_buy_cost": 36.66,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "USB",
+      "quantity": 0.6553,
+      "total_buy_cost": 45.0,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "V",
+      "quantity": 0.6891,
+      "total_buy_cost": 500.84,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "VICI",
+      "quantity": 0.1772,
+      "total_buy_cost": 21.21,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "VLO",
+      "quantity": 0.0862,
+      "total_buy_cost": 21.15,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "VRSN",
+      "quantity": 0.2571,
+      "total_buy_cost": 88.5,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "VRT",
+      "quantity": 0.1462,
+      "total_buy_cost": 46.84,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "VRTX",
+      "quantity": 0.0689,
+      "total_buy_cost": 42.82,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "VST",
+      "quantity": 0.1077,
+      "total_buy_cost": 62.28,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "VTR",
+      "quantity": 0.0807,
+      "total_buy_cost": 8.58,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "VZ",
+      "quantity": 1.5028,
+      "total_buy_cost": 83.86,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "WBD",
+      "quantity": 0.687,
+      "total_buy_cost": 23.22,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "WDAY",
+      "quantity": 0.5268,
+      "total_buy_cost": 143.53,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "WDC",
+      "quantity": 0.1067,
+      "total_buy_cost": 28.25,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "WEC",
+      "quantity": 0.3829,
+      "total_buy_cost": 66.52,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "WELL",
+      "quantity": 0.2255,
+      "total_buy_cost": 58.43,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "WFC",
+      "quantity": 1.742,
+      "total_buy_cost": 295.56,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "WM",
+      "quantity": 0.1356,
+      "total_buy_cost": 50.24,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "WMB",
+      "quantity": 0.3568,
+      "total_buy_cost": 37.88,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "WMT",
+      "quantity": 1.4935,
+      "total_buy_cost": 273.63,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "WST",
+      "quantity": 0.1032,
+      "total_buy_cost": 33.77,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "XEL",
+      "quantity": 0.1091,
+      "total_buy_cost": 12.52,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "XOM",
+      "quantity": 1.3728,
+      "total_buy_cost": 239.38,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "YUM",
+      "quantity": 0.1475,
+      "total_buy_cost": 36.35,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ZBH",
+      "quantity": 0.0986,
+      "total_buy_cost": 11.95,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "symbol": "ZTS",
+      "quantity": 0.1059,
+      "total_buy_cost": 23.67,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_231879ac",
+      "symbol": "BX",
+      "quantity": 147.827,
+      "total_buy_cost": 2690.94,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_231879ac",
+      "symbol": "PSA",
+      "quantity": 28.0,
+      "total_buy_cost": 1401.96,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_231879ac",
+      "symbol": "PSU.U",
+      "quantity": 27.0,
+      "total_buy_cost": 2705.67,
+      "currency": "USD"
+    },
+    {
+      "account_id": "acct_231879ac",
+      "symbol": "QQQ",
+      "quantity": 0.1175,
+      "total_buy_cost": 84.83,
+      "currency": "USD"
+    },
+    {
+      "account_id": "acct_231879ac",
+      "symbol": "VFV",
+      "quantity": 14.0735,
+      "total_buy_cost": 2346.5,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_231879ac",
+      "symbol": "VOOG",
+      "quantity": 5.9097,
+      "total_buy_cost": 480.36,
+      "currency": "USD"
+    },
+    {
+      "account_id": "acct_231879ac",
+      "symbol": "XEQT",
+      "quantity": 39.6443,
+      "total_buy_cost": 1642.81,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "symbol": "CHPS",
+      "quantity": 6.5625,
+      "total_buy_cost": 606.47,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "symbol": "L",
+      "quantity": 62.813,
+      "total_buy_cost": 3930.32,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "symbol": "META",
+      "quantity": 11.0465,
+      "total_buy_cost": 6725.88,
+      "currency": "USD"
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "symbol": "QQC",
+      "quantity": 46.5287,
+      "total_buy_cost": 2559.63,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "symbol": "VFV",
+      "quantity": 24.593,
+      "total_buy_cost": 4102.93,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "symbol": "XEG",
+      "quantity": 11.0,
+      "total_buy_cost": 270.23,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "symbol": "XEQT",
+      "quantity": 106.6383,
+      "total_buy_cost": 4342.22,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_3b7b8244",
+      "symbol": "JEPQ",
+      "quantity": 11.0,
+      "total_buy_cost": 537.74,
+      "currency": "USD"
+    },
+    {
+      "account_id": "acct_3b7b8244",
+      "symbol": "SCHD",
+      "quantity": 3.1578,
+      "total_buy_cost": 232.07,
+      "currency": "USD"
+    },
+    {
+      "account_id": "acct_91b82482",
+      "symbol": "ACWV",
+      "quantity": 38.4234,
+      "total_buy_cost": 6401.0,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_91b82482",
+      "symbol": "EEMV",
+      "quantity": 28.9796,
+      "total_buy_cost": 2648.55,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_91b82482",
+      "symbol": "IEFA",
+      "quantity": 67.0093,
+      "total_buy_cost": 8659.55,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_91b82482",
+      "symbol": "QCN",
+      "quantity": 64.0224,
+      "total_buy_cost": 12893.05,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_91b82482",
+      "symbol": "VOO",
+      "quantity": 18.9981,
+      "total_buy_cost": 16480.48,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "EEMV",
+      "quantity": 3.1324,
+      "total_buy_cost": 758.53,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "GLDM",
+      "quantity": 0.5872,
+      "total_buy_cost": 224.45,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "GLOV",
+      "quantity": 7.4803,
+      "total_buy_cost": 511.15,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "GSWO",
+      "quantity": 1.0539,
+      "total_buy_cost": 102.4,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "KILO.B",
+      "quantity": 1.2695,
+      "total_buy_cost": 111.03,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "QCN",
+      "quantity": 7.2332,
+      "total_buy_cost": 1255.22,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "QUU",
+      "quantity": 7.5099,
+      "total_buy_cost": 1805.6,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "ZAG",
+      "quantity": 28.3736,
+      "total_buy_cost": 1134.97,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "ZCB",
+      "quantity": 10.9171,
+      "total_buy_cost": 676.68,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "ZEA",
+      "quantity": 37.2096,
+      "total_buy_cost": 1152.05,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "ZGLD",
+      "quantity": 0.2824,
+      "total_buy_cost": 18.91,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "ZHY",
+      "quantity": 8.2105,
+      "total_buy_cost": 133.77,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "symbol": "ZUAG.F",
+      "quantity": 8.7317,
+      "total_buy_cost": 340.44,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "symbol": "EEMV",
+      "quantity": 7.5688,
+      "total_buy_cost": 742.57,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "symbol": "GSWO",
+      "quantity": 19.4404,
+      "total_buy_cost": 1653.54,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "symbol": "IEFA",
+      "quantity": 17.7178,
+      "total_buy_cost": 2350.66,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "symbol": "QCN",
+      "quantity": 16.8382,
+      "total_buy_cost": 3494.67,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "symbol": "VOO",
+      "quantity": 4.9812,
+      "total_buy_cost": 4558.16,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "symbol": "QQC",
+      "quantity": 9.0723,
+      "total_buy_cost": 379.23,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "symbol": "VFV",
+      "quantity": 7.5867,
+      "total_buy_cost": 1282.97,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "symbol": "XEQT",
+      "quantity": 38.8095,
+      "total_buy_cost": 1604.45,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "symbol": "PSA",
+      "quantity": 159.1371,
+      "total_buy_cost": 19913.6,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "symbol": "WSE300",
+      "quantity": -786.5129,
+      "total_buy_cost": 0.0,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "symbol": "WSE300P",
+      "quantity": 1194.367,
+      "total_buy_cost": 11943.67,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "symbol": "WSE401",
+      "quantity": 1241.715,
+      "total_buy_cost": 12417.15,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "CHPS",
+      "quantity": 15.1706,
+      "total_buy_cost": 1604.63,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "CONY",
+      "quantity": 98.5756,
+      "total_buy_cost": 1110.66,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "JEPQ",
+      "quantity": -11.0,
+      "total_buy_cost": 3727.37,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "MSTY",
+      "quantity": 100.5329,
+      "total_buy_cost": 3024.75,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "PSA",
+      "quantity": 320.5199,
+      "total_buy_cost": 17542.71,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "QQC",
+      "quantity": 5.9852,
+      "total_buy_cost": 319.31,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "SCHD",
+      "quantity": -9.7214,
+      "total_buy_cost": 251.77,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "TSLY",
+      "quantity": 62.9097,
+      "total_buy_cost": 785.14,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "VFV",
+      "quantity": 66.3484,
+      "total_buy_cost": 10135.41,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "XEQT",
+      "quantity": 115.5232,
+      "total_buy_cost": 4783.41,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "XFN",
+      "quantity": 8.108,
+      "total_buy_cost": 1002.53,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "symbol": "ZGLD",
+      "quantity": 53.4372,
+      "total_buy_cost": 3275.07,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_e2d627ff",
+      "symbol": "BTC",
+      "quantity": 0.006188,
+      "total_buy_cost": 530.32,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_e2d627ff",
+      "symbol": "ETH",
+      "quantity": 0.201815,
+      "total_buy_cost": 470.31,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "symbol": "L",
+      "quantity": 76.4366,
+      "total_buy_cost": 4782.18,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "symbol": "MSTY",
+      "quantity": 38.2986,
+      "total_buy_cost": 1223.4,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "symbol": "QQC",
+      "quantity": 60.464,
+      "total_buy_cost": 2526.21,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "symbol": "VFV",
+      "quantity": 50.0866,
+      "total_buy_cost": 9055.87,
+      "currency": "CAD"
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "symbol": "XEQT",
+      "quantity": 192.0711,
+      "total_buy_cost": 7910.16,
+      "currency": "CAD"
+    }
+  ],
+  "balances": [
+    {
+      "account_id": "acct_18a334f1",
+      "month": "2026-04",
+      "balance": 500.0,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_18a334f1",
+      "month": "2026-05",
+      "balance": 1500.0,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_18a334f1",
+      "month": "2026-06",
+      "balance": 1100.0,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2025-10",
+      "balance": 1015.28,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2025-11",
+      "balance": 530.2,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2025-12",
+      "balance": 524.28,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-01",
+      "balance": 552.02,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-02",
+      "balance": 335.56,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-03",
+      "balance": 581.69,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-04",
+      "balance": 539.09,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-05",
+      "balance": 746.25,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_1f9a1df3",
+      "month": "2026-06",
+      "balance": 584.74,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2025-09",
+      "balance": 0.0,
+      "currency": "BX",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2025-10",
+      "balance": 14.15,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2025-11",
+      "balance": 0.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2025-12",
+      "balance": 0.01,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-01",
+      "balance": 0.01,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-02",
+      "balance": 0.01,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-03",
+      "balance": 506.88,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-04",
+      "balance": 600.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-05",
+      "balance": 6030.42,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_231879ac",
+      "month": "2026-06",
+      "balance": 778.88,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-07",
+      "balance": 1488.52,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-08",
+      "balance": 1996.05,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-09",
+      "balance": 1452.66,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-10",
+      "balance": 21410.72,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-11",
+      "balance": 6150.94,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2025-12",
+      "balance": 8203.81,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-01",
+      "balance": 1057.89,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-02",
+      "balance": 862.39,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-03",
+      "balance": 227.29,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-04",
+      "balance": 458.7,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-05",
+      "balance": 195.59,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2b743dc7",
+      "month": "2026-06",
+      "balance": 155.62,
+      "currency": "CAD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2025-11",
+      "balance": 0.04,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2025-12",
+      "balance": 503.02,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-01",
+      "balance": 2600.01,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-02",
+      "balance": 219.13,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-03",
+      "balance": 508.95,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-04",
+      "balance": 500.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-05",
+      "balance": 1377.52,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_2c620d2b",
+      "month": "2026-06",
+      "balance": 555.52,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_375fd2ca",
+      "month": "2023-07",
+      "balance": 0.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-07",
+      "balance": 1418.98,
+      "currency": "USD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-08",
+      "balance": 1419.21,
+      "currency": "USD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-09",
+      "balance": 1423.16,
+      "currency": "USD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-10",
+      "balance": 1427.17,
+      "currency": "USD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-11",
+      "balance": 0.0,
+      "currency": "USD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_38abd498",
+      "month": "2025-12",
+      "balance": 0.0,
+      "currency": "USD",
+      "approximate": false
+    },
+    {
+      "account_id": "acct_3b7b8244",
+      "month": "2023-07",
+      "balance": 0.01,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_3b7b8244",
+      "month": "2023-08",
+      "balance": 0.0,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2025-09",
+      "balance": 20270.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2025-10",
+      "balance": 24516.18,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2025-11",
+      "balance": 25572.31,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2025-12",
+      "balance": 26618.77,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-01",
+      "balance": 2830.42,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-02",
+      "balance": 3000.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-03",
+      "balance": 102.32,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-04",
+      "balance": 19666.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-05",
+      "balance": 66.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_8cd3372e",
+      "month": "2026-06",
+      "balance": 0.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-01",
+      "balance": 19999.51,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-02",
+      "balance": 55.15,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-03",
+      "balance": 192.6,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-04",
+      "balance": 110.96,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-05",
+      "balance": 93.21,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_91b82482",
+      "month": "2026-06",
+      "balance": 237.74,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-07",
+      "balance": 503.33,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-08",
+      "balance": 2.56,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-09",
+      "balance": 5.48,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-10",
+      "balance": 4.64,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-11",
+      "balance": 3.11,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2023-12",
+      "balance": 6.27,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-01",
+      "balance": 4.68,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-02",
+      "balance": 5.88,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-03",
+      "balance": 4.37,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-04",
+      "balance": 2.83,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-05",
+      "balance": 3.84,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-06",
+      "balance": 6.95,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-07",
+      "balance": 3.03,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-08",
+      "balance": 4.06,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-09",
+      "balance": 4.17,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-10",
+      "balance": 4.12,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-11",
+      "balance": 5.43,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2024-12",
+      "balance": 5.16,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-01",
+      "balance": 4.56,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-02",
+      "balance": 4.72,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-03",
+      "balance": 7.53,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-04",
+      "balance": 12.57,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-05",
+      "balance": 8.35,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-06",
+      "balance": 68.67,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-07",
+      "balance": 409.52,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-08",
+      "balance": 11.07,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-09",
+      "balance": 21.41,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-10",
+      "balance": 29.1,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-11",
+      "balance": 27.75,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2025-12",
+      "balance": 32.31,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-01",
+      "balance": 16.55,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-02",
+      "balance": 16.17,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-03",
+      "balance": 29.73,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-04",
+      "balance": 15.59,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-05",
+      "balance": 17.66,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97100dd9",
+      "month": "2026-06",
+      "balance": 34.05,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "month": "2026-03",
+      "balance": 706.85,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "month": "2026-04",
+      "balance": 707.14,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "month": "2026-05",
+      "balance": 1025.97,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_97ab4cb2",
+      "month": "2026-06",
+      "balance": 879.18,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-01",
+      "balance": 116.39,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-02",
+      "balance": 334.18,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-03",
+      "balance": 3.23,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-04",
+      "balance": 10.01,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-05",
+      "balance": 167.76,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_c2e9345e",
+      "month": "2026-06",
+      "balance": 302.5,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2025-11",
+      "balance": 46.52,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2025-12",
+      "balance": 62.34,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-01",
+      "balance": 57.75,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-02",
+      "balance": 53.61,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-03",
+      "balance": 49.06,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-04",
+      "balance": 85.53,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-05",
+      "balance": 116.67,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d6d9fb4a",
+      "month": "2026-06",
+      "balance": 122.95,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-07",
+      "balance": 300.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-08",
+      "balance": 0.01,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-09",
+      "balance": 2.37,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-10",
+      "balance": 0.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-11",
+      "balance": 0.01,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2023-12",
+      "balance": 1.69,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-01",
+      "balance": 101.01,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-02",
+      "balance": 0.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-03",
+      "balance": 0.06,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-04",
+      "balance": 1.33,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-05",
+      "balance": 0.06,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-06",
+      "balance": 0.14,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-07",
+      "balance": 1.3,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-08",
+      "balance": 1.71,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-09",
+      "balance": 11.36,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-10",
+      "balance": 26.81,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-11",
+      "balance": 2.75,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2024-12",
+      "balance": 6.13,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-01",
+      "balance": 19.84,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-02",
+      "balance": 20.7,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-03",
+      "balance": 27.93,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-04",
+      "balance": 1.36,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-05",
+      "balance": 1.36,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-06",
+      "balance": 25.37,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-07",
+      "balance": 1732.14,
+      "currency": "JEPQ",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-08",
+      "balance": 321.46,
+      "currency": "ZGLD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-09",
+      "balance": 809.08,
+      "currency": "MSTY",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-10",
+      "balance": 38.66,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-11",
+      "balance": 0.74,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2025-12",
+      "balance": 1.52,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-01",
+      "balance": 0.0,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-02",
+      "balance": 0.08,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-03",
+      "balance": 3.4,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-04",
+      "balance": 8099.59,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-05",
+      "balance": 2618.4,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_d77c33c7",
+      "month": "2026-06",
+      "balance": 1037.09,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2d627ff",
+      "month": "2026-06",
+      "balance": 50.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2024-12",
+      "balance": 0.0,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-01",
+      "balance": 15.76,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-02",
+      "balance": 0.01,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-03",
+      "balance": 18.95,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-04",
+      "balance": 11.06,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-05",
+      "balance": 12.86,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-06",
+      "balance": 20.49,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-07",
+      "balance": 0.35,
+      "currency": "JEPQ",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-08",
+      "balance": 46.77,
+      "currency": "MSTY",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-09",
+      "balance": 5.42,
+      "currency": "MSTY",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-10",
+      "balance": 7.13,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-11",
+      "balance": 1.38,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2025-12",
+      "balance": 0.0,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-01",
+      "balance": -895.19,
+      "currency": "USD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-02",
+      "balance": 145.05,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-03",
+      "balance": 15.88,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-04",
+      "balance": 1895.42,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-05",
+      "balance": 993.72,
+      "currency": "CAD",
+      "approximate": true
+    },
+    {
+      "account_id": "acct_e2ec057d",
+      "month": "2026-06",
+      "balance": 2199.88,
+      "currency": "CAD",
+      "approximate": true
+    }
+  ]
+}

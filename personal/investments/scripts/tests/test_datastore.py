@@ -43,3 +43,23 @@ def test_identical_rows_are_all_kept(tmp_path: Path):
     (tmp_path / "A-2026-06-01-transactions-XX0TEST700CAD.csv").write_text(content)
     store = build_datastore(tmp_path, RED)
     assert store["meta"]["txn_count"] == 3
+
+
+def test_end_to_end_build_writes_outputs(tmp_source_dir, tmp_path, monkeypatch):
+    import json
+
+    import build
+
+    out_root = tmp_path / "endeavor"
+    (out_root / "data").mkdir(parents=True)
+    (out_root / "notes").mkdir(parents=True)
+    monkeypatch.setattr(build, "ENDEAVOR_ROOT", out_root)
+    # Use the committed example list (redactions.json is gitignored and may be absent in CI).
+    monkeypatch.setattr(build, "REDACTIONS_PATH", build.SCRIPTS_DIR / "redactions.example.json")
+    rc = build.main(source_dir=tmp_source_dir)
+    assert rc == 0
+    store = json.loads((out_root / "data" / "datastore.json").read_text())
+    assert store["meta"]["txn_count"] > 0
+    assert (out_root / "notes" / "index.html").exists()
+    blob = (out_root / "data" / "datastore.json").read_text()
+    assert "XX0TEST001CAD" not in blob
