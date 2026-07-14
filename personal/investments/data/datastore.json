@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-07-13T23:02:32.579428+00:00",
+    "generated_at": "2026-07-14T01:33:19.693516+00:00",
     "schema_version": 1,
     "file_count": 183,
     "txn_count": 8050,
@@ -16,6 +16,8 @@
     {
       "masked_id": "acct_2b743dc7",
       "kind": "Chequing",
+      "name": "Chequing",
+      "short_id": "2b74",
       "currency": "CAD",
       "first_activity": "2025-07-24",
       "last_activity": "2026-06-29",
@@ -24,6 +26,8 @@
     {
       "masked_id": "acct_8367cd66",
       "kind": "CreditCard",
+      "name": "Card",
+      "short_id": "8367",
       "currency": "CAD",
       "first_activity": "2025-12-29",
       "last_activity": "2026-06-23",
@@ -32,6 +36,8 @@
     {
       "masked_id": "acct_e2d627ff",
       "kind": "Crypto",
+      "name": "Crypto",
+      "short_id": "e2d6",
       "currency": "CAD",
       "first_activity": "2026-06-04",
       "last_activity": "2026-06-30",
@@ -40,6 +46,8 @@
     {
       "masked_id": "acct_1f9a1df3",
       "kind": "DirectIndexing",
+      "name": "Direct Indexing (USD)",
+      "short_id": "1f9a",
       "currency": "CAD",
       "first_activity": "2025-10-22",
       "last_activity": "2026-06-30",
@@ -48,6 +56,8 @@
     {
       "masked_id": "acct_e2ec057d",
       "kind": "FHSA",
+      "name": "Home",
+      "short_id": "e2ec",
       "currency": "CAD",
       "first_activity": "2024-12-03",
       "last_activity": "2026-06-30",
@@ -56,6 +66,8 @@
     {
       "masked_id": "acct_97100dd9",
       "kind": "ManagedTFSA",
+      "name": "Managed (TFSA)",
+      "short_id": "9710",
       "currency": "CAD",
       "first_activity": "2023-07-04",
       "last_activity": "2026-06-30",
@@ -64,6 +76,8 @@
     {
       "masked_id": "acct_375fd2ca",
       "kind": "NonRegistered",
+      "name": "Non-registered",
+      "short_id": "375f",
       "currency": "CAD",
       "first_activity": "2023-07-06",
       "last_activity": "2023-07-12",
@@ -72,6 +86,8 @@
     {
       "masked_id": "acct_2c620d2b",
       "kind": "NonRegistered",
+      "name": "Non-registered",
+      "short_id": "2c62",
       "currency": "USD",
       "first_activity": "2025-11-25",
       "last_activity": "2026-06-30",
@@ -80,6 +96,8 @@
     {
       "masked_id": "acct_91b82482",
       "kind": "Other",
+      "name": "xyzbytes",
+      "short_id": "91b8",
       "currency": "CAD",
       "first_activity": "2026-01-30",
       "last_activity": "2026-06-30",
@@ -88,6 +106,8 @@
     {
       "masked_id": "acct_d6d9fb4a",
       "kind": "PE",
+      "name": "PE",
+      "short_id": "d6d9",
       "currency": "CAD",
       "first_activity": "2025-11-20",
       "last_activity": "2026-06-30",
@@ -96,6 +116,8 @@
     {
       "masked_id": "acct_c2e9345e",
       "kind": "RESP",
+      "name": "Family-RESP",
+      "short_id": "c2e9",
       "currency": "CAD",
       "first_activity": "2026-01-08",
       "last_activity": "2026-06-30",
@@ -104,6 +126,8 @@
     {
       "masked_id": "acct_97ab4cb2",
       "kind": "RRSP",
+      "name": "Maham's RRSP",
+      "short_id": "97ab",
       "currency": "CAD",
       "first_activity": "2026-03-12",
       "last_activity": "2026-06-30",
@@ -112,6 +136,8 @@
     {
       "masked_id": "acct_231879ac",
       "kind": "RRSP",
+      "name": "Umar\u2019s RRSP",
+      "short_id": "2318",
       "currency": "CAD",
       "first_activity": "2025-09-13",
       "last_activity": "2026-06-30",
@@ -120,6 +146,8 @@
     {
       "masked_id": "acct_8cd3372e",
       "kind": "RRSP",
+      "name": "RRSP",
+      "short_id": "8cd3",
       "currency": "CAD",
       "first_activity": "2025-09-12",
       "last_activity": "2026-06-29",
@@ -128,6 +156,8 @@
     {
       "masked_id": "acct_18a334f1",
       "kind": "Savings",
+      "name": "Savings",
+      "short_id": "18a3",
       "currency": "CAD",
       "first_activity": "2026-04-14",
       "last_activity": "2026-06-29",
@@ -136,6 +166,8 @@
     {
       "masked_id": "acct_d77c33c7",
       "kind": "TFSA",
+      "name": "TFSA",
+      "short_id": "d77c",
       "currency": "CAD",
       "first_activity": "2023-07-04",
       "last_activity": "2026-06-30",
@@ -144,6 +176,8 @@
     {
       "masked_id": "acct_3b7b8244",
       "kind": "TFSA",
+      "name": "TFSA",
+      "short_id": "3b7b",
       "currency": "USD",
       "first_activity": "2023-07-14",
       "last_activity": "2023-08-13",
@@ -152,6 +186,8 @@
     {
       "masked_id": "acct_38abd498",
       "kind": "USD",
+      "name": "US dollars",
+      "short_id": "38ab",
       "currency": "USD",
       "first_activity": "2025-07-30",
       "last_activity": "2025-12-02",

@@ -52,6 +52,23 @@ def account_code_from_filename(name: str) -> str:
     return match.group(1)
 
 
+def short_account_id(real_code: str) -> str:
+    """Return a short 4-hex disambiguator for a real code; the real code is never stored."""
+    return hashlib.sha256(real_code.encode("utf-8")).hexdigest()[:4]
+
+
+_STMT_RE = re.compile(r"-\d{4}-\d{2}-\d{2}-monthly-statement.*$")
+
+
+def account_name_from_filename(name: str) -> str:
+    """Return the human account label from a filename (the part before the date)."""
+    if "credit-card" in name:
+        return "Card"
+    stem = _STMT_RE.sub("", name)
+    stem = re.sub(r"^[^\w(]+", "", stem).strip()
+    return stem or "Account"
+
+
 def detect_kind(filename: str) -> str:
     """Detect the account kind from a filename using ordered keyword rules."""
     lowered = filename.lower()

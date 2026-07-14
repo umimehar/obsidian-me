@@ -10,9 +10,11 @@ from investments.classify import classify
 from investments.mask import (
     Redactions,
     account_code_from_filename,
+    account_name_from_filename,
     detect_kind,
     mask_account_code,
     redact,
+    short_account_id,
 )
 from investments.parse import SCHEMA_CARD, RawRow, discover_csvs, parse_csv
 
@@ -78,12 +80,14 @@ def build_datastore(source_dir: Path, redactions: Redactions) -> dict:
     accounts: dict[str, dict] = {}
     transactions: list[dict] = []
     for path in files:
-        account_id = mask_account_code(account_code_from_filename(path.name))
+        real_code = account_code_from_filename(path.name)
+        account_id = mask_account_code(real_code)
         kind = detect_kind(path.name)
+        meta = (account_name_from_filename(path.name), short_account_id(real_code))
         for row in parse_csv(path):
             txn = _row_to_txn(row, account_id, redactions)
             transactions.append(txn)
-            _touch_account(accounts, account_id, kind, txn)
+            _touch_account(accounts, account_id, kind, txn, meta)
     return {
         "meta": {
             "generated_at": datetime.now(UTC).isoformat(),
@@ -98,13 +102,18 @@ def build_datastore(source_dir: Path, redactions: Redactions) -> dict:
     }
 
 
-def _touch_account(accounts: dict[str, dict], account_id: str, kind: str, txn: dict) -> None:
+def _touch_account(
+    accounts: dict[str, dict], account_id: str, kind: str, txn: dict, meta: tuple[str, str]
+) -> None:
     """Create or update the account summary for a transaction."""
+    name, short_id = meta
     acct = accounts.setdefault(
         account_id,
         {
             "masked_id": account_id,
             "kind": kind,
+            "name": name,
+            "short_id": short_id,
             "currency": txn["currency"],
             "first_activity": txn["date"],
             "last_activity": txn["date"],

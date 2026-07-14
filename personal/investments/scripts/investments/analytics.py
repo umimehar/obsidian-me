@@ -230,6 +230,124 @@ def _monthly_series(store: dict, kinds: dict[str, str]) -> list[dict]:
     ]
 
 
+def _acb_monthly(store: dict) -> dict[tuple[str, str], float]:
+    """Running adjusted cost base of held CAD positions per account at each month end."""
+    by_acct: dict[str, list[dict]] = defaultdict(list)
+    for txn in store["transactions"]:
+        if txn["symbol"] and txn["quantity"] is not None and txn["currency"] == "CAD":
+            by_acct[txn["account_id"]].append(txn)
+    out: dict[tuple[str, str], float] = {}
+    for account_id, txns in by_acct.items():
+        pos: dict[str, list[float]] = defaultdict(lambda: [0.0, 0.0])  # symbol -> [qty, cost]
+        for txn in sorted(txns, key=lambda t: t["date"]):
+            p = pos[txn["symbol"]]
+            if txn["type"] in {"BUY", "STKDIV"}:
+                p[0] += txn["quantity"]
+                p[1] += -txn["amount"] if txn["amount"] < 0 else 0.0
+            elif txn["type"] == "SELL" and p[0] > 0:
+                avg = p[1] / p[0]
+                p[1] -= avg * min(txn["quantity"], p[0])
+                p[0] -= txn["quantity"]
+            out[(account_id, _month(txn["date"]))] = sum(
+                max(c, 0.0) for q, c in pos.values() if q > 1e-9
+            )
+    return out
+
+
+def _holdings_acb(store: dict) -> list[dict]:
+    """Current CAD positions with adjusted cost base per account and symbol."""
+    pos: dict[tuple[str, str], list[float]] = defaultdict(lambda: [0.0, 0.0])
+    key_order = sorted(
+        (
+            t
+            for t in store["transactions"]
+            if t["symbol"] and t["quantity"] is not None and t["currency"] == "CAD"
+        ),
+        key=lambda t: t["date"],
+    )
+    for txn in key_order:
+        key = (txn["account_id"], txn["symbol"])
+        p = pos[key]
+        if txn["type"] in {"BUY", "STKDIV"}:
+            p[0] += txn["quantity"]
+            p[1] += -txn["amount"] if txn["amount"] < 0 else 0.0
+        elif txn["type"] == "SELL" and p[0] > 0:
+            avg = p[1] / p[0]
+            p[1] -= avg * min(txn["quantity"], p[0])
+            p[0] -= txn["quantity"]
+    return [
+        {"account_id": a, "symbol": s, "qty": round(q, 6), "acb": round(max(c, 0.0), 2)}
+        for (a, s), (q, c) in sorted(pos.items())
+        if q > 1e-9
+    ]
+
+
+def _ledger_flow(txn: dict, kinds: dict[str, str], r: dict[str, float]) -> None:
+    """Fold one CAD transaction into a per-account-month flow record."""
+    ttype, amount = txn["type"], txn["amount"]
+    if ttype in _INCOME_TYPES and amount > 0:
+        r["income"] += amount
+    if ttype == "CONTRIB":
+        r["contrib"] += amount
+    is_flow = ttype not in {"LENDING", "REORG"} and amount != 0
+    if is_flow and kinds.get(txn["account_id"]) != "CreditCard":
+        if amount >= 0:
+            r["inflow"] += amount
+        else:
+            r["outflow"] += amount
+
+
+def _ledger(store: dict, kinds: dict[str, str]) -> dict:
+    """One compact per-account-month dataset the filter-driven page recomputes from."""
+    acb = _acb_monthly(store)
+    rec: dict[tuple[str, str], dict[str, float]] = defaultdict(
+        lambda: {"contrib": 0.0, "income": 0.0, "inflow": 0.0, "outflow": 0.0}
+    )
+    cash: dict[tuple[str, str], tuple[str, float]] = {}
+    for txn in store["transactions"]:
+        if txn["currency"] != "CAD":
+            continue
+        key = (txn["account_id"], _month(txn["date"]))
+        _ledger_flow(txn, kinds, rec[key])
+        if txn["balance"] is not None:
+            prev = cash.get(key)
+            if prev is None or txn["date"] >= prev[0]:
+                cash[key] = (txn["date"], txn["balance"])
+    months = sorted({m for _, m in rec} | {m for _, m in cash} | {m for _, m in acb})
+    series = []
+    for (account_id, month), r in sorted(rec.items()):
+        series.append(
+            {
+                "account_id": account_id,
+                "month": month,
+                "contrib": round(r["contrib"], 2),
+                "income": round(r["income"], 2),
+                "inflow": round(r["inflow"], 2),
+                "outflow": round(r["outflow"], 2),
+                "cash": round(cash[(account_id, month)][1], 2)
+                if (account_id, month) in cash
+                else None,
+                "acb": round(acb[(account_id, month)], 2) if (account_id, month) in acb else None,
+            }
+        )
+    return {
+        "accounts": [
+            {
+                "id": a["masked_id"],
+                "kind": a["kind"],
+                "name": a.get("name", a["kind"]),
+                "short_id": a.get("short_id", a["masked_id"][5:9]),
+                "currency": a["currency"],
+            }
+            for a in store["accounts"]
+        ],
+        "months": months,
+        "series": series,
+        "holdings": _holdings_acb(store),
+        "limits": CONTRIBUTION_LIMITS,
+    }
+
+
 def compute_analytics(store: dict) -> dict:
     """Compute all analytic aggregations from a datastore dict."""
     kinds = _kinds(store)
@@ -240,4 +358,5 @@ def compute_analytics(store: dict) -> dict:
         "holdings": _holdings(store),
         "balances": _balances(store),
         "monthly_series": _monthly_series(store, kinds),
+        "ledger": _ledger(store, kinds),
     }
