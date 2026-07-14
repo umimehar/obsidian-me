@@ -2,7 +2,7 @@
 title: Investments
 tags: [personal/investments]
 created: 2026-07-13
-updated: 2026-07-13
+updated: 2026-07-14
 status: active
 type: personal
 personal: investments
@@ -10,21 +10,24 @@ personal: investments
 
 # Investments
 
-Personal finance and investments second brain built from Wealthsimple monthly statements. A reusable pipeline masks the raw exports into a normalized datastore and renders analysis pages.
+Personal finance second brain built from Wealthsimple monthly statements. A bun/TypeScript pipeline turns the raw exports into a normalized datastore and renders one filter-driven "Ledger" page.
 
-## Pages
+## Page
 
-- [Overview](notes/index.html)
-- [Growth](notes/growth.html)
-- [Contributions](notes/contributions.html)
-- [Cash flow](notes/cash-flow.html)
-- [Income](notes/income.html)
-- [Holdings](notes/holdings.html)
+- [The Ledger](notes/index.html) — filter by account and date across every figure and chart.
 
 ## Rebuild
 
 Drop new statement CSVs into the source directory, then from `scripts/`:
 
-    uv run python build.py
+    bun run build
 
-Regenerates `data/datastore.json`, `data/analytics.json`, and the pages. Real account numbers are never stored; masked ids only.
+Regenerates `data/datastore.json`, `data/analytics.json`, and `notes/index.html`. Real account numbers are never stored; accounts show as kind, name, and a short id.
+
+## Develop
+
+    bun install        # once
+    bun run check      # biome + tsc + bun test
+    bun test           # tests only
+
+The pipeline lives in `scripts/src/` (`parse` → `classify` → `mask` → `datastore` → `analytics` → `render`, driven by `build.ts`). `src/ledger.js` is the browser client embedded in the page. Styling is `personal/_assets/personal.css` (hand-maintained, self-hosted fonts). The real name list is `scripts/redactions.json` (gitignored; copy from `redactions.example.json`).

@@ -1,5 +1,3 @@
-scripts/.venv/
-scripts/**/__pycache__/
-scripts/.pytest_cache/
-scripts/.ruff_cache/
+scripts/node_modules/
 scripts/redactions.json
+scripts/.impeccable/
