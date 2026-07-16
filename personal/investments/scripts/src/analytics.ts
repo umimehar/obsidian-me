@@ -17,6 +17,7 @@ export interface LedgerSeriesRow {
   account_id: string;
   month: string;
   contrib: number;
+  deposits: number;
   income: number;
   inflow: number;
   outflow: number;
@@ -123,8 +124,11 @@ function holdingsAcb(store: Datastore): Ledger["holdings"] {
   return out;
 }
 
+const DEPOSIT_TYPES = new Set(["CONTRIB", "TRANSFER_IN", "TRANSFER_OUT"]);
+
 interface FlowRec {
   contrib: number;
+  deposits: number;
   income: number;
   inflow: number;
   outflow: number;
@@ -134,6 +138,7 @@ function foldFlow(txn: Txn, kinds: Map<string, string>, r: FlowRec): void {
   const { type, amount } = txn;
   if (INCOME_TYPES.has(type) && amount > 0) r.income += amount;
   if (type === "CONTRIB") r.contrib += amount;
+  if (DEPOSIT_TYPES.has(type)) r.deposits += amount;
   const isFlow = type !== "LENDING" && type !== "REORG" && amount !== 0;
   if (isFlow && kinds.get(txn.account_id) !== "CreditCard") {
     if (amount >= 0) r.inflow += amount;
@@ -151,7 +156,7 @@ export function buildLedger(store: Datastore): Ledger {
     const key = `${txn.account_id}|${month(txn.date)}`;
     let r = rec.get(key);
     if (!r) {
-      r = { contrib: 0, income: 0, inflow: 0, outflow: 0 };
+      r = { contrib: 0, deposits: 0, income: 0, inflow: 0, outflow: 0 };
       rec.set(key, r);
     }
     foldFlow(txn, kinds, r);
@@ -174,6 +179,7 @@ export function buildLedger(store: Datastore): Ledger {
       account_id: accountId ?? "",
       month: m ?? "",
       contrib: round2(r.contrib),
+      deposits: round2(r.deposits),
       income: round2(r.income),
       inflow: round2(r.inflow),
       outflow: round2(r.outflow),
@@ -181,14 +187,18 @@ export function buildLedger(store: Datastore): Ledger {
       acb: acb.has(key) ? round2(acb.get(key) ?? 0) : null,
     });
   }
+  const active = new Set<string>();
+  for (const row of series) active.add(row.account_id);
   return {
-    accounts: store.accounts.map((a) => ({
-      id: a.masked_id,
-      kind: a.kind,
-      name: a.name ?? a.kind,
-      short_id: a.short_id ?? a.masked_id.slice(5, 9),
-      currency: a.currency,
-    })),
+    accounts: store.accounts
+      .filter((a) => active.has(a.masked_id))
+      .map((a) => ({
+        id: a.masked_id,
+        kind: a.kind,
+        name: a.name ?? a.kind,
+        short_id: a.short_id ?? a.masked_id.slice(5, 9),
+        currency: a.currency,
+      })),
     months,
     series,
     holdings: holdingsAcb(store),

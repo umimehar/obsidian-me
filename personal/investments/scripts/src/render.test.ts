@@ -42,6 +42,7 @@ function analytics(): Analytics {
           account_id: "acct_a",
           month: "2025-03",
           contrib: 500,
+          deposits: 500,
           income: 3,
           inflow: 503,
           outflow: 0,

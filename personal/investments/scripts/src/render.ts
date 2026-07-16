@@ -129,7 +129,11 @@ function footnote(): string {
     "<p><strong>Invested at cost</strong> is the adjusted cost base of positions still held: " +
     "what was paid for them, reduced proportionally as they were sold. " +
     "<strong>Contributions</strong> are deposits coded as contributions, gross of " +
-    "recontributions. <strong>Cash on hand</strong> is uninvested cash. " +
+    "recontributions. <strong>Net deposits</strong> adds transfers in and subtracts " +
+    "transfers out, so it is the money put in net of money taken out; it is the closest " +
+    "match to the brokerage app's own net-deposits figure, though the statements cannot tell " +
+    "an internal transfer between your own accounts from an external withdrawal, so the two " +
+    "need not tie to the cent. <strong>Cash on hand</strong> is uninvested cash. " +
     "<strong>Growth beyond contributions</strong> is the cost base above contributions, i.e. " +
     "capital that arrived as transfers in or reinvested income.</p></section>"
   );

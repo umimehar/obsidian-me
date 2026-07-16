@@ -73,6 +73,15 @@ test("holdings use adjusted cost base, reduced on sell", () => {
   expect(holding?.acb).toBeCloseTo(53.33, 1);
 });
 
+test("accounts with no CAD ledger activity are dropped from the account list", () => {
+  const txns = [
+    txn({ account_id: "acct_a", type: "CONTRIB", amount: 500 }),
+    txn({ account_id: "acct_usd", type: "INT", amount: 3, currency: "USD" }),
+  ];
+  const l = computeAnalytics(store(txns, [acct("acct_a", "TFSA"), acct("acct_usd", "USD")])).ledger;
+  expect(l.accounts.map((a) => a.id)).toEqual(["acct_a"]);
+});
+
 test("credit card rows do not count as cash inflow", () => {
   const txns = [txn({ account_id: "acct_c", type: "CARD_PURCHASE", amount: 37.4 })];
   const series = computeAnalytics(store(txns, [acct("acct_c", "CreditCard")])).ledger.series;

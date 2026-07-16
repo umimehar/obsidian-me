@@ -14,14 +14,14 @@
   var flow = {}, acbFF = {}, cashFF = {};
   ACCTS.forEach(function (a) {
     flow[a.id] = MONTHS.map(function () {
-      return { contrib: 0, income: 0, inflow: 0, outflow: 0 };
+      return { contrib: 0, deposits: 0, income: 0, inflow: 0, outflow: 0 };
     });
     acbFF[a.id] = MONTHS.map(function () { return 0; });
     cashFF[a.id] = MONTHS.map(function () { return 0; });
   });
   L.series.forEach(function (s) {
     var f = flow[s.account_id][idx[s.month]];
-    f.contrib = s.contrib; f.income = s.income; f.inflow = s.inflow; f.outflow = s.outflow;
+    f.contrib = s.contrib; f.deposits = s.deposits; f.income = s.income; f.inflow = s.inflow; f.outflow = s.outflow;
     if (s.acb != null) { acbFF[s.account_id][idx[s.month]] = s.acb; }
     if (s.cash != null) { cashFF[s.account_id][idx[s.month]] = s.cash; }
   });
@@ -120,9 +120,11 @@
   // ---- headline + waterfall ----------------------------------------------
   function render() {
     var ris = rangeIdx(), g = grainOf(ris), endI = ris[ris.length - 1], accts = selected();
-    var invested = 0, cash = 0, contribToDate = 0, income = 0;
+    var invested = 0, cash = 0, contribToDate = 0, depositsToDate = 0, income = 0;
     accts.forEach(function (id) { invested += acbFF[id][endI]; cash += cashFF[id][endI]; });
-    for (var i = 0; i <= endI; i++) { accts.forEach(function (id) { contribToDate += flow[id][i].contrib; }); }
+    for (var i = 0; i <= endI; i++) {
+      accts.forEach(function (id) { contribToDate += flow[id][i].contrib; depositsToDate += flow[id][i].deposits; });
+    }
     ris.forEach(function (i) { accts.forEach(function (id) { income += flow[id][i].income; }); });
     var growth = invested - contribToDate;
 
@@ -136,7 +138,7 @@
       ["Growth beyond contributions", money(growth),
         "Cost base above contributions: transfers in and reinvested income."],
     ]);
-    waterfall(contribToDate, growth, invested, cash);
+    waterfall(contribToDate, depositsToDate, growth, invested, cash);
 
     capitalChart(ris, g);
     barChart("inc", bucketSum(flowSum(ris, "income"), g), false);
@@ -168,11 +170,12 @@
     });
   }
 
-  function waterfall(contrib, growth, invested, cash) {
+  function waterfall(contrib, deposits, growth, invested, cash) {
     var host = document.getElementById("waterfall");
     var max = Math.max(invested, 1);
     var parts = [
       { label: "Contributions", v: contrib, from: 0 },
+      { label: "Net deposits", v: deposits, from: 0, stub: true },
       { label: "+ Transfers & reinvested", v: growth, from: contrib },
       { label: "Invested at cost", v: invested, from: 0, total: true },
       { label: "Cash on hand", v: cash, from: 0, stub: true },
