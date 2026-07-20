@@ -100,6 +100,33 @@ test("index embeds the ledger data and the progressive filter shell", async () =
   expect(html).toContain('"month":"2025-03"');
 });
 
+test("index has the four pillar sections", async () => {
+  const html = (await pages())["index.html"] ?? "";
+  expect(html).toContain("Contributions &amp; Room");
+  expect(html).toContain(">Growth<");
+  expect(html).toContain("Tax this year");
+  expect(html).toContain(">Detail<");
+});
+
+test("index has the tax disclaimer and tax rate input", async () => {
+  const html = (await pages())["index.html"] ?? "";
+  expect(html).toContain("not for filing");
+  expect(html).toContain('id="tax-rate"');
+});
+
+test("index has the four chart canvases", async () => {
+  const html = (await pages())["index.html"] ?? "";
+  expect(html).toContain('id="chart-cashflow"');
+  expect(html).toContain('id="chart-growth"');
+  expect(html).toContain('id="chart-trend"');
+  expect(html).toContain('id="chart-income"');
+});
+
+test("index bundles all scripts offline, no CDN", async () => {
+  const html = (await pages())["index.html"] ?? "";
+  expect(html).not.toContain("https://cdn");
+});
+
 test("accounts are unmasked in the embedded ledger data", async () => {
   const html = (await pages())["index.html"] ?? "";
   expect(html).toContain("Managed (TFSA)");
