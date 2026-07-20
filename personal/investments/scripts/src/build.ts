@@ -2,10 +2,11 @@
 import { existsSync, mkdirSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
-import { computeAnalytics } from "./analytics";
+import { buildLedger, computeAnalytics, heldSymbols } from "./analytics";
 import { buildDatastore } from "./datastore";
 import { loadRedactions } from "./mask";
 import { discoverCsvs, parseCsv } from "./parse";
+import { fetchPrices, httpSources, loadCachedPrices } from "./prices";
 import { renderPages } from "./render";
 
 const SCRIPTS_DIR = dirname(import.meta.dir);
@@ -19,7 +20,7 @@ function reconcile(source: string, txnCount: number): [number, boolean] {
   return [parsed, parsed === txnCount];
 }
 
-export function main(sourceDir?: string): number {
+export async function main(sourceDir?: string): Promise<number> {
   const source = sourceDir ?? DEFAULT_SOURCE;
   if (!existsSync(source) || !statSync(source).isDirectory()) {
     console.error(`Source directory not found: ${source}`);
@@ -34,11 +35,17 @@ export function main(sourceDir?: string): number {
   }
   const redactions = loadRedactions(REDACTIONS_PATH);
   const store = buildDatastore(source, redactions);
-  const analytics = computeAnalytics(store);
   const dataDir = join(ENDEAVOR_ROOT, "data");
   const notesDir = join(ENDEAVOR_ROOT, "notes");
   mkdirSync(dataDir, { recursive: true });
   mkdirSync(notesDir, { recursive: true });
+
+  const pricesPath = join(dataDir, "prices.json");
+  const held = heldSymbols(buildLedger(store));
+  const snapshot = await fetchPrices(held, httpSources, loadCachedPrices(pricesPath));
+  writeFileSync(pricesPath, JSON.stringify(snapshot, null, 2));
+
+  const analytics = computeAnalytics(store, snapshot);
   writeFileSync(join(dataDir, "datastore.json"), JSON.stringify(store, null, 2));
   writeFileSync(join(dataDir, "analytics.json"), JSON.stringify(analytics, null, 2));
   for (const [name, html] of Object.entries(renderPages(store, analytics))) {
@@ -61,5 +68,5 @@ export function main(sourceDir?: string): number {
 }
 
 if (import.meta.main) {
-  process.exit(main());
+  process.exit(await main());
 }

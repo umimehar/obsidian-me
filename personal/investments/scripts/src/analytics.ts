@@ -32,6 +32,8 @@ export interface Ledger {
   series: LedgerSeriesRow[];
   holdings: Array<{ account_id: string; symbol: string; qty: number; acb: number }>;
   limits: Record<string, Record<string, number>>;
+  growth: Growth;
+  tax: Tax;
 }
 
 export interface Analytics {
@@ -221,7 +223,9 @@ function foldFlow(txn: Txn, kinds: Map<string, string>, r: FlowRec): void {
   }
 }
 
-export function buildLedger(store: Datastore): Ledger {
+type LedgerCore = Omit<Ledger, "growth" | "tax">;
+
+export function buildLedger(store: Datastore): LedgerCore {
   const kinds = kindsOf(store);
   const acb = acbMonthly(store);
   const rec = new Map<string, FlowRec>();
@@ -281,8 +285,25 @@ export function buildLedger(store: Datastore): Ledger {
   };
 }
 
-export function computeAnalytics(store: Datastore): Analytics {
-  return { ledger: buildLedger(store) };
+export function computeAnalytics(store: Datastore, prices: PriceSnapshot): Analytics {
+  const core = buildLedger(store);
+  const currentYear = (store.meta.source_range.end ?? new Date().toISOString()).slice(0, 4);
+  const ledger: Ledger = {
+    ...core,
+    growth: buildGrowth(core.holdings, core.accounts, prices),
+    tax: buildTax(store, currentYear),
+  };
+  return { ledger };
+}
+
+export function heldSymbols(
+  ledger: Pick<Ledger, "holdings" | "accounts">,
+): Array<{ symbol: string; kind: string }> {
+  const kindById = new Map(ledger.accounts.map((a) => [a.id, a.kind]));
+  return ledger.holdings.map((h) => ({
+    symbol: h.symbol,
+    kind: kindById.get(h.account_id) ?? "",
+  }));
 }
 
 export interface TaxYear {

@@ -4245,6 +4245,260 @@
         "2025": 2500,
         "2026": 2500
       }
+    },
+    "growth": {
+      "as_of": "2026-07-20T16:35:16.195Z",
+      "coverage": 0,
+      "accounts": [
+        {
+          "account_id": "acct_1f9a1df3",
+          "cost": 25093.55,
+          "market": 25093.55,
+          "gain": 0,
+          "gainPct": 0
+        },
+        {
+          "account_id": "acct_231879ac",
+          "cost": 8082.21,
+          "market": 8082.21,
+          "gain": 0,
+          "gainPct": 0
+        },
+        {
+          "account_id": "acct_2c620d2b",
+          "cost": 19140.34,
+          "market": 19140.34,
+          "gain": 0,
+          "gainPct": 0
+        },
+        {
+          "account_id": "acct_91b82482",
+          "cost": 47082.63,
+          "market": 47082.63,
+          "gain": 0,
+          "gainPct": 0
+        },
+        {
+          "account_id": "acct_97100dd9",
+          "cost": 6242.56,
+          "market": 6242.56,
+          "gain": 0,
+          "gainPct": 0
+        },
+        {
+          "account_id": "acct_97ab4cb2",
+          "cost": 12799.6,
+          "market": 12799.6,
+          "gain": 0,
+          "gainPct": 0
+        },
+        {
+          "account_id": "acct_c2e9345e",
+          "cost": 3266.65,
+          "market": 3266.65,
+          "gain": 0,
+          "gainPct": 0
+        },
+        {
+          "account_id": "acct_d6d9fb4a",
+          "cost": 32322.42,
+          "market": 32322.42,
+          "gain": 0,
+          "gainPct": 0
+        },
+        {
+          "account_id": "acct_d77c33c7",
+          "cost": 43024.34,
+          "market": 43024.34,
+          "gain": 0,
+          "gainPct": 0
+        },
+        {
+          "account_id": "acct_e2d627ff",
+          "cost": 1000.63,
+          "market": 1000.63,
+          "gain": 0,
+          "gainPct": 0
+        },
+        {
+          "account_id": "acct_e2ec057d",
+          "cost": 28418.76,
+          "market": 28418.76,
+          "gain": 0,
+          "gainPct": 0
+        }
+      ],
+      "total": {
+        "cost": 226473.69,
+        "market": 226473.69,
+        "gain": 0,
+        "gainPct": 0
+      }
+    },
+    "tax": {
+      "current_year": "2026",
+      "years": [
+        {
+          "year": "2023",
+          "room": [
+            {
+              "group": "TFSA",
+              "used": 3388,
+              "limit": 6500,
+              "remaining": 3112,
+              "over": false
+            },
+            {
+              "group": "FHSA",
+              "used": 0,
+              "limit": 8000,
+              "remaining": 8000,
+              "over": false
+            },
+            {
+              "group": "RRSP",
+              "used": 0,
+              "limit": 30780,
+              "remaining": 30780,
+              "over": false
+            },
+            {
+              "group": "RESP",
+              "used": 0,
+              "limit": 2500,
+              "remaining": 2500,
+              "over": false
+            }
+          ],
+          "rrsp_deduction_available": 30780,
+          "income": {
+            "interest": 0,
+            "eligible_dividends": 0,
+            "foreign_income": 0
+          },
+          "realized_gains": 0
+        },
+        {
+          "year": "2024",
+          "room": [
+            {
+              "group": "TFSA",
+              "used": 4033,
+              "limit": 7000,
+              "remaining": 2967,
+              "over": false
+            },
+            {
+              "group": "FHSA",
+              "used": 8000,
+              "limit": 8000,
+              "remaining": 0,
+              "over": false
+            },
+            {
+              "group": "RRSP",
+              "used": 0,
+              "limit": 31560,
+              "remaining": 31560,
+              "over": false
+            },
+            {
+              "group": "RESP",
+              "used": 0,
+              "limit": 2500,
+              "remaining": 2500,
+              "over": false
+            }
+          ],
+          "rrsp_deduction_available": 31560,
+          "income": {
+            "interest": 0,
+            "eligible_dividends": 0,
+            "foreign_income": 0
+          },
+          "realized_gains": 0
+        },
+        {
+          "year": "2025",
+          "room": [
+            {
+              "group": "TFSA",
+              "used": 25000,
+              "limit": 7000,
+              "remaining": -18000,
+              "over": true
+            },
+            {
+              "group": "FHSA",
+              "used": 8000,
+              "limit": 8000,
+              "remaining": 0,
+              "over": false
+            },
+            {
+              "group": "RRSP",
+              "used": 3000,
+              "limit": 32490,
+              "remaining": 29490,
+              "over": false
+            },
+            {
+              "group": "RESP",
+              "used": 0,
+              "limit": 2500,
+              "remaining": 2500,
+              "over": false
+            }
+          ],
+          "rrsp_deduction_available": 29490,
+          "income": {
+            "interest": 0,
+            "eligible_dividends": 39.58,
+            "foreign_income": 1.18
+          },
+          "realized_gains": -252.22
+        },
+        {
+          "year": "2026",
+          "room": [
+            {
+              "group": "TFSA",
+              "used": 7000,
+              "limit": 7000,
+              "remaining": 0,
+              "over": false
+            },
+            {
+              "group": "FHSA",
+              "used": 8000,
+              "limit": 8000,
+              "remaining": 0,
+              "over": false
+            },
+            {
+              "group": "RRSP",
+              "used": 25000,
+              "limit": 33810,
+              "remaining": 8810,
+              "over": false
+            },
+            {
+              "group": "RESP",
+              "used": 2550,
+              "limit": 2500,
+              "remaining": -50,
+              "over": true
+            }
+          ],
+          "rrsp_deduction_available": 8810,
+          "income": {
+            "interest": 0,
+            "eligible_dividends": 740.85,
+            "foreign_income": 16.84
+          },
+          "realized_gains": -143.87
+        }
+      ]
     }
   }
 }
