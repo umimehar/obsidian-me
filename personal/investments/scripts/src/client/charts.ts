@@ -45,21 +45,22 @@ function replace(canvas: HTMLCanvasElement, build: () => Chart): Chart {
   return chart;
 }
 
-// Line chart: capital-at-cost (filled area) vs cumulative contributions
-// (dashed reference line), sharing one label axis.
-export function contributionsChart(canvas: HTMLCanvasElement, data: TrendSeries): Chart {
+// Line chart: capital-at-cost (filled area) vs cumulative net deposits
+// (dashed reference line), sharing one label axis. The gap between the two
+// lines is the gain beyond deposits.
+export function capitalVsDepositsChart(canvas: HTMLCanvasElement, data: TrendSeries): Chart {
   const accent = cssVar("--color-accent");
   const text = cssVar("--color-text");
   return replace(canvas, () => {
     const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("contributionsChart: canvas has no 2d context");
+    if (!ctx) throw new Error("capitalVsDepositsChart: canvas has no 2d context");
     return new Chart(ctx, {
       type: "line",
       data: {
         labels: data.labels,
         datasets: [
           {
-            label: "Capital at cost",
+            label: "Portfolio at cost",
             data: data.capital,
             borderColor: accent,
             backgroundColor: `${accent}2e`,
@@ -68,8 +69,8 @@ export function contributionsChart(canvas: HTMLCanvasElement, data: TrendSeries)
             pointRadius: 0,
           },
           {
-            label: "Contributions",
-            data: data.contributions,
+            label: "Net deposits",
+            data: data.deposits,
             borderColor: text,
             borderDash: [4, 4],
             backgroundColor: "transparent",

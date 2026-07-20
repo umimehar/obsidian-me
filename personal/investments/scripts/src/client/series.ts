@@ -44,6 +44,7 @@ export interface TrendSeries {
   labels: string[];
   capital: number[];
   contributions: number[];
+  deposits: number[];
 }
 
 export interface PeriodSeries {
@@ -191,19 +192,21 @@ function sumAccountsAt(ids: string[], arrays: Map<string, number[]>, i: number):
   return v;
 }
 
-// Cumulative contributions to-date at each window index: the running total
-// is summed from month 0, not from the window start, so a filtered window
-// (e.g. a single year) still reports the true to-date total at each point.
-function contribCumSeries(
+// Cumulative flow to-date at each window index: the running total is summed
+// from month 0, not from the window start, so a filtered window (e.g. a
+// single year) still reports the true to-date total at each point. Used for
+// both contributions (CRA room) and deposits (true external money in).
+function flowCumSeries(
   months: string[],
   ris: number[],
   accts: string[],
   flow: Map<string, FlowRec[]>,
+  field: FlowField,
 ): Point[] {
   const byMonth = new Map<number, number>();
   let running = 0;
   for (let i = 0; i < months.length; i++) {
-    for (const id of accts) running += flow.get(id)?.[i]?.contrib ?? 0;
+    for (const id of accts) running += flow.get(id)?.[i]?.[field] ?? 0;
     byMonth.set(i, running);
   }
   return ris.map((i) => ({ i, v: byMonth.get(i) ?? 0 }));
@@ -273,7 +276,12 @@ export function capitalTrend(ledger: SeriesLedger, scope: Scope): TrendSeries {
   }));
   const capital = bucketLast(capitalPoints, ledger.months, grain);
   const contributions = bucketLast(
-    contribCumSeries(ledger.months, scope.ris, scope.accts, flow),
+    flowCumSeries(ledger.months, scope.ris, scope.accts, flow, "contrib"),
+    ledger.months,
+    grain,
+  );
+  const deposits = bucketLast(
+    flowCumSeries(ledger.months, scope.ris, scope.accts, flow, "deposits"),
     ledger.months,
     grain,
   );
@@ -281,6 +289,7 @@ export function capitalTrend(ledger: SeriesLedger, scope: Scope): TrendSeries {
     labels: capital.map((p) => p.key),
     capital: capital.map((p) => p.v),
     contributions: contributions.map((p) => p.v),
+    deposits: deposits.map((p) => p.v),
   };
 }
 

@@ -111,11 +111,11 @@ function growthSection(): string {
     '<section class="section" id="section-growth">' +
     sectionHead(
       "Growth",
-      "Capital deployed at cost, contributions, and income received across the selected " +
-        "accounts and time window.",
+      "Net deposits, portfolio at cost, and income received across the selected accounts " +
+        "and time window.",
     ) +
     '<div class="hero-row" id="growth-summary"></div>' +
-    subhead("Capital vs contributions") +
+    subhead("Portfolio at cost vs net deposits") +
     canvasBox("chart-trend") +
     subhead("By account, at cost") +
     canvasBox("chart-growth") +
@@ -169,16 +169,18 @@ function footnote(): string {
     "interest received, and each buy or sell with its price at the time of trade. They do " +
     "not carry current market prices, so a holding's present market value and any " +
     "unrealised gain cannot be shown.</p>" +
-    "<p><strong>Invested at cost</strong> is the adjusted cost base of positions still held: " +
-    "what was paid for them, reduced proportionally as they were sold. " +
-    "<strong>Contributions</strong> are deposits coded as contributions, gross of " +
-    "recontributions. <strong>Net deposits</strong> adds transfers in and subtracts " +
-    "transfers out, so it is the money put in net of money taken out; it is the closest " +
-    "match to the brokerage app's own net-deposits figure, though the statements cannot tell " +
-    "an internal transfer between your own accounts from an external withdrawal, so the two " +
-    "need not tie to the cent. <strong>Cash on hand</strong> is uninvested cash. " +
-    "<strong>Growth beyond contributions</strong> is the cost base above contributions, i.e. " +
-    "capital that arrived as transfers in or reinvested income.</p></section>"
+    "<p><strong>Portfolio at cost</strong> is the adjusted cost base of positions still held " +
+    "plus cash on hand: what was paid for them, reduced proportionally as they were sold, " +
+    "plus uninvested cash. <strong>Registered contributions</strong> are deposits coded as " +
+    "contributions, gross of recontributions, used only for CRA contribution room. " +
+    "<strong>Net deposits</strong> is the true measure of money put in: it adds transfers in " +
+    "and subtracts transfers out on top of registered contributions, so it also counts money " +
+    "that arrived as a transfer rather than a coded contribution. It is the closest match to " +
+    "the brokerage app's own net-deposits figure, though the statements cannot tell an " +
+    "internal transfer between your own accounts from an external withdrawal, so the two need " +
+    "not tie to the cent. <strong>Gain beyond deposits</strong> is portfolio at cost minus net " +
+    "deposits: cost basis above what was put in, i.e. reinvested income and securities " +
+    "transferred in at cost. It is a cost-basis figure, not a market-value gain.</p></section>"
   );
 }
 

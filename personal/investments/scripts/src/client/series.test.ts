@@ -71,7 +71,22 @@ describe("capitalTrend", () => {
   test("empty month window yields empty arrays", () => {
     const L = ledger({ series: [row({ month: "2024-01", contrib: 100, acb: 500 })] });
     const out = capitalTrend(L, { ris: [], accts: ["A"] });
-    expect(out).toEqual({ labels: [], capital: [], contributions: [] });
+    expect(out).toEqual({ labels: [], capital: [], contributions: [], deposits: [] });
+  });
+
+  test("deposits are cumulative to-date and can differ from contrib", () => {
+    // deposits = CONTRIB + TRANSFER_IN + TRANSFER_OUT, so a month with a
+    // transfer in but no coded contribution still counts as money in.
+    const L = ledger({
+      series: [
+        row({ month: "2024-01", contrib: 100, deposits: 100 }),
+        row({ month: "2024-02", contrib: 0, deposits: 40 }), // transfer in, uncoded
+        row({ month: "2024-03", contrib: 25, deposits: 25 }),
+      ],
+    });
+    const out = capitalTrend(L, ALL);
+    expect(out.contributions).toEqual([100, 100, 125]);
+    expect(out.deposits).toEqual([100, 140, 165]);
   });
 
   test("switches to year grain past 24 months and buckets to period end", () => {

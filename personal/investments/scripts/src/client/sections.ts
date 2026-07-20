@@ -1,4 +1,4 @@
-import { cashflowChart, contributionsChart, costBars, incomeChart } from "./charts";
+import { capitalVsDepositsChart, cashflowChart, costBars, incomeChart } from "./charts";
 // Populates the four pillar sections (Contributions & Room, Growth, Tax this
 // year, Detail) from the parsed ledger and the active Scope. Pure
 // aggregation lives in series.ts; this module is the DOM layer on top of it,
@@ -7,7 +7,7 @@ import { cashflowChart, contributionsChart, costBars, incomeChart } from "./char
 import type { Scope } from "./filter";
 import { money } from "./format";
 import { capitalTrend, cashflowSeries, costByAccount, incomeSeries } from "./series";
-import type { AccountCost, SeriesLedger } from "./series";
+import type { AccountCost, SeriesLedger, TrendSeries } from "./series";
 
 export interface TaxRoomRow {
   group: string;
@@ -153,9 +153,10 @@ function renderContribHeadline(ledger: SectionsLedger, scope: Scope): void {
   const roomUsed = (year?.room ?? []).reduce((s, r) => s + r.used, 0);
   heroCell(
     host,
-    "Total contributed",
+    "Registered contributions",
     money(contributed),
-    "Sum of contributions across the selected accounts and time window.",
+    "Contributions coded to registered accounts, used for contribution room. See Growth " +
+      "for total money in.",
     true,
   );
   heroCell(
@@ -207,23 +208,40 @@ function drawCashflowChart(ledger: SectionsLedger, scope: Scope): void {
 
 // ---- Growth -----------------------------------------------------------------
 
-function renderGrowthSummary(ledger: SectionsLedger, scope: Scope, costRows: AccountCost[]): void {
+// Money in and portfolio at cost, both as-of the end of the selected window
+// (last point of the capital/deposits trend, which is cumulative to-date).
+// See capitalTrend in series.ts for why deposits — not the CONTRIB-coded
+// `contrib` field — is the true measure of external money in.
+function growthTotals(trend: TrendSeries): { netDeposits: number; capital: number } {
+  const netDeposits = trend.deposits.at(-1) ?? 0;
+  const capital = trend.capital.at(-1) ?? 0;
+  return { netDeposits, capital };
+}
+
+function renderGrowthSummary(ledger: SectionsLedger, scope: Scope, trend: TrendSeries): void {
   const host = document.getElementById("growth-summary");
   if (!host) return;
   host.textContent = "";
-  const capital = costRows.reduce((s, r) => s + r.cost, 0);
+  const { netDeposits, capital } = growthTotals(trend);
   heroCell(
     host,
-    "Capital at cost",
-    money(capital),
-    "Adjusted cost base of the selected accounts at the end of the selected window.",
+    "Net deposits",
+    money(netDeposits),
+    "All money added, including transfers, not just coded contributions.",
     true,
   );
   heroCell(
     host,
-    "Contributions",
-    money(totalContributed(ledger, scope)),
-    "Contributions across the selected accounts and time window.",
+    "Portfolio at cost",
+    money(capital),
+    "Adjusted cost base plus cash of the selected accounts at the end of the selected window.",
+  );
+  heroCell(
+    host,
+    "Gain beyond deposits",
+    money(capital - netDeposits),
+    "Cost basis above what you put in (reinvested income and securities transferred in). " +
+      "Not a market-value figure.",
   );
   heroCell(
     host,
@@ -233,11 +251,11 @@ function renderGrowthSummary(ledger: SectionsLedger, scope: Scope, costRows: Acc
   );
 }
 
-function drawGrowthCharts(ledger: SectionsLedger, scope: Scope, rows: AccountCost[]): void {
+function drawGrowthCharts(trend: TrendSeries, rows: AccountCost[]): void {
   const costCanvas = canvasOf("chart-growth");
   if (costCanvas) costBars(costCanvas, rows);
   const trendCanvas = canvasOf("chart-trend");
-  if (trendCanvas) contributionsChart(trendCanvas, capitalTrend(ledger, scope));
+  if (trendCanvas) capitalVsDepositsChart(trendCanvas, trend);
 }
 
 // ---- Tax this year ------------------------------------------------------------
@@ -512,8 +530,9 @@ export function renderSections(ledger: SectionsLedger, scope: Scope): void {
   drawCashflowChart(ledger, scope);
 
   const costRows = costByAccount(ledger, scope);
-  renderGrowthSummary(ledger, scope, costRows);
-  drawGrowthCharts(ledger, scope, costRows);
+  const trend = capitalTrend(ledger, scope);
+  renderGrowthSummary(ledger, scope, trend);
+  drawGrowthCharts(trend, costRows);
 
   renderTaxCards(ledger.tax);
   updateTaxEstimate(ledger.tax);
