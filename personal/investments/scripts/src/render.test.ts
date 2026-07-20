@@ -64,12 +64,6 @@ function analytics(): Analytics {
       ],
       holdings: [{ account_id: "acct_a", symbol: "ZAG", qty: 5, acb: 80 }],
       limits: { TFSA: { "2025": 7000 } },
-      growth: {
-        as_of: "2025-03-01T00:00:00Z",
-        coverage: 0,
-        accounts: [],
-        total: { cost: 0, market: 0, gain: 0, gainPct: 0 },
-      },
       tax: { current_year: "2025", years: [] },
     },
   };

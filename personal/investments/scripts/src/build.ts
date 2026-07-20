@@ -2,11 +2,10 @@
 import { existsSync, mkdirSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
-import { buildLedger, computeAnalytics, heldSymbols } from "./analytics";
+import { computeAnalytics } from "./analytics";
 import { buildDatastore } from "./datastore";
 import { loadRedactions } from "./mask";
 import { discoverCsvs, parseCsv } from "./parse";
-import { fetchPrices, httpSources, loadCachedPrices } from "./prices";
 import { renderPages } from "./render";
 
 const SCRIPTS_DIR = dirname(import.meta.dir);
@@ -40,12 +39,7 @@ export async function main(sourceDir?: string): Promise<number> {
   mkdirSync(dataDir, { recursive: true });
   mkdirSync(notesDir, { recursive: true });
 
-  const pricesPath = join(dataDir, "prices.json");
-  const held = heldSymbols(buildLedger(store));
-  const snapshot = await fetchPrices(held, httpSources, loadCachedPrices(pricesPath));
-  writeFileSync(pricesPath, JSON.stringify(snapshot, null, 2));
-
-  const analytics = computeAnalytics(store, snapshot);
+  const analytics = computeAnalytics(store);
   writeFileSync(join(dataDir, "datastore.json"), JSON.stringify(store, null, 2));
   writeFileSync(join(dataDir, "analytics.json"), JSON.stringify(analytics, null, 2));
   for (const [name, html] of Object.entries(await renderPages(store, analytics))) {
