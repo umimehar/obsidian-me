@@ -171,208 +171,223 @@ export function dateToMonthKey(date: Date): string {
   return `${date.getFullYear()}-${month}`;
 }
 
+function isGroupName(value: string | undefined): value is keyof AccountGroups {
+  return value === "Registered" || value === "Taxable" || value === "Cash";
+}
+
+// Mutable controller shared by the module-level DOM helpers below, so
+// createFilter stays a thin wire-up under the 100-line limit. Everything the
+// helpers need to read state, mutate it, and re-notify lives here.
+interface Controller {
+  ledger: FilterLedger;
+  allIds: string[];
+  groups: AccountGroups;
+  state: FilterState;
+  rangePicker: flatpickr.Instance | null;
+  onChange: () => void;
+}
+
+function selectedIds(c: Controller): string[] {
+  return c.state.accts ?? c.allIds;
+}
+
+function applyAccounts(c: Controller, next: Set<string>): void {
+  // Account changes are orthogonal to time: the active window (preset or
+  // custom range) is carried through untouched, so resolveMonths() is
+  // unchanged by toggling accounts.
+  const accts = next.size === c.allIds.length ? null : [...next];
+  c.state = applyAccountSelection(c.state, accts);
+  paintAccountInputs(c);
+  c.onChange();
+}
+
+function toggleAccount(c: Controller, id: string, checked: boolean): void {
+  const next = new Set(selectedIds(c));
+  if (checked) next.add(id);
+  else next.delete(id);
+  applyAccounts(c, next);
+}
+
+function toggleGroup(c: Controller, name: keyof AccountGroups, checked: boolean): void {
+  const next = new Set(selectedIds(c));
+  for (const a of c.groups[name]) {
+    if (checked) next.add(a.id);
+    else next.delete(a.id);
+  }
+  applyAccounts(c, next);
+}
+
+function setPreset(c: Controller, preset: TimePreset): void {
+  c.state = { accts: c.state.accts, time: { mode: "preset", preset, from: "", to: "" } };
+  c.rangePicker?.clear();
+  paintPresets(c);
+  c.onChange();
+}
+
+function setCustomRange(c: Controller, from: string, to: string): void {
+  c.state = { accts: c.state.accts, time: { mode: "custom", preset: "all", from, to } };
+  paintPresets(c);
+  c.onChange();
+}
+
+function paintAccountInputs(c: Controller): void {
+  const host = document.getElementById("account-groups");
+  if (!host) return;
+  const selected = new Set(selectedIds(c));
+  for (const input of host.querySelectorAll("input[data-acct-id]")) {
+    if (input instanceof HTMLInputElement) {
+      input.checked = selected.has(input.dataset.acctId ?? "");
+    }
+  }
+  for (const input of host.querySelectorAll("input[data-group]")) {
+    if (!(input instanceof HTMLInputElement)) continue;
+    const groupName = input.dataset.group;
+    if (!isGroupName(groupName)) continue;
+    const ids = c.groups[groupName].map((a) => a.id);
+    input.checked = ids.length > 0 && ids.every((id) => selected.has(id));
+  }
+}
+
+function paintPresets(c: Controller): void {
+  const host = document.getElementById("scope-popover");
+  if (!host) return;
+  for (const btn of host.querySelectorAll("[data-preset]")) {
+    if (!(btn instanceof HTMLElement)) continue;
+    const active = c.state.time.mode === "preset" && btn.dataset.preset === c.state.time.preset;
+    btn.classList.toggle("on", active);
+  }
+}
+
+function buildAccountEl(a: FilterAccount): HTMLElement {
+  const label = document.createElement("label");
+  label.className = "fbx-acct";
+  const input = document.createElement("input");
+  input.type = "checkbox";
+  input.dataset.acctId = a.id;
+  const badge = document.createElement("span");
+  badge.className = "badge";
+  badge.textContent = a.kind;
+  const idSpan = document.createElement("span");
+  idSpan.className = "chip-id";
+  idSpan.textContent = a.short_id;
+  label.append(input, badge, ` ${a.name} `, idSpan);
+  return label;
+}
+
+function buildGroupEl(name: keyof AccountGroups, accounts: FilterAccount[]): HTMLElement {
+  const el = document.createElement("div");
+  el.className = "fbx-group";
+  const head = document.createElement("label");
+  head.className = "fbx-group-toggle";
+  const groupInput = document.createElement("input");
+  groupInput.type = "checkbox";
+  groupInput.dataset.group = name;
+  head.append(groupInput, document.createTextNode(name));
+  el.appendChild(head);
+  const list = document.createElement("div");
+  list.className = "fbx-group-list";
+  for (const a of accounts) list.appendChild(buildAccountEl(a));
+  el.appendChild(list);
+  return el;
+}
+
+function renderAccountGroups(c: Controller): void {
+  const host = document.getElementById("account-groups");
+  if (!host) return;
+  host.textContent = "";
+  for (const name of GROUP_ORDER) {
+    const accounts = c.groups[name];
+    if (accounts.length === 0) continue;
+    host.appendChild(buildGroupEl(name, accounts));
+  }
+  paintAccountInputs(c);
+}
+
+function wireAccountGroups(c: Controller): void {
+  const host = document.getElementById("account-groups");
+  host?.addEventListener("change", (e) => {
+    const target = e.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    if (isGroupName(target.dataset.group)) {
+      toggleGroup(c, target.dataset.group, target.checked);
+    } else if (target.dataset.acctId) {
+      toggleAccount(c, target.dataset.acctId, target.checked);
+    }
+  });
+}
+
+function wirePresets(c: Controller): void {
+  const host = document.getElementById("scope-popover");
+  host?.addEventListener("click", (e) => {
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) return;
+    const preset = target.closest<HTMLElement>("[data-preset]")?.dataset.preset;
+    if (preset === "all" || preset === "ytd" || preset === "1y" || preset === "3y") {
+      setPreset(c, preset);
+    }
+  });
+}
+
+function wireRangePicker(c: Controller): void {
+  const input = document.getElementById("range-picker");
+  if (!(input instanceof HTMLInputElement)) return;
+  const first = c.ledger.months[0];
+  const last = c.ledger.months[c.ledger.months.length - 1];
+  if (!first || !last) return;
+  c.rangePicker = flatpickr(input, {
+    mode: "range",
+    minDate: `${first}-01`,
+    maxDate: monthEndDate(last),
+    onChange: (selectedDates: Date[]) => {
+      if (selectedDates.length < 2) return;
+      const [from, to] = selectedDates;
+      if (!from || !to) return;
+      setCustomRange(c, dateToMonthKey(from), dateToMonthKey(to));
+    },
+  });
+}
+
+function wirePopover(): void {
+  const summary = document.getElementById("scope-summary");
+  const popover = document.getElementById("scope-popover");
+  if (!summary || !popover) return;
+  const setOpen = (open: boolean): void => {
+    popover.hidden = !open;
+    summary.setAttribute("aria-expanded", String(open));
+  };
+  summary.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setOpen(popover.hidden);
+  });
+  document.addEventListener("click", (e) => {
+    if (popover.hidden) return;
+    const target = e.target;
+    if (target instanceof Node && !popover.contains(target) && target !== summary) setOpen(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setOpen(false);
+  });
+}
+
 export function createFilter(ledger: FilterLedger, onChange: () => void): Filter {
-  const allIds = ledger.accounts.map((a) => a.id);
-  const groups = groupAccounts(ledger.accounts);
-  let state: FilterState = { accts: null, time: ALL_TIME };
-  let rangePicker: flatpickr.Instance | null = null;
-
-  function selectedIds(): string[] {
-    return state.accts ?? allIds;
-  }
-
-  function applyAccounts(next: Set<string>): void {
-    // Account changes are orthogonal to time: the active window (preset or
-    // custom range) is carried through untouched, so resolveMonths() is
-    // unchanged by toggling accounts.
-    const accts = next.size === allIds.length ? null : [...next];
-    state = applyAccountSelection(state, accts);
-    paintAccountInputs();
-    onChange();
-  }
-
-  function toggleAccount(id: string, checked: boolean): void {
-    const next = new Set(selectedIds());
-    if (checked) next.add(id);
-    else next.delete(id);
-    applyAccounts(next);
-  }
-
-  function toggleGroup(name: keyof AccountGroups, checked: boolean): void {
-    const next = new Set(selectedIds());
-    for (const a of groups[name]) {
-      if (checked) next.add(a.id);
-      else next.delete(a.id);
-    }
-    applyAccounts(next);
-  }
-
-  function setPreset(preset: TimePreset): void {
-    state.time = { mode: "preset", preset, from: "", to: "" };
-    rangePicker?.clear();
-    paintPresets();
-    onChange();
-  }
-
-  function setCustomRange(from: string, to: string): void {
-    state.time = { mode: "custom", preset: "all", from, to };
-    paintPresets();
-    onChange();
-  }
-
-  function paintAccountInputs(): void {
-    const host = document.getElementById("account-groups");
-    if (!host) return;
-    const selected = new Set(selectedIds());
-    for (const input of host.querySelectorAll("input[data-acct-id]")) {
-      if (input instanceof HTMLInputElement) {
-        input.checked = selected.has(input.dataset.acctId ?? "");
-      }
-    }
-    for (const input of host.querySelectorAll("input[data-group]")) {
-      if (!(input instanceof HTMLInputElement)) continue;
-      const groupName = input.dataset.group as keyof AccountGroups;
-      const ids = groups[groupName]?.map((a) => a.id) ?? [];
-      input.checked = ids.length > 0 && ids.every((id) => selected.has(id));
-    }
-  }
-
-  function paintPresets(): void {
-    const host = document.getElementById("scope-popover");
-    if (!host) return;
-    for (const btn of host.querySelectorAll("[data-preset]")) {
-      if (!(btn instanceof HTMLElement)) continue;
-      const active = state.time.mode === "preset" && btn.dataset.preset === state.time.preset;
-      btn.classList.toggle("on", active);
-    }
-  }
-
-  function buildAccountEl(a: FilterAccount): HTMLElement {
-    const label = document.createElement("label");
-    label.className = "fbx-acct";
-    const input = document.createElement("input");
-    input.type = "checkbox";
-    input.dataset.acctId = a.id;
-    const badge = document.createElement("span");
-    badge.className = "badge";
-    badge.textContent = a.kind;
-    const idSpan = document.createElement("span");
-    idSpan.className = "chip-id";
-    idSpan.textContent = a.short_id;
-    label.append(input, badge, ` ${a.name} `, idSpan);
-    return label;
-  }
-
-  function buildGroupEl(name: keyof AccountGroups, accounts: FilterAccount[]): HTMLElement {
-    const el = document.createElement("div");
-    el.className = "fbx-group";
-    const head = document.createElement("label");
-    head.className = "fbx-group-toggle";
-    const groupInput = document.createElement("input");
-    groupInput.type = "checkbox";
-    groupInput.dataset.group = name;
-    head.append(groupInput, document.createTextNode(name));
-    el.appendChild(head);
-    const list = document.createElement("div");
-    list.className = "fbx-group-list";
-    for (const a of accounts) list.appendChild(buildAccountEl(a));
-    el.appendChild(list);
-    return el;
-  }
-
-  function renderAccountGroups(): void {
-    const host = document.getElementById("account-groups");
-    if (!host) return;
-    host.textContent = "";
-    for (const name of GROUP_ORDER) {
-      const accounts = groups[name];
-      if (accounts.length === 0) continue;
-      host.appendChild(buildGroupEl(name, accounts));
-    }
-    paintAccountInputs();
-  }
-
-  function wireAccountGroups(): void {
-    const host = document.getElementById("account-groups");
-    host?.addEventListener("change", (e) => {
-      const target = e.target;
-      if (!(target instanceof HTMLInputElement)) return;
-      if (target.dataset.group) {
-        toggleGroup(target.dataset.group as keyof AccountGroups, target.checked);
-      } else if (target.dataset.acctId) {
-        toggleAccount(target.dataset.acctId, target.checked);
-      }
-    });
-  }
-
-  function wirePresets(): void {
-    const host = document.getElementById("scope-popover");
-    host?.addEventListener("click", (e) => {
-      const target = e.target;
-      if (!(target instanceof HTMLElement)) return;
-      const preset = target.closest<HTMLElement>("[data-preset]")?.dataset.preset;
-      if (preset === "all" || preset === "ytd" || preset === "1y" || preset === "3y") {
-        setPreset(preset);
-      }
-    });
-  }
-
-  function wireRangePicker(): void {
-    const input = document.getElementById("range-picker");
-    if (!(input instanceof HTMLInputElement)) return;
-    const first = ledger.months[0];
-    const last = ledger.months[ledger.months.length - 1];
-    if (!first || !last) return;
-    rangePicker = flatpickr(input, {
-      mode: "range",
-      minDate: `${first}-01`,
-      maxDate: monthEndDate(last),
-      onChange: (selectedDates: Date[]) => {
-        if (selectedDates.length < 2) return;
-        const [from, to] = selectedDates;
-        if (!from || !to) return;
-        setCustomRange(dateToMonthKey(from), dateToMonthKey(to));
-      },
-    });
-  }
-
-  function wirePopover(): void {
-    const summary = document.getElementById("scope-summary");
-    const popover = document.getElementById("scope-popover");
-    if (!summary || !popover) return;
-    const open = (): void => {
-      popover.hidden = false;
-      summary.setAttribute("aria-expanded", "true");
-    };
-    const close = (): void => {
-      popover.hidden = true;
-      summary.setAttribute("aria-expanded", "false");
-    };
-    summary.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (popover.hidden) open();
-      else close();
-    });
-    document.addEventListener("click", (e) => {
-      if (popover.hidden) return;
-      const target = e.target;
-      if (target instanceof Node && !popover.contains(target) && target !== summary) close();
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") close();
-    });
-  }
-
-  renderAccountGroups();
-  wireAccountGroups();
-  paintPresets();
-  wirePresets();
-  wireRangePicker();
+  const c: Controller = {
+    ledger,
+    allIds: ledger.accounts.map((a) => a.id),
+    groups: groupAccounts(ledger.accounts),
+    state: { accts: null, time: ALL_TIME },
+    rangePicker: null,
+    onChange,
+  };
+  renderAccountGroups(c);
+  wireAccountGroups(c);
+  paintPresets(c);
+  wirePresets(c);
+  wireRangePicker(c);
   wirePopover();
-
   return {
-    resolveMonths: () => resolveWindow(state.time, ledger.months),
-    selected: () => selectedIds(),
-    scopeLabel: () => formatScope(selectedIds().length, allIds.length, state.time, ledger.months),
+    resolveMonths: () => resolveWindow(c.state.time, ledger.months),
+    selected: () => selectedIds(c),
+    scopeLabel: () =>
+      formatScope(selectedIds(c).length, c.allIds.length, c.state.time, ledger.months),
   };
 }

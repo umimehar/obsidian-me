@@ -1,80 +1,80 @@
 {
-  "as_of": "2026-07-20T17:09:30.619Z",
+  "as_of": "2026-07-20T17:18:35.004Z",
   "fx_usd_cad": 1.4031,
   "quotes": {
     "AAPL": {
       "symbol": "AAPL",
-      "price": 324.705,
+      "price": 324.885,
       "currency": "USD"
     },
     "ABBV": {
       "symbol": "ABBV",
-      "price": 253.42,
+      "price": 253.275,
       "currency": "USD"
     },
     "ABNB": {
       "symbol": "ABNB",
-      "price": 145,
+      "price": 145.185,
       "currency": "USD"
     },
     "ABT": {
       "symbol": "ABT",
-      "price": 101.96,
+      "price": 101.985,
       "currency": "USD"
     },
     "ACGL": {
       "symbol": "ACGL",
-      "price": 101.8,
+      "price": 101.915,
       "currency": "USD"
     },
     "ADI": {
       "symbol": "ADI",
-      "price": 377.501,
+      "price": 377.215,
       "currency": "USD"
     },
     "ADP": {
       "symbol": "ADP",
-      "price": 254.845,
+      "price": 254.97,
       "currency": "USD"
     },
     "ADSK": {
       "symbol": "ADSK",
-      "price": 217.59,
+      "price": 218.235,
       "currency": "USD"
     },
     "AEP": {
       "symbol": "AEP",
-      "price": 130.83,
+      "price": 130.73,
       "currency": "USD"
     },
     "AFL": {
       "symbol": "AFL",
-      "price": 124.3,
+      "price": 124.42,
       "currency": "USD"
     },
     "AIG": {
       "symbol": "AIG",
-      "price": 80.1,
+      "price": 80.12,
       "currency": "USD"
     },
     "ALAB": {
       "symbol": "ALAB",
-      "price": 310.68,
+      "price": 311.57,
       "currency": "USD"
     },
     "ALL": {
       "symbol": "ALL",
-      "price": 253.315,
+      "price": 253.58,
       "currency": "USD"
     },
     "ALNY": {
       "symbol": "ALNY",
-      "price": 272.47,
+      "price": 272.645,
       "currency": "USD"
     },
     "AMAT": {
       "symbol": "AMAT",
-      "price": 531.39,
+      "price": 530.54,
       "currency": "USD"
     },
     "AMCR": {
@@ -84,92 +84,92 @@
     },
     "AMD": {
       "symbol": "AMD",
-      "price": 508.74,
+      "price": 510.18,
       "currency": "USD"
     },
     "AME": {
       "symbol": "AME",
-      "price": 236.12,
+      "price": 235.853,
       "currency": "USD"
     },
     "AMGN": {
       "symbol": "AMGN",
-      "price": 366.47,
+      "price": 366.265,
       "currency": "USD"
     },
     "AMT": {
       "symbol": "AMT",
-      "price": 168.145,
+      "price": 168.12,
       "currency": "USD"
     },
     "AMZN": {
       "symbol": "AMZN",
-      "price": 250.94,
+      "price": 250.27,
       "currency": "USD"
     },
     "ANET": {
       "symbol": "ANET",
-      "price": 170.91,
+      "price": 170.855,
       "currency": "USD"
     },
     "AON": {
       "symbol": "AON",
-      "price": 364.19,
+      "price": 364.31,
       "currency": "USD"
     },
     "APD": {
       "symbol": "APD",
-      "price": 296.18,
+      "price": 295.895,
       "currency": "USD"
     },
     "APH": {
       "symbol": "APH",
-      "price": 151.57,
+      "price": 151.44,
       "currency": "USD"
     },
     "APP": {
       "symbol": "APP",
-      "price": 426.01,
+      "price": 428,
       "currency": "USD"
     },
     "AVGO": {
       "symbol": "AVGO",
-      "price": 381.18,
+      "price": 381.4,
       "currency": "USD"
     },
     "AWK": {
       "symbol": "AWK",
-      "price": 132.4,
+      "price": 132.58,
       "currency": "USD"
     },
     "AZO": {
       "symbol": "AZO",
-      "price": 3003.76,
+      "price": 2997.55,
       "currency": "USD"
     },
     "BA": {
       "symbol": "BA",
-      "price": 209.25,
+      "price": 209.59,
       "currency": "USD"
     },
     "BAC": {
       "symbol": "BAC",
-      "price": 60.785,
+      "price": 60.735,
       "currency": "USD"
     },
     "BDX": {
       "symbol": "BDX",
-      "price": 156.22,
+      "price": 156.215,
       "currency": "USD"
     },
     "BE": {
       "symbol": "BE",
-      "price": 201.975,
+      "price": 201.99,
       "currency": "USD"
     },
     "BIIB": {
       "symbol": "BIIB",
-      "price": 202.86,
+      "price": 202.59,
       "currency": "USD"
     },
     "BK": {
@@ -179,62 +179,62 @@
     },
     "BKNG": {
       "symbol": "BKNG",
-      "price": 179.19,
+      "price": 179.06,
       "currency": "USD"
     },
     "BKR": {
       "symbol": "BKR",
-      "price": 55.855,
+      "price": 55.85,
       "currency": "USD"
     },
     "BLK": {
       "symbol": "BLK",
-      "price": 1060.3,
+      "price": 1059.755,
       "currency": "USD"
     },
     "BMY": {
       "symbol": "BMY",
-      "price": 60.65,
+      "price": 60.555,
       "currency": "USD"
     },
     "BRK.B": {
       "symbol": "BRK.B",
-      "price": 491.09,
+      "price": 490.995,
       "currency": "USD"
     },
     "BSX": {
       "symbol": "BSX",
-      "price": 44.13,
+      "price": 44.125,
       "currency": "USD"
     },
     "BX": {
       "symbol": "BX",
-      "price": 123.56,
+      "price": 123.62,
       "currency": "USD"
     },
     "C": {
       "symbol": "C",
-      "price": 129.62,
+      "price": 129.57,
       "currency": "USD"
     },
     "CAH": {
       "symbol": "CAH",
-      "price": 227.56,
+      "price": 227.29,
       "currency": "USD"
     },
     "CARR": {
       "symbol": "CARR",
-      "price": 67.65,
+      "price": 67.55,
       "currency": "USD"
     },
     "CAT": {
       "symbol": "CAT",
-      "price": 867.79,
+      "price": 866.685,
       "currency": "USD"
     },
     "CB": {
       "symbol": "CB",
-      "price": 353.07,
+      "price": 353.15,
       "currency": "USD"
     },
     "CCI": {
@@ -244,37 +244,37 @@
     },
     "CDNS": {
       "symbol": "CDNS",
-      "price": 331.75,
+      "price": 331.681,
       "currency": "USD"
     },
     "CEG": {
       "symbol": "CEG",
-      "price": 254.445,
+      "price": 254.23,
       "currency": "USD"
     },
     "CI": {
       "symbol": "CI",
-      "price": 283.68,
+      "price": 283.974,
       "currency": "USD"
     },
     "CIEN": {
       "symbol": "CIEN",
-      "price": 387.425,
+      "price": 387.01,
       "currency": "USD"
     },
     "CL": {
       "symbol": "CL",
-      "price": 91.467,
+      "price": 91.43,
       "currency": "USD"
     },
     "CMCSA": {
       "symbol": "CMCSA",
-      "price": 23.865,
+      "price": 23.833,
       "currency": "USD"
     },
     "CME": {
       "symbol": "CME",
-      "price": 245.99,
+      "price": 246.14,
       "currency": "USD"
     },
     "CMI": {
@@ -284,27 +284,27 @@
     },
     "COF": {
       "symbol": "COF",
-      "price": 207.65,
+      "price": 207.715,
       "currency": "USD"
     },
     "COHR": {
       "symbol": "COHR",
-      "price": 292.455,
+      "price": 292.975,
       "currency": "USD"
     },
     "COIN": {
       "symbol": "COIN",
-      "price": 161.83,
+      "price": 161.95,
       "currency": "USD"
     },
     "COP": {
       "symbol": "COP",
-      "price": 116.48,
+      "price": 116.469,
       "currency": "USD"
     },
     "COST": {
       "symbol": "COST",
-      "price": 936.91,
+      "price": 937.405,
       "currency": "USD"
     },
     "CPNG": {
@@ -314,222 +314,222 @@
     },
     "CRCL": {
       "symbol": "CRCL",
-      "price": 65.565,
+      "price": 65.755,
       "currency": "USD"
     },
     "CRDO": {
       "symbol": "CRDO",
-      "price": 216.085,
+      "price": 216.42,
       "currency": "USD"
     },
     "CRH": {
       "symbol": "CRH",
-      "price": 100.43,
+      "price": 100.18,
       "currency": "USD"
     },
     "CRWD": {
       "symbol": "CRWD",
-      "price": 204.3,
+      "price": 205.145,
       "currency": "USD"
     },
     "CRWV": {
       "symbol": "CRWV",
-      "price": 74.095,
+      "price": 74.09,
       "currency": "USD"
     },
     "CSCO": {
       "symbol": "CSCO",
-      "price": 111.77,
+      "price": 111.57,
       "currency": "USD"
     },
     "CSX": {
       "symbol": "CSX",
-      "price": 50.23,
+      "price": 50.14,
       "currency": "USD"
     },
     "CTVA": {
       "symbol": "CTVA",
-      "price": 87.405,
+      "price": 87.24,
       "currency": "USD"
     },
     "CVNA": {
       "symbol": "CVNA",
-      "price": 64.39,
+      "price": 64.25,
       "currency": "USD"
     },
     "CVS": {
       "symbol": "CVS",
-      "price": 107.555,
+      "price": 107.46,
       "currency": "USD"
     },
     "CVX": {
       "symbol": "CVX",
-      "price": 189.85,
+      "price": 189.95,
       "currency": "USD"
     },
     "DAL": {
       "symbol": "DAL",
-      "price": 84.42,
+      "price": 84.25,
       "currency": "USD"
     },
     "DDOG": {
       "symbol": "DDOG",
-      "price": 265.895,
+      "price": 266.98,
       "currency": "USD"
     },
     "DE": {
       "symbol": "DE",
-      "price": 585.725,
+      "price": 585.9,
       "currency": "USD"
     },
     "DELL": {
       "symbol": "DELL",
-      "price": 387.48,
+      "price": 386.14,
       "currency": "USD"
     },
     "DG": {
       "symbol": "DG",
-      "price": 126.095,
+      "price": 126.05,
       "currency": "USD"
     },
     "DGX": {
       "symbol": "DGX",
-      "price": 208.455,
+      "price": 208.34,
       "currency": "USD"
     },
     "DHI": {
       "symbol": "DHI",
-      "price": 145.165,
+      "price": 145.09,
       "currency": "USD"
     },
     "DLR": {
       "symbol": "DLR",
-      "price": 176.035,
+      "price": 175.875,
       "currency": "USD"
     },
     "DOV": {
       "symbol": "DOV",
-      "price": 210.525,
+      "price": 210.1,
       "currency": "USD"
     },
     "DOW": {
       "symbol": "DOW",
-      "price": 30.325,
+      "price": 30.3,
       "currency": "USD"
     },
     "DRI": {
       "symbol": "DRI",
-      "price": 193.78,
+      "price": 193.49,
       "currency": "USD"
     },
     "DUK": {
       "symbol": "DUK",
-      "price": 125.315,
+      "price": 125.39,
       "currency": "USD"
     },
     "DXCM": {
       "symbol": "DXCM",
-      "price": 76.36,
+      "price": 76.41,
       "currency": "USD"
     },
     "EA": {
       "symbol": "EA",
-      "price": 209.06,
+      "price": 209.07,
       "currency": "USD"
     },
     "EBAY": {
       "symbol": "EBAY",
-      "price": 113.71,
+      "price": 113.56,
       "currency": "USD"
     },
     "ECL": {
       "symbol": "ECL",
-      "price": 269.22,
+      "price": 269.105,
       "currency": "USD"
     },
     "ELV": {
       "symbol": "ELV",
-      "price": 385.53,
+      "price": 384.81,
       "currency": "USD"
     },
     "EMR": {
       "symbol": "EMR",
-      "price": 136.95,
+      "price": 136.77,
       "currency": "USD"
     },
     "ENTG": {
       "symbol": "ENTG",
-      "price": 136.74,
+      "price": 136.84,
       "currency": "USD"
     },
     "EOG": {
       "symbol": "EOG",
-      "price": 141.23,
+      "price": 141.345,
       "currency": "USD"
     },
     "EQIX": {
       "symbol": "EQIX",
-      "price": 1020,
+      "price": 1018.745,
       "currency": "USD"
     },
     "EQR": {
       "symbol": "EQR",
-      "price": 68.755,
+      "price": 68.715,
       "currency": "USD"
     },
     "EQT": {
       "symbol": "EQT",
-      "price": 49.076,
+      "price": 49.035,
       "currency": "USD"
     },
     "ETN": {
       "symbol": "ETN",
-      "price": 402.78,
+      "price": 402.34,
       "currency": "USD"
     },
     "ETR": {
       "symbol": "ETR",
-      "price": 112.23,
+      "price": 112.12,
       "currency": "USD"
     },
     "EW": {
       "symbol": "EW",
-      "price": 85.61,
+      "price": 85.66,
       "currency": "USD"
     },
     "EXC": {
       "symbol": "EXC",
-      "price": 45.85,
+      "price": 45.825,
       "currency": "USD"
     },
     "EXR": {
       "symbol": "EXR",
-      "price": 146.84,
+      "price": 146.98,
       "currency": "USD"
     },
     "F": {
       "symbol": "F",
-      "price": 14.055,
+      "price": 14.01,
       "currency": "USD"
     },
     "FANG": {
       "symbol": "FANG",
-      "price": 197.275,
+      "price": 197.19,
       "currency": "USD"
     },
     "FCX": {
       "symbol": "FCX",
-      "price": 58.915,
+      "price": 58.85,
       "currency": "USD"
     },
     "FDX": {
       "symbol": "FDX",
-      "price": 307.49,
+      "price": 307.37,
       "currency": "USD"
     },
     "FERG": {
       "symbol": "FERG",
-      "price": 228.78,
+      "price": 228.225,
       "currency": "USD"
     },
     "FI": {
@@ -539,357 +539,357 @@
     },
     "FICO": {
       "symbol": "FICO",
-      "price": 1263.34,
+      "price": 1265.89,
       "currency": "USD"
     },
     "FLEX": {
       "symbol": "FLEX",
-      "price": 120.655,
+      "price": 120.75,
       "currency": "USD"
     },
     "FOX": {
       "symbol": "FOX",
-      "price": 52.455,
+      "price": 52.46,
       "currency": "USD"
     },
     "FTNT": {
       "symbol": "FTNT",
-      "price": 162.805,
+      "price": 163.095,
       "currency": "USD"
     },
     "FWONA": {
       "symbol": "FWONA",
-      "price": 93.255,
+      "price": 93.135,
       "currency": "USD"
     },
     "GD": {
       "symbol": "GD",
-      "price": 372,
+      "price": 372.075,
       "currency": "USD"
     },
     "GE": {
       "symbol": "GE",
-      "price": 340.74,
+      "price": 340.595,
       "currency": "USD"
     },
     "GEV": {
       "symbol": "GEV",
-      "price": 1072.76,
+      "price": 1069.485,
       "currency": "USD"
     },
     "GILD": {
       "symbol": "GILD",
-      "price": 133.915,
+      "price": 133.89,
       "currency": "USD"
     },
     "GLW": {
       "symbol": "GLW",
-      "price": 154.79,
+      "price": 154.643,
       "currency": "USD"
     },
     "GM": {
       "symbol": "GM",
-      "price": 75.86,
+      "price": 75.62,
       "currency": "USD"
     },
     "GOOGL": {
       "symbol": "GOOGL",
-      "price": 353.32,
+      "price": 352.425,
       "currency": "USD"
     },
     "GPN": {
       "symbol": "GPN",
-      "price": 82.68,
+      "price": 82.7,
       "currency": "USD"
     },
     "GRMN": {
       "symbol": "GRMN",
-      "price": 246.47,
+      "price": 246.28,
       "currency": "USD"
     },
     "GS": {
       "symbol": "GS",
-      "price": 1056.17,
+      "price": 1056.285,
       "currency": "USD"
     },
     "GWW": {
       "symbol": "GWW",
-      "price": 1374.79,
+      "price": 1374.355,
       "currency": "USD"
     },
     "HCA": {
       "symbol": "HCA",
-      "price": 370.335,
+      "price": 370.015,
       "currency": "USD"
     },
     "HD": {
       "symbol": "HD",
-      "price": 333.43,
+      "price": 332.63,
       "currency": "USD"
     },
     "HEI.A": {
       "symbol": "HEI.A",
-      "price": 248.53,
+      "price": 247.885,
       "currency": "USD"
     },
     "HIG": {
       "symbol": "HIG",
-      "price": 140.345,
+      "price": 140.4,
       "currency": "USD"
     },
     "HLT": {
       "symbol": "HLT",
-      "price": 322.22,
+      "price": 321.76,
       "currency": "USD"
     },
     "HON": {
       "symbol": "HON",
-      "price": 226.66,
+      "price": 226.26,
       "currency": "USD"
     },
     "HOOD": {
       "symbol": "HOOD",
-      "price": 100.48,
+      "price": 100.57,
       "currency": "USD"
     },
     "HSY": {
       "symbol": "HSY",
-      "price": 171.1,
+      "price": 170.96,
       "currency": "USD"
     },
     "HUBB": {
       "symbol": "HUBB",
-      "price": 488.695,
+      "price": 488.622,
       "currency": "USD"
     },
     "HWM": {
       "symbol": "HWM",
-      "price": 271.625,
+      "price": 271.08,
       "currency": "USD"
     },
     "ICE": {
       "symbol": "ICE",
-      "price": 141.788,
+      "price": 141.82,
       "currency": "USD"
     },
     "INSM": {
       "symbol": "INSM",
-      "price": 108.715,
+      "price": 108.68,
       "currency": "USD"
     },
     "INTC": {
       "symbol": "INTC",
-      "price": 98.585,
+      "price": 98.53,
       "currency": "USD"
     },
     "IP": {
       "symbol": "IP",
-      "price": 36.605,
+      "price": 36.56,
       "currency": "USD"
     },
     "IR": {
       "symbol": "IR",
-      "price": 80.395,
+      "price": 80.37,
       "currency": "USD"
     },
     "ISRG": {
       "symbol": "ISRG",
-      "price": 352.045,
+      "price": 353.39,
       "currency": "USD"
     },
     "ITW": {
       "symbol": "ITW",
-      "price": 271.96,
+      "price": 271.24,
       "currency": "USD"
     },
     "JCI": {
       "symbol": "JCI",
-      "price": 140.1,
+      "price": 140.01,
       "currency": "USD"
     },
     "JNJ": {
       "symbol": "JNJ",
-      "price": 250.37,
+      "price": 250.09,
       "currency": "USD"
     },
     "JPM": {
       "symbol": "JPM",
-      "price": 339.975,
+      "price": 339.775,
       "currency": "USD"
     },
     "KDP": {
       "symbol": "KDP",
-      "price": 30.545,
+      "price": 30.51,
       "currency": "USD"
     },
     "KEY": {
       "symbol": "KEY",
-      "price": 23.33,
+      "price": 23.325,
       "currency": "USD"
     },
     "KEYS": {
       "symbol": "KEYS",
-      "price": 317.61,
+      "price": 317.165,
       "currency": "USD"
     },
     "KHC": {
       "symbol": "KHC",
-      "price": 26.015,
+      "price": 26.045,
       "currency": "USD"
     },
     "KKR": {
       "symbol": "KKR",
-      "price": 97.55,
+      "price": 97.45,
       "currency": "USD"
     },
     "KLAC": {
       "symbol": "KLAC",
-      "price": 209.875,
+      "price": 210,
       "currency": "USD"
     },
     "KMB": {
       "symbol": "KMB",
-      "price": 108.435,
+      "price": 108.34,
       "currency": "USD"
     },
     "KMI": {
       "symbol": "KMI",
-      "price": 32.615,
+      "price": 32.605,
       "currency": "USD"
     },
     "KO": {
       "symbol": "KO",
-      "price": 81.52,
+      "price": 81.444,
       "currency": "USD"
     },
     "KR": {
       "symbol": "KR",
-      "price": 58.18,
+      "price": 58.195,
       "currency": "USD"
     },
     "KVUE": {
       "symbol": "KVUE",
-      "price": 19.015,
+      "price": 19.019,
       "currency": "USD"
     },
     "L": {
       "symbol": "L",
-      "price": 114.56,
+      "price": 114.53,
       "currency": "USD"
     },
     "LEN.B": {
       "symbol": "LEN.B",
-      "price": 81.1,
+      "price": 80.965,
       "currency": "USD"
     },
     "LH": {
       "symbol": "LH",
-      "price": 281.15,
+      "price": 281.145,
       "currency": "USD"
     },
     "LII": {
       "symbol": "LII",
-      "price": 537.93,
+      "price": 537.33,
       "currency": "USD"
     },
     "LIN": {
       "symbol": "LIN",
-      "price": 512.47,
+      "price": 511.375,
       "currency": "USD"
     },
     "LITE": {
       "symbol": "LITE",
-      "price": 786.1,
+      "price": 787.52,
       "currency": "USD"
     },
     "LLY": {
       "symbol": "LLY",
-      "price": 1163.95,
+      "price": 1163.404,
       "currency": "USD"
     },
     "LMT": {
       "symbol": "LMT",
-      "price": 509.985,
+      "price": 510.38,
       "currency": "USD"
     },
     "LNG": {
       "symbol": "LNG",
-      "price": 265.92,
+      "price": 266.515,
       "currency": "USD"
     },
     "LOW": {
       "symbol": "LOW",
-      "price": 205,
+      "price": 204.695,
       "currency": "USD"
     },
     "LRCX": {
       "symbol": "LRCX",
-      "price": 309.11,
+      "price": 308.76,
       "currency": "USD"
     },
     "LVS": {
       "symbol": "LVS",
-      "price": 45.85,
+      "price": 45.88,
       "currency": "USD"
     },
     "LYB": {
       "symbol": "LYB",
-      "price": 60.15,
+      "price": 60.21,
       "currency": "USD"
     },
     "LYV": {
       "symbol": "LYV",
-      "price": 180.81,
+      "price": 180.64,
       "currency": "USD"
     },
     "MAR": {
       "symbol": "MAR",
-      "price": 365.81,
+      "price": 365.23,
       "currency": "USD"
     },
     "MAS": {
       "symbol": "MAS",
-      "price": 77.8,
+      "price": 77.62,
       "currency": "USD"
     },
     "MCD": {
       "symbol": "MCD",
-      "price": 266.91,
+      "price": 266.95,
       "currency": "USD"
     },
     "MCHP": {
       "symbol": "MCHP",
-      "price": 81.7,
+      "price": 81.71,
       "currency": "USD"
     },
     "MCK": {
       "symbol": "MCK",
-      "price": 838.47,
+      "price": 837.65,
       "currency": "USD"
     },
     "MDLN": {
       "symbol": "MDLN",
-      "price": 39.045,
+      "price": 39.039,
       "currency": "USD"
     },
     "MDLZ": {
       "symbol": "MDLZ",
-      "price": 59.85,
+      "price": 59.86,
       "currency": "USD"
     },
     "MDT": {
       "symbol": "MDT",
-      "price": 83.745,
+      "price": 83.85,
       "currency": "USD"
     },
     "META": {
       "symbol": "META",
-      "price": 650.565,
+      "price": 649.315,
       "currency": "USD"
     },
     "MNST": {
       "symbol": "MNST",
-      "price": 96,
+      "price": 95.75,
       "currency": "USD"
     },
     "MO": {
@@ -899,577 +899,577 @@
     },
     "MPWR": {
       "symbol": "MPWR",
-      "price": 1347.25,
+      "price": 1349.56,
       "currency": "USD"
     },
     "MRK": {
       "symbol": "MRK",
-      "price": 125.6,
+      "price": 125.4,
       "currency": "USD"
     },
     "MRVL": {
       "symbol": "MRVL",
-      "price": 197.636,
+      "price": 197.82,
       "currency": "USD"
     },
     "MSCI": {
       "symbol": "MSCI",
-      "price": 629.09,
+      "price": 628.68,
       "currency": "USD"
     },
     "MSFT": {
       "symbol": "MSFT",
-      "price": 400.79,
+      "price": 400.92,
       "currency": "USD"
     },
     "MSI": {
       "symbol": "MSI",
-      "price": 411.62,
+      "price": 411.77,
       "currency": "USD"
     },
     "MSTR": {
       "symbol": "MSTR",
-      "price": 99.52,
+      "price": 99.635,
       "currency": "USD"
     },
     "MU": {
       "symbol": "MU",
-      "price": 890.65,
+      "price": 889.5,
       "currency": "USD"
     },
     "NDAQ": {
       "symbol": "NDAQ",
-      "price": 92.4,
+      "price": 92.435,
       "currency": "USD"
     },
     "NEE": {
       "symbol": "NEE",
-      "price": 87.85,
+      "price": 87.8,
       "currency": "USD"
     },
     "NEM": {
       "symbol": "NEM",
-      "price": 89.95,
+      "price": 89.865,
       "currency": "USD"
     },
     "NET": {
       "symbol": "NET",
-      "price": 277.29,
+      "price": 277.35,
       "currency": "USD"
     },
     "NFLX": {
       "symbol": "NFLX",
-      "price": 67.515,
+      "price": 67.74,
       "currency": "USD"
     },
     "NOC": {
       "symbol": "NOC",
-      "price": 530.24,
+      "price": 530.01,
       "currency": "USD"
     },
     "NOW": {
       "symbol": "NOW",
-      "price": 104.1,
+      "price": 104.52,
       "currency": "USD"
     },
     "NRG": {
       "symbol": "NRG",
-      "price": 131.135,
+      "price": 130.79,
       "currency": "USD"
     },
     "NSC": {
       "symbol": "NSC",
-      "price": 339.125,
+      "price": 338.71,
       "currency": "USD"
     },
     "NTRS": {
       "symbol": "NTRS",
-      "price": 183.445,
+      "price": 183.355,
       "currency": "USD"
     },
     "NUE": {
       "symbol": "NUE",
-      "price": 232.48,
+      "price": 232.07,
       "currency": "USD"
     },
     "NVDA": {
       "symbol": "NVDA",
-      "price": 203.57,
+      "price": 203.45,
       "currency": "USD"
     },
     "NWS": {
       "symbol": "NWS",
-      "price": 32.24,
+      "price": 32.27,
       "currency": "USD"
     },
     "NXPI": {
       "symbol": "NXPI",
-      "price": 271.625,
+      "price": 271.53,
       "currency": "USD"
     },
     "O": {
       "symbol": "O",
-      "price": 65.09,
+      "price": 65.075,
       "currency": "USD"
     },
     "ODFL": {
       "symbol": "ODFL",
-      "price": 231.53,
+      "price": 230.77,
       "currency": "USD"
     },
     "OKE": {
       "symbol": "OKE",
-      "price": 93.79,
+      "price": 93.85,
       "currency": "USD"
     },
     "ON": {
       "symbol": "ON",
-      "price": 87.85,
+      "price": 87.855,
       "currency": "USD"
     },
     "ORLY": {
       "symbol": "ORLY",
-      "price": 84.72,
+      "price": 84.6,
       "currency": "USD"
     },
     "OXY": {
       "symbol": "OXY",
-      "price": 55.54,
+      "price": 55.538,
       "currency": "USD"
     },
     "PANW": {
       "symbol": "PANW",
-      "price": 358.405,
+      "price": 359.56,
       "currency": "USD"
     },
     "PCAR": {
       "symbol": "PCAR",
-      "price": 125.23,
+      "price": 125.03,
       "currency": "USD"
     },
     "PCG": {
       "symbol": "PCG",
-      "price": 17.325,
+      "price": 17.315,
       "currency": "USD"
     },
     "PEP": {
       "symbol": "PEP",
-      "price": 134.46,
+      "price": 134.375,
       "currency": "USD"
     },
     "PFE": {
       "symbol": "PFE",
-      "price": 24.915,
+      "price": 24.9,
       "currency": "USD"
     },
     "PG": {
       "symbol": "PG",
-      "price": 149.01,
+      "price": 148.9,
       "currency": "USD"
     },
     "PGR": {
       "symbol": "PGR",
-      "price": 209.455,
+      "price": 209.43,
       "currency": "USD"
     },
     "PH": {
       "symbol": "PH",
-      "price": 948.33,
+      "price": 946.86,
       "currency": "USD"
     },
     "PHM": {
       "symbol": "PHM",
-      "price": 123.08,
+      "price": 123.1,
       "currency": "USD"
     },
     "PLD": {
       "symbol": "PLD",
-      "price": 147.37,
+      "price": 147.205,
       "currency": "USD"
     },
     "PLTR": {
       "symbol": "PLTR",
-      "price": 134.315,
+      "price": 134.49,
       "currency": "USD"
     },
     "PM": {
       "symbol": "PM",
-      "price": 192.095,
+      "price": 191.848,
       "currency": "USD"
     },
     "PSX": {
       "symbol": "PSX",
-      "price": 210.16,
+      "price": 210.27,
       "currency": "USD"
     },
     "PTC": {
       "symbol": "PTC",
-      "price": 125.305,
+      "price": 125.475,
       "currency": "USD"
     },
     "PWR": {
       "symbol": "PWR",
-      "price": 633.99,
+      "price": 633.045,
       "currency": "USD"
     },
     "QCOM": {
       "symbol": "QCOM",
-      "price": 172.16,
+      "price": 172.22,
       "currency": "USD"
     },
     "RCL": {
       "symbol": "RCL",
-      "price": 286.695,
+      "price": 286.17,
       "currency": "USD"
     },
     "REGN": {
       "symbol": "REGN",
-      "price": 681.43,
+      "price": 680.65,
       "currency": "USD"
     },
     "RKLB": {
       "symbol": "RKLB",
-      "price": 66.63,
+      "price": 66.58,
       "currency": "USD"
     },
     "RMD": {
       "symbol": "RMD",
-      "price": 197.255,
+      "price": 197.35,
       "currency": "USD"
     },
     "ROK": {
       "symbol": "ROK",
-      "price": 460.35,
+      "price": 459.53,
       "currency": "USD"
     },
     "ROP": {
       "symbol": "ROP",
-      "price": 364.71,
+      "price": 365.08,
       "currency": "USD"
     },
     "ROST": {
       "symbol": "ROST",
-      "price": 235.795,
+      "price": 235.33,
       "currency": "USD"
     },
     "RPRX": {
       "symbol": "RPRX",
-      "price": 58.08,
+      "price": 58,
       "currency": "USD"
     },
     "RTX": {
       "symbol": "RTX",
-      "price": 196.27,
+      "price": 196.43,
       "currency": "USD"
     },
     "SBUX": {
       "symbol": "SBUX",
-      "price": 104.13,
+      "price": 104.045,
       "currency": "USD"
     },
     "SCCO": {
       "symbol": "SCCO",
-      "price": 175.63,
+      "price": 175.205,
       "currency": "USD"
     },
     "SHW": {
       "symbol": "SHW",
-      "price": 326.955,
+      "price": 326.82,
       "currency": "USD"
     },
     "SLB": {
       "symbol": "SLB",
-      "price": 46.795,
+      "price": 46.755,
       "currency": "USD"
     },
     "SMCI": {
       "symbol": "SMCI",
-      "price": 24.205,
+      "price": 24.18,
       "currency": "USD"
     },
     "SNDK": {
       "symbol": "SNDK",
-      "price": 1427.49,
+      "price": 1429.085,
       "currency": "USD"
     },
     "SO": {
       "symbol": "SO",
-      "price": 94.66,
+      "price": 94.58,
       "currency": "USD"
     },
     "SPG": {
       "symbol": "SPG",
-      "price": 228.48,
+      "price": 228.225,
       "currency": "USD"
     },
     "SPGI": {
       "symbol": "SPGI",
-      "price": 452.21,
+      "price": 451.995,
       "currency": "USD"
     },
     "STX": {
       "symbol": "STX",
-      "price": 804.71,
+      "price": 806.58,
       "currency": "USD"
     },
     "SW": {
       "symbol": "SW",
-      "price": 43.4,
+      "price": 43.28,
       "currency": "USD"
     },
     "SYK": {
       "symbol": "SYK",
-      "price": 320.63,
+      "price": 320.815,
       "currency": "USD"
     },
     "SYY": {
       "symbol": "SYY",
-      "price": 81.17,
+      "price": 81.179,
       "currency": "USD"
     },
     "T": {
       "symbol": "T",
-      "price": 21.895,
+      "price": 21.9,
       "currency": "USD"
     },
     "TDG": {
       "symbol": "TDG",
-      "price": 1211.885,
+      "price": 1210.62,
       "currency": "USD"
     },
     "TEL": {
       "symbol": "TEL",
-      "price": 205.242,
+      "price": 204.98,
       "currency": "USD"
     },
     "TER": {
       "symbol": "TER",
-      "price": 338.49,
+      "price": 338.03,
       "currency": "USD"
     },
     "TFC": {
       "symbol": "TFC",
-      "price": 51.1,
+      "price": 51.085,
       "currency": "USD"
     },
     "TGT": {
       "symbol": "TGT",
-      "price": 140.175,
+      "price": 140.03,
       "currency": "USD"
     },
     "TJX": {
       "symbol": "TJX",
-      "price": 155.36,
+      "price": 155.12,
       "currency": "USD"
     },
     "TMO": {
       "symbol": "TMO",
-      "price": 529.71,
+      "price": 530.5,
       "currency": "USD"
     },
     "TMUS": {
       "symbol": "TMUS",
-      "price": 194.31,
+      "price": 194.33,
       "currency": "USD"
     },
     "TPL": {
       "symbol": "TPL",
-      "price": 416.43,
+      "price": 415.825,
       "currency": "USD"
     },
     "TRGP": {
       "symbol": "TRGP",
-      "price": 283.07,
+      "price": 283.26,
       "currency": "USD"
     },
     "TRMB": {
       "symbol": "TRMB",
-      "price": 53.12,
+      "price": 53.15,
       "currency": "USD"
     },
     "TRV": {
       "symbol": "TRV",
-      "price": 367.45,
+      "price": 367.6,
       "currency": "USD"
     },
     "TSLA": {
       "symbol": "TSLA",
-      "price": 372.54,
+      "price": 372.51,
       "currency": "USD"
     },
     "TT": {
       "symbol": "TT",
-      "price": 467.085,
+      "price": 466.39,
       "currency": "USD"
     },
     "TWLO": {
       "symbol": "TWLO",
-      "price": 210.71,
+      "price": 210.885,
       "currency": "USD"
     },
     "TXN": {
       "symbol": "TXN",
-      "price": 287.76,
+      "price": 287.68,
       "currency": "USD"
     },
     "UBER": {
       "symbol": "UBER",
-      "price": 72.55,
+      "price": 72.665,
       "currency": "USD"
     },
     "ULTA": {
       "symbol": "ULTA",
-      "price": 486.58,
+      "price": 485.575,
       "currency": "USD"
     },
     "UNH": {
       "symbol": "UNH",
-      "price": 422.331,
+      "price": 423.23,
       "currency": "USD"
     },
     "UNP": {
       "symbol": "UNP",
-      "price": 299.19,
+      "price": 298.8,
       "currency": "USD"
     },
     "UPS": {
       "symbol": "UPS",
-      "price": 113.77,
+      "price": 113.73,
       "currency": "USD"
     },
     "USB": {
       "symbol": "USB",
-      "price": 63.165,
+      "price": 63.12,
       "currency": "USD"
     },
     "V": {
       "symbol": "V",
-      "price": 361.11,
+      "price": 361.42,
       "currency": "USD"
     },
     "VICI": {
       "symbol": "VICI",
-      "price": 26.755,
+      "price": 26.73,
       "currency": "USD"
     },
     "VLO": {
       "symbol": "VLO",
-      "price": 314.865,
+      "price": 315.165,
       "currency": "USD"
     },
     "VRSN": {
       "symbol": "VRSN",
-      "price": 277.58,
+      "price": 277.445,
       "currency": "USD"
     },
     "VRT": {
       "symbol": "VRT",
-      "price": 294.075,
+      "price": 293.665,
       "currency": "USD"
     },
     "VRTX": {
       "symbol": "VRTX",
-      "price": 486.255,
+      "price": 486.205,
       "currency": "USD"
     },
     "VST": {
       "symbol": "VST",
-      "price": 157.76,
+      "price": 157.59,
       "currency": "USD"
     },
     "VTR": {
       "symbol": "VTR",
-      "price": 96.1,
+      "price": 95.99,
       "currency": "USD"
     },
     "VZ": {
       "symbol": "VZ",
-      "price": 43.465,
+      "price": 43.5,
       "currency": "USD"
     },
     "WBD": {
       "symbol": "WBD",
-      "price": 26.485,
+      "price": 26.574,
       "currency": "USD"
     },
     "WDAY": {
       "symbol": "WDAY",
-      "price": 146.525,
+      "price": 147.235,
       "currency": "USD"
     },
     "WDC": {
       "symbol": "WDC",
-      "price": 498.62,
+      "price": 497.975,
       "currency": "USD"
     },
     "WEC": {
       "symbol": "WEC",
-      "price": 112.1,
+      "price": 112.09,
       "currency": "USD"
     },
     "WELL": {
       "symbol": "WELL",
-      "price": 243.62,
+      "price": 243.73,
       "currency": "USD"
     },
     "WFC": {
       "symbol": "WFC",
-      "price": 86.775,
+      "price": 86.65,
       "currency": "USD"
     },
     "WM": {
       "symbol": "WM",
-      "price": 238.865,
+      "price": 238.94,
       "currency": "USD"
     },
     "WMB": {
       "symbol": "WMB",
-      "price": 74.39,
+      "price": 74.265,
       "currency": "USD"
     },
     "WMT": {
       "symbol": "WMT",
-      "price": 112.67,
+      "price": 112.57,
       "currency": "USD"
     },
     "WST": {
       "symbol": "WST",
-      "price": 356.33,
+      "price": 356.46,
       "currency": "USD"
     },
     "XEL": {
       "symbol": "XEL",
-      "price": 78.48,
+      "price": 78.38,
       "currency": "USD"
     },
     "XOM": {
       "symbol": "XOM",
-      "price": 148.765,
+      "price": 148.62,
       "currency": "USD"
     },
     "YUM": {
       "symbol": "YUM",
-      "price": 146.935,
+      "price": 146.92,
       "currency": "USD"
     },
     "ZBH": {
       "symbol": "ZBH",
-      "price": 90.055,
+      "price": 89.995,
       "currency": "USD"
     },
     "ZTS": {
       "symbol": "ZTS",
-      "price": 76.19,
+      "price": 76.31,
       "currency": "USD"
     },
     "PSA": {
       "symbol": "PSA",
-      "price": 314.21,
+      "price": 314.34,
       "currency": "USD"
     },
     "VFV": {
       "symbol": "VFV",
-      "price": 186.15,
+      "price": 186.11,
       "currency": "CAD"
     },
     "XEQT": {
@@ -1479,12 +1479,12 @@
     },
     "CHPS": {
       "symbol": "CHPS",
-      "price": 83.74,
+      "price": 83.675,
       "currency": "USD"
     },
     "GOLD": {
       "symbol": "GOLD",
-      "price": 37.315,
+      "price": 37.198,
       "currency": "USD"
     },
     "QQC": {
@@ -1494,7 +1494,7 @@
     },
     "XEG": {
       "symbol": "XEG",
-      "price": 26.31,
+      "price": 26.32,
       "currency": "CAD"
     },
     "ACWV": {
@@ -1504,12 +1504,12 @@
     },
     "EEMV": {
       "symbol": "EEMV",
-      "price": 71.13,
+      "price": 71.14,
       "currency": "USD"
     },
     "IEFA": {
       "symbol": "IEFA",
-      "price": 95.885,
+      "price": 95.846,
       "currency": "USD"
     },
     "QCN": {
@@ -1519,12 +1519,12 @@
     },
     "VOO": {
       "symbol": "VOO",
-      "price": 684.26,
+      "price": 683.97,
       "currency": "USD"
     },
     "GLDM": {
       "symbol": "GLDM",
-      "price": 79.36,
+      "price": 79.345,
       "currency": "USD"
     },
     "GLOV": {
@@ -1544,7 +1544,7 @@
     },
     "ZAG": {
       "symbol": "ZAG",
-      "price": 13.69,
+      "price": 13.68,
       "currency": "CAD"
     },
     "ZCB": {
@@ -1554,7 +1554,7 @@
     },
     "ZEA": {
       "symbol": "ZEA",
-      "price": 30.99,
+      "price": 30.98,
       "currency": "CAD"
     },
     "ZGLD": {
@@ -1564,52 +1564,52 @@
     },
     "ZHY": {
       "symbol": "ZHY",
-      "price": 10.91,
+      "price": 10.905,
       "currency": "CAD"
     },
     "CONY": {
       "symbol": "CONY",
-      "price": 19.815,
+      "price": 19.81,
       "currency": "USD"
     },
     "JEPQ": {
       "symbol": "JEPQ",
-      "price": 58.9,
+      "price": 58.872,
       "currency": "USD"
     },
     "MSTY": {
       "symbol": "MSTY",
-      "price": 13.32,
+      "price": 13.315,
       "currency": "USD"
     },
     "SCHD": {
       "symbol": "SCHD",
-      "price": 32.81,
+      "price": 32.805,
       "currency": "USD"
     },
     "TSLY": {
       "symbol": "TSLY",
-      "price": 25.25,
+      "price": 25.24,
       "currency": "USD"
     },
     "XFN": {
       "symbol": "XFN",
-      "price": 95.89,
+      "price": 95.74,
       "currency": "CAD"
     },
     "BTC": {
       "symbol": "BTC",
-      "price": 91950.14,
+      "price": 91915.93,
       "currency": "CAD"
     },
     "ETH": {
       "symbol": "ETH",
-      "price": 2668.629,
+      "price": 2665.026,
       "currency": "CAD"
     },
     "APO": {
       "symbol": "APO",
-      "price": 118.33,
+      "price": 118.23,
       "currency": "USD"
     }
   }
