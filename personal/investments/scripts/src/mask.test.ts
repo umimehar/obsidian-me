@@ -2,7 +2,6 @@ import { expect, test } from "bun:test";
 import {
   type Redactions,
   accountCodeFromFilename,
-  accountNameFromFilename,
   detectKind,
   maskAccountCode,
   redact,
@@ -25,13 +24,6 @@ test("account code from filename", () => {
     accountCodeFromFilename("TFSA-2026-06-01-monthly-statement-transactions-XX0TEST001CAD.csv"),
   ).toBe("XX0TEST001CAD");
   expect(accountCodeFromFilename("Wealthsimple-credit-card-...-x.csv")).toBe("card");
-});
-
-test("account name from filename strips date and emoji, cards read Card", () => {
-  expect(
-    accountNameFromFilename("Managed (TFSA)-2026-06-01-monthly-statement-transactions-XX.csv"),
-  ).toBe("Managed (TFSA)");
-  expect(accountNameFromFilename("Wealthsimple-credit-card-...-x.csv")).toBe("Card");
 });
 
 test("detect kind", () => {

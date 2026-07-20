@@ -3,7 +3,6 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 
 const CODE_RE = /-([A-Za-z0-9]+)\.csv$/;
-const STMT_RE = /-\d{4}-\d{2}-\d{2}-monthly-statement.*$/;
 
 const KIND_RULES: ReadonlyArray<readonly [string, string]> = [
   ["credit-card", "CreditCard"],
@@ -45,15 +44,6 @@ export function accountCodeFromFilename(name: string): string {
   const match = CODE_RE.exec(name);
   if (!match?.[1]) throw new Error(`No account code found in filename: ${name}`);
   return match[1];
-}
-
-export function accountNameFromFilename(name: string): string {
-  if (name.includes("credit-card")) return "Card";
-  const stem = name
-    .replace(STMT_RE, "")
-    .replace(/^[^\w(]+/, "")
-    .trim();
-  return stem || "Account";
 }
 
 export function detectKind(filename: string): string {

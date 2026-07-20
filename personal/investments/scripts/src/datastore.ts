@@ -3,7 +3,6 @@ import { classify } from "./classify";
 import {
   type Redactions,
   accountCodeFromFilename,
-  accountNameFromFilename,
   detectKind,
   maskAccountCode,
   redact,
@@ -87,7 +86,6 @@ function touchAccount(
   accounts: Map<string, Account>,
   accountId: string,
   kind: string,
-  name: string,
   shortId: string,
   txn: Txn,
 ): void {
@@ -96,7 +94,7 @@ function touchAccount(
     acct = {
       masked_id: accountId,
       kind,
-      name,
+      name: kind,
       short_id: shortId,
       currency: txn.currency,
       first_activity: txn.date,
@@ -135,12 +133,11 @@ export function buildDatastore(sourceDir: string, redactions: Redactions): Datas
     const name = path.split("/").pop() ?? path;
     const accountId = maskAccountCode(accountCodeFromFilename(name));
     const kind = detectKind(name);
-    const acctName = redact(accountNameFromFilename(name), redactions);
     const shortId = shortAccountId(accountCodeFromFilename(name));
     for (const row of parseCsv(path)) {
       const txn = rowToTxn(row, accountId, redactions);
       transactions.push(txn);
-      touchAccount(accounts, accountId, kind, acctName, shortId, txn);
+      touchAccount(accounts, accountId, kind, shortId, txn);
     }
   }
   const sorted = [...accounts.values()].sort((a, b) => a.kind.localeCompare(b.kind));

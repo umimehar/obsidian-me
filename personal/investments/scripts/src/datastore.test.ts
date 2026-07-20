@@ -24,7 +24,7 @@ test("build datastore shape and account metadata", () => {
   expect(store.meta.file_count).toBe(1);
   expect(store.meta.txn_count).toBe(store.transactions.length);
   const acct = store.accounts[0];
-  expect(acct?.name).toBe("Managed (TFSA)");
+  expect(acct?.name).toBe("ManagedTFSA");
   expect(acct?.kind).toBe("ManagedTFSA");
   expect(acct?.short_id).toHaveLength(4);
 });
@@ -35,7 +35,7 @@ test("no real account code and names redacted", () => {
   expect(blob).not.toContain("Test Person Name");
 });
 
-test("account name is redacted when it contains a listed name", () => {
+test("account name is the kind, never a person-derived filename string", () => {
   const dir = mkdtempSync(join(tmpdir(), "invds-name-"));
   writeFileSync(
     join(dir, "Umar's RRSP-2026-06-01-monthly-statement-transactions-XX0TEST900CAD.csv"),
@@ -45,7 +45,8 @@ test("account name is redacted when it contains a listed name", () => {
   const red: Redactions = { names: ["Umar"], accountLabelPeople: {} };
   const store = buildDatastore(dir, red);
   const acct = store.accounts[0];
-  expect(acct?.name).toBe("[redacted]'s RRSP");
+  expect(acct?.name).toBe("RRSP");
+  expect(acct?.name).toBe(acct?.kind);
   const blob = JSON.stringify(store);
   expect(blob.toLowerCase()).not.toContain("umar");
 });

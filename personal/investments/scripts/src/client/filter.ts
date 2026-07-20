@@ -251,7 +251,7 @@ function buildAccountEl(a: FilterAccount): HTMLElement {
   const idSpan = document.createElement("span");
   idSpan.className = "chip-id";
   idSpan.textContent = a.short_id;
-  label.append(input, badge, ` ${a.name} `, idSpan);
+  label.append(input, badge, " ", idSpan);
   return label;
 }
 

@@ -331,7 +331,6 @@ function drawIncomeChart(ledger: SectionsLedger, scope: Scope): void {
 
 interface AcctRow {
   kind: string;
-  name: string;
   short_id: string;
   contrib: number;
   deposits: number;
@@ -374,7 +373,6 @@ function buildAcctRows(ledger: SectionsLedger, scope: Scope): AcctRow[] {
     const g = growth.get(a.id);
     rows.push({
       kind: a.kind,
-      name: a.name,
       short_id: a.short_id,
       contrib: f.contrib,
       deposits: f.deposits,
@@ -384,7 +382,7 @@ function buildAcctRows(ledger: SectionsLedger, scope: Scope): AcctRow[] {
       cash: lastCash(ledger, a.id, months),
     });
   }
-  return rows.sort((a, b) => a.kind.localeCompare(b.kind) || a.name.localeCompare(b.name));
+  return rows.sort((a, b) => a.kind.localeCompare(b.kind) || a.short_id.localeCompare(b.short_id));
 }
 
 function acctNameCell(r: AcctRow): HTMLTableCellElement {
@@ -395,7 +393,7 @@ function acctNameCell(r: AcctRow): HTMLTableCellElement {
   const idSpan = document.createElement("span");
   idSpan.className = "chip-id";
   idSpan.textContent = r.short_id;
-  td.append(badge, ` ${r.name} `, idSpan);
+  td.append(badge, " ", idSpan);
   return td;
 }
 
