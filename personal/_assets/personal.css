@@ -628,3 +628,107 @@ h1, h2, h3, h4 {
   .standing-note { padding: 0 20px; }
   .wf-row { grid-template-columns: 130px 1fr 100px; }
 }
+
+/* ===== Progressive scope filter (fbx-) =====================================
+   Single visible control at rest: a summary button that opens a popover with
+   grouped accounts and the time window. Namespaced so it never collides with
+   the retired filterbar/.fb-*/.chip rules above. */
+.fbx-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  max-width: 1240px;
+  margin: 18px auto 0;
+  padding: 10px 48px;
+  background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+  display: flex;
+}
+.fbx-summary {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  color: var(--color-text);
+  background: transparent;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  padding: 7px 12px;
+  cursor: pointer;
+}
+.fbx-summary:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.fbx-caret { font-size: 10px; color: var(--color-neutral-500); }
+.fbx-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 48px;
+  z-index: 31;
+  display: flex;
+  gap: 28px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--color-text) 18%, transparent);
+  padding: 18px 20px;
+  min-width: 420px;
+}
+.fbx-popover[hidden] { display: none; }
+.fbx-popover-col { display: flex; flex-direction: column; gap: 10px; min-width: 160px; }
+.fbx-popover-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-neutral-600);
+}
+.fbx-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.fbx-group-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  cursor: pointer;
+}
+.fbx-group-list { display: flex; flex-direction: column; gap: 4px; padding-left: 20px; }
+.fbx-acct {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--color-neutral-700);
+  cursor: pointer;
+}
+.fbx-presets { display: flex; gap: 6px; flex-wrap: wrap; }
+.fbx-preset {
+  font: inherit;
+  font-size: 11.5px;
+  padding: 5px 10px;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-neutral-700);
+  cursor: pointer;
+}
+.fbx-preset:hover { color: var(--color-accent); }
+.fbx-preset.on { color: var(--color-accent); box-shadow: inset 0 0 0 1px var(--color-accent); }
+.fbx-range-input {
+  font: inherit;
+  font-size: 12px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+.fbx-range-input:focus { outline: none; border-color: var(--color-accent); }
+
+@media (max-width: 900px) {
+  .fbx-bar { padding-left: 20px; padding-right: 20px; }
+  .fbx-popover { left: 20px; right: 20px; min-width: 0; flex-direction: column; }
+}

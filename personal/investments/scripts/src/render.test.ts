@@ -89,28 +89,31 @@ test("index is html linking the shared stylesheet", async () => {
   expect(html).toContain("The Ledger");
 });
 
-test("index embeds the ledger data and the filter bar", async () => {
+test("index embeds the ledger data and the progressive filter shell", async () => {
   const html = (await pages())["index.html"] ?? "";
   expect(html).toContain('id="ledger-data"');
-  expect(html).toContain('class="filterbar"');
+  expect(html).toContain('id="scope-summary"');
+  expect(html).toContain('id="scope-popover"');
+  expect(html).toContain('id="account-groups"');
+  expect(html).toContain('id="range-picker"');
   expect(html).toContain('id="headline"');
   expect(html).toContain('"month":"2025-03"');
 });
 
-test("accounts are unmasked with kind badge, name, and short id", async () => {
+test("accounts are unmasked in the embedded ledger data", async () => {
   const html = (await pages())["index.html"] ?? "";
   expect(html).toContain("Managed (TFSA)");
   expect(html).toContain("Umar");
   expect(html).toContain("a4f2");
-  expect(html).toContain('<span class="badge">TFSA</span>');
+  expect(html).toContain('"kind":"TFSA"');
 });
 
-test("store accounts absent from the ledger are not chipped", async () => {
+test("store accounts absent from the ledger are not embedded", async () => {
   const a = analytics();
   a.ledger.accounts = a.ledger.accounts.filter((x) => x.id !== "acct_b");
   a.ledger.series = a.ledger.series.filter((x) => x.account_id !== "acct_b");
   // biome-ignore lint/suspicious/noExplicitAny: test fixtures are structurally compatible
   const html = (await renderPages(store() as any, a))["index.html"] ?? "";
-  expect(html).not.toContain('data-acct="acct_b"');
+  expect(html).not.toContain('"id":"acct_b"');
   expect(html).not.toContain("9c31");
 });

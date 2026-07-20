@@ -1,30 +1,13 @@
 // Render the datastore and analytics into one self-contained offline page.
 import { readFileSync } from "node:fs";
 import type { Analytics } from "./analytics";
-import type { Account, Datastore } from "./datastore";
+import type { Datastore } from "./datastore";
 
 const CSS_HREF = "../../_assets/personal.css";
 const FLATPICKR_CSS_PATH = new URL(
   "../node_modules/flatpickr/dist/flatpickr.min.css",
   import.meta.url,
 );
-
-const KIND_ORDER = [
-  "TFSA",
-  "ManagedTFSA",
-  "FHSA",
-  "RRSP",
-  "RESP",
-  "NonRegistered",
-  "DirectIndexing",
-  "PE",
-  "Crypto",
-  "Other",
-  "Chequing",
-  "Savings",
-  "USD",
-  "CreditCard",
-];
 
 const STANDING_NOTE =
   "Compiled from monthly statements, which record what was paid, not what holdings are " +
@@ -51,66 +34,30 @@ function htmlEscape(text: unknown): string {
     .replace(/'/g, "&#x27;");
 }
 
-function slug(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
-function accountIdLabel(a: Account): string {
-  return `${slug(a.kind)}-${slug(a.name)}·${a.short_id}`;
-}
-
-function kindSort(kind: string): number {
-  const i = KIND_ORDER.indexOf(kind);
-  return i === -1 ? KIND_ORDER.length : i;
-}
-
-function filterBar(accounts: Account[]): string {
-  const ordered = [...accounts].sort(
-    (a, b) => kindSort(a.kind) - kindSort(b.kind) || a.name.localeCompare(b.name),
-  );
-  const groups = new Map<string, Account[]>();
-  for (const a of ordered) {
-    const list = groups.get(a.kind) ?? [];
-    list.push(a);
-    groups.set(a.kind, list);
-  }
-  const chipGroups: string[] = [];
-  for (const [kind, accts] of groups) {
-    const chips = accts
-      .map(
-        (a) =>
-          `<button type="button" class="chip acct" data-acct="${htmlEscape(a.masked_id)}" ` +
-          `data-kind="${htmlEscape(kind)}" title="${htmlEscape(accountIdLabel(a))}">` +
-          `${htmlEscape(a.name)} <span class="chip-id">${htmlEscape(a.short_id)}</span></button>`,
-      )
-      .join("");
-    chipGroups.push(
-      `<div class="kind-group"><button type="button" class="chip kind-toggle" ` +
-        `data-kind="${htmlEscape(kind)}"><span class="badge">${htmlEscape(kind)}</span>` +
-        `</button>${chips}</div>`,
-    );
-  }
+// Static skeleton for the progressive scope filter. filter.ts populates
+// #account-groups from the embedded ledger data at runtime and wires all
+// interactions; this only emits the summary button and the empty popover
+// shell so the page has something to attach to before the client script
+// runs. Selectors are namespaced "fbx-" so they never collide with the rest
+// of the shared stylesheet.
+function filterShell(): string {
   return (
-    '<div class="filterbar" id="filterbar"><div class="fb-accounts">' +
-    '<button type="button" class="chip on" data-all>All accounts</button>' +
-    `${chipGroups.join("")}</div>` +
-    '<div class="fb-side"><div class="fb-time">' +
-    // Year chips are injected client-side from the data's own month range so
-    // this markup never hardcodes a year list. Presets and the custom From/To
-    // pickers are alternative, mutually-exclusive ways to set the same window.
-    '<div class="fb-years chips" id="fb-years" role="group" aria-label="Years"></div>' +
-    '<div class="fb-timerow"><div class="seg fb-dates" role="group" aria-label="Date range">' +
-    '<button type="button" class="seg-btn" data-range="ytd">YTD</button>' +
-    '<button type="button" class="seg-btn" data-range="1y">1Y</button>' +
-    '<button type="button" class="seg-btn" data-range="3y">3Y</button>' +
-    '<button type="button" class="seg-btn on" data-range="all">All</button></div>' +
-    '<div class="fb-custom"><label>From <input type="month" class="fb-month" data-from></label>' +
-    '<label>To <input type="month" class="fb-month" data-to></label>' +
-    '<button type="button" class="fb-clear" data-clear hidden>Clear</button></div></div>' +
-    '<div class="fb-scope" id="fb-scope"></div></div></div>'
+    '<div class="fbx-bar">' +
+    '<button type="button" class="fbx-summary" id="scope-summary" aria-haspopup="true" ' +
+    'aria-expanded="false" aria-controls="scope-popover">' +
+    '<span id="scope-summary-text">All accounts · All time</span>' +
+    '<span class="fbx-caret" aria-hidden="true">&#9662;</span></button>' +
+    '<div class="fbx-popover" id="scope-popover" hidden>' +
+    '<div class="fbx-popover-col"><div class="fbx-popover-label">Accounts</div>' +
+    '<div id="account-groups"></div></div>' +
+    '<div class="fbx-popover-col"><div class="fbx-popover-label">Time window</div>' +
+    '<div class="fbx-presets" role="group" aria-label="Time presets">' +
+    '<button type="button" class="fbx-preset on" data-preset="all">All</button>' +
+    '<button type="button" class="fbx-preset" data-preset="ytd">YTD</button>' +
+    '<button type="button" class="fbx-preset" data-preset="1y">1Y</button>' +
+    '<button type="button" class="fbx-preset" data-preset="3y">3Y</button></div>' +
+    '<input type="text" class="fbx-range-input" id="range-picker" ' +
+    'placeholder="Custom range" readonly></div></div></div>'
   );
 }
 
@@ -176,15 +123,10 @@ function page(title: string, body: string, foot: string): string {
   );
 }
 
-export async function renderIndex(store: Datastore, analytics: Analytics): Promise<string> {
-  // Only chip the accounts the ledger actually carries. Empty accounts are
-  // dropped from analytics.ledger.accounts, so building chips from the full
-  // store would surface dead chips whose id has no series data to filter on.
-  const active = new Set(analytics.ledger.accounts.map((a) => a.id));
-  const filterAccounts = store.accounts.filter((a) => active.has(a.masked_id));
+export async function renderIndex(_store: Datastore, analytics: Analytics): Promise<string> {
   const body =
     masthead() +
-    filterBar(filterAccounts) +
+    filterShell() +
     '<div class="hero-row" id="headline"></div>' +
     '<div class="waterfall" id="waterfall"></div>' +
     rule() +
