@@ -10,10 +10,10 @@ import {
   grainOf,
   groupAccounts,
   monthEndDate,
-  monthLabel,
   pkey,
   resolveWindow,
 } from "./filter";
+import { monthLabel } from "./format";
 
 const MONTHS = [
   "2024-01",

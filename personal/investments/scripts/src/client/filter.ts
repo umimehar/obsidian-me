@@ -5,6 +5,7 @@
 // windows. DOM/flatpickr wiring lives alongside the pure helpers so the whole
 // popover interaction stays in one file.
 import flatpickr from "flatpickr";
+import { monthLabel } from "./format";
 
 export interface FilterAccount {
   id: string;
@@ -112,26 +113,6 @@ export function groupAccounts(accounts: FilterAccount[]): AccountGroups {
     else groups.Cash.push(a);
   }
   return groups;
-}
-
-const MONTH_NAMES = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-export function monthLabel(month: string): string {
-  const index = Number(month.slice(5, 7)) - 1;
-  return `${MONTH_NAMES[index] ?? month} ${month.slice(0, 4)}`;
 }
 
 function timeLabel(time: TimeState, months: string[]): string {
