@@ -4,6 +4,10 @@ import type { Analytics } from "./analytics";
 import type { Account, Datastore } from "./datastore";
 
 const CSS_HREF = "../../_assets/personal.css";
+const FLATPICKR_CSS_PATH = new URL(
+  "../node_modules/flatpickr/dist/flatpickr.min.css",
+  import.meta.url,
+);
 
 const KIND_ORDER = [
   "TFSA",
@@ -27,7 +31,16 @@ const STANDING_NOTE =
   "worth. Figures are stated at cost; the brokerage app shows market value, so its totals " +
   "will differ, usually upward.";
 
-const LEDGER_JS = readFileSync(new URL("./ledger.js", import.meta.url), "utf-8");
+async function bundleClient(): Promise<string> {
+  const built = await Bun.build({
+    entrypoints: [new URL("./client/main.ts", import.meta.url).pathname],
+    minify: true,
+    target: "browser",
+  });
+  const out = built.outputs[0];
+  if (!out) throw new Error("client bundle produced no output");
+  return await out.text();
+}
 
 function htmlEscape(text: unknown): string {
   return String(text)
@@ -152,16 +165,18 @@ function rule(): string {
 }
 
 function page(title: string, body: string, foot: string): string {
+  const flatpickrCss = readFileSync(FLATPICKR_CSS_PATH, "utf-8");
   return (
     '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
     `<title>${htmlEscape(title)} — The Ledger</title>\n` +
-    `<link rel="stylesheet" href="${CSS_HREF}">\n</head>\n<body>\n` +
+    `<link rel="stylesheet" href="${CSS_HREF}">\n` +
+    `<style>${flatpickrCss}</style>\n</head>\n<body>\n` +
     `<main class="page">${body}</main>${foot}\n</body>\n</html>\n`
   );
 }
 
-export function renderIndex(store: Datastore, analytics: Analytics): string {
+export async function renderIndex(store: Datastore, analytics: Analytics): Promise<string> {
   // Only chip the accounts the ledger actually carries. Empty accounts are
   // dropped from analytics.ledger.accounts, so building chips from the full
   // store would surface dead chips whose id has no series data to filter on.
@@ -208,12 +223,16 @@ export function renderIndex(store: Datastore, analytics: Analytics): string {
     rule() +
     footnote();
   const payload = JSON.stringify({ ledger: analytics.ledger });
+  const clientJs = await bundleClient();
   const foot =
     `<script type="application/json" id="ledger-data">${payload}</script>` +
-    `<script>${LEDGER_JS}</script>`;
+    `<script>${clientJs}</script>`;
   return page("The Ledger", body, foot);
 }
 
-export function renderPages(store: Datastore, analytics: Analytics): Record<string, string> {
-  return { "index.html": renderIndex(store, analytics) };
+export async function renderPages(
+  store: Datastore,
+  analytics: Analytics,
+): Promise<Record<string, string>> {
+  return { "index.html": await renderIndex(store, analytics) };
 }

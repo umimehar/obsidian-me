@@ -78,39 +78,39 @@ function analytics(): Analytics {
 // biome-ignore lint/suspicious/noExplicitAny: test fixtures are structurally compatible
 const pages = () => renderPages(store() as any, analytics());
 
-test("renders only the index page", () => {
-  expect(Object.keys(pages())).toEqual(["index.html"]);
+test("renders only the index page", async () => {
+  expect(Object.keys(await pages())).toEqual(["index.html"]);
 });
 
-test("index is html linking the shared stylesheet", () => {
-  const html = pages()["index.html"] ?? "";
+test("index is html linking the shared stylesheet", async () => {
+  const html = (await pages())["index.html"] ?? "";
   expect(html).toContain("<!DOCTYPE html>");
   expect(html).toContain("../../_assets/personal.css");
   expect(html).toContain("The Ledger");
 });
 
-test("index embeds the ledger data and the filter bar", () => {
-  const html = pages()["index.html"] ?? "";
+test("index embeds the ledger data and the filter bar", async () => {
+  const html = (await pages())["index.html"] ?? "";
   expect(html).toContain('id="ledger-data"');
   expect(html).toContain('class="filterbar"');
   expect(html).toContain('id="headline"');
   expect(html).toContain('"month":"2025-03"');
 });
 
-test("accounts are unmasked with kind badge, name, and short id", () => {
-  const html = pages()["index.html"] ?? "";
+test("accounts are unmasked with kind badge, name, and short id", async () => {
+  const html = (await pages())["index.html"] ?? "";
   expect(html).toContain("Managed (TFSA)");
   expect(html).toContain("Umar");
   expect(html).toContain("a4f2");
   expect(html).toContain('<span class="badge">TFSA</span>');
 });
 
-test("store accounts absent from the ledger are not chipped", () => {
+test("store accounts absent from the ledger are not chipped", async () => {
   const a = analytics();
   a.ledger.accounts = a.ledger.accounts.filter((x) => x.id !== "acct_b");
   a.ledger.series = a.ledger.series.filter((x) => x.account_id !== "acct_b");
   // biome-ignore lint/suspicious/noExplicitAny: test fixtures are structurally compatible
-  const html = renderPages(store() as any, a)["index.html"] ?? "";
+  const html = (await renderPages(store() as any, a))["index.html"] ?? "";
   expect(html).not.toContain('data-acct="acct_b"');
   expect(html).not.toContain("9c31");
 });

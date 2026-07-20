@@ -48,7 +48,7 @@ export async function main(sourceDir?: string): Promise<number> {
   const analytics = computeAnalytics(store, snapshot);
   writeFileSync(join(dataDir, "datastore.json"), JSON.stringify(store, null, 2));
   writeFileSync(join(dataDir, "analytics.json"), JSON.stringify(analytics, null, 2));
-  for (const [name, html] of Object.entries(renderPages(store, analytics))) {
+  for (const [name, html] of Object.entries(await renderPages(store, analytics))) {
     writeFileSync(join(notesDir, name), html);
   }
   const [parsed, ok] = reconcile(source, store.meta.txn_count);

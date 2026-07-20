@@ -19,6 +19,6 @@
     }
   },
   "files": {
-    "ignore": ["../data/**", "../notes/**", "src/ledger.js"]
+    "ignore": ["../data/**", "../notes/**"]
   }
 }
