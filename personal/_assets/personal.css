@@ -732,3 +732,66 @@ h1, h2, h3, h4 {
   .fbx-bar { padding-left: 20px; padding-right: 20px; }
   .fbx-popover { left: 20px; right: 20px; min-width: 0; flex-direction: column; }
 }
+
+/* ===== Three-pillar sections (pillar-) ======================================
+   Contributions & Room / Growth / Tax this year / Detail. Reuses existing
+   tokens and the hero-row/room-row/table classes above; only new selectors
+   are namespaced pillar- so nothing above is touched. */
+.pillar-subhead {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 400;
+  margin: 30px 0 8px;
+}
+.chartbox-canvas { position: relative; height: 320px; margin: 4px 0 10px; }
+.chartbox-canvas canvas { width: 100% !important; height: 100% !important; }
+
+.pillar-tax-rate {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 18px 0 8px;
+  font-size: 13px;
+  color: var(--color-neutral-700);
+}
+.pillar-tax-rate input[type="number"] {
+  font: inherit;
+  font-size: 13px;
+  width: 84px;
+  padding: 5px 8px;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+}
+.pillar-tax-rate input[type="number"]:focus { outline: none; border-color: var(--color-accent); }
+.pillar-tax-rate strong { font-variant-numeric: tabular-nums; color: var(--color-text); }
+.pillar-disclaimer { font-size: 13px; color: var(--color-accent-700); margin: 4px 0 0; }
+
+.pillar-detail summary {
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  padding: 6px 0;
+  color: var(--color-text);
+}
+.pillar-detail summary:hover { color: var(--color-accent); }
+
+.room-row.pillar-over .room-fill { background: var(--color-neutral-700); }
+.room-row.pillar-over .room-v { color: var(--color-accent-700); }
+.pillar-warn {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--color-bg);
+  background: var(--color-accent-700);
+}
+
+@media (max-width: 900px) {
+  .chartbox-canvas { height: 260px; }
+}

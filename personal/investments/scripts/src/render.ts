@@ -73,15 +73,89 @@ function masthead(): string {
   );
 }
 
-function chartSection(title: string, note: string, chartId: string): string {
+function canvasBox(chartId: string): string {
+  return `<div class="chartbox-canvas"><canvas id="${chartId}"></canvas></div>`;
+}
+
+function sectionHead(title: string, note: string): string {
   return (
-    `<section class="section"><div class="section-head"><div>` +
+    '<div class="section-head"><div>' +
     `<h2 class="section-title">${htmlEscape(title)}</h2>` +
-    `<p class="section-note">${htmlEscape(note)}</p></div></div>` +
-    `<div class="chartbox" id="${chartId}"><div class="ex-tip" id="${chartId}-tip"></div>` +
-    `<div class="chart-ymax" id="${chartId}-ymax"></div>` +
-    `<div class="chart-ymin" id="${chartId}-ymin"></div></div>` +
-    `<div class="chart-legend" id="${chartId}-legend"></div></section>`
+    `<p class="section-note">${htmlEscape(note)}</p></div></div>`
+  );
+}
+
+function subhead(title: string): string {
+  return `<h3 class="pillar-subhead">${htmlEscape(title)}</h3>`;
+}
+
+function contribSection(): string {
+  return (
+    '<section class="section" id="section-contrib">' +
+    sectionHead(
+      "Contributions & Room",
+      "Contributed and room used across the selected accounts and time window.",
+    ) +
+    '<div class="hero-row" id="headline"></div>' +
+    '<div id="room"></div>' +
+    subhead("Cash flow") +
+    canvasBox("chart-cashflow") +
+    "</section>"
+  );
+}
+
+function growthSection(): string {
+  return (
+    '<section class="section" id="section-growth">' +
+    sectionHead(
+      "Growth",
+      "Market value is a snapshot as of the latest pricing run — it responds to the account " +
+        "filter, but not to the time window.",
+    ) +
+    '<div class="hero-row" id="growth-summary"></div>' +
+    '<p class="section-note" id="growth-coverage-note"></p>' +
+    subhead("By account") +
+    canvasBox("chart-growth") +
+    subhead("Capital vs contributions") +
+    canvasBox("chart-trend") +
+    "</section>"
+  );
+}
+
+function taxSection(): string {
+  return (
+    '<section class="section" id="section-tax">' +
+    sectionHead(
+      "Tax this year",
+      "Always the current tax year across all taxable accounts — not affected by the scope " +
+        "filter above.",
+    ) +
+    '<div class="hero-row" id="tax-cards"></div>' +
+    '<div class="pillar-tax-rate">' +
+    '<label for="tax-rate">Marginal rate</label>' +
+    '<input type="number" id="tax-rate" step="0.01" min="0" max="1" value="0.48">' +
+    '<span>Estimated tax added: <strong id="tax-estimate"></strong></span></div>' +
+    '<p class="pillar-disclaimer"><strong>Rough estimate — not for filing.</strong></p>' +
+    subhead("Income received") +
+    canvasBox("chart-income") +
+    "</section>"
+  );
+}
+
+function detailSection(): string {
+  return (
+    '<section class="section" id="section-detail">' +
+    sectionHead("Detail", "Accounts and holdings within the current scope.") +
+    '<details class="pillar-detail"><summary>Show tables</summary>' +
+    subhead("Accounts") +
+    '<p class="section-note">Market value is shown per account here; the holdings table below ' +
+    "stays at cost.</p>" +
+    '<div class="table-wrap" id="acct-table"></div>' +
+    subhead("Holdings at cost") +
+    '<p class="section-note">Adjusted cost base, not market value. Direct Indexing is ' +
+    "collapsed to one row.</p>" +
+    '<div class="table-wrap" id="hold-table"></div>' +
+    "</details></section>"
   );
 }
 
@@ -127,41 +201,13 @@ export async function renderIndex(_store: Datastore, analytics: Analytics): Prom
   const body =
     masthead() +
     filterShell() +
-    '<div class="hero-row" id="headline"></div>' +
-    '<div class="waterfall" id="waterfall"></div>' +
+    contribSection() +
     rule() +
-    chartSection(
-      "Capital deployed over time",
-      "Cumulative cost base of holdings plus cash. The thin line is cumulative contributions; " +
-        "the gap above it is transfers in and reinvested income.",
-      "cap",
-    ) +
+    growthSection() +
     rule() +
-    chartSection("Income received", "Dividends and interest by period.", "inc") +
+    taxSection() +
     rule() +
-    chartSection(
-      "Cash flow",
-      "Money in above the line, money out below; net marked per period.",
-      "cf",
-    ) +
-    rule() +
-    '<section class="section"><div class="section-head"><div>' +
-    '<h2 class="section-title">Contributions &amp; room</h2>' +
-    '<p class="section-note">Contributed against annual room, per registered type.</p>' +
-    '</div></div><div id="room"></div></section>' +
-    rule() +
-    '<section class="section"><div class="section-head"><div>' +
-    '<h2 class="section-title">Accounts</h2>' +
-    '<p class="section-note">Grouped by type; figures within the current filter. ' +
-    "Contributed is money coded as a contribution; Net deposits also folds in transfers " +
-    "in and out, so the two differ wherever a deposit arrived as a transfer.</p>" +
-    '</div></div><div class="table-wrap" id="acct-table"></div></section>' +
-    rule() +
-    '<section class="section"><div class="section-head"><div>' +
-    '<h2 class="section-title">Holdings at cost</h2>' +
-    '<p class="section-note">Adjusted cost base, not market value. Direct Indexing ' +
-    "is collapsed to one row.</p></div></div>" +
-    '<div class="table-wrap" id="hold-table"></div></section>' +
+    detailSection() +
     rule() +
     footnote();
   const payload = JSON.stringify({ ledger: analytics.ledger });

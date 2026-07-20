@@ -9,6 +9,7 @@ import {
   CategoryScale,
   Chart,
   Filler,
+  Legend,
   LineController,
   LineElement,
   LinearScale,
@@ -16,13 +17,14 @@ import {
   Tooltip,
 } from "chart.js";
 import { money } from "./format";
-import type { CashflowSeries, GrowthRow, TrendSeries } from "./series";
+import type { CashflowSeries, GrowthRow, PeriodSeries, TrendSeries } from "./series";
 
 Chart.register(
   BarController,
   BarElement,
   CategoryScale,
   Filler,
+  Legend,
   LineController,
   LineElement,
   LinearScale,
@@ -83,6 +85,7 @@ export function contributionsChart(canvas: HTMLCanvasElement, data: TrendSeries)
         interaction: { mode: "index", intersect: false },
         scales: { x: { type: "category" }, y: { type: "linear" } },
         plugins: {
+          legend: { display: true, labels: { color: text } },
           tooltip: {
             enabled: true,
             callbacks: { label: (item) => `${item.dataset.label}: ${money(item.parsed.y ?? 0)}` },
@@ -97,6 +100,7 @@ export function contributionsChart(canvas: HTMLCanvasElement, data: TrendSeries)
 export function growthBars(canvas: HTMLCanvasElement, rows: GrowthRow[]): Chart {
   const accent = cssVar("--color-accent");
   const neutral = cssVar("--color-neutral-500");
+  const text = cssVar("--color-text");
   return replace(canvas, () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("growthBars: canvas has no 2d context");
@@ -115,6 +119,7 @@ export function growthBars(canvas: HTMLCanvasElement, rows: GrowthRow[]): Chart 
         interaction: { mode: "index", intersect: false },
         scales: { x: { type: "category" }, y: { type: "linear" } },
         plugins: {
+          legend: { display: true, labels: { color: text } },
           tooltip: {
             enabled: true,
             callbacks: { label: (item) => `${item.dataset.label}: ${money(item.parsed.y ?? 0)}` },
@@ -129,6 +134,7 @@ export function growthBars(canvas: HTMLCanvasElement, rows: GrowthRow[]): Chart 
 export function cashflowChart(canvas: HTMLCanvasElement, data: CashflowSeries): Chart {
   const accent = cssVar("--color-accent");
   const neutral = cssVar("--color-neutral-500");
+  const text = cssVar("--color-text");
   return replace(canvas, () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("cashflowChart: canvas has no 2d context");
@@ -147,6 +153,7 @@ export function cashflowChart(canvas: HTMLCanvasElement, data: CashflowSeries): 
         interaction: { mode: "index", intersect: false },
         scales: { x: { type: "category" }, y: { type: "linear" } },
         plugins: {
+          legend: { display: true, labels: { color: text } },
           tooltip: {
             enabled: true,
             callbacks: {
@@ -158,6 +165,35 @@ export function cashflowChart(canvas: HTMLCanvasElement, data: CashflowSeries): 
                 return net === undefined ? [] : [`Net: ${money(net)}`];
               },
             },
+          },
+        },
+      },
+    });
+  });
+}
+
+// Single-series bar chart: income (dividends + interest) received per period.
+export function incomeChart(canvas: HTMLCanvasElement, data: PeriodSeries): Chart {
+  const accent = cssVar("--color-accent");
+  return replace(canvas, () => {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("incomeChart: canvas has no 2d context");
+    return new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: data.labels,
+        datasets: [{ label: "Income", data: data.values, backgroundColor: accent }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        scales: { x: { type: "category" }, y: { type: "linear" } },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            enabled: true,
+            callbacks: { label: (item) => `${item.dataset.label}: ${money(item.parsed.y ?? 0)}` },
           },
         },
       },
