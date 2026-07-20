@@ -10,6 +10,8 @@ function seriesRow(
     account_id: "A",
     month: "2024-01",
     contrib: 0,
+    external_in: 0,
+    external_out: 0,
     deposits: 0,
     income: 0,
     inflow: 0,

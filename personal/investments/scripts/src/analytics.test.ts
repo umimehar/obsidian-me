@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { computeAnalytics } from "./analytics";
+import { computeAnalytics, externalFlow } from "./analytics";
 import type { Account, Datastore, Txn } from "./datastore";
 
 function txn(partial: Partial<Txn>): Txn {
@@ -99,14 +99,64 @@ test("inflow/outflow count only external CONTRIB/TRANSFER money, not BUY/SELL/DI
   expect(series.every((s) => s.inflow === 0 && s.outflow === 0)).toBe(true);
 });
 
-test("inflow/outflow count external CONTRIB/TRANSFER_IN/TRANSFER_OUT", () => {
+test("inflow/outflow count only external TRANSFER_IN/TRANSFER_OUT, by raw_type/description", () => {
   const txns = [
     txn({ type: "CONTRIB", amount: 500 }),
-    txn({ type: "TRANSFER_IN", amount: 200 }),
-    txn({ type: "TRANSFER_OUT", amount: -150 }),
+    txn({ type: "TRANSFER_IN", raw_type: "EFT", amount: 200 }),
+    txn({
+      type: "TRANSFER_OUT",
+      raw_type: "E_TRFOUT",
+      amount: -150,
+      description_redacted: "e-Transfer sent",
+    }),
   ];
   const series = computeAnalytics(store(txns, [acct("acct_a", "TFSA")])).ledger.series;
-  expect(series[0]).toMatchObject({ inflow: 700, outflow: -150 });
+  expect(series[0]).toMatchObject({
+    inflow: 700,
+    outflow: -150,
+    external_in: 700,
+    external_out: -150,
+    deposits: 550,
+  });
+});
+
+test("externalFlow: an EFT TRANSFER_IN is external, a TRFINTF TRANSFER_IN is internal", () => {
+  expect(externalFlow(txn({ type: "TRANSFER_IN", raw_type: "EFT" }))).toBe("in");
+  expect(externalFlow(txn({ type: "TRANSFER_IN", raw_type: "TRFINTF" }))).toBeNull();
+});
+
+test("externalFlow: a plain 'Transfer out to RRSP' TRFOUT is internal, an E_TRFOUT is external", () => {
+  expect(
+    externalFlow(
+      txn({
+        type: "TRANSFER_OUT",
+        raw_type: "TRFOUT",
+        description_redacted: "Transfer out to RRSP",
+      }),
+    ),
+  ).toBeNull();
+  expect(externalFlow(txn({ type: "TRANSFER_OUT", raw_type: "E_TRFOUT" }))).toBe("out");
+});
+
+test("internal transfers (TRFINTF/TRFOUTTF/generic TRFOUT) do not count as external_in/out", () => {
+  const txns = [
+    txn({ type: "TRANSFER_IN", raw_type: "TRFINTF", amount: 300 }),
+    txn({ type: "TRANSFER_OUT", raw_type: "TRFOUTTF", amount: -100 }),
+    txn({
+      type: "TRANSFER_OUT",
+      raw_type: "TRFOUT",
+      amount: -50,
+      description_redacted: "Transfer out",
+    }),
+  ];
+  const series = computeAnalytics(store(txns, [acct("acct_a", "TFSA")])).ledger.series;
+  expect(series[0]).toMatchObject({
+    external_in: 0,
+    external_out: 0,
+    deposits: 0,
+    inflow: 0,
+    outflow: 0,
+  });
 });
 
 test("CAD dividend in a taxable account lands in eligible_dividends", () => {
@@ -151,20 +201,30 @@ test("a sell produces the right realized_gain in the sell's month", () => {
   expect(jan?.realized_gain).toBe(0);
 });
 
-test("flows contains external transfer rows with the redacted description", () => {
+test("flows contains only external transactions, excluding internal transfers", () => {
   const txns = [
     txn({ type: "CONTRIB", amount: 500, date: "2025-03-05", description_redacted: "Contribution" }),
     txn({
       type: "TRANSFER_IN",
+      raw_type: "EFT",
       amount: 200,
       date: "2025-03-10",
       description_redacted: "Transfer in",
     }),
     txn({
       type: "TRANSFER_OUT",
+      raw_type: "E_TRFOUT",
       amount: -150,
       date: "2025-04-01",
       description_redacted: "Transfer out",
+    }),
+    // internal transfer between the owner's own accounts — excluded.
+    txn({
+      type: "TRANSFER_IN",
+      raw_type: "TRFINTF",
+      amount: 999,
+      date: "2025-04-02",
+      description_redacted: "Transfer in",
     }),
     txn({ type: "BUY", symbol: "L", quantity: 1, amount: -60, date: "2025-03-06" }),
     txn({ type: "DIV", amount: 10, date: "2025-03-07" }),

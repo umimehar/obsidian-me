@@ -206,10 +206,10 @@ function renderRoomBars(room: TaxRoomRow[], year: string): void {
   const note = document.createElement("p");
   note.className = "section-note";
   note.textContent =
-    "Bars compare this year's registered contributions, for the selected accounts, to this " +
-    "year's annual limit. Unused room carries forward from prior years, so a full or " +
-    "over-full bar is not necessarily an over-contribution (for example an RESP catch-up " +
-    "year).";
+    "Bars compare this year's registered contributions, including external deposits not " +
+    "coded as a contribution, for the selected accounts, to this year's annual limit. " +
+    "Unused room carries forward from prior years, so a full or over-full bar is not " +
+    "necessarily an over-contribution (for example an RESP catch-up year).";
   host.appendChild(note);
 }
 

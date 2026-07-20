@@ -157,9 +157,11 @@
         "account_id": "acct_18a334f1",
         "month": "2026-04",
         "contrib": 0,
-        "deposits": 500,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
         "income": 0,
-        "inflow": 500,
+        "inflow": 0,
         "outflow": 0,
         "cash": 500,
         "acb": null,
@@ -172,10 +174,12 @@
         "account_id": "acct_18a334f1",
         "month": "2026-05",
         "contrib": 0,
-        "deposits": 1000,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
         "income": 0,
-        "inflow": 1700,
-        "outflow": -700,
+        "inflow": 0,
+        "outflow": 0,
         "cash": 1500,
         "acb": null,
         "interest": 0,
@@ -187,10 +191,12 @@
         "account_id": "acct_18a334f1",
         "month": "2026-06",
         "contrib": 0,
-        "deposits": -400,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
         "income": 0,
-        "inflow": 2000,
-        "outflow": -2400,
+        "inflow": 0,
+        "outflow": 0,
         "cash": 1100,
         "acb": null,
         "interest": 0,
@@ -202,6 +208,8 @@
         "account_id": "acct_1f9a1df3",
         "month": "2025-10",
         "contrib": 0,
+        "external_in": 6000,
+        "external_out": 0,
         "deposits": 6000,
         "income": 0,
         "inflow": 6000,
@@ -217,6 +225,8 @@
         "account_id": "acct_1f9a1df3",
         "month": "2025-11",
         "contrib": 0,
+        "external_in": 6500,
+        "external_out": 0,
         "deposits": 6500,
         "income": 2.75,
         "inflow": 6500,
@@ -232,6 +242,8 @@
         "account_id": "acct_1f9a1df3",
         "month": "2025-12",
         "contrib": 0,
+        "external_in": 1500,
+        "external_out": 0,
         "deposits": 1500,
         "income": 16.66,
         "inflow": 1500,
@@ -247,6 +259,8 @@
         "account_id": "acct_1f9a1df3",
         "month": "2026-01",
         "contrib": 0,
+        "external_in": 7500,
+        "external_out": 0,
         "deposits": 7500,
         "income": 10.84,
         "inflow": 7500,
@@ -262,6 +276,8 @@
         "account_id": "acct_1f9a1df3",
         "month": "2026-02",
         "contrib": 0,
+        "external_in": 1000,
+        "external_out": 0,
         "deposits": 1000,
         "income": 13.32,
         "inflow": 1000,
@@ -277,6 +293,8 @@
         "account_id": "acct_1f9a1df3",
         "month": "2026-03",
         "contrib": 0,
+        "external_in": 1500,
+        "external_out": 0,
         "deposits": 1500,
         "income": 35.11,
         "inflow": 1500,
@@ -292,6 +310,8 @@
         "account_id": "acct_1f9a1df3",
         "month": "2026-04",
         "contrib": 0,
+        "external_in": 1000,
+        "external_out": 0,
         "deposits": 1000,
         "income": 12.14,
         "inflow": 1000,
@@ -307,6 +327,8 @@
         "account_id": "acct_1f9a1df3",
         "month": "2026-05",
         "contrib": 0,
+        "external_in": 1250,
+        "external_out": 0,
         "deposits": 1250,
         "income": 16.53,
         "inflow": 1250,
@@ -322,6 +344,8 @@
         "account_id": "acct_1f9a1df3",
         "month": "2026-06",
         "contrib": 0,
+        "external_in": 1000,
+        "external_out": 0,
         "deposits": 1000,
         "income": 43.88,
         "inflow": 1000,
@@ -337,6 +361,8 @@
         "account_id": "acct_231879ac",
         "month": "2025-09",
         "contrib": 2000,
+        "external_in": 2000,
+        "external_out": 0,
         "deposits": 2000,
         "income": 0,
         "inflow": 2000,
@@ -352,6 +378,8 @@
         "account_id": "acct_231879ac",
         "month": "2025-10",
         "contrib": 1000,
+        "external_in": 1000,
+        "external_out": 0,
         "deposits": 1000,
         "income": 9.21,
         "inflow": 1000,
@@ -367,6 +395,8 @@
         "account_id": "acct_231879ac",
         "month": "2025-11",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 20.23,
         "inflow": 0,
@@ -382,6 +412,8 @@
         "account_id": "acct_231879ac",
         "month": "2025-12",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 9.3,
         "inflow": 0,
@@ -397,6 +429,8 @@
         "account_id": "acct_231879ac",
         "month": "2026-01",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 13.74,
         "inflow": 0,
@@ -412,6 +446,8 @@
         "account_id": "acct_231879ac",
         "month": "2026-02",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 12.56,
         "inflow": 0,
@@ -427,6 +463,8 @@
         "account_id": "acct_231879ac",
         "month": "2026-03",
         "contrib": 3000,
+        "external_in": 3000,
+        "external_out": 0,
         "deposits": 3000,
         "income": 6.88,
         "inflow": 3000,
@@ -442,6 +480,8 @@
         "account_id": "acct_231879ac",
         "month": "2026-04",
         "contrib": 900,
+        "external_in": 900,
+        "external_out": 0,
         "deposits": 900,
         "income": 5.77,
         "inflow": 900,
@@ -457,6 +497,8 @@
         "account_id": "acct_231879ac",
         "month": "2026-05",
         "contrib": 6100,
+        "external_in": 6100,
+        "external_out": 0,
         "deposits": 6100,
         "income": 11.43,
         "inflow": 6100,
@@ -472,6 +514,8 @@
         "account_id": "acct_231879ac",
         "month": "2026-06",
         "contrib": 1400,
+        "external_in": 1400,
+        "external_out": 0,
         "deposits": 1400,
         "income": 29.19,
         "inflow": 1400,
@@ -487,10 +531,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2025-07",
         "contrib": 0,
-        "deposits": 1488.52,
+        "external_in": 7349.39,
+        "external_out": 0,
+        "deposits": 7349.39,
         "income": 0,
         "inflow": 7349.39,
-        "outflow": -5860.87,
+        "outflow": 0,
         "cash": 1488.52,
         "acb": null,
         "interest": 0,
@@ -502,10 +548,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2025-08",
         "contrib": 0,
-        "deposits": 540.99,
+        "external_in": 7289.5,
+        "external_out": 0,
+        "deposits": 7289.5,
         "income": 1.01,
         "inflow": 7289.5,
-        "outflow": -6748.51,
+        "outflow": 0,
         "cash": 1996.05,
         "acb": null,
         "interest": 0,
@@ -517,10 +565,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2025-09",
         "contrib": 0,
-        "deposits": -252.37,
+        "external_in": 4867.63,
+        "external_out": 0,
+        "deposits": 4867.63,
         "income": 1.4,
         "inflow": 4867.63,
-        "outflow": -5120,
+        "outflow": 0,
         "cash": 1452.66,
         "acb": null,
         "interest": 0,
@@ -532,10 +582,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2025-10",
         "contrib": 0,
-        "deposits": 19954.12,
+        "external_in": 11184.12,
+        "external_out": 0,
+        "deposits": 11184.12,
         "income": 1.01,
-        "inflow": 27454.12,
-        "outflow": -7500,
+        "inflow": 11184.12,
+        "outflow": 0,
         "cash": 21410.72,
         "acb": null,
         "interest": 0,
@@ -547,10 +599,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2025-11",
         "contrib": 0,
-        "deposits": -15313.69,
+        "external_in": 4686.31,
+        "external_out": -500,
+        "deposits": 4186.31,
         "income": 28.91,
         "inflow": 4686.31,
-        "outflow": -20000,
+        "outflow": -500,
         "cash": 6150.94,
         "acb": null,
         "interest": 0,
@@ -562,10 +616,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2025-12",
         "contrib": 0,
-        "deposits": 2027.82,
+        "external_in": 6379.88,
+        "external_out": -50,
+        "deposits": 6329.88,
         "income": 25.05,
         "inflow": 6379.88,
-        "outflow": -4352.06,
+        "outflow": -50,
         "cash": 8203.81,
         "acb": null,
         "interest": 0,
@@ -577,10 +633,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2026-01",
         "contrib": 0,
-        "deposits": -7233.67,
+        "external_in": 6958.64,
+        "external_out": -700,
+        "deposits": 6258.64,
         "income": 12.75,
         "inflow": 6958.64,
-        "outflow": -14192.31,
+        "outflow": -700,
         "cash": 1057.89,
         "acb": null,
         "interest": 0,
@@ -592,10 +650,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2026-02",
         "contrib": 0,
-        "deposits": -195.5,
+        "external_in": 10081.67,
+        "external_out": -1,
+        "deposits": 10080.67,
         "income": 0,
         "inflow": 10081.67,
-        "outflow": -10277.17,
+        "outflow": -1,
         "cash": 862.39,
         "acb": null,
         "interest": 0,
@@ -607,10 +667,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2026-03",
         "contrib": 0,
-        "deposits": -636.42,
+        "external_in": 6492.08,
+        "external_out": 0,
+        "deposits": 6492.08,
         "income": 1.32,
         "inflow": 6492.08,
-        "outflow": -7128.5,
+        "outflow": 0,
         "cash": 227.29,
         "acb": null,
         "interest": 0,
@@ -622,10 +684,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2026-04",
         "contrib": 0,
-        "deposits": 231.41,
+        "external_in": 6543.47,
+        "external_out": 0,
+        "deposits": 6543.47,
         "income": 0,
         "inflow": 6543.47,
-        "outflow": -6312.06,
+        "outflow": 0,
         "cash": 458.7,
         "acb": null,
         "interest": 0,
@@ -637,10 +701,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2026-05",
         "contrib": 0,
-        "deposits": -224.62,
+        "external_in": 6229.77,
+        "external_out": 0,
+        "deposits": 6229.77,
         "income": 0,
         "inflow": 6229.77,
-        "outflow": -6454.39,
+        "outflow": 0,
         "cash": 195.59,
         "acb": null,
         "interest": 0,
@@ -652,10 +718,12 @@
         "account_id": "acct_2b743dc7",
         "month": "2026-06",
         "contrib": 0,
-        "deposits": -93.94,
+        "external_in": 7163,
+        "external_out": 0,
+        "deposits": 7163,
         "income": 0,
-        "inflow": 7263,
-        "outflow": -7356.94,
+        "inflow": 7163,
+        "outflow": 0,
         "cash": 155.62,
         "acb": null,
         "interest": 0,
@@ -667,6 +735,8 @@
         "account_id": "acct_2c620d2b",
         "month": "2025-11",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -682,6 +752,8 @@
         "account_id": "acct_2c620d2b",
         "month": "2025-12",
         "contrib": 0,
+        "external_in": 1469.32,
+        "external_out": 0,
         "deposits": 1469.32,
         "income": 0,
         "inflow": 1469.32,
@@ -697,6 +769,8 @@
         "account_id": "acct_2c620d2b",
         "month": "2026-01",
         "contrib": 0,
+        "external_in": 11077.57,
+        "external_out": 0,
         "deposits": 11077.57,
         "income": 2.29,
         "inflow": 11077.57,
@@ -712,6 +786,8 @@
         "account_id": "acct_2c620d2b",
         "month": "2026-02",
         "contrib": 0,
+        "external_in": 6241.41,
+        "external_out": 0,
         "deposits": 6241.41,
         "income": 0,
         "inflow": 6241.41,
@@ -727,6 +803,8 @@
         "account_id": "acct_2c620d2b",
         "month": "2026-03",
         "contrib": 0,
+        "external_in": 3113,
+        "external_out": 0,
         "deposits": 3113,
         "income": 14.19,
         "inflow": 3113,
@@ -742,6 +820,8 @@
         "account_id": "acct_2c620d2b",
         "month": "2026-04",
         "contrib": 0,
+        "external_in": 1000,
+        "external_out": 0,
         "deposits": 1000,
         "income": 18.04,
         "inflow": 1000,
@@ -757,6 +837,8 @@
         "account_id": "acct_2c620d2b",
         "month": "2026-05",
         "contrib": 0,
+        "external_in": 1000,
+        "external_out": 0,
         "deposits": 1000,
         "income": 0,
         "inflow": 1000,
@@ -772,6 +854,8 @@
         "account_id": "acct_2c620d2b",
         "month": "2026-06",
         "contrib": 0,
+        "external_in": 1190,
+        "external_out": 0,
         "deposits": 1190,
         "income": 35.52,
         "inflow": 1190,
@@ -787,6 +871,8 @@
         "account_id": "acct_375fd2ca",
         "month": "2023-07",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": -5,
         "deposits": -5,
         "income": 0,
         "inflow": 0,
@@ -802,6 +888,8 @@
         "account_id": "acct_8367cd66",
         "month": "2025-12",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -817,6 +905,8 @@
         "account_id": "acct_8367cd66",
         "month": "2026-01",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -832,6 +922,8 @@
         "account_id": "acct_8367cd66",
         "month": "2026-02",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -847,6 +939,8 @@
         "account_id": "acct_8367cd66",
         "month": "2026-03",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -862,6 +956,8 @@
         "account_id": "acct_8367cd66",
         "month": "2026-04",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -877,6 +973,8 @@
         "account_id": "acct_8367cd66",
         "month": "2026-05",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -892,6 +990,8 @@
         "account_id": "acct_8367cd66",
         "month": "2026-06",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -907,10 +1007,12 @@
         "account_id": "acct_8cd3372e",
         "month": "2025-09",
         "contrib": 0,
-        "deposits": 20270,
+        "external_in": 20000,
+        "external_out": 0,
+        "deposits": 20000,
         "income": 0,
-        "inflow": 23270,
-        "outflow": -3000,
+        "inflow": 20000,
+        "outflow": 0,
         "cash": 20270,
         "acb": null,
         "interest": 0,
@@ -922,10 +1024,12 @@
         "account_id": "acct_8cd3372e",
         "month": "2025-10",
         "contrib": 0,
-        "deposits": 4230,
+        "external_in": 24000,
+        "external_out": 0,
+        "deposits": 24000,
         "income": 16.18,
-        "inflow": 24500,
-        "outflow": -20270,
+        "inflow": 24000,
+        "outflow": 0,
         "cash": 24516.18,
         "acb": null,
         "interest": 0,
@@ -937,9 +1041,11 @@
         "account_id": "acct_8cd3372e",
         "month": "2025-11",
         "contrib": 0,
-        "deposits": 1000,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
         "income": 56.13,
-        "inflow": 1000,
+        "inflow": 0,
         "outflow": 0,
         "cash": 25572.31,
         "acb": null,
@@ -952,9 +1058,11 @@
         "account_id": "acct_8cd3372e",
         "month": "2025-12",
         "contrib": 0,
-        "deposits": 1000,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
         "income": 46.46,
-        "inflow": 1000,
+        "inflow": 0,
         "outflow": 0,
         "cash": 26618.77,
         "acb": null,
@@ -967,10 +1075,12 @@
         "account_id": "acct_8cd3372e",
         "month": "2026-01",
         "contrib": 0,
-        "deposits": -23837.98,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
         "income": 49.63,
-        "inflow": 810,
-        "outflow": -24647.98,
+        "inflow": 0,
+        "outflow": 0,
         "cash": 2830.42,
         "acb": null,
         "interest": 0,
@@ -982,10 +1092,12 @@
         "account_id": "acct_8cd3372e",
         "month": "2026-02",
         "contrib": 0,
-        "deposits": 169.58,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
         "income": 0,
-        "inflow": 3760.99,
-        "outflow": -3591.41,
+        "inflow": 0,
+        "outflow": 0,
         "cash": 3000,
         "acb": null,
         "interest": 0,
@@ -997,10 +1109,12 @@
         "account_id": "acct_8cd3372e",
         "month": "2026-03",
         "contrib": 0,
-        "deposits": -2899.62,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
         "income": 1.94,
-        "inflow": 1480,
-        "outflow": -4379.62,
+        "inflow": 0,
+        "outflow": 0,
         "cash": 102.32,
         "acb": null,
         "interest": 0,
@@ -1012,10 +1126,12 @@
         "account_id": "acct_8cd3372e",
         "month": "2026-04",
         "contrib": 0,
-        "deposits": 19563.68,
+        "external_in": 19666,
+        "external_out": 0,
+        "deposits": 19666,
         "income": 0,
-        "inflow": 22266,
-        "outflow": -2702.32,
+        "inflow": 19666,
+        "outflow": 0,
         "cash": 19666,
         "acb": null,
         "interest": 0,
@@ -1027,10 +1143,12 @@
         "account_id": "acct_8cd3372e",
         "month": "2026-05",
         "contrib": 0,
-        "deposits": -19600,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
         "income": 0,
-        "inflow": 2800,
-        "outflow": -22400,
+        "inflow": 0,
+        "outflow": 0,
         "cash": 66,
         "acb": null,
         "interest": 0,
@@ -1042,10 +1160,12 @@
         "account_id": "acct_8cd3372e",
         "month": "2026-06",
         "contrib": 0,
-        "deposits": -66,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
         "income": 0,
         "inflow": 0,
-        "outflow": -66,
+        "outflow": 0,
         "cash": 0,
         "acb": null,
         "interest": 0,
@@ -1057,6 +1177,8 @@
         "account_id": "acct_91b82482",
         "month": "2026-01",
         "contrib": 20000,
+        "external_in": 20000,
+        "external_out": 0,
         "deposits": 20000,
         "income": 0,
         "inflow": 20000,
@@ -1072,6 +1194,8 @@
         "account_id": "acct_91b82482",
         "month": "2026-02",
         "contrib": 0,
+        "external_in": 5000,
+        "external_out": 0,
         "deposits": 5000,
         "income": 0,
         "inflow": 5000,
@@ -1087,6 +1211,8 @@
         "account_id": "acct_91b82482",
         "month": "2026-03",
         "contrib": 0,
+        "external_in": 17000,
+        "external_out": 0,
         "deposits": 17000,
         "income": 99.48,
         "inflow": 17000,
@@ -1102,6 +1228,8 @@
         "account_id": "acct_91b82482",
         "month": "2026-04",
         "contrib": 0,
+        "external_in": 2000,
+        "external_out": 0,
         "deposits": 2000,
         "income": 0,
         "inflow": 2000,
@@ -1117,6 +1245,8 @@
         "account_id": "acct_91b82482",
         "month": "2026-05",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -1132,6 +1262,8 @@
         "account_id": "acct_91b82482",
         "month": "2026-06",
         "contrib": 0,
+        "external_in": 3000,
+        "external_out": 0,
         "deposits": 3000,
         "income": 343.91,
         "inflow": 3000,
@@ -1147,6 +1279,8 @@
         "account_id": "acct_97100dd9",
         "month": "2023-07",
         "contrib": 1000,
+        "external_in": 1250,
+        "external_out": 0,
         "deposits": 1250,
         "income": 0,
         "inflow": 1250,
@@ -1162,6 +1296,8 @@
         "account_id": "acct_97100dd9",
         "month": "2023-08",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -1177,6 +1313,8 @@
         "account_id": "acct_97100dd9",
         "month": "2023-09",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 3.56,
         "inflow": 0,
@@ -1192,6 +1330,8 @@
         "account_id": "acct_97100dd9",
         "month": "2023-10",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 2.86,
         "inflow": 0,
@@ -1207,6 +1347,8 @@
         "account_id": "acct_97100dd9",
         "month": "2023-11",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 2.15,
         "inflow": 0,
@@ -1222,6 +1364,8 @@
         "account_id": "acct_97100dd9",
         "month": "2023-12",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 3.72,
         "inflow": 0,
@@ -1237,6 +1381,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-01",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 5.64,
         "inflow": 0,
@@ -1252,6 +1398,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-02",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 1.77,
         "inflow": 0,
@@ -1267,6 +1415,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-03",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 3.27,
         "inflow": 0,
@@ -1282,6 +1432,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-04",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 2.68,
         "inflow": 0,
@@ -1297,6 +1449,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-05",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 1.66,
         "inflow": 0,
@@ -1312,6 +1466,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-06",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 3.96,
         "inflow": 0,
@@ -1327,6 +1483,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-07",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 3.94,
         "inflow": 0,
@@ -1342,6 +1500,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-08",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 1.67,
         "inflow": 0,
@@ -1357,6 +1517,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-09",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 2.23,
         "inflow": 0,
@@ -1372,6 +1534,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-10",
         "contrib": 0,
+        "external_in": 200,
+        "external_out": 0,
         "deposits": 200,
         "income": 4.03,
         "inflow": 200,
@@ -1387,6 +1551,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-11",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 2.07,
         "inflow": 0,
@@ -1402,6 +1568,8 @@
         "account_id": "acct_97100dd9",
         "month": "2024-12",
         "contrib": 100,
+        "external_in": 100,
+        "external_out": 0,
         "deposits": 100,
         "income": 6.73,
         "inflow": 100,
@@ -1417,6 +1585,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-01",
         "contrib": 50,
+        "external_in": 50,
+        "external_out": 0,
         "deposits": 50,
         "income": 5.42,
         "inflow": 50,
@@ -1432,6 +1602,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-02",
         "contrib": 50,
+        "external_in": 50,
+        "external_out": 0,
         "deposits": 50,
         "income": 1.73,
         "inflow": 50,
@@ -1447,6 +1619,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-03",
         "contrib": 75,
+        "external_in": 75,
+        "external_out": 0,
         "deposits": 75,
         "income": 4.33,
         "inflow": 75,
@@ -1462,6 +1636,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-04",
         "contrib": 1350,
+        "external_in": 1350,
+        "external_out": 0,
         "deposits": 1350,
         "income": 3.64,
         "inflow": 1350,
@@ -1477,6 +1653,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-05",
         "contrib": 100,
+        "external_in": 100,
+        "external_out": 0,
         "deposits": 100,
         "income": 2.82,
         "inflow": 100,
@@ -1492,6 +1670,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-06",
         "contrib": 150,
+        "external_in": 150,
+        "external_out": 0,
         "deposits": 150,
         "income": 14.39,
         "inflow": 150,
@@ -1507,6 +1687,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-07",
         "contrib": 500,
+        "external_in": 500,
+        "external_out": 0,
         "deposits": 500,
         "income": 6.4,
         "inflow": 500,
@@ -1522,6 +1704,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-08",
         "contrib": 250,
+        "external_in": 250,
+        "external_out": 0,
         "deposits": 250,
         "income": 3.41,
         "inflow": 250,
@@ -1537,6 +1721,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-09",
         "contrib": 1043.25,
+        "external_in": 1043.25,
+        "external_out": 0,
         "deposits": 1043.25,
         "income": 13.05,
         "inflow": 1043.25,
@@ -1552,6 +1738,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-10",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 9.14,
         "inflow": 0,
@@ -1567,6 +1755,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-11",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 2.54,
         "inflow": 0,
@@ -1582,6 +1772,8 @@
         "account_id": "acct_97100dd9",
         "month": "2025-12",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 20.74,
         "inflow": 0,
@@ -1597,6 +1789,8 @@
         "account_id": "acct_97100dd9",
         "month": "2026-01",
         "contrib": 856.75,
+        "external_in": 856.75,
+        "external_out": 0,
         "deposits": 856.75,
         "income": 11.19,
         "inflow": 856.75,
@@ -1612,6 +1806,8 @@
         "account_id": "acct_97100dd9",
         "month": "2026-02",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 2.07,
         "inflow": 0,
@@ -1627,6 +1823,8 @@
         "account_id": "acct_97100dd9",
         "month": "2026-03",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 16.54,
         "inflow": 0,
@@ -1642,6 +1840,8 @@
         "account_id": "acct_97100dd9",
         "month": "2026-04",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 12.72,
         "inflow": 0,
@@ -1657,6 +1857,8 @@
         "account_id": "acct_97100dd9",
         "month": "2026-05",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 2.06,
         "inflow": 0,
@@ -1672,6 +1874,8 @@
         "account_id": "acct_97100dd9",
         "month": "2026-06",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 21.56,
         "inflow": 0,
@@ -1687,6 +1891,8 @@
         "account_id": "acct_97ab4cb2",
         "month": "2026-03",
         "contrib": 2000,
+        "external_in": 2000,
+        "external_out": 0,
         "deposits": 2000,
         "income": 3.83,
         "inflow": 2000,
@@ -1702,6 +1908,8 @@
         "account_id": "acct_97ab4cb2",
         "month": "2026-04",
         "contrib": 1700,
+        "external_in": 1700,
+        "external_out": 0,
         "deposits": 1700,
         "income": 0,
         "inflow": 1700,
@@ -1717,6 +1925,8 @@
         "account_id": "acct_97ab4cb2",
         "month": "2026-05",
         "contrib": 8300,
+        "external_in": 8300,
+        "external_out": 0,
         "deposits": 8300,
         "income": 0,
         "inflow": 8300,
@@ -1732,6 +1942,8 @@
         "account_id": "acct_97ab4cb2",
         "month": "2026-06",
         "contrib": 1600,
+        "external_in": 1600,
+        "external_out": 0,
         "deposits": 1600,
         "income": 84.64,
         "inflow": 1600,
@@ -1747,6 +1959,8 @@
         "account_id": "acct_c2e9345e",
         "month": "2026-01",
         "contrib": 2500,
+        "external_in": 2500,
+        "external_out": 0,
         "deposits": 2500,
         "income": 0,
         "inflow": 2500,
@@ -1762,6 +1976,8 @@
         "account_id": "acct_c2e9345e",
         "month": "2026-02",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -1777,6 +1993,8 @@
         "account_id": "acct_c2e9345e",
         "month": "2026-03",
         "contrib": 50,
+        "external_in": 50,
+        "external_out": 0,
         "deposits": 50,
         "income": 3.23,
         "inflow": 50,
@@ -1792,6 +2010,8 @@
         "account_id": "acct_c2e9345e",
         "month": "2026-04",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 3.42,
         "inflow": 0,
@@ -1807,6 +2027,8 @@
         "account_id": "acct_c2e9345e",
         "month": "2026-05",
         "contrib": 0,
+        "external_in": 200,
+        "external_out": 0,
         "deposits": 200,
         "income": 0,
         "inflow": 200,
@@ -1822,6 +2044,8 @@
         "account_id": "acct_c2e9345e",
         "month": "2026-06",
         "contrib": 0,
+        "external_in": 250,
+        "external_out": 0,
         "deposits": 250,
         "income": 12.5,
         "inflow": 250,
@@ -1837,6 +2061,8 @@
         "account_id": "acct_d6d9fb4a",
         "month": "2025-11",
         "contrib": 12000,
+        "external_in": 12000,
+        "external_out": 0,
         "deposits": 12000,
         "income": 0,
         "inflow": 12000,
@@ -1852,6 +2078,8 @@
         "account_id": "acct_d6d9fb4a",
         "month": "2025-12",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 20.17,
         "inflow": 0,
@@ -1867,6 +2095,8 @@
         "account_id": "acct_d6d9fb4a",
         "month": "2026-01",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -1882,6 +2112,8 @@
         "account_id": "acct_d6d9fb4a",
         "month": "2026-02",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -1897,6 +2129,8 @@
         "account_id": "acct_d6d9fb4a",
         "month": "2026-03",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0,
         "inflow": 0,
@@ -1912,6 +2146,8 @@
         "account_id": "acct_d6d9fb4a",
         "month": "2026-04",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 81.8,
         "inflow": 0,
@@ -1927,6 +2163,8 @@
         "account_id": "acct_d6d9fb4a",
         "month": "2026-05",
         "contrib": 8000,
+        "external_in": 8000,
+        "external_out": 0,
         "deposits": 8000,
         "income": 0,
         "inflow": 8000,
@@ -1942,6 +2180,8 @@
         "account_id": "acct_d6d9fb4a",
         "month": "2026-06",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 13.8,
         "inflow": 0,
@@ -1957,6 +2197,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2023-07",
         "contrib": 2195,
+        "external_in": 2195,
+        "external_out": -1280.75,
         "deposits": 914.25,
         "income": 0,
         "inflow": 2195,
@@ -1972,6 +2214,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2023-08",
         "contrib": 93,
+        "external_in": 97.5,
+        "external_out": 0,
         "deposits": 97.5,
         "income": 0,
         "inflow": 97.5,
@@ -1987,6 +2231,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2023-09",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 13.96,
         "inflow": 0,
@@ -2002,6 +2248,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2023-10",
         "contrib": 100,
+        "external_in": 100,
+        "external_out": 0,
         "deposits": 100,
         "income": 7.57,
         "inflow": 100,
@@ -2017,6 +2265,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2023-11",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 6.39,
         "inflow": 0,
@@ -2032,6 +2282,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2023-12",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 17.68,
         "inflow": 0,
@@ -2047,6 +2299,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-01",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 10.23,
         "inflow": 0,
@@ -2062,6 +2316,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-02",
         "contrib": 200,
+        "external_in": 200,
+        "external_out": 0,
         "deposits": 200,
         "income": 5.21,
         "inflow": 200,
@@ -2077,6 +2333,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-03",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 19.32,
         "inflow": 0,
@@ -2092,6 +2350,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-04",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 9.53,
         "inflow": 0,
@@ -2107,6 +2367,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-05",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 6.84,
         "inflow": 0,
@@ -2122,6 +2384,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-06",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 18.15,
         "inflow": 0,
@@ -2137,6 +2401,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-07",
         "contrib": 100,
+        "external_in": 100,
+        "external_out": 0,
         "deposits": 100,
         "income": 18.01,
         "inflow": 100,
@@ -2152,6 +2418,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-08",
         "contrib": 500,
+        "external_in": 500,
+        "external_out": 0,
         "deposits": 500,
         "income": 7.13,
         "inflow": 500,
@@ -2167,6 +2435,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-09",
         "contrib": 43,
+        "external_in": 43,
+        "external_out": 0,
         "deposits": 43,
         "income": 26.67,
         "inflow": 43,
@@ -2182,6 +2452,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-10",
         "contrib": 800,
+        "external_in": 800,
+        "external_out": -200,
         "deposits": 600,
         "income": 22.22,
         "inflow": 800,
@@ -2197,6 +2469,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-11",
         "contrib": 1020,
+        "external_in": 1020,
+        "external_out": 0,
         "deposits": 1020,
         "income": 32.06,
         "inflow": 1020,
@@ -2212,6 +2486,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2024-12",
         "contrib": 1270,
+        "external_in": 1270,
+        "external_out": 0,
         "deposits": 1270,
         "income": 35.81,
         "inflow": 1270,
@@ -2227,6 +2503,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-01",
         "contrib": 331,
+        "external_in": 331,
+        "external_out": 0,
         "deposits": 331,
         "income": 68,
         "inflow": 331,
@@ -2242,6 +2520,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-02",
         "contrib": 355,
+        "external_in": 355,
+        "external_out": 0,
         "deposits": 355,
         "income": 24.09,
         "inflow": 355,
@@ -2257,6 +2537,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-03",
         "contrib": 2950,
+        "external_in": 2950,
+        "external_out": 0,
         "deposits": 2950,
         "income": 39.19,
         "inflow": 2950,
@@ -2272,6 +2554,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-04",
         "contrib": 2000,
+        "external_in": 2000,
+        "external_out": 0,
         "deposits": 2000,
         "income": 83.09,
         "inflow": 2000,
@@ -2287,6 +2571,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-05",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 54.73,
         "inflow": 0,
@@ -2302,6 +2588,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-06",
         "contrib": 198.69,
+        "external_in": 198.69,
+        "external_out": 0,
         "deposits": 198.69,
         "income": 77.53,
         "inflow": 198.69,
@@ -2317,6 +2605,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-07",
         "contrib": 3141.8,
+        "external_in": 3141.8,
+        "external_out": 0,
         "deposits": 3141.8,
         "income": 80.96,
         "inflow": 3141.8,
@@ -2332,6 +2622,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-08",
         "contrib": 6598.51,
+        "external_in": 6598.51,
+        "external_out": 0,
         "deposits": 6598.51,
         "income": 285.91,
         "inflow": 6598.51,
@@ -2347,6 +2639,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-09",
         "contrib": 1856.75,
+        "external_in": 1856.75,
+        "external_out": 0,
         "deposits": 1856.75,
         "income": 318.14,
         "inflow": 1856.75,
@@ -2362,6 +2656,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-10",
         "contrib": 4000,
+        "external_in": 4000,
+        "external_out": 0,
         "deposits": 4000,
         "income": 178.36,
         "inflow": 4000,
@@ -2377,6 +2673,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-11",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 62.43,
         "inflow": 0,
@@ -2392,6 +2690,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2025-12",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 115.75,
         "inflow": 0,
@@ -2407,6 +2707,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2026-01",
         "contrib": 6143.25,
+        "external_in": 6143.25,
+        "external_out": 0,
         "deposits": 6143.25,
         "income": 99.34,
         "inflow": 6143.25,
@@ -2422,6 +2724,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2026-02",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 2,
         "inflow": 0,
@@ -2437,6 +2741,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2026-03",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 41.31,
         "inflow": 0,
@@ -2452,6 +2758,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2026-04",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 29.53,
         "inflow": 0,
@@ -2467,6 +2775,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2026-05",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0.04,
         "inflow": 0,
@@ -2482,6 +2792,8 @@
         "account_id": "acct_d77c33c7",
         "month": "2026-06",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 65.37,
         "inflow": 0,
@@ -2497,6 +2809,8 @@
         "account_id": "acct_e2d627ff",
         "month": "2026-06",
         "contrib": 0,
+        "external_in": 1060,
+        "external_out": 0,
         "deposits": 1060,
         "income": 0,
         "inflow": 1060,
@@ -2512,6 +2826,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2024-12",
         "contrib": 8000,
+        "external_in": 8000,
+        "external_out": 0,
         "deposits": 8000,
         "income": 0,
         "inflow": 8000,
@@ -2527,6 +2843,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-01",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 76.16,
         "inflow": 0,
@@ -2542,6 +2860,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-02",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 2.51,
         "inflow": 0,
@@ -2557,6 +2877,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-03",
         "contrib": 4000,
+        "external_in": 4000,
+        "external_out": 0,
         "deposits": 4000,
         "income": 13.27,
         "inflow": 4000,
@@ -2572,6 +2894,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-04",
         "contrib": 3000,
+        "external_in": 3000,
+        "external_out": 0,
         "deposits": 3000,
         "income": 116.45,
         "inflow": 3000,
@@ -2587,6 +2911,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-05",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 25.9,
         "inflow": 0,
@@ -2602,6 +2928,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-06",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 37.08,
         "inflow": 0,
@@ -2617,6 +2945,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-07",
         "contrib": 1000,
+        "external_in": 1000,
+        "external_out": 0,
         "deposits": 1000,
         "income": 81.95,
         "inflow": 1000,
@@ -2632,6 +2962,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-08",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 135.35,
         "inflow": 0,
@@ -2647,6 +2979,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-09",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 90.62,
         "inflow": 0,
@@ -2662,6 +2996,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-10",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 81.04,
         "inflow": 0,
@@ -2677,6 +3013,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-11",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0.01,
         "inflow": 0,
@@ -2692,6 +3030,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2025-12",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 1.87,
         "inflow": 0,
@@ -2707,6 +3047,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2026-01",
         "contrib": 8000,
+        "external_in": 8000,
+        "external_out": 0,
         "deposits": 8000,
         "income": 62.16,
         "inflow": 8000,
@@ -2722,6 +3064,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2026-02",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0.01,
         "inflow": 0,
@@ -2737,6 +3081,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2026-03",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 15.88,
         "inflow": 0,
@@ -2752,6 +3098,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2026-04",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 35.11,
         "inflow": 0,
@@ -2767,6 +3115,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2026-05",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 0.01,
         "inflow": 0,
@@ -2782,6 +3132,8 @@
         "account_id": "acct_e2ec057d",
         "month": "2026-06",
         "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
         "deposits": 0,
         "income": 60.89,
         "inflow": 0,
@@ -5023,14 +5375,6 @@
         "month": "2023-07",
         "date": "2023-07-14",
         "type": "TRANSFER_OUT",
-        "amount": 0,
-        "description": "BABA - Alibaba Group Holding Limited: Transfer of 2.0000 shares out of the account (executed at 2023-07-14)"
-      },
-      {
-        "account_id": "acct_d77c33c7",
-        "month": "2023-07",
-        "date": "2023-07-14",
-        "type": "TRANSFER_OUT",
         "amount": -757.85,
         "description": "Money transfer out of the account (executed at 2023-07-14)"
       },
@@ -5113,30 +5457,6 @@
         "type": "TRANSFER_IN",
         "amount": 4.5,
         "description": "Money transfer into the account (executed at 2023-08-13)"
-      },
-      {
-        "account_id": "acct_3b7b8244",
-        "month": "2023-08",
-        "date": "2023-08-13",
-        "type": "TRANSFER_OUT",
-        "amount": 0,
-        "description": "BABA - Alibaba Group Holding Limited: Transfer of 2.0000 shares out of the account (executed at 2023-08-13)"
-      },
-      {
-        "account_id": "acct_3b7b8244",
-        "month": "2023-08",
-        "date": "2023-08-13",
-        "type": "TRANSFER_OUT",
-        "amount": 0,
-        "description": "JEPQ - JPMorgan Nasdaq Equity Premium Income ETF: Transfer of 11.0000 shares out of the account (executed at 2023-08-13)"
-      },
-      {
-        "account_id": "acct_3b7b8244",
-        "month": "2023-08",
-        "date": "2023-08-13",
-        "type": "TRANSFER_OUT",
-        "amount": 0,
-        "description": "SCHD - CSIM Schwab US Dividend Equity ETF: Transfer of 3.1578 shares out of the account (executed at 2023-08-13)"
       },
       {
         "account_id": "acct_3b7b8244",
@@ -5670,30 +5990,6 @@
         "account_id": "acct_2b743dc7",
         "month": "2025-07",
         "date": "2025-07-24",
-        "type": "TRANSFER_OUT",
-        "amount": -87.08,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-24",
-        "type": "TRANSFER_OUT",
-        "amount": -153.89,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-24",
-        "type": "TRANSFER_OUT",
-        "amount": -204.62,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-24",
         "type": "TRANSFER_IN",
         "amount": 200,
         "description": "Deposit"
@@ -5713,22 +6009,6 @@
         "type": "CONTRIB",
         "amount": 50,
         "description": "Contribution (executed at 2025-07-25)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-25",
-        "type": "TRANSFER_OUT",
-        "amount": -93.25,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-25",
-        "type": "TRANSFER_OUT",
-        "amount": -50,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -5777,38 +6057,6 @@
         "type": "CONTRIB",
         "amount": 30,
         "description": "Contribution (executed at 2025-07-28)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-28",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-28",
-        "type": "TRANSFER_OUT",
-        "amount": -142.28,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_38abd498",
-        "month": "2025-07",
-        "date": "2025-07-30",
-        "type": "TRANSFER_IN",
-        "amount": 1418.98,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-30",
-        "type": "TRANSFER_OUT",
-        "amount": -2000,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_97100dd9",
@@ -5883,70 +6131,6 @@
         "description": "Direct deposit from PEOPLE CENTER"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-31",
-        "type": "TRANSFER_OUT",
-        "amount": -156.47,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-31",
-        "type": "TRANSFER_OUT",
-        "amount": -145.51,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-31",
-        "type": "TRANSFER_OUT",
-        "amount": -222.26,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-31",
-        "type": "TRANSFER_OUT",
-        "amount": -157.51,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-31",
-        "type": "TRANSFER_OUT",
-        "amount": -173.24,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-31",
-        "type": "TRANSFER_OUT",
-        "amount": -277.1,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-31",
-        "type": "TRANSFER_OUT",
-        "amount": -400,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-07",
-        "date": "2025-07-31",
-        "type": "TRANSFER_OUT",
-        "amount": -597.66,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_d77c33c7",
         "month": "2025-08",
         "date": "2025-08-01",
@@ -5961,22 +6145,6 @@
         "type": "CONTRIB",
         "amount": 900,
         "description": "Contribution (executed at 2025-08-01)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-01",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-01",
-        "type": "TRANSFER_OUT",
-        "amount": -900,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -6003,36 +6171,12 @@
         "description": "Contribution (executed at 2025-08-05)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-05",
-        "type": "TRANSFER_OUT",
-        "amount": -150,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-05",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_d77c33c7",
         "month": "2025-08",
         "date": "2025-08-06",
         "type": "CONTRIB",
         "amount": 439,
         "description": "Contribution (executed at 2025-08-06)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-06",
-        "type": "TRANSFER_OUT",
-        "amount": -439,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_d77c33c7",
@@ -6043,28 +6187,12 @@
         "description": "Contribution (executed at 2025-08-07)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-07",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_d77c33c7",
         "month": "2025-08",
         "date": "2025-08-08",
         "type": "CONTRIB",
         "amount": 50,
         "description": "Contribution (executed at 2025-08-08)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-08",
-        "type": "TRANSFER_OUT",
-        "amount": -50,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_97100dd9",
@@ -6083,14 +6211,6 @@
         "description": "Contribution (executed at 2025-08-11)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-11",
-        "type": "TRANSFER_OUT",
-        "amount": -950.53,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_d77c33c7",
         "month": "2025-08",
         "date": "2025-08-15",
@@ -6107,28 +6227,12 @@
         "description": "Direct deposit from PEOPLE CENTER"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-15",
-        "type": "TRANSFER_OUT",
-        "amount": -2008.98,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_d77c33c7",
         "month": "2025-08",
         "date": "2025-08-22",
         "type": "CONTRIB",
         "amount": 50,
         "description": "Contribution (executed at 2025-08-22)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-22",
-        "type": "TRANSFER_OUT",
-        "amount": -50,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_97100dd9",
@@ -6163,22 +6267,6 @@
         "description": "Direct deposit from PEOPLE CENTER"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-29",
-        "type": "TRANSFER_OUT",
-        "amount": -158.3,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-08",
-        "date": "2025-08-29",
-        "type": "TRANSFER_OUT",
-        "amount": -41.7,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_97100dd9",
         "month": "2025-09",
         "date": "2025-09-02",
@@ -6211,38 +6299,6 @@
         "description": "Contribution (executed at 2025-09-02)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-02",
-        "type": "TRANSFER_OUT",
-        "amount": -101.62,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-02",
-        "type": "TRANSFER_OUT",
-        "amount": -156.45,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-02",
-        "type": "TRANSFER_OUT",
-        "amount": -58.07,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-02",
-        "type": "TRANSFER_OUT",
-        "amount": -33.86,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_97100dd9",
         "month": "2025-09",
         "date": "2025-09-03",
@@ -6257,22 +6313,6 @@
         "type": "CONTRIB",
         "amount": 286.59,
         "description": "Contribution (executed at 2025-09-03)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-03",
-        "type": "TRANSFER_OUT",
-        "amount": -286.59,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-03",
-        "type": "TRANSFER_OUT",
-        "amount": -63.41,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_97100dd9",
@@ -6299,44 +6339,12 @@
         "description": "Contribution (executed at 2025-09-04)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-04",
-        "type": "TRANSFER_OUT",
-        "amount": -157.12,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-04",
-        "type": "TRANSFER_OUT",
-        "amount": -104.97,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-04",
-        "type": "TRANSFER_OUT",
-        "amount": -37.91,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_d77c33c7",
         "month": "2025-09",
         "date": "2025-09-05",
         "type": "CONTRIB",
         "amount": 50,
         "description": "Contribution (executed at 2025-09-05)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-05",
-        "type": "TRANSFER_OUT",
-        "amount": -50,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_97100dd9",
@@ -6355,14 +6363,6 @@
         "description": "Contribution (executed at 2025-09-09)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-09",
-        "type": "TRANSFER_OUT",
-        "amount": -300,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_97100dd9",
         "month": "2025-09",
         "date": "2025-09-11",
@@ -6379,44 +6379,12 @@
         "description": "Interac e-Transfer® Received"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-11",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-09",
-        "date": "2025-09-12",
-        "type": "TRANSFER_IN",
-        "amount": 2270,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-12",
-        "type": "TRANSFER_OUT",
-        "amount": -2270,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_231879ac",
         "month": "2025-09",
         "date": "2025-09-13",
         "type": "CONTRIB",
         "amount": 2000,
         "description": "Contribution (executed at 2025-09-13)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-09",
-        "date": "2025-09-13",
-        "type": "TRANSFER_OUT",
-        "amount": -2000,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -6451,36 +6419,12 @@
         "description": "Contribution (executed at 2025-09-25)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-09",
-        "date": "2025-09-25",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2025-09",
         "date": "2025-09-29",
         "type": "TRANSFER_IN",
         "amount": 2338.41,
         "description": "Direct deposit from PEOPLE CENTER"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-09",
-        "date": "2025-09-30",
-        "type": "TRANSFER_IN",
-        "amount": 1000,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-09",
-        "date": "2025-09-30",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_d77c33c7",
@@ -6494,33 +6438,9 @@
         "account_id": "acct_8cd3372e",
         "month": "2025-10",
         "date": "2025-10-03",
-        "type": "TRANSFER_OUT",
-        "amount": -4000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-10",
-        "date": "2025-10-03",
         "type": "TRANSFER_IN",
         "amount": 24000,
         "description": "Deposit"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-10",
-        "date": "2025-10-09",
-        "type": "TRANSFER_OUT",
-        "amount": -16270,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-10",
-        "date": "2025-10-09",
-        "type": "TRANSFER_IN",
-        "amount": 16270,
-        "description": "Transfer in"
       },
       {
         "account_id": "acct_231879ac",
@@ -6529,14 +6449,6 @@
         "type": "CONTRIB",
         "amount": 1000,
         "description": "Contribution (executed at 2025-10-14)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-10",
-        "date": "2025-10-14",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -6557,14 +6469,6 @@
       {
         "account_id": "acct_2b743dc7",
         "month": "2025-10",
-        "date": "2025-10-22",
-        "type": "TRANSFER_OUT",
-        "amount": -5000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-10",
         "date": "2025-10-27",
         "type": "TRANSFER_IN",
         "amount": 6500,
@@ -6577,30 +6481,6 @@
         "type": "TRANSFER_IN",
         "amount": 1000,
         "description": "Money transfer into the account (executed at 2025-10-31)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-10",
-        "date": "2025-10-30",
-        "type": "TRANSFER_IN",
-        "amount": 500,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-10",
-        "date": "2025-10-30",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-10",
-        "date": "2025-10-30",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -6619,44 +6499,12 @@
         "description": "Money transfer into the account (executed at 2025-11-05)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-11",
-        "date": "2025-11-05",
-        "type": "TRANSFER_OUT",
-        "amount": -4000,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_1f9a1df3",
         "month": "2025-11",
         "date": "2025-11-07",
         "type": "TRANSFER_IN",
         "amount": 500,
         "description": "Money transfer into the account (executed at 2025-11-07)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-11",
-        "date": "2025-11-07",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-11",
-        "date": "2025-11-13",
-        "type": "TRANSFER_IN",
-        "amount": 500,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-11",
-        "date": "2025-11-13",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_1f9a1df3",
@@ -6680,14 +6528,6 @@
         "date": "2025-11-14",
         "type": "TRANSFER_OUT",
         "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-11",
-        "date": "2025-11-14",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
         "description": "Interac e-Transfer® Out"
       },
       {
@@ -6699,28 +6539,12 @@
         "description": "Money transfer into the account (executed at 2025-11-17)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-11",
-        "date": "2025-11-17",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_d6d9fb4a",
         "month": "2025-11",
         "date": "2025-11-20",
         "type": "CONTRIB",
         "amount": 12000,
         "description": "Contribution (executed at 2025-11-20)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-11",
-        "date": "2025-11-20",
-        "type": "TRANSFER_OUT",
-        "amount": -12000,
-        "description": "Transfer out: initial investment rrsp"
       },
       {
         "account_id": "acct_1f9a1df3",
@@ -6731,14 +6555,6 @@
         "description": "Money transfer into the account (executed at 2025-11-24)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-11",
-        "date": "2025-11-24",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2c620d2b",
         "month": "2025-11",
         "date": "2025-11-25",
@@ -6747,44 +6563,12 @@
         "description": "Money transfer into the account (executed at 2025-11-26)"
       },
       {
-        "account_id": "acct_38abd498",
-        "month": "2025-11",
-        "date": "2025-11-25",
-        "type": "TRANSFER_OUT",
-        "amount": -1431.66,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_1f9a1df3",
         "month": "2025-11",
         "date": "2025-11-27",
         "type": "TRANSFER_IN",
         "amount": 500,
         "description": "Money transfer into the account (executed at 2025-11-28)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-11",
-        "date": "2025-11-27",
-        "type": "TRANSFER_IN",
-        "amount": 500,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-11",
-        "date": "2025-11-27",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-11",
-        "date": "2025-11-27",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -6811,44 +6595,12 @@
         "description": "Money transfer into the account (executed at 2025-12-02)"
       },
       {
-        "account_id": "acct_38abd498",
-        "month": "2025-12",
-        "date": "2025-12-02",
-        "type": "TRANSFER_OUT",
-        "amount": -3.31,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_1f9a1df3",
         "month": "2025-12",
         "date": "2025-12-11",
         "type": "TRANSFER_IN",
         "amount": 500,
         "description": "Money transfer into the account (executed at 2025-12-11)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-12",
-        "date": "2025-12-11",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-12",
-        "date": "2025-12-12",
-        "type": "TRANSFER_IN",
-        "amount": 500,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-12",
-        "date": "2025-12-12",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -6891,22 +6643,6 @@
         "description": "Money transfer into the account (executed at 2025-12-16)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-12",
-        "date": "2025-12-16",
-        "type": "TRANSFER_OUT",
-        "amount": -200,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-12",
-        "date": "2025-12-16",
-        "type": "TRANSFER_OUT",
-        "amount": -268,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_1f9a1df3",
         "month": "2025-12",
         "date": "2025-12-18",
@@ -6925,22 +6661,6 @@
       {
         "account_id": "acct_2b743dc7",
         "month": "2025-12",
-        "date": "2025-12-18",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-12",
-        "date": "2025-12-18",
-        "type": "TRANSFER_OUT",
-        "amount": -501.32,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-12",
         "date": "2025-12-29",
         "type": "TRANSFER_IN",
         "amount": 303,
@@ -6953,38 +6673,6 @@
         "type": "TRANSFER_IN",
         "amount": 500,
         "description": "Money transfer into the account (executed at 2025-12-31)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2025-12",
-        "date": "2025-12-30",
-        "type": "TRANSFER_IN",
-        "amount": 500,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-12",
-        "date": "2025-12-30",
-        "type": "TRANSFER_OUT",
-        "amount": -332.74,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-12",
-        "date": "2025-12-30",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-12",
-        "date": "2025-12-30",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2c620d2b",
@@ -7006,14 +6694,6 @@
         "account_id": "acct_2b743dc7",
         "month": "2025-12",
         "date": "2025-12-31",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2025-12",
-        "date": "2025-12-31",
         "type": "TRANSFER_IN",
         "amount": 100,
         "description": "Interac e-Transfer® Received"
@@ -7025,22 +6705,6 @@
         "type": "TRANSFER_IN",
         "amount": 1600,
         "description": "Money transfer into the account (executed at 2026-01-01)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-01",
-        "type": "TRANSFER_OUT",
-        "amount": -1600,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-01",
-        "type": "TRANSFER_OUT",
-        "amount": -93.54,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_e2ec057d",
@@ -7091,54 +6755,6 @@
         "description": "Contribution (executed at 2026-01-02)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-02",
-        "type": "TRANSFER_OUT",
-        "amount": -856.75,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-02",
-        "type": "TRANSFER_OUT",
-        "amount": -643.25,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-02",
-        "type": "TRANSFER_OUT",
-        "amount": -4000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-02",
-        "type": "TRANSFER_OUT",
-        "amount": -2000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-02",
-        "type": "TRANSFER_OUT",
-        "amount": -4000,
-        "description": "Transfer out: half of 2026 contribution"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-02",
-        "type": "TRANSFER_OUT",
-        "amount": -3500,
-        "description": "Transfer out: half of 2026 contribution"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-01",
         "date": "2026-01-04",
@@ -7155,14 +6771,6 @@
         "description": "Money transfer into the account (executed at 2026-01-06)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-06",
-        "type": "TRANSFER_OUT",
-        "amount": -6000,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2c620d2b",
         "month": "2026-01",
         "date": "2026-01-07",
@@ -7177,30 +6785,6 @@
         "type": "TRANSFER_IN",
         "amount": 202.89,
         "description": "Money transfer into the account (executed at 2026-01-07)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-07",
-        "type": "TRANSFER_OUT",
-        "amount": -204.93,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-07",
-        "type": "TRANSFER_OUT",
-        "amount": -202.89,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-07",
-        "type": "TRANSFER_OUT",
-        "amount": -160,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_c2e9345e",
@@ -7243,46 +6827,6 @@
         "description": "Money transfer into the account (executed at 2026-01-08)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-08",
-        "type": "TRANSFER_OUT",
-        "amount": -618.19,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-08",
-        "type": "TRANSFER_OUT",
-        "amount": -1051.61,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-08",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-08",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-08",
-        "type": "TRANSFER_OUT",
-        "amount": -2000,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2c620d2b",
         "month": "2026-01",
         "date": "2026-01-09",
@@ -7297,14 +6841,6 @@
         "type": "TRANSFER_IN",
         "amount": 624.85,
         "description": "Direct deposit from PEOPLE CENTER"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-09",
-        "type": "TRANSFER_OUT",
-        "amount": -329.59,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -7341,30 +6877,6 @@
       {
         "account_id": "acct_2b743dc7",
         "month": "2026-01",
-        "date": "2026-01-14",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-14",
-        "type": "TRANSFER_OUT",
-        "amount": -700,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-15",
-        "type": "TRANSFER_IN",
-        "amount": 10,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
         "date": "2026-01-15",
         "type": "TRANSFER_IN",
         "amount": 1928.32,
@@ -7379,36 +6891,12 @@
         "description": "Interac e-Transfer® Received"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-15",
-        "type": "TRANSFER_OUT",
-        "amount": -104.42,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-15",
-        "type": "TRANSFER_OUT",
-        "amount": -10,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_1f9a1df3",
         "month": "2026-01",
         "date": "2026-01-20",
         "type": "TRANSFER_IN",
         "amount": 500,
         "description": "Money transfer into the account (executed at 2026-01-20)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-20",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2c620d2b",
@@ -7419,22 +6907,6 @@
         "description": "Money transfer into the account (executed at 2026-01-21)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-21",
-        "type": "TRANSFER_OUT",
-        "amount": -800,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-21",
-        "type": "TRANSFER_OUT",
-        "amount": -200,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-01",
         "date": "2026-01-22",
@@ -7443,44 +6915,12 @@
         "description": "Interac e-Transfer® Received"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-22",
-        "type": "TRANSFER_OUT",
-        "amount": -300,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-25",
-        "type": "TRANSFER_OUT",
-        "amount": -97.18,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-25",
-        "type": "TRANSFER_OUT",
-        "amount": -180.9,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2c620d2b",
         "month": "2026-01",
         "date": "2026-01-27",
         "type": "TRANSFER_IN",
         "amount": 1470.36,
         "description": "Money transfer into the account (executed at 2026-01-27)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-27",
-        "type": "TRANSFER_OUT",
-        "amount": -1470.36,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2c620d2b",
@@ -7497,38 +6937,6 @@
         "type": "TRANSFER_IN",
         "amount": 150,
         "description": "Money transfer into the account (executed at 2026-01-30)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-29",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-29",
-        "type": "TRANSFER_IN",
-        "amount": 800,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-29",
-        "type": "TRANSFER_OUT",
-        "amount": -150,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-29",
-        "type": "TRANSFER_OUT",
-        "amount": -800,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_1f9a1df3",
@@ -7571,52 +6979,12 @@
         "description": "Contribution (executed at 2026-01-30)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-01",
-        "date": "2026-01-30",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-01",
         "date": "2026-01-30",
         "type": "TRANSFER_IN",
         "amount": 3255.47,
         "description": "Direct deposit from PEOPLE CENTER"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-30",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-30",
-        "type": "TRANSFER_OUT",
-        "amount": -1150,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-30",
-        "type": "TRANSFER_OUT",
-        "amount": -300,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-01",
-        "date": "2026-01-30",
-        "type": "TRANSFER_OUT",
-        "amount": -116.68,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -7635,36 +7003,12 @@
         "description": "Money transfer into the account (executed at 2026-02-02)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-02",
-        "date": "2026-02-02",
-        "type": "TRANSFER_OUT",
-        "amount": -2000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-02",
-        "type": "TRANSFER_OUT",
-        "amount": -68.05,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2c620d2b",
         "month": "2026-02",
         "date": "2026-02-03",
         "type": "TRANSFER_IN",
         "amount": 830.42,
         "description": "Money transfer into the account (executed at 2026-02-03)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-02",
-        "date": "2026-02-03",
-        "type": "TRANSFER_OUT",
-        "amount": -830.42,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_1f9a1df3",
@@ -7699,38 +7043,6 @@
         "description": "Interac e-Transfer® Received"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-05",
-        "type": "TRANSFER_OUT",
-        "amount": -2000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-05",
-        "type": "TRANSFER_OUT",
-        "amount": -200,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-02",
-        "date": "2026-02-12",
-        "type": "TRANSFER_IN",
-        "amount": 1000,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-12",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_1f9a1df3",
         "month": "2026-02",
         "date": "2026-02-13",
@@ -7755,60 +7067,12 @@
         "description": "Money transfer into the account (executed at 2026-02-13)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-02",
-        "date": "2026-02-13",
-        "type": "TRANSFER_IN",
-        "amount": 500,
-        "description": "Transfer in"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-02",
         "date": "2026-02-13",
         "type": "TRANSFER_IN",
         "amount": 2385.63,
         "description": "Direct deposit from PEOPLE CENTER"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-13",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-13",
-        "type": "TRANSFER_OUT",
-        "amount": -200,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-13",
-        "type": "TRANSFER_OUT",
-        "amount": -100,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-13",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-13",
-        "type": "TRANSFER_OUT",
-        "amount": -70,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -7829,14 +7093,6 @@
       {
         "account_id": "acct_2b743dc7",
         "month": "2026-02",
-        "date": "2026-02-17",
-        "type": "TRANSFER_OUT",
-        "amount": -50,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
         "date": "2026-02-22",
         "type": "TRANSFER_IN",
         "amount": 100,
@@ -7851,36 +7107,12 @@
         "description": "Money transfer into the account (executed at 2026-02-23)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-02",
-        "date": "2026-02-23",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-23",
-        "type": "TRANSFER_OUT",
-        "amount": -900,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2c620d2b",
         "month": "2026-02",
         "date": "2026-02-25",
         "type": "TRANSFER_IN",
         "amount": 260.99,
         "description": "Money transfer into the account (executed at 2026-02-25)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-02",
-        "date": "2026-02-25",
-        "type": "TRANSFER_OUT",
-        "amount": -260.99,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_1f9a1df3",
@@ -7891,60 +7123,12 @@
         "description": "Money transfer into the account (executed at 2026-02-27)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-02",
-        "date": "2026-02-26",
-        "type": "TRANSFER_IN",
-        "amount": 760.99,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-02",
-        "date": "2026-02-26",
-        "type": "TRANSFER_IN",
-        "amount": 1500,
-        "description": "Transfer in"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-02",
         "date": "2026-02-26",
         "type": "TRANSFER_IN",
         "amount": 3000,
         "description": "Interac e-Transfer® Received"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-26",
-        "type": "TRANSFER_OUT",
-        "amount": -1827.13,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-26",
-        "type": "TRANSFER_OUT",
-        "amount": -760.99,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-26",
-        "type": "TRANSFER_OUT",
-        "amount": -1500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-26",
-        "type": "TRANSFER_OUT",
-        "amount": -300,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2c620d2b",
@@ -7963,14 +7147,6 @@
         "description": "Direct deposit from PEOPLE CENTER"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-02",
-        "date": "2026-02-27",
-        "type": "TRANSFER_OUT",
-        "amount": -300,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_1f9a1df3",
         "month": "2026-03",
         "date": "2026-03-03",
@@ -7985,22 +7161,6 @@
         "type": "TRANSFER_IN",
         "amount": 613,
         "description": "Money transfer into the account (executed at 2026-03-03)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-03",
-        "type": "TRANSFER_OUT",
-        "amount": -250,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-03",
-        "type": "TRANSFER_OUT",
-        "amount": -613,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -8029,14 +7189,6 @@
       {
         "account_id": "acct_2b743dc7",
         "month": "2026-03",
-        "date": "2026-03-06",
-        "type": "TRANSFER_OUT",
-        "amount": -250,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
         "date": "2026-03-08",
         "type": "TRANSFER_IN",
         "amount": 200,
@@ -8059,38 +7211,6 @@
         "description": "Deposit (executed at 2026-03-09)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-03",
-        "date": "2026-03-09",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-03",
-        "date": "2026-03-09",
-        "type": "TRANSFER_OUT",
-        "amount": -179.62,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-03",
-        "date": "2026-03-09",
-        "type": "TRANSFER_IN",
-        "amount": 180,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-09",
-        "type": "TRANSFER_OUT",
-        "amount": -180,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_231879ac",
         "month": "2026-03",
         "date": "2026-03-10",
@@ -8105,22 +7225,6 @@
         "type": "CONTRIB",
         "amount": 500,
         "description": "Contribution (executed at 2026-03-10)"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-03",
-        "date": "2026-03-10",
-        "type": "TRANSFER_OUT",
-        "amount": -2000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-03",
-        "date": "2026-03-10",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_1f9a1df3",
@@ -8165,46 +7269,6 @@
       {
         "account_id": "acct_2b743dc7",
         "month": "2026-03",
-        "date": "2026-03-12",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-12",
-        "type": "TRANSFER_OUT",
-        "amount": -20,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-12",
-        "type": "TRANSFER_OUT",
-        "amount": -1300,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-12",
-        "type": "TRANSFER_OUT",
-        "amount": -450,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-12",
-        "type": "TRANSFER_OUT",
-        "amount": -30,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
         "date": "2026-03-13",
         "type": "TRANSFER_IN",
         "amount": 2496.04,
@@ -8241,30 +7305,6 @@
         "type": "TRANSFER_IN",
         "amount": 1000,
         "description": "Interac e-Transfer® Received"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-20",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-20",
-        "type": "TRANSFER_OUT",
-        "amount": -50,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-25",
-        "type": "TRANSFER_OUT",
-        "amount": -185.5,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_1f9a1df3",
@@ -8307,76 +7347,12 @@
         "description": "Deposit (executed at 2026-03-30)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-03",
-        "date": "2026-03-30",
-        "type": "TRANSFER_IN",
-        "amount": 1300,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-03",
-        "date": "2026-03-30",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-03",
-        "date": "2026-03-30",
-        "type": "TRANSFER_OUT",
-        "amount": -700,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-30",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-30",
-        "type": "TRANSFER_OUT",
-        "amount": -1300,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-03",
-        "date": "2026-03-30",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-03",
         "date": "2026-03-31",
         "type": "TRANSFER_IN",
         "amount": 2496.04,
         "description": "Direct deposit from PEOPLE CENTER"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-01",
-        "type": "TRANSFER_OUT",
-        "amount": -152.67,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-04",
-        "date": "2026-04-06",
-        "type": "TRANSFER_OUT",
-        "amount": -102.32,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_91b82482",
@@ -8419,30 +7395,6 @@
         "description": "Contribution (executed at 2026-04-15)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-04",
-        "date": "2026-04-14",
-        "type": "TRANSFER_IN",
-        "amount": 1300,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-04",
-        "date": "2026-04-14",
-        "type": "TRANSFER_OUT",
-        "amount": -300,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-04",
-        "date": "2026-04-14",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-04",
         "date": "2026-04-14",
@@ -8453,74 +7405,10 @@
       {
         "account_id": "acct_2b743dc7",
         "month": "2026-04",
-        "date": "2026-04-14",
-        "type": "TRANSFER_OUT",
-        "amount": -330.2,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-14",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-14",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-14",
-        "type": "TRANSFER_OUT",
-        "amount": -1300,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-14",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-14",
-        "type": "TRANSFER_OUT",
-        "amount": -492.5,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-04",
-        "date": "2026-04-14",
-        "type": "TRANSFER_IN",
-        "amount": 500,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
         "date": "2026-04-15",
         "type": "TRANSFER_IN",
         "amount": 3273.38,
         "description": "Direct deposit from PEOPLE CENTER"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-25",
-        "type": "TRANSFER_OUT",
-        "amount": -125.3,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_91b82482",
@@ -8547,38 +7435,6 @@
         "description": "Money transfer into the account (executed at 2026-04-30)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-04",
-        "date": "2026-04-29",
-        "type": "TRANSFER_IN",
-        "amount": 1300,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-29",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-29",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-29",
-        "type": "TRANSFER_OUT",
-        "amount": -1300,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_97ab4cb2",
         "month": "2026-04",
         "date": "2026-04-30",
@@ -8598,22 +7454,6 @@
         "account_id": "acct_8cd3372e",
         "month": "2026-04",
         "date": "2026-04-30",
-        "type": "TRANSFER_OUT",
-        "amount": -600,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-04",
-        "date": "2026-04-30",
-        "type": "TRANSFER_OUT",
-        "amount": -700,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-04",
-        "date": "2026-04-30",
         "type": "TRANSFER_IN",
         "amount": 19666,
         "description": "Deposit"
@@ -8627,14 +7467,6 @@
         "description": "Direct deposit from PEOPLE CENTER"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-04",
-        "date": "2026-04-30",
-        "type": "TRANSFER_OUT",
-        "amount": -111.39,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_c2e9345e",
         "month": "2026-05",
         "date": "2026-05-01",
@@ -8643,28 +7475,12 @@
         "description": "Deposit (executed at 2026-05-02)"
       },
       {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-01",
-        "type": "TRANSFER_OUT",
-        "amount": -200,
-        "description": "Transfer out to Family RESP"
-      },
-      {
         "account_id": "acct_1f9a1df3",
         "month": "2026-05",
         "date": "2026-05-04",
         "type": "TRANSFER_IN",
         "amount": 50,
         "description": "Money transfer into the account (executed at 2026-05-04)"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-04",
-        "type": "TRANSFER_OUT",
-        "amount": -50,
-        "description": "Transfer out to Non-registered"
       },
       {
         "account_id": "acct_97ab4cb2",
@@ -8691,30 +7507,6 @@
         "description": "Contribution (executed at 2026-05-06)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-05",
-        "date": "2026-05-06",
-        "type": "TRANSFER_OUT",
-        "amount": -8000,
-        "description": "Transfer out to RRSP"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-05",
-        "date": "2026-05-06",
-        "type": "TRANSFER_OUT",
-        "amount": -5100,
-        "description": "Transfer out to RRSP"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-05",
-        "date": "2026-05-06",
-        "type": "TRANSFER_OUT",
-        "amount": -6300,
-        "description": "Transfer out to Spousal RRSP"
-      },
-      {
         "account_id": "acct_1f9a1df3",
         "month": "2026-05",
         "date": "2026-05-14",
@@ -8731,60 +7523,12 @@
         "description": "Money transfer into the account (executed at 2026-05-15)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-05",
-        "date": "2026-05-14",
-        "type": "TRANSFER_IN",
-        "amount": 1300,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-14",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-14",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-14",
-        "type": "TRANSFER_OUT",
-        "amount": -1300,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-14",
-        "type": "TRANSFER_OUT",
-        "amount": -700,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-05",
         "date": "2026-05-14",
         "type": "TRANSFER_IN",
         "amount": 2938.53,
         "description": "Direct deposit from PEOPLE CENTER"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-05",
-        "date": "2026-05-14",
-        "type": "TRANSFER_IN",
-        "amount": 700,
-        "description": "Transfer in"
       },
       {
         "account_id": "acct_97ab4cb2",
@@ -8811,60 +7555,12 @@
         "description": "Contribution (executed at 2026-05-15)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-05",
-        "date": "2026-05-15",
-        "type": "TRANSFER_OUT",
-        "amount": -700,
-        "description": "Transfer out to Spousal RRSP"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-05",
-        "date": "2026-05-15",
-        "type": "TRANSFER_OUT",
-        "amount": -300,
-        "description": "Transfer out to Spousal RRSP"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-05",
-        "date": "2026-05-15",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out to RRSP"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-05",
         "date": "2026-05-17",
         "type": "TRANSFER_IN",
         "amount": 200,
         "description": "Interac e-Transfer® Received from [redacted]"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-17",
-        "type": "TRANSFER_OUT",
-        "amount": -122.59,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-20",
-        "type": "TRANSFER_OUT",
-        "amount": -66.89,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-25",
-        "type": "TRANSFER_OUT",
-        "amount": -14.91,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_1f9a1df3",
@@ -8875,14 +7571,6 @@
         "description": "Money transfer into the account (executed at 2026-05-27)"
       },
       {
-        "account_id": "acct_18a334f1",
-        "month": "2026-05",
-        "date": "2026-05-27",
-        "type": "TRANSFER_OUT",
-        "amount": -200,
-        "description": "Transfer out to Non-registered"
-      },
-      {
         "account_id": "acct_2c620d2b",
         "month": "2026-05",
         "date": "2026-05-28",
@@ -8891,52 +7579,12 @@
         "description": "Money transfer into the account (executed at 2026-05-29)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-05",
-        "date": "2026-05-28",
-        "type": "TRANSFER_IN",
-        "amount": 1500,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-28",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-28",
-        "type": "TRANSFER_OUT",
-        "amount": -1500,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-28",
-        "type": "TRANSFER_OUT",
-        "amount": -700,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-05",
         "date": "2026-05-28",
         "type": "TRANSFER_IN",
         "amount": 3091.24,
         "description": "Direct deposit from PEOPLE CENTER"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-05",
-        "date": "2026-05-28",
-        "type": "TRANSFER_IN",
-        "amount": 700,
-        "description": "Transfer in"
       },
       {
         "account_id": "acct_1f9a1df3",
@@ -8963,68 +7611,12 @@
         "description": "Contribution (executed at 2026-05-29)"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-05",
-        "date": "2026-05-29",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out to Spousal RRSP"
-      },
-      {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-05",
-        "date": "2026-05-29",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out to RRSP"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-05",
-        "date": "2026-05-29",
-        "type": "TRANSFER_OUT",
-        "amount": -300,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-05",
-        "date": "2026-05-29",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out to Non-registered"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-05",
-        "date": "2026-05-29",
-        "type": "TRANSFER_IN",
-        "amount": 300,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-03",
-        "type": "TRANSFER_OUT",
-        "amount": -122.84,
-        "description": "Transfer out"
-      },
-      {
         "account_id": "acct_e2d627ff",
         "month": "2026-06",
         "date": "2026-06-04",
         "type": "TRANSFER_IN",
         "amount": 500,
         "description": "Money transfer into the account (executed at 2026-06-05)"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-06",
-        "date": "2026-06-04",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out to Crypto"
       },
       {
         "account_id": "acct_e2d627ff",
@@ -9041,22 +7633,6 @@
         "type": "TRANSFER_IN",
         "amount": 660,
         "description": "Interac e-Transfer® Received from [redacted]"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-05",
-        "type": "TRANSFER_OUT",
-        "amount": -653,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-06",
-        "date": "2026-06-05",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out to Crypto"
       },
       {
         "account_id": "acct_91b82482",
@@ -9150,105 +7726,9 @@
         "account_id": "acct_2b743dc7",
         "month": "2026-06",
         "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -100,
-        "description": "Transfer out to Non-registered"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -30,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -60,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -700,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -800,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -150,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -30,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -80,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -150,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-12",
         "type": "TRANSFER_IN",
         "amount": 3101.5,
         "description": "Direct deposit from PEOPLE CENTER"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_IN",
-        "amount": 1000,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-06",
-        "date": "2026-06-12",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out to Non-registered"
       },
       {
         "account_id": "acct_2b743dc7",
@@ -9277,34 +7757,10 @@
       {
         "account_id": "acct_2b743dc7",
         "month": "2026-06",
-        "date": "2026-06-15",
-        "type": "TRANSFER_OUT",
-        "amount": -100,
-        "description": "Transfer out to Non-registered"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
         "date": "2026-06-21",
         "type": "TRANSFER_IN",
         "amount": 100,
         "description": "Interac e-Transfer® Received from [redacted]"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-21",
-        "type": "TRANSFER_OUT",
-        "amount": -71.17,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-25",
-        "type": "TRANSFER_OUT",
-        "amount": -200,
-        "description": "Transfer out"
       },
       {
         "account_id": "acct_e2d627ff",
@@ -9411,164 +7867,12 @@
         "description": "Deposit"
       },
       {
-        "account_id": "acct_8cd3372e",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -66,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -64,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -30,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -150,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -1000,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -700,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -800,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -60,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -80,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -30,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -75,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -75,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -45.93,
-        "description": "Transfer out"
-      },
-      {
-        "account_id": "acct_2b743dc7",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_IN",
-        "amount": 100,
-        "description": "Transfer in from Chequing"
-      },
-      {
         "account_id": "acct_2b743dc7",
         "month": "2026-06",
         "date": "2026-06-29",
         "type": "TRANSFER_IN",
         "amount": 3101.5,
         "description": "Direct deposit from PEOPLE CENTER"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -250,
-        "description": "Transfer out to Family RESP"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_IN",
-        "amount": 1000,
-        "description": "Transfer in"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -500,
-        "description": "Transfer out to Non-registered"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -100,
-        "description": "Transfer out to Chequing"
-      },
-      {
-        "account_id": "acct_18a334f1",
-        "month": "2026-06",
-        "date": "2026-06-29",
-        "type": "TRANSFER_OUT",
-        "amount": -50,
-        "description": "Transfer out to Non-registered"
       }
     ]
   }

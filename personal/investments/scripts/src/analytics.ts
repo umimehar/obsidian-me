@@ -17,6 +17,8 @@ export interface LedgerSeriesRow {
   account_id: string;
   month: string;
   contrib: number;
+  external_in: number;
+  external_out: number;
   deposits: number;
   income: number;
   inflow: number;
@@ -134,20 +136,33 @@ function holdingsAcb(store: Datastore): Ledger["holdings"] {
   return out;
 }
 
-// Money genuinely put into an account nets across three codes, not one.
-// Wealthsimple only tags a deposit "CONT" when it lands in the registered
-// account as an explicit contribution; the same money often arrives coded
-// TRFIN instead (e.g. the Managed TFSA and RESP each received a 450 deposit
-// as a transfer, and Direct Indexing / Non-registered are funded almost
-// entirely by TRFIN). Summing CONT alone therefore undercounts real deposits.
-// `deposits` = CONT + TRANSFER_IN - TRANSFER_OUT is the net-money-in figure
-// that lines up with the brokerage app's "Net deposits".
-//
-// Caveat kept deliberately visible: the statements cannot tell an INTERNAL
-// transfer between your own accounts from an EXTERNAL withdrawal/deposit — both
-// are just TRFIN/TRFOUT — so `deposits` will not tie to the app to the cent when
-// money was shuffled between your own accounts (see d77c's 2023 setup churn).
-const DEPOSIT_TYPES = new Set(["CONTRIB", "TRANSFER_IN", "TRANSFER_OUT"]);
+// Wealthsimple codes both an external bank deposit and an internal transfer
+// between the owner's own accounts as TRANSFER_IN/TRANSFER_OUT — the coded
+// type alone cannot tell them apart. `raw_type` (the original statement
+// code) can: bank EFTs, direct deposits, e-transfers received, and generic
+// deposits carry a distinct code from account-to-account transfers. See
+// CLAUDE.md's "External versus internal transfers" section for the full
+// rationale and the hub-account caveat.
+const EXTERNAL_IN_CODES = new Set(["EFT", "AFT_IN", "E_TRFIN", "DEP", "TRFIN"]);
+const EXTERNAL_OUT_CODES = new Set(["E_TRFOUT", "P2P_SENT"]);
+const EXTERNAL_OUT_DESC = /money transfer out|e-?transfer/i;
+
+// Classifies a transaction as external money in/out, or internal (null).
+// CONTRIB is always external in. TRANSFER_IN/TRANSFER_OUT are external only
+// when the raw statement code (or, for withdrawals, the description) marks
+// them as a real bank movement rather than a transfer between the owner's
+// own accounts.
+export function externalFlow(txn: Txn): "in" | "out" | null {
+  if (txn.type === "CONTRIB") return "in";
+  if (txn.type === "TRANSFER_IN" && EXTERNAL_IN_CODES.has(txn.raw_type)) return "in";
+  if (
+    txn.type === "TRANSFER_OUT" &&
+    (EXTERNAL_OUT_CODES.has(txn.raw_type) || EXTERNAL_OUT_DESC.test(txn.description_redacted))
+  ) {
+    return "out";
+  }
+  return null;
+}
 
 const TAXABLE_KINDS = new Set(["NonRegistered", "DirectIndexing", "Crypto", "PE", "Other"]);
 
@@ -157,27 +172,24 @@ function taxableAccounts(store: Datastore): Set<string> {
 
 interface FlowRec {
   contrib: number;
-  deposits: number;
+  external_in: number;
+  external_out: number;
   income: number;
-  inflow: number;
-  outflow: number;
   interest: number;
   eligible_dividends: number;
   foreign_income: number;
 }
 
-// CAD-tagged fields only: contrib/deposits/income/inflow/outflow are cash
+// CAD-tagged fields only: contrib/external_in/external_out/income are cash
 // flow figures, and the currency field is too dirty to convert non-CAD
 // amounts into CAD (see CLAUDE.md).
 function foldFlow(txn: Txn, r: FlowRec): void {
   const { type, amount } = txn;
   if (INCOME_TYPES.has(type) && amount > 0) r.income += amount;
   if (type === "CONTRIB") r.contrib += amount;
-  if (DEPOSIT_TYPES.has(type)) r.deposits += amount;
-  // inflow/outflow count only external money movement (deposits/withdrawals
-  // to/from the account), not internal churn like BUY/SELL/DIV/INT.
-  if (type === "CONTRIB" || type === "TRANSFER_IN") r.inflow += amount;
-  if (type === "TRANSFER_OUT") r.outflow += amount;
+  const ext = externalFlow(txn);
+  if (ext === "in") r.external_in += amount;
+  if (ext === "out") r.external_out += amount;
 }
 
 // Taxable income splits are not CAD-gated: interest and dividends earned in
@@ -224,9 +236,12 @@ function realizedGainMonthly(store: Datastore, taxable: Set<string>): Map<string
   return out;
 }
 
+// The transaction-level backing data for the cashflow chart and drill-down:
+// every external CONTRIB/TRANSFER_IN/TRANSFER_OUT row, excluding internal
+// transfers between the owner's own accounts.
 function buildFlows(store: Datastore): LedgerFlow[] {
   return store.transactions
-    .filter((t) => DEPOSIT_TYPES.has(t.type))
+    .filter((t) => externalFlow(t) !== null)
     .map((t) => ({
       account_id: t.account_id,
       month: month(t.date),
@@ -249,10 +264,9 @@ export function buildLedger(store: Datastore): Ledger {
     if (!r) {
       r = {
         contrib: 0,
-        deposits: 0,
+        external_in: 0,
+        external_out: 0,
         income: 0,
-        inflow: 0,
-        outflow: 0,
         interest: 0,
         eligible_dividends: 0,
         foreign_income: 0,
@@ -291,10 +305,12 @@ export function buildLedger(store: Datastore): Ledger {
       account_id: accountId ?? "",
       month: m ?? "",
       contrib: round2(r.contrib),
-      deposits: round2(r.deposits),
+      external_in: round2(r.external_in),
+      external_out: round2(r.external_out),
+      deposits: round2(r.external_in + r.external_out),
       income: round2(r.income),
-      inflow: round2(r.inflow),
-      outflow: round2(r.outflow),
+      inflow: round2(r.external_in),
+      outflow: round2(r.external_out),
       cash: c ? round2(c[1]) : null,
       acb: acb.has(key) ? round2(acb.get(key) ?? 0) : null,
       interest: round2(r.interest),

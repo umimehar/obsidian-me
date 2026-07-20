@@ -113,8 +113,9 @@ function contribSection(): string {
     '<div class="hero-row" id="headline"></div>' +
     '<div id="room"></div>' +
     subhead("External money in / out") +
-    '<p class="section-note">Deposits into and withdrawals or transfers out of the selected ' +
-    "accounts — not trading activity. Click a bar to see the underlying transactions.</p>" +
+    '<p class="section-note">External deposits into and withdrawals out of the selected ' +
+    "accounts, not trading activity — transfers between your own accounts are excluded. " +
+    "Click a bar to see the underlying transactions.</p>" +
     canvasBox("chart-cashflow") +
     '<details class="pillar-detail" id="cashflow-drill">' +
     "<summary>Transactions for the selected period</summary>" +

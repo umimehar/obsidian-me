@@ -16,6 +16,8 @@ function row(overrides: Partial<SeriesRow>): SeriesRow {
     account_id: "A",
     month: "2024-01",
     contrib: 0,
+    external_in: 0,
+    external_out: 0,
     deposits: 0,
     income: 0,
     inflow: 0,
@@ -286,7 +288,7 @@ describe("taxSummary", () => {
     expect(out.interest).toBe(10);
   });
 
-  test("room used sums contrib per registered group; ManagedTFSA shares the TFSA group", () => {
+  test("room used sums external_in per registered group; ManagedTFSA shares the TFSA group", () => {
     const L = ledger({
       accounts: [
         { id: "A", kind: "TFSA", name: "TFSA A", short_id: "aaaa", currency: "CAD" },
@@ -295,9 +297,11 @@ describe("taxSummary", () => {
       ],
       limits: { TFSA: { "2024": 7000 }, RRSP: { "2024": 31000 } },
       series: [
-        row({ account_id: "A", month: "2024-01", contrib: 1000 }),
-        row({ account_id: "B", month: "2024-01", contrib: 500 }),
-        row({ account_id: "C", month: "2024-01", contrib: 2000 }),
+        // A is coded CONTRIB (contrib set), B/C arrive as external TRANSFER_IN
+        // (external_in set, contrib left at 0) — both must count as room used.
+        row({ account_id: "A", month: "2024-01", contrib: 1000, external_in: 1000 }),
+        row({ account_id: "B", month: "2024-01", contrib: 0, external_in: 500 }),
+        row({ account_id: "C", month: "2024-01", contrib: 0, external_in: 2000 }),
       ],
     });
     const out = taxSummary(L, { ris: [0], accts: ["A", "B", "C"] }, "2024");
@@ -310,7 +314,7 @@ describe("taxSummary", () => {
   test("missing limit for the year falls back to 0", () => {
     const L = ledger({
       limits: {},
-      series: [row({ month: "2024-01", contrib: 100 })],
+      series: [row({ month: "2024-01", contrib: 100, external_in: 100 })],
     });
     const out = taxSummary(L, { ris: [0], accts: ["A"] }, "2024");
     const tfsa = out.room.find((r) => r.group === "TFSA");
