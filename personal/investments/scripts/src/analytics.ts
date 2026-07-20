@@ -284,3 +284,106 @@ export function buildLedger(store: Datastore): Ledger {
 export function computeAnalytics(store: Datastore): Analytics {
   return { ledger: buildLedger(store) };
 }
+
+export interface TaxYear {
+  year: string;
+  room: Array<{ group: string; used: number; limit: number; remaining: number; over: boolean }>;
+  rrsp_deduction_available: number;
+  income: { interest: number; eligible_dividends: number; foreign_income: number };
+  realized_gains: number;
+}
+export interface Tax {
+  current_year: string;
+  years: TaxYear[];
+}
+
+const TAXABLE_KINDS = new Set(["NonRegistered", "DirectIndexing", "Crypto", "PE", "Other"]);
+const REG_GROUP: Record<string, string> = {
+  TFSA: "TFSA",
+  ManagedTFSA: "TFSA",
+  FHSA: "FHSA",
+  RRSP: "RRSP",
+  RESP: "RESP",
+};
+
+function realizedGainByYear(store: Datastore, taxable: Set<string>): Map<string, number> {
+  const out = new Map<string, number>();
+  const pos = new Map<string, Position>();
+  const txns = store.transactions
+    .filter((t) => t.symbol && t.quantity !== null && taxable.has(t.account_id))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  for (const t of txns) {
+    const key = `${t.account_id}|${t.symbol}`;
+    let p = pos.get(key);
+    if (!p) {
+      p = { qty: 0, cost: 0 };
+      pos.set(key, p);
+    }
+    if (t.type === "BUY" || t.type === "STKDIV") {
+      p.qty += t.quantity ?? 0;
+      if (t.amount < 0) p.cost += -t.amount;
+    } else if (t.type === "SELL" && p.qty > 0) {
+      const q = Math.min(t.quantity ?? 0, p.qty);
+      const costOut = (p.cost / p.qty) * q;
+      const gain = t.amount - costOut; // proceeds are positive on a sell
+      out.set(t.date.slice(0, 4), (out.get(t.date.slice(0, 4)) ?? 0) + gain);
+      p.cost -= costOut;
+      p.qty -= t.quantity ?? 0;
+    }
+  }
+  return out;
+}
+
+export function buildTax(store: Datastore, currentYear: string): Tax {
+  const kinds = kindsOf(store);
+  const taxable = new Set(
+    store.accounts.filter((a) => TAXABLE_KINDS.has(a.kind)).map((a) => a.masked_id),
+  );
+  const years = new Set<string>([currentYear]);
+  for (const t of store.transactions) years.add(t.date.slice(0, 4));
+
+  const gainsByYear = realizedGainByYear(store, taxable);
+
+  const built: TaxYear[] = [...years]
+    .filter((y) => y)
+    .sort()
+    .map((year) => {
+      const income = { interest: 0, eligible_dividends: 0, foreign_income: 0 };
+      const roomUsed: Record<string, number> = { TFSA: 0, FHSA: 0, RRSP: 0, RESP: 0 };
+      for (const t of store.transactions) {
+        if (t.date.slice(0, 4) !== year) continue;
+        const group = REG_GROUP[kinds.get(t.account_id) ?? ""];
+        if (group && t.type === "CONTRIB") roomUsed[group] = (roomUsed[group] ?? 0) + t.amount;
+        if (!taxable.has(t.account_id)) continue;
+        if (t.type === "INT" && t.amount > 0) income.interest += t.amount;
+        if ((t.type === "DIV" || t.type === "STKDIV") && t.amount > 0) {
+          if (t.currency === "USD") income.foreign_income += t.amount;
+          else income.eligible_dividends += t.amount;
+        }
+      }
+      const room = (["TFSA", "FHSA", "RRSP", "RESP"] as const).map((group) => {
+        const limit = CONTRIBUTION_LIMITS[group]?.[year] ?? 0;
+        const used = round2(roomUsed[group] ?? 0);
+        return {
+          group,
+          used,
+          limit,
+          remaining: round2(limit - used),
+          over: used > limit && limit > 0,
+        };
+      });
+      const rrsp = room.find((r) => r.group === "RRSP");
+      return {
+        year,
+        room,
+        rrsp_deduction_available: Math.max(rrsp?.remaining ?? 0, 0),
+        income: {
+          interest: round2(income.interest),
+          eligible_dividends: round2(income.eligible_dividends),
+          foreign_income: round2(income.foreign_income),
+        },
+        realized_gains: round2(gainsByYear.get(year) ?? 0),
+      };
+    });
+  return { current_year: currentYear, years: built };
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it, test } from "bun:test";
-import { buildGrowth, computeAnalytics } from "./analytics";
+import { buildGrowth, buildTax, computeAnalytics } from "./analytics";
 import type { Account, Datastore, Txn } from "./datastore";
 
 function txn(partial: Partial<Txn>): Txn {
@@ -127,5 +127,93 @@ describe("buildGrowth", () => {
       quotes: { X: { symbol: "X", price: 5, currency: "CAD" } },
     });
     expect(g.total.gainPct).toBe(0);
+  });
+});
+
+describe("buildTax", () => {
+  function txn(p: Partial<Txn>): Txn {
+    return {
+      account_id: "t1",
+      date: "2026-03-01",
+      post_date: null,
+      type: "DIV",
+      raw_type: "",
+      symbol: null,
+      quantity: null,
+      unit_price: null,
+      fx_rate: null,
+      amount: 0,
+      balance: null,
+      currency: "CAD",
+      description_redacted: "",
+      ...p,
+    };
+  }
+  function store(txns: Txn[], kind = "NonRegistered"): Datastore {
+    return {
+      meta: {
+        generated_at: "",
+        schema_version: 1,
+        file_count: 0,
+        txn_count: txns.length,
+        source_range: { start: null, end: null },
+        warnings: { unmapped_types: {} },
+      },
+      accounts: [
+        {
+          masked_id: "t1",
+          kind,
+          name: kind,
+          short_id: "t1t1",
+          currency: "CAD",
+          first_activity: "",
+          last_activity: "",
+          txn_count: txns.length,
+        },
+      ],
+      transactions: txns,
+    };
+  }
+
+  it("buckets CAD dividends as eligible and USD dividends as foreign", () => {
+    const t = buildTax(
+      store([
+        txn({ type: "DIV", amount: 100, currency: "CAD" }),
+        txn({ type: "DIV", amount: 50, currency: "USD" }),
+        txn({ type: "INT", amount: 20, currency: "CAD", description_redacted: "Interest earned" }),
+      ]),
+      "2026",
+    );
+    const y = t.years.find((x) => x.year === "2026");
+    expect(y?.income.eligible_dividends).toBe(100);
+    expect(y?.income.foreign_income).toBe(50);
+    expect(y?.income.interest).toBe(20);
+  });
+
+  it("computes realized gains from sells against average cost", () => {
+    const t = buildTax(
+      store([
+        txn({ type: "BUY", symbol: "X", quantity: 10, amount: -100, date: "2026-01-01" }),
+        txn({ type: "SELL", symbol: "X", quantity: 5, amount: 80, date: "2026-02-01" }),
+      ]),
+      "2026",
+    );
+    // avg cost 10/share; sold 5 -> cost 50; proceeds 80 -> gain 30.
+    expect(t.years.find((x) => x.year === "2026")?.realized_gains).toBe(30);
+  });
+
+  it("excludes registered accounts from taxable income and gains", () => {
+    const t = buildTax(store([txn({ type: "DIV", amount: 100, currency: "CAD" })], "TFSA"), "2026");
+    expect(t.years.find((x) => x.year === "2026")?.income.eligible_dividends).toBe(0);
+  });
+
+  it("flags over-contribution when room used exceeds the limit", () => {
+    const t = buildTax(
+      store([txn({ type: "CONTRIB", amount: 9000, date: "2026-05-01" })], "TFSA"),
+      "2026",
+    );
+    const room = t.years.find((x) => x.year === "2026")?.room.find((r) => r.group === "TFSA");
+    expect(room?.over).toBe(true);
+    expect(room?.remaining).toBe(7000 - 9000);
   });
 });
