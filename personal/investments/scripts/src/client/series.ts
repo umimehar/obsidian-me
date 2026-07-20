@@ -28,6 +28,19 @@ export interface SeriesRow {
   outflow: number;
   cash: number | null;
   acb: number | null;
+  interest: number;
+  eligible_dividends: number;
+  foreign_income: number;
+  realized_gain: number;
+}
+
+export interface LedgerFlow {
+  account_id: string;
+  month: string;
+  date: string;
+  type: string;
+  amount: number;
+  description: string;
 }
 
 // The subset of the parsed ledger this module reads. Kept local (not
@@ -38,6 +51,8 @@ export interface SeriesLedger {
   months: string[];
   series: SeriesRow[];
   holdings: Array<{ account_id: string; symbol: string; qty: number; acb: number }>;
+  limits: Record<string, Record<string, number>>;
+  flows: LedgerFlow[];
 }
 
 export interface TrendSeries {
@@ -346,4 +361,96 @@ export function costByAccount(ledger: SeriesLedger, scope: Scope): AccountCost[]
     rows.push({ account_id: id, kind: a.kind, short_id: a.short_id, cost, contributions });
   }
   return rows.sort((a, b) => b.cost - a.cost);
+}
+
+// The tax year the Tax and Room sections report: the year of the last month
+// in the resolved window, so an "All time" scope reports the latest data
+// year and a custom range reports the range's end year. Falls back to the
+// ledger's own last month when the window is empty.
+export function scopeYear(ledger: SeriesLedger, scope: Scope): string {
+  const lastIdx = scope.ris.length > 0 ? Math.max(...scope.ris) : ledger.months.length - 1;
+  const m = ledger.months[lastIdx] ?? ledger.months[ledger.months.length - 1] ?? "";
+  return m.slice(0, 4);
+}
+
+export interface TaxRoomRow {
+  group: string;
+  used: number;
+  limit: number;
+  remaining: number;
+}
+
+export interface TaxSummary {
+  interest: number;
+  eligible_dividends: number;
+  foreign_income: number;
+  realized_gains: number;
+  room: TaxRoomRow[];
+}
+
+// Registered account kinds collapse into four CRA room groups; ManagedTFSA
+// shares the TFSA group's room with regular TFSA accounts.
+const REGISTERED_GROUPS: Record<string, string> = {
+  TFSA: "TFSA",
+  ManagedTFSA: "TFSA",
+  FHSA: "FHSA",
+  RRSP: "RRSP",
+  RESP: "RESP",
+};
+const ROOM_GROUP_ORDER = ["TFSA", "FHSA", "RRSP", "RESP"];
+
+// Tax income, realized gains, and registered room, all filter-aware: summed
+// only over the scoped accounts and the given tax year (see scopeYear).
+// Income/gain fields are 0 for non-taxable accounts at the analytics layer,
+// so summing across the full scope is safe. Room `used` sums `contrib` for
+// the scoped accounts in each registered group; there is no OVER flag —
+// unused room carries forward from prior years, so a full bar is not
+// necessarily an over-contribution.
+export function taxSummary(ledger: SeriesLedger, scope: Scope, year: string): TaxSummary {
+  const accts = new Set(scope.accts);
+  const kindById = new Map(ledger.accounts.map((a) => [a.id, a.kind]));
+  let interest = 0;
+  let eligibleDividends = 0;
+  let foreignIncome = 0;
+  let realizedGains = 0;
+  const used = new Map<string, number>();
+  for (const row of ledger.series) {
+    if (!accts.has(row.account_id) || !row.month.startsWith(year)) continue;
+    interest += row.interest;
+    eligibleDividends += row.eligible_dividends;
+    foreignIncome += row.foreign_income;
+    realizedGains += row.realized_gain;
+    const group = REGISTERED_GROUPS[kindById.get(row.account_id) ?? ""];
+    if (group) used.set(group, (used.get(group) ?? 0) + row.contrib);
+  }
+  const room = ROOM_GROUP_ORDER.map((group) => {
+    const u = used.get(group) ?? 0;
+    const limit = ledger.limits[group]?.[year] ?? 0;
+    return { group, used: u, limit, remaining: limit - u };
+  });
+  return {
+    interest,
+    eligible_dividends: eligibleDividends,
+    foreign_income: foreignIncome,
+    realized_gains: realizedGains,
+    room,
+  };
+}
+
+export interface MonthFlows {
+  inflow: LedgerFlow[];
+  outflow: LedgerFlow[];
+}
+
+// The scoped account flows (CONTRIB / TRANSFER_IN / TRANSFER_OUT) for one
+// month, split into money in (positive amount) and money out (negative
+// amount, i.e. TRANSFER_OUT). Backs the cashflow chart's drill-down.
+export function flowsForMonth(ledger: SeriesLedger, scope: Scope, month: string): MonthFlows {
+  const accts = new Set(scope.accts);
+  const matching = ledger.flows.filter((f) => f.month === month && accts.has(f.account_id));
+  const byDate = (a: LedgerFlow, b: LedgerFlow): number => a.date.localeCompare(b.date);
+  return {
+    inflow: matching.filter((f) => f.amount > 0).sort(byDate),
+    outflow: matching.filter((f) => f.amount < 0).sort(byDate),
+  };
 }

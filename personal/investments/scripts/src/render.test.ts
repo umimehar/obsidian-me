@@ -106,7 +106,7 @@ test("index has the four pillar sections", async () => {
   const html = (await pages())["index.html"] ?? "";
   expect(html).toContain("Contributions &amp; Room");
   expect(html).toContain(">Growth<");
-  expect(html).toContain("Tax this year");
+  expect(html).toContain('id="tax-section-title">Tax<');
   expect(html).toContain(">Detail<");
 });
 
@@ -122,6 +122,12 @@ test("index has the four chart canvases", async () => {
   expect(html).toContain('id="chart-growth"');
   expect(html).toContain('id="chart-trend"');
   expect(html).toContain('id="chart-income"');
+});
+
+test("index has the collapsed cashflow transaction drill-down", async () => {
+  const html = (await pages())["index.html"] ?? "";
+  expect(html).toContain('id="cashflow-drill"');
+  expect(html).toContain('id="cashflow-drill-body"');
 });
 
 test("Growth section has no market-value, unrealized-gain, as-of, or coverage copy", async () => {

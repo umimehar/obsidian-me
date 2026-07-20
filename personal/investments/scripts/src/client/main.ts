@@ -5,7 +5,7 @@
 import type { Filter } from "./filter";
 import { createFilter } from "./filter";
 import type { SectionsLedger } from "./sections";
-import { renderSections, wireTaxRateInput } from "./sections";
+import { renderSections, resetCashflowDrilldown, wireTaxRateInput } from "./sections";
 
 interface LedgerPayload {
   ledger: SectionsLedger;
@@ -24,13 +24,14 @@ function renderEmptyState(): void {
     const el = document.getElementById(id);
     if (el) el.textContent = "";
   }
+  resetCashflowDrilldown();
 }
 
 const dataEl = document.getElementById("ledger-data");
 if (dataEl?.textContent) {
   const ledger = parseLedger(dataEl.textContent);
   const filter: Filter = createFilter(ledger, rerender);
-  wireTaxRateInput(ledger);
+  wireTaxRateInput();
   rerender();
 
   function rerender(): void {

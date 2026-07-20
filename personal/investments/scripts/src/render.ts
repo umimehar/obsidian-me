@@ -77,10 +77,11 @@ function canvasBox(chartId: string): string {
   return `<div class="chartbox-canvas"><canvas id="${chartId}"></canvas></div>`;
 }
 
-function sectionHead(title: string, note: string): string {
+function sectionHead(title: string, note: string, titleId?: string): string {
+  const idAttr = titleId ? ` id="${titleId}"` : "";
   return (
     '<div class="section-head"><div>' +
-    `<h2 class="section-title">${htmlEscape(title)}</h2>` +
+    `<h2 class="section-title"${idAttr}>${htmlEscape(title)}</h2>` +
     `<p class="section-note">${htmlEscape(note)}</p></div></div>`
   );
 }
@@ -101,8 +102,11 @@ function contribSection(): string {
     '<div id="room"></div>' +
     subhead("External money in / out") +
     '<p class="section-note">Deposits into and withdrawals or transfers out of the selected ' +
-    "accounts — not trading activity.</p>" +
+    "accounts — not trading activity. Click a bar to see the underlying transactions.</p>" +
     canvasBox("chart-cashflow") +
+    '<details class="pillar-detail" id="cashflow-drill">' +
+    "<summary>Transactions for the selected month</summary>" +
+    '<div id="cashflow-drill-body"></div></details>' +
     "</section>"
   );
 }
@@ -128,9 +132,10 @@ function taxSection(): string {
   return (
     '<section class="section" id="section-tax">' +
     sectionHead(
-      "Tax this year",
-      "Always the current tax year across all taxable accounts — not affected by the scope " +
-        "filter above.",
+      "Tax",
+      "Interest, eligible dividends, foreign income, and realized gains for the selected " +
+        "accounts, for the selected window's tax year.",
+      "tax-section-title",
     ) +
     '<div class="hero-row" id="tax-cards"></div>' +
     '<div class="pillar-tax-rate">' +

@@ -136,7 +136,13 @@ export function costBars(canvas: HTMLCanvasElement, rows: AccountCost[]): Chart 
 }
 
 // Bar chart: inflow (up) vs outflow (down) per period, sharing a zero line.
-export function cashflowChart(canvas: HTMLCanvasElement, data: CashflowSeries): Chart {
+// `onMonthClick` (optional) resolves a click on any bar to that period's
+// label and fires the cashflow drill-down in sections.ts.
+export function cashflowChart(
+  canvas: HTMLCanvasElement,
+  data: CashflowSeries,
+  onMonthClick?: (month: string) => void,
+): Chart {
   const accent = cssVar("--color-accent");
   const neutral = cssVar("--color-neutral-500");
   const text = cssVar("--color-text");
@@ -157,6 +163,10 @@ export function cashflowChart(canvas: HTMLCanvasElement, data: CashflowSeries): 
         maintainAspectRatio: false,
         interaction: { mode: "index", intersect: false },
         scales: { x: { type: "category" }, y: { type: "linear" } },
+        onClick: (_event, elements) => {
+          const label = data.labels[elements[0]?.index ?? -1];
+          if (onMonthClick && label) onMonthClick(label);
+        },
         plugins: {
           legend: { display: true, labels: { color: text } },
           tooltip: {

@@ -50,11 +50,17 @@ The statements cannot distinguish an internal transfer between the owner's own a
 - Never commit unmasked real names, account numbers, or other sensitive data. The vault pre-commit guard blocks common patterns.
 - The guard scans `.html`, and the generated `notes/index.html` inlines minified flatpickr JS, so it false positives on the `sin` substring inside minified code (for example `getDaysInMonth`, `single`) plus long float mantissas. Before using `SKIP_MASK_HOOK=1` on this page, verify the strong signal is clean: the formatted SIN or card pattern check (`grep -E '\b[0-9]{3}[ -][0-9]{3}[ -][0-9]{3}\b|\b[0-9]{4}[ -][0-9]{4}[ -][0-9]{4}[ -][0-9]{4}\b'`) must return zero and no real name from `redactions.json` may appear. Only then bypass, for that one commit.
 
-## Tax section
+## Tax and Room sections are filter-aware
 
-- The Tax section is global for the current year and all taxable accounts. It is not filtered by the scope selector.
-- Income is split by currency and type: interest, Canadian eligible dividends (CAD dividends), foreign income (USD dividends). Realized gains come from sell proceeds minus average cost in taxable accounts.
-- The estimated tax added subtracts RRSP actually contributed this year (registered room used), not unused room. It is a rough estimate with a visible not for filing disclaimer. Never present it as a filing figure.
+- The Tax and Room sections respect the top scope selector, the same as every other section. The tax year they report is derived from the scope, not fixed to the current calendar year: it is the year of the last month in the resolved time window (`scopeYear` in `src/client/series.ts`), so an "All time" scope reports the latest data year and a custom range reports the range's end year.
+- Income is split by currency and type: interest, Canadian eligible dividends (CAD dividends), foreign income (USD dividends). Realized gains come from sell proceeds minus average cost in taxable accounts. All four are summed only over the selected accounts, for the scope's tax year (`taxSummary` in `src/client/series.ts`).
+- Room bars work the same way: `used` is `contrib` summed for the selected accounts of each registered group (TFSA, FHSA, RRSP, RESP; ManagedTFSA shares the TFSA group) within the scope's tax year, against that year's CRA limit. There is no OVER flag — unused room carries forward from prior years, so a full or over-full bar is not necessarily an over-contribution.
+- The estimated tax added subtracts RRSP actually contributed this year (registered room used, for the selected accounts), not unused room. It is a rough estimate with a visible not for filing disclaimer. Never present it as a filing figure. Editing the tax rate input recomputes only the estimate figure from the last-rendered tax summary — it never triggers a full section or chart rerender.
+
+## Cashflow flows and the transaction drill-down
+
+- `ledger.flows` is the transaction-level backing data for the cashflow chart: every `CONTRIB` / `TRANSFER_IN` / `TRANSFER_OUT` row, each carrying `account_id`, `month`, `date`, `type`, a signed `amount` (`TRANSFER_OUT` negative), and the already-redacted `description`. It is separate from `series[].deposits`, which is the same transactions pre-summed per account-month.
+- Clicking a bar on the cashflow chart drills into that month: `flowsForMonth` (`src/client/series.ts`) filters `ledger.flows` to the clicked month and the selected accounts, split into inflow (positive amount) and outflow (negative amount). `sections.ts` renders the result into a `<details id="cashflow-drill">` below the chart and opens it. Changing the filter resets the drill-down to collapsed and empty rather than showing a stale month.
 
 ## Design and docs
 

@@ -3,47 +3,46 @@ import type { Scope } from "./filter";
 import { estimateTax, totalContributed, totalDeposits, totalIncome } from "./sections";
 import type { SectionsLedger } from "./sections";
 
+function seriesRow(
+  overrides: Partial<SectionsLedger["series"][number]>,
+): SectionsLedger["series"][number] {
+  return {
+    account_id: "A",
+    month: "2024-01",
+    contrib: 0,
+    deposits: 0,
+    income: 0,
+    inflow: 0,
+    outflow: 0,
+    cash: 0,
+    acb: 0,
+    interest: 0,
+    eligible_dividends: 0,
+    foreign_income: 0,
+    realized_gain: 0,
+    ...overrides,
+  };
+}
+
 function ledger(): SectionsLedger {
   return {
     accounts: [{ id: "A", kind: "TFSA", name: "TFSA A", short_id: "aaaa", currency: "CAD" }],
     months: ["2024-01", "2024-02", "2024-03"],
     series: [
-      {
-        account_id: "A",
+      seriesRow({
         month: "2024-01",
         contrib: 100,
         deposits: 100,
         income: 5,
         inflow: 100,
-        outflow: 0,
-        cash: 0,
         acb: 100,
-      },
-      {
-        account_id: "A",
-        month: "2024-02",
-        contrib: 50,
-        deposits: 50,
-        income: 3,
-        inflow: 50,
-        outflow: 0,
-        cash: 0,
-        acb: 150,
-      },
-      {
-        account_id: "A",
-        month: "2024-03",
-        contrib: 25,
-        deposits: 25,
-        income: 2,
-        inflow: 25,
-        outflow: 0,
-        cash: 0,
-        acb: 175,
-      },
+      }),
+      seriesRow({ month: "2024-02", contrib: 50, deposits: 50, income: 3, inflow: 50, acb: 150 }),
+      seriesRow({ month: "2024-03", contrib: 25, deposits: 25, income: 2, inflow: 25, acb: 175 }),
     ],
     holdings: [],
-    tax: { current_year: "2024", years: [] },
+    limits: {},
+    flows: [],
   };
 }
 

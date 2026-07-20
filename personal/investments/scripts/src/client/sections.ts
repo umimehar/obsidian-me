@@ -1,39 +1,32 @@
 import { capitalVsDepositsChart, cashflowChart, costBars, incomeChart } from "./charts";
-// Populates the four pillar sections (Contributions & Room, Growth, Tax this
-// year, Detail) from the parsed ledger and the active Scope. Pure
-// aggregation lives in series.ts; this module is the DOM layer on top of it,
-// plus a handful of small pure helpers (totalContributed, totalDeposits,
+// Populates the four pillar sections (Contributions & Room, Growth, Tax,
+// Detail) from the parsed ledger and the active Scope. Pure aggregation
+// lives in series.ts; this module is the DOM layer on top of it, plus a
+// handful of small pure helpers (totalContributed, totalDeposits,
 // totalIncome, estimateTax) that are cheap enough to unit test directly.
 import type { Scope } from "./filter";
-import { money } from "./format";
-import { capitalTrend, cashflowSeries, costByAccount, incomeSeries } from "./series";
-import type { AccountCost, SeriesLedger, TrendSeries } from "./series";
+import { money, monthLabel } from "./format";
+import {
+  capitalTrend,
+  cashflowSeries,
+  costByAccount,
+  flowsForMonth,
+  incomeSeries,
+  scopeYear,
+  taxSummary,
+} from "./series";
+import type {
+  AccountCost,
+  LedgerFlow,
+  SeriesLedger,
+  TaxRoomRow,
+  TaxSummary,
+  TrendSeries,
+} from "./series";
 
-export interface TaxRoomRow {
-  group: string;
-  used: number;
-  limit: number;
-  remaining: number;
-}
-
-export interface TaxYearData {
-  year: string;
-  room: TaxRoomRow[];
-  rrsp_deduction_available: number;
-  income: { interest: number; eligible_dividends: number; foreign_income: number };
-  realized_gains: number;
-}
-
-export interface SectionsTax {
-  current_year: string;
-  years: TaxYearData[];
-}
-
-// The subset of the parsed ledger this module reads: series.ts's shape plus
-// the tax block. Kept local so this module never pulls in node-only code.
-export interface SectionsLedger extends SeriesLedger {
-  tax: SectionsTax;
-}
+// The parsed ledger this module reads is exactly series.ts's shape — kept as
+// a distinct name here for readability at the DOM layer's call sites.
+export type SectionsLedger = SeriesLedger;
 
 // ---- pure helpers (unit tested in sections.test.ts) ----------------------
 
@@ -153,17 +146,17 @@ function canvasOf(id: string): HTMLCanvasElement | null {
 
 // ---- Contributions & Room --------------------------------------------------
 
-function currentTaxYear(tax: SectionsTax): TaxYearData | undefined {
-  return tax.years.find((y) => y.year === tax.current_year);
-}
-
-function renderContribHeadline(ledger: SectionsLedger, scope: Scope): void {
+function renderContribHeadline(
+  ledger: SectionsLedger,
+  scope: Scope,
+  tax: TaxSummary,
+  year: string,
+): void {
   const host = document.getElementById("headline");
   if (!host) return;
   host.textContent = "";
   const deposits = totalDeposits(ledger, scope);
-  const year = currentTaxYear(ledger.tax);
-  const roomUsed = (year?.room ?? []).reduce((s, r) => s + r.used, 0);
+  const roomUsed = tax.room.reduce((s, r) => s + r.used, 0);
   heroCell(
     host,
     "Money in",
@@ -174,9 +167,10 @@ function renderContribHeadline(ledger: SectionsLedger, scope: Scope): void {
   );
   heroCell(
     host,
-    `${ledger.tax.current_year} room used`,
+    `${year} room used`,
     money(roomUsed),
-    "Across all registered accounts (TFSA, FHSA, RRSP, RESP) — not scoped by the filter above.",
+    "Across the selected registered accounts (TFSA, FHSA, RRSP, RESP), for the selected " +
+      "window's tax year.",
   );
 }
 
@@ -201,28 +195,85 @@ function roomBarRow(r: TaxRoomRow, year: string): HTMLDivElement {
   return row;
 }
 
-function renderRoomBars(tax: SectionsTax): void {
+function renderRoomBars(room: TaxRoomRow[], year: string): void {
   const host = document.getElementById("room");
   if (!host) return;
   host.textContent = "";
-  const year = currentTaxYear(tax);
-  if (!year) return;
-  for (const r of year.room) {
+  for (const r of room) {
     if (r.limit === 0 && r.used === 0) continue;
-    host.appendChild(roomBarRow(r, year.year));
+    host.appendChild(roomBarRow(r, year));
   }
   const note = document.createElement("p");
   note.className = "section-note";
   note.textContent =
-    "Bars compare this year's registered contributions to this year's annual limit. Unused " +
-    "room carries forward from prior years, so a full or over-full bar is not necessarily an " +
-    "over-contribution (for example an RESP catch-up year).";
+    "Bars compare this year's registered contributions, for the selected accounts, to this " +
+    "year's annual limit. Unused room carries forward from prior years, so a full or " +
+    "over-full bar is not necessarily an over-contribution (for example an RESP catch-up " +
+    "year).";
   host.appendChild(note);
+}
+
+function accountLabel(ledger: SectionsLedger, accountId: string): string {
+  const a = ledger.accounts.find((acct) => acct.id === accountId);
+  return a ? `${a.kind} ${a.short_id}` : accountId;
+}
+
+function flowRow(ledger: SectionsLedger, f: LedgerFlow): HTMLTableRowElement {
+  const tr = document.createElement("tr");
+  for (const v of [f.date, accountLabel(ledger, f.account_id), f.type]) {
+    const td = document.createElement("td");
+    td.textContent = v;
+    tr.appendChild(td);
+  }
+  const amountTd = document.createElement("td");
+  amountTd.className = "num";
+  amountTd.textContent = money(f.amount);
+  const descTd = document.createElement("td");
+  descTd.textContent = f.description;
+  tr.append(amountTd, descTd);
+  return tr;
+}
+
+function flowTable(ledger: SectionsLedger, title: string, flows: LedgerFlow[]): HTMLElement {
+  const wrap = document.createElement("div");
+  const heading = document.createElement("h4");
+  heading.textContent = `${title} (${flows.length})`;
+  wrap.appendChild(heading);
+  const { table, tbody } = tableEl(["Date", "Account", "Type", "#Amount", "Description"]);
+  for (const f of flows) tbody.appendChild(flowRow(ledger, f));
+  wrap.appendChild(table);
+  return wrap;
+}
+
+// Populates and opens the cashflow drill-down for a clicked chart bar. Reset
+// by resetCashflowDrilldown() on every filter change, since a stale month
+// selection would otherwise survive a rerender.
+function renderCashflowDrilldown(ledger: SectionsLedger, scope: Scope, month: string): void {
+  const details = document.getElementById("cashflow-drill");
+  const body = document.getElementById("cashflow-drill-body");
+  if (!(details instanceof HTMLDetailsElement) || !body) return;
+  body.textContent = "";
+  const { inflow, outflow } = flowsForMonth(ledger, scope, month);
+  const heading = document.createElement("h3");
+  heading.textContent = `${monthLabel(month)} — money in / out`;
+  body.append(heading, flowTable(ledger, "Inflow", inflow), flowTable(ledger, "Outflow", outflow));
+  details.open = true;
+}
+
+export function resetCashflowDrilldown(): void {
+  const details = document.getElementById("cashflow-drill");
+  const body = document.getElementById("cashflow-drill-body");
+  if (body) body.textContent = "";
+  if (details instanceof HTMLDetailsElement) details.open = false;
 }
 
 function drawCashflowChart(ledger: SectionsLedger, scope: Scope): void {
   const canvas = canvasOf("chart-cashflow");
-  if (canvas) cashflowChart(canvas, cashflowSeries(ledger, scope));
+  if (canvas) {
+    cashflowChart(canvas, cashflowSeries(ledger, scope), (month) =>
+      renderCashflowDrilldown(ledger, scope, month),
+    );
+  }
 }
 
 // ---- Growth -----------------------------------------------------------------
@@ -277,78 +328,75 @@ function drawGrowthCharts(trend: TrendSeries, rows: AccountCost[]): void {
   if (trendCanvas) capitalVsDepositsChart(trendCanvas, trend);
 }
 
-// ---- Tax this year ------------------------------------------------------------
+// ---- Tax ------------------------------------------------------------------
 
-function renderTaxCards(tax: SectionsTax): void {
+function renderTaxTitle(year: string): void {
+  const title = document.getElementById("tax-section-title");
+  if (title) title.textContent = `Tax — ${year}`;
+}
+
+function renderTaxCards(tax: TaxSummary): void {
   const host = document.getElementById("tax-cards");
   if (!host) return;
   host.textContent = "";
-  const year = currentTaxYear(tax);
-  if (!year) return;
-  heroCell(
-    host,
-    "Interest",
-    money(year.income.interest),
-    "Taxable interest received this year.",
-    true,
-  );
+  heroCell(host, "Interest", money(tax.interest), "Taxable interest received this year.", true);
   heroCell(
     host,
     "Eligible dividends",
-    money(year.income.eligible_dividends),
+    money(tax.eligible_dividends),
     "Canadian eligible dividends received this year.",
   );
   heroCell(
     host,
     "Foreign income",
-    money(year.income.foreign_income),
+    money(tax.foreign_income),
     "Foreign dividends and other foreign income received this year.",
   );
   heroCell(
     host,
     "Realized gains",
-    money(year.realized_gains),
+    money(tax.realized_gains),
     "Net realized capital gains (or losses) this year.",
   );
-  heroCell(
-    host,
-    "RRSP deduction available",
-    money(year.rrsp_deduction_available),
-    "Unused RRSP room usable as a deduction.",
-  );
 }
 
-function rrspContributed(year: TaxYearData): number {
-  return year.room.find((r) => r.group === "RRSP")?.used ?? 0;
+function rrspUsed(tax: TaxSummary): number {
+  return tax.room.find((r) => r.group === "RRSP")?.used ?? 0;
 }
 
-function updateTaxEstimate(tax: SectionsTax): void {
+function updateTaxEstimate(tax: TaxSummary): void {
   const rateInput = document.getElementById("tax-rate");
   const out = document.getElementById("tax-estimate");
   if (!(rateInput instanceof HTMLInputElement) || !out) return;
-  const year = currentTaxYear(tax);
-  if (!year) {
-    out.textContent = money(0);
-    return;
-  }
   const rate = Number(rateInput.value);
   const estimate = estimateTax({
-    interest: year.income.interest,
-    eligibleDividends: year.income.eligible_dividends,
-    foreignIncome: year.income.foreign_income,
-    realizedGains: year.realized_gains,
-    rrspContributed: rrspContributed(year),
+    interest: tax.interest,
+    eligibleDividends: tax.eligible_dividends,
+    foreignIncome: tax.foreign_income,
+    realizedGains: tax.realized_gains,
+    rrspContributed: rrspUsed(tax),
     rate: Number.isFinite(rate) ? rate : 0,
   });
   out.textContent = money(estimate);
 }
 
-// Wired once by main.ts (not on every rerender) so the tax-rate input only
-// ever gets one listener; it recomputes just the estimate figure, no rerender.
-export function wireTaxRateInput(ledger: SectionsLedger): void {
+// The scope's tax summary is filter-aware, so the tax-rate input can't just
+// close over the (static) ledger the way it used to. renderSections() stashes
+// the latest summary here on every rerender; the input listener (wired once
+// by main.ts) reads it back so a rate edit only recomputes the estimate
+// figure, never a full section/chart rerender.
+let currentTax: TaxSummary | null = null;
+
+function setCurrentTax(tax: TaxSummary): void {
+  currentTax = tax;
+}
+
+export function wireTaxRateInput(): void {
   const rateInput = document.getElementById("tax-rate");
   if (!(rateInput instanceof HTMLInputElement)) return;
-  rateInput.addEventListener("input", () => updateTaxEstimate(ledger.tax));
+  rateInput.addEventListener("input", () => {
+    if (currentTax) updateTaxEstimate(currentTax);
+  });
 }
 
 function drawIncomeChart(ledger: SectionsLedger, scope: Scope): void {
@@ -544,8 +592,12 @@ function renderHoldTable(ledger: SectionsLedger, scope: Scope): void {
 // ---- entry point --------------------------------------------------------------
 
 export function renderSections(ledger: SectionsLedger, scope: Scope): void {
-  renderContribHeadline(ledger, scope);
-  renderRoomBars(ledger.tax);
+  const year = scopeYear(ledger, scope);
+  const tax = taxSummary(ledger, scope, year);
+
+  renderContribHeadline(ledger, scope, tax, year);
+  renderRoomBars(tax.room, year);
+  resetCashflowDrilldown();
   drawCashflowChart(ledger, scope);
 
   const costRows = costByAccount(ledger, scope);
@@ -553,8 +605,10 @@ export function renderSections(ledger: SectionsLedger, scope: Scope): void {
   renderGrowthSummary(ledger, scope, trend);
   drawGrowthCharts(trend, costRows);
 
-  renderTaxCards(ledger.tax);
-  updateTaxEstimate(ledger.tax);
+  renderTaxTitle(year);
+  renderTaxCards(tax);
+  setCurrentTax(tax);
+  updateTaxEstimate(tax);
   drawIncomeChart(ledger, scope);
 
   renderAcctTable(ledger, scope);

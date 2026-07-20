@@ -1,7 +1,15 @@
 import { describe, expect, test } from "bun:test";
 import type { Scope } from "./filter";
-import type { SeriesLedger, SeriesRow } from "./series";
-import { capitalTrend, cashflowSeries, costByAccount, incomeSeries } from "./series";
+import type { LedgerFlow, SeriesLedger, SeriesRow } from "./series";
+import {
+  capitalTrend,
+  cashflowSeries,
+  costByAccount,
+  flowsForMonth,
+  incomeSeries,
+  scopeYear,
+  taxSummary,
+} from "./series";
 
 function row(overrides: Partial<SeriesRow>): SeriesRow {
   return {
@@ -14,6 +22,22 @@ function row(overrides: Partial<SeriesRow>): SeriesRow {
     outflow: 0,
     cash: null,
     acb: null,
+    interest: 0,
+    eligible_dividends: 0,
+    foreign_income: 0,
+    realized_gain: 0,
+    ...overrides,
+  };
+}
+
+function flow(overrides: Partial<LedgerFlow>): LedgerFlow {
+  return {
+    account_id: "A",
+    month: "2024-01",
+    date: "2024-01-15",
+    type: "CONTRIB",
+    amount: 0,
+    description: "",
     ...overrides,
   };
 }
@@ -24,6 +48,8 @@ function ledger(overrides: Partial<SeriesLedger>): SeriesLedger {
     months: ["2024-01", "2024-02", "2024-03"],
     series: [],
     holdings: [],
+    limits: {},
+    flows: [],
     ...overrides,
   };
 }
@@ -204,5 +230,124 @@ describe("costByAccount", () => {
     expect(out).toEqual([
       { account_id: "A", kind: "TFSA", short_id: "aaaa", cost: 0, contributions: 0 },
     ]);
+  });
+});
+
+describe("scopeYear", () => {
+  test("is the year of the last resolved month, not the ledger's last month", () => {
+    const L = ledger({ months: ["2024-01", "2024-02", "2025-01"] });
+    expect(scopeYear(L, { ris: [0, 1], accts: ["A"] })).toBe("2024");
+  });
+
+  test("all-time (full window) reports the latest data year", () => {
+    const L = ledger({ months: ["2024-01", "2024-02", "2025-01"] });
+    expect(scopeYear(L, { ris: [0, 1, 2], accts: ["A"] })).toBe("2025");
+  });
+
+  test("empty window falls back to the ledger's last month", () => {
+    const L = ledger({ months: ["2024-01", "2025-06"] });
+    expect(scopeYear(L, { ris: [], accts: ["A"] })).toBe("2025");
+  });
+});
+
+describe("taxSummary", () => {
+  test("sums the tax-split fields for scoped accounts within the year only", () => {
+    const L = ledger({
+      series: [
+        row({
+          month: "2024-01",
+          interest: 10,
+          eligible_dividends: 20,
+          foreign_income: 5,
+          realized_gain: 100,
+        }),
+        row({ month: "2025-01", interest: 999, eligible_dividends: 999 }), // wrong year
+      ],
+    });
+    const out = taxSummary(L, { ris: [0], accts: ["A"] }, "2024");
+    expect(out.interest).toBe(10);
+    expect(out.eligible_dividends).toBe(20);
+    expect(out.foreign_income).toBe(5);
+    expect(out.realized_gains).toBe(100);
+  });
+
+  test("excludes accounts outside the scope", () => {
+    const L = ledger({
+      accounts: [
+        { id: "A", kind: "TFSA", name: "TFSA A", short_id: "aaaa", currency: "CAD" },
+        { id: "B", kind: "RRSP", name: "RRSP B", short_id: "bbbb", currency: "CAD" },
+      ],
+      series: [
+        row({ account_id: "A", month: "2024-01", interest: 10 }),
+        row({ account_id: "B", month: "2024-01", interest: 999 }),
+      ],
+    });
+    const out = taxSummary(L, { ris: [0], accts: ["A"] }, "2024");
+    expect(out.interest).toBe(10);
+  });
+
+  test("room used sums contrib per registered group; ManagedTFSA shares the TFSA group", () => {
+    const L = ledger({
+      accounts: [
+        { id: "A", kind: "TFSA", name: "TFSA A", short_id: "aaaa", currency: "CAD" },
+        { id: "B", kind: "ManagedTFSA", name: "MTFSA B", short_id: "bbbb", currency: "CAD" },
+        { id: "C", kind: "RRSP", name: "RRSP C", short_id: "cccc", currency: "CAD" },
+      ],
+      limits: { TFSA: { "2024": 7000 }, RRSP: { "2024": 31000 } },
+      series: [
+        row({ account_id: "A", month: "2024-01", contrib: 1000 }),
+        row({ account_id: "B", month: "2024-01", contrib: 500 }),
+        row({ account_id: "C", month: "2024-01", contrib: 2000 }),
+      ],
+    });
+    const out = taxSummary(L, { ris: [0], accts: ["A", "B", "C"] }, "2024");
+    const tfsa = out.room.find((r) => r.group === "TFSA");
+    const rrsp = out.room.find((r) => r.group === "RRSP");
+    expect(tfsa).toEqual({ group: "TFSA", used: 1500, limit: 7000, remaining: 5500 });
+    expect(rrsp).toEqual({ group: "RRSP", used: 2000, limit: 31000, remaining: 29000 });
+  });
+
+  test("missing limit for the year falls back to 0", () => {
+    const L = ledger({
+      limits: {},
+      series: [row({ month: "2024-01", contrib: 100 })],
+    });
+    const out = taxSummary(L, { ris: [0], accts: ["A"] }, "2024");
+    const tfsa = out.room.find((r) => r.group === "TFSA");
+    expect(tfsa).toEqual({ group: "TFSA", used: 100, limit: 0, remaining: -100 });
+  });
+});
+
+describe("flowsForMonth", () => {
+  test("splits scoped-account flows for the month into inflow and outflow", () => {
+    const L = ledger({
+      flows: [
+        flow({ month: "2024-01", date: "2024-01-05", type: "CONTRIB", amount: 100 }),
+        flow({ month: "2024-01", date: "2024-01-20", type: "TRANSFER_IN", amount: 50 }),
+        flow({ month: "2024-01", date: "2024-01-10", type: "TRANSFER_OUT", amount: -30 }),
+        flow({ month: "2024-02", date: "2024-02-01", type: "CONTRIB", amount: 999 }),
+      ],
+    });
+    const out = flowsForMonth(L, { ris: [0], accts: ["A"] }, "2024-01");
+    expect(out.inflow.map((f) => f.date)).toEqual(["2024-01-05", "2024-01-20"]);
+    expect(out.outflow.map((f) => f.date)).toEqual(["2024-01-10"]);
+  });
+
+  test("excludes accounts outside the scope", () => {
+    const L = ledger({
+      flows: [
+        flow({ account_id: "A", month: "2024-01", amount: 100 }),
+        flow({ account_id: "B", month: "2024-01", amount: 200 }),
+      ],
+    });
+    const out = flowsForMonth(L, { ris: [0], accts: ["A"] }, "2024-01");
+    expect(out.inflow).toHaveLength(1);
+    expect(out.inflow[0]?.account_id).toBe("A");
+  });
+
+  test("no matching flows yields empty arrays", () => {
+    const L = ledger({ flows: [] });
+    const out = flowsForMonth(L, { ris: [0], accts: ["A"] }, "2024-01");
+    expect(out).toEqual({ inflow: [], outflow: [] });
   });
 });
