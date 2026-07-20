@@ -84,11 +84,19 @@ function filterBar(accounts: Account[]): string {
     '<div class="filterbar" id="filterbar"><div class="fb-accounts">' +
     '<button type="button" class="chip on" data-all>All accounts</button>' +
     `${chipGroups.join("")}</div>` +
-    '<div class="fb-side"><div class="seg fb-dates" role="group" aria-label="Date range">' +
+    '<div class="fb-side"><div class="fb-time">' +
+    // Year chips are injected client-side from the data's own month range so
+    // this markup never hardcodes a year list. Presets and the custom From/To
+    // pickers are alternative, mutually-exclusive ways to set the same window.
+    '<div class="fb-years chips" id="fb-years" role="group" aria-label="Years"></div>' +
+    '<div class="fb-timerow"><div class="seg fb-dates" role="group" aria-label="Date range">' +
     '<button type="button" class="seg-btn" data-range="ytd">YTD</button>' +
     '<button type="button" class="seg-btn" data-range="1y">1Y</button>' +
     '<button type="button" class="seg-btn" data-range="3y">3Y</button>' +
     '<button type="button" class="seg-btn on" data-range="all">All</button></div>' +
+    '<div class="fb-custom"><label>From <input type="month" class="fb-month" data-from></label>' +
+    '<label>To <input type="month" class="fb-month" data-to></label>' +
+    '<button type="button" class="fb-clear" data-clear hidden>Clear</button></div></div>' +
     '<div class="fb-scope" id="fb-scope"></div></div></div>'
   );
 }
@@ -154,9 +162,14 @@ function page(title: string, body: string, foot: string): string {
 }
 
 export function renderIndex(store: Datastore, analytics: Analytics): string {
+  // Only chip the accounts the ledger actually carries. Empty accounts are
+  // dropped from analytics.ledger.accounts, so building chips from the full
+  // store would surface dead chips whose id has no series data to filter on.
+  const active = new Set(analytics.ledger.accounts.map((a) => a.id));
+  const filterAccounts = store.accounts.filter((a) => active.has(a.masked_id));
   const body =
     masthead() +
-    filterBar(store.accounts) +
+    filterBar(filterAccounts) +
     '<div class="hero-row" id="headline"></div>' +
     '<div class="waterfall" id="waterfall"></div>' +
     rule() +
@@ -182,7 +195,9 @@ export function renderIndex(store: Datastore, analytics: Analytics): string {
     rule() +
     '<section class="section"><div class="section-head"><div>' +
     '<h2 class="section-title">Accounts</h2>' +
-    '<p class="section-note">Grouped by type; figures within the current filter.</p>' +
+    '<p class="section-note">Grouped by type; figures within the current filter. ' +
+    "Contributed is money coded as a contribution; Net deposits also folds in transfers " +
+    "in and out, so the two differ wherever a deposit arrived as a transfer.</p>" +
     '</div></div><div class="table-wrap" id="acct-table"></div></section>' +
     rule() +
     '<section class="section"><div class="section-head"><div>' +

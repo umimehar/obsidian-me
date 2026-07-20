@@ -39,24 +39,37 @@
     }
   });
 
-  var state = { accts: null, range: "all" };
+  // time.mode is one of "all" | "preset" | "years" | "custom". The three input
+  // groups (year chips, preset segment, custom From/To) are mutually exclusive:
+  // touching one resets the others, so the active window is never ambiguous.
+  var state = { accts: null, time: { mode: "all", preset: "all", years: [], from: "", to: "" } };
 
   function selected() {
     return state.accts || ACCTS.map(function (a) { return a.id; });
   }
-  function rangeIdx() {
-    var last = MONTHS.length - 1;
-    if (state.range === "all") { return MONTHS.map(function (_, i) { return i; }); }
-    if (state.range === "ytd") {
-      var y = MONTHS[last].slice(0, 4);
-      return MONTHS.map(function (m, i) { return i; }).filter(function (i) {
-        return MONTHS[i].slice(0, 4) === y;
-      });
+  // Resolve whichever time control is active to the list of MONTHS indices the
+  // whole page renders from. Every section derives from this list, so all of
+  // them filter together with no per-section wiring.
+  function resolveMonths() {
+    var t = state.time, last = MONTHS.length - 1;
+    var all = MONTHS.map(function (_, i) { return i; });
+    if (t.mode === "years" && t.years.length) {
+      return all.filter(function (i) { return t.years.indexOf(MONTHS[i].slice(0, 4)) >= 0; });
     }
-    var n = state.range === "1y" ? 12 : 36;
-    var out = [];
-    for (var i = Math.max(0, MONTHS.length - n); i < MONTHS.length; i++) { out.push(i); }
-    return out;
+    if (t.mode === "custom" && (t.from || t.to)) {
+      var from = t.from || MONTHS[0], to = t.to || MONTHS[last];
+      return all.filter(function (i) { return MONTHS[i] >= from && MONTHS[i] <= to; });
+    }
+    if (t.preset === "ytd") {
+      var y = MONTHS[last].slice(0, 4);
+      return all.filter(function (i) { return MONTHS[i].slice(0, 4) === y; });
+    }
+    if (t.preset === "1y" || t.preset === "3y") {
+      var n = t.preset === "1y" ? 12 : 36, out = [];
+      for (var i = Math.max(0, MONTHS.length - n); i < MONTHS.length; i++) { out.push(i); }
+      return out;
+    }
+    return all;
   }
   function grainOf(ris) { return ris.length > 24 ? "year" : "month"; }
   function pkey(m, g) { return g === "year" ? m.slice(0, 4) : m; }
@@ -118,27 +131,49 @@
   }
 
   // ---- headline + waterfall ----------------------------------------------
+  function renderEmpty() {
+    document.getElementById("asof").textContent = "No data in range";
+    document.getElementById("fb-scope").textContent = "No data in the selected range";
+    ["headline", "waterfall", "room", "acct-table", "hold-table"].forEach(function (id) {
+      var el = document.getElementById(id); if (el) { el.textContent = ""; }
+    });
+    ["cap", "inc", "cf"].forEach(function (id) {
+      var box = document.getElementById(id);
+      if (box) { box.querySelectorAll("svg").forEach(function (s) { s.remove(); }); }
+    });
+  }
+
   function render() {
-    var ris = rangeIdx(), g = grainOf(ris), endI = ris[ris.length - 1], accts = selected();
-    var invested = 0, cash = 0, contribToDate = 0, depositsToDate = 0, income = 0;
+    var ris = resolveMonths();
+    if (!ris.length) { renderEmpty(); return; }
+    var g = grainOf(ris), endI = ris[ris.length - 1], accts = selected();
+    // Flows (contributions, deposits, income) sum WITHIN the selected months so
+    // a year/custom filter reports that window's activity and a non-contiguous
+    // selection (e.g. 2023 + 2025) does not leak the excluded months. Invested
+    // and cash stay as-of the window end (they are stocks). Growth is derived as
+    // the residual, so the waterfall stack still adds up exactly.
+    var invested = 0, cash = 0, contrib = 0, deposits = 0, income = 0;
     accts.forEach(function (id) { invested += acbFF[id][endI]; cash += cashFF[id][endI]; });
-    for (var i = 0; i <= endI; i++) {
-      accts.forEach(function (id) { contribToDate += flow[id][i].contrib; depositsToDate += flow[id][i].deposits; });
-    }
-    ris.forEach(function (i) { accts.forEach(function (id) { income += flow[id][i].income; }); });
-    var growth = invested - contribToDate;
+    ris.forEach(function (i) {
+      accts.forEach(function (id) {
+        contrib += flow[id][i].contrib;
+        deposits += flow[id][i].deposits;
+        income += flow[id][i].income;
+      });
+    });
+    var growth = invested - contrib;
 
     document.getElementById("asof").textContent = "Reviewed " + monLabel(MONTHS[endI]);
     scopeCaption(ris, accts);
     headline([
       ["Invested at cost", money(invested), "Adjusted cost of positions still held."],
-      ["Contributions", money(contribToDate), "Gross deposits coded as contributions."],
+      ["Contributions", money(contrib), "Gross deposits coded as contributions."],
       ["Income received", money(income), "Dividends and interest in the period."],
       ["Cash on hand", money(cash), "Uninvested cash at period end."],
       ["Growth beyond contributions", money(growth),
         "Cost base above contributions: transfers in and reinvested income."],
     ]);
-    waterfall(contribToDate, depositsToDate, growth, invested, cash);
+    waterfall(contrib, deposits, growth, invested, cash);
 
     capitalChart(ris, g);
     barChart("inc", bucketSum(flowSum(ris, "income"), g), false);
@@ -151,9 +186,7 @@
   function scopeCaption(ris, accts) {
     var s = document.getElementById("fb-scope");
     var na = state.accts ? accts.length + (accts.length === 1 ? " account" : " accounts") : "All accounts";
-    var dr = state.range === "all"
-      ? monLabel(MONTHS[ris[0]]) + " – " + monLabel(MONTHS[ris[ris.length - 1]])
-      : monLabel(MONTHS[ris[0]]) + " – " + monLabel(MONTHS[ris[ris.length - 1]]);
+    var dr = monLabel(MONTHS[ris[0]]) + " – " + monLabel(MONTHS[ris[ris.length - 1]]);
     s.textContent = na + " · " + dr;
   }
 
@@ -337,6 +370,11 @@
 
   // ---- room, tables -------------------------------------------------------
   function roomBars(endI, accts) {
+    // Room-used stays on gross CONT (not net deposits) on purpose: CRA room is
+    // consumed by contributions, and folding in TRFIN here would wrongly count
+    // internal transfers between your own registered accounts as fresh room use.
+    // The Accounts table shows net deposits alongside, so transfer-coded top-ups
+    // are still visible without corrupting the room math.
     var host = document.getElementById("room");
     var year = MONTHS[endI].slice(0, 4);
     var by = {}; ["TFSA", "FHSA", "RRSP", "RESP"].forEach(function (k) { by[k] = 0; });
@@ -365,19 +403,28 @@
     var rows = {};
     ACCTS.forEach(function (a) {
       if (accts.indexOf(a.id) < 0) { return; }
-      var contrib = 0, income = 0;
-      for (var i = 0; i <= endI; i++) { contrib += flow[a.id][i].contrib; }
-      ris.forEach(function (i) { income += flow[a.id][i].income; });
-      (rows[a.kind] = rows[a.kind] || []).push({ a: a, contrib: contrib, income: income,
-        acb: acbFF[a.id][endI], cash: cashFF[a.id][endI] });
+      // "Contributed" is gross money coded CONT; "Net deposits" also folds in
+      // transfers (CONT + TRFIN - TRFOUT). They diverge whenever a deposit was
+      // booked as a transfer rather than a contribution — e.g. the Managed TFSA
+      // and RESP each took a 450 deposit as TRFIN, and Direct Indexing /
+      // Non-registered are funded almost entirely by transfers. Showing both
+      // makes that gap visible per account instead of silently undercounting.
+      var contrib = 0, deposits = 0, income = 0;
+      ris.forEach(function (i) {
+        contrib += flow[a.id][i].contrib; deposits += flow[a.id][i].deposits; income += flow[a.id][i].income;
+      });
+      (rows[a.kind] = rows[a.kind] || []).push({ a: a, contrib: contrib, deposits: deposits,
+        income: income, acb: acbFF[a.id][endI], cash: cashFF[a.id][endI] });
     });
     var html = '<table class="table"><thead><tr><th>Account</th><th class="num">Contributed</th>' +
-      '<th class="num">At cost</th><th class="num">Cash</th><th class="num">Income</th></tr></thead><tbody>';
+      '<th class="num">Net deposits</th><th class="num">At cost</th><th class="num">Cash</th>' +
+      '<th class="num">Income</th></tr></thead><tbody>';
     Object.keys(rows).sort().forEach(function (kind) {
       rows[kind].forEach(function (r) {
         html += '<tr><td><span class="badge">' + esc(kind) + "</span> " + esc(r.a.name) +
           ' <span class="chip-id">' + esc(r.a.short_id) + "</span></td>" +
-          '<td class="num">' + money(r.contrib) + "</td><td class=\"num\">" + money(r.acb) +
+          '<td class="num">' + money(r.contrib) + '</td><td class="num">' + money(r.deposits) +
+          "</td><td class=\"num\">" + money(r.acb) +
           '</td><td class="num">' + money(r.cash) + '</td><td class="num pos">' + money(r.income) + "</td></tr>";
       });
     });
@@ -442,13 +489,63 @@
     }
     paintChips(); render();
   });
+  // ---- time controls: year chips · presets · custom range ----------------
+  // Year chips are built from the data's own months so the list is never stale.
+  var YEARS = [];
+  MONTHS.forEach(function (m) { var y = m.slice(0, 4); if (YEARS.indexOf(y) < 0) { YEARS.push(y); } });
+  var yearsHost = document.getElementById("fb-years");
+  YEARS.forEach(function (y) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "chip year"; b.setAttribute("data-year", y); b.textContent = y;
+    yearsHost.appendChild(b);
+  });
+  var fromInput = bar.querySelector("[data-from]"), toInput = bar.querySelector("[data-to]");
+  var clearBtn = bar.querySelector("[data-clear]");
+  fromInput.min = toInput.min = MONTHS[0];
+  fromInput.max = toInput.max = MONTHS[MONTHS.length - 1];
+  var ALL_TIME = { mode: "all", preset: "all", years: [], from: "", to: "" };
+
+  function paintTime() {
+    var t = state.time;
+    bar.querySelectorAll("[data-range]").forEach(function (x) {
+      var active = (t.mode === "all" || t.mode === "preset") && x.getAttribute("data-range") === t.preset;
+      x.classList.toggle("on", active);
+    });
+    bar.querySelectorAll("[data-year]").forEach(function (x) {
+      x.classList.toggle("on", t.mode === "years" && t.years.indexOf(x.getAttribute("data-year")) >= 0);
+    });
+    clearBtn.hidden = t.mode !== "custom";
+  }
+  function setTime(t) { state.time = t; paintTime(); render(); }
+
   bar.querySelector(".fb-dates").addEventListener("click", function (e) {
     var b = e.target.closest("[data-range]"); if (!b) { return; }
-    state.range = b.getAttribute("data-range");
-    bar.querySelectorAll("[data-range]").forEach(function (x) { x.classList.toggle("on", x === b); });
-    render();
+    var p = b.getAttribute("data-range");
+    fromInput.value = ""; toInput.value = "";
+    setTime({ mode: p === "all" ? "all" : "preset", preset: p, years: [], from: "", to: "" });
+  });
+  yearsHost.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-year]"); if (!b) { return; }
+    var y = b.getAttribute("data-year");
+    var set = state.time.mode === "years" ? state.time.years.slice() : [];
+    var at = set.indexOf(y); if (at >= 0) { set.splice(at, 1); } else { set.push(y); }
+    fromInput.value = ""; toInput.value = "";
+    if (!set.length) { setTime({ mode: "all", preset: "all", years: [], from: "", to: "" }); }
+    else { setTime({ mode: "years", preset: null, years: set, from: "", to: "" }); }
+  });
+  function onCustom() {
+    var from = fromInput.value, to = toInput.value;
+    if (!from && !to) { setTime({ mode: "all", preset: "all", years: [], from: "", to: "" }); return; }
+    setTime({ mode: "custom", preset: null, years: [], from: from, to: to });
+  }
+  fromInput.addEventListener("change", onCustom);
+  toInput.addEventListener("change", onCustom);
+  clearBtn.addEventListener("click", function () {
+    fromInput.value = ""; toInput.value = "";
+    setTime({ mode: ALL_TIME.mode, preset: ALL_TIME.preset, years: [], from: "", to: "" });
   });
 
   paintChips();
+  paintTime();
   render();
 })();

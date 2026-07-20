@@ -124,6 +124,19 @@ function holdingsAcb(store: Datastore): Ledger["holdings"] {
   return out;
 }
 
+// Money genuinely put into an account nets across three codes, not one.
+// Wealthsimple only tags a deposit "CONT" when it lands in the registered
+// account as an explicit contribution; the same money often arrives coded
+// TRFIN instead (e.g. the Managed TFSA and RESP each received a 450 deposit
+// as a transfer, and Direct Indexing / Non-registered are funded almost
+// entirely by TRFIN). Summing CONT alone therefore undercounts real deposits.
+// `deposits` = CONT + TRANSFER_IN - TRANSFER_OUT is the net-money-in figure
+// that lines up with the brokerage app's "Net deposits".
+//
+// Caveat kept deliberately visible: the statements cannot tell an INTERNAL
+// transfer between your own accounts from an EXTERNAL withdrawal/deposit — both
+// are just TRFIN/TRFOUT — so `deposits` will not tie to the app to the cent when
+// money was shuffled between your own accounts (see d77c's 2023 setup churn).
 const DEPOSIT_TYPES = new Set(["CONTRIB", "TRANSFER_IN", "TRANSFER_OUT"]);
 
 interface FlowRec {
