@@ -1,8 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { Scope } from "./filter";
-import { estimateTax, sumGrowth, totalContributed } from "./sections";
+import { estimateTax, totalContributed, totalIncome } from "./sections";
 import type { SectionsLedger } from "./sections";
-import type { GrowthRow } from "./series";
 
 function ledger(): SectionsLedger {
   return {
@@ -14,7 +13,7 @@ function ledger(): SectionsLedger {
         month: "2024-01",
         contrib: 100,
         deposits: 100,
-        income: 0,
+        income: 5,
         inflow: 100,
         outflow: 0,
         cash: 0,
@@ -25,7 +24,7 @@ function ledger(): SectionsLedger {
         month: "2024-02",
         contrib: 50,
         deposits: 50,
-        income: 0,
+        income: 3,
         inflow: 50,
         outflow: 0,
         cash: 0,
@@ -36,7 +35,7 @@ function ledger(): SectionsLedger {
         month: "2024-03",
         contrib: 25,
         deposits: 25,
-        income: 0,
+        income: 2,
         inflow: 25,
         outflow: 0,
         cash: 0,
@@ -44,12 +43,6 @@ function ledger(): SectionsLedger {
       },
     ],
     holdings: [],
-    growth: {
-      as_of: null,
-      coverage: 0,
-      accounts: [],
-      total: { cost: 0, market: 0, gain: 0, gainPct: 0 },
-    },
     tax: { current_year: "2024", years: [] },
   };
 }
@@ -76,28 +69,25 @@ describe("totalContributed", () => {
   });
 });
 
-describe("sumGrowth", () => {
-  function row(overrides: Partial<GrowthRow>): GrowthRow {
-    return {
-      account_id: "A",
-      name: "A",
-      kind: "TFSA",
-      short_id: "aaaa",
-      cost: 0,
-      market: 0,
-      gain: 0,
-      gainPct: 0,
-      ...overrides,
-    };
-  }
-
-  test("sums cost and market across rows and derives gain / gainPct", () => {
-    const rows = [row({ cost: 100, market: 120 }), row({ cost: 50, market: 40 })];
-    expect(sumGrowth(rows)).toEqual({ cost: 150, market: 160, gain: 10, gainPct: 10 / 150 });
+describe("totalIncome", () => {
+  test("sums income within the scoped time window only", () => {
+    const scope: Scope = { ris: [0, 1], accts: ["A"] };
+    expect(totalIncome(ledger(), scope)).toBe(8);
   });
 
-  test("gainPct is 0 when cost is 0 (no divide by zero)", () => {
-    expect(sumGrowth([])).toEqual({ cost: 0, market: 0, gain: 0, gainPct: 0 });
+  test("sums the full window when all months are selected", () => {
+    const scope: Scope = { ris: [0, 1, 2], accts: ["A"] };
+    expect(totalIncome(ledger(), scope)).toBe(10);
+  });
+
+  test("returns 0 when no accounts are selected", () => {
+    const scope: Scope = { ris: [0, 1, 2], accts: [] };
+    expect(totalIncome(ledger(), scope)).toBe(0);
+  });
+
+  test("returns 0 when no months are selected", () => {
+    const scope: Scope = { ris: [], accts: ["A"] };
+    expect(totalIncome(ledger(), scope)).toBe(0);
   });
 });
 

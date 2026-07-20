@@ -116,6 +116,20 @@ test("index has the four chart canvases", async () => {
   expect(html).toContain('id="chart-income"');
 });
 
+test("Growth section has no market-value, unrealized-gain, as-of, or coverage copy", async () => {
+  const html = (await pages())["index.html"] ?? "";
+  expect(html).toContain('id="section-growth"');
+  expect(html).toContain(">Growth<");
+  expect(html).toContain('id="chart-trend"');
+  expect(html).toContain('id="chart-growth"');
+  expect(html).toContain('id="chart-income"');
+  expect(html).not.toContain("Market value");
+  expect(html).not.toContain("Unrealized");
+  expect(html).not.toContain('id="growth-coverage-note"');
+  expect(html).not.toContain("priced at market");
+  expect(html).not.toMatch(/as of the latest pricing run/i);
+});
+
 test("index bundles all scripts offline, no CDN", async () => {
   const html = (await pages())["index.html"] ?? "";
   expect(html).not.toContain("https://cdn");

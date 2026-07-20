@@ -17,7 +17,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { money } from "./format";
-import type { CashflowSeries, GrowthRow, PeriodSeries, TrendSeries } from "./series";
+import type { AccountCost, CashflowSeries, PeriodSeries, TrendSeries } from "./series";
 
 Chart.register(
   BarController,
@@ -96,21 +96,25 @@ export function contributionsChart(canvas: HTMLCanvasElement, data: TrendSeries)
   });
 }
 
-// Bar chart: cost vs market value per account (growth-by-account snapshot).
-export function growthBars(canvas: HTMLCanvasElement, rows: GrowthRow[]): Chart {
+// Bar chart: cost vs contributions per account (cost-by-account snapshot).
+export function costBars(canvas: HTMLCanvasElement, rows: AccountCost[]): Chart {
   const accent = cssVar("--color-accent");
   const neutral = cssVar("--color-neutral-500");
   const text = cssVar("--color-text");
   return replace(canvas, () => {
     const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("growthBars: canvas has no 2d context");
+    if (!ctx) throw new Error("costBars: canvas has no 2d context");
     return new Chart(ctx, {
       type: "bar",
       data: {
-        labels: rows.map((r) => r.name),
+        labels: rows.map((r) => `${r.kind} ${r.short_id}`),
         datasets: [
-          { label: "At cost", data: rows.map((r) => r.cost), backgroundColor: neutral },
-          { label: "Market value", data: rows.map((r) => r.market), backgroundColor: accent },
+          { label: "At cost", data: rows.map((r) => r.cost), backgroundColor: accent },
+          {
+            label: "Contributions",
+            data: rows.map((r) => r.contributions),
+            backgroundColor: neutral,
+          },
         ],
       },
       options: {

@@ -1,16 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { Scope } from "./filter";
-import type { SeriesGrowth, SeriesLedger, SeriesRow } from "./series";
-import { capitalTrend, cashflowSeries, growthByAccount, incomeSeries } from "./series";
-
-function emptyGrowth(): SeriesGrowth {
-  return {
-    as_of: null,
-    coverage: 0,
-    accounts: [],
-    total: { cost: 0, market: 0, gain: 0, gainPct: 0 },
-  };
-}
+import type { SeriesLedger, SeriesRow } from "./series";
+import { capitalTrend, cashflowSeries, costByAccount, incomeSeries } from "./series";
 
 function row(overrides: Partial<SeriesRow>): SeriesRow {
   return {
@@ -33,7 +24,6 @@ function ledger(overrides: Partial<SeriesLedger>): SeriesLedger {
     months: ["2024-01", "2024-02", "2024-03"],
     series: [],
     holdings: [],
-    growth: emptyGrowth(),
     ...overrides,
   };
 }
@@ -152,47 +142,52 @@ describe("incomeSeries / cashflowSeries (window-sum, not to-date)", () => {
   });
 });
 
-describe("growthByAccount", () => {
-  test("joins growth rows to account name/kind and filters to scope", () => {
+describe("costByAccount", () => {
+  test("cost is acb forward-filled to the window end; contributions sum within the window", () => {
     const L = ledger({
       accounts: [
         { id: "A", kind: "TFSA", name: "TFSA A", short_id: "aaaa", currency: "CAD" },
         { id: "B", kind: "RRSP", name: "RRSP B", short_id: "bbbb", currency: "CAD" },
       ],
-      growth: {
-        as_of: "2024-03-01",
-        coverage: 1,
-        accounts: [
-          { account_id: "A", cost: 1000, market: 1100, gain: 100, gainPct: 0.1 },
-          { account_id: "B", cost: 500, market: 480, gain: -20, gainPct: -0.04 },
-        ],
-        total: { cost: 1500, market: 1580, gain: 80, gainPct: 0.053 },
-      },
+      series: [
+        row({ account_id: "A", month: "2024-01", contrib: 100, acb: 500 }),
+        // 2024-02/03 carry no series row for A -> acb forward-fills from Jan.
+        row({ account_id: "A", month: "2024-03", contrib: 50 }),
+        row({ account_id: "B", month: "2024-01", contrib: 20, acb: 200 }),
+      ],
     });
-    const out = growthByAccount(L, { ris: [], accts: ["A"] });
+    const out = costByAccount(L, { ris: [0, 1, 2], accts: ["A", "B"] });
     expect(out).toEqual([
-      {
-        account_id: "A",
-        name: "TFSA A",
-        kind: "TFSA",
-        short_id: "aaaa",
-        cost: 1000,
-        market: 1100,
-        gain: 100,
-        gainPct: 0.1,
-      },
+      { account_id: "A", kind: "TFSA", short_id: "aaaa", cost: 500, contributions: 150 },
+      { account_id: "B", kind: "RRSP", short_id: "bbbb", cost: 200, contributions: 20 },
     ]);
   });
 
-  test("empty account scope yields no rows", () => {
+  test("rows are sorted by cost descending", () => {
     const L = ledger({
-      growth: {
-        as_of: "2024-03-01",
-        coverage: 1,
-        accounts: [{ account_id: "A", cost: 1000, market: 1100, gain: 100, gainPct: 0.1 }],
-        total: { cost: 1000, market: 1100, gain: 100, gainPct: 0.1 },
-      },
+      accounts: [
+        { id: "A", kind: "TFSA", name: "TFSA A", short_id: "aaaa", currency: "CAD" },
+        { id: "B", kind: "RRSP", name: "RRSP B", short_id: "bbbb", currency: "CAD" },
+      ],
+      series: [
+        row({ account_id: "A", month: "2024-01", acb: 100 }),
+        row({ account_id: "B", month: "2024-01", acb: 900 }),
+      ],
     });
-    expect(growthByAccount(L, { ris: [], accts: [] })).toEqual([]);
+    const out = costByAccount(L, { ris: [0], accts: ["A", "B"] });
+    expect(out.map((r) => r.account_id)).toEqual(["B", "A"]);
+  });
+
+  test("empty account scope yields no rows", () => {
+    const L = ledger({ series: [row({ month: "2024-01", acb: 500 })] });
+    expect(costByAccount(L, { ris: [0], accts: [] })).toEqual([]);
+  });
+
+  test("empty month window yields zero cost and zero contributions, not a crash", () => {
+    const L = ledger({ series: [row({ month: "2024-01", contrib: 100, acb: 500 })] });
+    const out = costByAccount(L, { ris: [], accts: ["A"] });
+    expect(out).toEqual([
+      { account_id: "A", kind: "TFSA", short_id: "aaaa", cost: 0, contributions: 0 },
+    ]);
   });
 });

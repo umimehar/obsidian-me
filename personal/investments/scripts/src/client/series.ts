@@ -30,21 +30,6 @@ export interface SeriesRow {
   acb: number | null;
 }
 
-export interface GrowthAccountRow {
-  account_id: string;
-  cost: number;
-  market: number;
-  gain: number;
-  gainPct: number;
-}
-
-export interface SeriesGrowth {
-  as_of: string | null;
-  coverage: number;
-  accounts: GrowthAccountRow[];
-  total: { cost: number; market: number; gain: number; gainPct: number };
-}
-
 // The subset of the parsed ledger this module reads. Kept local (not
 // imported from analytics.ts) so this module never pulls in node-only code
 // when bundled for the browser.
@@ -53,7 +38,6 @@ export interface SeriesLedger {
   months: string[];
   series: SeriesRow[];
   holdings: Array<{ account_id: string; symbol: string; qty: number; acb: number }>;
-  growth: SeriesGrowth;
 }
 
 export interface TrendSeries {
@@ -74,15 +58,12 @@ export interface CashflowSeries {
   net: number[];
 }
 
-export interface GrowthRow {
+export interface AccountCost {
   account_id: string;
-  name: string;
   kind: string;
   short_id: string;
   cost: number;
-  market: number;
-  gain: number;
-  gainPct: number;
+  contributions: number;
 }
 
 interface FlowRec {
@@ -338,25 +319,22 @@ export function cashflowSeries(ledger: SeriesLedger, scope: Scope): CashflowSeri
   };
 }
 
-// Growth-by-account snapshot (not a time series): L.growth.accounts joined
-// to name/kind/short_id and filtered to the scoped account ids.
-export function growthByAccount(ledger: SeriesLedger, scope: Scope): GrowthRow[] {
-  const acctIds = new Set(scope.accts);
+// Per-account cost snapshot for the selected scope (not a time series): the
+// adjusted cost base forward-filled to the window's last selected month
+// (reusing the same acb forward-fill capitalTrend uses), plus contributions
+// summed within the window. Sorted by cost descending.
+export function costByAccount(ledger: SeriesLedger, scope: Scope): AccountCost[] {
+  const { flow, acbFF } = buildFill(ledger);
   const byId = new Map(ledger.accounts.map((a) => [a.id, a]));
-  const rows: GrowthRow[] = [];
-  for (const g of ledger.growth.accounts) {
-    if (!acctIds.has(g.account_id)) continue;
-    const a = byId.get(g.account_id);
-    rows.push({
-      account_id: g.account_id,
-      name: a?.name ?? g.account_id,
-      kind: a?.kind ?? "",
-      short_id: a?.short_id ?? "",
-      cost: g.cost,
-      market: g.market,
-      gain: g.gain,
-      gainPct: g.gainPct,
-    });
+  const endIdx = scope.ris.length > 0 ? Math.max(...scope.ris) : -1;
+  const rows: AccountCost[] = [];
+  for (const id of scope.accts) {
+    const a = byId.get(id);
+    if (!a) continue;
+    const cost = endIdx >= 0 ? (acbFF.get(id)?.[endIdx] ?? 0) : 0;
+    let contributions = 0;
+    for (const i of scope.ris) contributions += flow.get(id)?.[i]?.contrib ?? 0;
+    rows.push({ account_id: id, kind: a.kind, short_id: a.short_id, cost, contributions });
   }
-  return rows;
+  return rows.sort((a, b) => b.cost - a.cost);
 }

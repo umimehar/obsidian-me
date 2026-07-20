@@ -1,13 +1,13 @@
-import { cashflowChart, contributionsChart, growthBars, incomeChart } from "./charts";
+import { cashflowChart, contributionsChart, costBars, incomeChart } from "./charts";
 // Populates the four pillar sections (Contributions & Room, Growth, Tax this
 // year, Detail) from the parsed ledger and the active Scope. Pure
 // aggregation lives in series.ts; this module is the DOM layer on top of it,
-// plus a couple of small pure helpers (totalContributed, sumGrowth,
+// plus a couple of small pure helpers (totalContributed, totalIncome,
 // estimateTax) that are cheap enough to unit test directly.
 import type { Scope } from "./filter";
-import { money, monthLabel } from "./format";
-import { capitalTrend, cashflowSeries, growthByAccount, incomeSeries } from "./series";
-import type { GrowthRow, SeriesLedger } from "./series";
+import { money } from "./format";
+import { capitalTrend, cashflowSeries, costByAccount, incomeSeries } from "./series";
+import type { AccountCost, SeriesLedger } from "./series";
 
 export interface TaxRoomRow {
   group: string;
@@ -50,21 +50,15 @@ export function totalContributed(ledger: SectionsLedger, scope: Scope): number {
   return total;
 }
 
-export interface GrowthTotal {
-  cost: number;
-  market: number;
-  gain: number;
-  gainPct: number;
-}
-
-// Recomputes cost/market/gain from the already-scoped growthByAccount rows,
-// so the total always matches the selected accounts (not the global total
-// baked into ledger.growth.total).
-export function sumGrowth(rows: GrowthRow[]): GrowthTotal {
-  const cost = rows.reduce((s, r) => s + r.cost, 0);
-  const market = rows.reduce((s, r) => s + r.market, 0);
-  const gain = market - cost;
-  return { cost, market, gain, gainPct: cost > 0 ? gain / cost : 0 };
+// Sum of `income` across the scoped accounts, within the scoped time window.
+export function totalIncome(ledger: SectionsLedger, scope: Scope): number {
+  const months = new Set(scope.ris.map((i) => ledger.months[i]).filter((m): m is string => !!m));
+  const accts = new Set(scope.accts);
+  let total = 0;
+  for (const row of ledger.series) {
+    if (accts.has(row.account_id) && months.has(row.month)) total += row.income;
+  }
+  return total;
 }
 
 export interface TaxEstimateInputs {
@@ -213,37 +207,35 @@ function drawCashflowChart(ledger: SectionsLedger, scope: Scope): void {
 
 // ---- Growth -----------------------------------------------------------------
 
-function renderGrowthSummary(ledger: SectionsLedger, totals: GrowthTotal): void {
+function renderGrowthSummary(ledger: SectionsLedger, scope: Scope, costRows: AccountCost[]): void {
   const host = document.getElementById("growth-summary");
   if (!host) return;
   host.textContent = "";
-  const asOf = ledger.growth.as_of ? monthLabel(ledger.growth.as_of.slice(0, 7)) : "unknown";
-  heroCell(host, "Market value", money(totals.market), `As of ${asOf}.`, true);
-  heroCell(host, "At cost", money(totals.cost), "Adjusted cost base of the same holdings.");
-  const gainLabel = totals.gain >= 0 ? "Unrealized gain" : "Unrealized loss";
+  const capital = costRows.reduce((s, r) => s + r.cost, 0);
   heroCell(
     host,
-    gainLabel,
-    money(totals.gain),
-    `${(totals.gainPct * 100).toFixed(1)}% of cost. The time window above does not affect this ` +
-      "snapshot — only the account filter does.",
+    "Capital at cost",
+    money(capital),
+    "Adjusted cost base of the selected accounts at the end of the selected window.",
+    true,
+  );
+  heroCell(
+    host,
+    "Contributions",
+    money(totalContributed(ledger, scope)),
+    "Contributions across the selected accounts and time window.",
+  );
+  heroCell(
+    host,
+    "Income received",
+    money(totalIncome(ledger, scope)),
+    "Dividends and interest received across the selected accounts and time window.",
   );
 }
 
-function renderCoverageNote(ledger: SectionsLedger): void {
-  const el = document.getElementById("growth-coverage-note");
-  if (!el) return;
-  if (ledger.growth.coverage >= 1) {
-    el.textContent = "";
-    return;
-  }
-  const pct = Math.round(ledger.growth.coverage * 100);
-  el.textContent = `${pct}% of cost is priced at market; the rest is shown at cost.`;
-}
-
-function drawGrowthCharts(ledger: SectionsLedger, scope: Scope, rows: GrowthRow[]): void {
-  const growthCanvas = canvasOf("chart-growth");
-  if (growthCanvas) growthBars(growthCanvas, rows);
+function drawGrowthCharts(ledger: SectionsLedger, scope: Scope, rows: AccountCost[]): void {
+  const costCanvas = canvasOf("chart-growth");
+  if (costCanvas) costBars(costCanvas, rows);
   const trendCanvas = canvasOf("chart-trend");
   if (trendCanvas) contributionsChart(trendCanvas, capitalTrend(ledger, scope));
 }
@@ -336,7 +328,6 @@ interface AcctRow {
   deposits: number;
   income: number;
   cost: number;
-  market: number;
   cash: number;
 }
 
@@ -365,20 +356,18 @@ function buildAcctRows(ledger: SectionsLedger, scope: Scope): AcctRow[] {
     t.income += row.income;
     flows.set(row.account_id, t);
   }
-  const growth = new Map(growthByAccount(ledger, scope).map((g) => [g.account_id, g]));
+  const costs = new Map(costByAccount(ledger, scope).map((c) => [c.account_id, c]));
   const rows: AcctRow[] = [];
   for (const a of ledger.accounts) {
     if (!acctSet.has(a.id)) continue;
     const f = flows.get(a.id) ?? { contrib: 0, deposits: 0, income: 0 };
-    const g = growth.get(a.id);
     rows.push({
       kind: a.kind,
       short_id: a.short_id,
       contrib: f.contrib,
       deposits: f.deposits,
       income: f.income,
-      cost: g?.cost ?? 0,
-      market: g?.market ?? 0,
+      cost: costs.get(a.id)?.cost ?? 0,
       cash: lastCash(ledger, a.id, months),
     });
   }
@@ -406,14 +395,13 @@ function renderAcctTable(ledger: SectionsLedger, scope: Scope): void {
     "#Contributed",
     "#Net deposits",
     "#At cost",
-    "#Market value",
     "#Cash",
     "#Income",
   ]);
   for (const r of buildAcctRows(ledger, scope)) {
     const tr = document.createElement("tr");
     tr.appendChild(acctNameCell(r));
-    for (const v of [r.contrib, r.deposits, r.cost, r.market, r.cash]) {
+    for (const v of [r.contrib, r.deposits, r.cost, r.cash]) {
       const td = document.createElement("td");
       td.className = "num";
       td.textContent = money(v);
@@ -523,10 +511,9 @@ export function renderSections(ledger: SectionsLedger, scope: Scope): void {
   renderRoomBars(ledger.tax);
   drawCashflowChart(ledger, scope);
 
-  const growthRows = growthByAccount(ledger, scope);
-  renderGrowthSummary(ledger, sumGrowth(growthRows));
-  renderCoverageNote(ledger);
-  drawGrowthCharts(ledger, scope, growthRows);
+  const costRows = costByAccount(ledger, scope);
+  renderGrowthSummary(ledger, scope, costRows);
+  drawGrowthCharts(ledger, scope, costRows);
 
   renderTaxCards(ledger.tax);
   updateTaxEstimate(ledger.tax);

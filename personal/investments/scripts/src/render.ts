@@ -98,7 +98,9 @@ function contribSection(): string {
     ) +
     '<div class="hero-row" id="headline"></div>' +
     '<div id="room"></div>' +
-    subhead("Cash flow") +
+    subhead("External money in / out") +
+    '<p class="section-note">Deposits into and withdrawals or transfers out of the selected ' +
+    "accounts — not trading activity.</p>" +
     canvasBox("chart-cashflow") +
     "</section>"
   );
@@ -109,15 +111,14 @@ function growthSection(): string {
     '<section class="section" id="section-growth">' +
     sectionHead(
       "Growth",
-      "Market value is a snapshot as of the latest pricing run — it responds to the account " +
-        "filter, but not to the time window.",
+      "Capital deployed at cost, contributions, and income received across the selected " +
+        "accounts and time window.",
     ) +
     '<div class="hero-row" id="growth-summary"></div>' +
-    '<p class="section-note" id="growth-coverage-note"></p>' +
-    subhead("By account") +
-    canvasBox("chart-growth") +
     subhead("Capital vs contributions") +
     canvasBox("chart-trend") +
+    subhead("By account, at cost") +
+    canvasBox("chart-growth") +
     "</section>"
   );
 }
@@ -148,8 +149,8 @@ function detailSection(): string {
     sectionHead("Detail", "Accounts and holdings within the current scope.") +
     '<details class="pillar-detail"><summary>Show tables</summary>' +
     subhead("Accounts") +
-    '<p class="section-note">Market value is shown per account here; the holdings table below ' +
-    "stays at cost.</p>" +
+    '<p class="section-note">All figures at cost; the holdings table below breaks holdings out ' +
+    "by security.</p>" +
     '<div class="table-wrap" id="acct-table"></div>' +
     subhead("Holdings at cost") +
     '<p class="section-note">Adjusted cost base, not market value. Direct Indexing is ' +
