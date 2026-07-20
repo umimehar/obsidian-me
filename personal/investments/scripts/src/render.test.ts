@@ -135,6 +135,19 @@ test("accounts are unmasked in the embedded ledger data", async () => {
   expect(html).toContain('"kind":"TFSA"');
 });
 
+test("ledger-data payload escapes < so a crafted value cannot close the script tag", async () => {
+  const a = analytics();
+  const acct = a.ledger.accounts[0];
+  if (acct) acct.name = "</script><script>alert(1)</script>";
+  // biome-ignore lint/suspicious/noExplicitAny: test fixtures are structurally compatible
+  const html = (await renderPages(store() as any, a))["index.html"] ?? "";
+  const dataStart = html.indexOf('id="ledger-data"');
+  const dataEnd = html.indexOf("</script>", dataStart);
+  const payload = html.slice(dataStart, dataEnd);
+  expect(payload).not.toContain("</script>");
+  expect(payload).toContain("\\u003c");
+});
+
 test("store accounts absent from the ledger are not embedded", async () => {
   const a = analytics();
   a.ledger.accounts = a.ledger.accounts.filter((x) => x.id !== "acct_b");

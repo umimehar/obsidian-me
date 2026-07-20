@@ -108,12 +108,19 @@ describe("estimateTax", () => {
       eligibleDividends: 200,
       foreignIncome: 50,
       realizedGains: 1000,
-      rrspDeductionAvailable: 300,
+      rrspContributed: 300,
       rate: 0.48,
     };
+    // 100*0.48 = 48
+    // 200*1.38*0.48*0.85 = 112.608
+    // 50*0.48 = 24
+    // 1000*0.5*0.48 = 240
+    // -300*0.48 = -144
+    // total = 48 + 112.608 + 24 + 240 - 144 = 280.608
     const expected =
       100 * 0.48 + 200 * 1.38 * 0.48 * 0.85 + 50 * 0.48 + 1000 * 0.5 * 0.48 - 300 * 0.48;
     expect(estimateTax(inputs)).toBeCloseTo(expected, 6);
+    expect(estimateTax(inputs)).toBeCloseTo(280.608, 6);
   });
 
   test("all zero inputs produce a zero estimate", () => {
@@ -123,21 +130,24 @@ describe("estimateTax", () => {
         eligibleDividends: 0,
         foreignIncome: 0,
         realizedGains: 0,
-        rrspDeductionAvailable: 0,
+        rrspContributed: 0,
         rate: 0.48,
       }),
     ).toBe(0);
   });
 
-  test("RRSP deduction can push the estimate negative", () => {
+  test("RRSP contributed this year reduces the estimate but a modest contribution should not force it negative", () => {
+    // Income (100+200*1.38*0.85+50)*0.48 = (100+234.6+50)*0.48 = 384.6*0.48 = 184.608
+    // 300 contributed * 0.48 = 144, so estimate stays positive at 40.608.
     const estimate = estimateTax({
-      interest: 0,
-      eligibleDividends: 0,
-      foreignIncome: 0,
+      interest: 100,
+      eligibleDividends: 200,
+      foreignIncome: 50,
       realizedGains: 0,
-      rrspDeductionAvailable: 1000,
+      rrspContributed: 300,
       rate: 0.48,
     });
-    expect(estimate).toBeLessThan(0);
+    expect(estimate).toBeCloseTo(40.608, 6);
+    expect(estimate).toBeGreaterThan(0);
   });
 });

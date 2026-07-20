@@ -35,6 +35,21 @@ test("no real account code and names redacted", () => {
   expect(blob).not.toContain("Test Person Name");
 });
 
+test("account name is redacted when it contains a listed name", () => {
+  const dir = mkdtempSync(join(tmpdir(), "invds-name-"));
+  writeFileSync(
+    join(dir, "Umar's RRSP-2026-06-01-monthly-statement-transactions-XX0TEST900CAD.csv"),
+    '"date","transaction","description","amount","balance","currency"\n' +
+      '"2026-06-05","CONT","Contribution","500.0","500.0","CAD"\n',
+  );
+  const red: Redactions = { names: ["Umar"], accountLabelPeople: {} };
+  const store = buildDatastore(dir, red);
+  const acct = store.accounts[0];
+  expect(acct?.name).toBe("[redacted]'s RRSP");
+  const blob = JSON.stringify(store);
+  expect(blob.toLowerCase()).not.toContain("umar");
+});
+
 test("identical rows are all kept (no dedup)", () => {
   const dir = mkdtempSync(join(tmpdir(), "inv-nodedup-"));
   writeFileSync(

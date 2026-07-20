@@ -210,7 +210,7 @@ export async function renderIndex(_store: Datastore, analytics: Analytics): Prom
     detailSection() +
     rule() +
     footnote();
-  const payload = JSON.stringify({ ledger: analytics.ledger });
+  const payload = JSON.stringify({ ledger: analytics.ledger }).replace(/</g, "\\u003c");
   const clientJs = await bundleClient();
   const foot =
     `<script type="application/json" id="ledger-data">${payload}</script>` +

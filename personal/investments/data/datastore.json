@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-07-20T17:49:05.402Z",
+    "generated_at": "2026-07-20T18:38:31.853Z",
     "schema_version": 1,
     "file_count": 183,
     "txn_count": 8050,
@@ -126,7 +126,7 @@
     {
       "masked_id": "acct_97ab4cb2",
       "kind": "RRSP",
-      "name": "Maham's RRSP",
+      "name": "[redacted]'s RRSP",
       "short_id": "97ab",
       "currency": "CAD",
       "first_activity": "2026-03-12",
@@ -136,7 +136,7 @@
     {
       "masked_id": "acct_231879ac",
       "kind": "RRSP",
-      "name": "Umar’s RRSP",
+      "name": "[redacted]’s RRSP",
       "short_id": "2318",
       "currency": "CAD",
       "first_activity": "2025-09-13",

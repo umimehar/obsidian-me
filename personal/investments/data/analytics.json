@@ -81,14 +81,14 @@
       {
         "id": "acct_97ab4cb2",
         "kind": "RRSP",
-        "name": "Maham's RRSP",
+        "name": "[redacted]'s RRSP",
         "short_id": "97ab",
         "currency": "CAD"
       },
       {
         "id": "acct_231879ac",
         "kind": "RRSP",
-        "name": "Umar’s RRSP",
+        "name": "[redacted]’s RRSP",
         "short_id": "2318",
         "currency": "CAD"
       },
@@ -4247,91 +4247,91 @@
       }
     },
     "growth": {
-      "as_of": "2026-07-20T17:49:48.223Z",
+      "as_of": "2026-07-20T18:39:13.932Z",
       "coverage": 0.8908601259598853,
       "accounts": [
         {
           "account_id": "acct_1f9a1df3",
           "cost": 25093.55,
-          "market": 28845.28,
-          "gain": 3751.73,
+          "market": 28829.71,
+          "gain": 3736.16,
           "gainPct": 0.15
         },
         {
           "account_id": "acct_231879ac",
           "cost": 8082.21,
-          "market": 42429.71,
-          "gain": 34347.5,
+          "market": 42469.01,
+          "gain": 34386.8,
           "gainPct": 4.25
         },
         {
           "account_id": "acct_2c620d2b",
           "cost": 19140.34,
-          "market": 22113.1,
-          "gain": 2972.76,
-          "gainPct": 0.16
+          "market": 22105.96,
+          "gain": 2965.62,
+          "gainPct": 0.15
         },
         {
           "account_id": "acct_91b82482",
           "cost": 47082.63,
-          "market": 50454.93,
-          "gain": 3372.3,
+          "market": 50431.19,
+          "gain": 3348.56,
           "gainPct": 0.07
         },
         {
           "account_id": "acct_97100dd9",
           "cost": 6242.56,
-          "market": 7421.25,
-          "gain": 1178.69,
+          "market": 7419.15,
+          "gain": 1176.59,
           "gainPct": 0.19
         },
         {
           "account_id": "acct_97ab4cb2",
           "cost": 12799.6,
-          "market": 13258.01,
-          "gain": 458.41,
+          "market": 13253.38,
+          "gain": 453.78,
           "gainPct": 0.04
         },
         {
           "account_id": "acct_c2e9345e",
           "cost": 3266.65,
-          "market": 3450.96,
-          "gain": 184.31,
+          "market": 3449.34,
+          "gain": 182.69,
           "gainPct": 0.06
         },
         {
           "account_id": "acct_d6d9fb4a",
           "cost": 32322.42,
-          "market": 94491.37,
-          "gain": 62168.95,
-          "gainPct": 1.92
+          "market": 94802.86,
+          "gain": 62480.44,
+          "gainPct": 1.93
         },
         {
           "account_id": "acct_d77c33c7",
           "cost": 43024.34,
-          "market": 174089.82,
-          "gain": 131065.48,
-          "gainPct": 3.05
+          "market": 174695.69,
+          "gain": 131671.35,
+          "gainPct": 3.06
         },
         {
           "account_id": "acct_e2d627ff",
           "cost": 1000.63,
-          "market": 1106.91,
-          "gain": 106.28,
+          "market": 1110.21,
+          "gain": 109.58,
           "gainPct": 0.11
         },
         {
           "account_id": "acct_e2ec057d",
           "cost": 28418.76,
-          "market": 37717.44,
-          "gain": 9298.68,
+          "market": 37701.5,
+          "gain": 9282.74,
           "gainPct": 0.33
         }
       ],
       "total": {
         "cost": 226473.69,
-        "market": 475378.78,
-        "gain": 248905.09,
+        "market": 476268,
+        "gain": 249794.31,
         "gainPct": 1.1
       }
     },

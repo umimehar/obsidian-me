@@ -135,7 +135,7 @@ export function buildDatastore(sourceDir: string, redactions: Redactions): Datas
     const name = path.split("/").pop() ?? path;
     const accountId = maskAccountCode(accountCodeFromFilename(name));
     const kind = detectKind(name);
-    const acctName = accountNameFromFilename(name);
+    const acctName = redact(accountNameFromFilename(name), redactions);
     const shortId = shortAccountId(accountCodeFromFilename(name));
     for (const row of parseCsv(path)) {
       const txn = rowToTxn(row, accountId, redactions);

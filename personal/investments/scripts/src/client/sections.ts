@@ -72,30 +72,25 @@ export interface TaxEstimateInputs {
   eligibleDividends: number;
   foreignIncome: number;
   realizedGains: number;
-  rrspDeductionAvailable: number;
+  rrspContributed: number;
   rate: number;
 }
 
 // Rough, non-filing estimate of the tax added by this year's investment
 // income: eligible dividends get an approximate 38% gross-up offset by an
 // ~85%-of-gross-up combined credit; only half of realized gains is taxable;
-// unused RRSP deduction room is treated as available to offset at the same
-// marginal rate. See the on-page disclaimer — this is not a filing figure.
+// RRSP contributions actually made this year (the current year's room
+// "used") are treated as a deduction against the same marginal rate.
+// See the on-page disclaimer — this is not a filing figure.
 export function estimateTax(inputs: TaxEstimateInputs): number {
-  const {
-    interest,
-    eligibleDividends,
-    foreignIncome,
-    realizedGains,
-    rrspDeductionAvailable,
-    rate,
-  } = inputs;
+  const { interest, eligibleDividends, foreignIncome, realizedGains, rrspContributed, rate } =
+    inputs;
   return (
     interest * rate +
     eligibleDividends * 1.38 * rate * 0.85 +
     foreignIncome * rate +
     realizedGains * 0.5 * rate -
-    rrspDeductionAvailable * rate
+    rrspContributed * rate
   );
 }
 
@@ -294,6 +289,10 @@ function renderTaxCards(tax: SectionsTax): void {
   );
 }
 
+function rrspContributed(year: TaxYearData): number {
+  return year.room.find((r) => r.group === "RRSP")?.used ?? 0;
+}
+
 function updateTaxEstimate(tax: SectionsTax): void {
   const rateInput = document.getElementById("tax-rate");
   const out = document.getElementById("tax-estimate");
@@ -309,7 +308,7 @@ function updateTaxEstimate(tax: SectionsTax): void {
     eligibleDividends: year.income.eligible_dividends,
     foreignIncome: year.income.foreign_income,
     realizedGains: year.realized_gains,
-    rrspDeductionAvailable: year.rrsp_deduction_available,
+    rrspContributed: rrspContributed(year),
     rate: Number.isFinite(rate) ? rate : 0,
   });
   out.textContent = money(estimate);
