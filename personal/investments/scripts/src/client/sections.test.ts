@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { Scope } from "./filter";
-import { estimateTax, totalContributed, totalIncome } from "./sections";
+import { estimateTax, totalContributed, totalDeposits, totalIncome } from "./sections";
 import type { SectionsLedger } from "./sections";
 
 function ledger(): SectionsLedger {
@@ -66,6 +66,39 @@ describe("totalContributed", () => {
   test("returns 0 when no months are selected", () => {
     const scope: Scope = { ris: [], accts: ["A"] };
     expect(totalContributed(ledger(), scope)).toBe(0);
+  });
+});
+
+describe("totalDeposits", () => {
+  test("sums deposits within the scoped time window only", () => {
+    const scope: Scope = { ris: [0, 1], accts: ["A"] };
+    expect(totalDeposits(ledger(), scope)).toBe(150);
+  });
+
+  test("sums the full window when all months are selected", () => {
+    const scope: Scope = { ris: [0, 1, 2], accts: ["A"] };
+    expect(totalDeposits(ledger(), scope)).toBe(175);
+  });
+
+  test("returns 0 when no accounts are selected", () => {
+    const scope: Scope = { ris: [0, 1, 2], accts: [] };
+    expect(totalDeposits(ledger(), scope)).toBe(0);
+  });
+
+  test("returns 0 when no months are selected", () => {
+    const scope: Scope = { ris: [], accts: ["A"] };
+    expect(totalDeposits(ledger(), scope)).toBe(0);
+  });
+
+  test("sums deposits, not contrib, when the two fields diverge (transfers vs coded contributions)", () => {
+    const withTransfers = ledger();
+    const [first, ...rest] = withTransfers.series;
+    if (!first) throw new Error("test fixture missing first series row");
+    // Row 0: only 100 of contrib, but 400 total deposits via TRANSFER_IN.
+    withTransfers.series = [{ ...first, contrib: 100, deposits: 400 }, ...rest];
+    const scope: Scope = { ris: [0], accts: ["A"] };
+    expect(totalDeposits(withTransfers, scope)).toBe(400);
+    expect(totalContributed(withTransfers, scope)).toBe(100);
   });
 });
 

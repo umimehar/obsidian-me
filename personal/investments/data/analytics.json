@@ -4256,29 +4256,25 @@
               "group": "TFSA",
               "used": 3388,
               "limit": 6500,
-              "remaining": 3112,
-              "over": false
+              "remaining": 3112
             },
             {
               "group": "FHSA",
               "used": 0,
               "limit": 8000,
-              "remaining": 8000,
-              "over": false
+              "remaining": 8000
             },
             {
               "group": "RRSP",
               "used": 0,
               "limit": 30780,
-              "remaining": 30780,
-              "over": false
+              "remaining": 30780
             },
             {
               "group": "RESP",
               "used": 0,
               "limit": 2500,
-              "remaining": 2500,
-              "over": false
+              "remaining": 2500
             }
           ],
           "rrsp_deduction_available": 30780,
@@ -4296,29 +4292,25 @@
               "group": "TFSA",
               "used": 4033,
               "limit": 7000,
-              "remaining": 2967,
-              "over": false
+              "remaining": 2967
             },
             {
               "group": "FHSA",
               "used": 8000,
               "limit": 8000,
-              "remaining": 0,
-              "over": false
+              "remaining": 0
             },
             {
               "group": "RRSP",
               "used": 0,
               "limit": 31560,
-              "remaining": 31560,
-              "over": false
+              "remaining": 31560
             },
             {
               "group": "RESP",
               "used": 0,
               "limit": 2500,
-              "remaining": 2500,
-              "over": false
+              "remaining": 2500
             }
           ],
           "rrsp_deduction_available": 31560,
@@ -4336,29 +4328,25 @@
               "group": "TFSA",
               "used": 25000,
               "limit": 7000,
-              "remaining": -18000,
-              "over": true
+              "remaining": -18000
             },
             {
               "group": "FHSA",
               "used": 8000,
               "limit": 8000,
-              "remaining": 0,
-              "over": false
+              "remaining": 0
             },
             {
               "group": "RRSP",
               "used": 3000,
               "limit": 32490,
-              "remaining": 29490,
-              "over": false
+              "remaining": 29490
             },
             {
               "group": "RESP",
               "used": 0,
               "limit": 2500,
-              "remaining": 2500,
-              "over": false
+              "remaining": 2500
             }
           ],
           "rrsp_deduction_available": 29490,
@@ -4376,29 +4364,25 @@
               "group": "TFSA",
               "used": 7000,
               "limit": 7000,
-              "remaining": 0,
-              "over": false
+              "remaining": 0
             },
             {
               "group": "FHSA",
               "used": 8000,
               "limit": 8000,
-              "remaining": 0,
-              "over": false
+              "remaining": 0
             },
             {
               "group": "RRSP",
               "used": 25000,
               "limit": 33810,
-              "remaining": 8810,
-              "over": false
+              "remaining": 8810
             },
             {
               "group": "RESP",
               "used": 2550,
               "limit": 2500,
-              "remaining": -50,
-              "over": true
+              "remaining": -50
             }
           ],
           "rrsp_deduction_available": 8810,

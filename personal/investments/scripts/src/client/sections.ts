@@ -2,8 +2,8 @@ import { capitalVsDepositsChart, cashflowChart, costBars, incomeChart } from "./
 // Populates the four pillar sections (Contributions & Room, Growth, Tax this
 // year, Detail) from the parsed ledger and the active Scope. Pure
 // aggregation lives in series.ts; this module is the DOM layer on top of it,
-// plus a couple of small pure helpers (totalContributed, totalIncome,
-// estimateTax) that are cheap enough to unit test directly.
+// plus a handful of small pure helpers (totalContributed, totalDeposits,
+// totalIncome, estimateTax) that are cheap enough to unit test directly.
 import type { Scope } from "./filter";
 import { money } from "./format";
 import { capitalTrend, cashflowSeries, costByAccount, incomeSeries } from "./series";
@@ -14,7 +14,6 @@ export interface TaxRoomRow {
   used: number;
   limit: number;
   remaining: number;
-  over: boolean;
 }
 
 export interface TaxYearData {
@@ -46,6 +45,20 @@ export function totalContributed(ledger: SectionsLedger, scope: Scope): number {
   let total = 0;
   for (const row of ledger.series) {
     if (accts.has(row.account_id) && months.has(row.month)) total += row.contrib;
+  }
+  return total;
+}
+
+// Sum of `deposits` (net money in: CONTRIB + TRANSFER_IN + TRANSFER_OUT)
+// across the scoped accounts, within the scoped time window. This is the
+// true "money in" figure — see the investments CLAUDE.md — because internal
+// transfers between the owner's own accounts cancel out in the total.
+export function totalDeposits(ledger: SectionsLedger, scope: Scope): number {
+  const months = new Set(scope.ris.map((i) => ledger.months[i]).filter((m): m is string => !!m));
+  const accts = new Set(scope.accts);
+  let total = 0;
+  for (const row of ledger.series) {
+    if (accts.has(row.account_id) && months.has(row.month)) total += row.deposits;
   }
   return total;
 }
@@ -148,15 +161,15 @@ function renderContribHeadline(ledger: SectionsLedger, scope: Scope): void {
   const host = document.getElementById("headline");
   if (!host) return;
   host.textContent = "";
-  const contributed = totalContributed(ledger, scope);
+  const deposits = totalDeposits(ledger, scope);
   const year = currentTaxYear(ledger.tax);
   const roomUsed = (year?.room ?? []).reduce((s, r) => s + r.used, 0);
   heroCell(
     host,
-    "Registered contributions",
-    money(contributed),
-    "Contributions coded to registered accounts, used for contribution room. See Growth " +
-      "for total money in.",
+    "Money in",
+    money(deposits),
+    "All money added to the selected accounts, including transfers, over the selected " +
+      "window. Internal transfers between your own accounts cancel out in the total.",
     true,
   );
   heroCell(
@@ -167,6 +180,27 @@ function renderContribHeadline(ledger: SectionsLedger, scope: Scope): void {
   );
 }
 
+function roomBarRow(r: TaxRoomRow, year: string): HTMLDivElement {
+  const rawPct = r.limit > 0 ? Math.round((r.used / r.limit) * 100) : 0;
+  const fillPct = Math.min(100, rawPct);
+  const row = document.createElement("div");
+  row.className = "room-row";
+  const label = document.createElement("div");
+  label.className = "room-k";
+  label.textContent = `${r.group} ${year}`;
+  const track = document.createElement("div");
+  track.className = "room-track";
+  const fill = document.createElement("div");
+  fill.className = "room-fill";
+  fill.style.width = `${fillPct}%`;
+  track.appendChild(fill);
+  const val = document.createElement("div");
+  val.className = "room-v";
+  val.textContent = `${money(r.used)} / ${money(r.limit)} · ${rawPct}%`;
+  row.append(label, track, val);
+  return row;
+}
+
 function renderRoomBars(tax: SectionsTax): void {
   const host = document.getElementById("room");
   if (!host) return;
@@ -175,30 +209,15 @@ function renderRoomBars(tax: SectionsTax): void {
   if (!year) return;
   for (const r of year.room) {
     if (r.limit === 0 && r.used === 0) continue;
-    const pct = r.limit > 0 ? Math.min(100, Math.round((r.used / r.limit) * 100)) : 0;
-    const row = document.createElement("div");
-    row.className = r.over ? "room-row pillar-over" : "room-row";
-    const label = document.createElement("div");
-    label.className = "room-k";
-    label.textContent = `${r.group} ${year.year}`;
-    const track = document.createElement("div");
-    track.className = "room-track";
-    const fill = document.createElement("div");
-    fill.className = "room-fill";
-    fill.style.width = `${pct}%`;
-    track.appendChild(fill);
-    const val = document.createElement("div");
-    val.className = "room-v";
-    val.textContent = `${money(r.used)} / ${money(r.limit)} · ${pct}%`;
-    if (r.over) {
-      const warn = document.createElement("span");
-      warn.className = "pillar-warn";
-      warn.textContent = "OVER";
-      val.appendChild(warn);
-    }
-    row.append(label, track, val);
-    host.appendChild(row);
+    host.appendChild(roomBarRow(r, year.year));
   }
+  const note = document.createElement("p");
+  note.className = "section-note";
+  note.textContent =
+    "Bars compare this year's registered contributions to this year's annual limit. Unused " +
+    "room carries forward from prior years, so a full or over-full bar is not necessarily an " +
+    "over-contribution (for example an RESP catch-up year).";
+  host.appendChild(note);
 }
 
 function drawCashflowChart(ledger: SectionsLedger, scope: Scope): void {

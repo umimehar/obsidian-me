@@ -186,13 +186,16 @@ describe("buildTax", () => {
     expect(t.years.find((x) => x.year === "2026")?.income.eligible_dividends).toBe(0);
   });
 
-  it("flags over-contribution when room used exceeds the limit", () => {
+  it("reports negative remaining room when used exceeds the annual limit, without a false over flag", () => {
+    // Unused room carries forward from prior years, so exceeding this year's
+    // annual limit is not necessarily an over-contribution — the room entry
+    // must not assert one; it should only report the raw remaining figure.
     const t = buildTax(
       store([txn({ type: "CONTRIB", amount: 9000, date: "2026-05-01" })], "TFSA"),
       "2026",
     );
     const room = t.years.find((x) => x.year === "2026")?.room.find((r) => r.group === "TFSA");
-    expect(room?.over).toBe(true);
+    expect(room).not.toHaveProperty("over");
     expect(room?.remaining).toBe(7000 - 9000);
   });
 });

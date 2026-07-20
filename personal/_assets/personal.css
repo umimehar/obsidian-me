@@ -392,20 +392,6 @@ h1, h2, h3, h4 {
 }
 .pillar-detail summary:hover { color: var(--color-accent); }
 
-.room-row.pillar-over .room-fill { background: var(--color-neutral-700); }
-.room-row.pillar-over .room-v { color: var(--color-accent-700); }
-.pillar-warn {
-  display: inline-block;
-  margin-left: 8px;
-  padding: 1px 6px;
-  border-radius: var(--radius-sm);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  color: var(--color-bg);
-  background: var(--color-accent-700);
-}
-
 @media (max-width: 900px) {
   .chartbox-canvas { height: 260px; }
 }

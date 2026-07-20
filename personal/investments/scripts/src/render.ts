@@ -94,7 +94,8 @@ function contribSection(): string {
     '<section class="section" id="section-contrib">' +
     sectionHead(
       "Contributions & Room",
-      "Contributed and room used across the selected accounts and time window.",
+      "Money you put in and registered room used across the selected accounts and time " +
+        "window.",
     ) +
     '<div class="hero-row" id="headline"></div>' +
     '<div id="room"></div>' +

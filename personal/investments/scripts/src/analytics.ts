@@ -232,7 +232,7 @@ export function computeAnalytics(store: Datastore): Analytics {
 
 export interface TaxYear {
   year: string;
-  room: Array<{ group: string; used: number; limit: number; remaining: number; over: boolean }>;
+  room: Array<{ group: string; used: number; limit: number; remaining: number }>;
   rrsp_deduction_available: number;
   income: { interest: number; eligible_dividends: number; foreign_income: number };
   realized_gains: number;
@@ -314,7 +314,6 @@ export function buildTax(store: Datastore, currentYear: string): Tax {
           used,
           limit,
           remaining: round2(limit - used),
-          over: used > limit && limit > 0,
         };
       });
       const rrsp = room.find((r) => r.group === "RRSP");
