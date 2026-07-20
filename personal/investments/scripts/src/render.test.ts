@@ -102,6 +102,12 @@ test("index embeds the ledger data and the progressive filter shell", async () =
   expect(html).toContain('"month":"2025-03"');
 });
 
+test("index shows the data date range in the masthead", async () => {
+  const html = (await pages())["index.html"] ?? "";
+  expect(html).toContain('id="data-range"');
+  expect(html).toContain("Data: Mar 2025 – Mar 2025");
+});
+
 test("index has the four pillar sections", async () => {
   const html = (await pages())["index.html"] ?? "";
   expect(html).toContain("Contributions &amp; Room");

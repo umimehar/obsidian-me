@@ -1,6 +1,7 @@
 // Render the datastore and analytics into one self-contained offline page.
 import { readFileSync } from "node:fs";
 import type { Analytics } from "./analytics";
+import { monthLabel } from "./client/format";
 import type { Datastore } from "./datastore";
 
 const CSS_HREF = "../../_assets/personal.css";
@@ -61,13 +62,24 @@ function filterShell(): string {
   );
 }
 
-function masthead(): string {
+// "Jul 2023 – Jun 2026" span of the underlying data, from the first to the
+// last month in the ledger. Rendered statically at build time since the
+// month list never changes without a rebuild.
+function dataRangeLabel(months: string[]): string {
+  const first = months[0];
+  const last = months[months.length - 1];
+  if (!first || !last) return "";
+  return `Data: ${monthLabel(first)} – ${monthLabel(last)}`;
+}
+
+function masthead(months: string[]): string {
   return (
     '<header class="masthead">' +
     '<div class="masthead-kicker">Personal Finance · Household Edition</div>' +
     '<h1 class="masthead-title">The Ledger</h1></header>' +
     '<div class="dateline"><span>Private Records</span>' +
     '<span class="reviewed" id="asof">Portfolio report</span>' +
+    `<span id="data-range">${htmlEscape(dataRangeLabel(months))}</span>` +
     "<span>Stated at cost</span></div>" +
     `<p class="standing-note">${htmlEscape(STANDING_NOTE)}</p>`
   );
@@ -105,7 +117,7 @@ function contribSection(): string {
     "accounts — not trading activity. Click a bar to see the underlying transactions.</p>" +
     canvasBox("chart-cashflow") +
     '<details class="pillar-detail" id="cashflow-drill">' +
-    "<summary>Transactions for the selected month</summary>" +
+    "<summary>Transactions for the selected period</summary>" +
     '<div id="cashflow-drill-body"></div></details>' +
     "</section>"
   );
@@ -208,7 +220,7 @@ function page(title: string, body: string, foot: string): string {
 
 export async function renderIndex(_store: Datastore, analytics: Analytics): Promise<string> {
   const body =
-    masthead() +
+    masthead(analytics.ledger.months) +
     filterShell() +
     contribSection() +
     rule() +

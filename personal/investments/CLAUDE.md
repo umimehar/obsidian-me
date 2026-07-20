@@ -60,7 +60,7 @@ The statements cannot distinguish an internal transfer between the owner's own a
 ## Cashflow flows and the transaction drill-down
 
 - `ledger.flows` is the transaction-level backing data for the cashflow chart: every `CONTRIB` / `TRANSFER_IN` / `TRANSFER_OUT` row, each carrying `account_id`, `month`, `date`, `type`, a signed `amount` (`TRANSFER_OUT` negative), and the already-redacted `description`. It is separate from `series[].deposits`, which is the same transactions pre-summed per account-month.
-- Clicking a bar on the cashflow chart drills into that month: `flowsForMonth` (`src/client/series.ts`) filters `ledger.flows` to the clicked month and the selected accounts, split into inflow (positive amount) and outflow (negative amount). `sections.ts` renders the result into a `<details id="cashflow-drill">` below the chart and opens it. Changing the filter resets the drill-down to collapsed and empty rather than showing a stale month.
+- Clicking a bar on the cashflow chart drills into that period: `flowsForPeriod` (`src/client/series.ts`) filters `ledger.flows` to the clicked period and the selected accounts, split into inflow (positive amount) and outflow (negative amount). The clicked bar's label is the period key already — a full month ("YYYY-MM") in month grain, or a bare year ("YYYY") in year grain (the default "All time" view, once the window exceeds 24 months) — and matching is by `flow.month.startsWith(period)`, so a year period matches every month in it. `sections.ts` renders the result into a `<details id="cashflow-drill">` below the chart and opens it. Changing the filter resets the drill-down to collapsed and empty rather than showing a stale period.
 
 ## Design and docs
 

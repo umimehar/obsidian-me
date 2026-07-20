@@ -10,7 +10,7 @@ import {
   capitalTrend,
   cashflowSeries,
   costByAccount,
-  flowsForMonth,
+  flowsForPeriod,
   incomeSeries,
   scopeYear,
   taxSummary,
@@ -245,17 +245,25 @@ function flowTable(ledger: SectionsLedger, title: string, flows: LedgerFlow[]): 
   return wrap;
 }
 
+// A clicked cashflow bar's label is either a full month ("YYYY-MM", in
+// month grain) or a bare year ("YYYY", in year grain) — see flowsForPeriod.
+// Months contain a dash; years don't, so that's enough to tell them apart
+// and format the drill-down heading naturally for either.
+function periodLabel(period: string): string {
+  return period.includes("-") ? monthLabel(period) : period;
+}
+
 // Populates and opens the cashflow drill-down for a clicked chart bar. Reset
-// by resetCashflowDrilldown() on every filter change, since a stale month
+// by resetCashflowDrilldown() on every filter change, since a stale
 // selection would otherwise survive a rerender.
-function renderCashflowDrilldown(ledger: SectionsLedger, scope: Scope, month: string): void {
+function renderCashflowDrilldown(ledger: SectionsLedger, scope: Scope, period: string): void {
   const details = document.getElementById("cashflow-drill");
   const body = document.getElementById("cashflow-drill-body");
   if (!(details instanceof HTMLDetailsElement) || !body) return;
   body.textContent = "";
-  const { inflow, outflow } = flowsForMonth(ledger, scope, month);
+  const { inflow, outflow } = flowsForPeriod(ledger, scope, period);
   const heading = document.createElement("h3");
-  heading.textContent = `${monthLabel(month)} — money in / out`;
+  heading.textContent = `${periodLabel(period)} — money in / out`;
   body.append(heading, flowTable(ledger, "Inflow", inflow), flowTable(ledger, "Outflow", outflow));
   details.open = true;
 }
@@ -270,8 +278,8 @@ export function resetCashflowDrilldown(): void {
 function drawCashflowChart(ledger: SectionsLedger, scope: Scope): void {
   const canvas = canvasOf("chart-cashflow");
   if (canvas) {
-    cashflowChart(canvas, cashflowSeries(ledger, scope), (month) =>
-      renderCashflowDrilldown(ledger, scope, month),
+    cashflowChart(canvas, cashflowSeries(ledger, scope), (period) =>
+      renderCashflowDrilldown(ledger, scope, period),
     );
   }
 }

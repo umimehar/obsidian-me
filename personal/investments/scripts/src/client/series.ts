@@ -437,17 +437,22 @@ export function taxSummary(ledger: SeriesLedger, scope: Scope, year: string): Ta
   };
 }
 
-export interface MonthFlows {
+export interface PeriodFlows {
   inflow: LedgerFlow[];
   outflow: LedgerFlow[];
 }
 
 // The scoped account flows (CONTRIB / TRANSFER_IN / TRANSFER_OUT) for one
-// month, split into money in (positive amount) and money out (negative
-// amount, i.e. TRANSFER_OUT). Backs the cashflow chart's drill-down.
-export function flowsForMonth(ledger: SeriesLedger, scope: Scope, month: string): MonthFlows {
+// period, split into money in (positive amount) and money out (negative
+// amount, i.e. TRANSFER_OUT). `period` is either a full month ("YYYY-MM"),
+// matching that month only, or a bare year ("YYYY"), matching every month in
+// it — this is what lets a click on a YEAR-grain cashflow bar drill into the
+// whole year's transactions. Backs the cashflow chart's drill-down.
+export function flowsForPeriod(ledger: SeriesLedger, scope: Scope, period: string): PeriodFlows {
   const accts = new Set(scope.accts);
-  const matching = ledger.flows.filter((f) => f.month === month && accts.has(f.account_id));
+  const matching = ledger.flows.filter(
+    (f) => f.month.startsWith(period) && accts.has(f.account_id),
+  );
   const byDate = (a: LedgerFlow, b: LedgerFlow): number => a.date.localeCompare(b.date);
   return {
     inflow: matching.filter((f) => f.amount > 0).sort(byDate),

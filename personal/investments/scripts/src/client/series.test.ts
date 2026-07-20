@@ -5,7 +5,7 @@ import {
   capitalTrend,
   cashflowSeries,
   costByAccount,
-  flowsForMonth,
+  flowsForPeriod,
   incomeSeries,
   scopeYear,
   taxSummary,
@@ -318,8 +318,8 @@ describe("taxSummary", () => {
   });
 });
 
-describe("flowsForMonth", () => {
-  test("splits scoped-account flows for the month into inflow and outflow", () => {
+describe("flowsForPeriod", () => {
+  test("month period matches only that month", () => {
     const L = ledger({
       flows: [
         flow({ month: "2024-01", date: "2024-01-05", type: "CONTRIB", amount: 100 }),
@@ -328,9 +328,23 @@ describe("flowsForMonth", () => {
         flow({ month: "2024-02", date: "2024-02-01", type: "CONTRIB", amount: 999 }),
       ],
     });
-    const out = flowsForMonth(L, { ris: [0], accts: ["A"] }, "2024-01");
+    const out = flowsForPeriod(L, { ris: [0], accts: ["A"] }, "2024-01");
     expect(out.inflow.map((f) => f.date)).toEqual(["2024-01-05", "2024-01-20"]);
     expect(out.outflow.map((f) => f.date)).toEqual(["2024-01-10"]);
+  });
+
+  test("year period matches every month in that year", () => {
+    const L = ledger({
+      flows: [
+        flow({ month: "2024-01", date: "2024-01-05", type: "CONTRIB", amount: 100 }),
+        flow({ month: "2024-06", date: "2024-06-15", type: "TRANSFER_IN", amount: 40 }),
+        flow({ month: "2024-11", date: "2024-11-02", type: "TRANSFER_OUT", amount: -20 }),
+        flow({ month: "2025-01", date: "2025-01-01", type: "CONTRIB", amount: 999 }),
+      ],
+    });
+    const out = flowsForPeriod(L, { ris: [0], accts: ["A"] }, "2024");
+    expect(out.inflow.map((f) => f.date)).toEqual(["2024-01-05", "2024-06-15"]);
+    expect(out.outflow.map((f) => f.date)).toEqual(["2024-11-02"]);
   });
 
   test("excludes accounts outside the scope", () => {
@@ -340,14 +354,14 @@ describe("flowsForMonth", () => {
         flow({ account_id: "B", month: "2024-01", amount: 200 }),
       ],
     });
-    const out = flowsForMonth(L, { ris: [0], accts: ["A"] }, "2024-01");
+    const out = flowsForPeriod(L, { ris: [0], accts: ["A"] }, "2024-01");
     expect(out.inflow).toHaveLength(1);
     expect(out.inflow[0]?.account_id).toBe("A");
   });
 
   test("no matching flows yields empty arrays", () => {
     const L = ledger({ flows: [] });
-    const out = flowsForMonth(L, { ris: [0], accts: ["A"] }, "2024-01");
+    const out = flowsForPeriod(L, { ris: [0], accts: ["A"] }, "2024-01");
     expect(out).toEqual({ inflow: [], outflow: [] });
   });
 });
