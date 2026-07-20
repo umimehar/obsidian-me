@@ -1,5 +1,5 @@
-import { expect, test } from "bun:test";
-import { computeAnalytics } from "./analytics";
+import { describe, expect, it, test } from "bun:test";
+import { buildGrowth, computeAnalytics } from "./analytics";
 import type { Account, Datastore, Txn } from "./datastore";
 
 function txn(partial: Partial<Txn>): Txn {
@@ -86,4 +86,46 @@ test("credit card rows do not count as cash inflow", () => {
   const txns = [txn({ account_id: "acct_c", type: "CARD_PURCHASE", amount: 37.4 })];
   const series = computeAnalytics(store(txns, [acct("acct_c", "CreditCard")])).ledger.series;
   expect(series.every((s) => s.inflow === 0)).toBe(true);
+});
+
+describe("buildGrowth", () => {
+  const accounts = [
+    { id: "a1", kind: "TFSA", name: "TFSA", short_id: "aaaa", currency: "CAD" },
+    { id: "a2", kind: "NonRegistered", name: "US", short_id: "bbbb", currency: "USD" },
+  ];
+  const holdings = [
+    { account_id: "a1", symbol: "XEQT", qty: 10, acb: 300 },
+    { account_id: "a2", symbol: "AAPL", qty: 2, acb: 200 },
+  ];
+  const prices = {
+    as_of: "2026-07-20T00:00:00Z",
+    fx_usd_cad: 1.4,
+    quotes: {
+      XEQT: { symbol: "XEQT", price: 35, currency: "CAD" },
+      AAPL: { symbol: "AAPL", price: 150, currency: "USD" },
+    },
+  };
+
+  it("computes CAD market value converting USD via fx", () => {
+    const g = buildGrowth(holdings, accounts, prices);
+    // XEQT: 10*35 = 350 (CAD). AAPL: 2*150*1.4 = 420 (CAD).
+    expect(g.total.market).toBe(770);
+    expect(g.total.cost).toBe(500);
+    expect(g.total.gain).toBe(270);
+  });
+
+  it("falls back to cost when a symbol is unpriced and lowers coverage", () => {
+    const g2 = buildGrowth(holdings, accounts, { ...prices, quotes: { XEQT: prices.quotes.XEQT } });
+    expect(g2.total.market).toBe(350 + 200); // AAPL falls back to its 200 cost
+    expect(g2.coverage).toBeCloseTo(300 / 500, 5);
+  });
+
+  it("reports gainPct of 0 when cost is 0", () => {
+    const g = buildGrowth([{ account_id: "a1", symbol: "X", qty: 1, acb: 0 }], accounts, {
+      as_of: "x",
+      fx_usd_cad: 1,
+      quotes: { X: { symbol: "X", price: 5, currency: "CAD" } },
+    });
+    expect(g.total.gainPct).toBe(0);
+  });
 });

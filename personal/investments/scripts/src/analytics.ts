@@ -1,5 +1,6 @@
 // Compute the per-account-month "ledger" dataset the filter-driven page uses.
 import type { Datastore, Txn } from "./datastore";
+import type { PriceSnapshot } from "./prices";
 
 const INCOME_TYPES = new Set(["DIV", "STKDIV", "INT"]);
 const CASH_CURRENCIES = new Set(["CAD", "USD"]);
@@ -122,6 +123,67 @@ function holdingsAcb(store: Datastore): Ledger["holdings"] {
     });
   }
   return out;
+}
+
+export interface GrowthRow {
+  account_id: string;
+  cost: number;
+  market: number;
+  gain: number;
+  gainPct: number;
+}
+export interface Growth {
+  as_of: string | null;
+  coverage: number;
+  accounts: GrowthRow[];
+  total: { cost: number; market: number; gain: number; gainPct: number };
+}
+
+export function buildGrowth(
+  holdings: Ledger["holdings"],
+  accounts: Ledger["accounts"],
+  prices: PriceSnapshot,
+): Growth {
+  const currency = new Map(accounts.map((a) => [a.id, a.currency]));
+  const byAcct = new Map<string, { cost: number; market: number }>();
+  let pricedCost = 0;
+  let totalCost = 0;
+  for (const h of holdings) {
+    const quote = prices.quotes[h.symbol];
+    const acctCcy = currency.get(h.account_id) ?? "CAD";
+    let market = h.acb; // fallback to cost
+    if (quote) {
+      const raw = h.qty * quote.price;
+      const ccy = quote.currency || acctCcy;
+      market = round2(ccy === "USD" ? raw * prices.fx_usd_cad : raw);
+      pricedCost += h.acb;
+    }
+    totalCost += h.acb;
+    const cur = byAcct.get(h.account_id) ?? { cost: 0, market: 0 };
+    cur.cost += h.acb;
+    cur.market += market;
+    byAcct.set(h.account_id, cur);
+  }
+  const rows: GrowthRow[] = [...byAcct.entries()].map(([account_id, v]) => ({
+    account_id,
+    cost: round2(v.cost),
+    market: round2(v.market),
+    gain: round2(v.market - v.cost),
+    gainPct: v.cost > 0 ? round2((v.market - v.cost) / v.cost) : 0,
+  }));
+  const cost = round2(rows.reduce((s, r) => s + r.cost, 0));
+  const market = round2(rows.reduce((s, r) => s + r.market, 0));
+  return {
+    as_of: holdings.length ? prices.as_of : null,
+    coverage: totalCost > 0 ? pricedCost / totalCost : 0,
+    accounts: rows,
+    total: {
+      cost,
+      market,
+      gain: round2(market - cost),
+      gainPct: cost > 0 ? round2((market - cost) / cost) : 0,
+    },
+  };
 }
 
 // Money genuinely put into an account nets across three codes, not one.
