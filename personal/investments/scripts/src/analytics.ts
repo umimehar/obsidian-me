@@ -23,6 +23,19 @@ export interface LedgerSeriesRow {
   outflow: number;
   cash: number | null;
   acb: number | null;
+  interest: number;
+  eligible_dividends: number;
+  foreign_income: number;
+  realized_gain: number;
+}
+
+export interface LedgerFlow {
+  account_id: string;
+  month: string;
+  date: string;
+  type: string;
+  amount: number;
+  description: string;
 }
 
 export interface Ledger {
@@ -31,7 +44,7 @@ export interface Ledger {
   series: LedgerSeriesRow[];
   holdings: Array<{ account_id: string; symbol: string; qty: number; acb: number }>;
   limits: Record<string, Record<string, number>>;
-  tax: Tax;
+  flows: LedgerFlow[];
 }
 
 export interface Analytics {
@@ -40,10 +53,6 @@ export interface Analytics {
 
 const month = (date: string): string => date.slice(0, 7);
 const round2 = (v: number): number => Math.round(v * 100) / 100;
-
-function kindsOf(store: Datastore): Map<string, string> {
-  return new Map(store.accounts.map((a) => [a.masked_id, a.kind]));
-}
 
 interface Position {
   qty: number;
@@ -140,14 +149,26 @@ function holdingsAcb(store: Datastore): Ledger["holdings"] {
 // money was shuffled between your own accounts (see d77c's 2023 setup churn).
 const DEPOSIT_TYPES = new Set(["CONTRIB", "TRANSFER_IN", "TRANSFER_OUT"]);
 
+const TAXABLE_KINDS = new Set(["NonRegistered", "DirectIndexing", "Crypto", "PE", "Other"]);
+
+function taxableAccounts(store: Datastore): Set<string> {
+  return new Set(store.accounts.filter((a) => TAXABLE_KINDS.has(a.kind)).map((a) => a.masked_id));
+}
+
 interface FlowRec {
   contrib: number;
   deposits: number;
   income: number;
   inflow: number;
   outflow: number;
+  interest: number;
+  eligible_dividends: number;
+  foreign_income: number;
 }
 
+// CAD-tagged fields only: contrib/deposits/income/inflow/outflow are cash
+// flow figures, and the currency field is too dirty to convert non-CAD
+// amounts into CAD (see CLAUDE.md).
 function foldFlow(txn: Txn, r: FlowRec): void {
   const { type, amount } = txn;
   if (INCOME_TYPES.has(type) && amount > 0) r.income += amount;
@@ -159,26 +180,103 @@ function foldFlow(txn: Txn, r: FlowRec): void {
   if (type === "TRANSFER_OUT") r.outflow += amount;
 }
 
-type LedgerCore = Omit<Ledger, "tax">;
+// Taxable income splits are not CAD-gated: interest and dividends earned in
+// USD are still real taxable income, just bucketed as foreign income instead
+// of eligible dividends.
+function foldTaxIncome(txn: Txn, r: FlowRec): void {
+  const { type, amount, currency } = txn;
+  if (type === "INT" && amount > 0) r.interest += amount;
+  if ((type === "DIV" || type === "STKDIV") && amount > 0) {
+    if (currency === "USD") r.foreign_income += amount;
+    else if (currency === "CAD") r.eligible_dividends += amount;
+  }
+}
 
-export function buildLedger(store: Datastore): LedgerCore {
-  const acb = acbMonthly(store);
-  const rec = new Map<string, FlowRec>();
-  const cash = new Map<string, [string, number]>();
-  for (const txn of store.transactions) {
-    if (txn.currency !== "CAD") continue;
-    const key = `${txn.account_id}|${month(txn.date)}`;
-    let r = rec.get(key);
-    if (!r) {
-      r = { contrib: 0, deposits: 0, income: 0, inflow: 0, outflow: 0 };
-      rec.set(key, r);
+// Realized capital gain, bucketed by account and the month of the sell.
+// Taxable accounts only, mirroring the account scope Tax previously used —
+// not currency filtered, since a sell's proceeds are what CRA taxes.
+function realizedGainMonthly(store: Datastore, taxable: Set<string>): Map<string, number> {
+  const out = new Map<string, number>();
+  const pos = new Map<string, Position>();
+  const txns = store.transactions
+    .filter((t) => t.symbol && t.quantity !== null && taxable.has(t.account_id))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  for (const t of txns) {
+    const key = `${t.account_id}|${t.symbol}`;
+    let p = pos.get(key);
+    if (!p) {
+      p = { qty: 0, cost: 0 };
+      pos.set(key, p);
     }
-    foldFlow(txn, r);
-    if (txn.balance !== null) {
-      const prev = cash.get(key);
-      if (!prev || txn.date >= prev[0]) cash.set(key, [txn.date, txn.balance]);
+    if (t.type === "BUY" || t.type === "STKDIV") {
+      p.qty += t.quantity ?? 0;
+      if (t.amount < 0) p.cost += -t.amount;
+    } else if (t.type === "SELL" && p.qty > 0) {
+      const q = Math.min(t.quantity ?? 0, p.qty);
+      const costOut = (p.cost / p.qty) * q;
+      const gain = t.amount - costOut; // proceeds are positive on a sell
+      const bucket = `${t.account_id}|${month(t.date)}`;
+      out.set(bucket, (out.get(bucket) ?? 0) + gain);
+      p.cost -= costOut;
+      p.qty -= t.quantity ?? 0;
     }
   }
+  return out;
+}
+
+function buildFlows(store: Datastore): LedgerFlow[] {
+  return store.transactions
+    .filter((t) => DEPOSIT_TYPES.has(t.type))
+    .map((t) => ({
+      account_id: t.account_id,
+      month: month(t.date),
+      date: t.date,
+      type: t.type,
+      amount: t.amount,
+      description: t.description_redacted,
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+export function buildLedger(store: Datastore): Ledger {
+  const acb = acbMonthly(store);
+  const taxable = taxableAccounts(store);
+  const gains = realizedGainMonthly(store, taxable);
+  const rec = new Map<string, FlowRec>();
+  const cash = new Map<string, [string, number]>();
+  const recFor = (key: string): FlowRec => {
+    let r = rec.get(key);
+    if (!r) {
+      r = {
+        contrib: 0,
+        deposits: 0,
+        income: 0,
+        inflow: 0,
+        outflow: 0,
+        interest: 0,
+        eligible_dividends: 0,
+        foreign_income: 0,
+      };
+      rec.set(key, r);
+    }
+    return r;
+  };
+  for (const txn of store.transactions) {
+    const key = `${txn.account_id}|${month(txn.date)}`;
+    if (txn.currency === "CAD") {
+      foldFlow(txn, recFor(key));
+      if (txn.balance !== null) {
+        const prev = cash.get(key);
+        if (!prev || txn.date >= prev[0]) cash.set(key, [txn.date, txn.balance]);
+      }
+    }
+    if (taxable.has(txn.account_id)) foldTaxIncome(txn, recFor(key));
+  }
+  // A sell realizing a gain is not always accompanied by a CAD-tagged or
+  // taxable-income transaction in the same account/month, so make sure its
+  // bucket still gets a series row.
+  for (const key of gains.keys()) recFor(key);
+
   const monthSet = new Set<string>();
   for (const k of rec.keys()) monthSet.add(k.split("|")[1] ?? "");
   for (const k of cash.keys()) monthSet.add(k.split("|")[1] ?? "");
@@ -199,6 +297,10 @@ export function buildLedger(store: Datastore): LedgerCore {
       outflow: round2(r.outflow),
       cash: c ? round2(c[1]) : null,
       acb: acb.has(key) ? round2(acb.get(key) ?? 0) : null,
+      interest: round2(r.interest),
+      eligible_dividends: round2(r.eligible_dividends),
+      foreign_income: round2(r.foreign_income),
+      realized_gain: round2(gains.get(key) ?? 0),
     });
   }
   const active = new Set<string>();
@@ -217,117 +319,10 @@ export function buildLedger(store: Datastore): LedgerCore {
     series,
     holdings: holdingsAcb(store),
     limits: CONTRIBUTION_LIMITS,
+    flows: buildFlows(store),
   };
 }
 
 export function computeAnalytics(store: Datastore): Analytics {
-  const core = buildLedger(store);
-  const currentYear = (store.meta.source_range.end ?? new Date().toISOString()).slice(0, 4);
-  const ledger: Ledger = {
-    ...core,
-    tax: buildTax(store, currentYear),
-  };
-  return { ledger };
-}
-
-export interface TaxYear {
-  year: string;
-  room: Array<{ group: string; used: number; limit: number; remaining: number }>;
-  rrsp_deduction_available: number;
-  income: { interest: number; eligible_dividends: number; foreign_income: number };
-  realized_gains: number;
-}
-export interface Tax {
-  current_year: string;
-  years: TaxYear[];
-}
-
-const TAXABLE_KINDS = new Set(["NonRegistered", "DirectIndexing", "Crypto", "PE", "Other"]);
-const REG_GROUP: Record<string, string> = {
-  TFSA: "TFSA",
-  ManagedTFSA: "TFSA",
-  FHSA: "FHSA",
-  RRSP: "RRSP",
-  RESP: "RESP",
-};
-
-function realizedGainByYear(store: Datastore, taxable: Set<string>): Map<string, number> {
-  const out = new Map<string, number>();
-  const pos = new Map<string, Position>();
-  const txns = store.transactions
-    .filter((t) => t.symbol && t.quantity !== null && taxable.has(t.account_id))
-    .sort((a, b) => a.date.localeCompare(b.date));
-  for (const t of txns) {
-    const key = `${t.account_id}|${t.symbol}`;
-    let p = pos.get(key);
-    if (!p) {
-      p = { qty: 0, cost: 0 };
-      pos.set(key, p);
-    }
-    if (t.type === "BUY" || t.type === "STKDIV") {
-      p.qty += t.quantity ?? 0;
-      if (t.amount < 0) p.cost += -t.amount;
-    } else if (t.type === "SELL" && p.qty > 0) {
-      const q = Math.min(t.quantity ?? 0, p.qty);
-      const costOut = (p.cost / p.qty) * q;
-      const gain = t.amount - costOut; // proceeds are positive on a sell
-      out.set(t.date.slice(0, 4), (out.get(t.date.slice(0, 4)) ?? 0) + gain);
-      p.cost -= costOut;
-      p.qty -= t.quantity ?? 0;
-    }
-  }
-  return out;
-}
-
-export function buildTax(store: Datastore, currentYear: string): Tax {
-  const kinds = kindsOf(store);
-  const taxable = new Set(
-    store.accounts.filter((a) => TAXABLE_KINDS.has(a.kind)).map((a) => a.masked_id),
-  );
-  const years = new Set<string>([currentYear]);
-  for (const t of store.transactions) years.add(t.date.slice(0, 4));
-
-  const gainsByYear = realizedGainByYear(store, taxable);
-
-  const built: TaxYear[] = [...years]
-    .filter((y) => y)
-    .sort()
-    .map((year) => {
-      const income = { interest: 0, eligible_dividends: 0, foreign_income: 0 };
-      const roomUsed: Record<string, number> = { TFSA: 0, FHSA: 0, RRSP: 0, RESP: 0 };
-      for (const t of store.transactions) {
-        if (t.date.slice(0, 4) !== year) continue;
-        const group = REG_GROUP[kinds.get(t.account_id) ?? ""];
-        if (group && t.type === "CONTRIB") roomUsed[group] = (roomUsed[group] ?? 0) + t.amount;
-        if (!taxable.has(t.account_id)) continue;
-        if (t.type === "INT" && t.amount > 0) income.interest += t.amount;
-        if ((t.type === "DIV" || t.type === "STKDIV") && t.amount > 0) {
-          if (t.currency === "USD") income.foreign_income += t.amount;
-          else income.eligible_dividends += t.amount;
-        }
-      }
-      const room = (["TFSA", "FHSA", "RRSP", "RESP"] as const).map((group) => {
-        const limit = CONTRIBUTION_LIMITS[group]?.[year] ?? 0;
-        const used = round2(roomUsed[group] ?? 0);
-        return {
-          group,
-          used,
-          limit,
-          remaining: round2(limit - used),
-        };
-      });
-      const rrsp = room.find((r) => r.group === "RRSP");
-      return {
-        year,
-        room,
-        rrsp_deduction_available: Math.max(rrsp?.remaining ?? 0, 0),
-        income: {
-          interest: round2(income.interest),
-          eligible_dividends: round2(income.eligible_dividends),
-          foreign_income: round2(income.foreign_income),
-        },
-        realized_gains: round2(gainsByYear.get(year) ?? 0),
-      };
-    });
-  return { current_year: currentYear, years: built };
+  return { ledger: buildLedger(store) };
 }

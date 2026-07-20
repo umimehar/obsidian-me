@@ -1,5 +1,5 @@
-import { describe, expect, it, test } from "bun:test";
-import { buildTax, computeAnalytics } from "./analytics";
+import { expect, test } from "bun:test";
+import { computeAnalytics } from "./analytics";
 import type { Account, Datastore, Txn } from "./datastore";
 
 function txn(partial: Partial<Txn>): Txn {
@@ -57,7 +57,7 @@ test("ledger has the expected shape", () => {
   expect(l.months).toContain("2025-03");
   expect(l.series[0]).toMatchObject({ contrib: 500, cash: 500 });
   expect(l.limits.TFSA?.["2025"]).toBe(7000);
-  expect(l.tax).toBeDefined();
+  expect(l.flows).toBeDefined();
 });
 
 test("holdings use adjusted cost base, reduced on sell", () => {
@@ -109,93 +109,74 @@ test("inflow/outflow count external CONTRIB/TRANSFER_IN/TRANSFER_OUT", () => {
   expect(series[0]).toMatchObject({ inflow: 700, outflow: -150 });
 });
 
-describe("buildTax", () => {
-  function txn(p: Partial<Txn>): Txn {
-    return {
-      account_id: "t1",
-      date: "2026-03-01",
-      post_date: null,
-      type: "DIV",
-      raw_type: "",
-      symbol: null,
-      quantity: null,
-      unit_price: null,
-      fx_rate: null,
-      amount: 0,
-      balance: null,
-      currency: "CAD",
-      description_redacted: "",
-      ...p,
-    };
-  }
-  function store(txns: Txn[], kind = "NonRegistered"): Datastore {
-    return {
-      meta: {
-        generated_at: "",
-        schema_version: 1,
-        file_count: 0,
-        txn_count: txns.length,
-        source_range: { start: null, end: null },
-        warnings: { unmapped_types: {} },
-      },
-      accounts: [
-        {
-          masked_id: "t1",
-          kind,
-          name: kind,
-          short_id: "t1t1",
-          currency: "CAD",
-          first_activity: "",
-          last_activity: "",
-          txn_count: txns.length,
-        },
-      ],
-      transactions: txns,
-    };
-  }
+test("CAD dividend in a taxable account lands in eligible_dividends", () => {
+  const txns = [txn({ type: "DIV", amount: 100, currency: "CAD" })];
+  const series = computeAnalytics(store(txns, [acct("acct_a", "NonRegistered")])).ledger.series;
+  expect(series[0]).toMatchObject({ eligible_dividends: 100, foreign_income: 0, interest: 0 });
+});
 
-  it("buckets CAD dividends as eligible and USD dividends as foreign", () => {
-    const t = buildTax(
-      store([
-        txn({ type: "DIV", amount: 100, currency: "CAD" }),
-        txn({ type: "DIV", amount: 50, currency: "USD" }),
-        txn({ type: "INT", amount: 20, currency: "CAD", description_redacted: "Interest earned" }),
-      ]),
-      "2026",
-    );
-    const y = t.years.find((x) => x.year === "2026");
-    expect(y?.income.eligible_dividends).toBe(100);
-    expect(y?.income.foreign_income).toBe(50);
-    expect(y?.income.interest).toBe(20);
-  });
+test("USD dividend in a taxable account lands in foreign_income", () => {
+  const txns = [
+    txn({ type: "DIV", amount: 50, currency: "USD" }),
+    txn({ type: "CONTRIB", amount: 1, currency: "CAD" }),
+  ];
+  const series = computeAnalytics(store(txns, [acct("acct_a", "NonRegistered")])).ledger.series;
+  expect(series[0]).toMatchObject({ foreign_income: 50, eligible_dividends: 0 });
+});
 
-  it("computes realized gains from sells against average cost", () => {
-    const t = buildTax(
-      store([
-        txn({ type: "BUY", symbol: "X", quantity: 10, amount: -100, date: "2026-01-01" }),
-        txn({ type: "SELL", symbol: "X", quantity: 5, amount: 80, date: "2026-02-01" }),
-      ]),
-      "2026",
-    );
-    // avg cost 10/share; sold 5 -> cost 50; proceeds 80 -> gain 30.
-    expect(t.years.find((x) => x.year === "2026")?.realized_gains).toBe(30);
-  });
+test("interest in a taxable account lands in interest", () => {
+  const txns = [txn({ type: "INT", amount: 20, currency: "CAD" })];
+  const series = computeAnalytics(store(txns, [acct("acct_a", "NonRegistered")])).ledger.series;
+  expect(series[0]).toMatchObject({ interest: 20, eligible_dividends: 0, foreign_income: 0 });
+});
 
-  it("excludes registered accounts from taxable income and gains", () => {
-    const t = buildTax(store([txn({ type: "DIV", amount: 100, currency: "CAD" })], "TFSA"), "2026");
-    expect(t.years.find((x) => x.year === "2026")?.income.eligible_dividends).toBe(0);
-  });
+test("a registered account's dividend contributes nothing to the tax splits", () => {
+  const txns = [txn({ type: "DIV", amount: 100, currency: "CAD" })];
+  const series = computeAnalytics(store(txns, [acct("acct_a", "TFSA")])).ledger.series;
+  expect(series[0]).toMatchObject({ eligible_dividends: 0, foreign_income: 0, interest: 0 });
+  // income (the coarse Growth-section figure) is unaffected by the taxable split.
+  expect(series[0]?.income).toBe(100);
+});
 
-  it("reports negative remaining room when used exceeds the annual limit, without a false over flag", () => {
-    // Unused room carries forward from prior years, so exceeding this year's
-    // annual limit is not necessarily an over-contribution — the room entry
-    // must not assert one; it should only report the raw remaining figure.
-    const t = buildTax(
-      store([txn({ type: "CONTRIB", amount: 9000, date: "2026-05-01" })], "TFSA"),
-      "2026",
-    );
-    const room = t.years.find((x) => x.year === "2026")?.room.find((r) => r.group === "TFSA");
-    expect(room).not.toHaveProperty("over");
-    expect(room?.remaining).toBe(7000 - 9000);
+test("a sell produces the right realized_gain in the sell's month", () => {
+  const txns = [
+    txn({ type: "BUY", symbol: "X", quantity: 10, amount: -100, date: "2025-01-01" }),
+    txn({ type: "SELL", symbol: "X", quantity: 5, amount: 80, date: "2025-02-01" }),
+  ];
+  const series = computeAnalytics(store(txns, [acct("acct_a", "NonRegistered")])).ledger.series;
+  // avg cost 10/share; sold 5 -> cost 50; proceeds 80 -> gain 30, in the sell's month.
+  const feb = series.find((s) => s.month === "2025-02");
+  expect(feb?.realized_gain).toBe(30);
+  const jan = series.find((s) => s.month === "2025-01");
+  expect(jan?.realized_gain).toBe(0);
+});
+
+test("flows contains external transfer rows with the redacted description", () => {
+  const txns = [
+    txn({ type: "CONTRIB", amount: 500, date: "2025-03-05", description_redacted: "Contribution" }),
+    txn({
+      type: "TRANSFER_IN",
+      amount: 200,
+      date: "2025-03-10",
+      description_redacted: "Transfer in",
+    }),
+    txn({
+      type: "TRANSFER_OUT",
+      amount: -150,
+      date: "2025-04-01",
+      description_redacted: "Transfer out",
+    }),
+    txn({ type: "BUY", symbol: "L", quantity: 1, amount: -60, date: "2025-03-06" }),
+    txn({ type: "DIV", amount: 10, date: "2025-03-07" }),
+  ];
+  const flows = computeAnalytics(store(txns, [acct("acct_a", "TFSA")])).ledger.flows;
+  expect(flows).toHaveLength(3);
+  expect(flows.map((f) => f.type)).toEqual(["CONTRIB", "TRANSFER_IN", "TRANSFER_OUT"]);
+  expect(flows[0]).toMatchObject({
+    account_id: "acct_a",
+    month: "2025-03",
+    date: "2025-03-05",
+    amount: 500,
+    description: "Contribution",
   });
 });

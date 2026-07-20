@@ -49,6 +49,10 @@ function analytics(): Analytics {
           outflow: 0,
           cash: 10,
           acb: 490,
+          interest: 0,
+          eligible_dividends: 3,
+          foreign_income: 0,
+          realized_gain: 0,
         },
         {
           account_id: "acct_b",
@@ -60,11 +64,15 @@ function analytics(): Analytics {
           outflow: 0,
           cash: 0,
           acb: 200,
+          interest: 0,
+          eligible_dividends: 0,
+          foreign_income: 0,
+          realized_gain: 0,
         },
       ],
       holdings: [{ account_id: "acct_a", symbol: "ZAG", qty: 5, acb: 80 }],
       limits: { TFSA: { "2025": 7000 } },
-      tax: { current_year: "2025", years: [] },
+      flows: [],
     },
   };
 }
