@@ -71,24 +71,83 @@ async function getText(url: string): Promise<string | null> {
   }
 }
 
-// Stooq CSV: "Symbol,Date,Time,Open,High,Low,Close,Volume"; Close is field 6.
+export type GetJson = (url: string) => Promise<unknown | null>;
+
+async function getJson(url: string): Promise<unknown | null> {
+  try {
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(8000),
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+    if (!res.ok) return null;
+    return JSON.parse(await res.text());
+  } catch {
+    return null;
+  }
+}
+
+interface YahooChartResponse {
+  chart?: {
+    result?: Array<{
+      meta?: {
+        regularMarketPrice?: number;
+        currency?: string;
+      };
+    }>;
+  };
+}
+
+async function fetchChartQuote(symbol: string, fetchJson: GetJson): Promise<PriceQuote | null> {
+  try {
+    const base = "https://query1.finance.yahoo.com/v8/finance/chart";
+    const url = `${base}/${encodeURIComponent(symbol)}?interval=1d&range=1d`;
+    const json = (await fetchJson(url)) as YahooChartResponse | null;
+    const meta = json?.chart?.result?.[0]?.meta;
+    const price = meta?.regularMarketPrice;
+    const currency = meta?.currency;
+    if (typeof price !== "number" || price <= 0 || typeof currency !== "string") return null;
+    return { symbol, price, currency };
+  } catch {
+    return null;
+  }
+}
+
+export async function resolveEquity(
+  symbol: string,
+  fetchJson: GetJson,
+): Promise<PriceQuote | null> {
+  const candidates = [
+    symbol,
+    symbol.replace(".", "-"),
+    `${symbol}.TO`,
+    `${symbol}.NE`,
+    `${symbol}.V`,
+  ];
+  for (const candidate of candidates) {
+    const quote = await fetchChartQuote(candidate, fetchJson);
+    if (quote) return { ...quote, symbol };
+  }
+  return null;
+}
+
+export async function resolveCrypto(
+  symbol: string,
+  fetchJson: GetJson,
+): Promise<PriceQuote | null> {
+  const candidates = [`${symbol}-CAD`, `${symbol}-USD`];
+  for (const candidate of candidates) {
+    const quote = await fetchChartQuote(candidate, fetchJson);
+    if (quote) return { ...quote, symbol };
+  }
+  return null;
+}
+
 export const httpSources: PriceSources = {
-  async equity(symbol) {
-    const text = await getText(
-      `https://stooq.com/q/l/?s=${symbol.toLowerCase()}.us&f=sd2t2ohlcv&e=csv`,
-    );
-    if (!text) return null;
-    const line = text.trim().split("\n")[1] ?? text.trim().split("\n")[0];
-    const close = Number.parseFloat((line ?? "").split(",")[6] ?? "");
-    return Number.isFinite(close) && close > 0 ? { symbol, price: close, currency: "USD" } : null;
+  equity(symbol) {
+    return resolveEquity(symbol, getJson);
   },
-  async crypto(symbol) {
-    const text = await getText(
-      `https://stooq.com/q/l/?s=${symbol.toLowerCase()}.v&f=sd2t2ohlcv&e=csv`,
-    );
-    if (!text) return null;
-    const close = Number.parseFloat((text.trim().split("\n")[1] ?? "").split(",")[6] ?? "");
-    return Number.isFinite(close) && close > 0 ? { symbol, price: close, currency: "USD" } : null;
+  crypto(symbol) {
+    return resolveCrypto(symbol, getJson);
   },
   async fxUsdCad() {
     const text = await getText("https://api.frankfurter.app/latest?from=USD&to=CAD");

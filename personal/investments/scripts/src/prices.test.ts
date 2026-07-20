@@ -1,5 +1,11 @@
 import { describe, expect, it } from "bun:test";
-import { type PriceSources, fetchPrices, httpSources } from "./prices";
+import {
+  type PriceSources,
+  fetchPrices,
+  httpSources,
+  resolveCrypto,
+  resolveEquity,
+} from "./prices";
 
 function sources(over: Partial<PriceSources> = {}): PriceSources {
   return {
@@ -74,5 +80,79 @@ describe("httpSources", () => {
     expect(typeof httpSources.equity).toBe("function");
     expect(typeof httpSources.crypto).toBe("function");
     expect(typeof httpSources.fxUsdCad).toBe("function");
+  });
+});
+
+function symbolFromUrl(url: string): string {
+  const match = /\/chart\/([^?]+)\?/.exec(url);
+  return decodeURIComponent(match?.[1] ?? "");
+}
+
+function chartJson(price: number, currency: string): unknown {
+  return { chart: { result: [{ meta: { regularMarketPrice: price, currency } }] } };
+}
+
+function fakeGetJson(hits: Record<string, { price: number; currency: string }>) {
+  return async (url: string): Promise<unknown | null> => {
+    const symbol = symbolFromUrl(url);
+    const hit = hits[symbol];
+    return hit ? chartJson(hit.price, hit.currency) : null;
+  };
+}
+
+describe("resolveEquity", () => {
+  it("returns the first candidate that yields a price", async () => {
+    const getJson = fakeGetJson({ AAPL: { price: 210, currency: "USD" } });
+    const quote = await resolveEquity("AAPL", getJson);
+    expect(quote).toEqual({ symbol: "AAPL", price: 210, currency: "USD" });
+  });
+
+  it("falls through to .TO when bare and dash candidates miss", async () => {
+    const getJson = fakeGetJson({ "XEQT.TO": { price: 33.5, currency: "CAD" } });
+    const quote = await resolveEquity("XEQT", getJson);
+    expect(quote).toEqual({ symbol: "XEQT", price: 33.5, currency: "CAD" });
+  });
+
+  it("returns null when every candidate misses", async () => {
+    const getJson = fakeGetJson({});
+    const quote = await resolveEquity("NOPE", getJson);
+    expect(quote).toBeNull();
+  });
+
+  it("converts a class-share dot to a dash", async () => {
+    const getJson = fakeGetJson({ "BRK-B": { price: 450, currency: "USD" } });
+    const quote = await resolveEquity("BRK.B", getJson);
+    expect(quote).toEqual({ symbol: "BRK.B", price: 450, currency: "USD" });
+  });
+
+  it("never throws when getJson throws", async () => {
+    const getJson = async (): Promise<unknown | null> => {
+      throw new Error("network down");
+    };
+    const quote = await resolveEquity("AAPL", getJson);
+    expect(quote).toBeNull();
+  });
+});
+
+describe("resolveCrypto", () => {
+  it("tries -CAD then -USD and returns the first hit", async () => {
+    const getJson = fakeGetJson({ "BTC-USD": { price: 60000, currency: "USD" } });
+    const quote = await resolveCrypto("BTC", getJson);
+    expect(quote).toEqual({ symbol: "BTC", price: 60000, currency: "USD" });
+  });
+
+  it("prefers -CAD when both resolve", async () => {
+    const getJson = fakeGetJson({
+      "ETH-CAD": { price: 4200, currency: "CAD" },
+      "ETH-USD": { price: 3000, currency: "USD" },
+    });
+    const quote = await resolveCrypto("ETH", getJson);
+    expect(quote).toEqual({ symbol: "ETH", price: 4200, currency: "CAD" });
+  });
+
+  it("returns null when getJson returns null for every candidate", async () => {
+    const getJson = fakeGetJson({});
+    const quote = await resolveCrypto("ZZZ", getJson);
+    expect(quote).toBeNull();
   });
 });
