@@ -404,11 +404,13 @@ const ROOM_GROUP_ORDER = ["TFSA", "FHSA", "RRSP", "RESP"];
 // Tax income, realized gains, and registered room, all filter-aware: summed
 // only over the scoped accounts and the given tax year (see scopeYear).
 // Income/gain fields are 0 for non-taxable accounts at the analytics layer,
-// so summing across the full scope is safe. Room `used` sums `external_in`
-// (real contributions, including external deposits that Wealthsimple coded
-// as TRANSFER_IN rather than CONTRIB) for the scoped accounts in each
-// registered group; there is no OVER flag — unused room carries forward from
-// prior years, so a full bar is not necessarily an over-contribution.
+// so summing across the full scope is safe. Room `used` sums `contrib` (the
+// contributions Wealthsimple explicitly tagged CONTRIB) for the scoped
+// accounts in each registered group. It deliberately does NOT use the gross
+// `external_in`, because a routing/hub account inflates that with deposits
+// that pass straight through to other accounts (see CLAUDE.md's hub caveat).
+// There is no OVER flag — unused room carries forward from prior years, so a
+// full bar is not necessarily an over-contribution.
 export function taxSummary(ledger: SeriesLedger, scope: Scope, year: string): TaxSummary {
   const accts = new Set(scope.accts);
   const kindById = new Map(ledger.accounts.map((a) => [a.id, a.kind]));
@@ -424,7 +426,7 @@ export function taxSummary(ledger: SeriesLedger, scope: Scope, year: string): Ta
     foreignIncome += row.foreign_income;
     realizedGains += row.realized_gain;
     const group = REGISTERED_GROUPS[kindById.get(row.account_id) ?? ""];
-    if (group) used.set(group, (used.get(group) ?? 0) + row.external_in);
+    if (group) used.set(group, (used.get(group) ?? 0) + row.contrib);
   }
   const room = ROOM_GROUP_ORDER.map((group) => {
     const u = used.get(group) ?? 0;

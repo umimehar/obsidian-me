@@ -288,7 +288,7 @@ describe("taxSummary", () => {
     expect(out.interest).toBe(10);
   });
 
-  test("room used sums external_in per registered group; ManagedTFSA shares the TFSA group", () => {
+  test("room used sums contrib per registered group and ignores gross external_in", () => {
     const L = ledger({
       accounts: [
         { id: "A", kind: "TFSA", name: "TFSA A", short_id: "aaaa", currency: "CAD" },
@@ -297,11 +297,12 @@ describe("taxSummary", () => {
       ],
       limits: { TFSA: { "2024": 7000 }, RRSP: { "2024": 31000 } },
       series: [
-        // A is coded CONTRIB (contrib set), B/C arrive as external TRANSFER_IN
-        // (external_in set, contrib left at 0) — both must count as room used.
         row({ account_id: "A", month: "2024-01", contrib: 1000, external_in: 1000 }),
-        row({ account_id: "B", month: "2024-01", contrib: 0, external_in: 500 }),
-        row({ account_id: "C", month: "2024-01", contrib: 0, external_in: 2000 }),
+        row({ account_id: "B", month: "2024-01", contrib: 500, external_in: 500 }),
+        // C is a routing/hub RRSP: coded CONTRIB 2000, but external_in 5000
+        // includes deposits that pass through to other accounts. Only the
+        // 2000 CONTRIB counts as room used; the gross 5000 must be ignored.
+        row({ account_id: "C", month: "2024-01", contrib: 2000, external_in: 5000 }),
       ],
     });
     const out = taxSummary(L, { ris: [0], accts: ["A", "B", "C"] }, "2024");
