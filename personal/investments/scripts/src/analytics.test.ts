@@ -150,10 +150,13 @@ test("internal transfers (TRFINTF/TRFOUTTF/generic TRFOUT) do not count as exter
     }),
   ];
   const series = computeAnalytics(store(txns, [acct("acct_a", "TFSA")])).ledger.series;
+  // external_in/out and the cashflow inflow/outflow exclude internal transfers,
+  // but `deposits` (net money in) includes every transfer: 300 in - 150 out = 150.
+  // These internal transfers cancel across accounts at the portfolio aggregate.
   expect(series[0]).toMatchObject({
     external_in: 0,
     external_out: 0,
-    deposits: 0,
+    deposits: 150,
     inflow: 0,
     outflow: 0,
   });

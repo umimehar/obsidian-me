@@ -147,6 +147,13 @@ const EXTERNAL_IN_CODES = new Set(["EFT", "AFT_IN", "E_TRFIN", "DEP", "TRFIN"]);
 const EXTERNAL_OUT_CODES = new Set(["E_TRFOUT", "P2P_SENT"]);
 const EXTERNAL_OUT_DESC = /money transfer out|e-?transfer/i;
 
+// `deposits` is the net-of-all-transfers money-in figure: CONTRIB plus every
+// TRANSFER_IN and TRANSFER_OUT, netted. Internal transfers between the owner's
+// own accounts appear as a matching out and in that cancel across accounts, so
+// the aggregate equals true net external money in (about $215,013) without the
+// hub-account double counting that summing gross `external_in` produces.
+const DEPOSIT_TYPES = new Set(["CONTRIB", "TRANSFER_IN", "TRANSFER_OUT"]);
+
 // Classifies a transaction as external money in/out, or internal (null).
 // CONTRIB is always external in. TRANSFER_IN/TRANSFER_OUT are external only
 // when the raw statement code (or, for withdrawals, the description) marks
@@ -174,6 +181,7 @@ interface FlowRec {
   contrib: number;
   external_in: number;
   external_out: number;
+  net_deposits: number;
   income: number;
   interest: number;
   eligible_dividends: number;
@@ -187,6 +195,7 @@ function foldFlow(txn: Txn, r: FlowRec): void {
   const { type, amount } = txn;
   if (INCOME_TYPES.has(type) && amount > 0) r.income += amount;
   if (type === "CONTRIB") r.contrib += amount;
+  if (DEPOSIT_TYPES.has(type)) r.net_deposits += amount;
   const ext = externalFlow(txn);
   if (ext === "in") r.external_in += amount;
   if (ext === "out") r.external_out += amount;
@@ -266,6 +275,7 @@ export function buildLedger(store: Datastore): Ledger {
         contrib: 0,
         external_in: 0,
         external_out: 0,
+        net_deposits: 0,
         income: 0,
         interest: 0,
         eligible_dividends: 0,
@@ -307,7 +317,7 @@ export function buildLedger(store: Datastore): Ledger {
       contrib: round2(r.contrib),
       external_in: round2(r.external_in),
       external_out: round2(r.external_out),
-      deposits: round2(r.external_in + r.external_out),
+      deposits: round2(r.net_deposits),
       income: round2(r.income),
       inflow: round2(r.external_in),
       outflow: round2(r.external_out),
