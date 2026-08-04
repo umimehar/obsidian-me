@@ -32,11 +32,11 @@ personal: investments
 
 Task 2 depends on Task 1's constants; Task 3 depends on Task 2's types. That chain is **serial**, correcting an earlier claim that it was parallelisable.
 
-Genuinely concurrent: **Task 1**, **Task 4a** (static markup in `render.ts`), and **Task 7a** (README/CLAUDE.md prose) touch disjoint files and can run together. Everything else is serial. Tasks 4b and 5 both edit `sections.ts` and must not run concurrently.
+Genuinely concurrent: **Task 1** and **Task 4a** (static markup in `render.ts`) touch disjoint files and can run together. **Task 7a** is file-disjoint too, but it documents the RESP rule, so it runs after Task 2 rather than racing it. Everything else is serial. Tasks 4b and 5 both edit `sections.ts` and must not run concurrently.
 
 ## Task 1 — CRA constants on the ledger payload
 
-- [ ] Add to `src/analytics.ts`, exported beside `CONTRIBUTION_LIMITS`: `FHSA_ANNUAL = 8000`, `FHSA_LIFETIME = 40000`, `RESP_LIFETIME = 50000`, `RESP_GRANT_TARGET = 2500`, `RESP_CATCHUP_TARGET = 5000`, `CESG_RATE = 0.2`, `CESG_ANNUAL_BASIC = 500`, `CESG_ANNUAL_MAX = 1000`, `CESG_LIFETIME = 7200`, `TFSA_ROUNDING = 500`, `RRSP_ROUNDING = 10`.
+- [ ] Add to `src/analytics.ts`, exported beside `CONTRIBUTION_LIMITS`: `FHSA_ANNUAL = 8000`, `FHSA_LIFETIME = 40000`, `RESP_LIFETIME = 50000`, `RESP_GRANT_TARGET = 2500`, `RESP_CATCHUP_TARGET = 5000`, `RESP_BENEFICIARY_BIRTH_YEAR = 2025` (owner-supplied, not in any statement — comment it as such, beside `ASSESSED_ROOM`), `CESG_RATE = 0.2`, `CESG_ANNUAL_BASIC = 500`, `CESG_ANNUAL_MAX = 1000`, `CESG_LIFETIME = 7200`, `TFSA_ROUNDING = 500`, `RRSP_ROUNDING = 10`.
 - [ ] Comment why FHSA and RESP are absent from the indexed set: their limits are statutory and do not index.
 - [ ] Emit them as `ledger.registered_rules`, mirroring how `limits` is emitted. Extend the `Ledger` interface and every test fixture that constructs a ledger.
 - [ ] `bun run check` clean.
@@ -51,10 +51,11 @@ Genuinely concurrent: **Task 1**, **Task 4a** (static markup in `render.ts`), an
 - [ ] FHSA never indexes, caps at $40,000 lifetime, and zeroes from `fhsaCloseYear` even if the cap was never reached.
 - [ ] FHSA closure zeroes the balance, records `withdrawn`, and the balance never reappears.
 - [ ] RRSP year one uses `rrspAssessedRemaining`; later years granted room; zero past `rrspLastYear`.
-- [ ] RESP targets $5,000 while CESG catch-up room remains, then $2,500, capped by the $50,000 lifetime including a partial final year.
-- [ ] CESG is bounded by 20% of contribution, $1,000/yr, accrued grant room, remaining lifetime, and `cesgLastYear`.
+- [ ] The RESP target is **derived** per the spec formula (claim all available grant, floor $2,500, ceiling $5,000), not a hardcoded rate schedule. Capped by the $50,000 lifetime including a partial final year.
+- [ ] CESG is bounded by 20% of contribution, the annual cap **minus grant already received in the start year**, accrued grant room, remaining lifetime, and `cesgLastYear`.
 - [ ] `cumulativeIn` excludes the grant; `cumulativeGrant` is separate.
-- [ ] `roomRemaining` follows the spec's per-group definition and is never negative.
+- [ ] `roomRemaining` follows the spec's per-group definition, subtracts `contributedThisYear` plus the top-up in the start year, and is never negative.
+- [ ] `projectYears` receives the CRA figures via `ProjectionInputs.rules`; it defines no constants of its own.
 - [ ] Assert the three statutory invariants (FHSA to exactly $40,000, RESP to exactly $50,000, CESG to exactly $7,200).
 - [ ] Keep `projectYears` under the complexity limit — extract a per-group helper rather than one branchy loop.
 - [ ] The committed fixture reproduces row for row.
@@ -65,10 +66,12 @@ Genuinely concurrent: **Task 1**, **Task 4a** (static markup in `render.ts`), an
 - [ ] Add to `src/client/series.ts` a function returning `ProjectionInputs` for the current scope.
 - [ ] Opening balance per group reuses the existing forward-fill convention (last non-null `acb` plus `cash` at window end). Do not write a second one.
 - [ ] Group mapping reuses `REGISTERED_GROUPS`; ManagedTFSA shares the TFSA group.
-- [ ] **RESP lifetime contributed must include `TRANSFER_IN` deposits, not just `contrib`.** Using `contrib` alone undercounts by $450 against the $50,000 cap.
+- [ ] **RESP lifetime contributed counts every dollar into the account regardless of `raw_type`**, not just `contrib`. Under CRA rules any money landing in an RESP is a contribution except an RESP-to-RESP transfer. Using `contrib` alone undercounts by $450 against the $50,000 cap.
 - [ ] **CESG received comes from `GRANT` transactions**, which exist in the data. Do not assume it.
 - [ ] `rrspAssessedRemaining` is `assessed_room[RRSP][year] − contrib used`, floored at zero. When no NOA figure exists, fall back to the **annual maximum minus contrib used**, also floored at zero — not the bare maximum, which would double-count consumed room.
 - [ ] `fhsaCloseYear` is the FHSA account's `first_activity` year plus 15.
+- [ ] Derive `contributedThisYear` per group and `lifetimeContributed` for FHSA and RESP.
+- [ ] `cesgReceived` sums `GRANT` transactions; `cesgRoomAccrued` is `500 × (startYear − RESP_BENEFICIARY_BIRTH_YEAR + 1)`; `cesgLastYear` is birth year plus 17.
 - [ ] Unit test it: an empty scope, a scope with no registered accounts, and the deposit-inclusive RESP total.
 - [ ] `bun run check` clean.
 
@@ -102,7 +105,7 @@ Genuinely concurrent: **Task 1**, **Task 4a** (static markup in `render.ts`), an
 - [ ] Masking guard on the regenerated page: SIN/card pattern returns zero, no name from `redactions.json` appears.
 - [ ] `bun run check` clean, full suite green.
 
-## Task 7a — Prose docs (concurrent with Task 1)
+## Task 7a — Prose docs (run after Task 2 settles the RESP rule)
 
 - [ ] Add a CLAUDE.md section covering the projection's assumptions and every trap: the unrounded-base rule, the FHSA cap and closure, the RESP lifetime cap, that RESP contributions include deposits, and that CESG received is a `GRANT` transaction.
 - [ ] Update the README to mention the projection section.

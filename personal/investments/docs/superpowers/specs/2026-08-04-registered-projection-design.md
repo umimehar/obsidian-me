@@ -19,7 +19,7 @@ Four premises in the original request do not survive contact with the data:
 - **The FHSA cannot run thirty years.** Lifetime contributions are already $24,000 against a $40,000 statutory cap, so contributions end after 2028. The account itself must close by the end of 2039.
 - **The TFSA limit is not a flat $7,000.** It is indexed and published rounded to the nearest $500.
 - **"Maxing the RRSP limit" means two different numbers.** Year one is the unused assessed room ($37,752). Later years are that year's accrual.
-- **$5,000/yr into the RESP forfeits grant.** It exhausts the $50,000 lifetime room by 2035, before the CESG has time to accrue, losing about $1,700. Contributing $5,000 only while catch-up room exists, then $2,500, captures the full $7,200.
+- **$5,000/yr into the RESP forfeits grant.** It exhausts the $50,000 lifetime room by 2035, before the CESG has time to accrue, losing about $1,700. More precisely: the catch-up actually available is **$450**, claimable this year with $2,250 more. After that, grant room never exceeds $500 in a year, so $2,500/yr captures the full $7,200 and a $5,000 rate would only waste room.
 
 ## Facts established from the data
 
@@ -33,8 +33,11 @@ Not assumptions. Each was read out of `data/datastore.json` and must be derived,
 | CESG received to date | $550 | three `GRANT` transactions ($500, $10, $40) |
 | RRSP assessed room 2026 | $70,752 | `ASSESSED_ROOM`, from the 2025 NOA |
 | RRSP used 2026 | $33,000 | `contrib` across the four RRSP accounts |
+| RESP beneficiary birth year | 2025 | **Owner-supplied, not in any statement.** Stored as `RESP_BENEFICIARY_BIRTH_YEAR` beside `ASSESSED_ROOM` in `analytics.ts`, with a comment naming it as owner input. Drives `cesgRoomAccrued` and `cesgLastYear` |
 
 Two of these are traps. RESP contributions counted for the $50,000 lifetime cap **must include deposits coded `TRANSFER_IN`**, not just `CONTRIB` — using `contrib` alone undercounts by $450. And CESG received is a real `GRANT` transaction type, so it is derivable rather than assumed.
+
+Note that $550 of grant against $3,000 contributed is 18.3%, not 20%: roughly $50 of grant on the 2026-06-29 deposit had not yet been paid as of the last statement. When it lands, `cesgReceived` becomes about $600 and the start-year row shifts. This is expected and is why the figure is derived from `GRANT` rows on every build rather than frozen.
 
 The $550 of CESG already received exceeds the $500 basic annual maximum, which confirms catch-up room is live (the beneficiary was born in 2025, a year before the account opened).
 
@@ -51,8 +54,8 @@ Settled with the owner. Recorded with the trade-off accepted, because several we
 | Investment return | Input, default 8% | Nominal, not real |
 | FHSA contributions | Stop at the $40,000 lifetime cap | Continued saving beyond it is not modelled |
 | FHSA at closure (2039) | Withdrawn for a home purchase, leaves the projection | Balance and its future compounding drop out |
-| RRSP last contribution year | Input, default 2068 | Owner gave April 2068; outside the window, so it never binds today |
-| RESP rate | $5,000/yr while CESG catch-up room lasts, then $2,500/yr | Captures the full $7,200 grant |
+| RRSP last contribution year | Input, default 2068 | Owner turns 71 in 2068, so the last contribution date is 31 Dec 2068. There is no 60-day spillover into 2069. Outside the window, so it never binds today |
+| RESP rate | Derived: contribute what claims all grant available that year, floored at $2,500, ceilinged at $5,000 | Captures the full $7,200 and never wastes room. The $5,000 ceiling does not bind in practice |
 | RESP after the $50,000 cap | Contributions stop, balance keeps compounding | Withdrawal for school is not modelled, so late years overstate |
 | Placement | New section on the Ledger page | Stays one self-contained file |
 | Start year | Derived from `scopeYear`, never a literal | Rolls forward without edits |
@@ -84,8 +87,16 @@ Year one tops up to the limit from what was already contributed *this calendar y
 - **TFSA** — `limit − contributedThisYear` in year one, then the granted limit. Carry-forward is **not** modelled: total unused TFSA room is not derivable from statement data.
 - **FHSA** — `min(8000 − contributedThisYear, 40000 − lifetime)`, and zero after the closure year regardless.
 - **RRSP** — year one is `rrspAssessedRemaining`; later years the granted room; zero after `rrspLastYear`.
-- **RESP** — target is $5,000 while CESG catch-up room remains, otherwise $2,500, capped by `50000 − lifetime`.
-- **CESG** — `min(20% × contribution, 1000, grantRoom, 7200 − received)`, and zero after `cesgLastYear`. Grant room accrues $500/yr from the beneficiary's birth year (2025) and is reduced by grants received. Zero after the year the beneficiary turns 17 (2042).
+- **RESP** — the target is **derived, not a hardcoded rate**:
+
+  ```
+  claimable = min(CESG_ANNUAL_MAX − grantReceivedThisYear, grantRoom, CESG_LIFETIME − received)   // 0 past cesgLastYear
+  target    = min(RESP_CATCHUP_TARGET, max(claimable / CESG_RATE, RESP_GRANT_TARGET − contributedThisYear))
+  contribution = max(0, min(target, 50000 − lifetime))
+  ```
+
+  This contributes exactly enough to claim every grant dollar available, never less than the $2,500 base, never more than the $5,000 ceiling, and never more than the lifetime cap allows. When the grant is exhausted it settles at $2,500/yr, filling the remaining room.
+- **CESG** — `min(20% × contribution, CESG_ANNUAL_MAX − grantReceivedThisYear, grantRoom, 7200 − received)`, and zero after `cesgLastYear`. The annual cap subtracts grants **already received in the start year** — in 2026 that is $550, leaving $450 claimable. Grant room accrues $500/yr from the beneficiary's birth year and is reduced by grants received. Zero after the year the beneficiary turns 17 (2042).
 
 ### Lifecycle events
 
@@ -124,15 +135,15 @@ Abridged, for review:
 
 | Year | TFSA | FHSA | RRSP | RESP | CESG | Cumulative in | Value | Event |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| 2026 | — | — | 37,752 | 2,000 | 400 | 39,752 | 190,771 | |
-| 2027 | 7,000 | 8,000 | 34,490 | 5,000 | 550 | 94,242 | 261,073 | |
-| 2028 | 7,500 | 8,000 | 35,180 | 2,500 | 500 | 147,422 | 335,638 | FHSA cap reached |
-| 2032 | 8,000 | 0 | 38,080 | 2,500 | 500 | 335,812 | 670,732 | |
-| 2039 | 9,000 | 0 | 43,740 | 2,500 | 200 | 701,542 | 1,488,418 | FHSA closed, 128,732 withdrawn; CESG max reached |
-| 2042 | 9,500 | 0 | 46,410 | 2,500 | 0 | 876,062 | 2,063,635 | RESP cap reached |
-| 2056 | 12,500 | 0 | 61,240 | 0 | 0 | 1,788,782 | 7,602,164 | |
+| 2026 | — | — | 37,752 | 2,250 | 450 | 40,002 | 191,071 |  |
+| 2027 | 7,000 | 8,000 | 34,490 | 2,500 | 500 | 91,992 | 258,847 |  |
+| 2028 | 7,500 | 8,000 | 35,180 | 2,500 | 500 | 145,172 | 333,234 | FHSA lifetime cap reached |
+| 2032 | 8,000 | — | 38,080 | 2,500 | 500 | 333,562 | 667,461 |  |
+| 2039 | 9,000 | — | 43,740 | 2,500 | 200 | 699,292 | 1,482,813 | FHSA closed, 128,732 withdrawn; CESG max reached |
+| 2044 | 10,000 | — | 48,290 | 2,250 | — | 991,692 | 2,520,806 | RESP lifetime cap reached |
+| 2056 | 12,500 | — | 61,240 | — | — | 1,788,782 | 7,585,958 |  |
 
-Totals: $1,788,782 contributed, $6,650 further grant (lifetime $7,200), $128,732 withdrawn in 2039, $7,602,164 ending value, about $4,196,933 in today's money at 2% inflation.
+Totals: $1,788,782 contributed, $6,650 further grant (lifetime $7,200), $128,732 withdrawn in 2039, $7,585,958 ending value, about $4,187,987 in today's money at 2% inflation.
 
 Comparison is on values rounded for display, carried unrounded year to year. An implementation that rounds each year's balance will diverge.
 
@@ -155,6 +166,10 @@ export interface ProjectionInputs {
   fhsaCloseYear: string;
   rrspLastYear: string;
   cesgLastYear: string;
+  // The CRA figures, read off `ledger.registered_rules`. Passing them in is what
+  // keeps analytics.ts the single home for statutory numbers; projection.ts must
+  // not define its own copies.
+  rules: RegisteredRules;
 }
 export interface ProjectionYear {
   year: string;
@@ -170,9 +185,9 @@ export interface ProjectionYear {
 export function projectYears(inputs: ProjectionInputs): ProjectionYear[];
 ```
 
-`roomRemaining` is **lifetime** room left where a lifetime cap exists and that year's unused annual room otherwise: FHSA `40000 − lifetime` (zero from the closure year), RESP `50000 − lifetime`, RRSP `granted − contributed` for the year, TFSA the same. It is never negative.
+`roomRemaining` is **lifetime** room left where a lifetime cap exists and that year's unused annual room otherwise: FHSA `40000 − lifetime` (zero from the closure year), RESP `50000 − lifetime`, RRSP `granted − contributed` for the year, TFSA the same. In the start year the annual figures subtract `contributedThisYear` **plus** that year's top-up, so TFSA 2026 reads 0, not 7,000. It is never negative.
 
-**Constants ship through the ledger payload**, the way `limits` and `assessed_room` already do. No client file imports values from `analytics.ts` today, and CLAUDE.md records that the client keeps its own local types. `analytics.ts` owns the CRA figures and emits them; `projection.ts` reads them off the ledger.
+**Constants ship through the ledger payload** as `registered_rules`, the way `limits` and `assessed_room` already do, and reach the engine via `ProjectionInputs.rules`. No client file imports values from `analytics.ts` today, and CLAUDE.md records that the client keeps its own local types. `analytics.ts` owns the CRA figures and emits them; `projection.ts` reads them off the ledger.
 
 Rendering lives in `sections.ts` beside the other pillars. Rate inputs wire like the existing tax-rate input: editing recomputes the projection from the last-rendered inputs and never triggers a full section or chart rerender.
 
@@ -185,7 +200,7 @@ The chart shows three visually distinct series: **contributions**, **government 
 1. The opening balance is cost basis, not market value, so every projected value is understated.
 2. RRSP room assumes the CRA annual maximum, which needs earned income near $188,000.
 3. FHSA contributions stop at the lifetime cap; the account closes in 2039 with its balance withdrawn for a home.
-4. The return is nominal. At 2% inflation the 2056 figure is roughly $4.20M in today's money, not $7.60M.
+4. The return is nominal. At 2% inflation the 2056 figure is roughly $4.19M in today's money, not $7.59M.
 5. RESP withdrawal for school is not modelled, so late years overstate.
 6. Indexed limits are seeded from published figures, so they may lag the real ones by about a year.
 7. When the account selection is partial, room figures are not meaningful, because room is assessed per person.
@@ -209,7 +224,8 @@ Rules:
 - FHSA closure zeroes the balance, records `withdrawn`, and it never reappears.
 - FHSA closing *before* its cap year is reached still zeroes contributions from the closure year.
 - RRSP year one uses the assessed remainder; zero past `rrspLastYear`.
-- RESP switches from $5,000 to $2,500 when catch-up room runs out, and stops at the lifetime cap including the partial final year.
+- The RESP target is derived from claimable grant: it claims all available grant, never drops below $2,500, never exceeds $5,000, and stops at the lifetime cap including the partial final year.
+- The start-year CESG annual cap subtracts grant already received that year ($1,000 − $550 = $450 claimable in 2026).
 - CESG never exceeds 20% of contribution, $1,000/yr, remaining lifetime, or `cesgLastYear`.
 - `cumulativeIn` excludes the grant.
 - Zero return: value equals opening plus cumulative contributions plus grants minus withdrawals, exactly.
