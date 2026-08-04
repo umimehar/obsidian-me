@@ -423,6 +423,17 @@ export const REGISTERED_GROUPS: Record<string, string> = {
 };
 const ROOM_GROUP_ORDER = ["TFSA", "FHSA", "RRSP", "RESP"];
 
+// The projection covers one more group than the room bars do. Corporate has no
+// CRA contribution room, so it must stay out of ROOM_GROUP_ORDER and
+// REGISTERED_GROUPS, but it is real money that compounds and the owner wants it
+// projected. Kept as a separate list so a future group cannot leak into the
+// room bars by accident.
+const PROJECTION_GROUP_OF: Record<string, string> = {
+  ...REGISTERED_GROUPS,
+  Corporate: "Corporate",
+};
+export const PROJECTION_GROUP_ORDER = [...ROOM_GROUP_ORDER, "Corporate"];
+
 // Tax income, realized gains, and registered room, all filter-aware: summed
 // only over the scoped accounts and the given tax year (see scopeYear).
 // Income/gain fields are 0 for non-taxable accounts at the analytics layer,
@@ -479,6 +490,7 @@ export interface ProjectionOptions {
   indexRate: number;
   years: number;
   rrspLastYear: string;
+  corporateAnnual: number;
   // OWNER-SUPPLIED. Not derivable from the ledger payload (see
   // analytics.ts's RESP_BENEFICIARY_BIRTH_YEAR, which this file must not
   // import — it reaches here as an explicit parameter instead).
@@ -491,7 +503,7 @@ function scopedAccountsByGroup(ledger: SeriesLedger, scope: Scope): Map<string, 
   const accts = new Set(scope.accts);
   const byGroup = new Map<string, string[]>();
   for (const a of ledger.accounts) {
-    const group = REGISTERED_GROUPS[a.kind];
+    const group = PROJECTION_GROUP_OF[a.kind];
     if (!group || !accts.has(a.id)) continue;
     const list = byGroup.get(group) ?? [];
     list.push(a.id);
@@ -645,8 +657,9 @@ export function projectionInputs(
     // projected all four regardless, so selecting one TFSA still showed RRSP
     // and FHSA contributions — and inflated them, because those groups then
     // looked like they had contributed nothing yet this year.
-    groups: ROOM_GROUP_ORDER.filter((g) => (byGroup.get(g) ?? []).length > 0),
+    groups: PROJECTION_GROUP_ORDER.filter((g) => (byGroup.get(g) ?? []).length > 0),
     rrspLastYear: opts.rrspLastYear,
+    corporateAnnual: opts.corporateAnnual,
     cesgLastYear: String(opts.respBeneficiaryBirthYear + 17),
     roomBase: {
       TFSA: ledger.limits.TFSA?.[year] ?? 0,
@@ -707,9 +720,9 @@ export function accountAllocations(
     contributed.set(row.account_id, (contributed.get(row.account_id) ?? 0) + row.contrib);
   }
   const out: AccountAllocation[] = [];
-  for (const group of ROOM_GROUP_ORDER) {
+  for (const group of PROJECTION_GROUP_ORDER) {
     const members = ledger.accounts.filter(
-      (a) => accts.has(a.id) && REGISTERED_GROUPS[a.kind] === group,
+      (a) => accts.has(a.id) && PROJECTION_GROUP_OF[a.kind] === group,
     );
     if (members.length === 0) continue;
     const byContrib = members.map((a) => contributed.get(a.id) ?? 0);

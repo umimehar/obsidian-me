@@ -299,7 +299,7 @@ export function incomeChart(canvas: HTMLCanvasElement, data: PeriodSeries): Char
 // survivors — a line keeps its colour whatever else is on screen. Slots are
 // assigned in fixed order and never cycled; past the seventh the palette is
 // exhausted, so the caller must cap the series count rather than reuse a hue.
-const CATEGORICAL_SLOTS = 7;
+const CATEGORICAL_SLOTS = 8;
 
 export interface AccountLine {
   label: string;

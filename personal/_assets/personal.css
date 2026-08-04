@@ -37,7 +37,7 @@
   /* Categorical slots for charts that plot one line per account. Fixed order,
      never cycled: a slot belongs to an entity, so filtering the series list
      must not repaint the survivors. Validated as a set against this surface —
-     worst adjacent pair ΔE 9.1 under protanopia, above the 8 floor, so no
+     worst adjacent pair ΔE 9.1 under protanopia across all eight, above the 8 floor, so no
      secondary encoding is required. Several sit under 3:1 contrast, which is
      why the chart always ships a legend and the year-by-year table. */
   --color-cat-1: #2a78d6;
@@ -47,6 +47,7 @@
   --color-cat-5: #e87ba4;
   --color-cat-6: #008300;
   --color-cat-7: #4a3aa7;
+  --color-cat-8: #e34948;
 
   --color-neutral-100: #f8f4f4;
   --color-neutral-200: #eae7e7;

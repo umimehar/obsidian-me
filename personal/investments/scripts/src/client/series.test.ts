@@ -96,6 +96,7 @@ function projOpts(overrides: Partial<ProjectionOptions> = {}): ProjectionOptions
     indexRate: 0.02,
     years: 30,
     rrspLastYear: "2068",
+    corporateAnnual: 26000,
     respBeneficiaryBirthYear: 2025,
     ...overrides,
   };

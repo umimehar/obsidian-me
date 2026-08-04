@@ -46,6 +46,11 @@ export interface ProjectionInputs {
   // exists. Omitted (undefined) means all four, which is what an unfiltered
   // page wants.
   groups?: readonly string[];
+  // Flat annual contribution to the corporate account. Unlike every other
+  // group this is a plan, not a statutory rule: a corporation has no CRA
+  // contribution room, so there is nothing to derive. Not indexed, because it
+  // is a fixed dollar commitment rather than a limit that CRA raises.
+  corporateAnnual?: number;
   // Unrounded room base per group at startYear (TFSA, RRSP), used to seed
   // indexation going forward. Not derivable from `contributedThisYear`: that
   // field tracks money already contributed, not the published limit itself.
@@ -76,6 +81,7 @@ interface EngineState {
   fhsaValue: number;
   rrspValue: number;
   respValue: number;
+  corporateValue: number;
   fhsaCapNoted: boolean;
   respCapNoted: boolean;
   cesgMaxNoted: boolean;
@@ -256,6 +262,7 @@ function advanceValues(
   state.fhsaValue = state.fhsaValue * (1 + returnRate) + at(contributions, "FHSA");
   state.rrspValue = state.rrspValue * (1 + returnRate) + at(contributions, "RRSP");
   state.respValue = state.respValue * (1 + returnRate) + at(contributions, "RESP") + grant;
+  state.corporateValue = state.corporateValue * (1 + returnRate) + at(contributions, "Corporate");
 }
 
 function applyFhsaClosure(state: EngineState, year: string, closeYear: string): number {
@@ -285,11 +292,14 @@ function buildYear(
     ? respStep(state, isStartYear, year, inputs)
     : { ...zero, grant: 0, notes: [] };
 
+  const corporate = inScope("Corporate") ? (inputs.corporateAnnual ?? 0) : 0;
+
   const contributions = {
     TFSA: tfsa.contribution,
     FHSA: fhsa.contribution,
     RRSP: rrsp.contribution,
     RESP: resp.contribution,
+    Corporate: corporate,
   };
   const grant = resp.grant;
 
@@ -301,7 +311,7 @@ function buildYear(
   notes.push(...resp.notes);
 
   const contributedIn =
-    tfsa.contribution + fhsa.contribution + rrsp.contribution + resp.contribution;
+    tfsa.contribution + fhsa.contribution + rrsp.contribution + resp.contribution + corporate;
 
   return {
     year,
@@ -312,11 +322,15 @@ function buildYear(
       FHSA: fhsa.roomRemaining,
       RRSP: rrsp.roomRemaining,
       RESP: resp.roomRemaining,
+      // No CRA room exists for a corporate account, so there is nothing to
+      // report as remaining.
+      Corporate: 0,
     },
     cumulativeIn: prevCumulativeIn + contributedIn,
     cumulativeGrant: prevCumulativeGrant + grant,
     withdrawn,
-    value: state.tfsaValue + state.fhsaValue + state.rrspValue + state.respValue,
+    value:
+      state.tfsaValue + state.fhsaValue + state.rrspValue + state.respValue + state.corporateValue,
     notes,
   };
 }
@@ -331,6 +345,7 @@ function initialState(inputs: ProjectionInputs): EngineState {
     fhsaValue: at(inputs.opening, "FHSA"),
     rrspValue: at(inputs.opening, "RRSP"),
     respValue: at(inputs.opening, "RESP"),
+    corporateValue: at(inputs.opening, "Corporate"),
     fhsaCapNoted: false,
     respCapNoted: false,
     cesgMaxNoted: false,

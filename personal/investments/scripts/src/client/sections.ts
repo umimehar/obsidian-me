@@ -656,6 +656,9 @@ function renderHoldTable(ledger: SectionsLedger, scope: Scope): void {
 const PROJECTION_YEARS = 30;
 const RRSP_LAST_CONTRIBUTION_YEAR = "2068";
 const RESP_BENEFICIARY_BIRTH_YEAR = 2025;
+// $1,000 biweekly, 26 pay periods a year. A plan the owner set, not a
+// statutory limit, so it is flat rather than indexed.
+const CORPORATE_ANNUAL = 1000 * 26;
 
 // Derived from series.ts's REGISTERED_GROUPS rather than restated, so a new
 // registered kind cannot be added there and silently missed here. Used to
@@ -738,6 +741,7 @@ function projectionRow(row: ProjectionYear): HTMLTableRowElement {
     row.contributions.FHSA,
     row.contributions.RRSP,
     row.contributions.RESP,
+    row.contributions.Corporate,
     row.grant,
     row.cumulativeIn,
     row.cumulativeGrant,
@@ -772,6 +776,7 @@ function renderProjectionTable(rows: ProjectionYear[]): void {
     "#FHSA",
     "#RRSP",
     "#RESP",
+    "#Corporate",
     "#CESG grant",
     "#Cumulative in",
     "#Cumulative grant",
@@ -794,7 +799,8 @@ function renderProjectionSummary(rows: ProjectionYear[], indexRate: number): voi
     host,
     "Total contributed",
     money(figures.contributed),
-    "Your own money across the projection, TFSA/FHSA/RRSP/RESP combined.",
+    "Your own money across the projection: TFSA, FHSA, RRSP, RESP and the " +
+      "corporate account combined. Excludes government grants.",
     true,
   );
   heroCell(
@@ -824,7 +830,7 @@ function drawProjectionChart(rows: ProjectionYear[], opening: number): void {
 // registered account let the routing-hub RRSP — which is always filtered out,
 // holding and contributing nothing — consume a slot and push the largest TFSA
 // past the end of the palette, silently dropping it from the chart entirely.
-const ACCOUNT_COLOUR_SLOTS = 7;
+const ACCOUNT_COLOUR_SLOTS = 8;
 
 function drawableAllocations(ledger: SectionsLedger, year: string): AccountAllocation[] {
   const all: Scope = {
@@ -899,6 +905,10 @@ function projectionCaveats(
       `${(indexRate * 100).toFixed(1)}% indexation rate, the ending value is about ` +
       `${money(figures.endingValueToday)} in today's money, not ${money(figures.endingValue)}.`,
     "RESP withdrawal for school is not modelled, so late years overstate.",
+    "The corporate account contributes a flat $26,000 a year ($1,000 biweekly). That is a " +
+      "plan you set, not a CRA rule, so unlike the registered limits it is not indexed and " +
+      "has no cap. Its investment income is taxed inside the corporation, not on your " +
+      "personal return, so it is excluded from the Tax section above.",
     "Indexed limits are seeded from published figures, so they may lag the real ones by " +
       "about a year.",
     "When the account selection is partial, room figures are not meaningful, because room " +
@@ -962,6 +972,7 @@ function drawProjection(
     years: PROJECTION_YEARS,
     rrspLastYear: RRSP_LAST_CONTRIBUTION_YEAR,
     respBeneficiaryBirthYear: RESP_BENEFICIARY_BIRTH_YEAR,
+    corporateAnnual: CORPORATE_ANNUAL,
   };
   const inputs = projectionInputs(ledger, scope, year, opts);
   const rows = projectYears(inputs);

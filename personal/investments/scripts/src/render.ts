@@ -167,9 +167,10 @@ function projectionSection(): string {
     '<section class="section" id="section-projection">' +
     sectionHead(
       "Thirty Year Projection",
-      "A forward projection of registered contributions, government grants, room " +
-        "remaining, and projected value across the selected accounts, driven by the rate " +
-        "inputs below.",
+      "A forward projection of contributions, government grants, room remaining, and " +
+        "projected value across the selected accounts, driven by the rate inputs below. " +
+        "Registered accounts follow their CRA limits; the corporate account follows a " +
+        "flat plan, since a corporation has no contribution room.",
       "projection-section-title",
     ) +
     '<div class="pillar-tax-rate">' +
