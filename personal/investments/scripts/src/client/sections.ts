@@ -14,7 +14,7 @@ import {
 import type { Scope } from "./filter";
 import { money, monthLabel } from "./format";
 import { allocateByAccount, projectYears } from "./projection";
-import type { ProjectionYear } from "./projection";
+import type { AccountAllocation, ProjectionYear } from "./projection";
 import {
   REGISTERED_GROUPS,
   accountAllocations,
@@ -807,18 +807,30 @@ function drawProjectionChart(rows: ProjectionYear[], opening: number): void {
   if (canvas) projectionChart(canvas, rows, opening);
 }
 
-// Colour slots are assigned from a stable ordering of every registered account
-// in the ledger, not from the filtered list, so an account keeps its colour
-// when the selection changes. The palette has seven slots; a ledger with more
-// registered accounts than that would start reusing hues, so the extras are
-// dropped rather than drawn in a colour that already means something else.
+// Colour slots are assigned over the accounts that are actually drawable,
+// computed against the FULL ledger rather than the current selection, so an
+// account keeps its colour when the filter changes but an undrawable one never
+// reserves a hue. That distinction matters: assigning slots to every
+// registered account let the routing-hub RRSP — which is always filtered out,
+// holding and contributing nothing — consume a slot and push the largest TFSA
+// past the end of the palette, silently dropping it from the chart entirely.
 const ACCOUNT_COLOUR_SLOTS = 7;
 
-function accountColourSlots(ledger: SectionsLedger): Map<string, number> {
-  const registered = ledger.accounts
-    .filter((a) => REGISTERED_KINDS.has(a.kind))
+function drawableAllocations(ledger: SectionsLedger, year: string): AccountAllocation[] {
+  const all: Scope = {
+    ris: ledger.months.map((_, i) => i),
+    accts: ledger.accounts.map((a) => a.id),
+  };
+  return accountAllocations(ledger, all, year).filter((a) => a.share > 0 || a.opening > 0);
+}
+
+function accountColourSlots(ledger: SectionsLedger, year: string): Map<string, number> {
+  const byId = new Map(ledger.accounts.map((a) => [a.id, a]));
+  const ordered = drawableAllocations(ledger, year)
+    .map((a) => byId.get(a.accountId))
+    .filter((a): a is SectionsLedger["accounts"][number] => a !== undefined)
     .sort((a, b) => a.kind.localeCompare(b.kind) || a.short_id.localeCompare(b.short_id));
-  return new Map(registered.map((a, i) => [a.id, i]));
+  return new Map(ordered.map((a, i) => [a.id, i]));
 }
 
 function drawAccountProjectionChart(
@@ -831,7 +843,7 @@ function drawAccountProjectionChart(
 ): void {
   const canvas = canvasOf("chart-projection-accounts");
   if (!canvas) return;
-  const slots = accountColourSlots(ledger);
+  const slots = accountColourSlots(ledger, year);
   const byId = new Map(ledger.accounts.map((a) => [a.id, a]));
   const series = allocateByAccount(
     rows,

@@ -13,6 +13,7 @@ import {
   LineController,
   LineElement,
   LinearScale,
+  LogarithmicScale,
   PointElement,
   Tooltip,
 } from "chart.js";
@@ -29,6 +30,9 @@ Chart.register(
   LineController,
   LineElement,
   LinearScale,
+  // The per-account chart uses a log y-axis; Chart.js v4 is tree-shaken, so a
+  // scale that is not registered silently renders nothing at all.
+  LogarithmicScale,
   PointElement,
   Tooltip,
 );
@@ -321,7 +325,10 @@ export function accountProjectionChart(
           const colour = cssVar(`--color-cat-${(l.slot % CATEGORICAL_SLOTS) + 1}`);
           return {
             label: l.label,
-            data: l.values,
+            // A log axis cannot place zero, and a zeroed line (a closed FHSA)
+            // would otherwise collapse the whole scale. null ends the line at
+            // closure, which is what actually happens to the account.
+            data: l.values.map((v) => (v > 0 ? v : null)),
             borderColor: colour,
             backgroundColor: colour,
             borderWidth: 2,
@@ -347,8 +354,26 @@ export function accountProjectionChart(
         },
         scales: {
           x: { ticks: { color: text, maxTicksLimit: 10 }, grid: { display: false } },
+          // Logarithmic, because thirty years of compounding across accounts
+          // spanning three orders of magnitude is unreadable on a linear axis:
+          // every line sits on the baseline until the last decade. On a log
+          // axis a constant growth rate is a straight line, so the accounts
+          // stay comparable throughout. A closed FHSA reaches exactly zero,
+          // which a log scale cannot plot — Chart.js simply ends the line
+          // there, which reads correctly as the account ceasing to exist.
           y: {
-            ticks: { color: text, callback: (v) => money(Number(v)) },
+            type: "logarithmic",
+            ticks: {
+              color: text,
+              callback: (v) => {
+                const n = Number(v);
+                // Label only the decade gridlines; Chart.js otherwise emits a
+                // dense, unreadable run of intermediate log ticks.
+                if (!(n > 0)) return "";
+                const log = Math.log10(n);
+                return Number.isInteger(log) ? money(n) : "";
+              },
+            },
             grid: { color: grid },
           },
         },

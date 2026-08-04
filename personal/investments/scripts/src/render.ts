@@ -187,7 +187,11 @@ function projectionSection(): string {
     subhead("Projected value by account") +
     '<p class="section-note">Contribution room is assessed per person and per group, not per ' +
     "account, so a group's room is split across its accounts by their recent share of that " +
-    "group's contributions. A line keeps its colour whatever else is selected.</p>" +
+    "group's contributions. A line keeps its colour whatever else is selected. " +
+    "The value axis is logarithmic, so steady growth reads as a straight line and " +
+    "accounts of very different sizes stay comparable \u2014 but equal vertical " +
+    "distances mean equal <em>ratios</em>, not equal dollars. A line that stops has " +
+    "closed.</p>" +
     canvasBox("chart-projection-accounts") +
     '<div id="proj-caveats"></div>' +
     "</section>"
