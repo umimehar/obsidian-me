@@ -13,6 +13,7 @@ function seriesRow(
     external_in: 0,
     external_out: 0,
     deposits: 0,
+    grant: 0,
     income: 0,
     inflow: 0,
     outflow: 0,
@@ -28,7 +29,16 @@ function seriesRow(
 
 function ledger(): SectionsLedger {
   return {
-    accounts: [{ id: "A", kind: "TFSA", name: "TFSA A", short_id: "aaaa", currency: "CAD" }],
+    accounts: [
+      {
+        id: "A",
+        kind: "TFSA",
+        name: "TFSA A",
+        short_id: "aaaa",
+        currency: "CAD",
+        first_activity: "2024-01-01",
+      },
+    ],
     months: ["2024-01", "2024-02", "2024-03"],
     series: [
       seriesRow({

@@ -81,6 +81,7 @@ export interface LedgerSeriesRow {
   external_in: number;
   external_out: number;
   deposits: number;
+  grant: number;
   income: number;
   inflow: number;
   outflow: number;
@@ -102,7 +103,14 @@ export interface LedgerFlow {
 }
 
 export interface Ledger {
-  accounts: Array<{ id: string; kind: string; name: string; short_id: string; currency: string }>;
+  accounts: Array<{
+    id: string;
+    kind: string;
+    name: string;
+    short_id: string;
+    currency: string;
+    first_activity: string;
+  }>;
   months: string[];
   series: LedgerSeriesRow[];
   holdings: Array<{ account_id: string; symbol: string; qty: number; acb: number }>;
@@ -245,6 +253,7 @@ interface FlowRec {
   external_in: number;
   external_out: number;
   net_deposits: number;
+  grant: number;
   income: number;
   interest: number;
   eligible_dividends: number;
@@ -259,6 +268,10 @@ function foldFlow(txn: Txn, r: FlowRec): void {
   if (INCOME_TYPES.has(type) && amount > 0) r.income += amount;
   if (type === "CONTRIB") r.contrib += amount;
   if (DEPOSIT_TYPES.has(type)) r.net_deposits += amount;
+  // Government grant money (CESG on an RESP). Kept out of contrib and
+  // deposits on purpose: it is not the owner's money and does not consume
+  // contribution room, but the projection needs the amount already received.
+  if (type === "GRANT") r.grant += amount;
   const ext = externalFlow(txn);
   if (ext === "in") r.external_in += amount;
   if (ext === "out") r.external_out += amount;
@@ -339,6 +352,7 @@ export function buildLedger(store: Datastore): Ledger {
         external_in: 0,
         external_out: 0,
         net_deposits: 0,
+        grant: 0,
         income: 0,
         interest: 0,
         eligible_dividends: 0,
@@ -381,6 +395,7 @@ export function buildLedger(store: Datastore): Ledger {
       external_in: round2(r.external_in),
       external_out: round2(r.external_out),
       deposits: round2(r.net_deposits),
+      grant: round2(r.grant),
       income: round2(r.income),
       inflow: round2(r.external_in),
       outflow: round2(r.external_out),
@@ -403,6 +418,7 @@ export function buildLedger(store: Datastore): Ledger {
         name: a.name ?? a.kind,
         short_id: a.short_id ?? a.masked_id.slice(5, 9),
         currency: a.currency,
+        first_activity: a.first_activity,
       })),
     months,
     series,

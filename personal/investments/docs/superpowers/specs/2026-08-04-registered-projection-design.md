@@ -96,7 +96,7 @@ Year one tops up to the limit from what was already contributed *this calendar y
   ```
 
   This contributes exactly enough to claim every grant dollar available, never less than the $2,500 base, never more than the $5,000 ceiling, and never more than the lifetime cap allows. When the grant is exhausted it settles at $2,500/yr, filling the remaining room.
-- **CESG** — `min(20% × contribution, CESG_ANNUAL_MAX − grantReceivedThisYear, grantRoom, 7200 − received)`, and zero after `cesgLastYear`. The annual cap subtracts grants **already received in the start year** — in 2026 that is $550, leaving $450 claimable. Grant room accrues $500/yr from the beneficiary's birth year and is reduced by grants received. Zero after the year the beneficiary turns 17 (2042).
+- **CESG** — `min(20% × contribution, CESG_ANNUAL_MAX − grantReceivedThisYear, grantRoom, 7200 − received)`, and zero after `cesgLastYear`. The `7200 − received` bound uses **total lifetime** received — the pre-projection $550 plus cumulative grant during the projection — which is what makes 2039 grant only $200 rather than $500. The annual cap subtracts grants **already received in the start year** — in 2026 that is $550, leaving $450 claimable. Grant room accrues $500/yr from the beneficiary's birth year and is reduced by grants received. Zero after the year the beneficiary turns 17 (2042).
 
 ### Lifecycle events
 
@@ -126,7 +126,7 @@ The full 31-row reference output is committed at `scripts/src/client/__fixtures_
   "contributedThisYear":  { "TFSA": 7000, "FHSA": 8000, "RRSP": 33000, "RESP": 3000 },
   "lifetimeContributed":  { "FHSA": 24000, "RESP": 3000 },
   "cesgReceived": 550, "cesgRoomAccrued": 1000,
-  "rrspAssessedRemaining": 37752,
+  "rrspAssessedRemaining": 37752, "roomBase": { "TFSA": 7000, "RRSP": 33810 },
   "fhsaCloseYear": "2039", "rrspLastYear": "2068", "cesgLastYear": "2042"
 }
 ```
@@ -147,6 +147,8 @@ Totals: $1,788,782 contributed, $6,650 further grant (lifetime $7,200), $128,732
 
 Comparison is on values rounded for display, carried unrounded year to year. An implementation that rounds each year's balance will diverge.
 
+The fixture declares **integer** opening balances totalling $139,462, while the live ledger derivation carries cents ($139,461.37). That $0.63 compounds at 8% over thirty years into roughly a $3 difference in the final value. This is expected: the fixture is a unit-test artifact pinned to its own declared inputs, and the engine reproduces those to the cent. Do not "fix" the engine to close the gap, and do not regenerate the fixture from live data — its whole value is being a fixed baseline.
+
 ## Architecture
 
 `src/client/projection.ts`, new, pure, no DOM and no `node:` imports:
@@ -163,6 +165,13 @@ export interface ProjectionInputs {
   cesgReceived: number;
   cesgRoomAccrued: number;
   rrspAssessedRemaining: number;
+  // The UNROUNDED room base per group at startYear (TFSA and RRSP only), the
+  // seed indexation compounds from. Not derivable from any other field:
+  // contributedThisYear is money already put in, and rrspAssessedRemaining is
+  // the NOA figure used only for the year-one contribution. Populated from
+  // `ledger.limits[group][startYear]`, since projection.ts may not import
+  // values from analytics.ts.
+  roomBase: Record<string, number>;
   fhsaCloseYear: string;
   rrspLastYear: string;
   cesgLastYear: string;

@@ -71,6 +71,8 @@ Genuinely concurrent: **Task 1** and **Task 4a** (static markup in `render.ts`) 
 - [ ] `rrspAssessedRemaining` is `assessed_room[RRSP][year] − contrib used`, floored at zero. When no NOA figure exists, fall back to the **annual maximum minus contrib used**, also floored at zero — not the bare maximum, which would double-count consumed room.
 - [ ] `fhsaCloseYear` is the FHSA account's `first_activity` year plus 15.
 - [ ] Derive `contributedThisYear` per group and `lifetimeContributed` for FHSA and RESP.
+- [ ] `roomBase` = `{ TFSA: limits.TFSA[year], RRSP: limits.RRSP[year] }` — the unrounded indexation seed.
+- [ ] `cesgReceived` uses the new `series[].grant` field; `fhsaCloseYear` uses the new `accounts[].first_activity`. Both were added to the ledger payload in analytics.ts because neither was reachable client-side.
 - [ ] `cesgReceived` sums `GRANT` transactions; `cesgRoomAccrued` is `500 × (startYear − RESP_BENEFICIARY_BIRTH_YEAR + 1)`; `cesgLastYear` is birth year plus 17.
 - [ ] Unit test it: an empty scope, a scope with no registered accounts, and the deposit-inclusive RESP total.
 - [ ] `bun run check` clean.

@@ -34,8 +34,22 @@ function analytics(): Analytics {
   return {
     ledger: {
       accounts: [
-        { id: "acct_a", kind: "TFSA", name: "Managed (TFSA)", short_id: "a4f2", currency: "CAD" },
-        { id: "acct_b", kind: "RRSP", name: "Umar's RRSP", short_id: "9c31", currency: "CAD" },
+        {
+          id: "acct_a",
+          kind: "TFSA",
+          name: "Managed (TFSA)",
+          short_id: "a4f2",
+          currency: "CAD",
+          first_activity: "2025-03-01",
+        },
+        {
+          id: "acct_b",
+          kind: "RRSP",
+          name: "Umar's RRSP",
+          short_id: "9c31",
+          currency: "CAD",
+          first_activity: "2025-03-01",
+        },
       ],
       months: ["2025-03"],
       series: [
@@ -46,6 +60,7 @@ function analytics(): Analytics {
           external_in: 500,
           external_out: 0,
           deposits: 500,
+          grant: 0,
           income: 3,
           inflow: 503,
           outflow: 0,
@@ -63,6 +78,7 @@ function analytics(): Analytics {
           external_in: 200,
           external_out: 0,
           deposits: 200,
+          grant: 0,
           income: 0,
           inflow: 200,
           outflow: 0,

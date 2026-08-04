@@ -9,6 +9,7 @@
 // within the window, matching the old client's running-total semantics.
 import type { Grain, Scope } from "./filter";
 import { grainOf, pkey } from "./filter";
+import type { ProjectionInputs, RegisteredRules } from "./projection";
 
 export interface SeriesAccount {
   id: string;
@@ -16,6 +17,7 @@ export interface SeriesAccount {
   name: string;
   short_id: string;
   currency: string;
+  first_activity: string;
 }
 
 export interface SeriesRow {
@@ -25,6 +27,11 @@ export interface SeriesRow {
   external_in: number;
   external_out: number;
   deposits: number;
+  // Government grant money received into the account this month (CESG on an
+  // RESP). Not a contribution and does not consume room, but the projection
+  // needs the amount already received — this is the only client-reachable
+  // source for it (see the `cesgReceived` derivation below).
+  grant: number;
   income: number;
   inflow: number;
   outflow: number;
@@ -456,6 +463,183 @@ export function taxSummary(ledger: SeriesLedger, scope: Scope, year: string): Ta
 export interface PeriodFlows {
   inflow: LedgerFlow[];
   outflow: LedgerFlow[];
+}
+
+export interface ProjectionOptions {
+  returnRate: number;
+  indexRate: number;
+  years: number;
+  rrspLastYear: string;
+  // OWNER-SUPPLIED. Not derivable from the ledger payload (see
+  // analytics.ts's RESP_BENEFICIARY_BIRTH_YEAR, which this file must not
+  // import — it reaches here as an explicit parameter instead).
+  respBeneficiaryBirthYear: number;
+}
+
+// Registered account ids in scope, grouped the same way taxSummary groups
+// them (ManagedTFSA shares the TFSA group).
+function scopedAccountsByGroup(ledger: SeriesLedger, scope: Scope): Map<string, string[]> {
+  const accts = new Set(scope.accts);
+  const byGroup = new Map<string, string[]>();
+  for (const a of ledger.accounts) {
+    const group = REGISTERED_GROUPS[a.kind];
+    if (!group || !accts.has(a.id)) continue;
+    const list = byGroup.get(group) ?? [];
+    list.push(a.id);
+    byGroup.set(group, list);
+  }
+  return byGroup;
+}
+
+// Opening balance per group: portfolio at cost (last non-null acb, plus cash)
+// at the scope window's end, reusing buildFill's forward-fill — the same
+// convention capitalTrend and costByAccount already use, not a second one.
+function openingByGroup(
+  ledger: SeriesLedger,
+  scope: Scope,
+  byGroup: Map<string, string[]>,
+): Record<string, number> {
+  const { acbFF, cashFF } = buildFill(ledger);
+  const endIdx = scope.ris.length > 0 ? Math.max(...scope.ris) : -1;
+  const out: Record<string, number> = {};
+  for (const [group, ids] of byGroup) {
+    let v = 0;
+    if (endIdx >= 0) {
+      for (const id of ids) v += (acbFF.get(id)?.[endIdx] ?? 0) + (cashFF.get(id)?.[endIdx] ?? 0);
+    }
+    out[group] = v;
+  }
+  return out;
+}
+
+// RESP counts every dollar landing in the account as a contribution for the
+// $50,000 lifetime cap and for what was contributed this year — CRA rule,
+// not just what Wealthsimple tagged CONTRIB. `deposits` (CONTRIB plus every
+// TRANSFER_IN/TRANSFER_OUT, netted) already carries that; `contrib` alone
+// undercounts by the deposits that arrived as a plain transfer in. Every
+// other group keeps using `contrib`, for the routing-hub reason `taxSummary`
+// documents.
+function groupField(group: string): "contrib" | "deposits" {
+  return group === "RESP" ? "deposits" : "contrib";
+}
+
+function sumField(
+  ledger: SeriesLedger,
+  ids: string[],
+  field: "contrib" | "deposits" | "grant",
+  yearFilter?: string,
+): number {
+  if (ids.length === 0) return 0;
+  const idSet = new Set(ids);
+  let total = 0;
+  for (const row of ledger.series) {
+    if (!idSet.has(row.account_id)) continue;
+    if (yearFilter !== undefined && !row.month.startsWith(yearFilter)) continue;
+    total += row[field];
+  }
+  return total;
+}
+
+function contributedThisYearByGroup(
+  ledger: SeriesLedger,
+  byGroup: Map<string, string[]>,
+  year: string,
+): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const group of ROOM_GROUP_ORDER) {
+    out[group] = sumField(ledger, byGroup.get(group) ?? [], groupField(group), year);
+  }
+  return out;
+}
+
+// The FHSA account's first-activity year plus 15 (the account must close by
+// then). Looked up across the full ledger, not the account scope, because
+// the closure date is a fact about the account, not a view of it — filtering
+// it out of the current selection shouldn't change when it closes. Empty
+// string (an immediate, already-closed year in the engine) if no FHSA
+// account exists on the payload at all.
+function fhsaCloseYearFrom(ledger: SeriesLedger): string {
+  let earliest: string | null = null;
+  for (const a of ledger.accounts) {
+    if (a.kind !== "FHSA") continue;
+    if (earliest === null || a.first_activity < earliest) earliest = a.first_activity;
+  }
+  return earliest === null ? "" : String(Number(earliest.slice(0, 4)) + 15);
+}
+
+function buildRules(raw: Record<string, number>): RegisteredRules {
+  const field = (key: string): number => raw[key] ?? 0;
+  return {
+    fhsaAnnual: field("fhsaAnnual"),
+    fhsaLifetime: field("fhsaLifetime"),
+    respLifetime: field("respLifetime"),
+    respGrantTarget: field("respGrantTarget"),
+    respCatchupTarget: field("respCatchupTarget"),
+    cesgRate: field("cesgRate"),
+    cesgAnnualBasic: field("cesgAnnualBasic"),
+    cesgAnnualMax: field("cesgAnnualMax"),
+    cesgLifetime: field("cesgLifetime"),
+    tfsaRounding: field("tfsaRounding"),
+    rrspRounding: field("rrspRounding"),
+  };
+}
+
+// RRSP room the start year can still use: the CRA-assessed figure from a
+// notice of assessment when one exists for the year, else the generic annual
+// maximum — either way minus what's already been contributed this year, and
+// never negative. Falling back to the bare maximum (ignoring what's already
+// used) would double-count room already consumed.
+function rrspAssessedRemaining(
+  ledger: SeriesLedger,
+  year: string,
+  contributedThisYear: Record<string, number>,
+): number {
+  const base = ledger.assessed_room.RRSP?.[year] ?? ledger.limits.RRSP?.[year] ?? 0;
+  return Math.max(0, base - (contributedThisYear.RRSP ?? 0));
+}
+
+// Builds the thirty-year projection's inputs from the current scope: opening
+// balances, room used and available, and lifetime contributions/grants for
+// the registered account groups. Pure — see src/client/projection.ts for the
+// engine this feeds and docs/superpowers/specs/2026-08-04-registered-
+// projection-design.md for the rules this codifies.
+export function projectionInputs(
+  ledger: SeriesLedger,
+  scope: Scope,
+  year: string,
+  opts: ProjectionOptions,
+): ProjectionInputs {
+  const byGroup = scopedAccountsByGroup(ledger, scope);
+  const respIds = byGroup.get("RESP") ?? [];
+  const contributedThisYear = contributedThisYearByGroup(ledger, byGroup, year);
+  const rules = buildRules(ledger.registered_rules);
+
+  return {
+    startYear: year,
+    years: opts.years,
+    returnRate: opts.returnRate,
+    indexRate: opts.indexRate,
+    opening: openingByGroup(ledger, scope, byGroup),
+    contributedThisYear,
+    lifetimeContributed: {
+      FHSA: sumField(ledger, byGroup.get("FHSA") ?? [], "contrib"),
+      RESP: sumField(ledger, respIds, "deposits"),
+    },
+    // Lifetime, not scoped to `year`: how much CESG has ever landed in the
+    // account, read off the `grant` field summed from GRANT-type
+    // transactions (see the SeriesRow doc comment above).
+    cesgReceived: sumField(ledger, respIds, "grant"),
+    cesgRoomAccrued: rules.cesgAnnualBasic * (Number(year) - opts.respBeneficiaryBirthYear + 1),
+    rrspAssessedRemaining: rrspAssessedRemaining(ledger, year, contributedThisYear),
+    fhsaCloseYear: fhsaCloseYearFrom(ledger),
+    rrspLastYear: opts.rrspLastYear,
+    cesgLastYear: String(opts.respBeneficiaryBirthYear + 17),
+    roomBase: {
+      TFSA: ledger.limits.TFSA?.[year] ?? 0,
+      RRSP: ledger.limits.RRSP?.[year] ?? 0,
+    },
+    rules,
+  };
 }
 
 // The scoped account flows (CONTRIB / TRANSFER_IN / TRANSFER_OUT) for one
