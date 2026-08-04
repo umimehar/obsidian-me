@@ -5,7 +5,12 @@
 import type { Filter } from "./filter";
 import { createFilter } from "./filter";
 import type { SectionsLedger } from "./sections";
-import { renderSections, resetCashflowDrilldown, wireTaxRateInput } from "./sections";
+import {
+  renderSections,
+  resetCashflowDrilldown,
+  wireProjectionRateInputs,
+  wireTaxRateInput,
+} from "./sections";
 import { decodeScope, writeScopeUrl } from "./url";
 
 interface LedgerPayload {
@@ -16,7 +21,18 @@ function parseLedger(text: string): SectionsLedger {
   return (JSON.parse(text) as LedgerPayload).ledger;
 }
 
-const EMPTY_IDS = ["headline", "room", "growth-summary", "tax-cards", "acct-table", "hold-table"];
+const EMPTY_IDS = [
+  "headline",
+  "room",
+  "growth-summary",
+  "tax-cards",
+  "proj-summary",
+  "proj-table",
+  "proj-caveats",
+  "proj-warning",
+  "acct-table",
+  "hold-table",
+];
 
 function renderEmptyState(): void {
   const headline = document.getElementById("headline");
@@ -47,6 +63,7 @@ if (dataEl?.textContent) {
     restored.state,
   );
   wireTaxRateInput();
+  wireProjectionRateInputs();
   rerender();
 
   function syncUrl(): void {

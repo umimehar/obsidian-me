@@ -17,6 +17,7 @@ import {
   Tooltip,
 } from "chart.js";
 import { money } from "./format";
+import type { ProjectionYear } from "./projection";
 import type { AccountCost, CashflowSeries, PeriodSeries, TrendSeries } from "./series";
 
 Chart.register(
@@ -181,6 +182,77 @@ export function cashflowChart(
                 return net === undefined ? [] : [`Net: ${money(net)}`];
               },
             },
+          },
+        },
+      },
+    });
+  });
+}
+
+// Stacked bar chart: cumulative contributions, cumulative government grants,
+// and residual growth, one bar per projected year. The three series are
+// deliberately never merged into one — grant money must never read as the
+// owner's own contribution. Growth is the residual: value minus opening
+// minus cumulative contributions minus cumulative grants, so the stack
+// height (contributions + grants + growth) is the projection's gain over
+// its opening balance, not the full portfolio value. Grant and growth use
+// fixed colours rather than CSS custom properties — the stylesheet defines
+// only an accent and a neutral scale, neither distinct enough for a
+// three-way stack — so they stay legible in both light and dark themes.
+const PROJECTION_GRANT_COLOR = "#3d7a9e";
+const PROJECTION_GROWTH_COLOR = "#5b8c5a";
+
+export function projectionChart(
+  canvas: HTMLCanvasElement,
+  rows: ProjectionYear[],
+  opening: number,
+): Chart {
+  const contribColor = cssVar("--color-accent");
+  const text = cssVar("--color-text");
+  return replace(canvas, () => {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("projectionChart: canvas has no 2d context");
+    const contributions = rows.map((r) => r.cumulativeIn);
+    const grants = rows.map((r) => r.cumulativeGrant);
+    const growth = rows.map((r) => r.value - opening - r.cumulativeIn - r.cumulativeGrant);
+    return new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: rows.map((r) => r.year),
+        datasets: [
+          {
+            label: "Contributions",
+            data: contributions,
+            backgroundColor: contribColor,
+            stack: "projection",
+          },
+          {
+            label: "Government grants",
+            data: grants,
+            backgroundColor: PROJECTION_GRANT_COLOR,
+            stack: "projection",
+          },
+          {
+            label: "Growth",
+            data: growth,
+            backgroundColor: PROJECTION_GROWTH_COLOR,
+            stack: "projection",
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        scales: {
+          x: { type: "category", stacked: true },
+          y: { type: "linear", stacked: true },
+        },
+        plugins: {
+          legend: { display: true, labels: { color: text } },
+          tooltip: {
+            enabled: true,
+            callbacks: { label: (item) => `${item.dataset.label}: ${money(item.parsed.y ?? 0)}` },
           },
         },
       },

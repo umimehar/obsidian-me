@@ -1,4 +1,10 @@
-import { capitalVsDepositsChart, cashflowChart, costBars, incomeChart } from "./charts";
+import {
+  capitalVsDepositsChart,
+  cashflowChart,
+  costBars,
+  incomeChart,
+  projectionChart,
+} from "./charts";
 // Populates the four pillar sections (Contributions & Room, Growth, Tax,
 // Detail) from the parsed ledger and the active Scope. Pure aggregation
 // lives in series.ts; this module is the DOM layer on top of it, plus a
@@ -6,18 +12,22 @@ import { capitalVsDepositsChart, cashflowChart, costBars, incomeChart } from "./
 // totalIncome, estimateTax) that are cheap enough to unit test directly.
 import type { Scope } from "./filter";
 import { money, monthLabel } from "./format";
+import { projectYears } from "./projection";
+import type { ProjectionYear } from "./projection";
 import {
   capitalTrend,
   cashflowSeries,
   costByAccount,
   flowsForPeriod,
   incomeSeries,
+  projectionInputs,
   scopeYear,
   taxSummary,
 } from "./series";
 import type {
   AccountCost,
   LedgerFlow,
+  ProjectionOptions,
   SeriesLedger,
   TaxRoomRow,
   TaxSummary,
@@ -622,6 +632,320 @@ function renderHoldTable(ledger: SectionsLedger, scope: Scope): void {
   host.appendChild(table);
 }
 
+// ---- Thirty Year Projection ------------------------------------------------
+
+// Owner-supplied projection constants. Neither is derivable from the ledger
+// payload — see analytics.ts's RESP_BENEFICIARY_BIRTH_YEAR (a fact about a
+// person, not a statement) and the plan's RRSP-last-contribution-year
+// decision (the owner turns 71, and loses RRSP room, in 2068). Duplicated
+// here rather than imported, because src/client/ never imports values from
+// analytics.ts (see this project's CLAUDE.md).
+const PROJECTION_YEARS = 30;
+const RRSP_LAST_CONTRIBUTION_YEAR = "2068";
+const RESP_BENEFICIARY_BIRTH_YEAR = 2025;
+
+// Registered account kinds, mirroring the private REGISTERED_GROUPS keys in
+// series.ts (not exported there). Used only to detect a partial registered
+// selection for the projection's per-person-room warning.
+const REGISTERED_KINDS = new Set(["TFSA", "ManagedTFSA", "FHSA", "RRSP", "RESP"]);
+
+// Pure: clamps a rate reading to [min, max], falling back to the last known
+// good value on anything non-numeric or out of range, rather than letting a
+// bad input reach the engine as NaN. Exported for the boundary tests — the
+// DOM-reading wrapper below is what production code actually calls.
+export function clampProjectionRate(
+  value: number,
+  min: number,
+  max: number,
+  fallback: number,
+): number {
+  return Number.isFinite(value) && value >= min && value <= max ? value : fallback;
+}
+
+// Reads the input, and writes the accepted rate back into the field. The
+// write-back matters: on a rejected entry (out of range, or not a number) the
+// projection falls back to the last good rate, and without this the field
+// would keep displaying the rejected text while the chart showed a different
+// rate. A number on screen that is not the number in use is a bug, so the
+// field is corrected rather than left as typed.
+function clampPercentInput(inputId: string, min: number, max: number, fallback: number): number {
+  const el = document.getElementById(inputId);
+  if (!(el instanceof HTMLInputElement)) return fallback;
+  // An empty field must NOT read as zero. A type=number input blanks itself on
+  // non-numeric text, and Number("") is 0 — which is a legal rate here, so
+  // typing "abc" would silently become a 0% return instead of falling back.
+  const raw = el.value.trim();
+  const accepted = raw === "" ? fallback : clampProjectionRate(Number(raw), min, max, fallback);
+  // Correct a rejected entry, but never mid-typing: rewriting on every
+  // keystroke would fight the user (e.g. "1" on the way to "12"). The change
+  // event fires on commit, when the field is no longer focused.
+  if (Number(raw) !== accepted && el !== document.activeElement) el.value = String(accepted);
+  return accepted;
+}
+
+export interface ProjectionSummaryFigures {
+  contributed: number;
+  grants: number;
+  endingValue: number;
+  endingValueToday: number;
+}
+
+// Pure: the headline figures plus the same-year deflation to today's money
+// at the given indexation rate. Exported so the rate-recompute path (a
+// changed rate produces a changed summary, without touching the DOM) is
+// unit testable.
+export function projectionSummaryFigures(
+  rows: ProjectionYear[],
+  indexRate: number,
+): ProjectionSummaryFigures {
+  const last = rows.at(-1);
+  const years = rows.length - 1;
+  const endingValue = last?.value ?? 0;
+  return {
+    contributed: last?.cumulativeIn ?? 0,
+    grants: last?.cumulativeGrant ?? 0,
+    endingValue,
+    endingValueToday: endingValue / (1 + indexRate) ** years,
+  };
+}
+
+function projectionNoteText(row: ProjectionYear): string {
+  return row.notes
+    .map((n) => (n === "FHSA closed, withdrawn for home" ? `${n} (${money(row.withdrawn)})` : n))
+    .join("; ");
+}
+
+// `Record<string, number>` fields read with noUncheckedIndexedAccess come
+// back possibly-undefined even for the group keys projection.ts always
+// populates (TFSA/FHSA/RRSP/RESP) — this sums them defensively rather than
+// asserting the type away.
+function sumGroups(record: Record<string, number>): number {
+  return Object.values(record).reduce((s, v) => s + (v ?? 0), 0);
+}
+
+function projectionRow(row: ProjectionYear): HTMLTableRowElement {
+  const tr = document.createElement("tr");
+  const yearTd = document.createElement("td");
+  yearTd.textContent = row.year;
+  tr.appendChild(yearTd);
+  const roomRemaining = sumGroups(row.roomRemaining);
+  const amounts = [
+    row.contributions.TFSA,
+    row.contributions.FHSA,
+    row.contributions.RRSP,
+    row.contributions.RESP,
+    row.grant,
+    row.cumulativeIn,
+    row.cumulativeGrant,
+    roomRemaining,
+    row.value,
+  ];
+  for (const v of amounts) {
+    const td = document.createElement("td");
+    td.className = "num";
+    td.textContent = money(v ?? 0);
+    tr.appendChild(td);
+  }
+  const noteTd = document.createElement("td");
+  noteTd.textContent = projectionNoteText(row);
+  tr.appendChild(noteTd);
+  return tr;
+}
+
+function renderProjectionTable(rows: ProjectionYear[]): void {
+  const host = document.getElementById("proj-table");
+  if (!host) return;
+  host.textContent = "";
+  const { table, tbody } = tableEl([
+    "Year",
+    "#TFSA",
+    "#FHSA",
+    "#RRSP",
+    "#RESP",
+    "#CESG grant",
+    "#Cumulative in",
+    "#Cumulative grant",
+    "#Room remaining",
+    "#Value",
+    "Notes",
+  ]);
+  for (const row of rows) tbody.appendChild(projectionRow(row));
+  host.appendChild(table);
+}
+
+function renderProjectionSummary(rows: ProjectionYear[], indexRate: number): void {
+  const host = document.getElementById("proj-summary");
+  if (!host) return;
+  host.textContent = "";
+  const figures = projectionSummaryFigures(rows, indexRate);
+  const years = rows.length - 1;
+  heroCell(
+    host,
+    "Total contributed",
+    money(figures.contributed),
+    "Your own money across the projection, TFSA/FHSA/RRSP/RESP combined.",
+    true,
+  );
+  heroCell(
+    host,
+    "Total grants",
+    money(figures.grants),
+    "Government CESG received on the RESP over the projection.",
+  );
+  heroCell(host, "Ending value", money(figures.endingValue), `Nominal value after ${years} years.`);
+  heroCell(
+    host,
+    "Ending value, today's money",
+    money(figures.endingValueToday),
+    `Deflated at the ${(indexRate * 100).toFixed(1)}% indexation rate — the return is nominal.`,
+  );
+}
+
+function drawProjectionChart(rows: ProjectionYear[], opening: number): void {
+  const canvas = canvasOf("chart-projection");
+  if (canvas) projectionChart(canvas, rows, opening);
+}
+
+// The eight statements the spec requires the page to say, every render —
+// see docs/superpowers/specs/2026-08-04-registered-projection-design.md,
+// "What the page must say". Two are parameterised by this render's actual
+// inputs and outputs rather than the spec's own worked example numbers.
+function projectionCaveats(
+  fhsaCloseYear: string,
+  indexRate: number,
+  figures: ProjectionSummaryFigures,
+): string[] {
+  return [
+    "The opening balance is cost basis, not market value, so every projected value is " +
+      "understated.",
+    "RRSP room assumes the CRA annual maximum, which needs earned income near $188,000.",
+    "FHSA contributions stop at the lifetime cap; the account closes in " +
+      `${fhsaCloseYear} with its balance withdrawn for a home.`,
+    "The return is nominal, not adjusted for inflation. At a " +
+      `${(indexRate * 100).toFixed(1)}% indexation rate, the ending value is about ` +
+      `${money(figures.endingValueToday)} in today's money, not ${money(figures.endingValue)}.`,
+    "RESP withdrawal for school is not modelled, so late years overstate.",
+    "Indexed limits are seeded from published figures, so they may lag the real ones by " +
+      "about a year.",
+    "When the account selection is partial, room figures are not meaningful, because room " +
+      "is assessed per person.",
+    "Thirty years of compounding is a scenario, not a forecast. Small changes to the " +
+      "return input swing the result by millions.",
+  ];
+}
+
+function renderProjectionCaveats(items: string[]): void {
+  const host = document.getElementById("proj-caveats");
+  if (!host) return;
+  host.textContent = "";
+  const list = document.createElement("ul");
+  for (const item of items) {
+    const li = document.createElement("li");
+    li.className = "section-note";
+    li.textContent = item;
+    list.appendChild(li);
+  }
+  host.appendChild(list);
+}
+
+// True only when SOME but not all of the ledger's registered accounts are
+// in scope — a full or empty selection needs no warning, since room is
+// meaningful for "all of them" and moot for "none of them".
+function partialRegisteredSelection(ledger: SectionsLedger, scope: Scope): boolean {
+  const registeredIds = ledger.accounts
+    .filter((a) => REGISTERED_KINDS.has(a.kind))
+    .map((a) => a.id);
+  if (registeredIds.length === 0) return false;
+  const selected = new Set(scope.accts);
+  const selectedCount = registeredIds.filter((id) => selected.has(id)).length;
+  return selectedCount > 0 && selectedCount < registeredIds.length;
+}
+
+function renderProjectionWarning(ledger: SectionsLedger, scope: Scope): void {
+  const host = document.getElementById("proj-warning");
+  if (!host) return;
+  host.textContent = "";
+  if (!partialRegisteredSelection(ledger, scope)) return;
+  const p = document.createElement("p");
+  p.className = "pillar-disclaimer";
+  p.textContent =
+    "Only some registered accounts are selected. Contribution room is assessed per " +
+    "person, not per account, so the room and cap figures below are not meaningful for " +
+    "a subset — switch to all accounts to read them.";
+  host.appendChild(p);
+}
+
+function drawProjection(
+  ledger: SectionsLedger,
+  scope: Scope,
+  year: string,
+  returnRate: number,
+  indexRate: number,
+): void {
+  const opts: ProjectionOptions = {
+    returnRate,
+    indexRate,
+    years: PROJECTION_YEARS,
+    rrspLastYear: RRSP_LAST_CONTRIBUTION_YEAR,
+    respBeneficiaryBirthYear: RESP_BENEFICIARY_BIRTH_YEAR,
+  };
+  const inputs = projectionInputs(ledger, scope, year, opts);
+  const rows = projectYears(inputs);
+  const opening = Object.values(inputs.opening).reduce((s, v) => s + v, 0);
+
+  renderProjectionTable(rows);
+  renderProjectionSummary(rows, indexRate);
+  drawProjectionChart(rows, opening);
+  renderProjectionCaveats(
+    projectionCaveats(inputs.fhsaCloseYear, indexRate, projectionSummaryFigures(rows, indexRate)),
+  );
+  renderProjectionWarning(ledger, scope);
+}
+
+// Mirrors currentTax below: renderProjectionSection() stashes the last
+// scope/ledger/year here on every full rerender, so the rate-input listener
+// (wired once by main.ts) can recompute just the projection — never a full
+// section or chart rerender — from the last-rendered inputs.
+interface ProjectionState {
+  ledger: SectionsLedger;
+  scope: Scope;
+  year: string;
+}
+let currentProjection: ProjectionState | null = null;
+let lastGoodReturnPct = 8;
+let lastGoodIndexPct = 2;
+
+function recomputeProjection(): void {
+  if (!currentProjection) return;
+  const returnPct = clampPercentInput("proj-return", 0, 20, lastGoodReturnPct);
+  const indexPct = clampPercentInput("proj-index", 0, 10, lastGoodIndexPct);
+  lastGoodReturnPct = returnPct;
+  lastGoodIndexPct = indexPct;
+  const { ledger, scope, year } = currentProjection;
+  drawProjection(ledger, scope, year, returnPct / 100, indexPct / 100);
+}
+
+export function wireProjectionRateInputs(): void {
+  for (const id of ["proj-return", "proj-index"]) {
+    const el = document.getElementById(id);
+    if (!(el instanceof HTMLInputElement)) continue;
+    // `input` recomputes live as you type; `change` fires on commit (blur or
+    // Enter), which is when a rejected entry gets corrected back to the rate
+    // actually in use. See clampPercentInput.
+    el.addEventListener("input", recomputeProjection);
+    el.addEventListener("change", recomputeProjection);
+  }
+}
+
+function renderProjectionSection(ledger: SectionsLedger, scope: Scope, year: string): void {
+  currentProjection = { ledger, scope, year };
+  const returnPct = clampPercentInput("proj-return", 0, 20, lastGoodReturnPct);
+  const indexPct = clampPercentInput("proj-index", 0, 10, lastGoodIndexPct);
+  lastGoodReturnPct = returnPct;
+  lastGoodIndexPct = indexPct;
+  drawProjection(ledger, scope, year, returnPct / 100, indexPct / 100);
+}
+
 // ---- entry point --------------------------------------------------------------
 
 export function renderSections(
@@ -647,6 +971,8 @@ export function renderSections(
   setCurrentTax(tax);
   updateTaxEstimate(tax);
   drawIncomeChart(ledger, scope);
+
+  renderProjectionSection(ledger, scope, year);
 
   renderAcctTable(ledger, scope);
   renderHoldTable(ledger, scope);
