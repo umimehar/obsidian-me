@@ -349,6 +349,12 @@ export function accountProjectionChart(
           // besides the year-by-year table below.
           legend: { display: true, position: "bottom", labels: { color: text, boxWidth: 12 } },
           tooltip: {
+            // Largest account first. The default is dataset order, which is
+            // the fixed colour-slot order and says nothing about size, so the
+            // reader has to scan every row to find the biggest. Ranking by
+            // value makes the hovered year readable at a glance. A closed
+            // account's point is null and Chart.js drops it from the list.
+            itemSort: (a, b) => (b.parsed.y ?? 0) - (a.parsed.y ?? 0),
             callbacks: { label: (item) => `${item.dataset.label}: ${money(item.parsed.y ?? 0)}` },
           },
         },
