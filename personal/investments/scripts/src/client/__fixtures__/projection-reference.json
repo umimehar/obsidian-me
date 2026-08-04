@@ -1,0 +1,474 @@
+[
+  {
+    "year": "2026",
+    "contributions": {
+      "TFSA": 0.0,
+      "FHSA": 0.0,
+      "RRSP": 37752.0,
+      "RESP": 2000.0
+    },
+    "grant": 400.0,
+    "cumulativeIn": 39752.0,
+    "cumulativeGrant": 400.0,
+    "withdrawn": 0.0,
+    "value": 190770.96,
+    "notes": []
+  },
+  {
+    "year": "2027",
+    "contributions": {
+      "TFSA": 7000,
+      "FHSA": 8000.0,
+      "RRSP": 34490,
+      "RESP": 5000.0
+    },
+    "grant": 550.0,
+    "cumulativeIn": 94242.0,
+    "cumulativeGrant": 950.0,
+    "withdrawn": 0.0,
+    "value": 261072.64,
+    "notes": []
+  },
+  {
+    "year": "2028",
+    "contributions": {
+      "TFSA": 7500,
+      "FHSA": 8000.0,
+      "RRSP": 35180,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 147422.0,
+    "cumulativeGrant": 1450.0,
+    "withdrawn": 0.0,
+    "value": 335638.45,
+    "notes": [
+      "FHSA lifetime cap reached"
+    ]
+  },
+  {
+    "year": "2029",
+    "contributions": {
+      "TFSA": 7500,
+      "FHSA": 0.0,
+      "RRSP": 35880,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 193302.0,
+    "cumulativeGrant": 1950.0,
+    "withdrawn": 0.0,
+    "value": 408869.52,
+    "notes": []
+  },
+  {
+    "year": "2030",
+    "contributions": {
+      "TFSA": 7500,
+      "FHSA": 0.0,
+      "RRSP": 36600,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 239902.0,
+    "cumulativeGrant": 2450.0,
+    "withdrawn": 0.0,
+    "value": 488679.09,
+    "notes": []
+  },
+  {
+    "year": "2031",
+    "contributions": {
+      "TFSA": 7500,
+      "FHSA": 0.0,
+      "RRSP": 37330,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 287232.0,
+    "cumulativeGrant": 2950.0,
+    "withdrawn": 0.0,
+    "value": 575603.41,
+    "notes": []
+  },
+  {
+    "year": "2032",
+    "contributions": {
+      "TFSA": 8000,
+      "FHSA": 0.0,
+      "RRSP": 38080,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 335812.0,
+    "cumulativeGrant": 3450.0,
+    "withdrawn": 0.0,
+    "value": 670731.69,
+    "notes": []
+  },
+  {
+    "year": "2033",
+    "contributions": {
+      "TFSA": 8000,
+      "FHSA": 0.0,
+      "RRSP": 38840,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 385152.0,
+    "cumulativeGrant": 3950.0,
+    "withdrawn": 0.0,
+    "value": 774230.22,
+    "notes": []
+  },
+  {
+    "year": "2034",
+    "contributions": {
+      "TFSA": 8000,
+      "FHSA": 0.0,
+      "RRSP": 39610,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 435262.0,
+    "cumulativeGrant": 4450.0,
+    "withdrawn": 0.0,
+    "value": 886778.64,
+    "notes": []
+  },
+  {
+    "year": "2035",
+    "contributions": {
+      "TFSA": 8500,
+      "FHSA": 0.0,
+      "RRSP": 40410,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 486672.0,
+    "cumulativeGrant": 4950.0,
+    "withdrawn": 0.0,
+    "value": 1009630.93,
+    "notes": []
+  },
+  {
+    "year": "2036",
+    "contributions": {
+      "TFSA": 8500,
+      "FHSA": 0.0,
+      "RRSP": 41210,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 538882.0,
+    "cumulativeGrant": 5450.0,
+    "withdrawn": 0.0,
+    "value": 1143111.4,
+    "notes": []
+  },
+  {
+    "year": "2037",
+    "contributions": {
+      "TFSA": 8500,
+      "FHSA": 0.0,
+      "RRSP": 42040,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 591922.0,
+    "cumulativeGrant": 5950.0,
+    "withdrawn": 0.0,
+    "value": 1288100.32,
+    "notes": []
+  },
+  {
+    "year": "2038",
+    "contributions": {
+      "TFSA": 9000,
+      "FHSA": 0.0,
+      "RRSP": 42880,
+      "RESP": 2500.0
+    },
+    "grant": 500.0,
+    "cumulativeIn": 646302.0,
+    "cumulativeGrant": 6450.0,
+    "withdrawn": 0.0,
+    "value": 1446028.34,
+    "notes": []
+  },
+  {
+    "year": "2039",
+    "contributions": {
+      "TFSA": 9000,
+      "FHSA": 0.0,
+      "RRSP": 43740,
+      "RESP": 2500.0
+    },
+    "grant": 200.0,
+    "cumulativeIn": 701542.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 128732.4,
+    "value": 1488418.2,
+    "notes": [
+      "FHSA closed, withdrawn for home",
+      "CESG lifetime max reached"
+    ]
+  },
+  {
+    "year": "2040",
+    "contributions": {
+      "TFSA": 9000,
+      "FHSA": 0.0,
+      "RRSP": 44610,
+      "RESP": 2500.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 757652.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 1663601.66,
+    "notes": []
+  },
+  {
+    "year": "2041",
+    "contributions": {
+      "TFSA": 9500,
+      "FHSA": 0.0,
+      "RRSP": 45500,
+      "RESP": 5000.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 817652.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 1856689.79,
+    "notes": []
+  },
+  {
+    "year": "2042",
+    "contributions": {
+      "TFSA": 9500,
+      "FHSA": 0.0,
+      "RRSP": 46410,
+      "RESP": 2500.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 876062.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 2063634.98,
+    "notes": [
+      "RESP lifetime cap reached"
+    ]
+  },
+  {
+    "year": "2043",
+    "contributions": {
+      "TFSA": 10000,
+      "FHSA": 0.0,
+      "RRSP": 47340,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 933402.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 2286065.77,
+    "notes": []
+  },
+  {
+    "year": "2044",
+    "contributions": {
+      "TFSA": 10000,
+      "FHSA": 0.0,
+      "RRSP": 48290,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 991692.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 2527241.04,
+    "notes": []
+  },
+  {
+    "year": "2045",
+    "contributions": {
+      "TFSA": 10000,
+      "FHSA": 0.0,
+      "RRSP": 49250,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1050942.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 2788670.32,
+    "notes": []
+  },
+  {
+    "year": "2046",
+    "contributions": {
+      "TFSA": 10500,
+      "FHSA": 0.0,
+      "RRSP": 50240,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1111682.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 3072503.94,
+    "notes": []
+  },
+  {
+    "year": "2047",
+    "contributions": {
+      "TFSA": 10500,
+      "FHSA": 0.0,
+      "RRSP": 51240,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1173422.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 3380044.26,
+    "notes": []
+  },
+  {
+    "year": "2048",
+    "contributions": {
+      "TFSA": 11000,
+      "FHSA": 0.0,
+      "RRSP": 52270,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1236692.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 3713717.8,
+    "notes": []
+  },
+  {
+    "year": "2049",
+    "contributions": {
+      "TFSA": 11000,
+      "FHSA": 0.0,
+      "RRSP": 53310,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1301002.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 4075125.22,
+    "notes": []
+  },
+  {
+    "year": "2050",
+    "contributions": {
+      "TFSA": 11500,
+      "FHSA": 0.0,
+      "RRSP": 54380,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1366882.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 4467015.24,
+    "notes": []
+  },
+  {
+    "year": "2051",
+    "contributions": {
+      "TFSA": 11500,
+      "FHSA": 0.0,
+      "RRSP": 55470,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1433852.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 4891346.46,
+    "notes": []
+  },
+  {
+    "year": "2052",
+    "contributions": {
+      "TFSA": 11500,
+      "FHSA": 0.0,
+      "RRSP": 56580,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1501932.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 5350734.18,
+    "notes": []
+  },
+  {
+    "year": "2053",
+    "contributions": {
+      "TFSA": 12000,
+      "FHSA": 0.0,
+      "RRSP": 57710,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1571642.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 5848502.91,
+    "notes": []
+  },
+  {
+    "year": "2054",
+    "contributions": {
+      "TFSA": 12000,
+      "FHSA": 0.0,
+      "RRSP": 58860,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1642502.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 6387243.15,
+    "notes": []
+  },
+  {
+    "year": "2055",
+    "contributions": {
+      "TFSA": 12500,
+      "FHSA": 0.0,
+      "RRSP": 60040,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1715042.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 6970762.6,
+    "notes": []
+  },
+  {
+    "year": "2056",
+    "contributions": {
+      "TFSA": 12500,
+      "FHSA": 0.0,
+      "RRSP": 61240,
+      "RESP": 0.0
+    },
+    "grant": 0.0,
+    "cumulativeIn": 1788782.0,
+    "cumulativeGrant": 6650.0,
+    "withdrawn": 0.0,
+    "value": 7602163.61,
+    "notes": []
+  }
+]
