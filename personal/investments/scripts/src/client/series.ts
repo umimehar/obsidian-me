@@ -405,7 +405,7 @@ export interface TaxSummary {
 
 // Registered account kinds collapse into four CRA room groups; ManagedTFSA
 // shares the TFSA group's room with regular TFSA accounts.
-const REGISTERED_GROUPS: Record<string, string> = {
+export const REGISTERED_GROUPS: Record<string, string> = {
   TFSA: "TFSA",
   ManagedTFSA: "TFSA",
   FHSA: "FHSA",

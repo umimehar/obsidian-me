@@ -15,6 +15,7 @@ import { money, monthLabel } from "./format";
 import { projectYears } from "./projection";
 import type { ProjectionYear } from "./projection";
 import {
+  REGISTERED_GROUPS,
   capitalTrend,
   cashflowSeries,
   costByAccount,
@@ -644,10 +645,10 @@ const PROJECTION_YEARS = 30;
 const RRSP_LAST_CONTRIBUTION_YEAR = "2068";
 const RESP_BENEFICIARY_BIRTH_YEAR = 2025;
 
-// Registered account kinds, mirroring the private REGISTERED_GROUPS keys in
-// series.ts (not exported there). Used only to detect a partial registered
-// selection for the projection's per-person-room warning.
-const REGISTERED_KINDS = new Set(["TFSA", "ManagedTFSA", "FHSA", "RRSP", "RESP"]);
+// Derived from series.ts's REGISTERED_GROUPS rather than restated, so a new
+// registered kind cannot be added there and silently missed here. Used to
+// detect a partial registered selection for the per-person-room warning.
+const REGISTERED_KINDS = new Set(Object.keys(REGISTERED_GROUPS));
 
 // Pure: clamps a rate reading to [min, max], falling back to the last known
 // good value on anything non-numeric or out of range, rather than letting a
@@ -715,20 +716,11 @@ function projectionNoteText(row: ProjectionYear): string {
     .join("; ");
 }
 
-// `Record<string, number>` fields read with noUncheckedIndexedAccess come
-// back possibly-undefined even for the group keys projection.ts always
-// populates (TFSA/FHSA/RRSP/RESP) — this sums them defensively rather than
-// asserting the type away.
-function sumGroups(record: Record<string, number>): number {
-  return Object.values(record).reduce((s, v) => s + (v ?? 0), 0);
-}
-
 function projectionRow(row: ProjectionYear): HTMLTableRowElement {
   const tr = document.createElement("tr");
   const yearTd = document.createElement("td");
   yearTd.textContent = row.year;
   tr.appendChild(yearTd);
-  const roomRemaining = sumGroups(row.roomRemaining);
   const amounts = [
     row.contributions.TFSA,
     row.contributions.FHSA,
@@ -737,7 +729,13 @@ function projectionRow(row: ProjectionYear): HTMLTableRowElement {
     row.grant,
     row.cumulativeIn,
     row.cumulativeGrant,
-    roomRemaining,
+    // Only the two LIFETIME ceilings are shown. TFSA and RRSP roomRemaining
+    // are structurally always zero here (a max-out assumption consumes each
+    // year's granted room), and summing an annual figure with a lifetime one
+    // produced a single "Room remaining" number that meant nothing — it read
+    // as available contribution room when it was two unrelated caps added up.
+    row.roomRemaining.FHSA,
+    row.roomRemaining.RESP,
     row.value,
   ];
   for (const v of amounts) {
@@ -765,7 +763,8 @@ function renderProjectionTable(rows: ProjectionYear[]): void {
     "#CESG grant",
     "#Cumulative in",
     "#Cumulative grant",
-    "#Room remaining",
+    "#FHSA left (lifetime)",
+    "#RESP left (lifetime)",
     "#Value",
     "Notes",
   ]);

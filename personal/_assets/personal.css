@@ -27,6 +27,13 @@
   --color-accent:  #b68235;
   --color-divider: color-mix(in srgb, #201f1d 16%, transparent);
 
+  /* Categorical series colours, for charts that stack more than one kind of
+     money. The accent plus the neutral scale cannot carry these: neutrals are
+     greys, and accent shades are one hue, so a three-way stack would not be
+     distinguishable. Distinct hues, matched in weight to the accent. */
+  --color-series-grant:  #3d7a9e;
+  --color-series-growth: #5b8c5a;
+
   --color-neutral-100: #f8f4f4;
   --color-neutral-200: #eae7e7;
   --color-neutral-300: #d7d3d3;

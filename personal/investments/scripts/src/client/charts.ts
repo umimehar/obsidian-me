@@ -196,11 +196,10 @@ export function cashflowChart(
 // minus cumulative contributions minus cumulative grants, so the stack
 // height (contributions + grants + growth) is the projection's gain over
 // its opening balance, not the full portfolio value. Grant and growth use
-// fixed colours rather than CSS custom properties — the stylesheet defines
-// only an accent and a neutral scale, neither distinct enough for a
-// three-way stack — so they stay legible in both light and dark themes.
-const PROJECTION_GRANT_COLOR = "#3d7a9e";
-const PROJECTION_GROWTH_COLOR = "#5b8c5a";
+// the two categorical series tokens added to personal.css: the accent and the
+// neutral scale cannot carry a three-way stack (neutrals are greys, accent
+// shades are one hue), so grant and growth get their own hues. Read through
+// cssVar like every other chart, so the palette stays in the stylesheet.
 
 export function projectionChart(
   canvas: HTMLCanvasElement,
@@ -208,6 +207,8 @@ export function projectionChart(
   opening: number,
 ): Chart {
   const contribColor = cssVar("--color-accent");
+  const grantColor = cssVar("--color-series-grant");
+  const growthColor = cssVar("--color-series-growth");
   const text = cssVar("--color-text");
   return replace(canvas, () => {
     const ctx = canvas.getContext("2d");
@@ -229,13 +230,13 @@ export function projectionChart(
           {
             label: "Government grants",
             data: grants,
-            backgroundColor: PROJECTION_GRANT_COLOR,
+            backgroundColor: grantColor,
             stack: "projection",
           },
           {
             label: "Growth",
             data: growth,
-            backgroundColor: PROJECTION_GROWTH_COLOR,
+            backgroundColor: growthColor,
             stack: "projection",
           },
         ],
