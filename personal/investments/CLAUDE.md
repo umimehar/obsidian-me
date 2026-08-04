@@ -87,6 +87,22 @@ There is a hub-account caveat worth keeping in mind. Per-account `external_in` c
 - A restored `period` is only reopened when it still exists in the current scope's cashflow labels; a stale one is dropped and scrubbed from the URL. Changing the filter clears it, matching `resetCashflowDrilldown`.
 - Unticking one of 16 accounts writes the other 15 into the URL. That is verbose but correct; there is deliberately no "exclude" form, since two ways to express one selection is not worth the readability.
 
+## The thirty year projection
+
+`src/client/projection.ts` is a pure engine: `projectYears(inputs)` returns one row per year. `src/client/series.ts`'s `projectionInputs()` derives its inputs from the ledger and the current scope. Rendering is a fourth pillar in `sections.ts`. The spec is `docs/superpowers/specs/2026-08-04-registered-projection-design.md`, and `src/client/__fixtures__/projection-reference.json` is the 31-row regression baseline.
+
+Five traps, each of which has bitten once:
+
+- **Indexation compounds an UNROUNDED base.** Rounding is a CRA publication rule applied to the figure handed back, never carried into the next year. Compounding the rounded value silently pins the TFSA at $7,000 forever, because $7,000 × 1.02 rounds back to $7,000. `roomBase` on `ProjectionInputs` carries the seed; it is not derivable from any other field, since `contributedThisYear` is money already put in.
+- **FHSA is statutory, not indexed**, and has two separate endings: contributions stop at the $40,000 lifetime cap (2028), and the account itself closes 15 years after opening (2039, from `first_activity`), at which point the whole balance leaves the projection as a home purchase.
+- **RESP contributions counted against the $50,000 lifetime cap are `deposits`, not `contrib`.** Money arriving as a `TRANSFER_IN`/`DEP` is still a contribution to CRA. Using `contrib` undercounts by $450 in the real data.
+- **CESG received is derived from `series[].grant`, not assumed.** `GRANT` transactions are real but were unreachable client-side until `grant` was added to the series row: `ledger.flows` filters on `externalFlow()`, which never classifies `GRANT`. `accounts[].first_activity` was added for the same reason. The `7200 − received` bound must use TOTAL lifetime received (pre-projection plus in-projection), which is what makes 2039's grant $200 rather than $500.
+- **The RESP contribution target is derived, never a hardcoded rate.** It contributes exactly what claims the grant available that year, floored at $2,500 and ceilinged at $5,000. A flat $5,000/yr exhausts the $50,000 room by 2035 and forfeits about $1,700 of grant; the real catch-up available was only $450.
+
+The fixture declares integer opening balances ($139,462) while live derivation carries cents ($139,461.37), so the live projection ends about $3 below the fixture. That is expected. Do not "fix" the engine to close it and do not regenerate the fixture from live data — its value is being a fixed baseline.
+
+`RESP_BENEFICIARY_BIRTH_YEAR` in `analytics.ts` is the one owner-supplied figure in a file otherwise made of published CRA numbers. It reaches the client as an explicit parameter, never an import.
+
 ## Design and docs
 
 - The spec and implementation plan live in `docs/superpowers/`.
