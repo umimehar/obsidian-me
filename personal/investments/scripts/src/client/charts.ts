@@ -17,7 +17,7 @@ import {
   PointElement,
   Tooltip,
 } from "chart.js";
-import { money } from "./format";
+import { accountLabel, money } from "./format";
 import type { ProjectionYear } from "./projection";
 import type { AccountCost, CashflowSeries, PeriodSeries, TrendSeries } from "./series";
 
@@ -113,7 +113,7 @@ export function costBars(canvas: HTMLCanvasElement, rows: AccountCost[]): Chart 
     return new Chart(ctx, {
       type: "bar",
       data: {
-        labels: rows.map((r) => `${r.kind} ${r.short_id}`),
+        labels: rows.map((r) => accountLabel(r)),
         datasets: [
           { label: "At cost", data: rows.map((r) => r.cost), backgroundColor: accent },
           {

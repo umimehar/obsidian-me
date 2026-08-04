@@ -11,6 +11,19 @@ import {
 import { type RawRow, SCHEMA_CARD, discoverCsvs, parseCsv } from "./parse";
 
 const SCHEMA_VERSION = 1;
+
+// Display names, keyed by `short_id` — the 4-char hash prefix the page already
+// shows, never the real account number, which must never reach source control.
+// The owner asked for these by name to tell four RRSPs apart; see this
+// project's CLAUDE.md. Accounts absent here fall back to their kind.
+const ACCOUNT_LABELS: Record<string, string> = {
+  "2318": "Umar RRSP",
+  d6d9: "Umar RRSP PE",
+  "97ab": "Maham Spousal RRSP",
+  // 8cd3 is a staging account: 81,057 in, 81,057 out, ends at zero. It routes
+  // contributions to the three RRSPs above and holds nothing of its own.
+  "8cd3": "RRSP staging",
+};
 const KNOWN_OTHER = new Set(["ROC"]);
 
 export interface Txn {
@@ -94,7 +107,7 @@ function touchAccount(
     acct = {
       masked_id: accountId,
       kind,
-      name: kind,
+      name: ACCOUNT_LABELS[shortId] ?? kind,
       short_id: shortId,
       currency: txn.currency,
       first_activity: txn.date,

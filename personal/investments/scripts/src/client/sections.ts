@@ -12,7 +12,7 @@ import {
 // handful of small pure helpers (totalContributed, totalDeposits,
 // totalIncome, estimateTax) that are cheap enough to unit test directly.
 import type { Scope } from "./filter";
-import { money, monthLabel } from "./format";
+import { accountLabel, money, monthLabel } from "./format";
 import { allocateByAccount, projectYears } from "./projection";
 import type { AccountAllocation, ProjectionYear } from "./projection";
 import {
@@ -232,14 +232,16 @@ function renderRoomBars(room: TaxRoomRow[], year: string): void {
   host.appendChild(note);
 }
 
-function accountLabel(ledger: SectionsLedger, accountId: string): string {
+// Resolves an id to its display label, deferring to format.ts's accountLabel
+// so every surface composes the label the same way.
+function labelForAccountId(ledger: SectionsLedger, accountId: string): string {
   const a = ledger.accounts.find((acct) => acct.id === accountId);
-  return a ? `${a.kind} ${a.short_id}` : accountId;
+  return a ? accountLabel(a) : accountId;
 }
 
 function flowRow(ledger: SectionsLedger, f: LedgerFlow): HTMLTableRowElement {
   const tr = document.createElement("tr");
-  for (const v of [f.date, accountLabel(ledger, f.account_id), f.type]) {
+  for (const v of [f.date, labelForAccountId(ledger, f.account_id), f.type]) {
     const td = document.createElement("td");
     td.textContent = v;
     tr.appendChild(td);
@@ -454,6 +456,7 @@ function drawIncomeChart(ledger: SectionsLedger, scope: Scope): void {
 
 interface AcctRow {
   kind: string;
+  name: string;
   short_id: string;
   contrib: number;
   deposits: number;
@@ -494,6 +497,7 @@ function buildAcctRows(ledger: SectionsLedger, scope: Scope): AcctRow[] {
     const f = flows.get(a.id) ?? { contrib: 0, deposits: 0, income: 0 };
     rows.push({
       kind: a.kind,
+      name: a.name,
       short_id: a.short_id,
       contrib: f.contrib,
       deposits: f.deposits,
@@ -858,7 +862,7 @@ function drawAccountProjectionChart(
     .map((s) => {
       const a = byId.get(s.accountId);
       return {
-        label: a ? `${a.kind} ${a.short_id}` : s.accountId,
+        label: a ? accountLabel(a) : s.accountId,
         slot: slots.get(s.accountId) ?? 0,
         values: s.values,
       };

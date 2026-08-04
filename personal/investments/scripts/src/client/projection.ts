@@ -40,6 +40,12 @@ export interface ProjectionInputs {
   fhsaCloseYear: string;
   rrspLastYear: string;
   cesgLastYear: string;
+  // The registered groups the current account selection actually covers. A
+  // group with no selected account contributes nothing and holds nothing: the
+  // projection describes the accounts on screen, not every account that
+  // exists. Omitted (undefined) means all four, which is what an unfiltered
+  // page wants.
+  groups?: readonly string[];
   // Unrounded room base per group at startYear (TFSA, RRSP), used to seed
   // indexation going forward. Not derivable from `contributedThisYear`: that
   // field tracks money already contributed, not the published limit itself.
@@ -268,10 +274,16 @@ function buildYear(
   prevCumulativeIn: number,
   prevCumulativeGrant: number,
 ): ProjectionYear {
-  const tfsa = tfsaStep(state, isStartYear, inputs);
-  const fhsa = fhsaStep(state, isStartYear, year, inputs);
-  const rrsp = rrspStep(state, isStartYear, year, inputs);
-  const resp = respStep(state, isStartYear, year, inputs);
+  const inScope = (g: string): boolean => inputs.groups === undefined || inputs.groups.includes(g);
+  const zero = { contribution: 0, roomRemaining: 0 };
+  const tfsa = inScope("TFSA") ? tfsaStep(state, isStartYear, inputs) : zero;
+  const fhsa = inScope("FHSA")
+    ? fhsaStep(state, isStartYear, year, inputs)
+    : { ...zero, note: undefined };
+  const rrsp = inScope("RRSP") ? rrspStep(state, isStartYear, year, inputs) : zero;
+  const resp = inScope("RESP")
+    ? respStep(state, isStartYear, year, inputs)
+    : { ...zero, grant: 0, notes: [] };
 
   const contributions = {
     TFSA: tfsa.contribution,

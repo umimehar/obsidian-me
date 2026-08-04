@@ -272,8 +272,22 @@ describe("costByAccount", () => {
     });
     const out = costByAccount(L, { ris: [0, 1, 2], accts: ["A", "B"] });
     expect(out).toEqual([
-      { account_id: "A", kind: "TFSA", short_id: "aaaa", cost: 500, contributions: 150 },
-      { account_id: "B", kind: "RRSP", short_id: "bbbb", cost: 200, contributions: 20 },
+      {
+        account_id: "A",
+        kind: "TFSA",
+        name: "TFSA A",
+        short_id: "aaaa",
+        cost: 500,
+        contributions: 150,
+      },
+      {
+        account_id: "B",
+        kind: "RRSP",
+        name: "RRSP B",
+        short_id: "bbbb",
+        cost: 200,
+        contributions: 20,
+      },
     ]);
   });
 
@@ -315,7 +329,14 @@ describe("costByAccount", () => {
     const L = ledger({ series: [row({ month: "2024-01", contrib: 100, acb: 500 })] });
     const out = costByAccount(L, { ris: [], accts: ["A"] });
     expect(out).toEqual([
-      { account_id: "A", kind: "TFSA", short_id: "aaaa", cost: 0, contributions: 0 },
+      {
+        account_id: "A",
+        kind: "TFSA",
+        name: "TFSA A",
+        short_id: "aaaa",
+        cost: 0,
+        contributions: 0,
+      },
     ]);
   });
 });

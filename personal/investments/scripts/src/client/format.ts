@@ -38,3 +38,12 @@ export function monthLabel(month: string): string {
   const index = Number(month.slice(5, 7)) - 1;
   return `${MONTH_NAMES[index] ?? month} ${month.slice(0, 4)}`;
 }
+
+// The one place an account's display label is composed. An account with a
+// real name renders that; anything else falls back to kind plus short_id,
+// which is what every account showed before names were introduced. Keeping
+// this in one function stops the filter chips, the charts, and the detail
+// table drifting apart.
+export function accountLabel(a: { kind: string; name?: string; short_id: string }): string {
+  return a.name && a.name !== a.kind ? a.name : `${a.kind} ${a.short_id}`;
+}

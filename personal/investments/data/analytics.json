@@ -84,7 +84,7 @@
       {
         "id": "acct_97ab4cb2",
         "kind": "RRSP",
-        "name": "RRSP",
+        "name": "Maham Spousal RRSP",
         "short_id": "97ab",
         "currency": "CAD",
         "first_activity": "2026-03-12"
@@ -92,7 +92,7 @@
       {
         "id": "acct_d6d9fb4a",
         "kind": "RRSP",
-        "name": "RRSP",
+        "name": "Umar RRSP PE",
         "short_id": "d6d9",
         "currency": "CAD",
         "first_activity": "2025-11-20"
@@ -100,7 +100,7 @@
       {
         "id": "acct_231879ac",
         "kind": "RRSP",
-        "name": "RRSP",
+        "name": "Umar RRSP",
         "short_id": "2318",
         "currency": "CAD",
         "first_activity": "2025-09-13"
@@ -108,7 +108,7 @@
       {
         "id": "acct_8cd3372e",
         "kind": "RRSP",
-        "name": "RRSP",
+        "name": "RRSP staging",
         "short_id": "8cd3",
         "currency": "CAD",
         "first_activity": "2025-09-12"

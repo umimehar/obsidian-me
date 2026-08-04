@@ -52,16 +52,18 @@ Every other `TRANSFER_IN`/`TRANSFER_OUT` is internal and excluded from all exter
 
 There is a hub-account caveat worth keeping in mind. Per-account `external_in` counts money that entered that account externally even if it was later moved internally to fund another account. A routing or hub account can therefore look artificially high, because the money it forwarded on internally is not subtracted back out (that onward leg is coded as an internal `TRFOUT` and excluded). The aggregate total for the scoped accounts is still the right figure to read; a single hub account's number in isolation is not.
 
-## Accounts are labelled by kind and id, never by name
+## Account labels
 
-- Account labels are `kind` plus `short_id` (for example `RRSP 97ab`, `NonRegistered 375f`). The four RRSP and two non registered accounts are distinguished by their `short_id`.
+- Named accounts render their name; everything else falls back to `kind` plus `short_id` (for example `NonRegistered 375f`). `accountLabel` in `src/client/format.ts` is the single place that composes a label, so the filter chips, charts, and detail table cannot drift apart.
+- The names live in `ACCOUNT_LABELS` in `src/datastore.ts`, keyed by **`short_id`** — the 4-char hash prefix the page already shows. Never key them by the real account number, which must never reach source control.
+- The owner asked for real names (2026-08-04) to tell four RRSPs apart, superseding the earlier blanket ban on person-derived names. Those names now render and are committed with the built page. The ban existed because names were once derived automatically from statement filenames; the point stands that nothing should be **derived** from a filename, but a deliberate, reviewed label is fine. `redactions.json` still scrubs names out of transaction descriptions, which is a separate concern.
 - The statements whose filenames start with `PE-` are an RRSP, not a taxable account. `detectKind` in `src/mask.ts` maps them to `RRSP` and they are excluded from `TAXABLE_KINDS`. The evidence: the hub account labels its funding transfers to them "Transfer out to RRSP" (the $8,000 on 2026-05-06), and their deposits arrive tagged `CONT`. Without that mapping the 2026 RRSP room bar undercounts by $8,000 and 2025 by $12,000.
-- The account name was previously derived from the statement filename and leaked real names (for example `Umar's RRSP`). Never render a person derived account name. The stored account name is now the kind, and `redactions.json` (gitignored) lists names to scrub from descriptions.
+
 
 ## Masking guard
 
-- Never commit unmasked real names, account numbers, or other sensitive data. The vault pre-commit guard blocks common patterns.
-- The guard scans `.html`, and the generated `notes/index.html` inlines minified flatpickr JS, so it false positives on the `sin` substring inside minified code (for example `getDaysInMonth`, `single`) plus long float mantissas. Before using `SKIP_MASK_HOOK=1` on this page, verify the strong signal is clean: the formatted SIN or card pattern check (`grep -E '\b[0-9]{3}[ -][0-9]{3}[ -][0-9]{3}\b|\b[0-9]{4}[ -][0-9]{4}[ -][0-9]{4}[ -][0-9]{4}\b'`) must return zero and no real name from `redactions.json` may appear. Only then bypass, for that one commit.
+- Never commit unmasked account numbers or other sensitive data. There is **no** pre-commit guard in this vault any more, so the check is manual: inspect the staged diff before every commit.
+- The guard scans `.html`, and the generated `notes/index.html` inlines minified flatpickr JS, so it false positives on the `sin` substring inside minified code (for example `getDaysInMonth`, `single`) plus long float mantissas. Check the strong signal directly: the formatted SIN or card pattern check (`grep -E '\b[0-9]{3}[ -][0-9]{3}[ -][0-9]{3}\b|\b[0-9]{4}[ -][0-9]{4}[ -][0-9]{4}[ -][0-9]{4}\b'`) must return zero, and no name from `redactions.json` may appear in the built page. Deliberate account labels (see Account labels above) are expected and are not a leak.
 
 ## Tax and Room sections are filter-aware
 

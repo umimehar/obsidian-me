@@ -89,6 +89,7 @@ export interface CashflowSeries {
 export interface AccountCost {
   account_id: string;
   kind: string;
+  name: string;
   short_id: string;
   cost: number;
   contributions: number;
@@ -370,7 +371,14 @@ export function costByAccount(ledger: SeriesLedger, scope: Scope): AccountCost[]
     const cost = endIdx >= 0 ? (acbFF.get(id)?.[endIdx] ?? 0) : 0;
     let contributions = 0;
     for (const i of scope.ris) contributions += flow.get(id)?.[i]?.contrib ?? 0;
-    rows.push({ account_id: id, kind: a.kind, short_id: a.short_id, cost, contributions });
+    rows.push({
+      account_id: id,
+      kind: a.kind,
+      name: a.name,
+      short_id: a.short_id,
+      cost,
+      contributions,
+    });
   }
   return rows.sort((a, b) => b.cost - a.cost);
 }
@@ -633,6 +641,11 @@ export function projectionInputs(
     cesgRoomAccrued: rules.cesgAnnualBasic * (Number(year) - opts.respBeneficiaryBirthYear + 1),
     rrspAssessedRemaining: rrspAssessedRemaining(ledger, year, contributedThisYear),
     fhsaCloseYear: fhsaCloseYearFrom(ledger),
+    // Only the groups the selection actually covers. Without this the engine
+    // projected all four regardless, so selecting one TFSA still showed RRSP
+    // and FHSA contributions — and inflated them, because those groups then
+    // looked like they had contributed nothing yet this year.
+    groups: ROOM_GROUP_ORDER.filter((g) => (byGroup.get(g) ?? []).length > 0),
     rrspLastYear: opts.rrspLastYear,
     cesgLastYear: String(opts.respBeneficiaryBirthYear + 17),
     roomBase: {

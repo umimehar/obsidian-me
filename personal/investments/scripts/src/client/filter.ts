@@ -254,7 +254,9 @@ function buildAccountEl(a: FilterAccount): HTMLElement {
   badge.textContent = a.kind;
   const idSpan = document.createElement("span");
   idSpan.className = "chip-id";
-  idSpan.textContent = a.short_id;
+  // A named account shows its name; the short_id stays the fallback for the
+  // unnamed ones, so every chip is still uniquely identifiable.
+  idSpan.textContent = a.name && a.name !== a.kind ? a.name : a.short_id;
   label.append(input, badge, " ", idSpan);
   return label;
 }
