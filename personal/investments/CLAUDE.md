@@ -52,6 +52,15 @@ Every other `TRANSFER_IN`/`TRANSFER_OUT` is internal and excluded from all exter
 
 There is a hub-account caveat worth keeping in mind. Per-account `external_in` counts money that entered that account externally even if it was later moved internally to fund another account. A routing or hub account can therefore look artificially high, because the money it forwarded on internally is not subtracted back out (that onward leg is coded as an internal `TRFOUT` and excluded). The aggregate total for the scoped accounts is still the right figure to read; a single hub account's number in isolation is not.
 
+## Some accounts are visible but not selectable
+
+`isDisabledAccount` in `src/client/filter.ts` marks accounts that stay in the filter list but cannot be selected: the `DISABLED_KINDS` (Chequing, Savings, CreditCard, USD) plus `DISABLED_SHORT_IDS` (375f). Day-to-day banking is not investing, and including it distorts portfolio-at-cost and money-in without saying anything about the portfolio.
+
+- They are **disabled, not hidden**, on purpose. A hidden account reads as missing data; a greyed one shows the ledger is complete and the omission is a choice.
+- `allIds` in `createFilter` excludes them, so "All accounts" resolves to the selectable set and every section's scope excludes them by default. The scope summary counts only selectable accounts.
+- A group whose every member is disabled has its own header checkbox disabled, and `toggleGroup` skips disabled members.
+- A restored URL naming a disabled account is stripped in `withoutDisabled`, not in `url.ts` — the URL module has no business knowing which accounts are selectable.
+
 ## Account labels
 
 - Named accounts render their name; everything else falls back to `kind` plus `short_id` (for example `NonRegistered 375f`). `accountLabel` in `src/client/format.ts` is the single place that composes a label, so the filter chips, charts, and detail table cannot drift apart.

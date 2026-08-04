@@ -224,6 +224,13 @@ h1, h2, h3, h4 {
 }
 .chip-id { color: var(--color-neutral-500); font-size: 10px; letter-spacing: 0.02em; }
 
+/* A filter row that is present but not selectable. Kept visible so the account
+   list still reads as complete; muted and struck so it is obviously excluded
+   by choice rather than missing. */
+.fbx-acct-off { opacity: 0.45; cursor: not-allowed; }
+.fbx-acct-off .badge { background: color-mix(in srgb, var(--color-text) 8%, transparent); color: var(--color-neutral-700); }
+.fbx-acct-off input { cursor: not-allowed; }
+
 /* Headline row */
 .hero-row {
   display: grid;

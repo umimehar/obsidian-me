@@ -97,6 +97,19 @@ export function applyAccountSelection(state: FilterState, accts: string[] | null
 }
 
 const REGISTERED_KINDS = new Set(["TFSA", "ManagedTFSA", "FHSA", "RRSP", "RESP"]);
+
+// Accounts that stay visible in the filter but cannot be selected. Day-to-day
+// banking is not investing: a chequing balance and a credit card would distort
+// portfolio-at-cost and money-in without saying anything about the portfolio.
+// Disabling rather than hiding is deliberate — a hidden account looks like
+// missing data, whereas a greyed-out one shows the ledger is complete and the
+// omission is a choice.
+const DISABLED_KINDS = new Set(["Chequing", "Savings", "CreditCard", "USD"]);
+const DISABLED_SHORT_IDS = new Set(["375f"]);
+
+export function isDisabledAccount(a: { kind: string; short_id: string }): boolean {
+  return DISABLED_KINDS.has(a.kind) || DISABLED_SHORT_IDS.has(a.short_id);
+}
 const TAXABLE_KINDS = new Set(["NonRegistered", "DirectIndexing", "Crypto", "Other"]);
 
 export interface AccountGroups {
@@ -205,6 +218,7 @@ function toggleAccount(c: Controller, id: string, checked: boolean): void {
 function toggleGroup(c: Controller, name: keyof AccountGroups, checked: boolean): void {
   const next = new Set(selectedIds(c));
   for (const a of c.groups[name]) {
+    if (isDisabledAccount(a)) continue;
     if (checked) next.add(a.id);
     else next.delete(a.id);
   }
@@ -237,8 +251,10 @@ function paintAccountInputs(c: Controller): void {
     if (!(input instanceof HTMLInputElement)) continue;
     const groupName = input.dataset.group;
     if (!isGroupName(groupName)) continue;
-    const ids = c.groups[groupName].map((a) => a.id);
+    const ids = c.groups[groupName].filter((a) => !isDisabledAccount(a)).map((a) => a.id);
     input.checked = ids.length > 0 && ids.every((id) => selected.has(id));
+    // A group whose every account is disabled has nothing to toggle.
+    input.disabled = ids.length === 0;
   }
 }
 
@@ -258,6 +274,11 @@ function buildAccountEl(a: FilterAccount): HTMLElement {
   const input = document.createElement("input");
   input.type = "checkbox";
   input.dataset.acctId = a.id;
+  if (isDisabledAccount(a)) {
+    input.disabled = true;
+    label.classList.add("fbx-acct-off");
+    label.title = "Excluded from the dashboard: day-to-day banking, not investing.";
+  }
   // A named account shows only its name: pairing the kind badge with a name
   // that already contains it reads as "RRSP Umar RRSP" or "Corporate Corporate
   // Investing". Unnamed accounts keep the kind badge plus short_id, which is
@@ -379,6 +400,12 @@ function showRestoredRange(c: Controller): void {
   c.rangePicker?.setDate([`${from}-01`, monthEndDate(to)], false);
 }
 
+function withoutDisabled(state: FilterState, ledger: FilterLedger): FilterState {
+  if (state.accts === null) return state;
+  const selectable = new Set(ledger.accounts.filter((a) => !isDisabledAccount(a)).map((a) => a.id));
+  return { ...state, accts: state.accts.filter((id) => selectable.has(id)) };
+}
+
 export function createFilter(
   ledger: FilterLedger,
   onChange: () => void,
@@ -386,9 +413,14 @@ export function createFilter(
 ): Filter {
   const c: Controller = {
     ledger,
-    allIds: ledger.accounts.map((a) => a.id),
+    // Only the selectable accounts. This is what "all accounts" resolves to,
+    // so a disabled account is absent from every section's scope by default.
+    allIds: ledger.accounts.filter((a) => !isDisabledAccount(a)).map((a) => a.id),
     groups: groupAccounts(ledger.accounts),
-    state: initial ?? { accts: null, time: ALL_TIME },
+    // A restored URL can name a disabled account (hand-edited, or saved before
+    // it was disabled). Strip those here rather than in url.ts, which has no
+    // business knowing which accounts are selectable.
+    state: initial ? withoutDisabled(initial, ledger) : { accts: null, time: ALL_TIME },
     rangePicker: null,
     onChange,
   };
