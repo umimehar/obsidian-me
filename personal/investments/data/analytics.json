@@ -65,13 +65,6 @@
         "currency": "CAD"
       },
       {
-        "id": "acct_d6d9fb4a",
-        "kind": "PE",
-        "name": "PE",
-        "short_id": "d6d9",
-        "currency": "CAD"
-      },
-      {
         "id": "acct_c2e9345e",
         "kind": "RESP",
         "name": "RESP",
@@ -83,6 +76,13 @@
         "kind": "RRSP",
         "name": "RRSP",
         "short_id": "97ab",
+        "currency": "CAD"
+      },
+      {
+        "id": "acct_d6d9fb4a",
+        "kind": "RRSP",
+        "name": "RRSP",
+        "short_id": "d6d9",
         "currency": "CAD"
       },
       {
@@ -150,7 +150,8 @@
       "2026-03",
       "2026-04",
       "2026-05",
-      "2026-06"
+      "2026-06",
+      "2026-07"
     ],
     "series": [
       {
@@ -732,6 +733,23 @@
         "realized_gain": 0
       },
       {
+        "account_id": "acct_2b743dc7",
+        "month": "2026-07",
+        "contrib": 0,
+        "external_in": 7513,
+        "external_out": 0,
+        "deposits": -22.09,
+        "income": 0,
+        "inflow": 7513,
+        "outflow": 0,
+        "cash": 133.53,
+        "acb": null,
+        "interest": 0,
+        "eligible_dividends": 0,
+        "foreign_income": 0,
+        "realized_gain": 0
+      },
+      {
         "account_id": "acct_2c620d2b",
         "month": "2025-11",
         "contrib": 0,
@@ -989,6 +1007,23 @@
       {
         "account_id": "acct_8367cd66",
         "month": "2026-06",
+        "contrib": 0,
+        "external_in": 0,
+        "external_out": 0,
+        "deposits": 0,
+        "income": 0,
+        "inflow": 0,
+        "outflow": 0,
+        "cash": null,
+        "acb": null,
+        "interest": 0,
+        "eligible_dividends": 0,
+        "foreign_income": 0,
+        "realized_gain": 0
+      },
+      {
+        "account_id": "acct_8367cd66",
+        "month": "2026-07",
         "contrib": 0,
         "external_in": 0,
         "external_out": 0,
@@ -2087,9 +2122,9 @@
         "cash": 62.34,
         "acb": 11943.67,
         "interest": 0,
-        "eligible_dividends": 20.17,
+        "eligible_dividends": 0,
         "foreign_income": 0,
-        "realized_gain": -8.83
+        "realized_gain": 0
       },
       {
         "account_id": "acct_d6d9fb4a",
@@ -2155,7 +2190,7 @@
         "cash": 85.53,
         "acb": null,
         "interest": 0,
-        "eligible_dividends": 81.8,
+        "eligible_dividends": 0,
         "foreign_income": 0,
         "realized_gain": 0
       },
@@ -2189,7 +2224,7 @@
         "cash": 122.95,
         "acb": 32322.42,
         "interest": 0,
-        "eligible_dividends": 13.8,
+        "eligible_dividends": 0,
         "foreign_income": 0,
         "realized_gain": 0
       },
@@ -5313,6 +5348,24 @@
         "2026": 2500
       }
     },
+    "assessed_room": {
+      "RRSP": {
+        "2026": 70752
+      }
+    },
+    "registered_rules": {
+      "fhsaAnnual": 8000,
+      "fhsaLifetime": 40000,
+      "respLifetime": 50000,
+      "respGrantTarget": 2500,
+      "respCatchupTarget": 5000,
+      "cesgRate": 0.2,
+      "cesgAnnualBasic": 500,
+      "cesgAnnualMax": 1000,
+      "cesgLifetime": 7200,
+      "tfsaRounding": 500,
+      "rrspRounding": 10
+    },
     "flows": [
       {
         "account_id": "acct_97100dd9",
@@ -7870,6 +7923,46 @@
         "account_id": "acct_2b743dc7",
         "month": "2026-06",
         "date": "2026-06-29",
+        "type": "TRANSFER_IN",
+        "amount": 3101.5,
+        "description": "Direct deposit from PEOPLE CENTER"
+      },
+      {
+        "account_id": "acct_2b743dc7",
+        "month": "2026-07",
+        "date": "2026-07-14",
+        "type": "TRANSFER_IN",
+        "amount": 3101.5,
+        "description": "Direct deposit from PEOPLE CENTER"
+      },
+      {
+        "account_id": "acct_2b743dc7",
+        "month": "2026-07",
+        "date": "2026-07-15",
+        "type": "TRANSFER_IN",
+        "amount": 200,
+        "description": "Interac e-Transfer® Received from [redacted]"
+      },
+      {
+        "account_id": "acct_2b743dc7",
+        "month": "2026-07",
+        "date": "2026-07-17",
+        "type": "TRANSFER_IN",
+        "amount": 110,
+        "description": "Interac e-Transfer® Received from [redacted]"
+      },
+      {
+        "account_id": "acct_2b743dc7",
+        "month": "2026-07",
+        "date": "2026-07-23",
+        "type": "TRANSFER_IN",
+        "amount": 1000,
+        "description": "Interac e-Transfer® Received from [redacted]"
+      },
+      {
+        "account_id": "acct_2b743dc7",
+        "month": "2026-07",
+        "date": "2026-07-30",
         "type": "TRANSFER_IN",
         "amount": 3101.5,
         "description": "Direct deposit from PEOPLE CENTER"

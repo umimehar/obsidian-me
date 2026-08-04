@@ -1,5 +1,5 @@
-import { expect, test } from "bun:test";
-import { computeAnalytics, externalFlow } from "./analytics";
+import { describe, expect, test } from "bun:test";
+import { computeAnalytics, externalFlow, roomLimit } from "./analytics";
 import type { Account, Datastore, Txn } from "./datastore";
 
 function txn(partial: Partial<Txn>): Txn {
@@ -241,5 +241,21 @@ test("flows contains only external transactions, excluding internal transfers", 
     date: "2025-03-05",
     amount: 500,
     description: "Contribution",
+  });
+});
+
+describe("roomLimit", () => {
+  test("prefers CRA-assessed room over the annual maximum", () => {
+    expect(roomLimit("RRSP", "2026")).toEqual({ limit: 70752, assessed: true });
+  });
+
+  test("falls back to the annual maximum when no NOA figure exists", () => {
+    expect(roomLimit("RRSP", "2025")).toEqual({ limit: 32490, assessed: false });
+    expect(roomLimit("TFSA", "2026")).toEqual({ limit: 7000, assessed: false });
+  });
+
+  test("unknown group or year is 0", () => {
+    expect(roomLimit("RRSP", "1999")).toEqual({ limit: 0, assessed: false });
+    expect(roomLimit("LIRA", "2026")).toEqual({ limit: 0, assessed: false });
   });
 });

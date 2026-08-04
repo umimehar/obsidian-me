@@ -44,6 +44,8 @@ function ledger(): SectionsLedger {
     ],
     holdings: [],
     limits: {},
+    assessed_room: {},
+    registered_rules: {},
     flows: [],
   };
 }

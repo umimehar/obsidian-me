@@ -42,9 +42,7 @@
     "cumulativeGrant": 1450.0,
     "withdrawn": 0.0,
     "value": 333234.37,
-    "notes": [
-      "FHSA lifetime cap reached"
-    ]
+    "notes": ["FHSA lifetime cap reached"]
   },
   {
     "year": "2029",
@@ -209,10 +207,7 @@
     "cumulativeGrant": 6650.0,
     "withdrawn": 128732.4,
     "value": 1482812.76,
-    "notes": [
-      "FHSA closed, withdrawn for home",
-      "CESG lifetime max reached"
-    ]
+    "notes": ["FHSA closed, withdrawn for home", "CESG lifetime max reached"]
   },
   {
     "year": "2040",
@@ -287,9 +282,7 @@
     "cumulativeGrant": 6650.0,
     "withdrawn": 0.0,
     "value": 2520805.52,
-    "notes": [
-      "RESP lifetime cap reached"
-    ]
+    "notes": ["RESP lifetime cap reached"]
   },
   {
     "year": "2045",

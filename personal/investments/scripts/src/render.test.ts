@@ -76,6 +76,20 @@ function analytics(): Analytics {
       ],
       holdings: [{ account_id: "acct_a", symbol: "ZAG", qty: 5, acb: 80 }],
       limits: { TFSA: { "2025": 7000 } },
+      assessed_room: {},
+      registered_rules: {
+        fhsaAnnual: 8000,
+        fhsaLifetime: 40000,
+        respLifetime: 50000,
+        respGrantTarget: 2500,
+        respCatchupTarget: 5000,
+        cesgRate: 0.2,
+        cesgAnnualBasic: 500,
+        cesgAnnualMax: 1000,
+        cesgLifetime: 7200,
+        tfsaRounding: 500,
+        rrspRounding: 10,
+      },
       flows: [],
     },
   };
@@ -132,6 +146,17 @@ test("index has the four chart canvases", async () => {
   expect(html).toContain('id="chart-growth"');
   expect(html).toContain('id="chart-trend"');
   expect(html).toContain('id="chart-income"');
+});
+
+test("index has the projection section host elements", async () => {
+  const html = (await pages())["index.html"] ?? "";
+  expect(html).toContain('id="proj-return"');
+  expect(html).toContain('id="proj-index"');
+  expect(html).toContain('id="proj-summary"');
+  expect(html).toContain('id="proj-table"');
+  expect(html).toContain('id="chart-projection"');
+  expect(html).toContain('id="proj-caveats"');
+  expect(html).toContain('id="proj-warning"');
 });
 
 test("index has the collapsed cashflow transaction drill-down", async () => {

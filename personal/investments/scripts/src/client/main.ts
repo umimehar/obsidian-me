@@ -6,6 +6,7 @@ import type { Filter } from "./filter";
 import { createFilter } from "./filter";
 import type { SectionsLedger } from "./sections";
 import { renderSections, resetCashflowDrilldown, wireTaxRateInput } from "./sections";
+import { decodeScope, writeScopeUrl } from "./url";
 
 interface LedgerPayload {
   ledger: SectionsLedger;
@@ -30,9 +31,27 @@ function renderEmptyState(): void {
 const dataEl = document.getElementById("ledger-data");
 if (dataEl?.textContent) {
   const ledger = parseLedger(dataEl.textContent);
-  const filter: Filter = createFilter(ledger, rerender);
+  const restored = decodeScope(location.search, ledger.accounts);
+  // Survives across rerenders so the URL keeps the drill-down while only the
+  // accounts or window change. A filter change clears it, matching
+  // resetCashflowDrilldown() collapsing the panel in renderSections.
+  let period: string | null = restored.period;
+  let pending: string | null = restored.period;
+  const filter: Filter = createFilter(
+    ledger,
+    () => {
+      period = null;
+      pending = null;
+      rerender();
+    },
+    restored.state,
+  );
   wireTaxRateInput();
   rerender();
+
+  function syncUrl(): void {
+    writeScopeUrl({ state: filter.state(), period }, ledger.accounts);
+  }
 
   function rerender(): void {
     const summary = document.getElementById("scope-summary-text");
@@ -40,8 +59,18 @@ if (dataEl?.textContent) {
     const scope = { ris: filter.resolveMonths(), accts: filter.selected() };
     if (scope.ris.length === 0) {
       renderEmptyState();
+      period = null;
+      syncUrl();
       return;
     }
-    renderSections(ledger, scope);
+    renderSections(ledger, scope, {
+      period: pending,
+      onDrilldown: (next) => {
+        period = next;
+        syncUrl();
+      },
+    });
+    pending = period;
+    syncUrl();
   }
 }

@@ -162,6 +162,33 @@ function taxSection(): string {
   );
 }
 
+function projectionSection(): string {
+  return (
+    '<section class="section" id="section-projection">' +
+    sectionHead(
+      "Thirty Year Projection",
+      "A forward projection of registered contributions, government grants, room " +
+        "remaining, and projected value across the selected accounts, driven by the rate " +
+        "inputs below.",
+      "projection-section-title",
+    ) +
+    '<div class="pillar-tax-rate">' +
+    '<label for="proj-return">Return</label>' +
+    '<input type="number" id="proj-return" step="0.1" min="0" max="20" value="8">' +
+    '<label for="proj-index">Indexation</label>' +
+    '<input type="number" id="proj-index" step="0.1" min="0" max="10" value="2">' +
+    "</div>" +
+    '<div id="proj-warning"></div>' +
+    '<div class="hero-row" id="proj-summary"></div>' +
+    subhead("Year by year") +
+    '<div class="table-wrap" id="proj-table"></div>' +
+    subhead("Contributions, grants, and growth") +
+    canvasBox("chart-projection") +
+    '<div id="proj-caveats"></div>' +
+    "</section>"
+  );
+}
+
 function detailSection(): string {
   return (
     '<section class="section" id="section-detail">' +
@@ -228,6 +255,8 @@ export async function renderIndex(_store: Datastore, analytics: Analytics): Prom
     growthSection() +
     rule() +
     taxSection() +
+    rule() +
+    projectionSection() +
     rule() +
     detailSection() +
     rule() +

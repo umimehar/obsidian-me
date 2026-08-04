@@ -6,12 +6,73 @@ const CASH_CURRENCIES = new Set(["CAD", "USD"]);
 
 // Annual context figures. RESP is the CESG-matched annual amount, not the
 // $50,000 lifetime contribution limit.
+//
+// FHSA and RESP are absent from this indexed set on purpose: their limits are
+// statutory dollar figures fixed in the Income Tax Act, not indexed to
+// inflation or wage growth the way TFSA and RRSP room is. See REGISTERED_RULES
+// below for the flat FHSA/RESP/CESG figures the projection engine uses.
 export const CONTRIBUTION_LIMITS: Record<string, Record<string, number>> = {
   TFSA: { "2022": 6000, "2023": 6500, "2024": 7000, "2025": 7000, "2026": 7000 },
   FHSA: { "2023": 8000, "2024": 8000, "2025": 8000, "2026": 8000 },
   RRSP: { "2022": 29210, "2023": 30780, "2024": 31560, "2025": 32490, "2026": 33810 },
   RESP: { "2022": 2500, "2023": 2500, "2024": 2500, "2025": 2500, "2026": 2500 },
 };
+
+// Personal contribution room as assessed by the CRA, transcribed from a notice
+// of assessment. This is the real ceiling and it differs from the annual
+// maximum above, because unused room carries forward. Where a figure exists
+// here it wins; everything else falls back to CONTRIBUTION_LIMITS.
+//
+// RRSP 2026 = 70,752, from the 2025 NOA: 45,191 unused room at the end of 2025
+// plus 25,561 earned in 2025, with no PSPA, PAR, or previously reported
+// undeducted contributions. Update this after each year's NOA arrives.
+export const ASSESSED_ROOM: Record<string, Record<string, number>> = {
+  RRSP: { "2026": 70752 },
+};
+
+// OWNER-SUPPLIED. Unlike every other figure in this file (a published CRA
+// figure, or derived from statement data), the RESP beneficiary's birth year
+// appears in no statement and cannot be derived. It drives the RESP catch-up
+// grant room and the CESG last-eligible-year cutoff in the registered
+// projection.
+export const RESP_BENEFICIARY_BIRTH_YEAR = 2025;
+
+export interface RegisteredRules {
+  fhsaAnnual: number;
+  fhsaLifetime: number;
+  respLifetime: number;
+  respGrantTarget: number;
+  respCatchupTarget: number;
+  cesgRate: number;
+  cesgAnnualBasic: number;
+  cesgAnnualMax: number;
+  cesgLifetime: number;
+  tfsaRounding: number;
+  rrspRounding: number;
+}
+
+// Flat CRA figures used by the registered contribution projection. FHSA and
+// RESP limits are statutory and do not index, so unlike CONTRIBUTION_LIMITS
+// these are single numbers, not a table keyed by year.
+export const REGISTERED_RULES: RegisteredRules = {
+  fhsaAnnual: 8000,
+  fhsaLifetime: 40000,
+  respLifetime: 50000,
+  respGrantTarget: 2500,
+  respCatchupTarget: 5000,
+  cesgRate: 0.2,
+  cesgAnnualBasic: 500,
+  cesgAnnualMax: 1000,
+  cesgLifetime: 7200,
+  tfsaRounding: 500,
+  rrspRounding: 10,
+};
+
+export function roomLimit(group: string, year: string): { limit: number; assessed: boolean } {
+  const noa = ASSESSED_ROOM[group]?.[year];
+  if (noa !== undefined) return { limit: noa, assessed: true };
+  return { limit: CONTRIBUTION_LIMITS[group]?.[year] ?? 0, assessed: false };
+}
 
 export interface LedgerSeriesRow {
   account_id: string;
@@ -46,6 +107,8 @@ export interface Ledger {
   series: LedgerSeriesRow[];
   holdings: Array<{ account_id: string; symbol: string; qty: number; acb: number }>;
   limits: Record<string, Record<string, number>>;
+  assessed_room: Record<string, Record<string, number>>;
+  registered_rules: RegisteredRules;
   flows: LedgerFlow[];
 }
 
@@ -171,7 +234,7 @@ export function externalFlow(txn: Txn): "in" | "out" | null {
   return null;
 }
 
-const TAXABLE_KINDS = new Set(["NonRegistered", "DirectIndexing", "Crypto", "PE", "Other"]);
+const TAXABLE_KINDS = new Set(["NonRegistered", "DirectIndexing", "Crypto", "Other"]);
 
 function taxableAccounts(store: Datastore): Set<string> {
   return new Set(store.accounts.filter((a) => TAXABLE_KINDS.has(a.kind)).map((a) => a.masked_id));
@@ -345,6 +408,8 @@ export function buildLedger(store: Datastore): Ledger {
     series,
     holdings: holdingsAcb(store),
     limits: CONTRIBUTION_LIMITS,
+    assessed_room: ASSESSED_ROOM,
+    registered_rules: REGISTERED_RULES,
     flows: buildFlows(store),
   };
 }

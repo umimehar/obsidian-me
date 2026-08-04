@@ -54,6 +54,8 @@ export interface SeriesLedger {
   series: SeriesRow[];
   holdings: Array<{ account_id: string; symbol: string; qty: number; acb: number }>;
   limits: Record<string, Record<string, number>>;
+  assessed_room: Record<string, Record<string, number>>;
+  registered_rules: Record<string, number>;
   flows: LedgerFlow[];
 }
 
@@ -380,6 +382,10 @@ export interface TaxRoomRow {
   used: number;
   limit: number;
   remaining: number;
+  // True when `limit` is this person's CRA-assessed room from a notice of
+  // assessment (carry-forward included), false when it is the generic annual
+  // maximum. The two mean different things and the page says which it showed.
+  assessed: boolean;
 }
 
 export interface TaxSummary {
@@ -409,8 +415,11 @@ const ROOM_GROUP_ORDER = ["TFSA", "FHSA", "RRSP", "RESP"];
 // accounts in each registered group. It deliberately does NOT use the gross
 // `external_in`, because a routing/hub account inflates that with deposits
 // that pass straight through to other accounts (see CLAUDE.md's hub caveat).
-// There is no OVER flag — unused room carries forward from prior years, so a
-// full bar is not necessarily an over-contribution.
+// There is no OVER flag. A bar measured against the generic annual maximum can
+// read full without being an over-contribution, because unused room carries
+// forward. A bar carrying `assessed: true` is measured against CRA-assessed
+// room that already includes the carry-forward, so there the comparison is
+// real — but it still is not a filing figure.
 export function taxSummary(ledger: SeriesLedger, scope: Scope, year: string): TaxSummary {
   const accts = new Set(scope.accts);
   const kindById = new Map(ledger.accounts.map((a) => [a.id, a.kind]));
@@ -430,8 +439,10 @@ export function taxSummary(ledger: SeriesLedger, scope: Scope, year: string): Ta
   }
   const room = ROOM_GROUP_ORDER.map((group) => {
     const u = used.get(group) ?? 0;
-    const limit = ledger.limits[group]?.[year] ?? 0;
-    return { group, used: u, limit, remaining: limit - u };
+    const noa = ledger.assessed_room?.[group]?.[year];
+    const assessed = noa !== undefined;
+    const limit = assessed ? noa : (ledger.limits[group]?.[year] ?? 0);
+    return { group, used: u, limit, remaining: limit - u, assessed };
   });
   return {
     interest,

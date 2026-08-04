@@ -32,6 +32,10 @@ export interface Filter {
   resolveMonths(): number[];
   selected(): string[];
   scopeLabel(): string;
+  // The raw state, for serializing the scope into the URL. Distinct from
+  // selected(): this reports null when nothing is narrowed, where selected()
+  // expands that to every id.
+  state(): FilterState;
 }
 
 export type Grain = "month" | "year";
@@ -93,7 +97,7 @@ export function applyAccountSelection(state: FilterState, accts: string[] | null
 }
 
 const REGISTERED_KINDS = new Set(["TFSA", "ManagedTFSA", "FHSA", "RRSP", "RESP"]);
-const TAXABLE_KINDS = new Set(["NonRegistered", "DirectIndexing", "Crypto", "PE", "Other"]);
+const TAXABLE_KINDS = new Set(["NonRegistered", "DirectIndexing", "Crypto", "Other"]);
 
 export interface AccountGroups {
   Registered: FilterAccount[];
@@ -350,12 +354,24 @@ function wirePopover(): void {
   });
 }
 
-export function createFilter(ledger: FilterLedger, onChange: () => void): Filter {
+// Reflect a restored custom range back into the calendar input, so a reloaded
+// page shows the dates it is actually filtering by rather than a blank field.
+function showRestoredRange(c: Controller): void {
+  const { mode, from, to } = c.state.time;
+  if (mode !== "custom" || !from || !to) return;
+  c.rangePicker?.setDate([`${from}-01`, monthEndDate(to)], false);
+}
+
+export function createFilter(
+  ledger: FilterLedger,
+  onChange: () => void,
+  initial?: FilterState,
+): Filter {
   const c: Controller = {
     ledger,
     allIds: ledger.accounts.map((a) => a.id),
     groups: groupAccounts(ledger.accounts),
-    state: { accts: null, time: ALL_TIME },
+    state: initial ?? { accts: null, time: ALL_TIME },
     rangePicker: null,
     onChange,
   };
@@ -364,11 +380,13 @@ export function createFilter(ledger: FilterLedger, onChange: () => void): Filter
   paintPresets(c);
   wirePresets(c);
   wireRangePicker(c);
+  showRestoredRange(c);
   wirePopover();
   return {
     resolveMonths: () => resolveWindow(c.state.time, ledger.months),
     selected: () => selectedIds(c),
     scopeLabel: () =>
       formatScope(selectedIds(c).length, c.allIds.length, c.state.time, ledger.months),
+    state: () => c.state,
   };
 }

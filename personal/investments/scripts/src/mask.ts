@@ -51,7 +51,9 @@ export function detectKind(filename: string): string {
   for (const [needle, kind] of KIND_RULES) {
     if (lowered.includes(needle)) return kind;
   }
-  if (lowered.startsWith("pe-")) return "PE";
+  // The "PE" statements are an RRSP: the hub account describes its funding
+  // transfers as "Transfer out to RRSP" and its deposits arrive tagged CONT.
+  if (lowered.startsWith("pe-")) return "RRSP";
   return "Other";
 }
 

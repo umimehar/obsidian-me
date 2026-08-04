@@ -181,7 +181,7 @@ function roomBarRow(r: TaxRoomRow, year: string): HTMLDivElement {
   row.className = "room-row";
   const label = document.createElement("div");
   label.className = "room-k";
-  label.textContent = `${r.group} ${year}`;
+  label.textContent = r.assessed ? `${r.group} ${year} · assessed` : `${r.group} ${year}`;
   const track = document.createElement("div");
   track.className = "room-track";
   const fill = document.createElement("div");
@@ -205,11 +205,17 @@ function renderRoomBars(room: TaxRoomRow[], year: string): void {
   }
   const note = document.createElement("p");
   note.className = "section-note";
+  const anyAssessed = room.some((r) => r.assessed && !(r.limit === 0 && r.used === 0));
   note.textContent =
     "Bars compare this year's registered contributions, including external deposits not " +
-    "coded as a contribution, for the selected accounts, to this year's annual limit. " +
-    "Unused room carries forward from prior years, so a full or over-full bar is not " +
-    "necessarily an over-contribution (for example an RESP catch-up year).";
+    "coded as a contribution, for the selected accounts, to this year's limit. " +
+    (anyAssessed
+      ? "A bar marked assessed uses your CRA room from the notice of assessment, which " +
+        "already includes carry-forward. Every other bar uses the generic annual maximum, " +
+        "and unused room carries forward from prior years, so a full or over-full bar " +
+        "there is not necessarily an over-contribution (for example an RESP catch-up year)."
+      : "Unused room carries forward from prior years, so a full or over-full bar is not " +
+        "necessarily an over-contribution (for example an RESP catch-up year).");
   host.appendChild(note);
 }
 
@@ -253,6 +259,15 @@ function periodLabel(period: string): string {
   return period.includes("-") ? monthLabel(period) : period;
 }
 
+export interface SectionOptions {
+  // A drill-down period to reopen on render, from the URL. Ignored when the
+  // current scope no longer contains it.
+  period?: string | null;
+  // Fires when the expanded drill-down period changes, so the caller can put
+  // it in the URL. null means nothing is expanded.
+  onDrilldown?: (period: string | null) => void;
+}
+
 // Populates and opens the cashflow drill-down for a clicked chart bar. Reset
 // by resetCashflowDrilldown() on every filter change, since a stale
 // selection would otherwise survive a rerender.
@@ -275,12 +290,22 @@ export function resetCashflowDrilldown(): void {
   if (details instanceof HTMLDetailsElement) details.open = false;
 }
 
-function drawCashflowChart(ledger: SectionsLedger, scope: Scope): void {
+function drawCashflowChart(ledger: SectionsLedger, scope: Scope, opts: SectionOptions): void {
   const canvas = canvasOf("chart-cashflow");
-  if (canvas) {
-    cashflowChart(canvas, cashflowSeries(ledger, scope), (period) =>
-      renderCashflowDrilldown(ledger, scope, period),
-    );
+  if (!canvas) return;
+  const series = cashflowSeries(ledger, scope);
+  cashflowChart(canvas, series, (period) => {
+    renderCashflowDrilldown(ledger, scope, period);
+    opts.onDrilldown?.(period);
+  });
+  // Restore a drill-down carried in the URL, but only when the period still
+  // exists under the current scope. A stale one is dropped rather than opening
+  // an empty panel.
+  const restore = opts.period;
+  if (restore && series.labels.includes(restore)) {
+    renderCashflowDrilldown(ledger, scope, restore);
+  } else if (restore) {
+    opts.onDrilldown?.(null);
   }
 }
 
@@ -599,14 +624,18 @@ function renderHoldTable(ledger: SectionsLedger, scope: Scope): void {
 
 // ---- entry point --------------------------------------------------------------
 
-export function renderSections(ledger: SectionsLedger, scope: Scope): void {
+export function renderSections(
+  ledger: SectionsLedger,
+  scope: Scope,
+  opts: SectionOptions = {},
+): void {
   const year = scopeYear(ledger, scope);
   const tax = taxSummary(ledger, scope, year);
 
   renderContribHeadline(ledger, scope, tax, year);
   renderRoomBars(tax.room, year);
   resetCashflowDrilldown();
-  drawCashflowChart(ledger, scope);
+  drawCashflowChart(ledger, scope, opts);
 
   const costRows = costByAccount(ledger, scope);
   const trend = capitalTrend(ledger, scope);

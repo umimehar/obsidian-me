@@ -51,6 +51,8 @@ function ledger(overrides: Partial<SeriesLedger>): SeriesLedger {
     series: [],
     holdings: [],
     limits: {},
+    assessed_room: {},
+    registered_rules: {},
     flows: [],
     ...overrides,
   };
@@ -308,8 +310,54 @@ describe("taxSummary", () => {
     const out = taxSummary(L, { ris: [0], accts: ["A", "B", "C"] }, "2024");
     const tfsa = out.room.find((r) => r.group === "TFSA");
     const rrsp = out.room.find((r) => r.group === "RRSP");
-    expect(tfsa).toEqual({ group: "TFSA", used: 1500, limit: 7000, remaining: 5500 });
-    expect(rrsp).toEqual({ group: "RRSP", used: 2000, limit: 31000, remaining: 29000 });
+    expect(tfsa).toEqual({
+      group: "TFSA",
+      used: 1500,
+      limit: 7000,
+      remaining: 5500,
+      assessed: false,
+    });
+    expect(rrsp).toEqual({
+      group: "RRSP",
+      used: 2000,
+      limit: 31000,
+      remaining: 29000,
+      assessed: false,
+    });
+  });
+
+  test("CRA-assessed room overrides the annual maximum and is flagged", () => {
+    const L = ledger({
+      accounts: [{ id: "C", kind: "RRSP", name: "RRSP C", short_id: "cccc", currency: "CAD" }],
+      limits: { RRSP: { "2024": 31000 } },
+      assessed_room: { RRSP: { "2024": 70752 } },
+      series: [row({ account_id: "C", month: "2024-01", contrib: 33000, external_in: 33000 })],
+    });
+    const out = taxSummary(L, { ris: [0], accts: ["C"] }, "2024");
+    expect(out.room.find((r) => r.group === "RRSP")).toEqual({
+      group: "RRSP",
+      used: 33000,
+      limit: 70752,
+      remaining: 37752,
+      assessed: true,
+    });
+  });
+
+  test("assessed room for one year does not leak into another", () => {
+    const L = ledger({
+      accounts: [{ id: "C", kind: "RRSP", name: "RRSP C", short_id: "cccc", currency: "CAD" }],
+      limits: { RRSP: { "2025": 31000 } },
+      assessed_room: { RRSP: { "2024": 70752 } },
+      series: [row({ account_id: "C", month: "2025-01", contrib: 1000, external_in: 1000 })],
+    });
+    const out = taxSummary(L, { ris: [0], accts: ["C"] }, "2025");
+    expect(out.room.find((r) => r.group === "RRSP")).toEqual({
+      group: "RRSP",
+      used: 1000,
+      limit: 31000,
+      remaining: 30000,
+      assessed: false,
+    });
   });
 
   test("missing limit for the year falls back to 0", () => {
@@ -319,7 +367,7 @@ describe("taxSummary", () => {
     });
     const out = taxSummary(L, { ris: [0], accts: ["A"] }, "2024");
     const tfsa = out.room.find((r) => r.group === "TFSA");
-    expect(tfsa).toEqual({ group: "TFSA", used: 100, limit: 0, remaining: -100 });
+    expect(tfsa).toEqual({ group: "TFSA", used: 100, limit: 0, remaining: -100, assessed: false });
   });
 });
 
