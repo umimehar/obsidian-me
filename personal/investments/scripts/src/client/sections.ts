@@ -509,15 +509,21 @@ function buildAcctRows(ledger: SectionsLedger, scope: Scope): AcctRow[] {
   return rows.sort((a, b) => a.kind.localeCompare(b.kind) || a.short_id.localeCompare(b.short_id));
 }
 
+// Matches the filter chips: a named account shows its name alone, an unnamed
+// one shows the kind badge plus short_id.
 function acctNameCell(r: AcctRow): HTMLTableCellElement {
   const td = document.createElement("td");
+  const named = Boolean(r.name) && r.name !== r.kind;
   const badge = document.createElement("span");
   badge.className = "badge";
-  badge.textContent = r.kind;
-  const idSpan = document.createElement("span");
-  idSpan.className = "chip-id";
-  idSpan.textContent = r.short_id;
-  td.append(badge, " ", idSpan);
+  badge.textContent = named ? r.name : r.kind;
+  td.append(badge);
+  if (!named) {
+    const idSpan = document.createElement("span");
+    idSpan.className = "chip-id";
+    idSpan.textContent = r.short_id;
+    td.append(" ", idSpan);
+  }
   return td;
 }
 
