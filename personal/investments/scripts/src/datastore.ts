@@ -16,6 +16,17 @@ const SCHEMA_VERSION = 1;
 // shows, never the real account number, which must never reach source control.
 // The owner asked for these by name to tell four RRSPs apart; see this
 // project's CLAUDE.md. Accounts absent here fall back to their kind.
+// Kind overrides, keyed by `short_id`, for accounts whose kind cannot be read
+// off the statement filename. 91b8 arrives as "Other" because its filename is
+// a company name; it is a corporate investing account, and its own kind
+// matters: it is deliberately absent from TAXABLE_KINDS in analytics.ts, since
+// investment income inside a corporation is taxed in the corporation, not on
+// the owner's personal return. Leaving it as "Other" fed its dividends into
+// the personal tax estimate.
+const ACCOUNT_KINDS: Record<string, string> = {
+  "91b8": "Corporate",
+};
+
 const ACCOUNT_LABELS: Record<string, string> = {
   "2318": "Umar RRSP",
   d6d9: "Umar RRSP PE",
@@ -23,6 +34,7 @@ const ACCOUNT_LABELS: Record<string, string> = {
   // 8cd3 is a staging account: 81,057 in, 81,057 out, ends at zero. It routes
   // contributions to the three RRSPs above and holds nothing of its own.
   "8cd3": "RRSP staging",
+  "91b8": "Corporate Investing",
 };
 const KNOWN_OTHER = new Set(["ROC"]);
 
@@ -145,8 +157,8 @@ export function buildDatastore(sourceDir: string, redactions: Redactions): Datas
   for (const path of files) {
     const name = path.split("/").pop() ?? path;
     const accountId = maskAccountCode(accountCodeFromFilename(name));
-    const kind = detectKind(name);
     const shortId = shortAccountId(accountCodeFromFilename(name));
+    const kind = ACCOUNT_KINDS[shortId] ?? detectKind(name);
     for (const row of parseCsv(path)) {
       const txn = rowToTxn(row, accountId, redactions);
       transactions.push(txn);

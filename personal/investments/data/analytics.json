@@ -10,6 +10,14 @@
         "first_activity": "2025-07-24"
       },
       {
+        "id": "acct_91b82482",
+        "kind": "Corporate",
+        "name": "Corporate Investing",
+        "short_id": "91b8",
+        "currency": "CAD",
+        "first_activity": "2026-01-30"
+      },
+      {
         "id": "acct_8367cd66",
         "kind": "CreditCard",
         "name": "CreditCard",
@@ -64,14 +72,6 @@
         "short_id": "2c62",
         "currency": "USD",
         "first_activity": "2025-11-25"
-      },
-      {
-        "id": "acct_91b82482",
-        "kind": "Other",
-        "name": "Other",
-        "short_id": "91b8",
-        "currency": "CAD",
-        "first_activity": "2026-01-30"
       },
       {
         "id": "acct_c2e9345e",
@@ -1336,7 +1336,7 @@
         "cash": 192.6,
         "acb": 41877.19,
         "interest": 0,
-        "eligible_dividends": 99.48,
+        "eligible_dividends": 0,
         "foreign_income": 0,
         "realized_gain": 0
       },
@@ -1390,7 +1390,7 @@
         "cash": 237.74,
         "acb": 47082.63,
         "interest": 0,
-        "eligible_dividends": 343.91,
+        "eligible_dividends": 0,
         "foreign_income": 0,
         "realized_gain": 0
       },

@@ -102,18 +102,27 @@ const TAXABLE_KINDS = new Set(["NonRegistered", "DirectIndexing", "Crypto", "Oth
 export interface AccountGroups {
   Registered: FilterAccount[];
   Taxable: FilterAccount[];
+  Corporate: FilterAccount[];
   Cash: FilterAccount[];
 }
 
-export const GROUP_ORDER: Array<keyof AccountGroups> = ["Registered", "Taxable", "Cash"];
+export const GROUP_ORDER: Array<keyof AccountGroups> = [
+  "Registered",
+  "Taxable",
+  "Corporate",
+  "Cash",
+];
 
 // Buckets by kind. Anything outside the Registered/Taxable kind lists (e.g. a
 // "USD" cash sub-account) lands in Cash, since it behaves like one.
 export function groupAccounts(accounts: FilterAccount[]): AccountGroups {
-  const groups: AccountGroups = { Registered: [], Taxable: [], Cash: [] };
+  const groups: AccountGroups = { Registered: [], Taxable: [], Corporate: [], Cash: [] };
   for (const a of accounts) {
     if (REGISTERED_KINDS.has(a.kind)) groups.Registered.push(a);
     else if (TAXABLE_KINDS.has(a.kind)) groups.Taxable.push(a);
+    // Corporate is neither: personally it is not taxable income, but it is
+    // not cash either, so it gets its own bucket rather than falling through.
+    else if (a.kind === "Corporate") groups.Corporate.push(a);
     else groups.Cash.push(a);
   }
   return groups;
@@ -157,7 +166,7 @@ export function dateToMonthKey(date: Date): string {
 }
 
 function isGroupName(value: string | undefined): value is keyof AccountGroups {
-  return value === "Registered" || value === "Taxable" || value === "Cash";
+  return value === "Registered" || value === "Taxable" || value === "Corporate" || value === "Cash";
 }
 
 // Mutable controller shared by the module-level DOM helpers below, so
@@ -249,15 +258,21 @@ function buildAccountEl(a: FilterAccount): HTMLElement {
   const input = document.createElement("input");
   input.type = "checkbox";
   input.dataset.acctId = a.id;
+  // A named account shows only its name: pairing the kind badge with a name
+  // that already contains it reads as "RRSP Umar RRSP" or "Corporate Corporate
+  // Investing". Unnamed accounts keep the kind badge plus short_id, which is
+  // what uniquely identifies them.
+  const named = Boolean(a.name) && a.name !== a.kind;
   const badge = document.createElement("span");
   badge.className = "badge";
-  badge.textContent = a.kind;
-  const idSpan = document.createElement("span");
-  idSpan.className = "chip-id";
-  // A named account shows its name; the short_id stays the fallback for the
-  // unnamed ones, so every chip is still uniquely identifiable.
-  idSpan.textContent = a.name && a.name !== a.kind ? a.name : a.short_id;
-  label.append(input, badge, " ", idSpan);
+  badge.textContent = named ? a.name : a.kind;
+  label.append(input, badge);
+  if (!named) {
+    const idSpan = document.createElement("span");
+    idSpan.className = "chip-id";
+    idSpan.textContent = a.short_id;
+    label.append(" ", idSpan);
+  }
   return label;
 }
 

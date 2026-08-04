@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-08-04T19:57:56.864Z",
+    "generated_at": "2026-08-04T20:02:59.325Z",
     "schema_version": 1,
     "file_count": 186,
     "txn_count": 8098,
@@ -22,6 +22,16 @@
       "first_activity": "2025-07-24",
       "last_activity": "2026-07-30",
       "txn_count": 277
+    },
+    {
+      "masked_id": "acct_91b82482",
+      "kind": "Corporate",
+      "name": "Corporate Investing",
+      "short_id": "91b8",
+      "currency": "CAD",
+      "first_activity": "2026-01-30",
+      "last_activity": "2026-06-30",
+      "txn_count": 101
     },
     {
       "masked_id": "acct_8367cd66",
@@ -92,16 +102,6 @@
       "first_activity": "2025-11-25",
       "last_activity": "2026-06-30",
       "txn_count": 260
-    },
-    {
-      "masked_id": "acct_91b82482",
-      "kind": "Other",
-      "name": "Other",
-      "short_id": "91b8",
-      "currency": "CAD",
-      "first_activity": "2026-01-30",
-      "last_activity": "2026-06-30",
-      "txn_count": 101
     },
     {
       "masked_id": "acct_c2e9345e",
