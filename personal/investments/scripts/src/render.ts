@@ -184,6 +184,11 @@ function projectionSection(): string {
     '<div class="table-wrap" id="proj-table"></div>' +
     subhead("Contributions, grants, and growth") +
     canvasBox("chart-projection") +
+    subhead("Projected value by account") +
+    '<p class="section-note">Contribution room is assessed per person and per group, not per ' +
+    "account, so a group's room is split across its accounts by their recent share of that " +
+    "group's contributions. A line keeps its colour whatever else is selected.</p>" +
+    canvasBox("chart-projection-accounts") +
     '<div id="proj-caveats"></div>' +
     "</section>"
   );

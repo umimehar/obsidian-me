@@ -9,6 +9,7 @@
 // within the window, matching the old client's running-total semantics.
 import type { Grain, Scope } from "./filter";
 import { grainOf, pkey } from "./filter";
+import type { AccountAllocation } from "./projection";
 import type { ProjectionInputs, RegisteredRules } from "./projection";
 
 export interface SeriesAccount {
@@ -658,4 +659,54 @@ export function flowsForPeriod(ledger: SeriesLedger, scope: Scope, period: strin
     inflow: matching.filter((f) => f.amount > 0).sort(byDate),
     outflow: matching.filter((f) => f.amount < 0).sort(byDate),
   };
+}
+
+// Per-account shares of each registered group's contributions, for the
+// per-account projection lines. Derived from the scope year's actual
+// contributions, so the split reflects how the owner really funds the
+// accounts rather than an invented rule.
+//
+// Two fallbacks, because a group can legitimately have no contributions in the
+// scope year: fall back to each account's share of the group's opening balance,
+// and if that is also zero, split evenly. An account with neither
+// contributions nor a balance (a routing hub, for instance) gets a zero share
+// and is dropped by the caller rather than drawn as a flat zero line.
+export function accountAllocations(
+  ledger: SeriesLedger,
+  scope: Scope,
+  year: string,
+): AccountAllocation[] {
+  const accts = new Set(scope.accts);
+  // ACB **plus cash**, matching openingByGroup exactly. costByAccount's `cost`
+  // is ACB only, and using it here left the per-account lines summing about
+  // $34,000 below the group total after thirty years of compounding.
+  const { acbFF, cashFF } = buildFill(ledger);
+  const endIdx = scope.ris.length > 0 ? Math.max(...scope.ris) : -1;
+  const opening = new Map<string, number>(
+    ledger.accounts.map((a) => [
+      a.id,
+      endIdx >= 0 ? (acbFF.get(a.id)?.[endIdx] ?? 0) + (cashFF.get(a.id)?.[endIdx] ?? 0) : 0,
+    ]),
+  );
+  const contributed = new Map<string, number>();
+  for (const row of ledger.series) {
+    if (!accts.has(row.account_id) || !row.month.startsWith(year)) continue;
+    contributed.set(row.account_id, (contributed.get(row.account_id) ?? 0) + row.contrib);
+  }
+  const out: AccountAllocation[] = [];
+  for (const group of ROOM_GROUP_ORDER) {
+    const members = ledger.accounts.filter(
+      (a) => accts.has(a.id) && REGISTERED_GROUPS[a.kind] === group,
+    );
+    if (members.length === 0) continue;
+    const byContrib = members.map((a) => contributed.get(a.id) ?? 0);
+    const byOpening = members.map((a) => opening.get(a.id) ?? 0);
+    const basis = byContrib.some((v) => v > 0) ? byContrib : byOpening;
+    const total = basis.reduce((s, v) => s + v, 0);
+    members.forEach((a, i) => {
+      const share = total > 0 ? (basis[i] ?? 0) / total : 1 / members.length;
+      out.push({ accountId: a.id, group, share, opening: opening.get(a.id) ?? 0 });
+    });
+  }
+  return out;
 }

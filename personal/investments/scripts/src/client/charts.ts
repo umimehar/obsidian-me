@@ -289,3 +289,70 @@ export function incomeChart(canvas: HTMLCanvasElement, data: PeriodSeries): Char
     });
   });
 }
+
+// One line per account. Colour is keyed to the account's own fixed slot, not
+// its position in the list, so filtering the series set never repaints the
+// survivors — a line keeps its colour whatever else is on screen. Slots are
+// assigned in fixed order and never cycled; past the seventh the palette is
+// exhausted, so the caller must cap the series count rather than reuse a hue.
+const CATEGORICAL_SLOTS = 7;
+
+export interface AccountLine {
+  label: string;
+  slot: number;
+  values: number[];
+}
+
+export function accountProjectionChart(
+  canvas: HTMLCanvasElement,
+  labels: string[],
+  lines: AccountLine[],
+): Chart {
+  const text = cssVar("--color-text");
+  const grid = cssVar("--color-divider");
+  return replace(canvas, () => {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("no 2d context");
+    return new Chart(ctx, {
+      type: "line",
+      data: {
+        labels,
+        datasets: lines.map((l) => {
+          const colour = cssVar(`--color-cat-${(l.slot % CATEGORICAL_SLOTS) + 1}`);
+          return {
+            label: l.label,
+            data: l.values,
+            borderColor: colour,
+            backgroundColor: colour,
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            tension: 0.15,
+            fill: false,
+          };
+        }),
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+          // A legend is always present: with more than four lines these are not
+          // direct-labelled, so the legend is the only non-colour identity cue
+          // besides the year-by-year table below.
+          legend: { display: true, position: "bottom", labels: { color: text, boxWidth: 12 } },
+          tooltip: {
+            callbacks: { label: (item) => `${item.dataset.label}: ${money(item.parsed.y ?? 0)}` },
+          },
+        },
+        scales: {
+          x: { ticks: { color: text, maxTicksLimit: 10 }, grid: { display: false } },
+          y: {
+            ticks: { color: text, callback: (v) => money(Number(v)) },
+            grid: { color: grid },
+          },
+        },
+      },
+    });
+  });
+}

@@ -1,4 +1,5 @@
 import {
+  accountProjectionChart,
   capitalVsDepositsChart,
   cashflowChart,
   costBars,
@@ -12,10 +13,11 @@ import {
 // totalIncome, estimateTax) that are cheap enough to unit test directly.
 import type { Scope } from "./filter";
 import { money, monthLabel } from "./format";
-import { projectYears } from "./projection";
+import { allocateByAccount, projectYears } from "./projection";
 import type { ProjectionYear } from "./projection";
 import {
   REGISTERED_GROUPS,
+  accountAllocations,
   capitalTrend,
   cashflowSeries,
   costByAccount,
@@ -805,6 +807,57 @@ function drawProjectionChart(rows: ProjectionYear[], opening: number): void {
   if (canvas) projectionChart(canvas, rows, opening);
 }
 
+// Colour slots are assigned from a stable ordering of every registered account
+// in the ledger, not from the filtered list, so an account keeps its colour
+// when the selection changes. The palette has seven slots; a ledger with more
+// registered accounts than that would start reusing hues, so the extras are
+// dropped rather than drawn in a colour that already means something else.
+const ACCOUNT_COLOUR_SLOTS = 7;
+
+function accountColourSlots(ledger: SectionsLedger): Map<string, number> {
+  const registered = ledger.accounts
+    .filter((a) => REGISTERED_KINDS.has(a.kind))
+    .sort((a, b) => a.kind.localeCompare(b.kind) || a.short_id.localeCompare(b.short_id));
+  return new Map(registered.map((a, i) => [a.id, i]));
+}
+
+function drawAccountProjectionChart(
+  ledger: SectionsLedger,
+  scope: Scope,
+  year: string,
+  rows: ProjectionYear[],
+  returnRate: number,
+  fhsaCloseYear: string,
+): void {
+  const canvas = canvasOf("chart-projection-accounts");
+  if (!canvas) return;
+  const slots = accountColourSlots(ledger);
+  const byId = new Map(ledger.accounts.map((a) => [a.id, a]));
+  const series = allocateByAccount(
+    rows,
+    // A routing hub contributes nothing and holds nothing; a flat zero line
+    // would just consume a colour slot and a legend entry.
+    accountAllocations(ledger, scope, year).filter((a) => a.share > 0 || a.opening > 0),
+    returnRate,
+    fhsaCloseYear,
+  );
+  const lines = series
+    .filter((s) => (slots.get(s.accountId) ?? ACCOUNT_COLOUR_SLOTS) < ACCOUNT_COLOUR_SLOTS)
+    .map((s) => {
+      const a = byId.get(s.accountId);
+      return {
+        label: a ? `${a.kind} ${a.short_id}` : s.accountId,
+        slot: slots.get(s.accountId) ?? 0,
+        values: s.values,
+      };
+    });
+  accountProjectionChart(
+    canvas,
+    rows.map((r) => r.year),
+    lines,
+  );
+}
+
 // The eight statements the spec requires the page to say, every render —
 // see docs/superpowers/specs/2026-08-04-registered-projection-design.md,
 // "What the page must say". Two are parameterised by this render's actual
@@ -895,6 +948,7 @@ function drawProjection(
   renderProjectionTable(rows);
   renderProjectionSummary(rows, indexRate);
   drawProjectionChart(rows, opening);
+  drawAccountProjectionChart(ledger, scope, year, rows, returnRate, inputs.fhsaCloseYear);
   renderProjectionCaveats(
     projectionCaveats(inputs.fhsaCloseYear, indexRate, projectionSummaryFigures(rows, indexRate)),
   );

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import fixture from "./__fixtures__/projection-reference.json";
 import type { ProjectionInputs, ProjectionYear, RegisteredRules } from "./projection";
-import { projectYears } from "./projection";
+import { allocateByAccount, projectYears } from "./projection";
 
 const RULES: RegisteredRules = {
   fhsaAnnual: 8000,
@@ -364,5 +364,66 @@ describe("projectYears — start-year CESG annual cap", () => {
     const rows = projectYears(baseInputs({ ...diverged, years: 1 }));
     // Year two has 1,600 of room left and a fresh 1,000 cap, so it claims 1,000.
     expect(rows[1]?.grant).toBeCloseTo(1000, 2);
+  });
+});
+
+// The per-account lines are an allocation of the group projection, so they must
+// add back up to it. This caught a real bug: the shares were seeded from an
+// ACB-only opening balance while the group engine uses ACB plus cash, leaving
+// the lines about $34,000 short after thirty years of compounding.
+describe("allocateByAccount", () => {
+  const rows = projectYears(FIXTURE_INPUTS);
+  const openings = FIXTURE_INPUTS.opening;
+
+  test("account lines sum back to the group total, to the cent", () => {
+    const allocations = [
+      { accountId: "t1", group: "TFSA", share: 0.7, opening: (openings.TFSA ?? 0) * 0.7 },
+      { accountId: "t2", group: "TFSA", share: 0.3, opening: (openings.TFSA ?? 0) * 0.3 },
+      { accountId: "f1", group: "FHSA", share: 1, opening: openings.FHSA ?? 0 },
+      { accountId: "r1", group: "RRSP", share: 0.6, opening: (openings.RRSP ?? 0) * 0.6 },
+      { accountId: "r2", group: "RRSP", share: 0.4, opening: (openings.RRSP ?? 0) * 0.4 },
+      { accountId: "e1", group: "RESP", share: 1, opening: openings.RESP ?? 0 },
+    ];
+    const series = allocateByAccount(rows, allocations, 0.08, FIXTURE_INPUTS.fhsaCloseYear);
+    const last = rows[rows.length - 1]?.value ?? 0;
+    const summed = series.reduce((s, x) => s + (x.values[x.values.length - 1] ?? 0), 0);
+    expect(summed).toBeCloseTo(last, 2);
+  });
+
+  test("an FHSA account is emptied in the closure year and never recovers", () => {
+    const series = allocateByAccount(
+      rows,
+      [{ accountId: "f1", group: "FHSA", share: 1, opening: openings.FHSA ?? 0 }],
+      0.08,
+      FIXTURE_INPUTS.fhsaCloseYear,
+    );
+    const closeIdx = rows.findIndex((r) => r.year === FIXTURE_INPUTS.fhsaCloseYear);
+    const values = series[0]?.values ?? [];
+    expect(values[closeIdx - 1] ?? 0).toBeGreaterThan(0);
+    for (let i = closeIdx; i < values.length; i++) expect(values[i]).toBe(0);
+  });
+
+  test("the RESP account receives the CESG grant, not just the contribution", () => {
+    const withGrant = allocateByAccount(
+      rows,
+      [{ accountId: "e1", group: "RESP", share: 1, opening: 0 }],
+      0,
+      "9999",
+    );
+    const contributions = rows.reduce((s, r) => s + (r.contributions.RESP ?? 0), 0);
+    const grants = rows.reduce((s, r) => s + r.grant, 0);
+    const final = withGrant[0]?.values.at(-1) ?? 0;
+    expect(final).toBeCloseTo(contributions + grants, 2);
+    expect(grants).toBeGreaterThan(0);
+  });
+
+  test("a zero share contributes nothing but still compounds its own balance", () => {
+    const series = allocateByAccount(
+      rows,
+      [{ accountId: "hub", group: "RRSP", share: 0, opening: 1000 }],
+      0.1,
+      "9999",
+    );
+    expect(series[0]?.values[0]).toBeCloseTo(1100, 2);
   });
 });

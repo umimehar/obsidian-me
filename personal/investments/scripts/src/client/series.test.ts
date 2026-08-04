@@ -8,6 +8,7 @@ import type {
   SeriesRow,
 } from "./series";
 import {
+  accountAllocations,
   capitalTrend,
   cashflowSeries,
   costByAccount,
@@ -731,5 +732,118 @@ describe("projectionInputs", () => {
     expect(out.opening).toEqual({});
     expect(out.contributedThisYear).toEqual({ TFSA: 0, FHSA: 0, RRSP: 0, RESP: 0 });
     expect(out.lifetimeContributed).toEqual({ FHSA: 0, RESP: 0 });
+  });
+});
+
+// The opening balance handed to the per-account lines must be ACB PLUS cash,
+// the same basis openingByGroup uses for the group projection. Seeding it from
+// costByAccount's ACB-only `cost` left the account lines summing about $34,000
+// below the group total after thirty years of compounding — silent, because
+// each line looked individually plausible.
+describe("accountAllocations opening basis", () => {
+  test("opening counts cash as well as acb", () => {
+    const L = ledger({
+      accounts: [
+        {
+          id: "A",
+          kind: "TFSA",
+          name: "TFSA",
+          short_id: "aaaa",
+          currency: "CAD",
+          first_activity: "2024-01-01",
+        },
+      ],
+      series: [row({ account_id: "A", month: "2024-01", contrib: 100, acb: 700, cash: 300 })],
+    });
+    const [alloc] = accountAllocations(L, { ris: [0], accts: ["A"] }, "2024");
+    expect(alloc?.opening).toBe(1000);
+  });
+
+  test("shares within a group sum to one", () => {
+    const L = ledger({
+      accounts: [
+        {
+          id: "A",
+          kind: "TFSA",
+          name: "TFSA",
+          short_id: "aaaa",
+          currency: "CAD",
+          first_activity: "2024-01-01",
+        },
+        {
+          id: "B",
+          kind: "ManagedTFSA",
+          name: "TFSA",
+          short_id: "bbbb",
+          currency: "CAD",
+          first_activity: "2024-01-01",
+        },
+      ],
+      series: [
+        row({ account_id: "A", month: "2024-01", contrib: 750 }),
+        row({ account_id: "B", month: "2024-01", contrib: 250 }),
+      ],
+    });
+    const out = accountAllocations(L, { ris: [0], accts: ["A", "B"] }, "2024");
+    expect(out.map((a) => a.share)).toEqual([0.75, 0.25]);
+    expect(out.reduce((s, a) => s + a.share, 0)).toBeCloseTo(1, 10);
+  });
+
+  test("falls back to opening-balance share when nothing was contributed that year", () => {
+    const L = ledger({
+      accounts: [
+        {
+          id: "A",
+          kind: "TFSA",
+          name: "TFSA",
+          short_id: "aaaa",
+          currency: "CAD",
+          first_activity: "2024-01-01",
+        },
+        {
+          id: "B",
+          kind: "ManagedTFSA",
+          name: "TFSA",
+          short_id: "bbbb",
+          currency: "CAD",
+          first_activity: "2024-01-01",
+        },
+      ],
+      series: [
+        row({ account_id: "A", month: "2024-01", acb: 800 }),
+        row({ account_id: "B", month: "2024-01", acb: 200 }),
+      ],
+    });
+    const out = accountAllocations(L, { ris: [0], accts: ["A", "B"] }, "2024");
+    expect(out.map((a) => a.share)).toEqual([0.8, 0.2]);
+  });
+
+  test("splits evenly when there is neither a contribution nor a balance", () => {
+    const L = ledger({
+      accounts: [
+        {
+          id: "A",
+          kind: "TFSA",
+          name: "TFSA",
+          short_id: "aaaa",
+          currency: "CAD",
+          first_activity: "2024-01-01",
+        },
+        {
+          id: "B",
+          kind: "ManagedTFSA",
+          name: "TFSA",
+          short_id: "bbbb",
+          currency: "CAD",
+          first_activity: "2024-01-01",
+        },
+      ],
+      series: [
+        row({ account_id: "A", month: "2024-01" }),
+        row({ account_id: "B", month: "2024-01" }),
+      ],
+    });
+    const out = accountAllocations(L, { ris: [0], accts: ["A", "B"] }, "2024");
+    expect(out.map((a) => a.share)).toEqual([0.5, 0.5]);
   });
 });

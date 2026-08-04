@@ -21,4 +21,18 @@ Prose format: one line per paragraph and per list item — never hard-wrap at a 
 
 ## Vault
 
-_No lessons captured yet._
+### config lives only in the dev vault (2026-08-04)
+
+Why:
+- Two copies of Claude Code config drift apart, and the copy you are not looking at is the one that goes stale.
+- The `config/claude/` and `config/git-hooks/` folders this vault's docs described never existed on disk, so `core.hooksPath` pointed at nothing and the "pre-commit masking guard" was a phantom safety net for three weeks.
+
+NEVER create a `config/` folder in `obsidian-me`. Claude Code config — `CLAUDE.md`, skills, MCP definitions in `mcp/mcp.json`, hooks, statusline — is owned solely by `~/obsidian/obsidian-dev/config/claude/` and symlinked into `~/.claude/` by `bootstrap.sh`. Add a skill or an MCP server there and re-run `python3 mcp/register-mcp.py`; never drop one into `~/.claude/skills/` directly, or the next device will not have it.
+
+### pin mcp<2 for stdio servers that import McpError (2026-08-04)
+
+Why:
+- `mcp` 2.0.0 removed `McpError` from `mcp.shared.exceptions`. `mcp-server-reddit` (0.2.1, unmaintained) and `mcp-server-fetch` import it at module load, so an unpinned `uvx` run dies with `ImportError` before the JSON-RPC handshake.
+- Claude Code reports that as a bare `Connection closed`, which says nothing about the cause and sends you looking at the wrong layer.
+
+ALWAYS diagnose an MCP `Connection closed` by running the server's command by hand and reading stderr, not by re-registering it. For these two the fix is `uvx --with "mcp<2" <server>`; drop the pin when either package ships a 2.x-compatible release.

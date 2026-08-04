@@ -349,3 +349,57 @@ export function projectYears(inputs: ProjectionInputs): ProjectionYear[] {
 
   return rows;
 }
+
+// ---- per-account allocation -------------------------------------------------
+
+// The engine above is deliberately per-GROUP, because CRA contribution room is
+// assessed per person and per group, not per account. Several accounts can
+// share one pool: two TFSAs, four RRSPs. To show a line per account, that
+// shared room has to be split by some rule, and there is no rule in the data —
+// only a choice. This allocates by each account's recent share of its group's
+// contributions, which is the owner's actual funding pattern rather than an
+// invented split.
+export interface AccountAllocation {
+  accountId: string;
+  group: string;
+  // Fraction of the group's contributions this account receives, 0..1.
+  // Shares within a group are expected to sum to 1.
+  share: number;
+  opening: number;
+}
+
+export interface AccountValueSeries {
+  accountId: string;
+  group: string;
+  values: number[];
+}
+
+// A group's money in for one year: contributions plus, for the RESP, the CESG
+// grant, which lands in the account like a contribution even though it is not
+// one for room purposes.
+function groupInflow(row: ProjectionYear, group: string): number {
+  const contribution = row.contributions[group] ?? 0;
+  return group === "RESP" ? contribution + row.grant : contribution;
+}
+
+// Compounds each account independently off its own opening balance, taking its
+// share of the group's yearly inflow. Mirrors the group engine's convention:
+// growth applies to the opening balance, contributions land at year end and
+// earn nothing in their own year, and an FHSA is emptied in its closure year.
+export function allocateByAccount(
+  rows: ProjectionYear[],
+  allocations: AccountAllocation[],
+  returnRate: number,
+  fhsaCloseYear: string,
+): AccountValueSeries[] {
+  return allocations.map((a) => {
+    let value = a.opening;
+    const values: number[] = [];
+    for (const row of rows) {
+      value = value * (1 + returnRate) + groupInflow(row, a.group) * a.share;
+      if (a.group === "FHSA" && row.year === fhsaCloseYear) value = 0;
+      values.push(value);
+    }
+    return { accountId: a.accountId, group: a.group, values };
+  });
+}
