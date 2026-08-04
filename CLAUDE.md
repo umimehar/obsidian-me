@@ -4,7 +4,7 @@
 
 Personal life-management vault and second brain. Tracks personal endeavors (taxes, applications, certifications, admin, life areas) and personal code projects. Persistent memory across Claude Code sessions. Uses the same system as the `dev` vault, but personal-first: `personal/` is the primary content, `projects/` holds personal code.
 
-> **Sensitive info policy.** Never commit unmasked sensitive data (SIN, passport, national ID, bank/account numbers, card numbers, government file numbers). Replace the value with `****` in the note, keeping the label (`SIN: ****`). A pre-commit guard in `config/git-hooks/pre-commit` blocks commits that contain unmasked patterns — do not bypass it to commit real secrets.
+> **Sensitive info policy.** Never commit unmasked sensitive data (SIN, passport, national ID, bank/account numbers, card numbers, government file numbers). Replace the value with `****` in the note, keeping the label (`SIN: ****`). Nothing enforces this automatically — mask at write time, and check the diff before every commit.
 
 ## Folder Structure
 
@@ -28,7 +28,8 @@ Personal life-management vault and second brain. Tracks personal endeavors (taxe
 - `standup/` — Daily cross-endeavor summary notes
 - `retros/` — Retros and learnings
 - `templates/` — Note templates
-- `config/claude/` — This vault's own standalone Claude Code config (MCP servers + session skills). Not symlinked from `dev`.
+
+This vault has **no `config/` folder**, and must never grow one. Claude Code config — `CLAUDE.md`, skills, MCP definitions, hooks, statusline — is owned solely by the `dev` vault at `~/obsidian/obsidian-dev/config/claude/` and symlinked into `~/.claude/`. Add or change a skill or MCP server there, never here. Paths in these notes that read `config/claude/...` resolve against the `dev` vault.
 
 ## Conventions
 

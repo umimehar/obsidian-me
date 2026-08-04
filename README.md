@@ -34,25 +34,26 @@ Settings > Community Plugins > turn off Restricted Mode, then install:
 - **Local REST API** — enables Claude Code MCP connection. Copy this vault's API key from Settings > Local REST API (it is **different** from the `dev` vault's key).
 - Templater, Calendar, Dataview — recommended. Kanban — optional, only for the orchestrator board UI.
 
-### 4. Install the git hooks (masking guard)
+### 4. Install the git hooks
 
 ```bash
 cd ~/obsidian/obsidian-me
-git config core.hooksPath config/git-hooks
+git config core.hooksPath ~/obsidian/obsidian-dev/config/git-hooks
 ```
 
-This enables `config/git-hooks/pre-commit`, which blocks commits containing unmasked sensitive data (SIN, passport, card, account numbers).
+Hooks live in the `dev` vault, same as everything else under `config/`. Point at them by absolute path rather than copying them here.
 
 ### 5. Set up Claude Code MCP + config
 
-This vault ships its own config at `config/claude/`:
+This vault carries **no** `config/` folder. All Claude Code configuration — `CLAUDE.md`, skills, MCP definitions, hooks, statusline — lives in the `dev` vault at `~/obsidian/obsidian-dev/config/claude/` and is symlinked into `~/.claude/`. Set it up once there:
 
 ```bash
-cd ~/obsidian/obsidian-me/config/claude
-cp .env.example .env && $EDITOR .env   # fill OBSIDIAN_API_KEY with THIS vault's Local REST API key
+cd ~/obsidian/obsidian-dev/config/claude
+cp .env.example .env && $EDITOR .env   # fill OBSIDIAN_API_KEY, X_CLIENT_ID/SECRET, ...
+./bootstrap.sh                         # symlink into ~/.claude and register MCP servers
 ```
 
-MCP servers are defined in `config/claude/mcp/mcp.json` (obsidian, reddit, context7, sequential-thinking). The obsidian MCP connects to whichever vault has the Local REST API plugin active, so open this vault in Obsidian when working here.
+MCP servers are defined in `~/obsidian/obsidian-dev/config/claude/mcp/mcp.json`. The obsidian MCP connects to whichever vault has the Local REST API plugin active, so open this vault in Obsidian when working here.
 
 ### 6. Verify
 
@@ -76,9 +77,9 @@ obsidian-me/
   standup/               Daily cross-endeavor summaries
   retros/                Retros and learnings
   templates/             Note templates
-  config/claude/         This vault's standalone Claude Code config (MCP + skills)
-  config/git-hooks/      Pre-commit masking guard
 ```
+
+There is deliberately no `config/` here. Claude Code config, skills, and git hooks are owned by the `dev` vault (`~/obsidian/obsidian-dev/config/`) and shared from there.
 
 ## Session Workflow
 

@@ -26,6 +26,6 @@ last_heartbeat: 2026-07-13T12:00:00
 
 Personal Mac Studio (macOS 26.5, `ComputerName` **Mac Studio**). First device registered in this vault's fleet. Runs Claude Code interactively; the autonomous daemon lane is off here (`daemon: false`, and the slug is absent from `control.md` `devices_enabled`).
 
-This vault ships its own standalone Claude Code config at [[config/claude/README|config/claude]] (MCP servers + session skills); it is not symlinked from the `dev` vault.
+Claude Code config (MCP servers + session skills) lives only in the `dev` vault at `~/obsidian/obsidian-dev/config/claude/`, symlinked into `~/.claude/`. This vault carries no `config/` folder.
 
 New devices join by cloning the vault and adding their own file in this folder (see [[orchestrator/design|design spec]], Device identity).

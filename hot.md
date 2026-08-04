@@ -17,9 +17,10 @@ Scannable cache of active endeavors and recent session context. Read this first.
 
 ## Recent sessions
 
-- **2026-07-13** — Vault initialized from the `dev` system: personal-first structure (`personal/`, `projects/`, `orchestrator/`, `knowledge/`), standalone `config/claude/`, and a pre-commit masking guard. See `standup/2026-07-13.md`.
+- **2026-08-04** — Config consolidated: this vault carries no `config/` folder. Claude Code config, skills, MCP definitions, and git hooks live only in `~/obsidian/obsidian-dev/config/`. Docs here that claimed a standalone config or a pre-commit masking guard were describing something that never existed on disk.
+- **2026-07-13** — Vault initialized from the `dev` system: personal-first structure (`personal/`, `projects/`, `orchestrator/`, `knowledge/`). See `standup/2026-07-13.md`.
 
 ## Pending
 
-- Install the git masking hook on this device: `git config core.hooksPath config/git-hooks`
-- Fill `config/claude/.env` with this vault's Local REST API key
+- Fill `~/obsidian/obsidian-dev/config/claude/.env` with this vault's Local REST API key
+- Decide whether the sensitive-data masking guard gets built for real (as a hook in the `dev` vault) or the policy stays manual-only
