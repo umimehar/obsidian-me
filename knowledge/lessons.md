@@ -2,7 +2,7 @@
 title: Lessons
 tags: [knowledge, lessons]
 created: 2026-07-13
-updated: 2026-07-13
+updated: 2026-08-05
 status: active
 type: permanent
 ---
@@ -36,3 +36,24 @@ Why:
 - Claude Code reports that as a bare `Connection closed`, which says nothing about the cause and sends you looking at the wrong layer.
 
 ALWAYS diagnose an MCP `Connection closed` by running the server's command by hand and reading stderr, not by re-registering it. For these two the fix is `uvx --with "mcp<2" <server>`; drop the pin when either package ships a 2.x-compatible release.
+
+## Sensitive data
+
+### never paste a real identifier into a doc as an example (2026-08-05)
+
+Why:
+- Masking effort concentrates on the pipeline output, so specs, plans, tests, and shell snippets get written with real values as illustrations and nobody masks them. In one session this leaked, four separate times, into files staged for commit: account numbers in test fixtures, a real filename list in a committed source file, the owner's surname inside a verification `grep`, and a city plus account number in plan prose.
+- Every leak passed the leak check, because each check matched one shape of identifier (`(WK|HQ|WZ)[A-Z0-9]{7,}`) while the document carried another (a bare 8-digit number, a name token, a postal code).
+- A statement filename IS an account number. So is a fixture list, a test input, and an error message that echoes its input.
+
+NEVER write a real account number, name, address, or filename into any tracked file — including specs, plans, test fixtures, code comments, and example commands. Use synthetic values (`ACCT0001CAD`, `First Last`, `Springfield`) and keep every real value in a gitignored config the code reads at runtime.
+
+ALWAYS make the leak gate match identifier *classes*, not one pattern, and have it read the name list from the gitignored config rather than hardcoding it: bare digit runs (`"[0-9]{7,}"`), postal codes (`[A-Z][0-9][A-Z] ?[0-9][A-Z][0-9]`), the SIN shape, the vendor account-code shape, and every token of every configured name. Run it against the staged diff before commit, not against the pipeline output only.
+
+### verify a claim against the corpus, not against a sample (2026-08-05)
+
+Why:
+- Four hand-read statements produced a parser design that failed on roughly half of 220 real files. Wealthsimple renamed the account-type descriptor twice inside one corpus — the same TFSA reads `Tax-Free Savings Account` in 2023, `Self-directed TFSA Account` in 2026-01, and `Order Execution Only TFSA Account` in 2026-06 — and two wordings contain "Cash" while being a TFSA and an FHSA.
+- Column x positions drifted between 340 and 362 across years, so any absolute position was wrong somewhere.
+
+ALWAYS enumerate the full value set from every file before writing a mapping table or a format regex — `for f in *.pdf; do ... done | sort -u` costs a minute and is the difference between a table and a guess. When a document's layout is load-bearing, prefer coordinates (`pdftotext -bbox-layout`) over flattened text (`pdftotext -layout`): flattening discards the structure and forces regexes to reconstruct it from whitespace, which breaks on interleaved panels, wrapped labels, and any marginal content.
