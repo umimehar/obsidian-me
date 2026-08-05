@@ -553,24 +553,8 @@ describe("scanPairs", () => {
   });
 });
 
-describe("against a real statement", () => {
-  test("finds the account type row and the portfolio total", async () => {
-    const pages = await load("brokerage-managed");
-    const total = findRow(pages, /Total Portfolio/);
-    if (!total) throw new Error("expected a Total Portfolio row");
-    const values = scanPairs([total])[0]?.values ?? [];
-    expect(values[0]).toBe(20498.54);
-  });
-
-  test("the address does not contaminate the summary table", async () => {
-    const pages = await load("brokerage-managed");
-    const row = findRow(pages, /Canadian/);
-    if (!row) throw new Error("expected the asset class row");
-    // The mailing address sits far to the left of the table.
-    const table = sliceColumns([row], 200, 600);
-    expect(rowText(table[0] ?? { y: 0, words: [] })).not.toMatch(/Road|ON|CA$/);
-  });
-});
+// Tests against a real statement live in Task 3, once the fixtures exist.
+// Nothing here reads a fixture, so this suite is green on its own.
 ```
 
 - [ ] **Step 4: Run it, verify it fails, implement `geometry.ts`**
@@ -735,12 +719,12 @@ export function scanPairs(rows: readonly Row[]): LabelValue[] {
 ```
 
 Run: `cd personal/investments/app && bun test src/ingest/geometry.test.ts`
-Expected: the first 9 tests PASS; the final two ("against a real statement") FAIL until Task 3 writes the fixtures. That is the expected intermediate state.
+Expected: PASS, 9 tests. Nothing in this suite reads a fixture, so it is green on its own.
 
 - [ ] **Step 5: Check and commit**
 
-Run: `cd personal/investments/app && bun run lint && bun run typecheck`
-Expected: clean. Do not run `bun run check` yet — two tests are knowingly red until Task 3.
+Run: `cd personal/investments/app && bun run check`
+Expected: clean, 21 tests (6 source, 6 money, 9 geometry).
 
 ```bash
 git add personal/investments/app
@@ -898,10 +882,38 @@ bun -e 'const c = await Bun.file("redactions.json").json();
 
 Expected: seven `.xml` files, all three checks print `clean`. Any leak stops the task — do not commit until all three are clean.
 
-- [ ] **Step 5: Confirm the two deferred geometry tests now pass, then commit**
+- [ ] **Step 5: Add the fixture-backed geometry tests, then commit**
+
+Append to `app/src/ingest/geometry.test.ts` — these need a fixture, which now exists:
+
+```ts
+describe("against a real statement", () => {
+  const load = async (name: string) =>
+    parseGeometry(await Bun.file(join(FIXTURES, `${name}.xml`)).text());
+
+  test("finds the portfolio total", async () => {
+    const total = findRow(await load("brokerage-managed"), /Total Portfolio/);
+    if (!total) throw new Error("expected a Total Portfolio row");
+    expect(scanPairs([total])[0]?.values[0]).toBe(20498.54);
+  });
+
+  test("the mailing address does not contaminate the summary table", async () => {
+    const pages = await load("brokerage-managed");
+    const row = findRow(pages, /Total Portfolio/);
+    if (!row) throw new Error("expected the total row");
+    const labelX = labelStartX(row, /Total Portfolio/);
+    if (labelX === null) throw new Error("expected a label position");
+    // Everything left of the table is address; slicing removes it.
+    const table = sliceColumns(pages.flatMap((p) => p.rows), labelX - 1, Number.POSITIVE_INFINITY);
+    expect(table.every((r) => !/Road|Suite/.test(rowText(r)))).toBe(true);
+  });
+});
+```
+
+Note `labelStartX` arrives in Task 5; if it is not yet present, add it there first — it is nine lines and its test is in Task 5 Step 1.
 
 Run: `cd personal/investments/app && bun run check`
-Expected: clean, 17 tests (6 source, 6 money, 11 geometry — of which the last two now have their fixture).
+Expected: clean, 23 tests (6 source, 6 money, 11 geometry).
 
 ```bash
 git add personal/investments/app

@@ -62,7 +62,7 @@ The 14 PDF accounts are the real set. The CSV export produced 18 by splitting US
 
 ## Architecture
 
-Six stages, each a module with one job, in a Bun + TypeScript workspace.
+Seven stages, each a module with one job, in a Bun + TypeScript workspace.
 
 | Stage | Input to output | Responsibility |
 |---|---|---|
