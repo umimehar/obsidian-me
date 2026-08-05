@@ -29,7 +29,13 @@ function statement(over: Partial<Statement> = {}): Statement {
     portfolio: {
       cashMarketValue: 122.95,
       cashBookCost: 122.95,
-      classes: [],
+      classes: [
+        {
+          name: "Canadian Equities and Alternatives",
+          marketValue: 20375.59,
+          bookCost: 20378.75,
+        },
+      ],
       totalMarketValue: 20498.54,
       totalBookCost: 20501.7,
     },
@@ -153,53 +159,102 @@ describe("checkArithmetic", () => {
     expect(marketFinding?.severity).toBe("error");
   });
 
-  test("flags a book-cost mismatch with no converted holding as an error", () => {
+  test("flags a book-cost mismatch with no converted holding as an error, at any magnitude", () => {
+    // No conversion touched this class at all, so there is no excuse for any
+    // size of mismatch -- unlike market value, book cost gets no budget: a
+    // magnitude cap cannot tell a real column-read bug from an fx residual,
+    // since the two overlap in size (a wrong-column read on these same
+    // statements would be 0.16%-26.05%, the real fx residuals 0.02%-4.55%).
     const bad = statement();
     const h = bad.holdings[0];
     if (!h) throw new Error("fixture");
     h.bookCost = 1;
     const f = checkArithmetic([bad]);
-    const bookFinding = f.find((x) => x.message.includes("book cost"));
-    expect(bookFinding).toBeDefined();
-    expect(bookFinding?.severity).toBe("error");
-    expect(bookFinding?.message).toBe(
-      "holdings plus cash do not equal the portfolio book cost total",
+    const classFinding = f.find((x) => x.message.includes("Canadian Equities"));
+    expect(classFinding).toBeDefined();
+    expect(classFinding?.severity).toBe("error");
+    const wholeFinding = f.find(
+      (x) => x.message === "holdings plus cash do not equal the portfolio book cost total",
     );
+    expect(wholeFinding).toBeDefined();
+    expect(wholeFinding?.severity).toBe("error");
   });
 
-  test("flags a small book-cost mismatch with a converted holding as a named warning", () => {
+  test("flags a book-cost mismatch with a converted holding as a named warning, regardless of size", () => {
     // A USD holding's book cost is converted at the statement's own fx rate,
     // which its footnote discloses for market value only -- a real,
     // expected residual, not a parser bug, so it must not read as an error.
-    // 100 is under the 5% (398.08) budget for this holding's 7961.6 book cost.
-    const bad = statement();
-    const h = bad.holdings[0];
-    if (!h) throw new Error("fixture");
-    h.bookCost += 100;
-    h.bookCostConverted = true;
-    const f = checkArithmetic([bad]);
-    const bookFinding = f.find((x) => x.message.includes("book cost"));
-    expect(bookFinding).toBeDefined();
-    expect(bookFinding?.severity).toBe("warning");
-    expect(bookFinding?.message).toMatch(/disclosed rate applies to market value only/);
-  });
-
-  test("still flags a book-cost mismatch too large to be fx drift as an error", () => {
-    // A converted holding does not excuse an arbitrarily large residual: it
-    // budgets 5% of the converted book cost (398.08 here), and 1000 is well
-    // past that -- this must surface as a real parser defect, not a warning.
+    // No magnitude cap here: the classification is structural (does this
+    // class contain a converted holding), not a size threshold.
     const bad = statement();
     const h = bad.holdings[0];
     if (!h) throw new Error("fixture");
     h.bookCost += 1000;
     h.bookCostConverted = true;
     const f = checkArithmetic([bad]);
-    const bookFinding = f.find((x) => x.message.includes("book cost"));
-    expect(bookFinding).toBeDefined();
-    expect(bookFinding?.severity).toBe("error");
-    expect(bookFinding?.message).toBe(
-      "holdings plus cash do not equal the portfolio book cost total",
+    const classFinding = f.find((x) => x.message.includes("Canadian Equities"));
+    expect(classFinding).toBeDefined();
+    expect(classFinding?.severity).toBe("warning");
+    expect(classFinding?.message).toMatch(/disclosed rate applies to market value only/);
+  });
+
+  test("flags an all-CAD class mismatch as an error even when another class on the same statement holds converted USD holdings", () => {
+    // This is the case the old whole-statement `hasConverted` flag let
+    // through: a USD holding anywhere on the statement used to excuse a
+    // mismatch everywhere on it. A real defect in the CAD class must not be
+    // masked by an unrelated, correctly-reconciling converted class.
+    const bad = statement({
+      portfolio: {
+        cashMarketValue: 0,
+        cashBookCost: 0,
+        classes: [
+          { name: "Canadian Equities and Alternatives", marketValue: 100, bookCost: 100 },
+          { name: "US Equities and Alternatives", marketValue: 200, bookCost: 200 },
+        ],
+        totalMarketValue: 300,
+        totalBookCost: 300,
+      },
+      holdings: [
+        {
+          name: "CAD Fund",
+          symbol: "CDF",
+          quantity: 1,
+          segregatedQuantity: 1,
+          marketPrice: 100,
+          priceCurrency: "CAD",
+          marketValue: 100,
+          marketValueConverted: false,
+          bookCost: 50, // wrong: the class expects 100, and nothing here was converted
+          assetClass: "Canadian Equities and Alternatives",
+          pendingValuation: false,
+          bookCostConverted: false,
+        },
+        {
+          name: "US Fund",
+          symbol: "USF",
+          quantity: 1,
+          segregatedQuantity: 1,
+          marketPrice: 200,
+          priceCurrency: "USD",
+          marketValue: 200,
+          marketValueConverted: true,
+          bookCost: 200, // reconciles exactly
+          assetClass: "US Equities and Alternatives",
+          pendingValuation: false,
+          bookCostConverted: true,
+        },
+      ],
+    });
+    const f = checkArithmetic([bad]);
+    const cadFinding = f.find((x) => x.message.includes("Canadian Equities"));
+    expect(cadFinding).toBeDefined();
+    expect(cadFinding?.severity).toBe("error");
+    expect(f.find((x) => x.message.includes("US Equities"))).toBeUndefined();
+    const wholeFinding = f.find(
+      (x) => x.message === "holdings plus cash do not equal the portfolio book cost total",
     );
+    expect(wholeFinding).toBeDefined();
+    expect(wholeFinding?.severity).toBe("error");
   });
 
   test("flags a paid-in breakdown that does not sum to its total", () => {

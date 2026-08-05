@@ -1,5 +1,5 @@
 import { classifyAccountType, maskAccountNo } from "../store/mask";
-import type { CashSummary, PortfolioSummary, Statement } from "../types";
+import type { AssetClassTotal, CashSummary, Holding, PortfolioSummary, Statement } from "../types";
 import { type Finding, within } from "./report";
 
 function finding(
@@ -118,35 +118,83 @@ function checkMarketValue(s: Statement, p: PortfolioSummary, out: Finding[]): vo
   );
 }
 
-/**
- * Book cost gets the same reconciliation, but not the same trust: a USD
- * holding's book cost is converted at the statement's own fx rate, which its
- * footnote discloses for market value only. Book cost is an accumulated
- * basis recorded at each purchase's own historical rate, so a converted
- * holding can leave a real, expected residual -- a warning, named as such,
- * not a silent pass or a false error.
- *
- * Unlike market value's flat cent-per-holding rounding, this residual is
- * proportional to how much book cost was actually converted, since it comes
- * from years of purchases at their own historical rates, not one rate
- * applied once. The budget is 5% of the converted holdings' book cost: the
- * largest residual seen across the 19 real converted-holding statements in
- * this corpus is 4.55%, so 5% covers all of them with headroom while still
- * rejecting a mismatch too large to be this effect. A mismatch with no
- * converted holding involved, or one past the budget, has no such excuse
- * and stays an error.
- */
-const BOOK_COST_FX_BUDGET_FRACTION = 0.05;
+interface ClassBookCostResult {
+  name: string;
+  sum: number;
+  expected: number;
+  hasConverted: boolean;
+  reconciles: boolean;
+}
 
+/**
+ * A magnitude budget cannot separate an fx residual from a real column-read
+ * bug: measuring what a wrong-column read (book cost misread as market
+ * value) would look like gives 0.16%-26.05% across the same 19 statements
+ * that carry real fx residuals of 0.02%-4.55% -- the two overlap in size, so
+ * no threshold can tell them apart. The statement's own structure can,
+ * though: it states book cost per asset class, and every holding carries
+ * its class. A class made entirely of unconverted (CAD) holdings has no fx
+ * rate touching it at all, so its book cost must reconcile exactly; a class
+ * with a converted holding is where the approximation actually lives.
+ */
+function reconcileClassBookCost(
+  holdings: readonly Holding[],
+  cls: AssetClassTotal,
+): ClassBookCostResult {
+  const classHoldings = holdings.filter((h) => h.assetClass === cls.name);
+  const sum = classHoldings.reduce((a, h) => a + h.bookCost, 0);
+  return {
+    name: cls.name,
+    sum,
+    expected: cls.bookCost,
+    hasConverted: classHoldings.some((h) => h.bookCostConverted),
+    reconciles: within(sum, cls.bookCost),
+  };
+}
+
+function pushClassBookCostFindings(
+  s: Statement,
+  results: readonly ClassBookCostResult[],
+  out: Finding[],
+): void {
+  for (const r of results) {
+    if (r.reconciles) continue;
+    const delta = r.sum - r.expected;
+    out.push(
+      finding(
+        "statement-arithmetic",
+        s,
+        r.hasConverted
+          ? `${r.name} book cost differs by ${delta.toFixed(2)}; the statement's disclosed rate applies to market value only, so converted USD book cost is approximate`
+          : `${r.name} book cost does not reconcile: holdings sum to a different figure than the class total`,
+        r.expected,
+        r.sum,
+        r.hasConverted ? "warning" : "error",
+      ),
+    );
+  }
+}
+
+/**
+ * The whole-statement figure is kept too, but its severity is derived from
+ * the per-class results rather than from "some holding somewhere is USD":
+ * a real defect in one class must not be excused by an unrelated converted
+ * class reconciling fine elsewhere on the same statement. Only when every
+ * class-level mismatch is a converted one (or there is no class-level
+ * mismatch to explain a cash-only residual) does the whole-statement figure
+ * read as the fx warning; any class-level error demotes it back to error.
+ */
 function checkBookCost(s: Statement, p: PortfolioSummary, out: Finding[]): void {
+  const results = p.classes.map((cls) => reconcileClassBookCost(s.holdings, cls));
+  pushClassBookCostFindings(s, results, out);
+
   const bookSum = s.holdings.reduce((a, h) => a + h.bookCost, 0) + p.cashBookCost;
   if (within(bookSum, p.totalBookCost)) return;
 
-  const converted = s.holdings.filter((h) => h.bookCostConverted);
-  const convertedBookCost = converted.reduce((a, h) => a + h.bookCost, 0);
+  const anyClassError = results.some((r) => !r.reconciles && !r.hasConverted);
+  const anyClassWarning = results.some((r) => !r.reconciles && r.hasConverted);
+  const isApproximate = !anyClassError && anyClassWarning;
   const delta = bookSum - p.totalBookCost;
-  const budget = convertedBookCost * BOOK_COST_FX_BUDGET_FRACTION;
-  const isApproximate = converted.length > 0 && Math.abs(delta) <= budget;
   out.push(
     finding(
       "statement-arithmetic",
