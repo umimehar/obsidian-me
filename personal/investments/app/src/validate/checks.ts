@@ -1,5 +1,12 @@
 import { classifyAccountType, maskAccountNo } from "../store/mask";
-import type { AssetClassTotal, CashSummary, Holding, PortfolioSummary, Statement } from "../types";
+import type {
+  ActivityRow,
+  AssetClassTotal,
+  CashSummary,
+  Holding,
+  PortfolioSummary,
+  Statement,
+} from "../types";
 import { type Finding, within } from "./report";
 
 function finding(
@@ -66,6 +73,111 @@ function checkCashBlock(s: Statement, cash: CashSummary, out: Finding[]): void {
         ),
       );
     }
+  }
+}
+
+/**
+ * Two known statement-side quirks make the activity ledger's own
+ * credit/debit sums differ from the printed totalIn/totalOut, and both leave
+ * the identical residual on both sides -- whatever gets excluded from cash
+ * paid in is excluded from cash paid out by the same amount, because in
+ * both cases it is really one entry the statement nets between the two
+ * categories rather than two independent errors. So a shared residual
+ * (`within(diffIn, diffOut)`) is the precondition for either explanation;
+ * without it there is no single netted entry that could account for both
+ * sides at once, and the mismatch is unexplained.
+ *
+ * - A small ETF-rebate credit is coded FEE or REIMB -- the same codes the
+ *   real management fee and reimbursement debits use -- and the statement
+ *   nets it against Fees paid out instead of counting it as cash in. The
+ *   description wording for it changes across the corpus ("ETF Rebate",
+ *   "ACCOUNTING_REIMBURSEMENT"), so detection keys on the code plus a credit
+ *   sign (the real fee/reimbursement is always a debit) rather than on
+ *   wording, account, or period, so it generalizes to any statement with the
+ *   same shape.
+ * - An amended/corrected statement can reverse an earlier entry: a credit
+ *   for amount X, and elsewhere a same-coded debit for the same X, with
+ *   neither counted in the printed totals. Detected by finding that matching
+ *   credit/debit pair rather than assuming a single row.
+ *
+ * Returns null when the residual has no such counterpart in the rows
+ * themselves, which is the honest answer for the cases this cannot explain.
+ */
+function explainActivityMismatch(
+  rows: readonly ActivityRow[],
+  diffIn: number,
+  diffOut: number,
+): string | null {
+  if (!within(diffIn, diffOut)) return null;
+  const netAmount = diffIn;
+  if (within(netAmount, 0)) return null;
+
+  const rebateSum = rows
+    .filter((r) => (r.code === "FEE" || r.code === "REIMB") && r.credit > 0)
+    .reduce((a, r) => a + r.credit, 0);
+  if (rebateSum > 0 && within(rebateSum, netAmount)) {
+    return `${rebateSum.toFixed(2)} of FEE/REIMB-coded rebate credits appear netted against fees paid out rather than counted as cash in`;
+  }
+
+  const reversedCredit = rows.find(
+    (credit) =>
+      credit.credit > 0 &&
+      within(credit.credit, netAmount) &&
+      rows.some(
+        (debit) => debit !== credit && debit.code === credit.code && within(debit.debit, netAmount),
+      ),
+  );
+  if (reversedCredit) {
+    return `a ${reversedCredit.code} entry for ${netAmount.toFixed(2)} appears reversed elsewhere on the statement, consistent with an amended/corrected statement whose printed totals exclude the correction`;
+  }
+
+  return null;
+}
+
+function checkActivityRows(s: Statement, cash: CashSummary, out: Finding[]): void {
+  if (cash.totalIn === null || cash.totalOut === null) return;
+
+  const rows = s.activity.filter((r) => r.currency === cash.currency);
+  const creditSum = rows.reduce((a, r) => a + r.credit, 0);
+  const debitSum = rows.reduce((a, r) => a + r.debit, 0);
+  const inOk = within(creditSum, cash.totalIn);
+  const outOk = within(debitSum, cash.totalOut);
+  if (inOk && outOk) return;
+
+  const explanation = explainActivityMismatch(
+    rows,
+    creditSum - cash.totalIn,
+    debitSum - cash.totalOut,
+  );
+  const severity = explanation ? "warning" : "error";
+
+  if (!inOk) {
+    out.push(
+      finding(
+        "statement-arithmetic",
+        s,
+        explanation
+          ? `${cash.currency} activity credits do not sum to cash paid in: ${explanation}`
+          : `${cash.currency} activity credits do not sum to the printed cash paid in`,
+        cash.totalIn,
+        creditSum,
+        severity,
+      ),
+    );
+  }
+  if (!outOk) {
+    out.push(
+      finding(
+        "statement-arithmetic",
+        s,
+        explanation
+          ? `${cash.currency} activity debits do not sum to cash paid out: ${explanation}`
+          : `${cash.currency} activity debits do not sum to the printed cash paid out`,
+        cash.totalOut,
+        debitSum,
+        severity,
+      ),
+    );
   }
 }
 
@@ -213,7 +325,10 @@ export function checkArithmetic(statements: readonly Statement[]): Finding[] {
   const out: Finding[] = [];
 
   for (const s of statements) {
-    for (const cash of s.cash) checkCashBlock(s, cash, out);
+    for (const cash of s.cash) {
+      checkCashBlock(s, cash, out);
+      checkActivityRows(s, cash, out);
+    }
 
     const p = s.portfolio;
     if (!p) {

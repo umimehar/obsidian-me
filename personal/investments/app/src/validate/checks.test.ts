@@ -94,7 +94,48 @@ function statement(over: Partial<Statement> = {}): Statement {
         bookCostConverted: false,
       },
     ],
-    activity: [],
+    activity: [
+      {
+        date: "2026-06-01",
+        postedDate: null,
+        code: "SELL",
+        description: "Sold WSE300",
+        debit: 0,
+        credit: 12417.15,
+        balance: 12417.15,
+        currency: "CAD",
+      },
+      {
+        date: "2026-06-02",
+        postedDate: null,
+        code: "DIV",
+        description: "Cash dividend distribution",
+        debit: 0,
+        credit: 13.8,
+        balance: 12430.95,
+        currency: "CAD",
+      },
+      {
+        date: "2026-06-01",
+        postedDate: null,
+        code: "BUY",
+        description: "Bought WSE401",
+        debit: 12417.15,
+        credit: 0,
+        balance: 13.8,
+        currency: "CAD",
+      },
+      {
+        date: "2026-06-30",
+        postedDate: null,
+        code: "FEE",
+        description: "Management fees",
+        debit: 7.52,
+        credit: 0,
+        balance: 6.28,
+        currency: "CAD",
+      },
+    ],
     contributions: null,
     dividendsYearToDate: null,
     fxRate: null,
@@ -263,6 +304,115 @@ describe("checkArithmetic", () => {
     if (!cad?.paidIn) throw new Error("fixture");
     cad.paidIn.dividends = 500;
     expect(checkArithmetic([bad]).some((x) => x.message.includes("paid in"))).toBe(true);
+  });
+
+  test("flags activity credits/debits that plainly do not sum to the printed totals as an error", () => {
+    const bad = statement();
+    const sell = bad.activity.find((r) => r.code === "SELL");
+    if (!sell) throw new Error("fixture");
+    sell.credit = 1; // no matching FEE rebate or reversal explains this
+    const f = checkArithmetic([bad]);
+    const activityFindings = f.filter((x) => x.message.includes("activity credits"));
+    expect(activityFindings).toHaveLength(1);
+    expect(activityFindings[0]?.severity).toBe("error");
+    expect(activityFindings[0]?.expected).toBe(12430.95);
+  });
+
+  test("classifies an ETF-rebate credit netted against fees as a named warning", () => {
+    // A FEE-coded credit (the rebate) inflates the credit sum above totalIn
+    // and the debit sum stays untouched -- so add a plain FEE debit too and
+    // shrink totalOut to match, keeping the "same residual on both sides"
+    // signature this check requires before naming a cause.
+    const bad = statement();
+    const cad = bad.cash[0];
+    if (!cad || cad.totalOut === null) throw new Error("fixture");
+    bad.activity.push({
+      date: "2026-06-23",
+      postedDate: null,
+      code: "FEE",
+      description: "ETF Rebate",
+      debit: 0,
+      credit: 0.15,
+      balance: 6.43,
+      currency: "CAD",
+    });
+    cad.totalOut -= 0.15; // the rebate reduced Fees paid out instead of adding to paid in
+    const f = checkArithmetic([bad]);
+    const activityFindings = f.filter((x) => x.message.includes("activity"));
+    expect(activityFindings).toHaveLength(2);
+    for (const finding of activityFindings) {
+      expect(finding.severity).toBe("warning");
+      expect(finding.message).toMatch(/rebate/);
+    }
+  });
+
+  test("classifies a reversed entry on an amended statement as a named warning", () => {
+    // A second DIV credit for 40.90, reversed by a same-coded debit for the
+    // same amount -- the printed totals exclude both sides of the
+    // correction, leaving a matching residual in the ledger's own sums.
+    const bad = statement();
+    const cad = bad.cash[0];
+    if (!cad || cad.totalIn === null) throw new Error("fixture");
+    bad.activity.push(
+      {
+        date: "2026-06-15",
+        postedDate: null,
+        code: "DIV",
+        description: "Cash dividend distribution (later reversed)",
+        debit: 0,
+        credit: 40.9,
+        balance: 47.18,
+        currency: "CAD",
+      },
+      {
+        date: "2026-06-16",
+        postedDate: null,
+        code: "DIV",
+        description: "Reversal of the above",
+        debit: 40.9,
+        credit: 0,
+        balance: 6.28,
+        currency: "CAD",
+      },
+    );
+    cad.totalIn += 40.9 - 40.9; // both sides of the reversal are already outside the printed totals
+    const f = checkArithmetic([bad]);
+    const activityFindings = f.filter((x) => x.message.includes("activity"));
+    expect(activityFindings).toHaveLength(2);
+    for (const finding of activityFindings) {
+      expect(finding.severity).toBe("warning");
+      expect(finding.message).toMatch(/reversed elsewhere/);
+    }
+  });
+
+  test("skips the activity check when no totals are printed", () => {
+    const cashOnly = statement({
+      source: src("2026-06", "CASH"),
+      cash: [
+        {
+          currency: "CAD",
+          opening: 195.59,
+          closing: 155.62,
+          totalIn: null,
+          totalOut: null,
+          paidIn: null,
+          paidOut: null,
+        },
+      ],
+      activity: [
+        {
+          date: "2026-06-01",
+          postedDate: null,
+          code: "TRFOUTTF",
+          description: "Tax-free money transfer out",
+          debit: 39.97,
+          credit: 0,
+          balance: 155.62,
+          currency: "CAD",
+        },
+      ],
+    });
+    expect(checkArithmetic([cashOnly]).some((x) => x.message.includes("activity"))).toBe(false);
   });
 
   test("flags a BROKERAGE statement with no portfolio as a parser bug", () => {
