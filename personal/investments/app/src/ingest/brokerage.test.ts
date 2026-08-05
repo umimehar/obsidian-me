@@ -62,6 +62,19 @@ describe("portfolio summary", () => {
     expect(p.totalBookCost).toBe(20501.7);
   });
 
+  test("joins a class name that wraps onto its own row, not the next class's", async () => {
+    // "Canadian Equities and" / "Alternatives" prints as a money row followed
+    // by a bare continuation row. The continuation belongs to the class that
+    // precedes it, not the one that follows — the class name must come out
+    // whole, not truncated and not merged into the next class.
+    const p = (await managed()).portfolio;
+    if (!p) throw new Error("expected a portfolio");
+    expect(p.classes.map((c) => c.name)).toEqual([
+      "Canadian Equities and Alternatives",
+      "US Equities and Alternatives",
+    ]);
+  });
+
   test("reads a non-null portfolio on the 2023 wrapped-header layout", async () => {
     // The 2023 statements wrap "Market Value" across two rows, so the header
     // never appears contiguous in any row. The guard must not depend on it.
@@ -154,17 +167,19 @@ describe("portfolio summary", () => {
 
   test("reads asset classes named with 'Securities', not just 'Equities'", async () => {
     // performance.xml names its classes "Canadian-Listed Securities and
-    // Alternatives" / "US-Listed Securities and Alternatives" — an
-    // /Equities/-only filter drops both entirely. The last class also
-    // carries a trailing "(The conversion rate used to convert...)"
-    // footnote that is not part of the name.
+    // Alternatives" / "US-Listed Securities and Alternatives" — a wording
+    // filter that only knew about "Equities" drops both entirely, and each
+    // name wraps onto its own continuation row the same way managed's does.
     const source = parseSourceFilename("ACCT0001CAD_2026-04_PERFORMANCE.pdf");
     if (!source) throw new Error("bad filename");
     const pages = await loadPages("performance");
     const s = parseBrokerage(pages, source);
     const p = s.portfolio;
     if (!p) throw new Error("expected a portfolio");
-    expect(p.classes.length).toBeGreaterThan(0);
+    expect(p.classes.map((c) => c.name)).toEqual([
+      "Canadian-Listed Securities and Alternatives",
+      "US-Listed Securities and Alternatives",
+    ]);
     for (const c of p.classes) {
       expect(c.name).not.toMatch(/conversion rate/i);
     }

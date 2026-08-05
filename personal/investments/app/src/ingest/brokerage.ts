@@ -18,6 +18,7 @@ import {
   scanPairs,
   sliceColumns,
 } from "./geometry";
+import { isMoney, parseMoney } from "./money";
 import type { SourceRef } from "./source";
 
 const ACCOUNT_TYPE =
@@ -50,6 +51,48 @@ function readPeriod(pages: readonly Page[]): { start: string; end: string } {
 
 const PORTFOLIO_END = [/Portfolio Cash/];
 const PORTFOLIO_START = /Account No\./;
+
+/**
+ * A two-line class name ("Canadian Equities and" / "Alternatives") wraps as a
+ * money-bearing row followed by a continuation row with no money of its own.
+ * `scanPairs` accumulates label words forward until a money row closes them,
+ * which attaches the continuation to the *next* class instead of the one it
+ * belongs to — so this walks `table`'s rows directly instead. A row carrying
+ * money starts a new class entry; a row carrying none is a continuation and
+ * is appended to the entry that precedes it.
+ */
+function readAssetClasses(table: readonly Row[]): AssetClassTotal[] {
+  const cashRowIdx = table.findIndex((r) => r.words.some((w) => isMoney(w.text)));
+  const totalRowIdx = table.findIndex((r) => /^Total Portfolio\b/.test(rowText(r).trim()));
+  if (cashRowIdx === -1 || totalRowIdx === -1) return [];
+
+  const classes: AssetClassTotal[] = [];
+  for (const row of table.slice(cashRowIdx + 1, totalRowIdx)) {
+    const words: string[] = [];
+    const values: number[] = [];
+    for (const w of row.words) {
+      if (isMoney(w.text)) values.push(parseMoney(w.text));
+      else words.push(w.text);
+    }
+    if (values.length >= 3) {
+      classes.push({
+        name: words.join(" "),
+        marketValue: values[0] ?? 0,
+        bookCost: values[2] ?? 0,
+      });
+      continue;
+    }
+    const last = classes[classes.length - 1];
+    if (last) last.name = `${last.name} ${words.join(" ")}`.trim();
+  }
+
+  // The last class's name may also carry a trailing footnote ("(The
+  // conversion rate used to convert...)") that is not part of the name.
+  for (const c of classes) {
+    c.name = c.name.replace(/\s*\(The conversion rate.*$/, "").trim();
+  }
+  return classes;
+}
 
 /**
  * The summary table sits right of the mailing address, so it is read from a
@@ -89,17 +132,8 @@ function readPortfolio(pages: readonly Page[]): PortfolioSummary | null {
   // shared word at all), so a wording allow-list keeps breaking on the next
   // account type. Every row between Cash and Total Portfolio that carries
   // the same four money columns those two rows do is a class, regardless of
-  // what it is called; the last one may also carry a trailing footnote
-  // ("(The conversion rate used to convert...)") that is not part of the
-  // name and is stripped before use.
-  const classes: AssetClassTotal[] = pairs
-    .slice(cashIdx + 1, totalIdx)
-    .filter((p) => p.values.length >= 3)
-    .map((p) => ({
-      name: p.label.replace(/\s*\(The conversion rate.*$/, "").trim(),
-      marketValue: p.values[0] ?? 0,
-      bookCost: p.values[2] ?? 0,
-    }));
+  // what it is called.
+  const classes = readAssetClasses(table);
 
   return {
     cashMarketValue: cash[0] ?? 0,
