@@ -236,6 +236,7 @@ interface ClassBookCostResult {
   expected: number;
   hasConverted: boolean;
   reconciles: boolean;
+  columnSwapSuspected: boolean;
 }
 
 /**
@@ -248,6 +249,17 @@ interface ClassBookCostResult {
  * its class. A class made entirely of unconverted (CAD) holdings has no fx
  * rate touching it at all, so its book cost must reconcile exactly; a class
  * with a converted holding is where the approximation actually lives.
+ *
+ * A column swap inside a converted class has its own structural signature,
+ * distinct from fx rounding: if book cost were misread from the market
+ * value column, the class's holdings would sum to the *same* figure for
+ * both fields, to the cent, while the statement's own stated class totals
+ * for the two are genuinely different. A holding bought this period can
+ * legitimately have book cost equal to market value, which is exactly why
+ * the check also requires the *stated* class totals to differ -- that is
+ * what rules out the legitimate case. No amount of fx rounding produces an
+ * exact tie between two different columns, so this stays an error even
+ * inside an otherwise-converted (warning) class.
  */
 function reconcileClassBookCost(
   holdings: readonly Holding[],
@@ -255,12 +267,14 @@ function reconcileClassBookCost(
 ): ClassBookCostResult {
   const classHoldings = holdings.filter((h) => h.assetClass === cls.name);
   const sum = classHoldings.reduce((a, h) => a + h.bookCost, 0);
+  const marketValueSum = classHoldings.reduce((a, h) => a + h.marketValue, 0);
   return {
     name: cls.name,
     sum,
     expected: cls.bookCost,
     hasConverted: classHoldings.some((h) => h.bookCostConverted),
     reconciles: within(sum, cls.bookCost),
+    columnSwapSuspected: within(sum, marketValueSum) && !within(cls.bookCost, cls.marketValue),
   };
 }
 
@@ -272,16 +286,20 @@ function pushClassBookCostFindings(
   for (const r of results) {
     if (r.reconciles) continue;
     const delta = r.sum - r.expected;
+    const isApproximate = r.hasConverted && !r.columnSwapSuspected;
+    const message = r.columnSwapSuspected
+      ? `${r.name} book cost equals market value across its holdings while the statement states different totals for the two, consistent with book cost misread from the market value column`
+      : isApproximate
+        ? `${r.name} book cost differs by ${delta.toFixed(2)}; the statement's disclosed rate applies to market value only, so converted USD book cost is approximate`
+        : `${r.name} book cost does not reconcile: holdings sum to a different figure than the class total`;
     out.push(
       finding(
         "statement-arithmetic",
         s,
-        r.hasConverted
-          ? `${r.name} book cost differs by ${delta.toFixed(2)}; the statement's disclosed rate applies to market value only, so converted USD book cost is approximate`
-          : `${r.name} book cost does not reconcile: holdings sum to a different figure than the class total`,
+        message,
         r.expected,
         r.sum,
-        r.hasConverted ? "warning" : "error",
+        isApproximate ? "warning" : "error",
       ),
     );
   }
@@ -292,9 +310,11 @@ function pushClassBookCostFindings(
  * the per-class results rather than from "some holding somewhere is USD":
  * a real defect in one class must not be excused by an unrelated converted
  * class reconciling fine elsewhere on the same statement. Only when every
- * class-level mismatch is a converted one (or there is no class-level
- * mismatch to explain a cash-only residual) does the whole-statement figure
- * read as the fx warning; any class-level error demotes it back to error.
+ * class-level mismatch is a converted one, with no suspected column swap,
+ * (or there is no class-level mismatch to explain a cash-only residual)
+ * does the whole-statement figure read as the fx warning; any class-level
+ * error -- including a suspected swap inside an otherwise-converted class --
+ * demotes it back to error.
  */
 function checkBookCost(s: Statement, p: PortfolioSummary, out: Finding[]): void {
   const results = p.classes.map((cls) => reconcileClassBookCost(s.holdings, cls));
@@ -303,8 +323,12 @@ function checkBookCost(s: Statement, p: PortfolioSummary, out: Finding[]): void 
   const bookSum = s.holdings.reduce((a, h) => a + h.bookCost, 0) + p.cashBookCost;
   if (within(bookSum, p.totalBookCost)) return;
 
-  const anyClassError = results.some((r) => !r.reconciles && !r.hasConverted);
-  const anyClassWarning = results.some((r) => !r.reconciles && r.hasConverted);
+  const anyClassError = results.some(
+    (r) => !r.reconciles && (!r.hasConverted || r.columnSwapSuspected),
+  );
+  const anyClassWarning = results.some(
+    (r) => !r.reconciles && r.hasConverted && !r.columnSwapSuspected,
+  );
   const isApproximate = !anyClassError && anyClassWarning;
   const delta = bookSum - p.totalBookCost;
   out.push(
@@ -319,6 +343,35 @@ function checkBookCost(s: Statement, p: PortfolioSummary, out: Finding[]): void 
       isApproximate ? "warning" : "error",
     ),
   );
+}
+
+/**
+ * A holding whose assetClass is empty, or names a class the statement never
+ * states, is invisible to reconcileClassBookCost above -- it filters
+ * holdings by exact class-name match, so an orphaned holding is silently
+ * excluded from every per-class sum while still counting toward the
+ * whole-statement sum. Worse, if some other class on the same statement
+ * legitimately warns, the whole-statement severity demotes to warning too,
+ * hiding the orphan's contribution to a real mismatch entirely. Checked
+ * against the statement's own stated classes, never a hardcoded class name.
+ */
+function checkOrphanedHoldings(s: Statement, p: PortfolioSummary, out: Finding[]): void {
+  const classNames = new Set(p.classes.map((c) => c.name));
+  for (const h of s.holdings) {
+    if (h.assetClass !== "" && classNames.has(h.assetClass)) continue;
+    const label = h.symbol || "(no symbol)";
+    out.push(
+      finding(
+        "statement-arithmetic",
+        s,
+        h.assetClass === ""
+          ? `holding ${label} carries no asset class and is excluded from every per-class book-cost check`
+          : `holding ${label} carries asset class "${h.assetClass}", which the portfolio summary never states`,
+        null,
+        null,
+      ),
+    );
+  }
 }
 
 export function checkArithmetic(statements: readonly Statement[]): Finding[] {
@@ -337,6 +390,7 @@ export function checkArithmetic(statements: readonly Statement[]): Finding[] {
     }
 
     checkMarketValue(s, p, out);
+    checkOrphanedHoldings(s, p, out);
     checkBookCost(s, p, out);
   }
   return out;

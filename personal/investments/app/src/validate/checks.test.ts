@@ -298,6 +298,105 @@ describe("checkArithmetic", () => {
     expect(wholeFinding?.severity).toBe("error");
   });
 
+  test("flags a holding with no asset class as an error, even though it still counts toward the whole-statement sum", () => {
+    // reconcileClassBookCost matches holdings by exact assetClass name, so an
+    // empty class silently drops the holding from every per-class check
+    // while it still counts in the whole-statement sum below -- this is the
+    // gap that needs its own, independent check.
+    const bad = statement();
+    const wse = bad.holdings[1];
+    if (!wse) throw new Error("fixture");
+    wse.assetClass = "";
+    const f = checkArithmetic([bad]);
+    const orphan = f.find((x) => x.message.includes("no asset class"));
+    expect(orphan).toBeDefined();
+    expect(orphan?.severity).toBe("error");
+    expect(orphan?.message).toContain("WSE401");
+  });
+
+  test("flags a holding whose asset class matches no stated class as an error", () => {
+    const bad = statement();
+    const wse = bad.holdings[1];
+    if (!wse) throw new Error("fixture");
+    wse.assetClass = "Crypto Assets"; // never appears in this fixture's portfolio.classes
+    const f = checkArithmetic([bad]);
+    const orphan = f.find((x) => x.message.includes("never states"));
+    expect(orphan).toBeDefined();
+    expect(orphan?.severity).toBe("error");
+    expect(orphan?.message).toContain("Crypto Assets");
+  });
+
+  test("flags a column swap inside a converted class as an error, not the usual fx-rounding warning", () => {
+    // A wrong-column read (book cost misread as market value) leaves the
+    // class's holdings summing to the *same* figure for both fields, while
+    // the statement's own stated class totals for the two are genuinely
+    // different -- a shape no amount of fx rounding produces.
+    const bad = statement({
+      portfolio: {
+        cashMarketValue: 0,
+        cashBookCost: 0,
+        classes: [{ name: "US Equities and Alternatives", marketValue: 200, bookCost: 150 }],
+        totalMarketValue: 200,
+        totalBookCost: 150,
+      },
+      holdings: [
+        {
+          name: "US Fund",
+          symbol: "USF",
+          quantity: 1,
+          segregatedQuantity: 1,
+          marketPrice: 200,
+          priceCurrency: "USD",
+          marketValue: 200,
+          marketValueConverted: true,
+          bookCost: 200, // swapped: reads the market value column, not book cost
+          assetClass: "US Equities and Alternatives",
+          pendingValuation: false,
+          bookCostConverted: true,
+        },
+      ],
+    });
+    const f = checkArithmetic([bad]);
+    const classFinding = f.find((x) => x.message.includes("US Equities"));
+    expect(classFinding).toBeDefined();
+    expect(classFinding?.severity).toBe("error");
+    expect(classFinding?.message).toMatch(/misread from the market value column/);
+  });
+
+  test("does not suspect a column swap when a holding legitimately has book cost equal to market value", () => {
+    // Bought this period, at cost -- book cost and market value are the same
+    // number for a real, correct holding. The statement's own stated class
+    // totals for the two also agree here, which is what keeps this out of
+    // the swap check (only a genuine difference in the *stated* totals,
+    // paired with an exact tie in the holdings, is suspicious).
+    const bad = statement({
+      portfolio: {
+        cashMarketValue: 0,
+        cashBookCost: 0,
+        classes: [{ name: "Canadian Equities and Alternatives", marketValue: 100, bookCost: 100 }],
+        totalMarketValue: 100,
+        totalBookCost: 100,
+      },
+      holdings: [
+        {
+          name: "CAD Fund",
+          symbol: "CDF",
+          quantity: 1,
+          segregatedQuantity: 1,
+          marketPrice: 100,
+          priceCurrency: "CAD",
+          marketValue: 100,
+          marketValueConverted: false,
+          bookCost: 100,
+          assetClass: "Canadian Equities and Alternatives",
+          pendingValuation: false,
+          bookCostConverted: false,
+        },
+      ],
+    });
+    expect(checkArithmetic([bad])).toEqual([]);
+  });
+
   test("flags a paid-in breakdown that does not sum to its total", () => {
     const bad = statement();
     const cad = bad.cash[0];
