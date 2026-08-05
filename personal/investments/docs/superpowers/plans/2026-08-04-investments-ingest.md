@@ -1601,6 +1601,18 @@ describe("holdings", () => {
     expect(s.holdings.every((h) => h.assetClass !== "")).toBe(true);
   });
 
+  test("holdings plus cash equal the portfolio total", async () => {
+    // Moved here from Task 5: it cannot pass until holdings are populated.
+    // This is the reconciliation that matters — checked against the portfolio
+    // total, not per asset class, because the summary's class label wraps
+    // around mailing-address rows and does not match the assets heading.
+    const s = await managed();
+    const p = s.portfolio;
+    if (!p) throw new Error("expected a portfolio");
+    const sum = s.holdings.reduce((a, h) => a + h.marketValue, 0) + p.cashMarketValue;
+    expect(sum).toBeCloseTo(p.totalMarketValue, 2);
+  });
+
   test("returns no holdings for an account that holds nothing", async () => {
     const s = await load("brokerage-empty", "ACCT0006CAD_2026-06_BROKERAGE.pdf");
     expect(s.holdings).toEqual([]);
