@@ -106,6 +106,31 @@ export function checkArithmetic(statements: readonly Statement[]): Finding[] {
         ),
       );
     }
+
+    // Book cost gets the same reconciliation, but not the same trust: a USD
+    // holding's book cost is converted at the statement's own fx rate, which
+    // its footnote discloses for market value only. Book cost is an
+    // accumulated basis recorded at each purchase's own historical rate, so
+    // a converted holding can leave a real, expected residual -- a warning,
+    // named as such, not a silent pass or a false error. A mismatch with no
+    // converted holding involved has no such excuse and stays an error.
+    const bookSum = s.holdings.reduce((a, h) => a + h.bookCost, 0) + p.cashBookCost;
+    if (!within(bookSum, p.totalBookCost)) {
+      const hasConverted = s.holdings.some((h) => h.bookCostConverted);
+      const delta = bookSum - p.totalBookCost;
+      out.push(
+        finding(
+          "statement-arithmetic",
+          s,
+          hasConverted
+            ? `book cost differs by ${delta.toFixed(2)}; the statement's disclosed rate applies to market value only, so converted USD book cost is approximate`
+            : "holdings plus cash do not equal the portfolio book cost total",
+          p.totalBookCost,
+          bookSum,
+          hasConverted ? "warning" : "error",
+        ),
+      );
+    }
   }
   return out;
 }

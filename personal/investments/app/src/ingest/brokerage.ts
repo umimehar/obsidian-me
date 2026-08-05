@@ -477,6 +477,7 @@ function readHoldings(pages: readonly Page[]): Holding[] {
     const priceCurrency = tags[n - 3] ?? "CAD";
     const valueCurrency = tags[n - 2] ?? "CAD";
     const costCurrency = tags[n - 1] ?? "CAD";
+    const costConverted = costCurrency === "USD";
 
     holdings.push({
       name,
@@ -486,9 +487,10 @@ function readHoldings(pages: readonly Page[]): Holding[] {
       marketPrice: money[n - 3]?.amount ?? 0,
       priceCurrency,
       marketValue: (money[n - 2]?.amount ?? 0) * (valueCurrency === "USD" ? (fxRate ?? 1) : 1),
-      bookCost: (money[n - 1]?.amount ?? 0) * (costCurrency === "USD" ? (fxRate ?? 1) : 1),
+      bookCost: (money[n - 1]?.amount ?? 0) * (costConverted ? (fxRate ?? 1) : 1),
       assetClass,
       pendingValuation: pendingSymbols.has(symbol),
+      bookCostConverted: costConverted,
     });
   }
   return holdings;

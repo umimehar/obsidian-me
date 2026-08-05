@@ -550,6 +550,33 @@ describe("holdings — shapes the seven fixtures never exercised", () => {
     expect(h.priceCurrency).toBe("USD");
     expect(h.marketValue).toBeCloseTo(140, 2); // $100.00 * 1.4
     expect(h.bookCost).toBeCloseTo(134.4, 2); // $96.00 * 1.4
+    // Downstream cost-basis figures must be able to tell this book cost is
+    // approximate: the statement's disclosed fx rate covers market value
+    // only, not the historical-rate cost basis book cost represents.
+    expect(h.bookCostConverted).toBe(true);
+  });
+
+  test("marks a CAD holding's book cost as not converted", () => {
+    const s = parse([
+      { y: 9, words: [word("Portfolio Assets", 50, 9)] },
+      { y: 10, words: [word("Canadian Equities and Alternatives", 50, 10)] },
+      {
+        y: 11,
+        words: [
+          word("Example", 40, 11),
+          word("Fund", 90, 11),
+          word("CDH", 140, 11),
+          word("4.0000", 200, 11),
+          word("4.0000", 260, 11),
+          word("$10.00", 320, 11),
+          word("$40.00", 380, 11),
+          word("$39.00", 430, 11),
+        ],
+      },
+    ]);
+    const h = s.holdings.find((x) => x.symbol === "CDH");
+    if (!h) throw new Error("expected the CDH holding");
+    expect(h.bookCostConverted).toBe(false);
   });
 
   test("drops the trailing Aggregate Book Cost column instead of misreading it as book cost", () => {

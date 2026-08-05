@@ -70,6 +70,7 @@ function statement(over: Partial<Statement> = {}): Statement {
         bookCost: 7961.6,
         assetClass: "Canadian Equities and Alternatives",
         pendingValuation: false,
+        bookCostConverted: false,
       },
       {
         name: "WS PVT MKT I F",
@@ -82,6 +83,7 @@ function statement(over: Partial<Statement> = {}): Statement {
         bookCost: 12417.15,
         assetClass: "Canadian Equities and Alternatives",
         pendingValuation: true,
+        bookCostConverted: false,
       },
     ],
     activity: [],
@@ -116,6 +118,36 @@ describe("checkArithmetic", () => {
     if (!h) throw new Error("fixture");
     h.marketValue = 1;
     expect(checkArithmetic([bad]).some((x) => x.message.includes("portfolio total"))).toBe(true);
+  });
+
+  test("flags a book-cost mismatch with no converted holding as an error", () => {
+    const bad = statement();
+    const h = bad.holdings[0];
+    if (!h) throw new Error("fixture");
+    h.bookCost = 1;
+    const f = checkArithmetic([bad]);
+    const bookFinding = f.find((x) => x.message.includes("book cost"));
+    expect(bookFinding).toBeDefined();
+    expect(bookFinding?.severity).toBe("error");
+    expect(bookFinding?.message).toBe(
+      "holdings plus cash do not equal the portfolio book cost total",
+    );
+  });
+
+  test("flags a book-cost mismatch with a converted holding as a named warning", () => {
+    // A USD holding's book cost is converted at the statement's own fx rate,
+    // which its footnote discloses for market value only -- a real,
+    // expected residual, not a parser bug, so it must not read as an error.
+    const bad = statement();
+    const h = bad.holdings[0];
+    if (!h) throw new Error("fixture");
+    h.bookCost = 1;
+    h.bookCostConverted = true;
+    const f = checkArithmetic([bad]);
+    const bookFinding = f.find((x) => x.message.includes("book cost"));
+    expect(bookFinding).toBeDefined();
+    expect(bookFinding?.severity).toBe("warning");
+    expect(bookFinding?.message).toMatch(/disclosed rate applies to market value only/);
   });
 
   test("flags a paid-in breakdown that does not sum to its total", () => {

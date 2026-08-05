@@ -14,6 +14,16 @@ export interface Holding {
   assetClass: string;
   /** True when the statement says pricing for the period is not yet final. */
   pendingValuation: boolean;
+  /**
+   * True when bookCost was converted from USD to CAD at the statement's own
+   * fx rate. That rate is disclosed for market value only (see the class
+   * heading's footnote); book cost is an accumulated basis recorded at each
+   * purchase's own historical rate, which a single current rate cannot
+   * reconstruct exactly. This flag marks the figure as approximate so a
+   * downstream tax calculation can choose to flag or exclude it rather than
+   * silently treat it as exact.
+   */
+  bookCostConverted: boolean;
 }
 
 export interface AssetClassTotal {
