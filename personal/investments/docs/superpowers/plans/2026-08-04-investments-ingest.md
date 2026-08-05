@@ -3280,11 +3280,20 @@ if (import.meta.main) {
     JSON.stringify(buildDatastore(statements, accounts, names, generated), null, 2));
   await Bun.write(join(DATA, "reconciliation.json"), JSON.stringify(report, null, 2));
 
-  const errors = findings.filter(
-    (f) => f.severity === "error" && !isAcknowledged(f.check, f.accountShortId, f.period),
+  // Acknowledgement applies to every severity, not just errors: the WSE401
+  // pending-valuation entry acknowledges a ground-truth finding, which
+  // checkGroundTruth emits as a warning. Filtering acknowledgement to errors
+  // alone would make that entry — and the whole mechanism for warnings — dead.
+  const unacknowledged = findings.filter(
+    (f) => !isAcknowledged(f.check, f.accountShortId, f.period),
   );
+  const errors = unacknowledged.filter((f) => f.severity === "error");
+  const acknowledged = findings.length - unacknowledged.length;
   console.log(`${statements.length} statements, ${accounts.length} accounts`);
-  console.log(`${errors.length} unacknowledged error(s), ${findings.length - errors.length} other finding(s)`);
+  console.log(
+    `${errors.length} unacknowledged error(s), ` +
+      `${unacknowledged.length - errors.length} warning(s), ${acknowledged} acknowledged`,
+  );
   for (const f of findings.filter((x) => x.check === "ground-truth")) {
     console.log(`  ${f.period} ${f.message}\n    expected ${f.expected}, got ${f.actual?.toFixed(2)}, delta ${f.delta?.toFixed(2)}`);
   }
