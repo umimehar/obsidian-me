@@ -1110,8 +1110,10 @@ Add to `geometry.ts` (and its import in the test):
 ```ts
 /** The x of the left edge of the label matched by `re` within `row`, or null. */
 export function labelStartX(row: Row, re: RegExp): number | null {
+  // Shortest match, like labelEndX. Scanning longest-first lets an unanchored
+  // regex swallow the value into the label and return the wrong position.
   for (let start = 0; start < row.words.length; start += 1) {
-    for (let end = row.words.length; end > start; end -= 1) {
+    for (let end = start + 1; end <= row.words.length; end += 1) {
       const slice = row.words.slice(start, end);
       if (re.test(slice.map((w) => w.text).join(" "))) return slice[0]?.x0 ?? null;
     }
