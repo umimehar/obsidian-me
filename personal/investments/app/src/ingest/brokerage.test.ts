@@ -135,4 +135,14 @@ describe("contributions and fx", () => {
   test("reads the month-end conversion rate", async () => {
     expect((await dual()).fxRate).toBe(1.421);
   });
+
+  test("reports no contributions or dividends on a Chequing account", async () => {
+    // Chequing accounts print an "Interest:" panel instead of "Contributions:",
+    // so there is no contributions column at all. dividendsYearToDate must
+    // read null (no such section), not 0 (a stray value leaking in from an
+    // unbounded column slice).
+    const s = await load("brokerage-empty", "ACCT0006CAD_2026-06_BROKERAGE.pdf");
+    expect(s.contributions).toBeNull();
+    expect(s.dividendsYearToDate).toBeNull();
+  });
 });
