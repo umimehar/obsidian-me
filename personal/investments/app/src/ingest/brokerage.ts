@@ -76,19 +76,25 @@ function readPortfolio(pages: readonly Page[]): PortfolioSummary | null {
   const table = sliceColumns(section, labelX - 1, Number.POSITIVE_INFINITY);
   const pairs = scanPairs(table);
 
-  const find = (re: RegExp): number[] => pairs.find((p) => re.test(p.label))?.values ?? [];
-  const cash = find(/(?:^|\s)Cash$/);
-  const total = find(/Total Portfolio$/);
+  const cashIdx = pairs.findIndex((p) => /(?:^|\s)Cash$/.test(p.label));
+  const totalIdx = pairs.findIndex((p) => /Total Portfolio$/.test(p.label));
+  if (cashIdx === -1 || totalIdx === -1) return null;
+  const cash = pairs[cashIdx]?.values ?? [];
+  const total = pairs[totalIdx]?.values ?? [];
   if (cash.length < 3 || total.length < 3) return null;
 
   // Columns are market value, % of market value, book cost, % of total book.
-  // Newer statements name these classes "...-Listed Securities and
-  // Alternatives" instead of "...Equities and Alternatives", so both words
-  // are matched. A class whose name is the last one on the page also carries
-  // a trailing footnote ("(The conversion rate used to convert...)") that is
-  // not part of the name and is stripped before use.
+  // Wealthsimple has renamed these classes at least three times (Equities,
+  // then Securities, then Crypto Assets appeared as a fourth class with no
+  // shared word at all), so a wording allow-list keeps breaking on the next
+  // account type. Every row between Cash and Total Portfolio that carries
+  // the same four money columns those two rows do is a class, regardless of
+  // what it is called; the last one may also carry a trailing footnote
+  // ("(The conversion rate used to convert...)") that is not part of the
+  // name and is stripped before use.
   const classes: AssetClassTotal[] = pairs
-    .filter((p) => /Securities|Equities/.test(p.label) && p.values.length >= 3)
+    .slice(cashIdx + 1, totalIdx)
+    .filter((p) => p.values.length >= 3)
     .map((p) => ({
       name: p.label.replace(/\s*\(The conversion rate.*$/, "").trim(),
       marketValue: p.values[0] ?? 0,

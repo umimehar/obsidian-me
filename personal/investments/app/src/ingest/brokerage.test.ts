@@ -74,6 +74,84 @@ describe("portfolio summary", () => {
     expect(p.totalBookCost).toBe(0);
   });
 
+  test("reads an asset class with no wording in common with any known class", async () => {
+    // Crypto accounts head their class row "Crypto Assets" — no "Equities",
+    // no "Securities". Classes are derived from the table's shape (a row
+    // between Cash and Total Portfolio carrying the same four money columns
+    // those two rows do), not from a wording allow-list, so this needs no
+    // dedicated regex.
+    const word = (text: string, x0: number, y: number) => ({ x0, x1: x0 + 10, y, text });
+    const pages: Page[] = [
+      {
+        rows: [
+          { y: 1, words: [word("Managed RRSP Account", 50, 1)] },
+          { y: 2, words: [word("2026-06-01 - 2026-06-30", 50, 2)] },
+          { y: 3, words: [word("Account No.", 50, 3)] },
+          {
+            y: 4,
+            words: [
+              word("Cash", 50, 4),
+              word("$50.00", 100, 4),
+              word("2.47", 150, 4),
+              word("$50.00", 200, 4),
+              word("2.47", 250, 4),
+            ],
+          },
+          {
+            y: 5,
+            words: [
+              word("Crypto", 50, 5),
+              word("Assets", 90, 5),
+              word("$964.96", 150, 5),
+              word("47.65", 220, 5),
+              word("$964.96", 280, 5),
+              word("47.65", 340, 5),
+            ],
+          },
+          {
+            y: 6,
+            words: [
+              word("Total", 50, 6),
+              word("Portfolio", 100, 6),
+              word("$1,014.96", 160, 6),
+              word("100.00", 230, 6),
+              word("$1,014.96", 300, 6),
+              word("100.00", 370, 6),
+            ],
+          },
+          { y: 7, words: [word("Portfolio Cash", 50, 7)] },
+          {
+            y: 8,
+            words: [
+              word("Last", 50, 8),
+              word("Statement", 90, 8),
+              word("Cash", 140, 8),
+              word("Balance", 170, 8),
+              word("$50.00", 220, 8),
+            ],
+          },
+          {
+            y: 9,
+            words: [
+              word("Closing", 50, 9),
+              word("Cash", 100, 9),
+              word("Balance", 140, 9),
+              word("$50.00", 220, 9),
+            ],
+          },
+        ],
+      },
+    ];
+    const source = parseSourceFilename("ACCT0001CAD_2026-06_BROKERAGE.pdf");
+    if (!source) throw new Error("bad filename");
+    const s = parseBrokerage(pages, source);
+    const p = s.portfolio;
+    if (!p) throw new Error("expected a portfolio");
+    expect(p.classes).toEqual([{ name: "Crypto Assets", marketValue: 964.96, bookCost: 964.96 }]);
+    expect(p.cashMarketValue).toBe(50);
+    expect(p.totalMarketValue).toBe(1014.96);
+  });
+
   test("reads asset classes named with 'Securities', not just 'Equities'", async () => {
     // performance.xml names its classes "Canadian-Listed Securities and
     // Alternatives" / "US-Listed Securities and Alternatives" — an
