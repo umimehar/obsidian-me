@@ -2,7 +2,7 @@
 title: "Investments rebuild: PDF statements as the source of truth"
 tags: [personal/investments, decision]
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-08-05
 status: active
 type: decision
 personal: investments
@@ -23,7 +23,9 @@ Four causes of the net-deposits gap were traced in the CSV data:
 - RESP grants ($550 across three payments) are not counted as deposits.
 - Which accounts belong in the investment total was a guess, never verified against a stated figure.
 
-The PDFs remove all four causes. Summing the eleven investment accounts from their June 2026 statements gives **$241,739.67 against the app's $242,019.61**, a 0.12% gap, with no tuning. Section [Open questions](#open-questions) covers the residual.
+The PDFs remove all four causes for every account that has statements. Summing the eleven investment accounts from their June 2026 statements gives **$241,739.67 against the app's $242,019.61**, a 0.12% gap, with no tuning, and that residual is explained below.
+
+One qualification: the 2023 USD deposits in cause 2 landed in accounts with no PDF export at all, so a net-deposits total built from PDFs alone cannot recover them. Cause 2 is removed only where statements exist.
 
 ## What the PDFs contain that the CSVs do not
 
@@ -52,14 +54,21 @@ Filenames follow `<ACCOUNTNO>_YYYY-MM_<TEMPLATE>.pdf` and already carry account 
 
 The 14 PDF accounts are the real set. The CSV export produced 18 by splitting USD balances into fake separate accounts (`TFSA USD`, `USD`, `NonRegistered USD`) and carrying one two-transaction remnant. Four of the eighteen do not exist.
 
+**Coverage is not uniform, and the CSVs hold three things the PDFs do not.** Stating it plainly, because the CSV pipeline is being deleted:
+
+- **July 2026 exists only for the three chequing accounts.** All eleven investment accounts stop at 2026-06, while the CSVs run to 2026-07. Exporting the July PDFs before cutover avoids losing a month; until then the rebuild is a month behind the current page.
+- **The credit card has no PDF export at all.** Seven CSVs exist (2026-01 to 2026-07); Wealthsimple produces no equivalent statement. It is a non-goal (see [Non-goals](#non-goals)), and the card therefore disappears from the rebuild. Deciding otherwise means keeping a narrow CSV reader for that one account.
+- **Three closed accounts have CSV history and no PDFs** — two USD sub-ledgers and a two-transaction remnant. All reached $0.00 before 2025-12, so no value is lost from any current figure, but the 2023 USD deposits behind Wealthsimple's own net-deposits total ($766.39 and $1,434.97) are not recoverable from PDFs.
+
 ## Architecture
 
 Six stages, each a module with one job, in a Bun + TypeScript workspace.
 
 | Stage | Input to output | Responsibility |
 |---|---|---|
-| `extract` | PDF to text | `pdftotext -layout` via poppler, cached by file content hash so re-runs skip unchanged files |
-| `parse` | text to `Statement` | Template dispatch on the filename suffix. Transcription only, no interpretation |
+| `extract` | PDF to word geometry | `pdftotext -bbox-layout` via poppler, cached by file content hash so re-runs skip unchanged files |
+| `geometry` | XML to `Page[]` | Words with x-extents and y, grouped per page into rows. The 2D model every parser reads |
+| `parse` | rows to `Statement` | Template dispatch on the filename suffix. Transcription only, no interpretation |
 | `validate` | `Statement[]` to `ReconciliationReport` | The five checks below. Never drops a statement, never silently corrects one |
 | `store` | to `data/datastore.json` | Masked. Account numbers, owner name, and address never leave the extract cache |
 | `analytics` | to `data/analytics.json` | Timeline series, room, grants, tax, returns, projections |
@@ -67,13 +76,41 @@ Six stages, each a module with one job, in a Bun + TypeScript workspace.
 
 Source PDFs stay outside the vault in a gitignored directory. Only masked derived data is committed. This keeps roughly 100MB a year of statements out of git and keeps the owner's address and account numbers out of history permanently.
 
+### Why word geometry rather than flattened text
+
+`pdftotext -layout` renders a statement to space-padded text, discarding coordinates and asking regexes to reconstruct columns from runs of whitespace. That fails on these documents in three ways that are not fixable by better regexes:
+
+- **The summary block is three interleaved panels.** `Last Statement Cash Balance $116.67 · Cash Paid In Deposits $0.00 · Contributions:` is one line. Taking the last money token on the line reads $0.00 as the opening balance; taking the first reads correctly on the managed layout and wrongly on the dual-currency one.
+- **The mailing address is interleaved into the table.** The portfolio summary's `Cash` row shares its line with the owner's name, and the asset-class name wraps around two address lines before continuing.
+- **Column positions drift.** Sampling one statement per account per year, the market-value column sits at x=340 in 2024-01, x=349 in 2025-01, and x=346 in 2026-01. Any absolute position is wrong somewhere.
+
+`pdftotext -bbox-layout` emits every word with its x-extent and y. Grouped per page into rows, the same block reads unambiguously: the address occupies x=55 to x=166 and the table starts at x=222, a wrapped class name is the same x two rows down, and a label's value is simply the nearest money token to its right. Positions are read relative to the label, never hardcoded, so the column drift above is irrelevant.
+
+### Account type wording is not stable
+
+Wealthsimple has renamed the account-type descriptor twice inside this corpus. The same TFSA reads `Tax-Free Savings Account` in 2023, `Self-directed TFSA Account` in 2026-01, and `Order Execution Only TFSA Account` in 2026-06. Twenty distinct wordings appear across 220 statements.
+
+Two of them are traps: `Tax-Free Savings Managed Cash Account` and `First Home Savings SDI Cash Account` both contain the word "Cash" while being a TFSA and an FHSA, and the 2023 TFSA wording contains no `TFSA` token at all. A mapping keyed on obvious substrings gets both wrong.
+
+The mapping table is therefore derived from the full corpus rather than from a sample, and an unrecognised wording throws rather than defaulting. Because account identity is the account number and an account does not change tax wrapper, kind is taken from the account's **most recent** statement and every earlier statement must agree; a disagreement is a reconciliation finding.
+
+The descriptor also carries a second, orthogonal fact: `Managed` versus `Self-directed` / `Order Execution Only` is the management style, not the tax wrapper. `Account.managementStyle` records it, and it is what reproduces the app's Trading versus Portfolios split ($125,599.68 and $131,606.99 on 2026-06-30).
+
 ### Data model
 
 Three levels. Each is derived from the one above it and none is hand-edited.
 
 **`Statement`** — one per account-month, a faithful transcription of one PDF: holdings (symbol, quantity, market price, market value, book cost), cash summary in CAD and USD, contributions with the 60-day split, activity rows, FX rate, stated account type, and the source filename. The parse stage does no classification and no netting.
 
-**`Account`** — identity and classification. Type comes from the statement text. Carries the reviewed display label (keyed by `short_id`, never by account number), a purpose tag for the purpose lens, and an `in_totals` flag.
+**`Account`** — identity and classification. Kind comes from the most recent statement's type row; `managementStyle` comes from the same row's prefix. Carries the reviewed display label (keyed by `short_id`, never by account number), a purpose tag for the purpose lens, and an `in_totals` flag.
+
+### One account-month can have more than one document
+
+Three rules the corpus forces, none of which is a special case:
+
+- **Two templates, same month.** The three chequing accounts each produce both a `BROKERAGE` and a `CASH` statement for the same month — 25-plus account-months in this corpus. Continuity and coverage are therefore checked per `(account, period, template)`, never per `(account, period)`. The `CASH` document wins for a chequing account's activity; the `BROKERAGE` one supplies its portfolio total.
+- **Amended statements supersede.** The 2026-06 managed RRSP statement states in terms that an amended version will be issued once a private-asset NAV is finalised. A re-issued PDF for an account-month replaces the earlier one; the later `_v_N` suffix or the later file mtime decides, and the supersession is recorded as a finding so it is visible rather than silent.
+- **Coverage is per template.** An account whose `CASH` series starts later than its `BROKERAGE` series has no gap.
 
 **`Timeline`** — the monthly series per account: market value, book cost, net deposits, contributions, grants, income split by type, realized gains, and return. Every figure the UI shows is a slice of this.
 
@@ -84,7 +121,7 @@ Discrepancies are surfaced as data, not swallowed and not fatal. A wrong number 
 1. **Statement arithmetic.** Opening cash plus total paid in minus total paid out equals closing cash. Holdings sum to their asset-class total. Asset-class totals plus cash equal Total Portfolio. All three are printed on the page, so a drifting parse contradicts itself on the same document.
 2. **Month-to-month continuity.** The prior month's closing cash equals this month's opening cash. Catches a missing month, a double-ingested month, and an amended statement replacing an earlier one.
 3. **Coverage gaps.** Between an account's first and last statement, every month must be present.
-4. **Cross-document agreement.** Where a `PERFORMANCE` statement covers the same account-month as a `BROKERAGE` one, their start balance, deposits, withdrawals, and end balance must agree. Two independent transcriptions checked against each other.
+4. **Cross-document agreement.** Where a `PERFORMANCE` statement covers the same account-month as a `BROKERAGE` one, their portfolio totals, cash blocks, and holdings must agree — two independent transcriptions of the same month. The `PERFORMANCE` balance summary is additionally checked against itself: start plus deposits minus withdrawals plus change in market value must equal the end balance, and that end balance must equal its own portfolio total. `BROKERAGE` statements carry no balance summary, so it cannot be compared across the pair.
 5. **Ground truth.** A checked-in file of figures observed in the Wealthsimple app on a given date, starting with 2026-06-30: account value $242,019.61 and net deposits $217,514.00. The system reports its own figure, the observed figure, and the delta.
 
 Failures render in a **Reconciliation view** listing account, period, check, expected, actual, delta, and source filename. Parse-level failures — a required field absent from a document that should carry it — fail the build, because they mean the parser is wrong rather than the data.
@@ -106,7 +143,7 @@ Each wrapper view shows what that wrapper needs:
 | View | Shows |
 |---|---|
 | RESP | CESG received, grant room remaining, $50,000 lifetime cap, Canada Learning Bond |
-| RRSP | First-60-days versus rest-of-year split, assessed room from the notice of assessment, four accounts rolled up |
+| RRSP | First-60-days versus rest-of-year split, assessed room from the notice of assessment, three accounts rolled up: one self-directed, one managed, one spousal (reported separately, since spousal contributions use the contributor's room) |
 | FHSA | $40,000 lifetime cap, the 15-year closure deadline |
 | TFSA | Lifetime room, indexed annual limit |
 | Non-registered | Realized gains, dividend income by type, foreign income |
@@ -138,6 +175,8 @@ The CSV pipeline is deleted rather than kept alongside. Two parsers producing di
 - Filing-grade tax figures. The tax view stays an estimate with a visible disclaimer.
 - Trade or order entry. Read-only.
 - Any hosted or networked deployment. Local only.
+- **The Wealthsimple credit card.** No PDF statement exists for it, and the CSV pipeline it currently relies on is being deleted. Spending analysis is not what this system is for.
+- **Per-beneficiary RESP tracking.** The statements name no beneficiary, so a multi-beneficiary RESP cannot be split from this data. CESG is tracked at the account level against the $7,200 lifetime cap.
 
 ## Testing
 
@@ -152,7 +191,17 @@ Per the project standard: `bun run check` runs Biome, `tsc --noEmit`, and `bun t
 
 Resolved during implementation, none blocking:
 
-1. **The residual $279.94** between the summed statements ($241,739.67) and the app ($242,019.61) on 2026-06-30. Candidates: an account with no PDF export, crypto staking held outside the portfolio total, or a timing difference in the app's own figure. The reconciliation view exists to answer questions of exactly this shape.
-2. **Purpose tags per account**, owner-supplied.
-3. **Goal definitions**, owner-supplied.
-4. **Whether the corporate account belongs in the headline total.** It currently reconciles as if included, which is worth confirming against the app.
+1. **Purpose tags per account**, owner-supplied.
+2. **Goal definitions**, owner-supplied.
+3. **Whether the corporate account belongs in the headline total.** It currently reconciles as if included, which is worth confirming against the app.
+4. **Whether the July 2026 investment-account PDFs get exported** before the CSV pipeline is deleted.
+
+## Resolved: the $279.94 residual
+
+The gap between the summed statements ($241,739.67) and the app ($242,019.61) on 2026-06-30 is one unpriced holding, not a missing account and not a parsing error.
+
+The managed RRSP's June statement is the only one in the corpus carrying a pending-valuation disclaimer: *"Pricing for this period is not yet available. The value shown reflects the last available valuation... An amended statement will be issued once the updated Net Asset Value is finalized."* The holding is `WSE401`, a private-markets fund, 1,241.7150 units priced at exactly $10.00 — the 2026-05-29 purchase price, carried forward. It was converted out of `WSE300` that day, which had traded at $15.62 in April and $15.78 in May.
+
+If the entire residual is that one stale price, the finalised NAV is **$10.2254**, a 2.25% month. It is the only unpriced asset in the corpus, and the claim is testable: when the amended statement arrives, `WSE401` either reads $10.2254 or the explanation is wrong.
+
+Two consequences. Reconciliation must treat a pending valuation as a known, labelled reason for a ground-truth delta rather than an unexplained error. And amended statements are not hypothetical — this corpus is going to receive one, which is why supersession is specified above rather than deferred.
