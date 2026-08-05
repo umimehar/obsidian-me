@@ -5,6 +5,7 @@ import type {
   CashSummary,
   Contributions,
   Currency,
+  Holding,
   PortfolioSummary,
   Statement,
 } from "../types";
@@ -329,6 +330,72 @@ function readDividendsYtd(block: CashBlock): number | null {
   return p ? (p.values[p.values.length - 1] ?? null) : null;
 }
 
+const ASSETS_END = [/^\*Book Cost/, /Activity - Current period/, /LEVERAGE DISCLOSURE/];
+const CLASS_HEADING = /^(Canadian|US)[- ](Listed Securities|Equities)/;
+const PENDING = /PENDING VALUATION|Pricing for this period is not yet available/;
+
+/**
+ * A holding row is: name, symbol, total quantity, segregated quantity, price
+ * with currency, market value, book cost. The name and symbol are words; the
+ * five numbers are the row's money tokens in x order.
+ */
+function readHoldings(pages: readonly Page[]): Holding[] {
+  const rows = sectionRows(pages, /Portfolio Assets/, ASSETS_END);
+  const pendingSymbols = readPendingSymbols(pages);
+
+  const holdings: Holding[] = [];
+  let assetClass = "";
+
+  for (const row of rows) {
+    const text = rowText(row);
+
+    if (CLASS_HEADING.test(text)) {
+      assetClass = text.replace(/\s*\(The conversion rate.*$/, "").trim();
+      continue;
+    }
+    if (/^Total\b/.test(text)) continue;
+
+    const values: number[] = [];
+    const words: string[] = [];
+    let currency: Currency = "CAD";
+    for (const w of row.words) {
+      if (isMoney(w.text)) values.push(parseMoney(w.text));
+      else if (w.text === "USD" || w.text === "CAD") currency = w.text;
+      else words.push(w.text);
+    }
+    if (values.length < 5 || words.length < 2) continue;
+
+    const symbol = words[words.length - 1];
+    const name = words.slice(0, -1).join(" ");
+    if (!symbol || !/^[A-Z][A-Z0-9.]*$/.test(symbol)) continue;
+
+    holdings.push({
+      name,
+      symbol,
+      quantity: values[0] ?? 0,
+      segregatedQuantity: values[1] ?? 0,
+      marketPrice: values[2] ?? 0,
+      priceCurrency: currency,
+      marketValue: values[3] ?? 0,
+      bookCost: values[4] ?? 0,
+      assetClass,
+      pendingValuation: pendingSymbols.has(symbol),
+    });
+  }
+  return holdings;
+}
+
+/** Symbols named in a pending-valuation disclaimer, e.g. "WSE401 is valued...". */
+function readPendingSymbols(pages: readonly Page[]): Set<string> {
+  const out = new Set<string>();
+  if (!findRow(pages, PENDING)) return out;
+  for (const row of pages.flatMap((p) => p.rows)) {
+    const m = /\b([A-Z][A-Z0-9]{2,})\s+is valued\b/.exec(rowText(row));
+    if (m?.[1]) out.add(m[1]);
+  }
+  return out;
+}
+
 function readFxRate(pages: readonly Page[]): number | null {
   const row = findRow(pages, FX_RATE);
   const m = row ? FX_RATE.exec(rowText(row)) : null;
@@ -349,7 +416,7 @@ export function parseBrokerage(pages: readonly Page[], source: SourceRef): State
     periodEnd: period.end,
     portfolio: readPortfolio(pages),
     cash: readCash(block),
-    holdings: [],
+    holdings: readHoldings(pages),
     activity: [],
     contributions: readContributions(block),
     dividendsYearToDate: readDividendsYtd(block),

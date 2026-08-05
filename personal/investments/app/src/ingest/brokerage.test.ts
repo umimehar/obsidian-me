@@ -319,3 +319,66 @@ describe("contributions and fx", () => {
     expect(s.dividendsYearToDate).toBeNull();
   });
 });
+
+describe("holdings", () => {
+  test("reads each holding with its stated price", async () => {
+    const s = await managed();
+    const psa = s.holdings.find((h) => h.symbol === "PSA");
+    if (!psa) throw new Error("expected the PSA holding");
+    expect(psa.name).toBe("Purpose High Interest Savings ETF");
+    expect(psa.quantity).toBe(159.1371);
+    expect(psa.segregatedQuantity).toBe(159.1371);
+    expect(psa.marketPrice).toBe(50.01);
+    expect(psa.priceCurrency).toBe("CAD");
+    expect(psa.marketValue).toBe(7958.44);
+    expect(psa.bookCost).toBe(7961.6);
+    expect(psa.assetClass).toBe("Canadian Equities and Alternatives");
+  });
+
+  test("prices PSA as the Canadian ETF, not the US namesake", async () => {
+    // A bare-ticker price fetch resolved PSA to Public Storage US at ~$315.
+    // The statement states the right one, which is the whole point.
+    const psa = (await managed()).holdings.find((h) => h.symbol === "PSA");
+    expect(psa?.marketPrice).toBeLessThan(100);
+  });
+
+  test("keeps a holding whose segregated quantity is zero", async () => {
+    const wse = (await managed()).holdings.find((h) => h.symbol === "WSE401");
+    expect(wse?.quantity).toBe(1241.715);
+    expect(wse?.segregatedQuantity).toBe(0);
+    expect(wse?.marketValue).toBe(12417.15);
+  });
+
+  test("flags a holding the statement says is not yet priced", async () => {
+    // The June managed statement carries a pending-valuation disclaimer for
+    // WSE401. This is the whole of the $279.94 ground-truth residual, so it
+    // must be labelled rather than silently accepted.
+    const s = await managed();
+    expect(s.holdings.find((h) => h.symbol === "WSE401")?.pendingValuation).toBe(true);
+    expect(s.holdings.find((h) => h.symbol === "PSA")?.pendingValuation).toBe(false);
+  });
+
+  test("assigns the asset class despite the name wrapping around address lines", async () => {
+    // "Canadian Equities and" and "Alternatives" are two rows with a mailing
+    // address row between them.
+    const s = await managed();
+    expect(s.holdings.every((h) => h.assetClass !== "")).toBe(true);
+  });
+
+  test("holdings plus cash equal the portfolio total", async () => {
+    // Moved here from Task 5: it cannot pass until holdings are populated.
+    // This is the reconciliation that matters — checked against the portfolio
+    // total, not per asset class, because the summary's class label wraps
+    // around mailing-address rows and does not match the assets heading.
+    const s = await managed();
+    const p = s.portfolio;
+    if (!p) throw new Error("expected a portfolio");
+    const sum = s.holdings.reduce((a, h) => a + h.marketValue, 0) + p.cashMarketValue;
+    expect(sum).toBeCloseTo(p.totalMarketValue, 2);
+  });
+
+  test("returns no holdings for an account that holds nothing", async () => {
+    const s = await load("brokerage-empty", "ACCT0006CAD_2026-06_BROKERAGE.pdf");
+    expect(s.holdings).toEqual([]);
+  });
+});
