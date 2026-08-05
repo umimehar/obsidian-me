@@ -24,21 +24,28 @@ export function maskAccountNo(accountNo: string): MaskedId {
   return { maskedId: `acct_${digest.slice(0, 8)}`, shortId: digest.slice(0, 4) };
 }
 
+/**
+ * Longest name first, regardless of caller order: redacting "Jane" before
+ * "Jane Doe" would consume the short match and leave "Doe" exposed in the
+ * output. Sorting here makes the guarantee a property of the function, not
+ * of how the caller happens to order its name list.
+ */
 export function redactText(text: string, names: readonly string[]): string {
   let out = text;
-  for (const name of names) {
-    if (!name) continue;
+  const byDescendingLength = [...names].filter(Boolean).sort((a, b) => b.length - a.length);
+  for (const name of byDescendingLength) {
     out = out.replace(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), "[redacted]");
   }
   return out;
 }
 
 /**
- * Order is load-bearing. Spousal must precede RRSP, and both "Tax-Free Savings"
- * and "First Home Savings" must precede anything matching "Cash", because
- * "Tax-Free Savings Managed Cash Account" is a TFSA and "First Home Savings SDI
- * Cash Account" is an FHSA. "Tax-Free Savings Account" carries no TFSA token at
- * all, which is why the long-form names are listed first.
+ * The one live ordering dependency today is Spousal RRSP before plain RRSP:
+ * "Managed Spousal RRSP Account" would otherwise match the RRSP rule first.
+ * The long-form "Tax-Free Savings" / "First Home Savings" rules are listed
+ * ahead of the bare TFSA/FHSA token rules as a forward-looking guard, since a
+ * future generic "Cash" rule could otherwise shadow them — no such rule
+ * exists today, so that guard isn't yet load-bearing.
  */
 const KIND_RULES: readonly (readonly [RegExp, AccountKind])[] = [
   [/Spousal RRSP/i, "SpousalRRSP"],

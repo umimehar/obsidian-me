@@ -35,6 +35,19 @@ describe("redactText", () => {
       "Transfer out to Non-registered",
     );
   });
+
+  test("redacts the long form fully even when a shorter name is listed first", () => {
+    // Config order is caller-controlled and not guaranteed longest-first.
+    expect(redactText("e-Transfer Received from Jane Doe", ["Jane", "Jane Doe"])).toBe(
+      "e-Transfer Received from [redacted]",
+    );
+  });
+
+  test("treats regex metacharacters in a name as literal text", () => {
+    expect(redactText("paid to A.B Corp", ["A.B"])).toBe("paid to [redacted] Corp");
+    // A "." in the name must not act as a wildcard and match "AXB".
+    expect(redactText("paid to AXB Corp", ["A.B"])).toBe("paid to AXB Corp");
+  });
 });
 
 describe("classifyAccountType", () => {

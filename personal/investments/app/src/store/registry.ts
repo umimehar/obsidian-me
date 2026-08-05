@@ -39,13 +39,26 @@ export function buildRegistry(statements: readonly Statement[]): AccountRecord[]
   }
 
   const records: AccountRecord[] = [];
+  const accountNoByShortId = new Map<string, string>();
   for (const [accountNo, group] of byAccount) {
-    const sorted = [...group].sort((a, b) => a.source.period.localeCompare(b.source.period));
+    const sorted = [...group].sort(
+      (a, b) =>
+        a.source.period.localeCompare(b.source.period) || a.source.version - b.source.version,
+    );
     const latest = sorted[sorted.length - 1];
     const earliest = sorted[0];
     if (!latest || !earliest) continue;
 
     const { maskedId, shortId } = maskAccountNo(accountNo);
+    const priorAccountNo = accountNoByShortId.get(shortId);
+    if (priorAccountNo !== undefined && priorAccountNo !== accountNo) {
+      const prior = maskAccountNo(priorAccountNo);
+      throw new Error(
+        `shortId collision between ${prior.maskedId} and ${maskedId}: both hash to ${shortId}`,
+      );
+    }
+    accountNoByShortId.set(shortId, accountNo);
+
     const { kind, style } = classifyAccountType(latest.accountType);
 
     records.push({
