@@ -1,6 +1,14 @@
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
-import { findRow, labelEndX, parseGeometry, rowText, scanPairs, sliceColumns } from "./geometry";
+import {
+  findRow,
+  labelEndX,
+  labelStartX,
+  parseGeometry,
+  rowText,
+  scanPairs,
+  sliceColumns,
+} from "./geometry";
 
 const FIXTURES = join(import.meta.dir, "__fixtures__");
 const load = async (name: string) =>
@@ -57,6 +65,23 @@ describe("labelEndX and sliceColumns", () => {
       ],
     };
     expect(labelEndX(row, /Last Balance/)).toBe(147);
+  });
+
+  test("labelStartX returns the left edge of the matched label", () => {
+    const row = {
+      y: 281,
+      words: [
+        word(48, 62, 281, "Last"),
+        word(119, 147, 281, "Balance"),
+        word(174, 200, 281, "$116.67"),
+      ],
+    };
+    expect(labelStartX(row, /Last Balance/)).toBe(48);
+  });
+
+  test("labelStartX returns null when the label is absent", () => {
+    const row = { y: 281, words: [word(48, 62, 281, "Cash")] };
+    expect(labelStartX(row, /Last Balance/)).toBeNull();
   });
 
   test("sliceColumns keeps only words inside the x range", () => {
@@ -130,5 +155,25 @@ describe("scanPairs", () => {
   });
 });
 
-// Tests against a real statement live in Task 3, once the fixtures exist.
-// Nothing here reads a fixture, so this suite is green on its own.
+describe("against a real statement", () => {
+  test("finds the portfolio total", async () => {
+    const total = findRow(await load("brokerage-managed"), /Total Portfolio/);
+    if (!total) throw new Error("expected a Total Portfolio row");
+    expect(scanPairs([total])[0]?.values[0]).toBe(20498.54);
+  });
+
+  test("the mailing address does not contaminate the summary table", async () => {
+    const pages = await load("brokerage-managed");
+    const row = findRow(pages, /Total Portfolio/);
+    if (!row) throw new Error("expected the total row");
+    const labelX = labelStartX(row, /Total Portfolio/);
+    if (labelX === null) throw new Error("expected a label position");
+    // Everything left of the table is address; slicing removes it.
+    const table = sliceColumns(
+      pages.flatMap((p) => p.rows),
+      labelX - 1,
+      Number.POSITIVE_INFINITY,
+    );
+    expect(table.every((r) => !/Road|Suite/.test(rowText(r)))).toBe(true);
+  });
+});

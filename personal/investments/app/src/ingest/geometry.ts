@@ -119,6 +119,23 @@ export function labelEndX(row: Row, re: RegExp): number | null {
   return null;
 }
 
+/**
+ * The x of the left edge of the label matched by `re` within `row`, or null.
+ * Scans shortest match first: an unanchored regex can otherwise match a longer
+ * slice that includes the value and returns the wrong position.
+ */
+export function labelStartX(row: Row, re: RegExp): number | null {
+  for (let start = 0; start < row.words.length; start += 1) {
+    for (let end = start + 1; end <= row.words.length; end += 1) {
+      const slice = row.words.slice(start, end);
+      if (re.test(slice.map((w) => w.text).join(" "))) {
+        return slice[0]?.x0 ?? null;
+      }
+    }
+  }
+  return null;
+}
+
 /** Keeps only words whose left edge falls in [xMin, xMax). Empty rows are dropped. */
 export function sliceColumns(rows: readonly Row[], xMin: number, xMax: number): Row[] {
   return rows

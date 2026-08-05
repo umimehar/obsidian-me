@@ -1,0 +1,7 @@
+{
+  "redactions": ["First Last", "Other Name"],
+  "addressWords": ["StreetName", "CityName"],
+  "fixtures": [
+    { "file": "ACCOUNTNO_2026-06_BROKERAGE.pdf", "alias": "ACCT0001CAD", "as": "brokerage-managed" }
+  ]
+}
