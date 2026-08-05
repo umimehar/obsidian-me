@@ -1,15 +1,19 @@
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { parseBrokerage } from "./brokerage";
-import { parseGeometry } from "./geometry";
+import { type Page, parseGeometry, rowText } from "./geometry";
 import { parseSourceFilename } from "./source";
 
 const FIXTURES = join(import.meta.dir, "__fixtures__");
 
+async function loadPages(name: string): Promise<Page[]> {
+  return parseGeometry(await Bun.file(join(FIXTURES, `${name}.xml`)).text());
+}
+
 async function load(name: string, file: string) {
   const source = parseSourceFilename(file);
   if (!source) throw new Error(`bad fixture filename ${file}`);
-  const pages = parseGeometry(await Bun.file(join(FIXTURES, `${name}.xml`)).text());
+  const pages = await loadPages(name);
   return parseBrokerage(pages, source);
 }
 
@@ -69,6 +73,24 @@ describe("portfolio summary", () => {
     expect(p.totalMarketValue).toBe(0);
     expect(p.totalBookCost).toBe(0);
   });
+
+  test("reads asset classes named with 'Securities', not just 'Equities'", async () => {
+    // performance.xml names its classes "Canadian-Listed Securities and
+    // Alternatives" / "US-Listed Securities and Alternatives" — an
+    // /Equities/-only filter drops both entirely. The last class also
+    // carries a trailing "(The conversion rate used to convert...)"
+    // footnote that is not part of the name.
+    const source = parseSourceFilename("ACCT0001CAD_2026-04_PERFORMANCE.pdf");
+    if (!source) throw new Error("bad filename");
+    const pages = await loadPages("performance");
+    const s = parseBrokerage(pages, source);
+    const p = s.portfolio;
+    if (!p) throw new Error("expected a portfolio");
+    expect(p.classes.length).toBeGreaterThan(0);
+    for (const c of p.classes) {
+      expect(c.name).not.toMatch(/conversion rate/i);
+    }
+  });
 });
 
 describe("cash summary", () => {
@@ -114,6 +136,64 @@ describe("cash summary", () => {
         expect(c.opening + c.totalIn - c.totalOut).toBeCloseTo(c.closing, 2);
       }
     }
+  });
+
+  test("throws rather than fabricating a zero-filled summary when the section is absent", async () => {
+    // A statement whose Portfolio Cash section genuinely could not be found
+    // must not silently become a complete, reconciling all-zero CashSummary
+    // — that is indistinguishable from a real zero-activity account.
+    const source = parseSourceFilename("ACCT0001CAD_2026-06_BROKERAGE.pdf");
+    if (!source) throw new Error("bad filename");
+    const pages = await loadPages("brokerage-managed");
+    const stripped = pages.map((p) => ({
+      rows: p.rows.filter((r) => !/Portfolio Cash/.test(rowText(r))),
+    }));
+    expect(() => parseBrokerage(stripped, source)).toThrow(/portfolio cash/i);
+  });
+
+  test("throws when the detected currency count doesn't match the summary row", async () => {
+    // Synthetic statement: no "USD Transactions" marker (so single-currency
+    // is inferred) and no Cash Paid In / Contributions anchors to slice the
+    // summary panel down (so nothing narrows it). If the closing/opening
+    // balance rows genuinely carry 2 money tokens under those conditions,
+    // that is a second, undetected currency — not a Combined column, since
+    // the single-panel layout never has one. Silently taking the last 1
+    // value would return the USD figure mislabeled as CAD; the parser must
+    // throw instead.
+    const word = (text: string, x0: number, y: number) => ({ x0, x1: x0 + 10, y, text });
+    const pages: Page[] = [
+      {
+        rows: [
+          { y: 1, words: [word("Managed RRSP Account", 50, 1)] },
+          { y: 2, words: [word("2026-06-01 - 2026-06-30", 50, 2)] },
+          { y: 3, words: [word("Portfolio Cash", 50, 3)] },
+          {
+            y: 4,
+            words: [
+              word("Last", 50, 4),
+              word("Statement", 90, 4),
+              word("Cash", 140, 4),
+              word("Balance", 170, 4),
+              word("$10.00", 220, 4),
+              word("$20.00", 260, 4),
+            ],
+          },
+          {
+            y: 5,
+            words: [
+              word("Closing", 50, 5),
+              word("Cash", 100, 5),
+              word("Balance", 140, 5),
+              word("$15.00", 220, 5),
+              word("$25.00", 260, 5),
+            ],
+          },
+        ],
+      },
+    ];
+    const source = parseSourceFilename("ACCT0001CAD_2026-06_BROKERAGE.pdf");
+    if (!source) throw new Error("bad filename");
+    expect(() => parseBrokerage(pages, source)).toThrow(/currency count mismatch/i);
   });
 });
 

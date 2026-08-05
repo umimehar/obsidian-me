@@ -82,10 +82,15 @@ function readPortfolio(pages: readonly Page[]): PortfolioSummary | null {
   if (cash.length < 3 || total.length < 3) return null;
 
   // Columns are market value, % of market value, book cost, % of total book.
+  // Newer statements name these classes "...-Listed Securities and
+  // Alternatives" instead of "...Equities and Alternatives", so both words
+  // are matched. A class whose name is the last one on the page also carries
+  // a trailing footnote ("(The conversion rate used to convert...)") that is
+  // not part of the name and is stripped before use.
   const classes: AssetClassTotal[] = pairs
-    .filter((p) => /Equities/.test(p.label) && p.values.length >= 3)
+    .filter((p) => /Securities|Equities/.test(p.label) && p.values.length >= 3)
     .map((p) => ({
-      name: p.label.trim(),
+      name: p.label.replace(/\s*\(The conversion rate.*$/, "").trim(),
       marketValue: p.values[0] ?? 0,
       bookCost: p.values[2] ?? 0,
     }));
@@ -108,6 +113,36 @@ interface CashBlock {
   contributions: LabelValue[];
 }
 
+const SUMMARY_ROW_LABELS = [/Last Statement Cash Balance/, /Closing Cash Balance/];
+
+/**
+ * `readCashBlock`'s currency count rests entirely on whether `/USD
+ * Transactions/` matched. If that single marker is ever wrong on a real
+ * statement, `lookup`'s `slice(-n)` still returns a value — just the wrong
+ * one, silently mislabeled with the wrong currency. This is the shape check
+ * that catches it: on a correctly parsed statement, the summary panel has
+ * been sliced down to exactly one value per currency on both the opening and
+ * closing balance rows. The dual layout's raw rows also carry a leading
+ * "Combined" total, so it alone tolerates one extra value; the single-panel
+ * layout's slice never has that column, so any extra value there means a
+ * second currency slipped through undetected, not a Combined total, and must
+ * throw the same as too few.
+ */
+function assertCurrencyCountConsistent(block: CashBlock, dual: boolean): void {
+  const n = block.currencies.length;
+  const max = dual ? n + 1 : n;
+  for (const label of SUMMARY_ROW_LABELS) {
+    const pair = block.summary.find((p) => label.test(p.label));
+    const count = pair?.values.length ?? 0;
+    if (count < n || count > max) {
+      throw new Error(
+        `cash currency count mismatch: expected ${n} currenc${n === 1 ? "y" : "ies"} ` +
+          `(${block.currencies.join("/")}) but the "${label.source}" row carries ${count} value(s)`,
+      );
+    }
+  }
+}
+
 /**
  * Splits the cash block into the three panels the managed layout prints side by
  * side. A dual-currency statement has no panels, so all three views are the same
@@ -115,12 +150,27 @@ interface CashBlock {
  * uniform: take the last N values, N being the currency count.
  */
 function readCashBlock(pages: readonly Page[]): CashBlock {
+  // A missing Portfolio Cash section is a parser failure, not a zero-activity
+  // account: without it every summary/items lookup below falls through to
+  // `lookup`'s all-zero fallback and fabricates a complete, reconciling
+  // CashSummary that is indistinguishable from a real one.
+  if (!findRow(pages, /Portfolio Cash/)) {
+    throw new Error("could not find the Portfolio Cash section");
+  }
+
   const rows = sectionRows(pages, /Portfolio Cash/, CASH_END);
   const dual = rows.some((r) => /USD Transactions/.test(rowText(r)));
 
   if (dual) {
     const pairs = scanPairs(rows);
-    return { currencies: ["CAD", "USD"], summary: pairs, items: pairs, contributions: pairs };
+    const block: CashBlock = {
+      currencies: ["CAD", "USD"],
+      summary: pairs,
+      items: pairs,
+      contributions: pairs,
+    };
+    assertCurrencyCountConsistent(block, dual);
+    return block;
   }
 
   const paidInRow = rows.find((r) => /Cash Paid In/.test(rowText(r)));
@@ -137,12 +187,14 @@ function readCashBlock(pages: readonly Page[]): CashBlock {
   // back to x=0 there would slice in the whole row width — summary and items
   // panels included — instead of correctly reporting no contributions panel.
   const contributions = xContrib === null ? [] : scanPairs(sliceColumns(rows, xContrib, inf));
-  return {
+  const block: CashBlock = {
     currencies: ["CAD"],
     summary: scanPairs(sliceColumns(rows, 0, xIn ?? inf)),
     items: scanPairs(sliceColumns(rows, xIn ?? 0, xContrib ?? inf)),
     contributions,
   };
+  assertCurrencyCountConsistent(block, dual);
+  return block;
 }
 
 function lookup(pairs: readonly LabelValue[], re: RegExp, count: number): number[] {
@@ -167,20 +219,25 @@ function readCash(block: CashBlock): CashSummary[] {
   const totalOut = lookup(block.summary, /Total Cash Paid Out/, n);
   const closing = lookup(block.summary, /Closing Cash Balance/, n);
 
+  // End-anchored, matching Dividends/Other below: several of these labels keep
+  // their panel prefix after slicing ("Cash Paid In Deposits", "Cash Paid Out
+  // Fees"), so a start anchor would miss them, but the item name is always
+  // the last word(s) on its own pair, so an unanchored regex risks matching a
+  // different row that happens to contain the same substring.
   const paidIn: Record<keyof CashPaidIn, number[]> = {
-    deposits: lookup(inItems, /Deposits/, n),
-    proceedsFromSales: lookup(inItems, /Proceeds from sales/, n),
+    deposits: lookup(inItems, /(^|\s)Deposits$/, n),
+    proceedsFromSales: lookup(inItems, /(^|\s)Proceeds from sales$/, n),
     dividends: lookup(inItems, /(^|\s)Dividends$/, n),
-    interestEarned: lookup(inItems, /Interest Earned/, n),
-    stockLendingIncome: lookup(inItems, /Stock Lending Income/, n),
+    interestEarned: lookup(inItems, /(^|\s)Interest Earned$/, n),
+    stockLendingIncome: lookup(inItems, /(^|\s)Stock Lending Income$/, n),
     other: lookup(inItems, /(^|\s)Other$/, n),
   };
   const paidOut: Record<keyof CashPaidOut, number[]> = {
-    fees: lookup(outItems, /Fees/, n),
-    taxes: lookup(outItems, /Taxes/, n),
-    interestPaid: lookup(outItems, /Interest Paid/, n),
-    costOfInvestments: lookup(outItems, /Cost of Investments/, n),
-    withdrawals: lookup(outItems, /Withdrawals/, n),
+    fees: lookup(outItems, /(^|\s)Fees$/, n),
+    taxes: lookup(outItems, /(^|\s)Taxes$/, n),
+    interestPaid: lookup(outItems, /(^|\s)Interest Paid$/, n),
+    costOfInvestments: lookup(outItems, /(^|\s)Cost of Investments$/, n),
+    withdrawals: lookup(outItems, /(^|\s)Withdrawals$/, n),
     other: lookup(outItems, /(^|\s)Other$/, n),
   };
 
