@@ -37,23 +37,34 @@ async function loadConfig(): Promise<Config> {
   };
 }
 
+// Postal code split across two bbox words, e.g. "M5V" then "2J4" as separate
+// <word> elements. Tested per word so the redaction fires regardless of whether
+// pdftotext happened to keep the code whole or broke it at the internal space.
+const POSTAL_FIRST_HALF = /^[A-Za-z]\d[A-Za-z]$/;
+const POSTAL_SECOND_HALF = /^\d[A-Za-z]\d$/;
+
 /** Word-level scrub. bbox XML emits one <word> per token, so whole-name search fails. */
 function scrub(xml: string, accountNo: string, alias: string, cfg: Config): string {
   const tokens = new Set<string>();
   for (const phrase of [...cfg.redactions, ...cfg.addressWords]) {
+    // Single-character tokens are excluded: a bare "A" or "L" also matches a
+    // single-letter ticker symbol or a table's column header, so admitting them
+    // would over-redact real statement data rather than close a real gap.
     for (const t of phrase.split(/\s+/)) if (t.length > 1) tokens.add(t.toLowerCase());
   }
 
   return xml.replace(/(>)([^<]*)(<\/word>)/g, (_m, open: string, text: string, close: string) => {
     let out = text;
-    if (out === accountNo) out = alias;
+    if (out.toLowerCase() === accountNo.toLowerCase()) out = alias;
     // Compare against punctuation stripped from both ends: a name token followed by a
     // comma or period (e.g. an address line's "Springfield,") would otherwise slip past
     // an exact match against the bare token.
     const bare = out.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "").toLowerCase();
     if (tokens.has(bare)) out = "REDACTED";
     if (/^\d{6,}$/.test(out)) out = "00000000"; // bare numeric account numbers
-    if (/^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i.test(out)) out = "X0X0X0"; // postal code
+    if (/^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i.test(out)) out = "X0X0X0"; // whole postal code
+    if (POSTAL_FIRST_HALF.test(out)) out = "X0X"; // postal code, first half only
+    if (POSTAL_SECOND_HALF.test(out)) out = "0X0"; // postal code, second half only
     return `${open}${out}${close}`;
   });
 }
@@ -80,6 +91,19 @@ for (const { file, alias, as } of cfg.fixtures) {
       throw new Error(`scrub failed: bare number ${bare[1]} in ${as}`);
     }
   }
+  for (const word of scrubbed.matchAll(/<word[^>]*>([^<]*)<\/word>/g)) {
+    const w = word[1] ?? "";
+    if (/^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i.test(w)) {
+      throw new Error(`scrub failed: postal code "${w}" in ${as}`);
+    }
+    if ((POSTAL_FIRST_HALF.test(w) && w !== "X0X") || (POSTAL_SECOND_HALF.test(w) && w !== "0X0")) {
+      throw new Error(`scrub failed: postal code half "${w}" in ${as}`);
+    }
+  }
+  // A sibling account's own filename-derived code, not just the one this fixture
+  // is keyed on — a body row could legitimately name another account.
+  const vendorCode = /(WK|HQ|WZ)[A-Z0-9]{7,}/i.exec(scrubbed);
+  if (vendorCode) throw new Error(`scrub failed: vendor account code "${vendorCode[0]}" in ${as}`);
 
   await Bun.write(join(OUT, `${as}.xml`), scrubbed);
   console.log(`wrote ${as}.xml`);
