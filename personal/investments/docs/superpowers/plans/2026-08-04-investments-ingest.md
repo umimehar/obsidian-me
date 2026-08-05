@@ -868,7 +868,16 @@ Create `app/redactions.json` (gitignored). Pick one statement per layout variant
 cd personal/investments/app
 bun run fixtures
 grep -rlE '\b(WK|HQ|WZ)[A-Z0-9]{7,}\b' src/ingest/__fixtures__/ && echo "LEAK: account code" || echo "clean"
-grep -rlE '<word[^>]*>[0-9]{6,}</word>' src/ingest/__fixtures__/ | grep -v '00000000' && echo "LEAK: bare number" || echo "clean"
+bun -e 'const { Glob } = require("bun");
+  let bad = false;
+  for await (const f of new Glob("src/ingest/__fixtures__/*.xml").scan(".")) {
+    for (const m of (await Bun.file(f).text()).matchAll(/<word[^>]*>([^<]*)<\/word>/g)) {
+      const t = (m[1] ?? "").trim();
+      if (/^\d{6,}$/.test(t) && t !== "00000000") { console.log("LEAK: bare number", t, "in", f); bad = true; }
+      if (/^[A-Za-z]\d[A-Za-z] ?\d[A-Za-z]\d$/.test(t)) { console.log("LEAK: postal code in", f); bad = true; }
+    }
+  }
+  if (!bad) console.log("clean");'
 bun -e 'const c = await Bun.file("redactions.json").json();
   const { Glob } = require("bun");
   const toks = [...c.redactions, ...(c.addressWords ?? [])].flatMap(p => p.split(/\s+/)).filter(t => t.length > 1);
@@ -880,7 +889,7 @@ bun -e 'const c = await Bun.file("redactions.json").json();
   if (!bad) console.log("clean");'
 ```
 
-Expected: seven `.xml` files, all three checks print `clean`. Any leak stops the task — do not commit until all three are clean.
+Expected: seven `.xml` files, all three checks print `clean`. Note the bare-number check scans word CONTENT: an earlier draft piped `grep -rl` into `grep -v`, which filters by filename and so could never fail. Any leak stops the task — do not commit until all three are clean.
 
 - [ ] **Step 5: Add the fixture-backed geometry tests, then commit**
 
