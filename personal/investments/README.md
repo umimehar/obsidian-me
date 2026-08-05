@@ -2,13 +2,19 @@
 title: Investments
 tags: [personal/investments]
 created: 2026-07-13
-updated: 2026-08-04
+updated: 2026-08-05
 status: active
 type: personal
 personal: investments
 ---
 
 # Investments
+
+> **Being rebuilt on PDF statements (started 2026-08-05).** The page described below is built from the transaction **CSVs** and states everything at cost, because those exports carry no market price. A replacement reading the monthly **PDF** statements is under construction in `app/`: it recovers market value, book cost, the month-end FX rate, the RRSP first-60-days split, and Wealthsimple's own money-weighted returns.
+>
+> Reconciled so far: summing the eleven investment accounts from their June 2026 PDFs gives $241,739.67 against the app's $242,019.61 — a 0.12% gap, explained as one private-markets holding whose valuation was not yet final that month.
+>
+> Design: [spec](docs/superpowers/specs/2026-08-04-investments-rebuild-design.md) · [phase 1 plan](docs/superpowers/plans/2026-08-04-investments-ingest.md)
 
 Personal finance second brain built from Wealthsimple monthly statements. A bun/TypeScript pipeline turns the raw exports into a normalized datastore and renders one filter driven "Ledger" page.
 
