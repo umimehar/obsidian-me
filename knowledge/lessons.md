@@ -57,3 +57,16 @@ Why:
 - Column x positions drifted between 340 and 362 across years, so any absolute position was wrong somewhere.
 
 ALWAYS enumerate the full value set from every file before writing a mapping table or a format regex — `for f in *.pdf; do ... done | sort -u` costs a minute and is the difference between a table and a guess. When a document's layout is load-bearing, prefer coordinates (`pdftotext -bbox-layout`) over flattened text (`pdftotext -layout`): flattening discards the structure and forces regexes to reconstruct it from whitespace, which breaks on interleaved panels, wrapped labels, and any marginal content.
+
+### a check you have not seen fail is not a check (2026-08-05)
+
+Why:
+- Five verification checks in one project were structurally incapable of failing, and every one looked correct in review: `grep -rl … | grep -v sentinel` (filters filenames, never content); a non-global `.exec()` scanning a 1700-word document and seeing only the first match; a reconciliation assertion where `0 + 0 − 0 === 0` passed on completely unparsed input; a postal-code regex that could not match a code split across two tokens; and a grouping-key test whose fixture numbers coincided so it passed whether the key was right or wrong.
+- Four of the five were written by the same author as the code they guarded, and three shipped through a passing suite. A green suite is evidence that the code and the test agree, not that either is right.
+- The failure is invisible in exactly the situation the check exists for, so it converts a loud error into a silent wrong answer.
+
+ALWAYS demonstrate the failure before trusting a check: break the guarded line, watch the specific test go red, restore it. Do this for every check whose job is catching a defect — leak gates, reconciliation assertions, validation guards — not just for hard logic. Record the mutation and its failure message alongside the test.
+
+NEVER accept "the suite is green" as evidence a guard works, and never write a check whose passing condition is also its degenerate condition (`0 === 0`, an empty match set, a filter over the wrong stream). If a check cannot distinguish "nothing to find" from "nothing looked", it needs a separate assertion that input was actually examined.
+
+When reviewing, ask for a concrete input that trips each check. "I cannot construct one" is the finding.
