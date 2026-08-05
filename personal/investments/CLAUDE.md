@@ -1,5 +1,15 @@
 # Investments project — instructions for Claude Code
 
+> **Being rebuilt (from 2026-08-05).** Everything below describes the **CSV pipeline** in `scripts/`, which still runs and is still the source of `notes/index.html`. A replacement built on **PDF statements** is under construction in `app/` — see `docs/superpowers/specs/2026-08-04-investments-rebuild-design.md`.
+>
+> Several findings below are **true of the CSVs and false of the PDFs**. Do not apply them to `app/`:
+>
+> - *"There is no market value in this data"* — the PDFs state market price, market value and book cost per holding, with the exchange already resolved (`PSA` prices at $50.01 CAD, the Purpose HISA, not the $315 US namesake). The ticker-disambiguation problem does not exist there.
+> - *"The currency field is dirty"* — the PDFs print a month-end conversion rate and split cash into CAD and USD columns.
+> - *Filename-derived account kind* — the PDFs state the account type in plain text. Note it has been **renamed twice**: the same TFSA reads `Tax-Free Savings Account` in 2023, `Self-directed TFSA Account` in 2026-01, and `Order Execution Only TFSA Account` in 2026-06.
+>
+> When the rebuild replaces the page, delete `scripts/` and everything below this banner.
+
 Personal finance dashboard built from Wealthsimple monthly statement CSVs. A bun/TypeScript pipeline turns the raw exports into a masked datastore, analytics, and one self-contained offline HTML page (`notes/index.html`). These instructions capture hard-won findings about the data and the reporting semantics. Read them before changing analytics, prices, or the numbers shown on the page.
 
 ## Pipeline and commands
@@ -23,14 +33,16 @@ This is the single most important reporting rule.
 - The Growth section reports **net deposits** (`deposits`, summed across the scope) as money in, **portfolio at cost** = adjusted cost base plus cash at the window end, and **gain beyond deposits** = portfolio at cost minus net deposits. That gain is a cost basis figure (reinvested income and securities transferred in), not a market value.
 - Room / contribution figures in the Contributions and Room section use `contrib` (the CONTRIB-tagged contributions), summed for the scoped accounts of each registered group in the tax year (`taxSummary` in `src/client/series.ts`). Reference figure: RRSP `contrib` for 2026 is $33,000 against a $33,810 limit, for 2025 $15,000 ($48,000 total). This deliberately excludes routing-hub deposits, so it stays under the annual limit and matches what actually landed as contributions.
 
-## There is no market value in this data
+## There is no market value in this data (CSV pipeline only)
 
-The statements are transaction level only. Holdings carry `symbol`, `qty`, and `acb` (adjusted cost base), never a market price.
+**Scope: this section is about the CSV exports read by `scripts/`. The PDF statements read by `app/` do carry market prices — see the banner at the top.**
+
+The CSV exports are transaction level only. Holdings carry `symbol`, `qty`, and `acb` (adjusted cost base), never a market price.
 
 - A live price fetch (Yahoo chart endpoint) was built and then removed on purpose. It was unreliable: bare tickers resolve to the wrong exchange (for example `PSA` returns Public Storage US at about $315 instead of the Purpose HISA `PSA.TO` at about $50, and `L` returns Loews instead of Loblaw), which inflated market value and growth by multiples. Do not reintroduce live prices without first solving symbol to exchange disambiguation and the USD cost basis gap below.
 - Growth is cost basis only by design. If asked for market value or true unrealized gain, explain that the statement data cannot support it and point to the Wealthsimple app.
 
-## The currency field is dirty
+## The currency field is dirty (CSV pipeline only)
 
 - `transactions[].currency` is contaminated with ticker symbols and other junk, not clean ISO codes. Only about 1 of 1325 non CAD transactions carries an `fx_rate`, so per transaction FX conversion is not possible.
 - Because of this, ACB and flows are computed from CAD tagged transactions only. Cost basis for USD denominated holdings (for example US stocks in the Direct Indexing or USD non registered accounts) is therefore partial and can be wrong. Do not trust per holding average cost for USD positions.
