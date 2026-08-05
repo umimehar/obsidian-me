@@ -4,6 +4,7 @@ export type Currency = "CAD" | "USD";
 
 export interface Holding {
   name: string;
+  /** Can be empty (a spinoff with no printed ticker, a name split across a page break) -- never use as a unique key. */
   symbol: string;
   quantity: number;
   segregatedQuantity: number;

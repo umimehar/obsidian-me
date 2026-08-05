@@ -167,20 +167,39 @@ describe("checkArithmetic", () => {
     );
   });
 
-  test("flags a book-cost mismatch with a converted holding as a named warning", () => {
+  test("flags a small book-cost mismatch with a converted holding as a named warning", () => {
     // A USD holding's book cost is converted at the statement's own fx rate,
     // which its footnote discloses for market value only -- a real,
     // expected residual, not a parser bug, so it must not read as an error.
+    // 100 is under the 5% (398.08) budget for this holding's 7961.6 book cost.
     const bad = statement();
     const h = bad.holdings[0];
     if (!h) throw new Error("fixture");
-    h.bookCost = 1;
+    h.bookCost += 100;
     h.bookCostConverted = true;
     const f = checkArithmetic([bad]);
     const bookFinding = f.find((x) => x.message.includes("book cost"));
     expect(bookFinding).toBeDefined();
     expect(bookFinding?.severity).toBe("warning");
     expect(bookFinding?.message).toMatch(/disclosed rate applies to market value only/);
+  });
+
+  test("still flags a book-cost mismatch too large to be fx drift as an error", () => {
+    // A converted holding does not excuse an arbitrarily large residual: it
+    // budgets 5% of the converted book cost (398.08 here), and 1000 is well
+    // past that -- this must surface as a real parser defect, not a warning.
+    const bad = statement();
+    const h = bad.holdings[0];
+    if (!h) throw new Error("fixture");
+    h.bookCost += 1000;
+    h.bookCostConverted = true;
+    const f = checkArithmetic([bad]);
+    const bookFinding = f.find((x) => x.message.includes("book cost"));
+    expect(bookFinding).toBeDefined();
+    expect(bookFinding?.severity).toBe("error");
+    expect(bookFinding?.message).toBe(
+      "holdings plus cash do not equal the portfolio book cost total",
+    );
   });
 
   test("flags a paid-in breakdown that does not sum to its total", () => {

@@ -190,38 +190,30 @@ function assertCurrencyCountConsistent(block: CashBlock, dual: boolean): void {
  * pair list and the label lookups still resolve. Either way the value rule is
  * uniform: take the last N values, N being the currency count.
  */
-function readCashBlock(pages: readonly Page[]): CashBlock {
-  // A missing Portfolio Cash section is a parser failure, not a zero-activity
-  // account: without it every summary/items lookup below falls through to
-  // `lookup`'s all-zero fallback and fabricates a complete, reconciling
-  // CashSummary that is indistinguishable from a real one.
-  if (!findRow(pages, /Portfolio Cash/)) {
-    throw new Error("could not find the Portfolio Cash section");
-  }
+function readDualCurrencyCashBlock(rows: readonly Row[]): CashBlock {
+  const pairs = scanPairs(rows);
+  const block: CashBlock = {
+    currencies: ["CAD", "USD"],
+    summary: pairs,
+    items: pairs,
+    contributions: pairs,
+  };
+  assertCurrencyCountConsistent(block, true);
+  return block;
+}
 
-  const rows = sectionRows(pages, /Portfolio Cash/, CASH_END);
-  const dual = rows.some((r) => /USD Transactions/.test(rowText(r)));
+/** The x0 of the first row matching `find`, anchored within it by `anchor`. */
+function findPanelX(rows: readonly Row[], find: RegExp, anchor: RegExp): number | null {
+  const row = rows.find((r) => find.test(rowText(r)));
+  return row ? labelStartX(row, anchor) : null;
+}
 
-  if (dual) {
-    const pairs = scanPairs(rows);
-    const block: CashBlock = {
-      currencies: ["CAD", "USD"],
-      summary: pairs,
-      items: pairs,
-      contributions: pairs,
-    };
-    assertCurrencyCountConsistent(block, dual);
-    return block;
-  }
-
-  const paidInRow = rows.find((r) => /Cash Paid In/.test(rowText(r)));
-  const contribRow = rows.find((r) => /Contributions/.test(rowText(r)));
-  const statsRow = rows.find((r) => /Interest:|Dividends:/.test(rowText(r)));
+function readSingleCurrencyCashBlock(rows: readonly Row[]): CashBlock {
   // Anchored: these rows carry earlier panel text before the label, and an
   // unanchored regex matches that whole prefix once it reaches the label,
   // returning the prefix's x0 instead of the label's own.
-  const xIn = paidInRow ? labelStartX(paidInRow, /^Cash Paid In/) : null;
-  const xContrib = contribRow ? labelStartX(contribRow, /^Contributions/) : null;
+  const xIn = findPanelX(rows, /Cash Paid In/, /^Cash Paid In/);
+  const xContrib = findPanelX(rows, /Contributions/, /^Contributions/);
   // Some account types print a stats panel instead of "Contributions:" --
   // "Interest:" on Chequing, "Dividends:" on non-registered Cash accounts --
   // so there is no contributions column at all, handled below. But that
@@ -230,7 +222,7 @@ function readCashBlock(pages: readonly Page[]): CashBlock {
   // and bleeds into the same pair, so the item's label reads "...Deposits
   // Interest:" and no longer ends in "Deposits", breaking the end-anchored
   // lookups below.
-  const xStats = statsRow ? labelStartX(statsRow, /^(?:Interest|Dividends):/) : null;
+  const xStats = findPanelX(rows, /Interest:|Dividends:/, /^(?:Interest|Dividends):/);
 
   const inf = Number.POSITIVE_INFINITY;
   // Falling back to x=0 for contributions would slice in the whole row width
@@ -243,8 +235,22 @@ function readCashBlock(pages: readonly Page[]): CashBlock {
     items: scanPairs(sliceColumns(rows, xIn ?? 0, xContrib ?? xStats ?? inf)),
     contributions,
   };
-  assertCurrencyCountConsistent(block, dual);
+  assertCurrencyCountConsistent(block, false);
   return block;
+}
+
+function readCashBlock(pages: readonly Page[]): CashBlock {
+  // A missing Portfolio Cash section is a parser failure, not a zero-activity
+  // account: without it every summary/items lookup below falls through to
+  // `lookup`'s all-zero fallback and fabricates a complete, reconciling
+  // CashSummary that is indistinguishable from a real one.
+  if (!findRow(pages, /Portfolio Cash/)) {
+    throw new Error("could not find the Portfolio Cash section");
+  }
+
+  const rows = sectionRows(pages, /Portfolio Cash/, CASH_END);
+  const dual = rows.some((r) => /USD Transactions/.test(rowText(r)));
+  return dual ? readDualCurrencyCashBlock(rows) : readSingleCurrencyCashBlock(rows);
 }
 
 function lookup(pairs: readonly LabelValue[], re: RegExp, count: number): number[] {
@@ -426,13 +432,27 @@ function attachCurrencies(
   return tags;
 }
 
+interface HoldingIdentity {
+  symbol: string;
+  name: string;
+}
+
 /**
- * A holding row is: name, symbol, total quantity, segregated quantity,
- * optionally a quantity on loan, price, market value, book cost. Quantity on
- * loan appears on roughly a third of statements, so the last three money
- * tokens (price, market value, book cost) are read from the end rather than
- * a fixed front offset — stable whether the row carries five values or six.
- *
+ * The last word is normally the ticker, but a handful of holdings — a recent
+ * spinoff, in the one seen so far — print only a name and never get a ticker
+ * column at all. Such a row is still real money and must stay in the
+ * reconciliation; it just carries an empty symbol.
+ */
+function extractHoldingIdentity(tokens: RowTokens): HoldingIdentity {
+  const lastWord = tokens.words[tokens.words.length - 1];
+  const hasSymbol = !!lastWord && /^[A-Z][A-Z0-9.]*$/.test(lastWord);
+  return {
+    symbol: hasSymbol ? lastWord : "",
+    name: hasSymbol ? tokens.words.slice(0, -1).join(" ") : tokens.words.join(" "),
+  };
+}
+
+/**
  * A wrapped continuation line — the tail of a long name, a trailing currency
  * tag for market value or book cost, or both together — is folded in for its
  * currency tokens only; its words are never a holding's name or symbol, so
@@ -440,25 +460,86 @@ function attachCurrencies(
  * than "carries only currency", since a real continuation often wraps a
  * currency tag alongside leftover name words (e.g. "Income Strategy ETF USD").
  */
+function resolveCurrencyTokens(tokens: RowTokens, next: Row | undefined): CurrencyToken[] {
+  const nextTokens = next ? classifyRow(next) : null;
+  if (!nextTokens || isHoldingRow(nextTokens)) return tokens.currency;
+  return [...tokens.currency, ...nextTokens.currency];
+}
+
+interface HoldingColumns {
+  quantity: number;
+  segregatedQuantity: number;
+  marketPrice: number;
+  priceCurrency: Currency;
+  marketValue: number;
+  marketValueConverted: boolean;
+  bookCost: number;
+  bookCostConverted: boolean;
+}
+
+/**
+ * A holding row is: name, symbol, total quantity, segregated quantity,
+ * optionally a quantity on loan, price, market value, book cost. Quantity on
+ * loan appears on roughly a third of statements, so the last three money
+ * tokens (price, market value, book cost) are read from the end rather than
+ * a fixed front offset — stable whether the row carries five values or six.
+ * A USD-priced holding's market value and book cost can print in USD, not
+ * CAD, on the page. The portfolio summary they must reconcile against is CAD
+ * throughout, and Holding carries no separate currency for these two
+ * fields, so a USD-tagged one is converted here at the statement's own rate.
+ */
+/** The amount of the money token at `index`, or 0 when the row is short one. */
+function amountAt(money: readonly MoneyToken[], index: number): number {
+  return money[index]?.amount ?? 0;
+}
+
+function resolveHoldingColumns(
+  tokens: RowTokens,
+  currencyTokens: readonly CurrencyToken[],
+  hasAggregateBookCost: boolean,
+  fxRate: number | null,
+): HoldingColumns {
+  const money = hasAggregateBookCost ? tokens.money.slice(0, -1) : tokens.money;
+  const n = money.length;
+  const tags = attachCurrencies(money, currencyTokens);
+  const priceCurrency = tags[n - 3] ?? "CAD";
+  const valueConverted = tags[n - 2] === "USD";
+  const costConverted = tags[n - 1] === "USD";
+  const rate = fxRate ?? 1;
+
+  return {
+    quantity: amountAt(money, 0),
+    segregatedQuantity: amountAt(money, 1),
+    marketPrice: amountAt(money, n - 3),
+    priceCurrency,
+    marketValue: amountAt(money, n - 2) * (valueConverted ? rate : 1),
+    marketValueConverted: valueConverted,
+    bookCost: amountAt(money, n - 1) * (costConverted ? rate : 1),
+    bookCostConverted: costConverted,
+  };
+}
+
+/**
+ * A handful of statements add a seventh "Aggregate Book Cost" column after
+ * Book Cost (for superficial-loss tracking). It sits at the far end, not the
+ * middle like a loan or staked quantity, so reading price/value/cost from
+ * the end of the row would misalign by one for every holding — this is
+ * checked once per statement, from the header row this section starts with
+ * ("...Market Book Aggregate"). The phrase "Book Aggregate" adjacent is the
+ * marker, not the bare word: a real holding can be named "Aggregate" (e.g.
+ * "BMO Aggregate Bond Index ETF"), and the scan is limited to `rows[0]`, the
+ * header, so such a holding is never mistaken for it.
+ */
+function hasAggregateBookCostColumn(rows: readonly Row[]): boolean {
+  const header = rows[0];
+  return !!header && /\bBook Aggregate\b/.test(rowText(header));
+}
+
 function readHoldings(pages: readonly Page[]): Holding[] {
   const rows = sectionRows(pages, ASSETS_START, ASSETS_END);
   const pendingSymbols = readPendingSymbols(pages);
-  // A USD-priced holding's market value and book cost can print in USD, not
-  // CAD, on the page. The portfolio summary they must reconcile against is
-  // CAD throughout, and Holding carries no separate currency for these two
-  // fields, so a USD-tagged one is converted here at the statement's own rate.
   const fxRate = readFxRate(pages);
-  // A handful of statements add a seventh "Aggregate Book Cost" column after
-  // Book Cost (for superficial-loss tracking). It sits at the far end, not
-  // the middle like a loan or staked quantity, so reading price/value/cost
-  // from the end of the row would misalign by one for every holding — this
-  // is checked once per statement, from the header row this section starts
-  // with ("...Market Book Aggregate"). The phrase "Book Aggregate" adjacent
-  // is the marker, not the bare word: a real holding can be named "Aggregate"
-  // (e.g. "BMO Aggregate Bond Index ETF"), and the scan is limited to
-  // `rows[0]`, the header, so such a holding is never mistaken for it.
-  const header = rows[0];
-  const hasAggregateBookCost = !!header && /\bBook Aggregate\b/.test(rowText(header));
+  const hasAggregateBookCost = hasAggregateBookCostColumn(rows);
 
   const holdings: Holding[] = [];
   let assetClass = "";
@@ -477,44 +558,16 @@ function readHoldings(pages: readonly Page[]): Holding[] {
     const tokens = classifyRow(row);
     if (!isHoldingRow(tokens)) continue;
 
-    // The last word is normally the ticker, but a handful of holdings — a
-    // recent spinoff, in the one seen so far — print only a name and never
-    // get a ticker column at all. Such a row is still real money and must
-    // stay in the reconciliation; it just carries an empty symbol.
-    const lastWord = tokens.words[tokens.words.length - 1];
-    const hasSymbol = !!lastWord && /^[A-Z][A-Z0-9.]*$/.test(lastWord);
-    const symbol = hasSymbol ? lastWord : "";
-    const name = hasSymbol ? tokens.words.slice(0, -1).join(" ") : tokens.words.join(" ");
-
-    const next = rows[i + 1];
-    const nextTokens = next ? classifyRow(next) : null;
-    const currencyTokens =
-      nextTokens && !isHoldingRow(nextTokens)
-        ? [...tokens.currency, ...nextTokens.currency]
-        : tokens.currency;
-
-    const money = hasAggregateBookCost ? tokens.money.slice(0, -1) : tokens.money;
-    const n = money.length;
-    const tags = attachCurrencies(money, currencyTokens);
-    const priceCurrency = tags[n - 3] ?? "CAD";
-    const valueCurrency = tags[n - 2] ?? "CAD";
-    const costCurrency = tags[n - 1] ?? "CAD";
-    const valueConverted = valueCurrency === "USD";
-    const costConverted = costCurrency === "USD";
+    const { symbol, name } = extractHoldingIdentity(tokens);
+    const currencyTokens = resolveCurrencyTokens(tokens, rows[i + 1]);
+    const columns = resolveHoldingColumns(tokens, currencyTokens, hasAggregateBookCost, fxRate);
 
     holdings.push({
       name,
       symbol,
-      quantity: money[0]?.amount ?? 0,
-      segregatedQuantity: money[1]?.amount ?? 0,
-      marketPrice: money[n - 3]?.amount ?? 0,
-      priceCurrency,
-      marketValue: (money[n - 2]?.amount ?? 0) * (valueConverted ? (fxRate ?? 1) : 1),
-      marketValueConverted: valueConverted,
-      bookCost: (money[n - 1]?.amount ?? 0) * (costConverted ? (fxRate ?? 1) : 1),
+      ...columns,
       assetClass,
       pendingValuation: pendingSymbols.has(symbol),
-      bookCostConverted: costConverted,
     });
   }
   return holdings;

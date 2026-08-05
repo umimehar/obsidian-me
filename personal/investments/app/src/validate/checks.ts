@@ -1,5 +1,5 @@
 import { classifyAccountType, maskAccountNo } from "../store/mask";
-import type { CashSummary, Statement } from "../types";
+import type { CashSummary, PortfolioSummary, Statement } from "../types";
 import { type Finding, within } from "./report";
 
 function finding(
@@ -69,6 +69,98 @@ function checkCashBlock(s: Statement, cash: CashSummary, out: Finding[]): void {
   }
 }
 
+function checkMissingPortfolio(s: Statement, out: Finding[]): void {
+  if (s.source.template === "CASH") return;
+  out.push(
+    finding(
+      "missing-portfolio",
+      s,
+      "no portfolio summary on a statement that must print one",
+      null,
+      null,
+    ),
+  );
+}
+
+/**
+ * Checked against the portfolio total rather than per asset class: the
+ * summary's class label wraps around mailing-address rows and does not
+ * match the assets section's heading. This check is stronger anyway.
+ *
+ * A converted USD holding is exactly what the disclosed fx rate covers
+ * (unlike book cost below), so a mismatch here is not automatically a
+ * parser defect: the statement prints that rate to six decimals, and
+ * summing several holdings converted at a rounded rate drifts a cent or two
+ * from whatever precision the statement's own total used. A cent per
+ * converted holding is the budget for that drift; a residual within it is
+ * fx rounding, one bigger than that -- or one on a CAD-only statement, where
+ * no conversion touched the numbers at all -- has no such excuse and stays
+ * an error.
+ */
+function checkMarketValue(s: Statement, p: PortfolioSummary, out: Finding[]): void {
+  const sum = s.holdings.reduce((a, h) => a + h.marketValue, 0) + p.cashMarketValue;
+  if (within(sum, p.totalMarketValue)) return;
+
+  const convertedCount = s.holdings.filter((h) => h.marketValueConverted).length;
+  const delta = sum - p.totalMarketValue;
+  const isRounding = convertedCount > 0 && Math.abs(delta) <= convertedCount * 0.01;
+  out.push(
+    finding(
+      "statement-arithmetic",
+      s,
+      isRounding
+        ? `market value differs by ${delta.toFixed(2)}; the statement's fx rate is disclosed to six decimals, so summing ${convertedCount} converted USD holding(s) drifts by rounding`
+        : "holdings plus cash do not equal the portfolio total",
+      p.totalMarketValue,
+      sum,
+      isRounding ? "warning" : "error",
+    ),
+  );
+}
+
+/**
+ * Book cost gets the same reconciliation, but not the same trust: a USD
+ * holding's book cost is converted at the statement's own fx rate, which its
+ * footnote discloses for market value only. Book cost is an accumulated
+ * basis recorded at each purchase's own historical rate, so a converted
+ * holding can leave a real, expected residual -- a warning, named as such,
+ * not a silent pass or a false error.
+ *
+ * Unlike market value's flat cent-per-holding rounding, this residual is
+ * proportional to how much book cost was actually converted, since it comes
+ * from years of purchases at their own historical rates, not one rate
+ * applied once. The budget is 5% of the converted holdings' book cost: the
+ * largest residual seen across the 19 real converted-holding statements in
+ * this corpus is 4.55%, so 5% covers all of them with headroom while still
+ * rejecting a mismatch too large to be this effect. A mismatch with no
+ * converted holding involved, or one past the budget, has no such excuse
+ * and stays an error.
+ */
+const BOOK_COST_FX_BUDGET_FRACTION = 0.05;
+
+function checkBookCost(s: Statement, p: PortfolioSummary, out: Finding[]): void {
+  const bookSum = s.holdings.reduce((a, h) => a + h.bookCost, 0) + p.cashBookCost;
+  if (within(bookSum, p.totalBookCost)) return;
+
+  const converted = s.holdings.filter((h) => h.bookCostConverted);
+  const convertedBookCost = converted.reduce((a, h) => a + h.bookCost, 0);
+  const delta = bookSum - p.totalBookCost;
+  const budget = convertedBookCost * BOOK_COST_FX_BUDGET_FRACTION;
+  const isApproximate = converted.length > 0 && Math.abs(delta) <= budget;
+  out.push(
+    finding(
+      "statement-arithmetic",
+      s,
+      isApproximate
+        ? `book cost differs by ${delta.toFixed(2)}; the statement's disclosed rate applies to market value only, so converted USD book cost is approximate`
+        : "holdings plus cash do not equal the portfolio book cost total",
+      p.totalBookCost,
+      bookSum,
+      isApproximate ? "warning" : "error",
+    ),
+  );
+}
+
 export function checkArithmetic(statements: readonly Statement[]): Finding[] {
   const out: Finding[] = [];
 
@@ -77,75 +169,12 @@ export function checkArithmetic(statements: readonly Statement[]): Finding[] {
 
     const p = s.portfolio;
     if (!p) {
-      if (s.source.template !== "CASH") {
-        out.push(
-          finding(
-            "missing-portfolio",
-            s,
-            "no portfolio summary on a statement that must print one",
-            null,
-            null,
-          ),
-        );
-      }
+      checkMissingPortfolio(s, out);
       continue;
     }
 
-    // Checked against the portfolio total rather than per asset class: the
-    // summary's class label wraps around mailing-address rows and does not
-    // match the assets section's heading. This check is stronger anyway.
-    const sum = s.holdings.reduce((a, h) => a + h.marketValue, 0) + p.cashMarketValue;
-    if (!within(sum, p.totalMarketValue)) {
-      // A converted USD holding is exactly what the disclosed fx rate covers
-      // (unlike book cost below), so a mismatch here is not automatically a
-      // parser defect: the statement prints that rate to six decimals, and
-      // summing several holdings converted at a rounded rate drifts a cent
-      // or two from whatever precision the statement's own total used. A
-      // cent per converted holding is the budget for that drift; a residual
-      // within it is fx rounding, one bigger than that -- or one on a
-      // CAD-only statement, where no conversion touched the numbers at all
-      // -- has no such excuse and stays an error.
-      const convertedCount = s.holdings.filter((h) => h.marketValueConverted).length;
-      const delta = sum - p.totalMarketValue;
-      const isRounding = convertedCount > 0 && Math.abs(delta) <= convertedCount * 0.01;
-      out.push(
-        finding(
-          "statement-arithmetic",
-          s,
-          isRounding
-            ? `market value differs by ${delta.toFixed(2)}; the statement's fx rate is disclosed to six decimals, so summing ${convertedCount} converted USD holding(s) drifts by rounding`
-            : "holdings plus cash do not equal the portfolio total",
-          p.totalMarketValue,
-          sum,
-          isRounding ? "warning" : "error",
-        ),
-      );
-    }
-
-    // Book cost gets the same reconciliation, but not the same trust: a USD
-    // holding's book cost is converted at the statement's own fx rate, which
-    // its footnote discloses for market value only. Book cost is an
-    // accumulated basis recorded at each purchase's own historical rate, so
-    // a converted holding can leave a real, expected residual -- a warning,
-    // named as such, not a silent pass or a false error. A mismatch with no
-    // converted holding involved has no such excuse and stays an error.
-    const bookSum = s.holdings.reduce((a, h) => a + h.bookCost, 0) + p.cashBookCost;
-    if (!within(bookSum, p.totalBookCost)) {
-      const hasConverted = s.holdings.some((h) => h.bookCostConverted);
-      const delta = bookSum - p.totalBookCost;
-      out.push(
-        finding(
-          "statement-arithmetic",
-          s,
-          hasConverted
-            ? `book cost differs by ${delta.toFixed(2)}; the statement's disclosed rate applies to market value only, so converted USD book cost is approximate`
-            : "holdings plus cash do not equal the portfolio book cost total",
-          p.totalBookCost,
-          bookSum,
-          hasConverted ? "warning" : "error",
-        ),
-      );
-    }
+    checkMarketValue(s, p, out);
+    checkBookCost(s, p, out);
   }
   return out;
 }
