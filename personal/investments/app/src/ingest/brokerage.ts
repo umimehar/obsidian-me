@@ -216,22 +216,31 @@ function readCashBlock(pages: readonly Page[]): CashBlock {
 
   const paidInRow = rows.find((r) => /Cash Paid In/.test(rowText(r)));
   const contribRow = rows.find((r) => /Contributions/.test(rowText(r)));
+  const statsRow = rows.find((r) => /Interest:|Dividends:/.test(rowText(r)));
   // Anchored: these rows carry earlier panel text before the label, and an
   // unanchored regex matches that whole prefix once it reaches the label,
   // returning the prefix's x0 instead of the label's own.
   const xIn = paidInRow ? labelStartX(paidInRow, /^Cash Paid In/) : null;
   const xContrib = contribRow ? labelStartX(contribRow, /^Contributions/) : null;
+  // Some account types print a stats panel instead of "Contributions:" --
+  // "Interest:" on Chequing, "Dividends:" on non-registered Cash accounts --
+  // so there is no contributions column at all, handled below. But that
+  // panel's column still needs a right edge for the items panel: without
+  // one, its header text shares a row with the last item (e.g. Deposits)
+  // and bleeds into the same pair, so the item's label reads "...Deposits
+  // Interest:" and no longer ends in "Deposits", breaking the end-anchored
+  // lookups below.
+  const xStats = statsRow ? labelStartX(statsRow, /^(?:Interest|Dividends):/) : null;
 
   const inf = Number.POSITIVE_INFINITY;
-  // Some account types (Chequing) print an "Interest:" stats panel instead of
-  // "Contributions:", so there is no contributions column at all. Falling
-  // back to x=0 there would slice in the whole row width — summary and items
-  // panels included — instead of correctly reporting no contributions panel.
+  // Falling back to x=0 for contributions would slice in the whole row width
+  // — summary and items panels included — instead of correctly reporting no
+  // contributions panel.
   const contributions = xContrib === null ? [] : scanPairs(sliceColumns(rows, xContrib, inf));
   const block: CashBlock = {
     currencies: ["CAD"],
     summary: scanPairs(sliceColumns(rows, 0, xIn ?? inf)),
-    items: scanPairs(sliceColumns(rows, xIn ?? 0, xContrib ?? inf)),
+    items: scanPairs(sliceColumns(rows, xIn ?? 0, xContrib ?? xStats ?? inf)),
     contributions,
   };
   assertCurrencyCountConsistent(block, dual);
@@ -265,12 +274,25 @@ function readCash(block: CashBlock): CashSummary[] {
   // Fees"), so a start anchor would miss them, but the item name is always
   // the last word(s) on its own pair, so an unanchored regex risks matching a
   // different row that happens to contain the same substring.
+  //
+  // Older statements label the same two rows differently: "Interest Earned"
+  // used to print as bare "Interest", and "Stock Lending Income" as "Interest
+  // from Stock Lending" (the two physical rows "Interest from" / "Stock
+  // Lending" that `scanPairs` joins into one label). The bare "Interest" arm
+  // cannot also match "Interest Paid" (a paid-out row, a different items
+  // list entirely) since that string never ends in "Interest", nor swallow
+  // "Interest from Stock Lending" since that string never ends in "Interest"
+  // or "Interest Earned" either -- the two resolve to distinct fields.
   const paidIn: Record<keyof CashPaidIn, number[]> = {
     deposits: lookup(inItems, /(^|\s)Deposits$/, n),
     proceedsFromSales: lookup(inItems, /(^|\s)Proceeds from sales$/, n),
     dividends: lookup(inItems, /(^|\s)Dividends$/, n),
-    interestEarned: lookup(inItems, /(^|\s)Interest Earned$/, n),
-    stockLendingIncome: lookup(inItems, /(^|\s)Stock Lending Income$/, n),
+    interestEarned: lookup(inItems, /(^|\s)Interest(?: Earned)?$/, n),
+    stockLendingIncome: lookup(
+      inItems,
+      /(^|\s)(?:Stock Lending Income|Interest from Stock Lending)$/,
+      n,
+    ),
     other: lookup(inItems, /(^|\s)Other$/, n),
   };
   const paidOut: Record<keyof CashPaidOut, number[]> = {
@@ -477,6 +499,7 @@ function readHoldings(pages: readonly Page[]): Holding[] {
     const priceCurrency = tags[n - 3] ?? "CAD";
     const valueCurrency = tags[n - 2] ?? "CAD";
     const costCurrency = tags[n - 1] ?? "CAD";
+    const valueConverted = valueCurrency === "USD";
     const costConverted = costCurrency === "USD";
 
     holdings.push({
@@ -486,7 +509,8 @@ function readHoldings(pages: readonly Page[]): Holding[] {
       segregatedQuantity: money[1]?.amount ?? 0,
       marketPrice: money[n - 3]?.amount ?? 0,
       priceCurrency,
-      marketValue: (money[n - 2]?.amount ?? 0) * (valueCurrency === "USD" ? (fxRate ?? 1) : 1),
+      marketValue: (money[n - 2]?.amount ?? 0) * (valueConverted ? (fxRate ?? 1) : 1),
+      marketValueConverted: valueConverted,
       bookCost: (money[n - 1]?.amount ?? 0) * (costConverted ? (fxRate ?? 1) : 1),
       assetClass,
       pendingValuation: pendingSymbols.has(symbol),

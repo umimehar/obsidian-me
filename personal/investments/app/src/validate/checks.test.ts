@@ -67,6 +67,7 @@ function statement(over: Partial<Statement> = {}): Statement {
         marketPrice: 50.01,
         priceCurrency: "CAD",
         marketValue: 7958.44,
+        marketValueConverted: false,
         bookCost: 7961.6,
         assetClass: "Canadian Equities and Alternatives",
         pendingValuation: false,
@@ -80,6 +81,7 @@ function statement(over: Partial<Statement> = {}): Statement {
         marketPrice: 10,
         priceCurrency: "CAD",
         marketValue: 12417.15,
+        marketValueConverted: false,
         bookCost: 12417.15,
         assetClass: "Canadian Equities and Alternatives",
         pendingValuation: true,
@@ -118,6 +120,37 @@ describe("checkArithmetic", () => {
     if (!h) throw new Error("fixture");
     h.marketValue = 1;
     expect(checkArithmetic([bad]).some((x) => x.message.includes("portfolio total"))).toBe(true);
+  });
+
+  test("treats a small market-value residual on converted holdings as fx rounding", () => {
+    // The statement discloses its fx rate to only six decimals, so summing
+    // several holdings converted at that rounded rate can drift a cent or
+    // two from the printed total -- a real, expected residual, not a parser
+    // defect. Both holdings converted here budgets 2 cents of drift.
+    const bad = statement();
+    const psa = bad.holdings[0];
+    const wse = bad.holdings[1];
+    if (!psa || !wse) throw new Error("fixture");
+    psa.marketValueConverted = true;
+    wse.marketValueConverted = true;
+    psa.marketValue += 0.015; // over tolerance (0.011), under the 2-cent budget
+    const f = checkArithmetic([bad]);
+    const marketFinding = f.find((x) => x.message.includes("market value"));
+    expect(marketFinding).toBeDefined();
+    expect(marketFinding?.severity).toBe("warning");
+    expect(marketFinding?.message).toMatch(/six decimals/);
+  });
+
+  test("still flags a market-value residual too large to be fx rounding as an error", () => {
+    const bad = statement();
+    const psa = bad.holdings[0];
+    if (!psa) throw new Error("fixture");
+    psa.marketValueConverted = true;
+    psa.marketValue += 0.05; // 1 converted holding budgets only 1 cent
+    const f = checkArithmetic([bad]);
+    const marketFinding = f.find((x) => x.message.includes("portfolio total"));
+    expect(marketFinding).toBeDefined();
+    expect(marketFinding?.severity).toBe("error");
   });
 
   test("flags a book-cost mismatch with no converted holding as an error", () => {

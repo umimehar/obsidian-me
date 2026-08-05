@@ -96,13 +96,28 @@ export function checkArithmetic(statements: readonly Statement[]): Finding[] {
     // match the assets section's heading. This check is stronger anyway.
     const sum = s.holdings.reduce((a, h) => a + h.marketValue, 0) + p.cashMarketValue;
     if (!within(sum, p.totalMarketValue)) {
+      // A converted USD holding is exactly what the disclosed fx rate covers
+      // (unlike book cost below), so a mismatch here is not automatically a
+      // parser defect: the statement prints that rate to six decimals, and
+      // summing several holdings converted at a rounded rate drifts a cent
+      // or two from whatever precision the statement's own total used. A
+      // cent per converted holding is the budget for that drift; a residual
+      // within it is fx rounding, one bigger than that -- or one on a
+      // CAD-only statement, where no conversion touched the numbers at all
+      // -- has no such excuse and stays an error.
+      const convertedCount = s.holdings.filter((h) => h.marketValueConverted).length;
+      const delta = sum - p.totalMarketValue;
+      const isRounding = convertedCount > 0 && Math.abs(delta) <= convertedCount * 0.01;
       out.push(
         finding(
           "statement-arithmetic",
           s,
-          "holdings plus cash do not equal the portfolio total",
+          isRounding
+            ? `market value differs by ${delta.toFixed(2)}; the statement's fx rate is disclosed to six decimals, so summing ${convertedCount} converted USD holding(s) drifts by rounding`
+            : "holdings plus cash do not equal the portfolio total",
           p.totalMarketValue,
           sum,
+          isRounding ? "warning" : "error",
         ),
       );
     }

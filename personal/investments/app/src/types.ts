@@ -10,6 +10,16 @@ export interface Holding {
   marketPrice: number;
   priceCurrency: Currency;
   marketValue: number;
+  /**
+   * True when marketValue was converted from USD to CAD at the statement's
+   * own fx rate -- exactly what the class heading's footnote sanctions, so
+   * this is not an approximation flag like bookCostConverted below. It marks
+   * which holdings the disclosed rate actually touched, so a reconciliation
+   * check can attribute a small residual (the statement's own six-decimal
+   * rate rounding, summed across several holdings) to that cause instead of
+   * reporting it as a parser defect.
+   */
+  marketValueConverted: boolean;
   bookCost: number;
   assetClass: string;
   /** True when the statement says pricing for the period is not yet final. */

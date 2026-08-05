@@ -290,6 +290,177 @@ describe("cash summary", () => {
   });
 });
 
+describe("cash summary — older item labels", () => {
+  // Statements from 2023-2024 label two Cash Paid In rows differently than
+  // the current wording: "Interest Earned" prints as bare "Interest", and
+  // "Stock Lending Income" as "Interest from Stock Lending" (itself wrapped
+  // across two physical rows — "Interest from" then "Stock Lending" — which
+  // `scanPairs` joins into that one label). Missing either wording leaves the
+  // item read as zero, which silently breaks the paid-in breakdown's sum.
+  const word = (text: string, x0: number, y: number) => ({ x0, x1: x0 + 10, y, text });
+
+  function parse(cashRows: { y: number; words: ReturnType<typeof word>[] }[]) {
+    const pages: Page[] = [
+      {
+        rows: [
+          { y: 1, words: [word("Managed RRSP Account", 50, 1)] },
+          { y: 2, words: [word("2026-06-01 - 2026-06-30", 50, 2)] },
+          { y: 3, words: [word("Portfolio Cash", 50, 3)] },
+          ...cashRows,
+        ],
+      },
+    ];
+    const source = parseSourceFilename("ACCT0001CAD_2026-06_BROKERAGE.pdf");
+    if (!source) throw new Error("bad filename");
+    return parseBrokerage(pages, source);
+  }
+
+  // Panels split at x=300 (the "Cash Paid In" anchor), mirroring the real
+  // column layout: summary figures left of it, item figures at or right of it.
+  // Deposits $0.00, Interest $0.03, Interest from Stock Lending $0.02 sums to
+  // the $0.05 Total Cash Paid In; Interest Paid $0.01 is the whole of Total
+  // Cash Paid Out, and $0.00 opening + $0.05 - $0.01 is the $0.04 closing.
+  function olderLayoutRows() {
+    return [
+      {
+        y: 4,
+        words: [
+          word("Last", 50, 4),
+          word("Statement", 90, 4),
+          word("Cash", 140, 4),
+          word("Balance", 170, 4),
+          word("$0.00", 220, 4),
+          word("Cash", 300, 4),
+          word("Paid", 340, 4),
+          word("In", 370, 4),
+          word("Deposits", 390, 4),
+          word("$0.00", 450, 4),
+        ],
+      },
+      { y: 5, words: [word("Total", 50, 5), word("Cash", 90, 5), word("Paid", 130, 5)] },
+      { y: 6, words: [word("In", 50, 6), word("$0.05", 90, 6)] },
+      { y: 7, words: [word("Interest", 300, 7), word("$0.03", 400, 7)] },
+      { y: 8, words: [word("Interest", 300, 8), word("from", 340, 8)] },
+      { y: 9, words: [word("Stock", 300, 9), word("Lending", 340, 9), word("$0.02", 400, 9)] },
+      {
+        y: 10,
+        words: [
+          word("Cash", 300, 10),
+          word("Paid", 340, 10),
+          word("Out", 370, 10),
+          word("Interest", 390, 10),
+          word("Paid", 430, 10),
+          word("$0.01", 470, 10),
+        ],
+      },
+      { y: 11, words: [word("Total", 50, 11), word("Cash", 90, 11), word("Paid", 130, 11)] },
+      { y: 12, words: [word("Out", 50, 12), word("$0.01", 90, 12)] },
+      {
+        y: 13,
+        words: [
+          word("Closing", 50, 13),
+          word("Cash", 90, 13),
+          word("Balance", 130, 13),
+          word("$0.04", 220, 13),
+        ],
+      },
+    ];
+  }
+
+  test("reads Interest Earned from the older bare 'Interest' label", () => {
+    const s = parse(olderLayoutRows());
+    const cad = s.cash[0];
+    if (!cad) throw new Error("expected a CAD cash summary");
+    expect(cad.paidIn?.interestEarned).toBe(0.03);
+  });
+
+  test("reads Stock Lending Income from the wrapped 'Interest from Stock Lending' label", () => {
+    const s = parse(olderLayoutRows());
+    const cad = s.cash[0];
+    if (!cad) throw new Error("expected a CAD cash summary");
+    expect(cad.paidIn?.stockLendingIncome).toBe(0.02);
+  });
+
+  test("does not confuse Interest Paid (paid-out) with Interest Earned (paid-in)", () => {
+    const s = parse(olderLayoutRows());
+    const cad = s.cash[0];
+    if (!cad) throw new Error("expected a CAD cash summary");
+    expect(cad.paidOut?.interestPaid).toBe(0.01);
+  });
+
+  test("the older-label paid-in breakdown sums to the printed total", () => {
+    const s = parse(olderLayoutRows());
+    const cad = s.cash[0];
+    if (!cad?.paidIn) throw new Error("expected a paidIn breakdown");
+    const sum = Object.values(cad.paidIn).reduce((a, v) => a + v, 0);
+    expect(sum).toBeCloseTo(cad.totalIn ?? Number.NaN, 2);
+  });
+});
+
+describe("cash summary — stats panel bleeds into the last item", () => {
+  // Chequing accounts print an "Interest:" stats panel, and non-registered
+  // Cash accounts print a "Dividends:" one, in the column where a registered
+  // account's "Contributions:" panel would sit. Neither carries a right edge
+  // for the items panel to stop at, so the header token shares a row with
+  // the last item (Deposits, on the same row as the opening balance) and
+  // gets glued onto its label -- "Cash Paid In Deposits Interest:" no longer
+  // ends in "Deposits", so the end-anchored deposits lookup misses it and
+  // reads zero instead of the real figure.
+  const word = (text: string, x0: number, y: number) => ({ x0, x1: x0 + 10, y, text });
+
+  function parse(statsToken: string) {
+    const pages: Page[] = [
+      {
+        rows: [
+          { y: 1, words: [word("Managed RRSP Account", 50, 1)] },
+          { y: 2, words: [word("2026-06-01 - 2026-06-30", 50, 2)] },
+          { y: 3, words: [word("Portfolio Cash", 50, 3)] },
+          {
+            y: 4,
+            words: [
+              word("Last", 50, 4),
+              word("Statement", 90, 4),
+              word("Cash", 140, 4),
+              word("Balance", 170, 4),
+              word("$0.00", 220, 4),
+              word("Cash", 300, 4),
+              word("Paid", 340, 4),
+              word("In", 370, 4),
+              word("Deposits", 390, 4),
+              word("$500.00", 450, 4),
+              word(statsToken, 520, 4),
+            ],
+          },
+          { y: 5, words: [word("Total", 50, 5), word("Cash", 90, 5), word("Paid", 130, 5)] },
+          { y: 6, words: [word("In", 50, 6), word("$500.00", 90, 6)] },
+          {
+            y: 7,
+            words: [
+              word("Closing", 50, 7),
+              word("Cash", 90, 7),
+              word("Balance", 130, 7),
+              word("$500.00", 220, 7),
+            ],
+          },
+        ],
+      },
+    ];
+    const source = parseSourceFilename("ACCT0001CAD_2026-06_BROKERAGE.pdf");
+    if (!source) throw new Error("bad filename");
+    return parseBrokerage(pages, source);
+  }
+
+  test("reads Deposits past an 'Interest:' stats panel header (Chequing layout)", () => {
+    const s = parse("Interest:");
+    expect(s.cash[0]?.paidIn?.deposits).toBe(500);
+  });
+
+  test("reads Deposits past a 'Dividends:' stats panel header (non-registered Cash layout)", () => {
+    const s = parse("Dividends:");
+    expect(s.cash[0]?.paidIn?.deposits).toBe(500);
+  });
+});
+
 describe("contributions and fx", () => {
   test("reads the 60-day split", async () => {
     const s = await managed();
@@ -554,6 +725,11 @@ describe("holdings — shapes the seven fixtures never exercised", () => {
     // approximate: the statement's disclosed fx rate covers market value
     // only, not the historical-rate cost basis book cost represents.
     expect(h.bookCostConverted).toBe(true);
+    // Unlike book cost, a converted market value is exactly what the
+    // footnote sanctions -- but the reconciliation check still needs to know
+    // which holdings a rate touched, to attribute a small residual to fx
+    // rounding rather than reporting it as a parser defect.
+    expect(h.marketValueConverted).toBe(true);
   });
 
   test("marks a CAD holding's book cost as not converted", () => {
@@ -577,6 +753,7 @@ describe("holdings — shapes the seven fixtures never exercised", () => {
     const h = s.holdings.find((x) => x.symbol === "CDH");
     if (!h) throw new Error("expected the CDH holding");
     expect(h.bookCostConverted).toBe(false);
+    expect(h.marketValueConverted).toBe(false);
   });
 
   test("drops the trailing Aggregate Book Cost column instead of misreading it as book cost", () => {
