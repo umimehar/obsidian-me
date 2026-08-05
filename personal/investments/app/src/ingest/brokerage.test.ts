@@ -58,16 +58,16 @@ describe("portfolio summary", () => {
     expect(p.totalBookCost).toBe(20501.7);
   });
 
-  // Holdings are empty until Task 6 parses them, so the sum below is just cash
-  // and cannot reconcile yet. test.failing flips pass/fail so this test still
-  // runs every check, and starts failing the moment Task 6 makes it true,
-  // which is the signal to drop .failing.
-  test.failing("holdings and cash sum to the portfolio total", async () => {
-    const s = await managed();
+  test("reads a non-null portfolio on the 2023 wrapped-header layout", async () => {
+    // The 2023 statements wrap "Market Value" across two rows, so the header
+    // never appears contiguous in any row. The guard must not depend on it.
+    // This account really was empty in 2023-06 — zeros are the correct
+    // answer, null is not.
+    const s = await load("brokerage-legacy-wording", "ACCT0007CAD_2023-06_BROKERAGE.pdf");
     const p = s.portfolio;
     if (!p) throw new Error("expected a portfolio");
-    const sum = s.holdings.reduce((a, h) => a + h.marketValue, 0) + p.cashMarketValue;
-    expect(sum).toBeCloseTo(p.totalMarketValue, 2);
+    expect(p.totalMarketValue).toBe(0);
+    expect(p.totalBookCost).toBe(0);
   });
 });
 

@@ -49,6 +49,7 @@ function readPeriod(pages: readonly Page[]): { start: string; end: string } {
 }
 
 const PORTFOLIO_END = [/Portfolio Cash/];
+const PORTFOLIO_START = /Account No\./;
 
 /**
  * The summary table sits right of the mailing address, so it is read from a
@@ -57,16 +58,21 @@ const PORTFOLIO_END = [/Portfolio Cash/];
  * left (the address) is discarded. The label headers above "Cash" carry no
  * money and merge into the first pair scanPairs closes, so lookups match on
  * the label's trailing word rather than requiring an exact match.
+ *
+ * The guard is "Total Portfolio" alone, not a "Market Value" header check:
+ * 2023-era statements wrap the header across two rows ("Market % of Market
+ * Book % of Total Book" / "Value($) Value Value($) Value"), so "Market Value"
+ * never appears contiguous in any row and that guard silently drops a
+ * statement that otherwise parses fine.
  */
 function readPortfolio(pages: readonly Page[]): PortfolioSummary | null {
-  const header = findRow(pages, /Market Value/);
   const totalRow = findRow(pages, /Total Portfolio/);
-  if (!header || !totalRow) return null;
+  if (!totalRow) return null;
 
   const labelX = labelStartX(totalRow, /Total Portfolio/);
   if (labelX === null) return null;
 
-  const section = sectionRows(pages, /Market Value/, PORTFOLIO_END);
+  const section = sectionRows(pages, PORTFOLIO_START, PORTFOLIO_END);
   const table = sliceColumns(section, labelX - 1, Number.POSITIVE_INFINITY);
   const pairs = scanPairs(table);
 
@@ -126,11 +132,16 @@ function readCashBlock(pages: readonly Page[]): CashBlock {
   const xContrib = contribRow ? labelStartX(contribRow, /^Contributions/) : null;
 
   const inf = Number.POSITIVE_INFINITY;
+  // Some account types (Chequing) print an "Interest:" stats panel instead of
+  // "Contributions:", so there is no contributions column at all. Falling
+  // back to x=0 there would slice in the whole row width — summary and items
+  // panels included — instead of correctly reporting no contributions panel.
+  const contributions = xContrib === null ? [] : scanPairs(sliceColumns(rows, xContrib, inf));
   return {
     currencies: ["CAD"],
     summary: scanPairs(sliceColumns(rows, 0, xIn ?? inf)),
     items: scanPairs(sliceColumns(rows, xIn ?? 0, xContrib ?? inf)),
-    contributions: scanPairs(sliceColumns(rows, xContrib ?? 0, inf)),
+    contributions,
   };
 }
 
