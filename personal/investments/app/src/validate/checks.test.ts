@@ -4,6 +4,7 @@ import {
   checkArithmetic,
   checkContinuity,
   checkCoverage,
+  checkCrossDocument,
   checkGroundTruth,
   checkKindConsistency,
   checkSupersession,
@@ -174,9 +175,12 @@ describe("checkContinuity", () => {
   });
 
   test("flags a broken opening balance", () => {
+    // delta follows the actual-minus-expected convention every other check
+    // uses: the printed opening (actual) is 500, the prior close it should
+    // have equaled (expected) is 122.95.
     const f = checkContinuity([june(), july(500)]);
     expect(f).toHaveLength(1);
-    expect(f[0]?.delta).toBeCloseTo(122.95 - 500, 2);
+    expect(f[0]?.delta).toBeCloseTo(500 - 122.95, 2);
   });
 
   test("does not compare a CASH statement against a BROKERAGE one", () => {
@@ -261,6 +265,66 @@ describe("checkCoverage", () => {
       statement({ source: src("2026-06", "CASH") }),
     ];
     expect(checkCoverage(rows)).toEqual([]);
+  });
+
+  test("terminates and reports a stuck scan instead of looping forever", () => {
+    // "1" has no dash, so nextPeriod cannot parse a month out of it and
+    // returns it unchanged -- the scan would never reach "2026-01" without a
+    // hard bound. parseSourceFilename would reject this in practice; the
+    // check must not depend on that for its own termination.
+    const rows = [
+      statement({ source: src("1", "BROKERAGE") }),
+      statement({ source: src("2026-01", "BROKERAGE") }),
+    ];
+    const f = checkCoverage(rows);
+    expect(f.some((x) => x.severity === "error" && x.message.includes("stuck"))).toBe(true);
+  });
+});
+
+describe("checkCrossDocument", () => {
+  test("flags disagreement between performance and brokerage portfolio totals", () => {
+    const brokerage = statement();
+    const brokeragePortfolio = brokerage.portfolio;
+    if (!brokeragePortfolio) throw new Error("fixture");
+    const performance = statement({
+      source: src("2026-06", "PERFORMANCE"),
+      portfolio: { ...brokeragePortfolio, totalMarketValue: 99999 },
+      balances: { start: 0, deposits: 0, withdrawals: 0, changeInMarketValue: 99999, end: 99999 },
+    });
+    const f = checkCrossDocument([brokerage, performance]);
+    expect(f.some((x) => x.check === "cross-document" && x.message.includes("disagree"))).toBe(
+      true,
+    );
+  });
+
+  test("flags a performance balance summary that does not reconcile", () => {
+    const performance = statement({
+      source: src("2026-06", "PERFORMANCE"),
+      portfolio: null,
+      holdings: [],
+      balances: { start: 100, deposits: 50, withdrawals: 10, changeInMarketValue: 5, end: 999 },
+    });
+    const f = checkCrossDocument([performance]);
+    expect(f.some((x) => x.message.includes("does not reconcile"))).toBe(true);
+  });
+
+  test("flags a balance summary end that does not match the portfolio total", () => {
+    // Reconciles internally (0 + 0 - 0 + 100 = 100) but disagrees with the
+    // portfolio total the default fixture carries (20498.54).
+    const performance = statement({
+      source: src("2026-06", "PERFORMANCE"),
+      balances: { start: 0, deposits: 0, withdrawals: 0, changeInMarketValue: 100, end: 100 },
+    });
+    const f = checkCrossDocument([performance]);
+    expect(f.some((x) => x.message.includes("does not match the portfolio total"))).toBe(true);
+  });
+
+  test("flags a missing balance summary as a warning, not a silent pass", () => {
+    const performance = statement({ source: src("2026-06", "PERFORMANCE"), balances: null });
+    const f = checkCrossDocument([performance]);
+    const missing = f.find((x) => x.severity === "warning");
+    expect(missing).toBeDefined();
+    expect(missing?.message.toLowerCase()).toContain("balance");
   });
 });
 

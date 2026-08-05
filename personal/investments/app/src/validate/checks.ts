@@ -142,18 +142,15 @@ export function checkContinuity(statements: readonly Statement[]): Finding[] {
         const prior = prev.cash.find((c) => c.currency === cash.currency);
         if (!prior) continue;
         if (!within(prior.closing, cash.opening)) {
-          // delta is signed as "expected minus actual": how far the printed
-          // opening fell short of the prior close, not the reverse.
-          out.push({
-            ...finding(
+          out.push(
+            finding(
               "cash-continuity",
               curr,
               `${cash.currency} opening does not match ${prev.source.period} closing`,
               prior.closing,
               cash.opening,
             ),
-            delta: prior.closing - cash.opening,
-          });
+          );
         }
       }
     }
@@ -167,6 +164,9 @@ function nextPeriod(period: string): string {
   return m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, "0")}`;
 }
 
+/** Comfortably beyond any real corpus; guards against a malformed period stalling nextPeriod. */
+const MAX_COVERAGE_SPAN = 3000;
+
 export function checkCoverage(statements: readonly Statement[]): Finding[] {
   const out: Finding[] = [];
 
@@ -176,19 +176,38 @@ export function checkCoverage(statements: readonly Statement[]): Finding[] {
     const last = list[list.length - 1];
     if (!first || !last) continue;
 
-    for (let p = first.source.period; p < last.source.period; p = nextPeriod(p)) {
-      if (present.has(p)) continue;
-      out.push({
-        check: "coverage-gap",
-        severity: "warning",
-        accountShortId: maskAccountNo(first.source.accountNo).shortId,
-        period: p,
-        message: `no ${first.source.template} statement for this month`,
-        expected: null,
-        actual: null,
-        delta: null,
-        sourceFile: "",
-      });
+    let p = first.source.period;
+    let steps = 0;
+    while (p < last.source.period) {
+      if (steps >= MAX_COVERAGE_SPAN) {
+        out.push({
+          check: "coverage-gap",
+          severity: "error",
+          accountShortId: maskAccountNo(first.source.accountNo).shortId,
+          period: p,
+          message: `coverage scan stuck at this period after ${MAX_COVERAGE_SPAN} steps without reaching ${last.source.period}; the period format is likely malformed`,
+          expected: null,
+          actual: null,
+          delta: null,
+          sourceFile: "",
+        });
+        break;
+      }
+      if (!present.has(p)) {
+        out.push({
+          check: "coverage-gap",
+          severity: "warning",
+          accountShortId: maskAccountNo(first.source.accountNo).shortId,
+          period: p,
+          message: `no ${first.source.template} statement for this month`,
+          expected: null,
+          actual: null,
+          delta: null,
+          sourceFile: "",
+        });
+      }
+      p = nextPeriod(p);
+      steps += 1;
     }
   }
   return out;
@@ -275,26 +294,39 @@ export function checkCrossDocument(statements: readonly Statement[]): Finding[] 
         ),
       );
     }
-    // BROKERAGE carries no balance summary, so it is checked against itself.
     const b = p.balances;
-    if (b) {
-      const derived = b.start + b.deposits - b.withdrawals + b.changeInMarketValue;
-      if (!within(derived, b.end)) {
-        out.push(
-          finding("cross-document", p, "balance summary does not reconcile", derived, b.end),
-        );
-      }
-      if (p.portfolio && !within(b.end, p.portfolio.totalMarketValue)) {
-        out.push(
-          finding(
-            "cross-document",
-            p,
-            "balance summary end does not match the portfolio total",
-            p.portfolio.totalMarketValue,
-            b.end,
-          ),
-        );
-      }
+    if (!b) {
+      // A PERFORMANCE statement is defined by carrying a balance summary, so
+      // a null one is a parser bug -- with one documented exception: an
+      // account funded mid-period prints a dash instead of a figure, which
+      // legitimately parses to null. Warning, not error, to reflect that.
+      out.push(
+        finding(
+          "cross-document",
+          p,
+          "no balance summary on this PERFORMANCE statement (expected only when the account was funded mid-period)",
+          null,
+          null,
+          "warning",
+        ),
+      );
+      continue;
+    }
+
+    const derived = b.start + b.deposits - b.withdrawals + b.changeInMarketValue;
+    if (!within(derived, b.end)) {
+      out.push(finding("cross-document", p, "balance summary does not reconcile", derived, b.end));
+    }
+    if (p.portfolio && !within(b.end, p.portfolio.totalMarketValue)) {
+      out.push(
+        finding(
+          "cross-document",
+          p,
+          "balance summary end does not match the portfolio total",
+          p.portfolio.totalMarketValue,
+          b.end,
+        ),
+      );
     }
   }
   return out;
