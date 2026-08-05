@@ -850,4 +850,95 @@ describe("holdings — shapes the seven fixtures never exercised", () => {
     expect(s.holdings[0]?.name).toBe("");
     expect(s.holdings[0]?.marketValue).toBe(633.93);
   });
+
+  test("defaults a crypto holding's asset class to 'Crypto Assets' when the layout prints no per-class heading", () => {
+    // Equities layouts head every class explicitly (CLASS_HEADING above).
+    // A Crypto Portfolio never does -- it goes straight from "Crypto
+    // Portfolio" / "Holdings" to the column header row to the holdings,
+    // since there is only ever the one class. Leaving the class blank here
+    // would never match the summary table's "Crypto Assets" class total, so
+    // a per-class book-cost reconciliation check would misreport an
+    // otherwise-correct crypto holding as a parser bug.
+    const s = parse([
+      { y: 9, words: [word("Crypto Portfolio", 50, 9)] },
+      { y: 10, words: [word("Holdings", 50, 10)] },
+      {
+        y: 11,
+        words: [
+          word("Crypto", 40, 11),
+          word("Asset", 90, 11),
+          word("Symbol", 130, 11),
+          word("Total", 170, 11),
+          word("Quantity", 220, 11),
+        ],
+      },
+      {
+        y: 12,
+        words: [
+          word("Bitcoin", 40, 12),
+          word("BTC", 140, 12),
+          word("0.5000", 200, 12),
+          word("0.5000", 260, 12),
+          word("$50000.00", 320, 12),
+          word("$25000.00", 380, 12),
+          word("$24000.00", 430, 12),
+        ],
+      },
+    ]);
+    const h = s.holdings.find((x) => x.symbol === "BTC");
+    if (!h) throw new Error("expected the BTC holding");
+    expect(h.assetClass).toBe("Crypto Assets");
+  });
+});
+
+describe("activity", () => {
+  test("reads a single-row entry with its three money columns", async () => {
+    const fee = (await managed()).activity.find((r) => r.code === "FEE");
+    if (!fee) throw new Error("expected the management fee row");
+    expect(fee.date).toBe("2026-06-30");
+    expect(fee.debit).toBe(7.52);
+    expect(fee.credit).toBe(0);
+    expect(fee.balance).toBe(122.95);
+    expect(fee.currency).toBe("CAD");
+  });
+
+  test("joins a description that wraps onto the next row", async () => {
+    const buy = (await managed()).activity.find((r) => r.code === "BUY");
+    expect(buy?.description).toBe(
+      "WSE401 - WS PVT MKT I F: Bought 1241.7150 shares at $10.00 per share (executed at 2026-05-29)",
+    );
+  });
+
+  test("parses a negative balance rendered as $-12,300.48", async () => {
+    expect((await managed()).activity.find((r) => r.code === "BUY")?.balance).toBe(-12300.48);
+  });
+
+  test("never mistakes a page number or repeated header for a row", async () => {
+    const s = await dual();
+    expect(s.activity.every((r) => /^\d{4}-\d{2}-\d{2}$/.test(r.date))).toBe(true);
+    expect(s.activity.every((r) => r.code !== "")).toBe(true);
+    expect(s.activity.some((r) => /\d+\/\d+/.test(r.description))).toBe(false);
+  });
+
+  test("tags rows in the USD section as USD", async () => {
+    const s = await dual();
+    expect(new Set(s.activity.map((r) => r.currency)).has("CAD")).toBe(true);
+  });
+
+  test("credits and debits reconcile to the printed cash totals", async () => {
+    const s = await dual();
+    const cad = s.cash.find((c) => c.currency === "CAD");
+    const rows = s.activity.filter((r) => r.currency === "CAD");
+    expect(rows.reduce((a, r) => a + r.credit, 0)).toBeCloseTo(cad?.totalIn ?? -1, 2);
+    expect(rows.reduce((a, r) => a + r.debit, 0)).toBeCloseTo(cad?.totalOut ?? -1, 2);
+  });
+
+  test("returns no activity for an empty period", async () => {
+    // brokerage-empty (a Chequing account) actually carries one activity row
+    // (a $66 transfer out) -- the legacy-wording fixture is the one whose
+    // Activity section prints the heading and column header with no data
+    // rows at all, going straight to the page number and LEVERAGE DISCLOSURE.
+    const s = await load("brokerage-legacy-wording", "ACCT0007CAD_2023-06_BROKERAGE.pdf");
+    expect(s.activity).toEqual([]);
+  });
 });

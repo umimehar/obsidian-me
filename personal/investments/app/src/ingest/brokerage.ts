@@ -1,4 +1,5 @@
 import type {
+  ActivityRow,
   AssetClassTotal,
   CashPaidIn,
   CashPaidOut,
@@ -535,6 +536,18 @@ function hasAggregateBookCostColumn(rows: readonly Row[]): boolean {
   return !!header && /\bBook Aggregate\b/.test(rowText(header));
 }
 
+/**
+ * Every Equities layout heads each class explicitly (`CLASS_HEADING` below).
+ * A Crypto Portfolio does not: it goes straight from the column header row
+ * ("Crypto Asset Symbol...") to the holdings, with no per-class heading row
+ * at all, because there is only ever the one class. Leaving the default
+ * empty would never match the summary table's "Crypto Assets" class, so a
+ * correctly-parsed crypto holding would falsely fail a per-class reconciliation.
+ */
+function defaultAssetClass(rows: readonly Row[]): string {
+  return rows.some((r) => /Crypto Asset Symbol/.test(rowText(r))) ? "Crypto Assets" : "";
+}
+
 function readHoldings(pages: readonly Page[]): Holding[] {
   const rows = sectionRows(pages, ASSETS_START, ASSETS_END);
   const pendingSymbols = readPendingSymbols(pages);
@@ -542,7 +555,7 @@ function readHoldings(pages: readonly Page[]): Holding[] {
   const hasAggregateBookCost = hasAggregateBookCostColumn(rows);
 
   const holdings: Holding[] = [];
-  let assetClass = "";
+  let assetClass = defaultAssetClass(rows);
 
   for (let i = 0; i < rows.length; i += 1) {
     const row = rows[i];
@@ -590,6 +603,131 @@ function readFxRate(pages: readonly Page[]): number | null {
   return m?.[1] ? Number(m[1]) : null;
 }
 
+const ACTIVITY_HEADING = /^(?:(CAD|USD) )?Activity - Current period$/;
+const ACTIVITY_END = [
+  /^LEVERAGE DISCLOSURE/,
+  /^STATEMENT NOTES/,
+  /^Money-weighted Return Rates/,
+  // A trade placed near period end can settle after it. Wealthsimple prints
+  // those in a separate two-column ("To be Debited"/"To be Credited", no
+  // running balance) table for the *next* period, dated past periodEnd --
+  // real money, but not part of this statement's reconciliation. A
+  // dual-currency statement prefixes it with the currency, same as the
+  // heading above.
+  /^(?:(?:CAD|USD) )?Transactions for Future Settlement/,
+];
+const COLUMN_HEADER = /^Date\s+Transaction\s+Description/;
+const PAGE_NUMBER = /^\d+\s*\/\s*\d+$/;
+const ACTIVITY_DATE = /^\d{4}-\d{2}-\d{2}$/;
+// Some codes carry an underscore (E_TRFIN, AFT_IN, P2P_OUT) rather than being
+// plain alphanumeric.
+const ACTIVITY_CODE = /^[A-Z][A-Z0-9_]*$/;
+
+/**
+ * A data row is a date, a code, description words, and three money columns
+ * (debit, credit, balance) at the far right. The description can itself
+ * carry dollar-shaped tokens -- a per-share price, a bare share count that
+ * parses as money too -- so only the *last three* money-looking tokens in
+ * the row are treated as the real columns; everything earlier stays in the
+ * description text even when it looks like an amount. Returns null when the
+ * row does not have a date first word, or does not carry at least three
+ * money tokens (not a data row at all).
+ */
+function parseActivityDataRow(row: Row, currency: Currency): ActivityRow | null {
+  const first = row.words[0];
+  if (!first || !ACTIVITY_DATE.test(first.text)) return null;
+
+  const rest = row.words.slice(1);
+  const moneyIdx = rest.reduce<number[]>((acc, w, i) => {
+    if (isMoney(w.text)) acc.push(i);
+    return acc;
+  }, []);
+  if (moneyIdx.length < 3) return null;
+
+  const valueIdx = new Set(moneyIdx.slice(-3));
+  const values = moneyIdx.slice(-3).map((i) => parseMoney(rest[i]?.text ?? "0"));
+  const textWords = rest.filter((_, i) => !valueIdx.has(i)).map((w) => w.text);
+
+  const code = textWords[0];
+  if (!code || !ACTIVITY_CODE.test(code)) return null;
+
+  return {
+    date: first.text,
+    postedDate: null,
+    code,
+    description: textWords.slice(1).join(" "),
+    debit: values[0] ?? 0,
+    credit: values[1] ?? 0,
+    balance: values[2] ?? 0,
+    currency,
+  };
+}
+
+/**
+ * A handful of amended/restated statements print one activity row twice in
+ * immediate succession -- same date, code, debit, credit and balance -- with
+ * no other row between the two. A real second transaction can never share
+ * the first's balance (a nonzero debit or credit always moves it), so this
+ * is a rendering duplicate, not two transactions, and must not be summed
+ * twice into the reconciliation.
+ */
+function isDuplicateOf(a: ActivityRow, b: ActivityRow): boolean {
+  return (
+    a.date === b.date &&
+    a.code === b.code &&
+    a.currency === b.currency &&
+    a.debit === b.debit &&
+    a.credit === b.credit &&
+    a.balance === b.balance
+  );
+}
+
+/**
+ * A row without a leading date continues the previous row's description
+ * (a wrapped name, an "(executed at ...)" tail). Page numbers and the
+ * column header repeated on every page are dropped explicitly, since
+ * neither carries a date and both would otherwise look like a stray
+ * continuation.
+ */
+function readActivity(pages: readonly Page[]): ActivityRow[] {
+  const rows: ActivityRow[] = [];
+  let currency: Currency = "CAD";
+  let inSection = false;
+  let current: ActivityRow | null = null;
+
+  for (const row of pages.flatMap((p) => p.rows)) {
+    const text = rowText(row);
+
+    const heading = ACTIVITY_HEADING.exec(text);
+    if (heading) {
+      currency = heading[1] === "USD" ? "USD" : "CAD";
+      inSection = true;
+      current = null;
+      continue;
+    }
+    if (!inSection) continue;
+    if (ACTIVITY_END.some((re) => re.test(text))) {
+      inSection = false;
+      current = null;
+      continue;
+    }
+    if (PAGE_NUMBER.test(text) || COLUMN_HEADER.test(text)) continue;
+
+    const parsed = parseActivityDataRow(row, currency);
+    if (parsed) {
+      if (current && isDuplicateOf(parsed, current)) continue;
+      current = parsed;
+      rows.push(current);
+      continue;
+    }
+
+    if (current && !row.words.some((w) => isMoney(w.text))) {
+      current.description = `${current.description} ${text}`.trim();
+    }
+  }
+  return rows;
+}
+
 export function parseBrokerage(pages: readonly Page[], source: SourceRef): Statement {
   // Read account type first: it is the failure mode the "type row absent" test
   // exercises, and it must be the error that surfaces, not a later one.
@@ -605,7 +743,7 @@ export function parseBrokerage(pages: readonly Page[], source: SourceRef): State
     portfolio: readPortfolio(pages),
     cash: readCash(block),
     holdings: readHoldings(pages),
-    activity: [],
+    activity: readActivity(pages),
     contributions: readContributions(block),
     dividendsYearToDate: readDividendsYtd(block),
     fxRate: readFxRate(pages),
