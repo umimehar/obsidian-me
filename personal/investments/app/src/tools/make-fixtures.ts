@@ -48,7 +48,7 @@ function scrub(xml: string, accountNo: string, alias: string, cfg: Config): stri
     let out = text;
     if (out === accountNo) out = alias;
     // Compare against punctuation stripped from both ends: a name token followed by a
-    // comma or period (e.g. an address line's "Mississauga,") would otherwise slip past
+    // comma or period (e.g. an address line's "Springfield,") would otherwise slip past
     // an exact match against the bare token.
     const bare = out.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "").toLowerCase();
     if (tokens.has(bare)) out = "REDACTED";
@@ -75,9 +75,10 @@ for (const { file, alias, as } of cfg.fixtures) {
     }
   }
   if (scrubbed.includes(accountNo)) throw new Error(`scrub failed: account number in ${as}`);
-  const bare = /<word[^>]*>(\d{6,})<\/word>/.exec(scrubbed);
-  if (bare && bare[1] !== "00000000") {
-    throw new Error(`scrub failed: bare number ${bare[1]} in ${as}`);
+  for (const bare of scrubbed.matchAll(/<word[^>]*>(\d{6,})<\/word>/g)) {
+    if (bare[1] !== "00000000") {
+      throw new Error(`scrub failed: bare number ${bare[1]} in ${as}`);
+    }
   }
 
   await Bun.write(join(OUT, `${as}.xml`), scrubbed);
