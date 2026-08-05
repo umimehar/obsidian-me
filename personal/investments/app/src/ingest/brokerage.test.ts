@@ -382,3 +382,268 @@ describe("holdings", () => {
     expect(s.holdings).toEqual([]);
   });
 });
+
+// The 84-test fixture suite above could not show that holdings were wrong or
+// absent on 124 of 192 real statements: three column shapes and one currency
+// behaviour that no fixture exercised. These are synthetic, built the same
+// way as Task 5's crypto-class test, and each reproduces one real cause
+// found by running the parser over the full corpus.
+describe("holdings — shapes the seven fixtures never exercised", () => {
+  const word = (text: string, x0: number, y: number) => ({ x0, x1: x0 + 10, y, text });
+
+  // Account type, period, Account No., a minimal portfolio summary, and a
+  // Portfolio Cash section — the fixed prelude every synthetic statement
+  // needs before its own assets section, mirroring real document order
+  // (summary → Portfolio Cash → Portfolio Assets).
+  function preludeRows() {
+    return [
+      { y: 1, words: [word("Managed RRSP Account", 50, 1)] },
+      { y: 2, words: [word("2026-06-01 - 2026-06-30", 50, 2)] },
+      { y: 3, words: [word("Account No.", 50, 3)] },
+      {
+        y: 4,
+        words: [
+          word("Cash", 50, 4),
+          word("$50.00", 100, 4),
+          word("2.47", 150, 4),
+          word("$50.00", 200, 4),
+          word("2.47", 250, 4),
+        ],
+      },
+      {
+        y: 5,
+        words: [
+          word("Total", 50, 5),
+          word("Portfolio", 100, 5),
+          word("$50.00", 160, 5),
+          word("100.00", 230, 5),
+          word("$50.00", 300, 5),
+          word("100.00", 370, 5),
+        ],
+      },
+      { y: 6, words: [word("Portfolio Cash", 50, 6)] },
+      {
+        y: 7,
+        words: [
+          word("Last", 50, 7),
+          word("Statement", 90, 7),
+          word("Cash", 140, 7),
+          word("Balance", 170, 7),
+          word("$50.00", 220, 7),
+        ],
+      },
+      {
+        y: 8,
+        words: [
+          word("Closing", 50, 8),
+          word("Cash", 100, 8),
+          word("Balance", 140, 8),
+          word("$50.00", 220, 8),
+        ],
+      },
+    ];
+  }
+
+  function parse(assetRows: ReturnType<typeof preludeRows>) {
+    const pages: Page[] = [{ rows: [...preludeRows(), ...assetRows] }];
+    const source = parseSourceFilename("ACCT0001CAD_2026-06_BROKERAGE.pdf");
+    if (!source) throw new Error("bad filename");
+    return parseBrokerage(pages, source);
+  }
+
+  test("reads price, market value and book cost from the end when a Quantity on Loan column is present", () => {
+    // A third of real statements insert a sixth money value — quantity on
+    // loan — between segregated quantity and price. Reading price/value/cost
+    // from a fixed front offset reads the loan quantity as the price and
+    // shifts every column after it by one.
+    const s = parse([
+      { y: 9, words: [word("Portfolio Assets", 50, 9)] },
+      { y: 10, words: [word("Canadian Equities and Alternatives", 50, 10)] },
+      {
+        y: 11,
+        words: [
+          word("Example", 40, 11),
+          word("Fund", 90, 11),
+          word("EFH", 140, 11),
+          word("10.0000", 200, 11), // total quantity
+          word("10.0000", 260, 11), // segregated quantity
+          word("2.0000", 320, 11), // quantity on loan
+          word("$25.00", 380, 11), // price
+          word("$250.00", 430, 11), // market value
+          word("$248.00", 490, 11), // book cost
+        ],
+      },
+    ]);
+    const h = s.holdings.find((x) => x.symbol === "EFH");
+    if (!h) throw new Error("expected the EFH holding");
+    expect(h.quantity).toBe(10);
+    expect(h.segregatedQuantity).toBe(10);
+    expect(h.marketPrice).toBe(25);
+    expect(h.marketValue).toBe(250);
+    expect(h.bookCost).toBe(248);
+  });
+
+  test("reads holdings under the older 'Portfolio Equities' heading", () => {
+    // Only 88 of 192 real statements head the table "Portfolio Assets"; the
+    // rest call it "Portfolio Equities". A parser matching only the newer
+    // wording parses those statements to zero holdings while their asset
+    // classes report real money.
+    const s = parse([
+      { y: 9, words: [word("Portfolio Equities", 50, 9)] },
+      { y: 10, words: [word("Canadian Equities and Alternatives", 50, 10)] },
+      {
+        y: 11,
+        words: [
+          word("Example", 40, 11),
+          word("Fund", 90, 11),
+          word("EQH", 140, 11),
+          word("4.0000", 200, 11),
+          word("4.0000", 260, 11),
+          word("$10.00", 320, 11),
+          word("$40.00", 380, 11),
+          word("$39.00", 430, 11),
+        ],
+      },
+    ]);
+    expect(s.holdings).toHaveLength(1);
+    expect(s.holdings[0]?.symbol).toBe("EQH");
+    expect(s.holdings[0]?.marketValue).toBe(40);
+  });
+
+  test("attaches a currency tag that wraps onto the row below to the value it labels, and converts a USD holding to CAD", () => {
+    // A narrow price cell wraps its currency tag onto its own continuation
+    // row. Real statements print market value and book cost in USD there —
+    // not CAD — so both must be converted at the statement's own fx rate to
+    // stay comparable to the CAD portfolio total.
+    const s = parse([
+      {
+        y: 9,
+        words: [
+          word("$1USD", 50, 9),
+          word("=", 90, 9),
+          word("$1.400000", 110, 9),
+          word("CAD", 170, 9),
+        ],
+      },
+      { y: 10, words: [word("Portfolio Assets", 50, 10)] },
+      { y: 11, words: [word("US Equities and Alternatives", 50, 11)] },
+      {
+        y: 12,
+        words: [
+          word("Example", 40, 12),
+          word("Fund", 90, 12),
+          word("USH", 140, 12),
+          word("5.0000", 200, 12),
+          word("5.0000", 260, 12),
+          word("$20.00", 320, 12),
+          word("USD", 360, 12), // price's tag, inline
+          word("$100.00", 400, 12), // market value, untagged here — tag wraps below
+          word("$96.00", 460, 12), // book cost, untagged here — tag wraps below
+        ],
+      },
+      // Continuation row: nothing but the wrapped currency tags for market
+      // value and book cost, positioned under those columns.
+      { y: 13, words: [word("USD", 400, 13), word("USD", 460, 13)] },
+    ]);
+    const h = s.holdings.find((x) => x.symbol === "USH");
+    if (!h) throw new Error("expected the USH holding");
+    expect(h.priceCurrency).toBe("USD");
+    expect(h.marketValue).toBeCloseTo(140, 2); // $100.00 * 1.4
+    expect(h.bookCost).toBeCloseTo(134.4, 2); // $96.00 * 1.4
+  });
+
+  test("drops the trailing Aggregate Book Cost column instead of misreading it as book cost", () => {
+    // A few statements add a seventh column, Aggregate Book Cost, after Book
+    // Cost — for superficial-loss tracking. It sits at the far end, not the
+    // middle like a loan quantity, so it must be recognized and dropped
+    // rather than read as the row's real book cost.
+    const s = parse([
+      { y: 9, words: [word("Portfolio Assets", 50, 9)] },
+      {
+        y: 10,
+        words: [
+          word("Symbol", 50, 10),
+          word("Total", 90, 10),
+          word("Segregated", 130, 10),
+          word("Market", 180, 10),
+          word("Market", 220, 10),
+          word("Book", 260, 10),
+          word("Aggregate", 300, 10),
+        ],
+      },
+      { y: 11, words: [word("Canadian Equities and Alternatives", 50, 11)] },
+      {
+        y: 12,
+        words: [
+          word("Example", 40, 12),
+          word("Fund", 90, 12),
+          word("AGG", 140, 12),
+          word("6.0000", 200, 12),
+          word("6.0000", 260, 12),
+          word("$10.00", 320, 12),
+          word("$60.00", 380, 12),
+          word("$58.00", 430, 12), // real book cost
+          word("$61.00", 490, 12), // aggregate book cost — must be dropped
+        ],
+      },
+    ]);
+    const h = s.holdings.find((x) => x.symbol === "AGG");
+    if (!h) throw new Error("expected the AGG holding");
+    expect(h.marketValue).toBe(60);
+    expect(h.bookCost).toBe(58);
+  });
+
+  test("keeps a holding with no printed ticker, using an empty symbol", () => {
+    // A recent spinoff on a real statement printed only a company name and
+    // never got a ticker column at all. The row is still real money and
+    // must stay in the reconciliation rather than being dropped for lacking
+    // a valid-looking last word.
+    const s = parse([
+      { y: 9, words: [word("Portfolio Assets", 50, 9)] },
+      { y: 10, words: [word("Canadian Equities and Alternatives", 50, 10)] },
+      {
+        y: 11,
+        words: [
+          word("Spinoff", 40, 11),
+          word("Holdings", 90, 11),
+          word("Limited", 140, 11),
+          word("3.0000", 200, 11),
+          word("3.0000", 260, 11),
+          word("$5.00", 320, 11),
+          word("$15.00", 380, 11),
+          word("$14.00", 430, 11),
+        ],
+      },
+    ]);
+    expect(s.holdings).toHaveLength(1);
+    expect(s.holdings[0]?.symbol).toBe("");
+    expect(s.holdings[0]?.marketValue).toBe(15);
+  });
+
+  test("keeps a holding whose name wrapped across a page break, leaving only the symbol", () => {
+    // A real statement split one row's name across a page break: the numbers
+    // stayed on the first page with only the bare ticker, and the multi-line
+    // name printed on the next page instead. A row this bare (just a symbol,
+    // no name) is still real money and must not be dropped for lacking a
+    // second word.
+    const s = parse([
+      { y: 9, words: [word("Portfolio Assets", 50, 9)] },
+      { y: 10, words: [word("Canadian Equities and Alternatives", 50, 10)] },
+      {
+        y: 11,
+        words: [
+          word("CHPS", 40, 11),
+          word("6.5625", 200, 11),
+          word("6.5625", 260, 11),
+          word("$96.60", 320, 11),
+          word("$633.93", 380, 11),
+          word("$606.47", 430, 11),
+        ],
+      },
+    ]);
+    expect(s.holdings).toHaveLength(1);
+    expect(s.holdings[0]?.symbol).toBe("CHPS");
+    expect(s.holdings[0]?.name).toBe("");
+    expect(s.holdings[0]?.marketValue).toBe(633.93);
+  });
+});

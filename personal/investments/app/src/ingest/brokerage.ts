@@ -330,23 +330,120 @@ function readDividendsYtd(block: CashBlock): number | null {
   return p ? (p.values[p.values.length - 1] ?? null) : null;
 }
 
+const ASSETS_START = /Portfolio (Assets|Equities)|Crypto Portfolio/;
 const ASSETS_END = [/^\*Book Cost/, /Activity - Current period/, /LEVERAGE DISCLOSURE/];
 const CLASS_HEADING = /^(Canadian|US)[- ](Listed Securities|Equities)/;
 const PENDING = /PENDING VALUATION|Pricing for this period is not yet available/;
 
+interface MoneyToken {
+  x0: number;
+  amount: number;
+}
+
+interface CurrencyToken {
+  x0: number;
+  currency: Currency;
+}
+
+interface RowTokens {
+  money: MoneyToken[];
+  currency: CurrencyToken[];
+  words: string[];
+}
+
+function classifyRow(row: Row): RowTokens {
+  const money: MoneyToken[] = [];
+  const currency: CurrencyToken[] = [];
+  const words: string[] = [];
+  for (const w of row.words) {
+    if (isMoney(w.text)) money.push({ x0: w.x0, amount: parseMoney(w.text) });
+    else if (w.text === "USD" || w.text === "CAD") currency.push({ x0: w.x0, currency: w.text });
+    else words.push(w.text);
+  }
+  return { money, currency, words };
+}
+
 /**
- * A holding row is: name, symbol, total quantity, segregated quantity, price
- * with currency, market value, book cost. The name and symbol are words; the
- * five numbers are the row's money tokens in x order.
+ * A holding row carries a trailing symbol and at least the five money
+ * columns. The name is normally present too, but when a long name wraps
+ * across a page break, the numbers can land on the page-2 side alone with
+ * only the symbol — a bare word that itself looks like a ticker still means
+ * this is a real holding, just one whose name printed elsewhere and is lost.
+ */
+function isHoldingRow(tokens: RowTokens): boolean {
+  return tokens.money.length >= 5 && tokens.words.length >= 1;
+}
+
+/**
+ * Each money column (price, market value, book cost) can carry its own
+ * currency tag, independently of the others — a "CAD Hedged" holding prices
+ * in USD but values in CAD, so a single per-row currency is not enough. A
+ * tag is paired to the nearest money token to its left across both token
+ * lists sorted together by x-position, which is what a reader does visually
+ * and holds even when a tag wraps onto the row below (its x still falls
+ * under the column it labels).
+ */
+function attachCurrencies(
+  money: readonly MoneyToken[],
+  currency: readonly CurrencyToken[],
+): (Currency | null)[] {
+  const tags: (Currency | null)[] = money.map(() => null);
+  const entries = [
+    ...money.map((m, idx) => ({ x0: m.x0, idx, currency: null as Currency | null })),
+    ...currency.map((c) => ({ x0: c.x0, idx: -1, currency: c.currency })),
+  ].sort((a, b) => a.x0 - b.x0);
+
+  let lastMoneyIdx = -1;
+  for (const entry of entries) {
+    if (entry.currency === null) {
+      lastMoneyIdx = entry.idx;
+    } else if (lastMoneyIdx !== -1 && tags[lastMoneyIdx] === null) {
+      tags[lastMoneyIdx] = entry.currency;
+    }
+  }
+  return tags;
+}
+
+/**
+ * A holding row is: name, symbol, total quantity, segregated quantity,
+ * optionally a quantity on loan, price, market value, book cost. Quantity on
+ * loan appears on roughly a third of statements, so the last three money
+ * tokens (price, market value, book cost) are read from the end rather than
+ * a fixed front offset — stable whether the row carries five values or six.
+ *
+ * A wrapped continuation line — the tail of a long name, a trailing currency
+ * tag for market value or book cost, or both together — is folded in for its
+ * currency tokens only; its words are never a holding's name or symbol, so
+ * they are discarded. It is recognized as "not itself a holding row" rather
+ * than "carries only currency", since a real continuation often wraps a
+ * currency tag alongside leftover name words (e.g. "Income Strategy ETF USD").
  */
 function readHoldings(pages: readonly Page[]): Holding[] {
-  const rows = sectionRows(pages, /Portfolio Assets/, ASSETS_END);
+  const rows = sectionRows(pages, ASSETS_START, ASSETS_END);
   const pendingSymbols = readPendingSymbols(pages);
+  // A USD-priced holding's market value and book cost can print in USD, not
+  // CAD, on the page. The portfolio summary they must reconcile against is
+  // CAD throughout, and Holding carries no separate currency for these two
+  // fields, so a USD-tagged one is converted here at the statement's own rate.
+  const fxRate = readFxRate(pages);
+  // A handful of statements add a seventh "Aggregate Book Cost" column after
+  // Book Cost (for superficial-loss tracking). It sits at the far end, not
+  // the middle like a loan or staked quantity, so reading price/value/cost
+  // from the end of the row would misalign by one for every holding — this
+  // is checked once per statement, from the header row this section starts
+  // with ("...Market Book Aggregate"). The phrase "Book Aggregate" adjacent
+  // is the marker, not the bare word: a real holding can be named "Aggregate"
+  // (e.g. "BMO Aggregate Bond Index ETF"), and the scan is limited to
+  // `rows[0]`, the header, so such a holding is never mistaken for it.
+  const header = rows[0];
+  const hasAggregateBookCost = !!header && /\bBook Aggregate\b/.test(rowText(header));
 
   const holdings: Holding[] = [];
   let assetClass = "";
 
-  for (const row of rows) {
+  for (let i = 0; i < rows.length; i += 1) {
+    const row = rows[i];
+    if (!row) continue;
     const text = rowText(row);
 
     if (CLASS_HEADING.test(text)) {
@@ -355,29 +452,41 @@ function readHoldings(pages: readonly Page[]): Holding[] {
     }
     if (/^Total\b/.test(text)) continue;
 
-    const values: number[] = [];
-    const words: string[] = [];
-    let currency: Currency = "CAD";
-    for (const w of row.words) {
-      if (isMoney(w.text)) values.push(parseMoney(w.text));
-      else if (w.text === "USD" || w.text === "CAD") currency = w.text;
-      else words.push(w.text);
-    }
-    if (values.length < 5 || words.length < 2) continue;
+    const tokens = classifyRow(row);
+    if (!isHoldingRow(tokens)) continue;
 
-    const symbol = words[words.length - 1];
-    const name = words.slice(0, -1).join(" ");
-    if (!symbol || !/^[A-Z][A-Z0-9.]*$/.test(symbol)) continue;
+    // The last word is normally the ticker, but a handful of holdings — a
+    // recent spinoff, in the one seen so far — print only a name and never
+    // get a ticker column at all. Such a row is still real money and must
+    // stay in the reconciliation; it just carries an empty symbol.
+    const lastWord = tokens.words[tokens.words.length - 1];
+    const hasSymbol = !!lastWord && /^[A-Z][A-Z0-9.]*$/.test(lastWord);
+    const symbol = hasSymbol ? lastWord : "";
+    const name = hasSymbol ? tokens.words.slice(0, -1).join(" ") : tokens.words.join(" ");
+
+    const next = rows[i + 1];
+    const nextTokens = next ? classifyRow(next) : null;
+    const currencyTokens =
+      nextTokens && !isHoldingRow(nextTokens)
+        ? [...tokens.currency, ...nextTokens.currency]
+        : tokens.currency;
+
+    const money = hasAggregateBookCost ? tokens.money.slice(0, -1) : tokens.money;
+    const n = money.length;
+    const tags = attachCurrencies(money, currencyTokens);
+    const priceCurrency = tags[n - 3] ?? "CAD";
+    const valueCurrency = tags[n - 2] ?? "CAD";
+    const costCurrency = tags[n - 1] ?? "CAD";
 
     holdings.push({
       name,
       symbol,
-      quantity: values[0] ?? 0,
-      segregatedQuantity: values[1] ?? 0,
-      marketPrice: values[2] ?? 0,
-      priceCurrency: currency,
-      marketValue: values[3] ?? 0,
-      bookCost: values[4] ?? 0,
+      quantity: money[0]?.amount ?? 0,
+      segregatedQuantity: money[1]?.amount ?? 0,
+      marketPrice: money[n - 3]?.amount ?? 0,
+      priceCurrency,
+      marketValue: (money[n - 2]?.amount ?? 0) * (valueCurrency === "USD" ? (fxRate ?? 1) : 1),
+      bookCost: (money[n - 1]?.amount ?? 0) * (costCurrency === "USD" ? (fxRate ?? 1) : 1),
       assetClass,
       pendingValuation: pendingSymbols.has(symbol),
     });
