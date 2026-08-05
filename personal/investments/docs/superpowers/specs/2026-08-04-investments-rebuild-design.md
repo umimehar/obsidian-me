@@ -169,6 +169,16 @@ Four features over one engine.
 
 The CSV pipeline is deleted rather than kept alongside. Two parsers producing different answers for the same month is the failure mode being fixed.
 
+## USD book cost is approximate, and always will be
+
+Found while parsing all 192 statements: holdings plus cash reconcile to the stated portfolio **market value** everywhere except three statements, off by one to three cents from rounding the six-decimal rate. Book cost does not reconcile on 19 statements, by up to $218.92 — and every one of those 19 holds USD securities, while no CAD-only statement diverges at all.
+
+This is a property of the source, not a parser defect. Each statement discloses one month-end rate, and its own footnote scopes that rate to *market value*. Book cost is an accumulated basis recorded at each purchase's own historical rate, so no single current rate can reconstruct it. Converting is much closer than not converting — $99 versus $1,976 of error on one sampled file — and is necessary because `bookCost` carries no currency of its own, but it is not exact.
+
+So `Holding.bookCostConverted` marks every converted figure, and the reconciliation report separates the two cases: a book-cost divergence with no converted holding is an error, because that is a real indexing bug; a divergence with converted holdings is a warning naming the fx limitation. Phase 3's adjusted-cost-base and capital-gains work must treat a converted book cost as an estimate rather than a filing figure.
+
+The old CSV pipeline documented the same limitation from the other direction — it could not convert USD at all, so its cost basis for USD positions was simply partial. The constraint is inherent to the data, and the rebuild narrows it rather than removing it.
+
 ## Non-goals
 
 - Live or intraday prices. Values are month-end, from the statements.
