@@ -524,6 +524,45 @@ describe("checkArithmetic", () => {
     }
   });
 
+  test("does not launder an extra one-cent defect behind an existing reversal explanation", () => {
+    // A genuine reversal pair (credit and same-day debit, both 40.90) already
+    // explains part of the mismatch. If an unrelated row is also missing,
+    // shifting only the debit side by another cent, the two sides' residuals
+    // stop matching each other exactly -- the outer check's cent-of-slack
+    // tolerance would still call that "close enough" and re-use the
+    // pre-existing reversal explanation, hiding the second defect. The
+    // tighter EXPLANATION_TOLERANCE inside the classifier itself must not.
+    const bad = statement();
+    const cad = bad.cash[0];
+    if (!cad || cad.totalOut === null) throw new Error("fixture");
+    bad.activity.push(
+      {
+        date: "2026-06-15",
+        postedDate: null,
+        code: "DIV",
+        description: "Cash dividend distribution (later reversed)",
+        debit: 0,
+        credit: 40.9,
+        balance: 47.18,
+        currency: "CAD",
+      },
+      {
+        date: "2026-06-15",
+        postedDate: null,
+        code: "DIV",
+        description: "Reversal of the above",
+        debit: 40.9,
+        credit: 0,
+        balance: 6.28,
+        currency: "CAD",
+      },
+    );
+    cad.totalOut -= 0.01; // an unrelated debit row is also missing
+    const f = checkArithmetic([bad]);
+    const activityFindings = f.filter((x) => x.message.includes("activity"));
+    expect(activityFindings.some((x) => x.severity === "error")).toBe(true);
+  });
+
   test("skips the activity check when no totals are printed", () => {
     const cashOnly = statement({
       source: src("2026-06", "CASH"),
