@@ -70,3 +70,14 @@ ALWAYS demonstrate the failure before trusting a check: break the guarded line, 
 NEVER accept "the suite is green" as evidence a guard works, and never write a check whose passing condition is also its degenerate condition (`0 === 0`, an empty match set, a filter over the wrong stream). If a check cannot distinguish "nothing to find" from "nothing looked", it needs a separate assertion that input was actually examined.
 
 When reviewing, ask for a concrete input that trips each check. "I cannot construct one" is the finding.
+
+### git grep silently ignores \b, so a boundary pattern always returns clean (2026-08-06)
+
+Why:
+- `git grep -E '\b(WK|HQ)[A-Z0-9]{7,}\b'` returns nothing on a file that plainly contains a match; drop the `\b` and it matches. It does not warn or error — it reports success with zero hits, which reads exactly like "no leak found".
+- This was used as a sensitive-data check and passed a real committed account number as clean. Plain `grep -E` on the same content found it immediately.
+- It is the same failure shape as a check that cannot fail: the passing condition is indistinguishable from the "nothing was examined" condition.
+
+NEVER use `\b` in a `git grep` pattern. Use `grep -E` over `git show <rev>:<path>` or over `git diff` output, or use explicit character-class boundaries `(^|[^A-Z0-9])…([^A-Z0-9]|$)` which git grep does honour.
+
+ALWAYS prove a search tool can find the thing before trusting it to report absence: run it once against known-present content. A grep that has never returned a hit is not evidence of a clean tree.
