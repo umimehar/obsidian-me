@@ -8,7 +8,8 @@ export type AccountKind =
   | "RESP"
   | "NonRegistered"
   | "Crypto"
-  | "Chequing";
+  | "Chequing"
+  | "Corporate";
 
 /** Managed versus self-directed. This is the app's Portfolios/Trading split. */
 export type ManagementStyle = "managed" | "self-directed";

@@ -22,6 +22,19 @@ export interface AccountRecord {
 const LABELS: Record<string, string> = {};
 const PURPOSES: Record<string, Purpose> = {};
 
+/**
+ * A corporate investing account prints "Non-Registered Cash Account" on its
+ * statements exactly like a real personal non-registered account -- nothing
+ * in the document distinguishes the two, so this cannot be derived by
+ * `classifyAccountType` and must be owner-supplied. The CSV-era pipeline this
+ * app replaces carried the same override for the same account; missing it
+ * inflated 2026 eligible dividends from $202 to $645 by feeding corporate
+ * investment income into the personal tax estimate. Investment income inside
+ * a corporation is taxed in the corporation and only reaches the owner when
+ * dividended out, so this account must stay out of any personal tax grouping.
+ */
+const KIND_OVERRIDES: Record<string, AccountKind> = { "91b8": "Corporate" };
+
 const EXCLUDED_KINDS: readonly AccountKind[] = ["Chequing"];
 
 /**
@@ -59,7 +72,8 @@ export function buildRegistry(statements: readonly Statement[]): AccountRecord[]
     }
     accountNoByShortId.set(shortId, accountNo);
 
-    const { kind, style } = classifyAccountType(latest.accountType);
+    const { kind: documentKind, style } = classifyAccountType(latest.accountType);
+    const kind = KIND_OVERRIDES[shortId] ?? documentKind;
 
     records.push({
       maskedId,
