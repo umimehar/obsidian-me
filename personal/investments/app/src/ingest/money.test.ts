@@ -37,4 +37,11 @@ describe("isMoney", () => {
       expect(isMoney(t)).toBe(false);
     }
   });
+
+  test("is narrower than parseMoney: an integer amount parses but does not pass isMoney", () => {
+    // The corpus always prints to the cent, so this asymmetry never bites in
+    // practice, but the two are not the same predicate.
+    expect(parseMoney("$50")).toBe(50);
+    expect(isMoney("$50")).toBe(false);
+  });
 });

@@ -797,6 +797,43 @@ describe("holdings — shapes the seven fixtures never exercised", () => {
     expect(h.bookCost).toBe(58);
   });
 
+  test("does not misread a genuinely short row as a holding on an Aggregate Book Cost statement", () => {
+    // A statement with the seventh Aggregate Book Cost column requires six
+    // money tokens per holding, not five: a row with only five (missing its
+    // aggregate figure, or simply malformed) must not be swept in and have
+    // its book cost misread as the aggregate value.
+    const s = parse([
+      { y: 9, words: [word("Portfolio Assets", 50, 9)] },
+      {
+        y: 10,
+        words: [
+          word("Symbol", 50, 10),
+          word("Total", 90, 10),
+          word("Segregated", 130, 10),
+          word("Market", 180, 10),
+          word("Market", 220, 10),
+          word("Book", 260, 10),
+          word("Aggregate", 300, 10),
+        ],
+      },
+      { y: 11, words: [word("Canadian Equities and Alternatives", 50, 11)] },
+      {
+        y: 12,
+        words: [
+          word("Short", 40, 12),
+          word("Row", 90, 12),
+          word("SHR", 140, 12),
+          word("6.0000", 200, 12), // quantity
+          word("6.0000", 260, 12), // segregated quantity
+          word("$10.00", 320, 12), // price
+          word("$60.00", 380, 12), // market value
+          word("$58.00", 430, 12), // "book cost" -- but only 5 money tokens, short one for this layout
+        ],
+      },
+    ]);
+    expect(s.holdings.some((x) => x.symbol === "SHR")).toBe(false);
+  });
+
   test("keeps a holding with no printed ticker, using an empty symbol", () => {
     // A recent spinoff on a real statement printed only a company name and
     // never got a ticker column at all. The row is still real money and

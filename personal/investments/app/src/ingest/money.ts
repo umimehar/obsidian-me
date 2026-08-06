@@ -19,7 +19,12 @@ export function parseMoney(raw: string): number {
   return negative ? -Number(digits) : Number(digits);
 }
 
-/** True for tokens parseMoney accepts. Percentages are deliberately excluded. */
+/**
+ * True for the money tokens the corpus actually prints -- always to the
+ * cent, so a decimal point is required here. This is narrower than
+ * `parseMoney`: `parseMoney("$50")` succeeds (no decimal required), but
+ * `isMoney("$50")` is false. Percentages are deliberately excluded too.
+ */
 export function isMoney(text: string): boolean {
   return MONEY.test(text.trim());
 }

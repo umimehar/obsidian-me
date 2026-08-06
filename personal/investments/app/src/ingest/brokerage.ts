@@ -27,6 +27,13 @@ const ACCOUNT_TYPE =
   /^(Managed|Self-directed|Order Execution Only|Crypto|Chequing|Tax-Free Savings|First Home Savings)\b.*\bAccount$/;
 const PERIOD = /(\d{4}-\d{2}-\d{2})\s*-\s*(\d{4}-\d{2}-\d{2})/;
 const FX_RATE = /\$1\s?USD\s?=\s?\$([\d.]+)\s?CAD/;
+/** Trailing footnote on a class name ("(The conversion rate used to convert...)") that is not part of the name itself. */
+const CONVERSION_RATE_FOOTNOTE = /\s*\(The conversion rate.*$/;
+
+/** Strips the trailing conversion-rate footnote a class name can carry, wherever it is read from. */
+function stripConversionRateFootnote(text: string): string {
+  return text.replace(CONVERSION_RATE_FOOTNOTE, "").trim();
+}
 
 /** Rows from the row matching `start` (exclusive) to the first matching any `ends`. */
 function sectionRows(pages: readonly Page[], start: RegExp, ends: readonly RegExp[]): Row[] {
@@ -88,10 +95,9 @@ function readAssetClasses(table: readonly Row[]): AssetClassTotal[] {
     if (last) last.name = `${last.name} ${words.join(" ")}`.trim();
   }
 
-  // The last class's name may also carry a trailing footnote ("(The
-  // conversion rate used to convert...)") that is not part of the name.
+  // The last class's name may also carry the conversion-rate footnote.
   for (const c of classes) {
-    c.name = c.name.replace(/\s*\(The conversion rate.*$/, "").trim();
+    c.name = stripConversionRateFootnote(c.name);
   }
   return classes;
 }
@@ -389,13 +395,17 @@ function classifyRow(row: Row): RowTokens {
 
 /**
  * A holding row carries a trailing symbol and at least the five money
- * columns. The name is normally present too, but when a long name wraps
- * across a page break, the numbers can land on the page-2 side alone with
- * only the symbol — a bare word that itself looks like a ticker still means
- * this is a real holding, just one whose name printed elsewhere and is lost.
+ * columns -- six on a statement with the extra Aggregate Book Cost column,
+ * so a genuinely short row on such a statement is not mistaken for a
+ * holding that happens to be missing its aggregate figure. The name is
+ * normally present too, but when a long name wraps across a page break, the
+ * numbers can land on the page-2 side alone with only the symbol — a bare
+ * word that itself looks like a ticker still means this is a real holding,
+ * just one whose name printed elsewhere and is lost.
  */
-function isHoldingRow(tokens: RowTokens): boolean {
-  return tokens.money.length >= 5 && tokens.words.length >= 1;
+function isHoldingRow(tokens: RowTokens, hasAggregateBookCost: boolean): boolean {
+  const minMoney = hasAggregateBookCost ? 6 : 5;
+  return tokens.money.length >= minMoney && tokens.words.length >= 1;
 }
 
 /**
@@ -456,9 +466,13 @@ function extractHoldingIdentity(tokens: RowTokens): HoldingIdentity {
  * than "carries only currency", since a real continuation often wraps a
  * currency tag alongside leftover name words (e.g. "Income Strategy ETF USD").
  */
-function resolveCurrencyTokens(tokens: RowTokens, next: Row | undefined): CurrencyToken[] {
+function resolveCurrencyTokens(
+  tokens: RowTokens,
+  next: Row | undefined,
+  hasAggregateBookCost: boolean,
+): CurrencyToken[] {
   const nextTokens = next ? classifyRow(next) : null;
-  if (!nextTokens || isHoldingRow(nextTokens)) return tokens.currency;
+  if (!nextTokens || isHoldingRow(nextTokens, hasAggregateBookCost)) return tokens.currency;
   return [...tokens.currency, ...nextTokens.currency];
 }
 
@@ -558,16 +572,16 @@ function readHoldings(pages: readonly Page[]): Holding[] {
     const text = rowText(row);
 
     if (CLASS_HEADING.test(text)) {
-      assetClass = text.replace(/\s*\(The conversion rate.*$/, "").trim();
+      assetClass = stripConversionRateFootnote(text);
       continue;
     }
     if (/^Total\b/.test(text)) continue;
 
     const tokens = classifyRow(row);
-    if (!isHoldingRow(tokens)) continue;
+    if (!isHoldingRow(tokens, hasAggregateBookCost)) continue;
 
     const { symbol, name } = extractHoldingIdentity(tokens);
-    const currencyTokens = resolveCurrencyTokens(tokens, rows[i + 1]);
+    const currencyTokens = resolveCurrencyTokens(tokens, rows[i + 1], hasAggregateBookCost);
     const columns = resolveHoldingColumns(tokens, currencyTokens, hasAggregateBookCost, fxRate);
 
     holdings.push({
