@@ -6,6 +6,7 @@ import { countedAccountNumbers, ingestAll } from "./build";
 import { buildRegistry } from "./store/registry";
 import {
   checkArithmetic,
+  checkBalanceChain,
   checkContinuity,
   checkGroundTruth,
   checkKindConsistency,
@@ -41,6 +42,14 @@ describe.if(existsSync(SOURCE))("full corpus", () => {
   test("no account changes kind across its history", async () => {
     // Wording drifts; kind must not.
     expect(checkKindConsistency(await ingestAll(SOURCE, CACHE))).toEqual([]);
+  });
+
+  test("every date group's running balance chains to the printed figure", async () => {
+    // Rows sharing a date print that date's closing balance, not a per-row
+    // running balance -- chaining group to group by date is what makes this
+    // hold across the whole corpus rather than breaking on any date with
+    // more than one transaction.
+    expect(checkBalanceChain(await ingestAll(SOURCE, CACHE))).toEqual([]);
   });
 
   test("finds the expected accounts, kinds and styles", async () => {

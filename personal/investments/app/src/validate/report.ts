@@ -6,6 +6,8 @@ export type CheckName =
   | "cross-document"
   | "superseded"
   | "kind-drift"
+  | "balance-chain"
+  | "ingest"
   | "ground-truth";
 
 export interface Finding {

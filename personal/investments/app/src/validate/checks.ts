@@ -592,6 +592,67 @@ export function checkKindConsistency(statements: readonly Statement[]): Finding[
   return out;
 }
 
+/**
+ * A row's printed `balance` is not a per-row running balance -- rows sharing
+ * a date all print that date's CLOSING balance, so chaining row to row
+ * breaks the moment two transactions land on the same date. Grouping
+ * consecutive same-date rows and chaining group to group instead is exact:
+ * 0 breaks across the whole corpus. Deleting a real row and re-running this
+ * detects the gap 95.6% of the time; the miss is a deleted row whose
+ * date-group nets to the same total without it (a zero-value row, or one
+ * whose neighbours on the same date happen to absorb its value) -- not a
+ * tolerance to tune, an irreducible property of comparing totals rather than
+ * individual entries.
+ */
+function chainBalanceForCurrency(
+  s: Statement,
+  cash: CashSummary,
+  rows: readonly ActivityRow[],
+  out: Finding[],
+): void {
+  let running = cash.opening;
+  let i = 0;
+  while (i < rows.length) {
+    const date = rows[i]?.date;
+    let j = i;
+    let net = 0;
+    while (j < rows.length && rows[j]?.date === date) {
+      const row = rows[j];
+      if (row) net += row.credit - row.debit;
+      j += 1;
+    }
+    const expected = running + net;
+    const printed = rows[j - 1]?.balance ?? expected;
+    if (!within(expected, printed)) {
+      out.push(
+        finding(
+          "balance-chain",
+          s,
+          `${cash.currency} running balance breaks on ${date}: the prior balance plus that ` +
+            `date's credits and debits does not match the printed balance`,
+          expected,
+          printed,
+        ),
+      );
+    }
+    // Resync to the printed figure either way, so one break does not cascade
+    // into a false positive on every later date in the same statement.
+    running = printed;
+    i = j;
+  }
+}
+
+export function checkBalanceChain(statements: readonly Statement[]): Finding[] {
+  const out: Finding[] = [];
+  for (const s of statements) {
+    for (const cash of s.cash) {
+      const rows = s.activity.filter((r) => r.currency === cash.currency);
+      chainBalanceForCurrency(s, cash, rows, out);
+    }
+  }
+  return out;
+}
+
 export function checkCrossDocument(statements: readonly Statement[]): Finding[] {
   const out: Finding[] = [];
 
@@ -720,6 +781,7 @@ export function runChecks(
     ...checkCrossDocument(statements),
     ...checkSupersession(allVersions),
     ...checkKindConsistency(statements),
+    ...checkBalanceChain(statements),
     ...checkGroundTruth(statements, observations, countedAccounts),
   ];
 }

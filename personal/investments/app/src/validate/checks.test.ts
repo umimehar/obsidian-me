@@ -1,7 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import type { Statement } from "../types";
+import type { ActivityRow, CashSummary, Statement } from "../types";
 import {
   checkArithmetic,
+  checkBalanceChain,
   checkContinuity,
   checkCoverage,
   checkCrossDocument,
@@ -616,6 +617,108 @@ describe("checkArithmetic", () => {
       ],
     });
     expect(checkArithmetic([cashOnly])).toEqual([]);
+  });
+});
+
+function chainRow(over: Partial<ActivityRow>): ActivityRow {
+  return {
+    date: "2026-06-01",
+    postedDate: null,
+    code: "",
+    description: "",
+    debit: 0,
+    credit: 0,
+    balance: 0,
+    currency: "CAD",
+    ...over,
+  };
+}
+
+function chainCash(over: Partial<CashSummary> = {}): CashSummary {
+  return {
+    currency: "CAD",
+    opening: 100,
+    closing: 100,
+    totalIn: null,
+    totalOut: null,
+    paidIn: null,
+    paidOut: null,
+    ...over,
+  };
+}
+
+describe("checkBalanceChain", () => {
+  test("passes one row per date chained from the opening balance", () => {
+    const s = statement({
+      cash: [chainCash({ opening: 100, closing: 80 })],
+      activity: [
+        chainRow({ date: "2026-06-01", credit: 50, balance: 150 }),
+        chainRow({ date: "2026-06-02", debit: 70, balance: 80 }),
+      ],
+    });
+    expect(checkBalanceChain([s])).toEqual([]);
+  });
+
+  test("passes several rows sharing a date, all printing that date's closing balance", () => {
+    // Two transactions on the same day: the printed balance on BOTH rows is
+    // the day's closing figure, not a running per-row balance. Naive
+    // row-by-row chaining would flag the first row here as a break.
+    const s = statement({
+      cash: [chainCash({ opening: 100, closing: 130 })],
+      activity: [
+        chainRow({ date: "2026-06-01", credit: 50, balance: 130 }),
+        chainRow({ date: "2026-06-01", debit: 20, balance: 130 }),
+      ],
+    });
+    expect(checkBalanceChain([s])).toEqual([]);
+  });
+
+  test("flags a date group whose credits and debits do not reach the printed balance", () => {
+    const s = statement({
+      cash: [chainCash({ opening: 100, closing: 200 })],
+      activity: [chainRow({ date: "2026-06-01", credit: 50, balance: 200 })],
+    });
+    const f = checkBalanceChain([s]);
+    expect(f).toHaveLength(1);
+    expect(f[0]?.check).toBe("balance-chain");
+    expect(f[0]?.expected).toBe(150);
+    expect(f[0]?.actual).toBe(200);
+  });
+
+  test("resyncs to the printed balance so one break does not cascade into every later date", () => {
+    const s = statement({
+      cash: [chainCash({ opening: 100, closing: 250 })],
+      activity: [
+        // This date's printed balance is wrong by 20 -- a real break.
+        chainRow({ date: "2026-06-01", credit: 50, balance: 170 }),
+        // Chained from the CORRECT prior balance (150) this would also
+        // break; chained from the printed 170 it reconciles, proving the
+        // check resyncs on the printed figure rather than compounding.
+        chainRow({ date: "2026-06-02", credit: 80, balance: 250 }),
+      ],
+    });
+    const f = checkBalanceChain([s]);
+    expect(f).toHaveLength(1);
+    expect(f[0]?.period).toBe(s.source.period);
+  });
+
+  test("chains CAD and USD independently on a dual-currency statement", () => {
+    const s = statement({
+      cash: [
+        chainCash({ currency: "CAD", opening: 100, closing: 150 }),
+        chainCash({ currency: "USD", opening: 10, closing: 25 }),
+      ],
+      activity: [
+        chainRow({ date: "2026-06-01", credit: 50, balance: 150, currency: "CAD" }),
+        chainRow({ date: "2026-06-01", credit: 15, balance: 25, currency: "USD" }),
+      ],
+    });
+    expect(checkBalanceChain([s])).toEqual([]);
+  });
+
+  test("passes a statement with no activity rows", () => {
+    const s = statement({ cash: [chainCash({ opening: 100, closing: 100 })], activity: [] });
+    expect(checkBalanceChain([s])).toEqual([]);
   });
 });
 
