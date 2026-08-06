@@ -1,4 +1,4 @@
-import { describe, expect, spyOn, test } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -164,29 +164,29 @@ describe("countedAccountNumbers", () => {
 
 describe("resolveTemplate", () => {
   test("uses the document's template even when the filename states a different one", () => {
-    const warn = spyOn(console, "warn").mockImplementation(() => {});
     const parsed = makeParsedFilename({ template: "BROKERAGE", templateStated: true });
-    expect(resolveTemplate(parsed, "CASH")).toBe("CASH");
-    expect(warn).toHaveBeenCalledTimes(1);
-    warn.mockRestore();
+    const findings: Finding[] = [];
+    expect(resolveTemplate(parsed, "CASH", findings)).toBe("CASH");
+    expect(findings).toHaveLength(1);
+    expect(findings[0]?.check).toBe("ingest");
+    expect(findings[0]?.severity).toBe("warning");
+    expect(findings[0]?.message).toMatch(/template mismatch/);
   });
 
-  test("does not warn when the filename agrees with the document", () => {
-    const warn = spyOn(console, "warn").mockImplementation(() => {});
+  test("does not report a finding when the filename agrees with the document", () => {
     const parsed = makeParsedFilename({ template: "BROKERAGE", templateStated: true });
-    expect(resolveTemplate(parsed, "BROKERAGE")).toBe("BROKERAGE");
-    expect(warn).not.toHaveBeenCalled();
-    warn.mockRestore();
+    const findings: Finding[] = [];
+    expect(resolveTemplate(parsed, "BROKERAGE", findings)).toBe("BROKERAGE");
+    expect(findings).toEqual([]);
   });
 
-  test("does not warn on a fresh download's placeholder template, and still uses the document", () => {
+  test("does not report a finding on a fresh download's placeholder template, and still uses the document", () => {
     // The fresh-download filename form states no template at all -- its
     // placeholder disagreeing with the document is not a real conflict.
-    const warn = spyOn(console, "warn").mockImplementation(() => {});
     const parsed = makeParsedFilename({ template: "BROKERAGE", templateStated: false });
-    expect(resolveTemplate(parsed, "PERFORMANCE")).toBe("PERFORMANCE");
-    expect(warn).not.toHaveBeenCalled();
-    warn.mockRestore();
+    const findings: Finding[] = [];
+    expect(resolveTemplate(parsed, "PERFORMANCE", findings)).toBe("PERFORMANCE");
+    expect(findings).toEqual([]);
   });
 });
 

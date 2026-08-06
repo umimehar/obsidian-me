@@ -101,7 +101,7 @@ describe.if(existsSync(SOURCE))("full corpus", () => {
 
     // The corpus carries no duplicate (accountNo, period, template) group
     // today, so checkSupersession never fires against the raw, undeduped list.
-    expect(checkSupersession(await ingestRaw(SOURCE, CACHE))).toEqual([]);
+    expect(checkSupersession((await ingestRaw(SOURCE, CACHE)).statements)).toEqual([]);
   });
 
   test("every class-level market value reconciles exactly or within the disclosed fx budget", async () => {
@@ -114,6 +114,18 @@ describe.if(existsSync(SOURCE))("full corpus", () => {
     expect(errors).toEqual([]);
     expect(classPairs).toBeGreaterThan(0);
     expect(findings.length).toBeLessThan(classPairs);
+  });
+
+  test("the byte-identical duplicate skip reaches the report as a Finding, not just a console.warn", async () => {
+    // The source folder's known duplicate (see the first test above) used to
+    // be a console.warn only, invisible to reconciliation.json.
+    const { findings } = await ingestRaw(SOURCE, CACHE);
+    const ingestFindings = findings.filter((f) => f.check === "ingest");
+    expect(ingestFindings.length).toBeGreaterThan(0);
+    expect(ingestFindings.every((f) => f.severity === "warning" || f.severity === "error")).toBe(
+      true,
+    );
+    expect(ingestFindings.some((f) => f.message.includes("byte-identical"))).toBe(true);
   });
 
   test("every ingested statement's template is document-derived, never filename-derived", async () => {

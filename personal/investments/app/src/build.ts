@@ -37,16 +37,45 @@ export async function loadRedactions(path: string): Promise<string[]> {
     : [];
 }
 
+/** Builds an ingest-time anomaly finding straight from a filename, before any Statement exists to key it on. */
+function ingestFinding(
+  severity: Finding["severity"],
+  parsed: Pick<ParsedFilename, "accountNo" | "period" | "file">,
+  message: string,
+): Finding {
+  return {
+    check: "ingest",
+    severity,
+    accountShortId: maskAccountNo(parsed.accountNo).shortId,
+    period: parsed.period,
+    message,
+    expected: null,
+    actual: null,
+    delta: null,
+    sourceFile: parsed.file,
+  };
+}
+
 /**
  * The document's own template always wins over whatever the filename claims,
  * even when the filename does state one -- classifying by filename is the
  * exact failure mode ($8,000 of hidden RRSP contributions) this rebuild
- * exists to remove. A disagreement is reported, never resolved silently.
+ * exists to remove. A disagreement is reported, never resolved silently, and
+ * -- unlike a console.warn -- reaches reconciliation.json under the same
+ * severity contract as every other finding.
  */
-export function resolveTemplate(parsed: ParsedFilename, docTemplate: Template): Template {
+export function resolveTemplate(
+  parsed: ParsedFilename,
+  docTemplate: Template,
+  findings: Finding[],
+): Template {
   if (parsed.templateStated && parsed.template !== docTemplate) {
-    console.warn(
-      `template mismatch on ${parsed.file}: filename says ${parsed.template}, document says ${docTemplate}; using the document`,
+    findings.push(
+      ingestFinding(
+        "warning",
+        parsed,
+        `template mismatch: filename says ${parsed.template}, document says ${docTemplate}; using the document`,
+      ),
     );
   }
   return docTemplate;
@@ -64,14 +93,15 @@ async function ingestFile(
   sourceDir: string,
   cacheDir: string,
   seenHashes: Map<string, string>,
+  findings: Finding[],
 ): Promise<Statement | null> {
   const filePath = join(sourceDir, parsed.file);
   const bytes = await Bun.file(filePath).arrayBuffer();
   const hash = createHash("sha256").update(new Uint8Array(bytes)).digest("hex");
   const original = seenHashes.get(hash);
   if (original) {
-    console.warn(
-      `skipping duplicate: ${parsed.file} is byte-identical to already-ingested ${original}`,
+    findings.push(
+      ingestFinding("warning", parsed, `skipped: byte-identical to already-ingested ${original}`),
     );
     return null;
   }
@@ -90,19 +120,27 @@ async function ingestFile(
     accountNo: parsed.accountNo,
     period: parsed.period,
     version: parsed.version,
-    template: resolveTemplate(parsed, docTemplate),
+    template: resolveTemplate(parsed, docTemplate, findings),
   };
   return parseStatement(xml, source);
 }
 
+export interface IngestResult {
+  /** Every version of every statement, including superseded ones -- the raw material `checkSupersession` needs to report what it dropped. */
+  statements: Statement[];
+  /** Anomalies discovered during ingestion itself: a filename/document template mismatch, a byte-identical duplicate skip. */
+  findings: Finding[];
+}
+
 /**
- * Every version of every statement, including superseded ones -- the raw
- * material `checkSupersession` needs to report what it dropped. Nothing else
- * should read this directly; call `ingestAll` or `dedupeToLatestVersion`.
+ * Nothing downstream should read `statements` here directly; call `ingestAll`
+ * or `dedupeToLatestVersion` on it first. `findings` is never deduped -- an
+ * ingest anomaly on a superseded version is still a real anomaly.
  */
-export async function ingestRaw(sourceDir: string, cacheDir: string): Promise<Statement[]> {
+export async function ingestRaw(sourceDir: string, cacheDir: string): Promise<IngestResult> {
   const files = (await readdir(sourceDir)).filter((f) => f.endsWith(".pdf")).sort();
   const statements: Statement[] = [];
+  const findings: Finding[] = [];
   const skipped: string[] = [];
   const seenHashes = new Map<string, string>();
 
@@ -112,7 +150,7 @@ export async function ingestRaw(sourceDir: string, cacheDir: string): Promise<St
       skipped.push(file);
       continue;
     }
-    const statement = await ingestFile(parsed, sourceDir, cacheDir, seenHashes);
+    const statement = await ingestFile(parsed, sourceDir, cacheDir, seenHashes, findings);
     if (statement) statements.push(statement);
   }
 
@@ -121,7 +159,7 @@ export async function ingestRaw(sourceDir: string, cacheDir: string): Promise<St
       `${skipped.length} file(s) did not match a known naming convention:\n  ${skipped.join("\n  ")}`,
     );
   }
-  return statements;
+  return { statements, findings };
 }
 
 /**
@@ -144,7 +182,7 @@ export function dedupeToLatestVersion(statements: readonly Statement[]): Stateme
 }
 
 export async function ingestAll(sourceDir: string, cacheDir: string): Promise<Statement[]> {
-  return dedupeToLatestVersion(await ingestRaw(sourceDir, cacheDir));
+  return dedupeToLatestVersion((await ingestRaw(sourceDir, cacheDir)).statements);
 }
 
 /**
@@ -178,17 +216,21 @@ export function countedAccountNumbers(
 
 if (import.meta.main) {
   const generated = new Date().toISOString();
-  const allVersions = await ingestRaw(SOURCE, CACHE);
+  const raw = await ingestRaw(SOURCE, CACHE);
+  const allVersions = raw.statements;
   const statements = dedupeToLatestVersion(allVersions);
   const accounts = buildRegistry(statements);
   const names = await loadRedactions(REDACTIONS_PATH);
 
-  const findings = runChecks(
-    statements,
-    allVersions,
-    OBSERVATIONS,
-    countedAccountNumbers(statements, accounts),
-  );
+  const findings = [
+    ...runChecks(
+      statements,
+      allVersions,
+      OBSERVATIONS,
+      countedAccountNumbers(statements, accounts),
+    ),
+    ...raw.findings,
+  ];
   const report: ReconciliationReport = {
     generated,
     statementCount: statements.length,
