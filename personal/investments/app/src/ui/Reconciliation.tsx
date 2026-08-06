@@ -117,12 +117,27 @@ function GroundTruth({ finding }: { finding: ReportedFinding }) {
   );
 }
 
-/** The stated figure against the computed one, for any finding that is not the ground-truth line. */
+/**
+ * What `expected` and `actual` actually hold, which is not the same for every
+ * check. On a `ground-truth` finding `expected` is a figure the owner read off
+ * the Wealthsimple app; calling that "Stated" sends a reader looking for a
+ * statement that does not exist. Everywhere else `expected` is the figure the
+ * document itself prints, and "Stated" is exactly right.
+ */
+function figureLabels(check: string): { expected: string; actual: string } {
+  if (check === "ground-truth")
+    return { expected: "The app showed", actual: "This system computes" };
+  return { expected: "Stated", actual: "Computed" };
+}
+
 function Figures({ finding }: { finding: ReportedFinding }) {
+  const labels = figureLabels(finding.check);
   return (
     <Flex direction="column">
-      {finding.expected === null ? null : <FigureRow label="Stated" value={finding.expected} />}
-      {finding.actual === null ? null : <FigureRow label="Computed" value={finding.actual} />}
+      {finding.actual === null ? null : <FigureRow label={labels.actual} value={finding.actual} />}
+      {finding.expected === null ? null : (
+        <FigureRow label={labels.expected} value={finding.expected} />
+      )}
       {finding.delta === null ? null : <FigureRow label="Difference" value={finding.delta} />}
     </Flex>
   );
@@ -202,7 +217,13 @@ function GroupSection({ group }: { group: FindingGroup }) {
  */
 export function Reconciliation({ report }: ReconciliationProps) {
   const truth = groundTruthFinding(report.findings);
-  const groups = groupFindings(report.findings);
+  // The promoted finding is excluded from the groups rather than rendered
+  // twice. The card is a fuller rendering of it, not a lesser one, and two
+  // renderings of one fact is one too many to keep in agreement. Only the
+  // promoted instance is removed: an older observation still belongs in a
+  // group, and `figureLabels` keeps its labels honest there.
+  const grouped = truth === null ? report.findings : report.findings.filter((f) => f !== truth);
+  const groups = groupFindings(grouped);
   const errors = report.findings.filter((f) => f.severity === "error").length;
   const acknowledged = report.findings.filter((f) => f.acknowledged).length;
 

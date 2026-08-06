@@ -33,6 +33,23 @@ function reportWith(...findings: ReportedFinding[]): ReconciliationReport {
   return { ...emptyReport(), statementCount: 220, findings };
 }
 
+function makeFinding(overrides: Partial<ReportedFinding> = {}): ReportedFinding {
+  return {
+    check: "statement-arithmetic",
+    severity: "warning",
+    accountShortId: "55ce",
+    period: "2026-06",
+    message: "differs by 0.02",
+    expected: 100,
+    actual: 100.02,
+    delta: 0.02,
+    sourceFile: "55ce_2026-06_BROKERAGE.pdf",
+    acknowledged: false,
+    reason: null,
+    ...overrides,
+  };
+}
+
 /** The real ground-truth line's figures, with no corrections.ts entry behind them yet. */
 function unacknowledgedGroundTruth(): ReportedFinding {
   return {
@@ -117,7 +134,39 @@ describe("Reconciliation, the ground-truth headline", () => {
 describe("Reconciliation, the findings", () => {
   test("renders every one of the 88 findings, hiding none of them", () => {
     renderReal();
-    expect(document.querySelectorAll("[data-finding-row]").length).toBe(88);
+    // 87 in the groups, plus the ground-truth line promoted into the headline
+    // card. Promoted, not dropped: the card is the fuller rendering of it.
+    expect(document.querySelectorAll("[data-finding-row]").length).toBe(87);
+    expect(document.querySelector("[data-recon-ground-truth]")).not.toBeNull();
+  });
+
+  test("the promoted ground-truth line does not also render as a group row", () => {
+    renderReal();
+    // Rendered twice it read "This system computes $241,739.67" in the card and
+    // "Stated $242,019.61" in the row: two descriptions of one fact that
+    // disagree about which figure came from where. $242,019.61 is a number the
+    // owner read off the app, and no statement ever stated it.
+    expect(document.querySelector('[data-finding-group="ground-truth"]')).toBeNull();
+    expect(screen.getAllByText("$242,019.61").length).toBe(1);
+    expect(screen.getAllByText("-$279.94").length).toBe(1);
+    expect(screen.getAllByText(/WSE401 carries a pending valuation/).length).toBe(1);
+  });
+
+  test("a ground-truth line that is not the promoted one keeps the card's labels", () => {
+    // An older observation still belongs in the groups, but never under
+    // "Stated": the field holds what the app showed, not what a statement said.
+    const older = { ...unacknowledgedGroundTruth(), period: "2026-05" };
+    const newer = unacknowledgedGroundTruth();
+    render(
+      <Theme>
+        <Reconciliation report={reportWith(newer, older)} />
+      </Theme>,
+    );
+    const row = within(group("ground-truth"));
+    expect(row.getByText("The app showed")).toBeDefined();
+    expect(row.getByText("This system computes")).toBeDefined();
+    expect(row.queryByText("Stated")).toBeNull();
+    expect(row.queryByText("Computed")).toBeNull();
   });
 
   test("counts the corpus it checked and what it found", () => {
@@ -191,6 +240,40 @@ describe("Reconciliation, the findings", () => {
     renderReal();
     expect((group("cross-document") as HTMLDetailsElement).open).toBe(true);
     expect((group("style-drift") as HTMLDetailsElement).open).toBe(true);
+  });
+
+  test("an error opens a group that is far too large to open on size alone", () => {
+    // The corpus's two error groups hold one finding each, so they open on the
+    // size rule whether the severity rule exists or not. Thirteen findings is
+    // past the collapse threshold: only the severity rule can open this.
+    const findings = [
+      makeFinding({ check: "balance-chain", severity: "error", period: "2026-01" }),
+      ...Array.from({ length: 12 }, (_, i) =>
+        makeFinding({ check: "balance-chain", period: `2025-${String(i + 1).padStart(2, "0")}` }),
+      ),
+    ];
+    render(
+      <Theme>
+        <Reconciliation report={reportWith(...findings)} />
+      </Theme>,
+    );
+    const chain = group("balance-chain") as HTMLDetailsElement;
+    expect(chain.querySelectorAll("[data-finding-row]").length).toBe(13);
+    expect(chain.open).toBe(true);
+  });
+
+  test("a large warning-only group of the same size stays collapsed", () => {
+    // The other half of the rule. Without it the test above would pass against
+    // a view that simply opens everything.
+    const findings = Array.from({ length: 13 }, (_, i) =>
+      makeFinding({ check: "balance-chain", period: `2025-${String(i + 1).padStart(2, "0")}` }),
+    );
+    render(
+      <Theme>
+        <Reconciliation report={reportWith(...findings)} />
+      </Theme>,
+    );
+    expect((group("balance-chain") as HTMLDetailsElement).open).toBe(false);
   });
 
   test("a report with no findings says the corpus reconciles, not nothing at all", () => {

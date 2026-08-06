@@ -19,7 +19,8 @@ describe("App", () => {
   test("the reconciliation view renders beneath the figures it reconciles", () => {
     render(<App />);
     expect(document.querySelector("[data-recon-ground-truth]")).not.toBeNull();
-    expect(document.querySelectorAll("[data-finding-row]").length).toBe(88);
+    // 87 group rows plus the ground-truth line promoted into the headline card.
+    expect(document.querySelectorAll("[data-finding-row]").length).toBe(87);
   });
 
   test("the year control drives both the room lines and the tax figures", () => {
