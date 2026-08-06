@@ -20,9 +20,35 @@ export interface MonthPoint {
   deposits: number;
   /** The CAD cash block's `paidOut.withdrawals`. Zero when unstated (a CASH-template statement has no `paidOut`). */
   withdrawals: number;
-  /** Populated in task 2 from the delta between consecutive stated year-to-date contribution figures. */
-  contributions: number;
-  /** Populated in task 2 from `GRANT`/`CLB` activity credits. */
+  /**
+   * The delta between this statement's stated year-to-date contribution
+   * figure and the previous stated one, or the year-to-date figure itself
+   * when this is the first stated figure of its calendar year (January in
+   * the normal case, a later month when earlier statements are missing or
+   * state no contributions).
+   *
+   * For a first-60-days/rest-of-year split account (RRSP family only) this
+   * is computed against `first60Days + restOfYear` as the combined
+   * year-to-date figure -- both halves are themselves cumulative within the
+   * year, so the same telescoping delta applies.
+   *
+   * Null when this statement states no contributions figure at all -- never
+   * coerced to zero, since an unstated month is not a known zero.
+   */
+  contributions: number | null;
+  /**
+   * How many calendar months this delta spans. 1 in the normal case.
+   * Greater than 1 when one or more preceding months carried no stated
+   * contributions figure, so this delta silently covers the gap -- present
+   * so the UI can flag a multi-month lump rather than attribute it to this
+   * one month. Meaningless (left at 1) when `contributions` is null.
+   */
+  contributionMonthsSpanned: number;
+  /** Verbatim from the statement's `contributions.first60Days`, never derived from a delta. Null when unstated. */
+  contributionFirst60Days: number | null;
+  /** Verbatim from the statement's `contributions.restOfYear`, never derived from a delta. Null when unstated. */
+  contributionRestOfYear: number | null;
+  /** Populated in task 3 from `GRANT`/`CLB` activity credits. */
   grants: number;
 }
 
@@ -35,4 +61,11 @@ export interface AccountSeries {
   inTotals: boolean;
   /** Oldest period first. */
   months: MonthPoint[];
+  /**
+   * Total contributions per calendar year, keyed on `YYYY`. Equal to the
+   * last stated (or combined split) year-to-date figure observed in that
+   * year -- since the monthly deltas telescope back to it, summing them
+   * would give the same number by construction.
+   */
+  contributionsByYear: Record<string, number>;
 }

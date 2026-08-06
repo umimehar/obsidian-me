@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { AccountRecord } from "../store/registry";
-import type { CashSummary, PortfolioSummary, Statement } from "../types";
+import type { CashSummary, Contributions, PortfolioSummary, Statement } from "../types";
 import { buildSeries } from "./series";
 
 function src(
@@ -71,6 +71,14 @@ function statement(over: Partial<Statement> = {}): Statement {
     balances: null,
     ...over,
   };
+}
+
+function ytd(value: number | null): Contributions {
+  return { yearToDate: value, first60Days: null, restOfYear: null };
+}
+
+function split(first60Days: number | null, restOfYear: number | null): Contributions {
+  return { yearToDate: null, first60Days, restOfYear };
 }
 
 function account(over: Partial<AccountRecord> = {}): AccountRecord {
@@ -209,5 +217,99 @@ describe("buildSeries", () => {
       purpose: "retirement",
       inTotals: true,
     });
+  });
+});
+
+describe("buildSeries contributions", () => {
+  test("a three-month run of stated year-to-date figures yields the deltas between them", () => {
+    const jan = statement({ source: src("2026-01", "BROKERAGE"), contributions: ytd(1000) });
+    const feb = statement({ source: src("2026-02", "BROKERAGE"), contributions: ytd(2500) });
+    const mar = statement({ source: src("2026-03", "BROKERAGE"), contributions: ytd(2500) });
+
+    const [series] = buildSeries([jan, feb, mar], [account()]);
+
+    expect(series?.months.map((m) => m.contributions)).toEqual([1000, 1500, 0]);
+    expect(series?.months.map((m) => m.contributionMonthsSpanned)).toEqual([1, 1, 1]);
+  });
+
+  test("January's contribution is its own year-to-date figure, not a delta against December", () => {
+    const dec = statement({ source: src("2025-12", "BROKERAGE"), contributions: ytd(9000) });
+    const jan = statement({ source: src("2026-01", "BROKERAGE"), contributions: ytd(400) });
+
+    const [series] = buildSeries([dec, jan], [account()]);
+
+    expect(series?.months[1]).toMatchObject({
+      period: "2026-01",
+      contributions: 400,
+      contributionMonthsSpanned: 1,
+    });
+  });
+
+  test("a missing month's contribution is folded into the next stated figure and flagged with the span", () => {
+    const jan = statement({ source: src("2026-01", "BROKERAGE"), contributions: ytd(1000) });
+    // February has no statement at all.
+    const mar = statement({ source: src("2026-03", "BROKERAGE"), contributions: ytd(4000) });
+
+    const [series] = buildSeries([jan, mar], [account()]);
+
+    expect(series?.months[1]).toMatchObject({
+      period: "2026-03",
+      contributions: 3000,
+      contributionMonthsSpanned: 2,
+    });
+  });
+
+  test("a present statement stating no contributions figure leaves the month null rather than zero", () => {
+    const jan = statement({ source: src("2026-01", "BROKERAGE"), contributions: ytd(1000) });
+    const feb = statement({ source: src("2026-02", "BROKERAGE"), contributions: null });
+    const mar = statement({ source: src("2026-03", "BROKERAGE"), contributions: ytd(4000) });
+
+    const [series] = buildSeries([jan, feb, mar], [account()]);
+
+    expect(series?.months[1]).toMatchObject({ period: "2026-02", contributions: null });
+    expect(series?.months[2]).toMatchObject({
+      period: "2026-03",
+      contributions: 3000,
+      contributionMonthsSpanned: 2,
+    });
+  });
+
+  test("the first-60-days/rest-of-year split is preserved verbatim, never derived from a delta", () => {
+    const feb = statement({ source: src("2026-02", "BROKERAGE"), contributions: split(0, 0) });
+    const mar = statement({ source: src("2026-03", "BROKERAGE"), contributions: split(0, 3000) });
+
+    const [series] = buildSeries([feb, mar], [account()]);
+
+    expect(series?.months[0]).toMatchObject({
+      contributionFirst60Days: 0,
+      contributionRestOfYear: 0,
+    });
+    expect(series?.months[1]).toMatchObject({
+      contributions: 3000,
+      contributionFirst60Days: 0,
+      contributionRestOfYear: 3000,
+    });
+  });
+
+  test("a statement with no contributions object leaves the split fields null too", () => {
+    const jan = statement({ source: src("2026-01", "BROKERAGE"), contributions: null });
+
+    const [series] = buildSeries([jan], [account()]);
+
+    expect(series?.months[0]).toMatchObject({
+      contributions: null,
+      contributionFirst60Days: null,
+      contributionRestOfYear: null,
+    });
+  });
+
+  test("contributionsByYear totals each calendar year to its last stated year-to-date figure", () => {
+    const dec25 = statement({ source: src("2025-12", "BROKERAGE"), contributions: ytd(9000) });
+    const jan26 = statement({ source: src("2026-01", "BROKERAGE"), contributions: ytd(400) });
+    const feb26 = statement({ source: src("2026-02", "BROKERAGE"), contributions: ytd(1200) });
+
+    const [series] = buildSeries([dec25, jan26, feb26], [account()]);
+
+    expect(series?.contributionsByYear).toEqual({ "2025": 9000, "2026": 1200 });
   });
 });
