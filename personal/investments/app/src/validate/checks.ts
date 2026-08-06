@@ -129,22 +129,19 @@ function checkCashBlock(s: Statement, cash: CashSummary, out: Finding[]): void {
  */
 const EXPLANATION_TOLERANCE = 0.001;
 
-function explainActivityMismatch(
-  rows: readonly ActivityRow[],
-  diffIn: number,
-  diffOut: number,
-): string | null {
-  if (!within(diffIn, diffOut, EXPLANATION_TOLERANCE)) return null;
-  const netAmount = diffIn;
-  if (within(netAmount, 0)) return null;
-
+/** A FEE/REIMB-coded credit (the real fee/reimbursement is always a debit) netted against fees paid out. */
+function explainRebateNetting(rows: readonly ActivityRow[], netAmount: number): string | null {
   const rebateSum = rows
     .filter((r) => (r.code === "FEE" || r.code === "REIMB") && r.credit > 0)
     .reduce((a, r) => a + r.credit, 0);
   if (rebateSum > 0 && within(rebateSum, netAmount, EXPLANATION_TOLERANCE)) {
     return `${rebateSum.toFixed(2)} of FEE/REIMB-coded rebate credits appear netted against fees paid out rather than counted as cash in`;
   }
+  return null;
+}
 
+/** A same-coded, same-day credit/debit pair, each equal to the residual -- an amended statement's correction. */
+function explainSameDayReversal(rows: readonly ActivityRow[], netAmount: number): string | null {
   const reversedCredit = rows.find(
     (credit) =>
       credit.credit > 0 &&
@@ -157,11 +154,20 @@ function explainActivityMismatch(
           within(debit.debit, netAmount, EXPLANATION_TOLERANCE),
       ),
   );
-  if (reversedCredit) {
-    return `a ${reversedCredit.code} entry for ${netAmount.toFixed(2)} on ${reversedCredit.date} appears reversed the same day, consistent with an amended/corrected statement whose printed totals exclude the correction`;
-  }
+  if (!reversedCredit) return null;
+  return `a ${reversedCredit.code} entry for ${netAmount.toFixed(2)} on ${reversedCredit.date} appears reversed the same day, consistent with an amended/corrected statement whose printed totals exclude the correction`;
+}
 
-  return null;
+function explainActivityMismatch(
+  rows: readonly ActivityRow[],
+  diffIn: number,
+  diffOut: number,
+): string | null {
+  if (!within(diffIn, diffOut, EXPLANATION_TOLERANCE)) return null;
+  const netAmount = diffIn;
+  if (within(netAmount, 0)) return null;
+
+  return explainRebateNetting(rows, netAmount) ?? explainSameDayReversal(rows, netAmount);
 }
 
 function checkActivityRows(s: Statement, cash: CashSummary, out: Finding[]): void {

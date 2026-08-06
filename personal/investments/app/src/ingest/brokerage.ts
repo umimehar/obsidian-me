@@ -614,11 +614,6 @@ const ACTIVITY_END = [
   // no money -- which in turn broke duplicate-row detection below, since the
   // row's description no longer matched its verbatim twin.
   /^GLOSSARY/,
-  // The PERFORMANCE template's statement-code glossary. Missing this let the
-  // whole glossary (hundreds of words) get swallowed as a "continuation" of
-  // the last activity row on the page, since it carries no leading date and
-  // no money -- which in turn broke duplicate-row detection below, since the
-  // row's description no longer matched its verbatim twin.
   // A trade placed near period end can settle after it. Wealthsimple prints
   // those in a separate two-column ("To be Debited"/"To be Credited", no
   // running balance) table for the *next* period, dated past periodEnd --
@@ -687,6 +682,16 @@ function parseActivityDataRow(row: Row, currency: Currency): ActivityRow | null 
  * tells those apart, so it must be compared as well. Two $0.00 rows for
  * different securities are real, separate transactions and must both
  * survive.
+ *
+ * The zero-value guard is a deliberate one-way trade, not an oversight: it
+ * means a genuine verbatim rendering duplicate of a *zero-value* row (the
+ * same amended-statement quirk that motivated this function, just with
+ * debit and credit both $0.00) can no longer be collapsed. That is
+ * acceptable because the two failure modes are not symmetric -- the case
+ * this guards against was a confirmed, measured 386-row data-loss bug; a
+ * zero-value verbatim duplicate slipping through is unconfirmed and, being
+ * zero-value, contributes nothing to the credit/debit reconciliation either
+ * way. The corpus shows zero new reconciliation errors after this change.
  */
 function isDuplicateOf(a: ActivityRow, b: ActivityRow): boolean {
   if (a.debit === 0 && a.credit === 0) return false;
@@ -709,6 +714,14 @@ function isDuplicateOf(a: ActivityRow, b: ActivityRow): boolean {
  * it is first parsed, so comparing descriptions during the build would
  * compare a fully-merged first copy against a still-bare second one and
  * never match.
+ *
+ * This still assumes the continuation line itself is not also duplicated:
+ * a wrapped continuation always attaches to whichever copy was parsed most
+ * recently (`readActivity`'s `current`), so if a real duplicate's second
+ * copy is the one that ends up carrying the continuation rather than the
+ * first, the two descriptions would differ and the pair would not collapse.
+ * Not observed in the corpus -- every verbatim duplicate found so far
+ * either carries no continuation or duplicates it on both copies.
  */
 function dropVerbatimDuplicates(rows: readonly ActivityRow[]): ActivityRow[] {
   const out: ActivityRow[] = [];
