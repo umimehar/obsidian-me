@@ -14,9 +14,11 @@ interface FixtureSpec {
   as: string;
 }
 
-interface Config {
+export interface Config {
   redactions: string[];
   addressWords: string[];
+  /** Account-number vendor prefixes (e.g. the letters before the digits) -- owner-specific, so this lives in the gitignored config, not hardcoded here. */
+  vendorPrefixes: string[];
   fixtures: FixtureSpec[];
 }
 
@@ -27,14 +29,34 @@ async function loadConfig(): Promise<Config> {
     throw new Error(`missing ${path} — copy redactions.example.json and fill it in`);
   }
   const parsed = (await file.json()) as Partial<Config>;
-  if (!parsed.redactions || !parsed.fixtures) {
-    throw new Error("redactions.json needs { redactions, addressWords, fixtures }");
+  if (!parsed.redactions || !parsed.fixtures || !parsed.vendorPrefixes) {
+    throw new Error("redactions.json needs { redactions, addressWords, vendorPrefixes, fixtures }");
   }
   return {
     redactions: parsed.redactions,
     addressWords: parsed.addressWords ?? [],
+    vendorPrefixes: parsed.vendorPrefixes,
     fixtures: parsed.fixtures,
   };
+}
+
+/**
+ * Splits a configured phrase into tokens on whitespace, PLUS the hyphenated
+ * halves of each word: a civic/unit address like "1004-200" can print as one
+ * hyphenated bbox word or as two separate ones ("1004" then "200"),
+ * depending on how the source PDF wrapped it. Both forms are kept -- the
+ * whole hyphenated word AND its halves -- since either one alone misses the
+ * other layout.
+ */
+export function phraseTokens(phrase: string): string[] {
+  const tokens = new Set<string>();
+  for (const word of phrase.split(/\s+/)) {
+    if (word.length > 1) tokens.add(word);
+    for (const half of word.split(/-+/)) {
+      if (half.length > 1) tokens.add(half);
+    }
+  }
+  return [...tokens];
 }
 
 // Postal code split across two bbox words, e.g. "M5V" then "2J4" as separate
@@ -44,13 +66,13 @@ const POSTAL_FIRST_HALF = /^[A-Za-z]\d[A-Za-z]$/;
 const POSTAL_SECOND_HALF = /^\d[A-Za-z]\d$/;
 
 /** Word-level scrub. bbox XML emits one <word> per token, so whole-name search fails. */
-function scrub(xml: string, accountNo: string, alias: string, cfg: Config): string {
+export function scrub(xml: string, accountNo: string, alias: string, cfg: Config): string {
   const tokens = new Set<string>();
   for (const phrase of [...cfg.redactions, ...cfg.addressWords]) {
     // Single-character tokens are excluded: a bare "A" or "L" also matches a
     // single-letter ticker symbol or a table's column header, so admitting them
     // would over-redact real statement data rather than close a real gap.
-    for (const t of phrase.split(/\s+/)) if (t.length > 1) tokens.add(t.toLowerCase());
+    for (const t of phraseTokens(phrase)) tokens.add(t.toLowerCase());
   }
 
   return xml.replace(/(>)([^<]*)(<\/word>)/g, (_m, open: string, text: string, close: string) => {
@@ -69,29 +91,51 @@ function scrub(xml: string, accountNo: string, alias: string, cfg: Config): stri
   });
 }
 
-/** A configured name or address word, matched word by word, case-insensitively. */
+/**
+ * A configured name or address word, matched the same way `scrub` itself
+ * matches: against one bbox `<word>`'s content, punctuation-stripped and
+ * exact, not a raw substring search over the whole document. A short
+ * numeric token split from a civic/unit address (e.g. "200" out of
+ * "1004-200") is a plausible substring of an unrelated dollar amount or
+ * date anywhere on the page; only an exact per-word match means the same
+ * thing `scrub` would have redacted.
+ */
 function assertNoConfiguredTokens(content: string, label: string, cfg: Config): void {
-  const lower = content.toLowerCase();
+  const tokens = new Set<string>();
   for (const phrase of [...cfg.redactions, ...cfg.addressWords]) {
-    for (const t of phrase.split(/\s+/)) {
-      if (t.length > 1 && lower.includes(t.toLowerCase())) {
-        throw new Error(
-          `stale fixture: "${t}" still present in ${label} -- run \`bun run fixtures\` to regenerate`,
-        );
-      }
+    for (const t of phraseTokens(phrase)) tokens.add(t.toLowerCase());
+  }
+
+  for (const word of content.matchAll(/<word[^>]*>([^<]*)<\/word>/g)) {
+    const raw = word[1] ?? "";
+    const bare = raw.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, "").toLowerCase();
+    if (tokens.has(bare)) {
+      throw new Error(
+        `stale fixture: "${raw}" still present in ${label} -- run \`bun run fixtures\` to regenerate`,
+      );
     }
   }
 }
 
+/**
+ * Checked against every configured account number, not just the one this
+ * particular fixture is keyed on: a body row can legitimately name a
+ * sibling account (a transfer, a beneficiary designation), and the orphan
+ * sweep at the bottom of this file calls `assertClean` with no single
+ * account number in hand at all -- only the full configured set catches
+ * that case.
+ */
 function assertNoAccountNumber(
   content: string,
   label: string,
-  accountNo: string | undefined,
+  accountNos: readonly string[],
 ): void {
-  if (accountNo && content.includes(accountNo)) {
-    throw new Error(
-      `stale fixture: account number in ${label} -- run \`bun run fixtures\` to regenerate`,
-    );
+  for (const accountNo of accountNos) {
+    if (content.includes(accountNo)) {
+      throw new Error(
+        `stale fixture: account number in ${label} -- run \`bun run fixtures\` to regenerate`,
+      );
+    }
   }
 }
 
@@ -121,9 +165,15 @@ function assertNoPostalCodes(content: string, label: string): void {
   }
 }
 
-/** A sibling account's own filename-derived code, not just the one this fixture is keyed on — a body row could legitimately name another account. */
-function assertNoVendorCode(content: string, label: string): void {
-  const vendorCode = /(WK|HQ|WZ)[A-Z0-9]{7,}/i.exec(content);
+/**
+ * Any account number of the owner's own vendor-prefix shape, not just the
+ * ones named in `cfg.fixtures` -- a body row could legitimately name a
+ * sibling account never chosen as a fixture. The prefixes themselves are
+ * owner-specific and come from the gitignored config, never hardcoded here.
+ */
+function assertNoVendorCode(content: string, label: string, cfg: Config): void {
+  const pattern = new RegExp(`(${cfg.vendorPrefixes.join("|")})[A-Z0-9]{7,}`, "i");
+  const vendorCode = pattern.exec(content);
   if (vendorCode) {
     throw new Error(
       `stale fixture: vendor account code "${vendorCode[0]}" in ${label} -- run \`bun run fixtures\` to regenerate`,
@@ -140,34 +190,46 @@ function assertNoVendorCode(content: string, label: string): void {
  * spec removed or renamed) still gets checked instead of going quietly
  * stale forever.
  */
-function assertClean(content: string, label: string, cfg: Config, accountNo?: string): void {
+export function assertClean(
+  content: string,
+  label: string,
+  cfg: Config,
+  accountNos: readonly string[],
+): void {
   assertNoConfiguredTokens(content, label, cfg);
-  assertNoAccountNumber(content, label, accountNo);
+  assertNoAccountNumber(content, label, accountNos);
   assertNoBareNumbers(content, label);
   assertNoPostalCodes(content, label);
-  assertNoVendorCode(content, label);
+  assertNoVendorCode(content, label, cfg);
 }
 
-const cfg = await loadConfig();
-await mkdir(OUT, { recursive: true });
+if (import.meta.main) {
+  const cfg = await loadConfig();
+  await mkdir(OUT, { recursive: true });
 
-for (const { file, alias, as } of cfg.fixtures) {
-  const xml = await extractXml(join(SOURCE, file), CACHE);
-  const accountNo = file.split("_")[0] ?? "";
-  const scrubbed = scrub(xml, accountNo, alias, cfg);
+  // Every account number named across every fixture spec, not just the one a
+  // given fixture is keyed on -- checked against every write, and again in the
+  // orphan sweep below, which has no single account number of its own to hand.
+  const allAccountNos = cfg.fixtures.map((f) => f.file.split("_")[0] ?? "");
 
-  assertClean(scrubbed, as, cfg, accountNo);
+  for (const { file, alias, as } of cfg.fixtures) {
+    const xml = await extractXml(join(SOURCE, file), CACHE);
+    const accountNo = file.split("_")[0] ?? "";
+    const scrubbed = scrub(xml, accountNo, alias, cfg);
 
-  await Bun.write(join(OUT, `${as}.xml`), scrubbed);
-  console.log(`wrote ${as}.xml`);
+    assertClean(scrubbed, as, cfg, allAccountNos);
+
+    await Bun.write(join(OUT, `${as}.xml`), scrubbed);
+    console.log(`wrote ${as}.xml`);
+  }
+
+  // Every fixture actually on disk, not just the specs above -- catches one
+  // whose spec was removed or renamed out of redactions.json but whose file
+  // is still committed.
+  for (const entry of await readdir(OUT)) {
+    if (!entry.endsWith(".xml")) continue;
+    const content = await Bun.file(join(OUT, entry)).text();
+    assertClean(content, entry, cfg, allAccountNos);
+  }
+  console.log(`verified ${cfg.fixtures.length} fixture(s) against the current redaction list`);
 }
-
-// Every fixture actually on disk, not just the specs above -- catches one
-// whose spec was removed or renamed out of redactions.json but whose file
-// is still committed.
-for (const entry of await readdir(OUT)) {
-  if (!entry.endsWith(".xml")) continue;
-  const content = await Bun.file(join(OUT, entry)).text();
-  assertClean(content, entry, cfg);
-}
-console.log(`verified ${cfg.fixtures.length} fixture(s) against the current redaction list`);
