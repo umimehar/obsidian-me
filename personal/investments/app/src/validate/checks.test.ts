@@ -446,9 +446,10 @@ describe("checkArithmetic", () => {
   });
 
   test("classifies a reversed entry on an amended statement as a named warning", () => {
-    // A second DIV credit for 40.90, reversed by a same-coded debit for the
-    // same amount -- the printed totals exclude both sides of the
-    // correction, leaving a matching residual in the ledger's own sums.
+    // A second DIV credit for 40.90, reversed same-day by a same-coded debit
+    // for the same amount -- the printed totals exclude both sides of the
+    // correction, leaving a matching residual in the ledger's own sums. Both
+    // real reversals found in the corpus post the correction the same day.
     const bad = statement();
     const cad = bad.cash[0];
     if (!cad || cad.totalIn === null) throw new Error("fixture");
@@ -464,7 +465,7 @@ describe("checkArithmetic", () => {
         currency: "CAD",
       },
       {
-        date: "2026-06-16",
+        date: "2026-06-15",
         postedDate: null,
         code: "DIV",
         description: "Reversal of the above",
@@ -480,7 +481,46 @@ describe("checkArithmetic", () => {
     expect(activityFindings).toHaveLength(2);
     for (const finding of activityFindings) {
       expect(finding.severity).toBe("warning");
-      expect(finding.message).toMatch(/reversed elsewhere/);
+      expect(finding.message).toMatch(/reversed the same day/);
+    }
+  });
+
+  test("does not classify a same-coded, same-amount pair on different days as a reversal", () => {
+    // The pairing requires the reversal to post the same day as the entry
+    // it corrects -- without that, an unrelated same-coded, same-amount row
+    // elsewhere in the statement (a coincidence more likely on a long
+    // statement with many small same-coded rows) must not launder a real
+    // mismatch into this warning.
+    const bad = statement();
+    const cad = bad.cash[0];
+    if (!cad || cad.totalIn === null) throw new Error("fixture");
+    bad.activity.push(
+      {
+        date: "2026-06-15",
+        postedDate: null,
+        code: "DIV",
+        description: "Cash dividend distribution",
+        debit: 0,
+        credit: 40.9,
+        balance: 47.18,
+        currency: "CAD",
+      },
+      {
+        date: "2026-06-20",
+        postedDate: null,
+        code: "DIV",
+        description: "An unrelated same-amount debit on a different day",
+        debit: 40.9,
+        credit: 0,
+        balance: 6.28,
+        currency: "CAD",
+      },
+    );
+    const f = checkArithmetic([bad]);
+    const activityFindings = f.filter((x) => x.message.includes("activity"));
+    expect(activityFindings.length).toBeGreaterThan(0);
+    for (const finding of activityFindings) {
+      expect(finding.severity).toBe("error");
     }
   });
 

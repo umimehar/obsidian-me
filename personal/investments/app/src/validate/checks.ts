@@ -96,39 +96,69 @@ function checkCashBlock(s: Statement, cash: CashSummary, out: Finding[]): void {
  *   wording, account, or period, so it generalizes to any statement with the
  *   same shape.
  * - An amended/corrected statement can reverse an earlier entry: a credit
- *   for amount X, and elsewhere a same-coded debit for the same X, with
- *   neither counted in the printed totals. Detected by finding that matching
- *   credit/debit pair rather than assuming a single row.
+ *   for amount X, and a same-coded, same-day debit for the same X, with
+ *   neither counted in the printed totals. The two real cases seen both
+ *   reverse same-day (the correction posts the day it is caught), and
+ *   requiring that match -- not just a same-coded debit anywhere in the
+ *   statement -- matters on a large statement with many small same-coded
+ *   rows (hundreds of NRT withholding entries across a month, several within
+ *   a cent of each other): without it, an unrelated pair on a different day
+ *   can coincidentally equal whatever residual a real missing row leaves
+ *   behind, laundering a genuine parse failure into this warning.
  *
  * Returns null when the residual has no such counterpart in the rows
  * themselves, which is the honest answer for the cases this cannot explain.
+ *
+ * The rebate case above has no equivalent tightening available: it matches
+ * on a *sum* of same-coded credits, and removing any one real rebate row
+ * shrinks that sum by exactly the amount it shrinks the residual by, so the
+ * equation balances identically whether every rebate row is present or one
+ * is genuinely missing. The two situations are not numerically
+ * distinguishable from the totals alone -- a documented blind spot, not a
+ * threshold to keep tuning.
+ *
+ * Every comparison in here uses `EXPLANATION_TOLERANCE`, not the outer
+ * check's cent-of-slack `within`, and that distinction matters: these
+ * activity figures are pure bookkeeping sums with no fx conversion or
+ * independent measurement involved, so a genuine explanation should match
+ * exactly (bar float noise). The outer check's full cent of slack is wide
+ * enough that, on a statement already carrying a real explained residual,
+ * an unrelated missing row's small effect (at most a cent, on one side
+ * only) can still fall inside it and re-match the pre-existing explanation
+ * -- laundering a second, independent defect behind the first, genuine one.
  */
+const EXPLANATION_TOLERANCE = 0.001;
+
 function explainActivityMismatch(
   rows: readonly ActivityRow[],
   diffIn: number,
   diffOut: number,
 ): string | null {
-  if (!within(diffIn, diffOut)) return null;
+  if (!within(diffIn, diffOut, EXPLANATION_TOLERANCE)) return null;
   const netAmount = diffIn;
   if (within(netAmount, 0)) return null;
 
   const rebateSum = rows
     .filter((r) => (r.code === "FEE" || r.code === "REIMB") && r.credit > 0)
     .reduce((a, r) => a + r.credit, 0);
-  if (rebateSum > 0 && within(rebateSum, netAmount)) {
+  if (rebateSum > 0 && within(rebateSum, netAmount, EXPLANATION_TOLERANCE)) {
     return `${rebateSum.toFixed(2)} of FEE/REIMB-coded rebate credits appear netted against fees paid out rather than counted as cash in`;
   }
 
   const reversedCredit = rows.find(
     (credit) =>
       credit.credit > 0 &&
-      within(credit.credit, netAmount) &&
+      within(credit.credit, netAmount, EXPLANATION_TOLERANCE) &&
       rows.some(
-        (debit) => debit !== credit && debit.code === credit.code && within(debit.debit, netAmount),
+        (debit) =>
+          debit !== credit &&
+          debit.code === credit.code &&
+          debit.date === credit.date &&
+          within(debit.debit, netAmount, EXPLANATION_TOLERANCE),
       ),
   );
   if (reversedCredit) {
-    return `a ${reversedCredit.code} entry for ${netAmount.toFixed(2)} appears reversed elsewhere on the statement, consistent with an amended/corrected statement whose printed totals exclude the correction`;
+    return `a ${reversedCredit.code} entry for ${netAmount.toFixed(2)} on ${reversedCredit.date} appears reversed the same day, consistent with an amended/corrected statement whose printed totals exclude the correction`;
   }
 
   return null;
