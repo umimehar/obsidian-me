@@ -1,4 +1,4 @@
-import { mkdir } from "node:fs/promises";
+import { mkdir, readdir } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { extractXml } from "../ingest/extract";
@@ -69,6 +69,61 @@ function scrub(xml: string, accountNo: string, alias: string, cfg: Config): stri
   });
 }
 
+/**
+ * Fails loudly, naming the fixture and the fix, rather than letting a token
+ * that was added to the redaction list *after* a fixture was generated sit
+ * unnoticed in a committed file. Runs against every write below, and again at
+ * the end against every `.xml` actually on disk -- not just the ones this
+ * run happened to touch -- so a fixture orphaned from `cfg.fixtures` (its
+ * spec removed or renamed) still gets checked instead of going quietly
+ * stale forever.
+ */
+function assertClean(content: string, label: string, cfg: Config, accountNo?: string): void {
+  const lower = content.toLowerCase();
+  for (const phrase of [...cfg.redactions, ...cfg.addressWords]) {
+    for (const t of phrase.split(/\s+/)) {
+      if (t.length > 1 && lower.includes(t.toLowerCase())) {
+        throw new Error(
+          `stale fixture: "${t}" still present in ${label} -- run \`bun run fixtures\` to regenerate`,
+        );
+      }
+    }
+  }
+  if (accountNo && content.includes(accountNo)) {
+    throw new Error(
+      `stale fixture: account number in ${label} -- run \`bun run fixtures\` to regenerate`,
+    );
+  }
+  for (const bare of content.matchAll(/<word[^>]*>(\d{6,})<\/word>/g)) {
+    if (bare[1] !== "00000000") {
+      throw new Error(
+        `stale fixture: bare number ${bare[1]} in ${label} -- run \`bun run fixtures\` to regenerate`,
+      );
+    }
+  }
+  for (const word of content.matchAll(/<word[^>]*>([^<]*)<\/word>/g)) {
+    const w = word[1] ?? "";
+    if (/^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i.test(w)) {
+      throw new Error(
+        `stale fixture: postal code "${w}" in ${label} -- run \`bun run fixtures\` to regenerate`,
+      );
+    }
+    if ((POSTAL_FIRST_HALF.test(w) && w !== "X0X") || (POSTAL_SECOND_HALF.test(w) && w !== "0X0")) {
+      throw new Error(
+        `stale fixture: postal code half "${w}" in ${label} -- run \`bun run fixtures\` to regenerate`,
+      );
+    }
+  }
+  // A sibling account's own filename-derived code, not just the one this fixture
+  // is keyed on — a body row could legitimately name another account.
+  const vendorCode = /(WK|HQ|WZ)[A-Z0-9]{7,}/i.exec(content);
+  if (vendorCode) {
+    throw new Error(
+      `stale fixture: vendor account code "${vendorCode[0]}" in ${label} -- run \`bun run fixtures\` to regenerate`,
+    );
+  }
+}
+
 const cfg = await loadConfig();
 await mkdir(OUT, { recursive: true });
 
@@ -77,34 +132,18 @@ for (const { file, alias, as } of cfg.fixtures) {
   const accountNo = file.split("_")[0] ?? "";
   const scrubbed = scrub(xml, accountNo, alias, cfg);
 
-  const lower = scrubbed.toLowerCase();
-  for (const phrase of [...cfg.redactions, ...cfg.addressWords]) {
-    for (const t of phrase.split(/\s+/)) {
-      if (t.length > 1 && lower.includes(t.toLowerCase())) {
-        throw new Error(`scrub failed: "${t}" still present in ${as}`);
-      }
-    }
-  }
-  if (scrubbed.includes(accountNo)) throw new Error(`scrub failed: account number in ${as}`);
-  for (const bare of scrubbed.matchAll(/<word[^>]*>(\d{6,})<\/word>/g)) {
-    if (bare[1] !== "00000000") {
-      throw new Error(`scrub failed: bare number ${bare[1]} in ${as}`);
-    }
-  }
-  for (const word of scrubbed.matchAll(/<word[^>]*>([^<]*)<\/word>/g)) {
-    const w = word[1] ?? "";
-    if (/^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i.test(w)) {
-      throw new Error(`scrub failed: postal code "${w}" in ${as}`);
-    }
-    if ((POSTAL_FIRST_HALF.test(w) && w !== "X0X") || (POSTAL_SECOND_HALF.test(w) && w !== "0X0")) {
-      throw new Error(`scrub failed: postal code half "${w}" in ${as}`);
-    }
-  }
-  // A sibling account's own filename-derived code, not just the one this fixture
-  // is keyed on — a body row could legitimately name another account.
-  const vendorCode = /(WK|HQ|WZ)[A-Z0-9]{7,}/i.exec(scrubbed);
-  if (vendorCode) throw new Error(`scrub failed: vendor account code "${vendorCode[0]}" in ${as}`);
+  assertClean(scrubbed, as, cfg, accountNo);
 
   await Bun.write(join(OUT, `${as}.xml`), scrubbed);
   console.log(`wrote ${as}.xml`);
 }
+
+// Every fixture actually on disk, not just the specs above -- catches one
+// whose spec was removed or renamed out of redactions.json but whose file
+// is still committed.
+for (const entry of await readdir(OUT)) {
+  if (!entry.endsWith(".xml")) continue;
+  const content = await Bun.file(join(OUT, entry)).text();
+  assertClean(content, entry, cfg);
+}
+console.log(`verified ${cfg.fixtures.length} fixture(s) against the current redaction list`);
