@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { Overview } from "./Overview";
+import { Overview, cardMotion } from "./Overview";
 import { loadAnalytics } from "./data";
 
 /**
@@ -19,6 +19,31 @@ function renderOverview() {
   );
   return analytics;
 }
+
+/** The group card whose heading is `label`, so a figure is pinned to one group rather than to the page. */
+function groupCard(label: string): HTMLElement {
+  const card = screen.getByRole("heading", { name: label }).closest("[data-overview-group]");
+  if (card === null) throw new Error(`expected the ${label} group card to render`);
+  return card as HTMLElement;
+}
+
+describe("cardMotion", () => {
+  test("reduced motion removes the fade and the reflow, it does not shorten them", () => {
+    const spec = cardMotion(true);
+    expect(spec.duration).toBe(0);
+    expect(spec.layout).toBe(false);
+    expect(spec.initial).toBe(false);
+    expect(spec.exit).toBeUndefined();
+  });
+
+  test("without the preference the card fades in, out, and reflows", () => {
+    const spec = cardMotion(false);
+    expect(spec.duration).toBeGreaterThan(0);
+    expect(spec.layout).toBe(true);
+    expect(spec.initial).toEqual({ opacity: 0 });
+    expect(spec.exit).toEqual({ opacity: 0 });
+  });
+});
 
 describe("Overview", () => {
   test("shows the real grand total as the headline", () => {
@@ -86,6 +111,45 @@ describe("Overview", () => {
     if (unassignedCard === null) throw new Error("expected the Unassigned group card to render");
     const group = within(unassignedCard as HTMLElement);
     expect(group.getByText(/no accounts/i)).toBeDefined();
+  });
+
+  test("a group prints its own total, not a share of one", () => {
+    renderOverview();
+    // Real corpus, registration lens: TFSA $48,155.28, RRSP $49,314.45,
+    // Non-registered $60,798.32. Three groups pinned rather than one, so a
+    // card that renders a constant cannot pass by matching a single figure.
+    // Each is a multi-account group, so the total is never also an account
+    // line and the assertion cannot pass off one for the other.
+    expect(within(groupCard("TFSA")).getByText("$48,155.28")).toBeDefined();
+    expect(within(groupCard("RRSP")).getByText("$49,314.45")).toBeDefined();
+    expect(within(groupCard("Non-registered")).getByText("$60,798.32")).toBeDefined();
+  });
+
+  test("each account line prints its own market value", () => {
+    renderOverview();
+    const tfsa = within(groupCard("TFSA"));
+    expect(tfsa.getByText("$7,580.33")).toBeDefined();
+    expect(tfsa.getByText("$40,574.95")).toBeDefined();
+
+    const rrsp = within(groupCard("RRSP"));
+    expect(rrsp.getByText("$14,509.70")).toBeDefined();
+    expect(rrsp.getByText("$14,306.21")).toBeDefined();
+    expect(rrsp.getByText("$20,498.54")).toBeDefined();
+  });
+
+  test("an account with no stated figure says so rather than printing zero", () => {
+    renderOverview();
+    // The three Chequing accounts carry a null market value: cash is outside
+    // the totals, so there is no figure to print, and $0.00 would be a claim.
+    const cash = within(groupCard("Cash"));
+    expect(cash.getAllByText("No figure").length).toBe(3);
+  });
+
+  test("a group states how many accounts are in it", () => {
+    renderOverview();
+    expect(within(groupCard("RRSP")).getByText("3 accounts")).toBeDefined();
+    expect(within(groupCard("TFSA")).getByText("2 accounts")).toBeDefined();
+    expect(within(groupCard("FHSA")).getByText("1 account")).toBeDefined();
   });
 
   test("group share of total is computed against the same headline total", () => {

@@ -42,12 +42,25 @@ describe("groupFindings", () => {
     expect(groups.map((g) => g.check)).toEqual(["statement-arithmetic", "ingest"]);
   });
 
-  test("puts errors first inside a group too", () => {
+  test("puts errors first inside a group too, ahead of an earlier warning", () => {
+    // The error is the LATER period on purpose: if severity were dropped and
+    // the rows fell back to period order, the error would sort second, so
+    // this ordering can only come from the severity rank.
     const groups = groupFindings([
-      makeFinding({ check: "kind-drift", period: "2026-06" }),
-      makeFinding({ check: "kind-drift", severity: "error", period: "2026-01" }),
+      makeFinding({ check: "kind-drift", period: "2026-01" }),
+      makeFinding({ check: "kind-drift", severity: "error", period: "2026-06" }),
     ]);
     expect(groups[0]?.findings.map((f) => f.severity)).toEqual(["error", "warning"]);
+    expect(groups[0]?.findings.map((f) => f.period)).toEqual(["2026-06", "2026-01"]);
+  });
+
+  test("orders same-severity rows by period, oldest first", () => {
+    const groups = groupFindings([
+      makeFinding({ check: "kind-drift", period: "2026-06" }),
+      makeFinding({ check: "kind-drift", period: "2026-01" }),
+      makeFinding({ check: "kind-drift", period: "2026-03" }),
+    ]);
+    expect(groups[0]?.findings.map((f) => f.period)).toEqual(["2026-01", "2026-03", "2026-06"]);
   });
 
   test("counts acknowledged findings per group without dropping them", () => {

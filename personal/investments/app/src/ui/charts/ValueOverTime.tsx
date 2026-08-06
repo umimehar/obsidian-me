@@ -80,6 +80,27 @@ function areaPath(points: readonly PlotPoint[], baselineY: number): string {
   return `${linePath(points)} L${last.x},${baselineY} L${first.x},${baselineY} Z`;
 }
 
+export interface Reveal {
+  /** The clip rect's starting width. Equal to the full width when there is to be no reveal at all. */
+  initialWidth: number;
+  /** Seconds. Zero, never a smaller non-zero: a fast wipe is still a wipe. */
+  duration: number;
+}
+
+/**
+ * The reveal's timing, as a value rather than as two ternaries inline in the
+ * JSX. Reduced motion *skips* the animation: the clip starts at full width
+ * and takes no time, so the chart is simply drawn. Shortening the duration
+ * instead would still move, which is the thing the preference asks not to
+ * happen. Kept exported and pure because motion applies its final value
+ * immediately under happy-dom, so this rule is not observable from the
+ * rendered DOM and would otherwise be untestable.
+ */
+export function revealMotion(prefersReducedMotion: boolean, innerWidth: number): Reveal {
+  if (prefersReducedMotion) return { initialWidth: innerWidth, duration: 0 };
+  return { initialWidth: 0, duration: 1.1 };
+}
+
 function EmptyState() {
   return (
     <div role="img" aria-label="No portfolio value history yet.">
@@ -104,6 +125,7 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
   const rawClipId = useId();
   const clipId = `value-over-time-clip-${rawClipId.replace(/[^a-zA-Z0-9]/g, "")}`;
   const prefersReducedMotion = useReducedMotion();
+  const reveal = revealMotion(prefersReducedMotion === true, INNER_WIDTH);
   const points = useMemo(() => buildPortfolioSeries(series), [series]);
   const scales = useMemo(
     () => buildScales(toDomainPoints(points), INNER_WIDTH, INNER_HEIGHT),
@@ -146,9 +168,9 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
           <motion.rect
             y={0}
             height={INNER_HEIGHT}
-            initial={{ width: prefersReducedMotion ? INNER_WIDTH : 0 }}
+            initial={{ width: reveal.initialWidth }}
             animate={{ width: INNER_WIDTH }}
-            transition={{ duration: prefersReducedMotion ? 0 : 1.1, ease: "easeOut" }}
+            transition={{ duration: reveal.duration, ease: "easeOut" }}
           />
         </clipPath>
         <g clipPath={`url(#${clipId})`}>

@@ -42,6 +42,24 @@ describe("TaxView", () => {
     expect(income.getByText("$16.84")).toBeDefined();
   });
 
+  test("the interest row prints the interest figure, not a constant zero", () => {
+    // Every year in the corpus has $0.00 interest, so the real data cannot
+    // tell `income.interest` apart from a hardcoded zero. This is the only
+    // figure on the page that needs a constructed value to be pinned at all.
+    const analytics = loadAnalytics();
+    const income2026 = analytics.income["2026"];
+    if (income2026 === undefined) throw new Error("expected 2026 income in the corpus");
+    render(
+      <Theme>
+        <TaxView
+          analytics={{ ...analytics, income: { 2026: { ...income2026, interest: 412.75 } } }}
+          year={2026}
+        />
+      </Theme>,
+    );
+    expect(row("interest").getByText("$412.75")).toBeDefined();
+  });
+
   test("the real 2026 realized figure is a loss and is shown as one", () => {
     renderYear(2026);
     const income = within(section("income"));

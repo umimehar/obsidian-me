@@ -85,9 +85,20 @@ describe("Reconciliation, the findings", () => {
     renderReal();
     const summary = region("summary");
     expect(summary.getByText(/220 statements/)).toBeDefined();
+    expect(summary.getByText(/88 findings/)).toBeDefined();
     expect(summary.getByText(/2 errors/)).toBeDefined();
     expect(summary.getByText(/86 warnings/)).toBeDefined();
     expect(summary.getByText(/3 acknowledged/)).toBeDefined();
+  });
+
+  test("each group's own summary counts its errors and its acknowledgements", () => {
+    renderReal();
+    const heading = group("cross-document").querySelector("summary");
+    if (heading === null) throw new Error("expected the cross-document group to have a summary");
+    expect(heading.textContent).toBe("Across documents 1 finding, 1 error, 1 acknowledged");
+
+    const arithmetic = group("statement-arithmetic").querySelector("summary");
+    expect(arithmetic?.textContent).toBe("Statement arithmetic 84 findings, 84 warnings");
   });
 
   test("puts the error groups ahead of the 84-strong warning group", () => {

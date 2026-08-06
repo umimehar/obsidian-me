@@ -46,10 +46,32 @@ function AccountRow({ account }: { account: RollupAccount }) {
   );
 }
 
+export interface CardMotion {
+  layout: boolean;
+  initial: { opacity: number } | false;
+  exit: { opacity: number } | undefined;
+  /** Seconds. Zero under the preference, never a smaller non-zero. */
+  duration: number;
+}
+
+/**
+ * How a group card enters, leaves and reflows when the lens changes.
+ *
+ * Under `prefers-reduced-motion` the card does not fade or reflow at all: it
+ * is simply in its new place. Shortening the fade instead would still move,
+ * which is the thing the preference asks not to happen. Exported and pure
+ * because motion applies its final values immediately under happy-dom, so
+ * this rule is not observable from the rendered DOM.
+ */
+export function cardMotion(prefersReducedMotion: boolean): CardMotion {
+  if (prefersReducedMotion) return { layout: false, initial: false, exit: undefined, duration: 0 };
+  return { layout: true, initial: { opacity: 0 }, exit: { opacity: 0 }, duration: 0.25 };
+}
+
 interface GroupCardProps {
   group: Rollup;
   grandTotalValue: number;
-  animate: boolean;
+  motionSpec: CardMotion;
 }
 
 /**
@@ -58,16 +80,16 @@ interface GroupCardProps {
  * not styling -- the group's DOM position is what changes between lenses,
  * so tests need a way to scope into "this card" that survives the reorder.
  */
-function GroupCard({ group, grandTotalValue, animate }: GroupCardProps) {
+function GroupCard({ group, grandTotalValue, motionSpec }: GroupCardProps) {
   const share = grandTotalValue > 0 ? group.total / grandTotalValue : 0;
   return (
     <motion.div
       key={group.key}
-      layout={animate}
-      initial={animate ? { opacity: 0 } : false}
+      layout={motionSpec.layout}
+      initial={motionSpec.initial}
       animate={{ opacity: 1 }}
-      exit={animate ? { opacity: 0 } : undefined}
-      transition={{ duration: animate ? 0.25 : 0 }}
+      exit={motionSpec.exit}
+      transition={{ duration: motionSpec.duration }}
       data-overview-group=""
     >
       <Card mb="3">
@@ -139,7 +161,7 @@ export function Overview({ analytics }: OverviewProps) {
             key={group.key}
             group={group}
             grandTotalValue={total}
-            animate={!prefersReducedMotion}
+            motionSpec={cardMotion(prefersReducedMotion === true)}
           />
         ))}
       </AnimatePresence>

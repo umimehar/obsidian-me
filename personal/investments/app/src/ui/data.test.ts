@@ -71,11 +71,76 @@ describe("data.ts against the real committed analytics.json", () => {
   });
 
   test("parseReconciliation rejects a finding missing its acknowledgement fields", () => {
+    // Complete in every field a pre-acknowledgement build wrote, and missing
+    // only the two this one adds. A looser guard would accept this and the
+    // view would render three explained findings as unexplained.
+    const finding = {
+      check: "ingest",
+      severity: "warning",
+      accountShortId: "55ce",
+      period: "2026-06",
+      message: "skipped",
+      expected: null,
+      actual: null,
+      delta: null,
+      sourceFile: "55ce_2026-06_BROKERAGE.pdf",
+    };
+    const stale = { generated: "x", statementCount: 1, findings: [finding] };
+    expect(() => parseReconciliation(stale)).toThrow(/acknowledged/);
+
+    // reason alone is not enough: the boolean is what the view branches on,
+    // and a finding carrying only a null reason would read as unacknowledged.
+    const reasonOnly = { ...stale, findings: [{ ...finding, reason: null }] };
+    expect(() => parseReconciliation(reasonOnly)).toThrow(/acknowledged/);
+
+    const withAcknowledged = {
+      ...stale,
+      findings: [{ ...finding, acknowledged: false, reason: null }],
+    };
+    expect(parseReconciliation(withAcknowledged).findings.length).toBe(1);
+  });
+
+  test("parseReconciliation rejects a reason that is neither a string nor null", () => {
     const stale = {
       generated: "x",
       statementCount: 1,
       findings: [
-        { check: "ingest", severity: "warning", accountShortId: "55ce", period: "2026-06" },
+        {
+          check: "ingest",
+          severity: "warning",
+          accountShortId: "55ce",
+          period: "2026-06",
+          message: "skipped",
+          expected: null,
+          actual: null,
+          delta: null,
+          sourceFile: "f.pdf",
+          acknowledged: true,
+          reason: 42,
+        },
+      ],
+    };
+    expect(() => parseReconciliation(stale)).toThrow(/bun run build/);
+  });
+
+  test("parseReconciliation rejects a figure that arrived as a string", () => {
+    const stale = {
+      generated: "x",
+      statementCount: 1,
+      findings: [
+        {
+          check: "ingest",
+          severity: "warning",
+          accountShortId: "55ce",
+          period: "2026-06",
+          message: "skipped",
+          expected: "12000.00",
+          actual: null,
+          delta: null,
+          sourceFile: "f.pdf",
+          acknowledged: false,
+          reason: null,
+        },
       ],
     };
     expect(() => parseReconciliation(stale)).toThrow(/bun run build/);
