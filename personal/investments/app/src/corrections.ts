@@ -42,8 +42,17 @@ export const ACKNOWLEDGED: readonly Acknowledgement[] = [
   },
 ];
 
-export function isAcknowledged(check: CheckName, shortId: string, period: string): boolean {
-  return ACKNOWLEDGED.some(
+/** The entry covering this exact (check, account, period), or undefined when there is none. */
+export function acknowledgementFor(
+  check: CheckName,
+  shortId: string,
+  period: string,
+): Acknowledgement | undefined {
+  return ACKNOWLEDGED.find(
     (a) => a.check === check && a.shortId === shortId && a.period === period,
   );
+}
+
+export function isAcknowledged(check: CheckName, shortId: string, period: string): boolean {
+  return acknowledgementFor(check, shortId, period) !== undefined;
 }

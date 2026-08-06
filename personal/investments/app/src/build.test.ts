@@ -3,6 +3,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
+  annotateFinding,
   countedAccountNumbers,
   dedupeToLatestVersion,
   loadRedactions,
@@ -241,5 +242,51 @@ describe("maskFinding", () => {
   test("leaves a message with no embedded filename untouched", () => {
     const finding = makeFinding({ message: "does not reconcile" });
     expect(maskFinding(finding).message).toBe("does not reconcile");
+  });
+});
+
+describe("annotateFinding", () => {
+  test("marks an acknowledged finding and carries its reason onto the report", () => {
+    const annotated = annotateFinding(
+      makeFinding({ check: "style-drift", accountShortId: "9710", period: "2026-06" }),
+    );
+    expect(annotated.acknowledged).toBe(true);
+    expect(annotated.reason).toContain("self-directed to a Wealthsimple Managed portfolio");
+  });
+
+  test('the whole-portfolio ground-truth acknowledgement matches on the "*" short id', () => {
+    const annotated = annotateFinding(
+      makeFinding({
+        check: "ground-truth",
+        accountShortId: "*",
+        period: "2026-06",
+        sourceFile: "",
+      }),
+    );
+    expect(annotated.acknowledged).toBe(true);
+    expect(annotated.reason).toContain("WSE401");
+  });
+
+  test("an unacknowledged finding carries a null reason, never an empty-string one", () => {
+    const annotated = annotateFinding(makeFinding());
+    expect(annotated.acknowledged).toBe(false);
+    expect(annotated.reason).toBeNull();
+  });
+
+  test("acknowledgement is keyed on the period too, so a later period is not covered", () => {
+    const annotated = annotateFinding(
+      makeFinding({ check: "style-drift", accountShortId: "9710", period: "2026-07" }),
+    );
+    expect(annotated.acknowledged).toBe(false);
+    expect(annotated.reason).toBeNull();
+  });
+
+  test("leaves every figure exactly as it was -- annotation never rewrites a number", () => {
+    const finding = makeFinding({ check: "cross-document", accountShortId: "d6d9" });
+    const annotated = annotateFinding(finding);
+    expect(annotated.expected).toBe(100);
+    expect(annotated.actual).toBe(99);
+    expect(annotated.delta).toBe(-1);
+    expect(annotated.message).toBe("does not reconcile");
   });
 });

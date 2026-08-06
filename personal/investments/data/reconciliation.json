@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-06T14:34:45.720Z",
+  "generated": "2026-08-06T15:41:53.361Z",
   "statementCount": 220,
   "findings": [
     {
@@ -11,7 +11,9 @@
       "expected": 7894.05,
       "actual": 7894.026429999999,
       "delta": -0.023570000001200242,
-      "sourceFile": "d77c_2025-10_BROKERAGE.pdf"
+      "sourceFile": "d77c_2025-10_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -22,7 +24,9 @@
       "expected": 31204.75,
       "actual": 31204.72643,
       "delta": -0.023570000001200242,
-      "sourceFile": "d77c_2025-10_BROKERAGE.pdf"
+      "sourceFile": "d77c_2025-10_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -33,7 +37,9 @@
       "expected": 8729.9,
       "actual": 8733.242036,
       "delta": 3.3420360000000073,
-      "sourceFile": "d77c_2025-10_BROKERAGE.pdf"
+      "sourceFile": "d77c_2025-10_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -44,7 +50,9 @@
       "expected": 29195.15,
       "actual": 29198.492035999996,
       "delta": 3.3420359999945504,
-      "sourceFile": "d77c_2025-10_BROKERAGE.pdf"
+      "sourceFile": "d77c_2025-10_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -55,7 +63,9 @@
       "expected": 9339.8,
       "actual": 9316.262613,
       "delta": -23.53738699999849,
-      "sourceFile": "d77c_2025-11_BROKERAGE.pdf"
+      "sourceFile": "d77c_2025-11_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -66,7 +76,9 @@
       "expected": 29403.87,
       "actual": 29380.332613,
       "delta": -23.537387000000308,
-      "sourceFile": "d77c_2025-11_BROKERAGE.pdf"
+      "sourceFile": "d77c_2025-11_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -77,7 +89,9 @@
       "expected": 7347.92,
       "actual": 7347.896248000001,
       "delta": -0.02375199999914912,
-      "sourceFile": "d77c_2025-12_BROKERAGE.pdf"
+      "sourceFile": "d77c_2025-12_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -88,7 +102,9 @@
       "expected": 30195.21,
       "actual": 30195.186248,
       "delta": -0.02375199999733013,
-      "sourceFile": "d77c_2025-12_BROKERAGE.pdf"
+      "sourceFile": "d77c_2025-12_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -99,7 +115,9 @@
       "expected": 7043.44,
       "actual": 6944.747963999999,
       "delta": -98.69203600000037,
-      "sourceFile": "d77c_2025-12_BROKERAGE.pdf"
+      "sourceFile": "d77c_2025-12_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -110,7 +128,9 @@
       "expected": 27220.72,
       "actual": 27122.027964000004,
       "delta": -98.69203599999673,
-      "sourceFile": "d77c_2025-12_BROKERAGE.pdf"
+      "sourceFile": "d77c_2025-12_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -121,7 +141,9 @@
       "expected": 4570.28,
       "actual": 4478.552136,
       "delta": -91.7278639999995,
-      "sourceFile": "d77c_2026-01_BROKERAGE.pdf"
+      "sourceFile": "d77c_2026-01_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -132,7 +154,9 @@
       "expected": 34284.93,
       "actual": 34193.20213599999,
       "delta": -91.72786400000768,
-      "sourceFile": "d77c_2026-01_BROKERAGE.pdf"
+      "sourceFile": "d77c_2026-01_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -143,7 +167,9 @@
       "expected": 3919.83,
       "actual": 3886.346602,
       "delta": -33.48339799999985,
-      "sourceFile": "d77c_2026-02_BROKERAGE.pdf"
+      "sourceFile": "d77c_2026-02_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -154,7 +180,9 @@
       "expected": 34368.99,
       "actual": 34335.506601999994,
       "delta": -33.483398000003945,
-      "sourceFile": "d77c_2026-02_BROKERAGE.pdf"
+      "sourceFile": "d77c_2026-02_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -165,7 +193,9 @@
       "expected": 3919.83,
       "actual": 3970.9562589999996,
       "delta": 51.12625899999966,
-      "sourceFile": "d77c_2026-03_BROKERAGE.pdf"
+      "sourceFile": "d77c_2026-03_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -176,7 +206,9 @@
       "expected": 34410.18,
       "actual": 34461.306259,
       "delta": 51.126258999996935,
-      "sourceFile": "d77c_2026-03_BROKERAGE.pdf"
+      "sourceFile": "d77c_2026-03_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -187,7 +219,9 @@
       "expected": 5686.13,
       "actual": 5561.206942000001,
       "delta": -124.9230579999994,
-      "sourceFile": "e2ec_2025-10_BROKERAGE.pdf"
+      "sourceFile": "e2ec_2025-10_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -198,7 +232,9 @@
       "expected": 16869.86,
       "actual": 16744.936942,
       "delta": -124.92305800000031,
-      "sourceFile": "e2ec_2025-10_BROKERAGE.pdf"
+      "sourceFile": "e2ec_2025-10_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -209,7 +245,9 @@
       "expected": 5742.26,
       "actual": 5601.525089999999,
       "delta": -140.73491000000104,
-      "sourceFile": "e2ec_2025-11_BROKERAGE.pdf"
+      "sourceFile": "e2ec_2025-11_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -220,7 +258,9 @@
       "expected": 16917.93,
       "actual": 16777.195089999997,
       "delta": -140.73491000000286,
-      "sourceFile": "e2ec_2025-11_BROKERAGE.pdf"
+      "sourceFile": "e2ec_2025-11_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -231,7 +271,9 @@
       "expected": 5026.71,
       "actual": 4807.79068,
       "delta": -218.91931999999997,
-      "sourceFile": "e2ec_2025-12_BROKERAGE.pdf"
+      "sourceFile": "e2ec_2025-12_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -242,7 +284,9 @@
       "expected": 16202.05,
       "actual": 15983.13068,
       "delta": -218.91931999999906,
-      "sourceFile": "e2ec_2025-12_BROKERAGE.pdf"
+      "sourceFile": "e2ec_2025-12_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -253,7 +297,9 @@
       "expected": 1851.15,
       "actual": 1773.2450620000002,
       "delta": -77.9049379999999,
-      "sourceFile": "e2ec_2026-01_BROKERAGE.pdf"
+      "sourceFile": "e2ec_2026-01_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -264,7 +310,9 @@
       "expected": 24193.24,
       "actual": 24115.335062000006,
       "delta": -77.90493799999604,
-      "sourceFile": "e2ec_2026-01_BROKERAGE.pdf"
+      "sourceFile": "e2ec_2026-01_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -275,7 +323,9 @@
       "expected": 4655.51,
       "actual": 4655.52283,
       "delta": 0.012829999999667052,
-      "sourceFile": "2318_2026-06_BROKERAGE.pdf"
+      "sourceFile": "2318_2026-06_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -286,7 +336,9 @@
       "expected": 14509.7,
       "actual": 14509.71283,
       "delta": 0.012829999999667052,
-      "sourceFile": "2318_2026-06_BROKERAGE.pdf"
+      "sourceFile": "2318_2026-06_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -297,7 +349,9 @@
       "expected": 4585.02,
       "actual": 4647.89206,
       "delta": 62.87205999999969,
-      "sourceFile": "2318_2026-06_BROKERAGE.pdf"
+      "sourceFile": "2318_2026-06_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -308,7 +362,9 @@
       "expected": 14503.18,
       "actual": 14566.052060000002,
       "delta": 62.87206000000151,
-      "sourceFile": "2318_2026-06_BROKERAGE.pdf"
+      "sourceFile": "2318_2026-06_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -319,7 +375,9 @@
       "expected": 2016.6,
       "actual": 2001.2615979999998,
       "delta": -15.338402000000087,
-      "sourceFile": "2c62_2025-11_BROKERAGE.pdf"
+      "sourceFile": "2c62_2025-11_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -330,7 +388,9 @@
       "expected": 2016.65,
       "actual": 2001.3115979999998,
       "delta": -15.338402000000315,
-      "sourceFile": "2c62_2025-11_BROKERAGE.pdf"
+      "sourceFile": "2c62_2025-11_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -341,7 +401,9 @@
       "expected": 2022.53,
       "actual": 1968.0856580000002,
       "delta": -54.44434199999978,
-      "sourceFile": "2c62_2025-12_BROKERAGE.pdf"
+      "sourceFile": "2c62_2025-12_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -352,7 +414,9 @@
       "expected": 3491.9,
       "actual": 3437.4556580000003,
       "delta": -54.44434199999978,
-      "sourceFile": "2c62_2025-12_BROKERAGE.pdf"
+      "sourceFile": "2c62_2025-12_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -363,7 +427,9 @@
       "expected": 2817.58,
       "actual": 2727.8606800000002,
       "delta": -89.7193199999997,
-      "sourceFile": "2c62_2026-01_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-01_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -374,7 +440,9 @@
       "expected": 14585.51,
       "actual": 14495.790679999998,
       "delta": -89.71932000000197,
-      "sourceFile": "2c62_2026-01_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-01_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -385,7 +453,9 @@
       "expected": 6723.27,
       "actual": 6645.372891999999,
       "delta": -77.89710800000103,
-      "sourceFile": "2c62_2026-02_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-02_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -396,7 +466,9 @@
       "expected": 20805.62,
       "actual": 20727.722892,
       "delta": -77.89710799999739,
-      "sourceFile": "2c62_2026-02_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-02_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -407,7 +479,9 @@
       "expected": 7022.36,
       "actual": 7095.480681999999,
       "delta": 73.12068199999976,
-      "sourceFile": "2c62_2026-03_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-03_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -418,7 +492,9 @@
       "expected": 24192.1,
       "actual": 24265.220682000003,
       "delta": 73.12068200000431,
-      "sourceFile": "2c62_2026-03_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-03_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -429,7 +505,9 @@
       "expected": 7089.89,
       "actual": 7001.7142,
       "delta": -88.17579999999998,
-      "sourceFile": "2c62_2026-04_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-04_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -440,7 +518,9 @@
       "expected": 25219.71,
       "actual": 25131.534199999995,
       "delta": -88.17580000000453,
-      "sourceFile": "2c62_2026-04_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-04_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -451,7 +531,9 @@
       "expected": 7100.66,
       "actual": 7102.051368,
       "delta": 1.3913680000005115,
-      "sourceFile": "2c62_2026-05_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-05_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -462,7 +544,9 @@
       "expected": 25850.28,
       "actual": 25851.671367999996,
       "delta": 1.3913679999968736,
-      "sourceFile": "2c62_2026-05_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-05_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -473,7 +557,9 @@
       "expected": 9345.35,
       "actual": 9557.475480000001,
       "delta": 212.1254800000006,
-      "sourceFile": "2c62_2026-06_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-06_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -484,7 +570,9 @@
       "expected": 29048.04,
       "actual": 29260.165480000003,
       "delta": 212.12548000000243,
-      "sourceFile": "2c62_2026-06_BROKERAGE.pdf"
+      "sourceFile": "2c62_2026-06_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -495,7 +583,9 @@
       "expected": 3.96,
       "actual": 4.08,
       "delta": 0.1200000000000001,
-      "sourceFile": "9710_2024-06_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-06_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -506,7 +596,9 @@
       "expected": 0.85,
       "actual": 0.97,
       "delta": 0.12,
-      "sourceFile": "9710_2024-06_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-06_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -517,7 +609,9 @@
       "expected": 17.94,
       "actual": 18.180000000000003,
       "delta": 0.240000000000002,
-      "sourceFile": "9710_2024-07_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-07_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -528,7 +622,9 @@
       "expected": 21.85,
       "actual": 22.090000000000003,
       "delta": 0.240000000000002,
-      "sourceFile": "9710_2024-07_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-07_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -539,7 +635,9 @@
       "expected": 1.67,
       "actual": 1.7,
       "delta": 0.030000000000000027,
-      "sourceFile": "9710_2024-08_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-08_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -550,7 +648,9 @@
       "expected": 0.65,
       "actual": 0.68,
       "delta": 0.030000000000000027,
-      "sourceFile": "9710_2024-08_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-08_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -561,7 +661,9 @@
       "expected": 27.23,
       "actual": 27.35,
       "delta": 0.120000000000001,
-      "sourceFile": "9710_2024-09_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-09_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -572,7 +674,9 @@
       "expected": 27.12,
       "actual": 27.24,
       "delta": 0.11999999999999744,
-      "sourceFile": "9710_2024-09_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-09_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -583,7 +687,9 @@
       "expected": 2.07,
       "actual": 2.0900000000000003,
       "delta": 0.020000000000000462,
-      "sourceFile": "9710_2024-11_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-11_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -594,7 +700,9 @@
       "expected": 0.76,
       "actual": 0.78,
       "delta": 0.020000000000000018,
-      "sourceFile": "9710_2024-11_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-11_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -605,7 +713,9 @@
       "expected": 266.15,
       "actual": 266.27,
       "delta": 0.12000000000000455,
-      "sourceFile": "9710_2024-12_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-12_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -616,7 +726,9 @@
       "expected": 266.42,
       "actual": 266.54,
       "delta": 0.12000000000000455,
-      "sourceFile": "9710_2024-12_BROKERAGE.pdf"
+      "sourceFile": "9710_2024-12_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -627,7 +739,9 @@
       "expected": 74.91,
       "actual": 74.92999999999999,
       "delta": 0.01999999999999602,
-      "sourceFile": "9710_2025-02_BROKERAGE.pdf"
+      "sourceFile": "9710_2025-02_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -638,7 +752,9 @@
       "expected": 74.75,
       "actual": 74.77,
       "delta": 0.01999999999999602,
-      "sourceFile": "9710_2025-02_BROKERAGE.pdf"
+      "sourceFile": "9710_2025-02_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -649,7 +765,9 @@
       "expected": 74.91,
       "actual": 74.92999999999999,
       "delta": 0.01999999999999602,
-      "sourceFile": "9710_2025-02_PERFORMANCE.pdf"
+      "sourceFile": "9710_2025-02_PERFORMANCE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -660,7 +778,9 @@
       "expected": 74.75,
       "actual": 74.77,
       "delta": 0.01999999999999602,
-      "sourceFile": "9710_2025-02_PERFORMANCE.pdf"
+      "sourceFile": "9710_2025-02_PERFORMANCE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -671,7 +791,9 @@
       "expected": 79.33,
       "actual": 79.48,
       "delta": 0.15000000000000568,
-      "sourceFile": "9710_2025-03_BROKERAGE.pdf"
+      "sourceFile": "9710_2025-03_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -682,7 +804,9 @@
       "expected": 76.52,
       "actual": 76.66999999999999,
       "delta": 0.14999999999999147,
-      "sourceFile": "9710_2025-03_BROKERAGE.pdf"
+      "sourceFile": "9710_2025-03_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -693,7 +817,9 @@
       "expected": 79.33,
       "actual": 79.48,
       "delta": 0.15000000000000568,
-      "sourceFile": "9710_2025-03_PERFORMANCE.pdf"
+      "sourceFile": "9710_2025-03_PERFORMANCE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -704,7 +830,9 @@
       "expected": 76.52,
       "actual": 76.66999999999999,
       "delta": 0.14999999999999147,
-      "sourceFile": "9710_2025-03_PERFORMANCE.pdf"
+      "sourceFile": "9710_2025-03_PERFORMANCE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -715,7 +843,9 @@
       "expected": 102.82,
       "actual": 102.85,
       "delta": 0.030000000000001137,
-      "sourceFile": "9710_2025-05_BROKERAGE.pdf"
+      "sourceFile": "9710_2025-05_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -726,7 +856,9 @@
       "expected": 107.04,
       "actual": 107.07,
       "delta": 0.029999999999986926,
-      "sourceFile": "9710_2025-05_BROKERAGE.pdf"
+      "sourceFile": "9710_2025-05_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -737,7 +869,9 @@
       "expected": 102.82,
       "actual": 102.85,
       "delta": 0.030000000000001137,
-      "sourceFile": "9710_2025-05_PERFORMANCE.pdf"
+      "sourceFile": "9710_2025-05_PERFORMANCE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -748,7 +882,9 @@
       "expected": 107.04,
       "actual": 107.07,
       "delta": 0.029999999999986926,
-      "sourceFile": "9710_2025-05_PERFORMANCE.pdf"
+      "sourceFile": "9710_2025-05_PERFORMANCE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -759,7 +895,9 @@
       "expected": 164.39,
       "actual": 164.56,
       "delta": 0.17000000000001592,
-      "sourceFile": "9710_2025-06_BROKERAGE.pdf"
+      "sourceFile": "9710_2025-06_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -770,7 +908,9 @@
       "expected": 104.07,
       "actual": 104.24,
       "delta": 0.1700000000000017,
-      "sourceFile": "9710_2025-06_BROKERAGE.pdf"
+      "sourceFile": "9710_2025-06_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -781,7 +921,9 @@
       "expected": 164.39,
       "actual": 164.56,
       "delta": 0.17000000000001592,
-      "sourceFile": "9710_2025-06_PERFORMANCE.pdf"
+      "sourceFile": "9710_2025-06_PERFORMANCE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -792,7 +934,9 @@
       "expected": 104.07,
       "actual": 104.24,
       "delta": 0.1700000000000017,
-      "sourceFile": "9710_2025-06_PERFORMANCE.pdf"
+      "sourceFile": "9710_2025-06_PERFORMANCE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -803,7 +947,9 @@
       "expected": 1987.7,
       "actual": 1988,
       "delta": 0.2999999999999545,
-      "sourceFile": "9710_2025-10_BROKERAGE.pdf"
+      "sourceFile": "9710_2025-10_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -814,7 +960,9 @@
       "expected": 1980.01,
       "actual": 1980.31,
       "delta": 0.2999999999999545,
-      "sourceFile": "9710_2025-10_BROKERAGE.pdf"
+      "sourceFile": "9710_2025-10_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -825,7 +973,9 @@
       "expected": 1987.7,
       "actual": 1988,
       "delta": 0.2999999999999545,
-      "sourceFile": "9710_2025-10_PERFORMANCE.pdf"
+      "sourceFile": "9710_2025-10_PERFORMANCE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -836,7 +986,9 @@
       "expected": 1980.01,
       "actual": 1980.31,
       "delta": 0.2999999999999545,
-      "sourceFile": "9710_2025-10_PERFORMANCE.pdf"
+      "sourceFile": "9710_2025-10_PERFORMANCE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -847,7 +999,9 @@
       "expected": 12.72,
       "actual": 13.19,
       "delta": 0.46999999999999886,
-      "sourceFile": "9710_2026-04_BROKERAGE.pdf"
+      "sourceFile": "9710_2026-04_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -858,7 +1012,9 @@
       "expected": 26.86,
       "actual": 27.33,
       "delta": 0.46999999999999886,
-      "sourceFile": "9710_2026-04_BROKERAGE.pdf"
+      "sourceFile": "9710_2026-04_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -869,7 +1025,9 @@
       "expected": 21.76,
       "actual": 23.79,
       "delta": 2.0299999999999976,
-      "sourceFile": "9710_2026-05_BROKERAGE.pdf"
+      "sourceFile": "9710_2026-05_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -880,7 +1038,9 @@
       "expected": 19.69,
       "actual": 21.72,
       "delta": 2.0299999999999976,
-      "sourceFile": "9710_2026-05_BROKERAGE.pdf"
+      "sourceFile": "9710_2026-05_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -891,7 +1051,9 @@
       "expected": 40.9,
       "actual": 81.8,
       "delta": 40.9,
-      "sourceFile": "d6d9_2026-04_BROKERAGE.pdf"
+      "sourceFile": "d6d9_2026-04_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -902,7 +1064,9 @@
       "expected": 4.43,
       "actual": 45.33,
       "delta": 40.9,
-      "sourceFile": "d6d9_2026-04_BROKERAGE.pdf"
+      "sourceFile": "d6d9_2026-04_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -913,7 +1077,9 @@
       "expected": 8529.39,
       "actual": 8529.490000000002,
       "delta": 0.10000000000218279,
-      "sourceFile": "1f9a_2026-01_BROKERAGE.pdf"
+      "sourceFile": "1f9a_2026-01_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "statement-arithmetic",
@@ -924,7 +1090,9 @@
       "expected": 8501.65,
       "actual": 8501.750000000004,
       "delta": 0.10000000000400178,
-      "sourceFile": "1f9a_2026-01_BROKERAGE.pdf"
+      "sourceFile": "1f9a_2026-01_BROKERAGE.pdf",
+      "acknowledged": false,
+      "reason": null
     },
     {
       "check": "cross-document",
@@ -935,7 +1103,9 @@
       "expected": 12000,
       "actual": 11984.22,
       "delta": -15.780000000000655,
-      "sourceFile": "d6d9_2025-11_PERFORMANCE.pdf"
+      "sourceFile": "d6d9_2025-11_PERFORMANCE.pdf",
+      "acknowledged": true,
+      "reason": "The account's first-ever statement, funded mid-period with a $12,000 deposit; the printed Change in Market Value is $0.00, but the securities it bought were actually worth $15.78 less by period end (bought for $11,953.48 net of fees, closed at a portfolio value of $11,937.70). The statement's own start/deposits/withdrawals/change-in-market-value/end row does not reconcile ($12,000.00 derived versus $11,984.22 printed) -- Wealthsimple's Change in Market Value figure does not capture the intra-period revaluation of a position opened and revalued within the same period. Not a parser defect: every input number is read correctly from the page."
     },
     {
       "check": "style-drift",
@@ -946,7 +1116,9 @@
       "expected": null,
       "actual": null,
       "delta": null,
-      "sourceFile": "9710_2026-06_BROKERAGE.pdf"
+      "sourceFile": "9710_2026-06_BROKERAGE.pdf",
+      "acknowledged": true,
+      "reason": "A real, owner-initiated product change, not a parser defect: this TFSA moved from self-directed to a Wealthsimple Managed portfolio. Its history reads Tax-Free Savings Account (self-directed) -> Tax-Free Savings Managed Cash Account -> Managed TFSA Account."
     },
     {
       "check": "ground-truth",
@@ -957,7 +1129,9 @@
       "expected": 242019.61,
       "actual": 241739.66999999995,
       "delta": -279.94000000003143,
-      "sourceFile": ""
+      "sourceFile": "",
+      "acknowledged": true,
+      "reason": "WSE401 carries a pending valuation at its $10.00 purchase price; the app shows the finalised NAV. Accounts for the whole $279.94 delta if the NAV is $10.2254."
     },
     {
       "check": "ingest",
@@ -968,7 +1142,9 @@
       "expected": null,
       "actual": null,
       "delta": null,
-      "sourceFile": "d6d9_person-008AocPsEJh4_2026-06_v_0.pdf"
+      "sourceFile": "d6d9_person-008AocPsEJh4_2026-06_v_0.pdf",
+      "acknowledged": false,
+      "reason": null
     }
   ]
 }

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { readdir } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { isAcknowledged } from "./corrections";
+import { acknowledgementFor, isAcknowledged } from "./corrections";
 import { extractXml } from "./ingest/extract";
 import { parseGeometry } from "./ingest/geometry";
 import { parseStatement } from "./ingest/parse";
@@ -14,7 +14,7 @@ import { buildRegistry } from "./store/registry";
 import { OBSERVATIONS } from "./truth";
 import type { Statement } from "./types";
 import { runChecks } from "./validate/checks";
-import type { Finding, ReconciliationReport } from "./validate/report";
+import type { Finding, ReconciliationReport, ReportedFinding } from "./validate/report";
 
 const SOURCE = process.env.STATEMENTS_DIR ?? join(homedir(), "Downloads", "monthly_pdf_statements");
 const CACHE = join(import.meta.dir, "..", ".cache");
@@ -230,6 +230,18 @@ export function maskFinding(finding: Finding): Finding {
   return masked;
 }
 
+/**
+ * Attaches the acknowledgement state to a finding, so `reconciliation.json`
+ * carries it and the dashboard never has to import `corrections.ts` and
+ * repeat the match. No figure is touched: an acknowledged finding keeps its
+ * expected, actual and delta exactly as the check computed them, because an
+ * acknowledgement explains a discrepancy rather than cancelling it.
+ */
+export function annotateFinding(finding: Finding): ReportedFinding {
+  const ack = acknowledgementFor(finding.check, finding.accountShortId, finding.period);
+  return { ...finding, acknowledged: ack !== undefined, reason: ack?.reason ?? null };
+}
+
 /** Raw account numbers for accounts that count toward investment totals. */
 export function countedAccountNumbers(
   statements: readonly Statement[],
@@ -263,7 +275,7 @@ if (import.meta.main) {
   const report: ReconciliationReport = {
     generated,
     statementCount: statements.length,
-    findings: findings.map(maskFinding),
+    findings: findings.map(maskFinding).map(annotateFinding),
   };
 
   await Bun.write(
