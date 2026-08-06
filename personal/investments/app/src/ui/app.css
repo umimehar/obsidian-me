@@ -23,15 +23,23 @@ summary {
 }
 
 /*
- * Reduced motion means no motion, not faster motion. The <details> marker
- * rotation is the only animation the browser adds on its own here.
+ * Reduced motion means no motion, not faster motion, so this removes the
+ * animation rather than shortening it. The usual snippet sets a 0.01ms
+ * duration on everything, which is the opposite of what its own comment
+ * claims and still animates.
+ *
+ * Scoped to the disclosures rather than `*`: they are the only thing on this
+ * page the browser animates on its own (the marker rotation). Every other
+ * animation here is motion's, and `useCardMotion` and `useRevealMotion`
+ * already skip those from the same preference.
  */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  details,
+  details *,
+  summary,
+  summary::marker,
+  summary::-webkit-details-marker {
+    animation: none !important;
+    transition: none !important;
   }
 }
