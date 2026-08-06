@@ -72,7 +72,9 @@ function GroupCard({ group, grandTotalValue, animate }: GroupCardProps) {
     >
       <Card mb="3">
         <Flex justify="between" align="baseline" mb="2">
-          <Heading size="3">{group.label}</Heading>
+          <Heading size="3" as="h3">
+            {group.label}
+          </Heading>
           <Text size="2" color="gray">
             {group.accounts.length} {group.accounts.length === 1 ? "account" : "accounts"}
           </Text>
@@ -120,10 +122,14 @@ export function Overview({ analytics }: OverviewProps) {
   return (
     <Flex direction="column" gap="4">
       <Flex direction="column" gap="1">
-        <Text size="2" color="gray">
+        {/* The heading is the label, not the figure. A screen reader's heading
+            list is a table of contents, and "$241,739.67" is not a section name. */}
+        <Heading size="2" as="h2" color="gray" weight="regular">
           Portfolio total{period !== null ? ` as of ${period}` : ""}
+        </Heading>
+        <Text size="8" weight="bold" data-portfolio-total="">
+          {formatCurrency(total)}
         </Text>
-        <Heading size="8">{formatCurrency(total)}</Heading>
       </Flex>
       <ValueOverTime series={analytics.series} />
       <LensToggle lens={lens} onLensChange={setLens} />

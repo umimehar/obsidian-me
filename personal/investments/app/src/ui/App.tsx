@@ -1,8 +1,10 @@
-import { Flex, Theme } from "@radix-ui/themes";
+import { Button, Flex, Heading, Theme } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
 import { Overview } from "./Overview";
-import { loadAnalytics } from "./data";
+import { Reconciliation } from "./Reconciliation";
+import { loadAnalytics, loadReconciliation } from "./data";
+import { ErrorBoundary } from "./states/ErrorBoundary";
 import { RegisteredView } from "./wrappers/RegisteredView";
 import { TaxView } from "./wrappers/TaxView";
 import { YearSelect } from "./wrappers/YearSelect";
@@ -32,14 +34,34 @@ function yearsCovered(analytics: AnalyticsOutput): number[] {
     .sort((a, b) => a - b);
 }
 
+/**
+ * Everything that reads a committed artifact. It is a separate component
+ * from `App` so that `ErrorBoundary` sits above the code that parses, and a
+ * malformed `analytics.json` renders the rebuild instructions rather than
+ * unmounting the whole page.
+ */
+function Dashboard() {
+  const analytics = loadAnalytics();
+  const report = loadReconciliation();
+  const years = yearsCovered(analytics);
+  const latestYear = years[years.length - 1] ?? new Date().getUTCFullYear();
+  const [year, setYear] = useState(latestYear);
+
+  return (
+    <Flex direction="column" gap="6">
+      <Overview analytics={analytics} />
+      <YearSelect years={years} year={year} onYearChange={setYear} />
+      <RegisteredView analytics={analytics} year={year} />
+      <TaxView analytics={analytics} year={year} />
+      <Reconciliation report={report} />
+    </Flex>
+  );
+}
+
 export function App() {
   const [appearance, setAppearance] = useState<Appearance>("inherit");
   const systemAppearance = useSystemAppearance();
   const effectiveAppearance = appearance === "inherit" ? systemAppearance : appearance;
-  const analytics = loadAnalytics();
-  const years = yearsCovered(analytics);
-  const latestYear = years[years.length - 1] ?? new Date().getUTCFullYear();
-  const [year, setYear] = useState(latestYear);
 
   function toggleAppearance() {
     setAppearance(effectiveAppearance === "light" ? "dark" : "light");
@@ -47,16 +69,18 @@ export function App() {
 
   return (
     <Theme appearance={appearance} accentColor="jade" grayColor="slate" radius="large">
-      <main style={{ padding: "3rem", maxWidth: "40rem", margin: "0 auto" }}>
-        <button type="button" onClick={toggleAppearance}>
-          {effectiveAppearance === "light" ? "Switch to dark" : "Switch to light"}
-        </button>
-        <Flex direction="column" gap="6">
-          <Overview analytics={analytics} />
-          <YearSelect years={years} year={year} onYearChange={setYear} />
-          <RegisteredView analytics={analytics} year={year} />
-          <TaxView analytics={analytics} year={year} />
+      <main style={{ padding: "3rem", maxWidth: "48rem", margin: "0 auto" }}>
+        <Flex justify="between" align="center" gap="3" mb="5" wrap="wrap">
+          <Heading size="6" as="h1">
+            Investments
+          </Heading>
+          <Button variant="soft" color="gray" onClick={toggleAppearance}>
+            {effectiveAppearance === "light" ? "Switch to dark" : "Switch to light"}
+          </Button>
         </Flex>
+        <ErrorBoundary>
+          <Dashboard />
+        </ErrorBoundary>
       </main>
     </Theme>
   );

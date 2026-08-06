@@ -147,7 +147,9 @@ export function RoomBar({ line, contributionsSource }: RoomBarProps) {
     <Card mb="3" data-room-line={line.group}>
       <Flex direction="column" gap="2">
         <Flex justify="between" align="center" gap="2" wrap="wrap">
-          <Heading size="3">{line.group}</Heading>
+          <Heading size="3" as="h3">
+            {line.group}
+          </Heading>
           <Flex gap="2">
             {line.assessed ? (
               <Badge color="jade" variant="soft">

@@ -1,0 +1,37 @@
+/*
+ * The only stylesheet the app owns. Radix Themes handles everything its own
+ * components render; what is left is the native elements this app uses
+ * directly, which means the <details>/<summary> disclosures in the
+ * reconciliation view.
+ */
+
+/*
+ * The browser's default focus ring on <summary> is a 1px system blue that
+ * does not track the theme, so in dark mode it sits at roughly 3:1 against
+ * the background. This uses the accent token instead, which Radix redefines
+ * per appearance, so the ring stays visible in both.
+ */
+summary:focus-visible {
+  outline: 2px solid var(--focus-8);
+  outline-offset: 2px;
+  border-radius: var(--radius-2);
+}
+
+/* The marker is the affordance; without a pointer cursor the group reads as static text. */
+summary {
+  cursor: pointer;
+}
+
+/*
+ * Reduced motion means no motion, not faster motion. The <details> marker
+ * rotation is the only animation the browser adds on its own here.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

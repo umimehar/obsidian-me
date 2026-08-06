@@ -70,7 +70,9 @@ export function TaxView({ analytics, year }: TaxViewProps) {
     // real position rather than as data that is not there.
     return (
       <Flex direction="column" gap="3">
-        <Heading size="5">Personal taxable income, {year}</Heading>
+        <Heading size="5" as="h2">
+          Personal taxable income, {year}
+        </Heading>
         <Card>
           <Text size="2" color="gray">
             No income data for {year}.
@@ -84,7 +86,9 @@ export function TaxView({ analytics, year }: TaxViewProps) {
 
   return (
     <Flex direction="column" gap="3">
-      <Heading size="5">Personal taxable income, {year}</Heading>
+      <Heading size="5" as="h2">
+        Personal taxable income, {year}
+      </Heading>
 
       <Card data-tax-income="">
         <Row hook="interest" label="Interest" value={formatCurrency(income.interest)} />

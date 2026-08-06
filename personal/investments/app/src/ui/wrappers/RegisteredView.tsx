@@ -20,7 +20,9 @@ export function RegisteredView({ analytics, year }: RegisteredViewProps) {
 
   return (
     <Flex direction="column" gap="2">
-      <Heading size="5">Registered wrappers, {year}</Heading>
+      <Heading size="5" as="h2">
+        Registered wrappers, {year}
+      </Heading>
       {lines.length === 0 ? (
         <Text size="2" color="gray">
           No registered wrapper has a statement for {year}.

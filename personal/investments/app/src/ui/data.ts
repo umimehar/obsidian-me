@@ -1,6 +1,8 @@
 import rawAnalytics from "@data/analytics.json";
+import rawReconciliation from "@data/reconciliation.json";
 import type { AnalyticsOutput } from "../analytics/build";
 import type { Lens } from "../analytics/rollup";
+import type { ReconciliationReport, ReportedFinding } from "../validate/report";
 
 const LENSES: readonly Lens[] = ["registration", "account", "purpose"];
 
@@ -36,6 +38,62 @@ export function parseAnalytics(raw: unknown): AnalyticsOutput {
 /** The real committed payload, parsed once at module load. */
 export function loadAnalytics(): AnalyticsOutput {
   return parseAnalytics(rawAnalytics);
+}
+
+/** A figure a check could not compute stays null; it must never arrive as a zero. */
+function isNumberOrNull(value: unknown): boolean {
+  return value === null || typeof value === "number";
+}
+
+/**
+ * A finding is only usable by the reconciliation view once it carries its
+ * acknowledgement state, which `annotateFinding` in `build.ts` writes. A
+ * report predating that stage would otherwise render every acknowledged
+ * finding as an unexplained discrepancy, so the missing field is an error
+ * rather than a default.
+ */
+function isReportedFinding(value: unknown): value is ReportedFinding {
+  if (typeof value !== "object" || value === null) return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.check === "string" &&
+    typeof candidate.severity === "string" &&
+    typeof candidate.accountShortId === "string" &&
+    typeof candidate.period === "string" &&
+    typeof candidate.message === "string" &&
+    typeof candidate.sourceFile === "string" &&
+    isNumberOrNull(candidate.expected) &&
+    isNumberOrNull(candidate.actual) &&
+    isNumberOrNull(candidate.delta) &&
+    typeof candidate.acknowledged === "boolean" &&
+    (candidate.reason === null || typeof candidate.reason === "string")
+  );
+}
+
+export function parseReconciliation(raw: unknown): ReconciliationReport {
+  if (typeof raw !== "object" || raw === null) {
+    throw new Error("reconciliation.json is not an object; run bun run build");
+  }
+  const { generated, statementCount, findings } = raw as Record<string, unknown>;
+  if (typeof generated !== "string" || typeof statementCount !== "number") {
+    throw new Error(
+      "reconciliation.json is missing generated or statementCount; run bun run build",
+    );
+  }
+  if (!Array.isArray(findings)) {
+    throw new Error("reconciliation.json is missing its findings array; run bun run build");
+  }
+  if (!findings.every(isReportedFinding)) {
+    throw new Error(
+      "reconciliation.json has a finding without its acknowledged/reason fields; run bun run build",
+    );
+  }
+  return { generated, statementCount, findings };
+}
+
+/** The real committed reconciliation report, parsed on every call. */
+export function loadReconciliation(): ReconciliationReport {
+  return parseReconciliation(rawReconciliation);
 }
 
 /**

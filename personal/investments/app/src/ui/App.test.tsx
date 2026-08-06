@@ -11,9 +11,15 @@ function roomCard(group: string) {
 describe("App", () => {
   test("renders the overview, the registered wrappers and the tax view together", () => {
     render(<App />);
-    expect(screen.getByText("$241,739.67")).toBeDefined();
+    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");
     expect(document.querySelectorAll("[data-room-line]").length).toBe(4);
     expect(document.querySelector("[data-tax-income]")).not.toBeNull();
+  });
+
+  test("the reconciliation view renders beneath the figures it reconciles", () => {
+    render(<App />);
+    expect(document.querySelector("[data-recon-ground-truth]")).not.toBeNull();
+    expect(document.querySelectorAll("[data-finding-row]").length).toBe(88);
   });
 
   test("the year control drives both the room lines and the tax figures", () => {
