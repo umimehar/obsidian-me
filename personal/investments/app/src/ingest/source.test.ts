@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { parseSourceFilename } from "./source";
+import { type Page, parseGeometry } from "./geometry";
+import { detectTemplate, parseSourceFilename } from "./source";
 
 describe("parseSourceFilename", () => {
   test("reads account, period and template", () => {
@@ -9,6 +10,7 @@ describe("parseSourceFilename", () => {
       period: "2026-06",
       template: "BROKERAGE",
       version: 0,
+      templateStated: true,
     });
   });
 
@@ -39,5 +41,59 @@ describe("parseSourceFilename", () => {
     expect(v?.period).toBe("2026-06");
     expect(v?.template).toBe("BROKERAGE");
     expect(v?.version).toBe(2);
+  });
+
+  test("reads a fresh Wealthsimple download, which carries no template segment", () => {
+    // This is what a statement actually downloads as, one at a time, from the
+    // app -- unlike the renamed bulk-export form every other test here uses.
+    const p = parseSourceFilename("WK63GZF41CAD_person-008AocPsEJh4_2026-06_v_0.pdf");
+    expect(p?.accountNo).toBe("WK63GZF41CAD");
+    expect(p?.period).toBe("2026-06");
+    expect(p?.version).toBe(0);
+    expect(p?.templateStated).toBe(false);
+  });
+
+  test("rejects a malformed fresh-download period or a missing version", () => {
+    expect(parseSourceFilename("WK63GZF41CAD_person-008AocPsEJh4_2026-13_v_0.pdf")).toBeNull();
+    expect(parseSourceFilename("WK63GZF41CAD_person-008AocPsEJh4_2026-06.pdf")).toBeNull();
+    expect(parseSourceFilename("WK63GZF41CAD_person-008AocPsEJh4_2026-06_v_.pdf")).toBeNull();
+  });
+
+  test("marks a filename that does state a template", () => {
+    expect(parseSourceFilename("ACCT0002CAD_2026-06_BROKERAGE.pdf")?.templateStated).toBe(true);
+  });
+});
+
+/** Builds a synthetic single-word page, enough for a `findRow` regex match. */
+function pageWithText(text: string): Page {
+  const xml = `<page width="612" height="792">
+    <word xMin="10" yMin="10" xMax="200" yMax="20">${text}</word>
+  </page>`;
+  const [page] = parseGeometry(xml);
+  if (!page) throw new Error("test fixture failed to produce a page");
+  return page;
+}
+
+describe("detectTemplate", () => {
+  test("reads PERFORMANCE from the money-weighted return rates marker", () => {
+    expect(detectTemplate([pageWithText("Money-weighted Return Rates")])).toBe("PERFORMANCE");
+  });
+
+  test("reads CASH from the monthly statement marker on the first page only", () => {
+    expect(detectTemplate([pageWithText("Monthly Statement")])).toBe("CASH");
+    // A later page calling itself a monthly statement does not count -- only
+    // page one is trusted, matching how the real CASH template is worded.
+    expect(
+      detectTemplate([pageWithText("Account Summary"), pageWithText("Monthly Statement")]),
+    ).toBeNull();
+  });
+
+  test("reads BROKERAGE from either the managed or order-execution-only marker", () => {
+    expect(detectTemplate([pageWithText("Managed Account")])).toBe("BROKERAGE");
+    expect(detectTemplate([pageWithText("Order Execution Only Account")])).toBe("BROKERAGE");
+  });
+
+  test("returns null when no marker is present, rather than guessing", () => {
+    expect(detectTemplate([pageWithText("Some Unrelated Page")])).toBeNull();
   });
 });
