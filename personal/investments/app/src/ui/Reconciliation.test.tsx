@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { render, screen, within } from "@testing-library/react";
-import type { ReconciliationReport } from "../validate/report";
+import type { ReconciliationReport, ReportedFinding } from "../validate/report";
 import { Reconciliation } from "./Reconciliation";
 import { loadReconciliation } from "./data";
 
@@ -27,6 +27,27 @@ function group(check: string) {
 
 function emptyReport(): ReconciliationReport {
   return { generated: "2026-08-06T00:00:00.000Z", statementCount: 0, findings: [] };
+}
+
+function reportWith(...findings: ReportedFinding[]): ReconciliationReport {
+  return { ...emptyReport(), statementCount: 220, findings };
+}
+
+/** The real ground-truth line's figures, with no corrections.ts entry behind them yet. */
+function unacknowledgedGroundTruth(): ReportedFinding {
+  return {
+    check: "ground-truth",
+    severity: "warning",
+    accountShortId: "*",
+    period: "2026-07",
+    message: "account value on 2026-07-31 versus the app",
+    expected: 242019.61,
+    actual: 241739.67,
+    delta: -279.94,
+    sourceFile: "",
+    acknowledged: false,
+    reason: null,
+  };
 }
 
 describe("Reconciliation, the ground-truth headline", () => {
@@ -62,6 +83,24 @@ describe("Reconciliation, the ground-truth headline", () => {
   test("says the explanation is untested rather than presenting it as settled", () => {
     renderReal();
     expect(region("ground-truth").getByText(/not been tested/i)).toBeDefined();
+  });
+
+  test("an unacknowledged difference says no reason is on record, not that one is", () => {
+    // The owner adds an observation to truth.ts before writing the matching
+    // corrections.ts entry. A card that still said "the reason above is on
+    // record" would turn no explanation at all into an unproven explanation,
+    // which is the exact inversion this whole view exists to prevent.
+    render(
+      <Theme>
+        <Reconciliation report={reportWith(unacknowledgedGroundTruth())} />
+      </Theme>,
+    );
+    const truth = region("ground-truth");
+    expect(truth.getByText("-$279.94")).toBeDefined();
+    expect(truth.getByText(/no reason is on record/i)).toBeDefined();
+    expect(truth.queryByText(/reason above is on record/i)).toBeNull();
+    expect(truth.queryByText(/not been tested/i)).toBeNull();
+    expect(document.querySelector("[data-recon-reason]")).toBeNull();
   });
 
   test("says so plainly when the report carries no ground-truth observation", () => {

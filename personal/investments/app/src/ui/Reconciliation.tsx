@@ -94,11 +94,24 @@ function GroundTruth({ finding }: { finding: ReportedFinding }) {
           <FigureRow label="The app showed" value={finding.expected} />
         )}
         {finding.delta === null ? null : <FigureRow label="Difference" value={finding.delta} />}
-        {finding.reason === null ? null : <Reason reason={finding.reason} />}
-        <Text size="1" color="gray">
-          The reason above is on record, not proven. It has not been tested against an amended
-          statement, so the difference stands.
-        </Text>
+        {/* The caveat belongs INSIDE this branch. Outside it, a difference with
+            no corrections.ts entry behind it would still read "the reason above
+            is on record", turning no explanation at all into an unproven one --
+            the exact inversion this view exists to prevent. */}
+        {finding.reason === null ? (
+          <Text size="1" color="gray">
+            No reason is on record for this difference. Add one to corrections.ts once you know what
+            causes it.
+          </Text>
+        ) : (
+          <>
+            <Reason reason={finding.reason} />
+            <Text size="1" color="gray">
+              The reason above is on record, not proven. It has not been tested against an amended
+              statement, so the difference stands.
+            </Text>
+          </>
+        )}
       </Flex>
     </Card>
   );
