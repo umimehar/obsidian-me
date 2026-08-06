@@ -1,5 +1,10 @@
 import { Badge, Card, Flex, Heading, Progress, Text } from "@radix-ui/themes";
-import type { LifetimePosition, RespGrantPosition, RoomLine } from "../../analytics/rooms";
+import type {
+  LifetimePosition,
+  RegisteredGroup,
+  RespGrantPosition,
+  RoomLine,
+} from "../../analytics/rooms";
 import { formatCurrency } from "../format";
 import type { ContributionsSource } from "./roomSource";
 
@@ -45,10 +50,18 @@ function AnnualLimit({ line }: { line: RoomLine }) {
     );
   }
 
-  return <AssessedLimit limit={line.limit} used={line.used} remaining={line.remaining} />;
+  return (
+    <AssessedLimit
+      group={line.group}
+      limit={line.limit}
+      used={line.used}
+      remaining={line.remaining}
+    />
+  );
 }
 
 interface AssessedLimitProps {
+  group: RegisteredGroup;
   limit: number;
   used: number;
   remaining: number | null;
@@ -60,12 +73,12 @@ interface AssessedLimitProps {
  * ever renders a negative remaining. The fill is clamped for the same
  * reason -- a bar past its own end says nothing the excess line does not.
  */
-function AssessedLimit({ limit, used, remaining }: AssessedLimitProps) {
+function AssessedLimit({ group, limit, used, remaining }: AssessedLimitProps) {
   const fill = limit > 0 ? Math.min(100, Math.max(0, (used / limit) * 100)) : 0;
 
   return (
     <Flex direction="column" gap="1">
-      <Progress value={fill} />
+      <Progress value={fill} aria-label={`${group} room used`} />
       {remaining === null ? null : <AssessedRemaining limit={limit} remaining={remaining} />}
     </Flex>
   );

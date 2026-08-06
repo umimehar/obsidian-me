@@ -15,16 +15,10 @@ export interface TaxViewProps {
  */
 const ESTIMATE_RATE = 0.3;
 
-const ZERO_INCOME: IncomeSummary = {
-  interest: 0,
-  eligibleDividends: 0,
-  foreignIncome: 0,
-  realizedGains: 0,
-};
-
-function Row({ label, value }: { label: string; value: string }) {
+/** `data-tax-row` is a stable test hook, not styling -- it is what lets a test pin one figure rather than one of several equal-looking ones. */
+function Row({ label, value, hook }: { label: string; value: string; hook: string }) {
   return (
-    <Flex justify="between" align="baseline" py="1">
+    <Flex justify="between" align="baseline" py="1" data-tax-row={hook}>
       <Text size="2" color="gray">
         {label}
       </Text>
@@ -40,7 +34,7 @@ function Row({ label, value }: { label: string; value: string }) {
  */
 function RealizedRow({ realizedGains }: { realizedGains: number }) {
   return (
-    <Flex justify="between" align="baseline" py="1">
+    <Flex justify="between" align="baseline" py="1" data-tax-row="realized">
       <Text size="2" color="gray">
         {realizedGains < 0 ? "Realized loss" : "Realized gains"}
       </Text>
@@ -67,8 +61,25 @@ function rrspContributedIn(analytics: AnalyticsOutput, year: number): number {
  * footnote a reader can scroll past.
  */
 export function TaxView({ analytics, year }: TaxViewProps) {
-  const income = analytics.income[String(year)] ?? ZERO_INCOME;
+  const income = analytics.income[String(year)];
   const rrspContributed = rrspContributedIn(analytics, year);
+
+  if (income === undefined) {
+    // A year can reach here with room lines but no income entry, since the
+    // year control is driven by the rooms map. Four zeros would read as a
+    // real position rather than as data that is not there.
+    return (
+      <Flex direction="column" gap="3">
+        <Heading size="5">Personal taxable income, {year}</Heading>
+        <Card>
+          <Text size="2" color="gray">
+            No income data for {year}.
+          </Text>
+        </Card>
+      </Flex>
+    );
+  }
+
   const estimate = estimateTax(income, rrspContributed, ESTIMATE_RATE);
 
   return (
@@ -76,16 +87,33 @@ export function TaxView({ analytics, year }: TaxViewProps) {
       <Heading size="5">Personal taxable income, {year}</Heading>
 
       <Card data-tax-income="">
-        <Row label="Interest" value={formatCurrency(income.interest)} />
-        <Row label="Canadian eligible dividends" value={formatCurrency(income.eligibleDividends)} />
-        <Row label="Foreign income" value={formatCurrency(income.foreignIncome)} />
+        <Row hook="interest" label="Interest" value={formatCurrency(income.interest)} />
+        <Row
+          hook="eligible-dividends"
+          label="Canadian eligible dividends"
+          value={formatCurrency(income.eligibleDividends)}
+        />
+        <Row
+          hook="foreign-income"
+          label="Foreign income"
+          value={formatCurrency(income.foreignIncome)}
+        />
         <RealizedRow realizedGains={income.realizedGains} />
       </Card>
 
       <Card data-tax-estimate="">
-        <Row label="RRSP contributed this year" value={formatCurrency(estimate.rrspDeduction)} />
-        <Row label="Taxable income" value={formatCurrency(estimate.taxableIncome)} />
         <Row
+          hook="rrsp-deduction"
+          label="RRSP contributed this year"
+          value={formatCurrency(estimate.rrspDeduction)}
+        />
+        <Row
+          hook="taxable-income"
+          label="Taxable income"
+          value={formatCurrency(estimate.taxableIncome)}
+        />
+        <Row
+          hook="estimated-tax"
           label={`Estimated tax at a flat ${Math.round(ESTIMATE_RATE * 100)}% rate`}
           value={formatCurrency(estimate.estimatedTax)}
         />

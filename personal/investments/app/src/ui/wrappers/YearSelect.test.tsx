@@ -12,11 +12,16 @@ function renderSelect(onYearChange: (year: number) => void = () => {}) {
 }
 
 describe("YearSelect", () => {
-  test("offers every year it is given, newest last", () => {
+  test("offers every year it is given, in the order it is given, newest last", () => {
     renderSelect();
-    for (const year of ["2023", "2024", "2025", "2026"]) {
-      expect(screen.getByRole("radio", { name: year })).toBeDefined();
-    }
+    // By accessible name and DOM position, so a reversed list fails rather
+    // than passing on mere presence. Radix prints each label twice, the second
+    // copy aria-hidden, which is why textContent is not what is compared.
+    const radios = screen.getAllByRole("radio");
+    const positions = ["2023", "2024", "2025", "2026"].map((year) =>
+      radios.indexOf(screen.getByRole("radio", { name: year })),
+    );
+    expect(positions).toEqual([0, 1, 2, 3]);
   });
 
   test("reports the picked year back as a number", () => {

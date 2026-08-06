@@ -38,10 +38,22 @@ describe("RegisteredView", () => {
     renderYear(2026);
     const tfsa = card("TFSA");
     expect(within(tfsa).getByText("$7,000.00")).toBeDefined();
+    expect(within(tfsa).getByText(/Against the \$7,000\.00 annual maximum/)).toBeDefined();
     expect(within(tfsa).getByText(/carry-forward not visible/i)).toBeDefined();
     expect(tfsa.querySelectorAll('[role="progressbar"]').length).toBe(0);
     expect(within(tfsa).queryByText(/%/)).toBeNull();
     expect(within(tfsa).queryByText(/\bremaining\b/i)).toBeNull();
+  });
+
+  test("the real 2026 FHSA pairs an uncertain annual line with a real lifetime one", () => {
+    renderYear(2026);
+    const fhsa = card("FHSA");
+    expect(within(fhsa).getByText("$8,000.00")).toBeDefined();
+    expect(within(fhsa).getByText(/Against the \$8,000\.00 annual maximum/)).toBeDefined();
+    expect(within(fhsa).getByText(/carry-forward not visible/i)).toBeDefined();
+    expect(fhsa.querySelectorAll('[role="progressbar"]').length).toBe(0);
+    expect(within(fhsa).getByText(/\$24,000\.00 of \$40,000\.00/)).toBeDefined();
+    expect(within(fhsa).getByText(/\$16,000\.00 remaining/)).toBeDefined();
   });
 
   test("the real 2025 TFSA is over its annual maximum and still renders no negative", () => {
@@ -56,10 +68,20 @@ describe("RegisteredView", () => {
   test("the real 2026 RRSP shows its assessed remaining and says where the figure came from", () => {
     renderYear(2026);
     const rrsp = card("RRSP");
-    expect(within(rrsp).getByText(/\$37,752\.00 remaining/)).toBeDefined();
+    expect(within(rrsp).getByText(/\$37,752\.00 remaining of \$70,752\.00/)).toBeDefined();
     expect(within(rrsp).getByText(/notice of assessment/i)).toBeDefined();
     expect(within(rrsp).getByText(/\$13,600\.00.*spousal/i)).toBeDefined();
     expect(within(rrsp).getByText(/counts against your own room/i)).toBeDefined();
+  });
+
+  test("the one fill the corpus permits reads the true share, not its inverse", () => {
+    renderYear(2026);
+    // 33,000 of 70,752 assessed room is 47%, and 53% is what an inverted fill
+    // would show. This is the only percentage in the whole view.
+    const fill = card("RRSP").querySelector('[role="progressbar"]');
+    if (fill === null) throw new Error("expected the assessed RRSP line to render a fill");
+    expect(fill.getAttribute("aria-valuetext")).toBe("47%");
+    expect(fill.getAttribute("aria-label")).toBe("RRSP room used");
   });
 
   test("the real 2026 RESP has no annual limit, a lifetime position and a CESG line", () => {

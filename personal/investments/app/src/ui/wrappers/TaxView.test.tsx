@@ -24,6 +24,12 @@ function section(name: string) {
   return node as HTMLElement;
 }
 
+function row(name: string) {
+  const node = document.querySelector(`[data-tax-row="${name}"]`);
+  if (node === null) throw new Error(`expected the ${name} row to render`);
+  return within(node as HTMLElement);
+}
+
 describe("TaxView", () => {
   test("shows the real 2026 income split by type", () => {
     renderYear(2026);
@@ -58,6 +64,30 @@ describe("TaxView", () => {
     const estimate = within(section("estimate"));
     expect(estimate.getByText(/not a filing figure/i)).toBeDefined();
     expect(estimate.getByText(/estimated tax/i)).toBeDefined();
+  });
+
+  test("the estimate itself is a real figure, at the rate the page states", () => {
+    renderYear(2026);
+    // Gross 2026 investment income is negative once the realized loss lands, so
+    // the taxable figure floors at zero and the tax with it. Both are asserted
+    // per row: a fabricated tax bill beside a not-for-filing disclaimer is the
+    // worst thing this view could print.
+    expect(row("taxable-income").getByText("$0.00")).toBeDefined();
+    expect(row("estimated-tax").getByText("$0.00")).toBeDefined();
+    expect(screen.getByText(/flat 30% rate/)).toBeDefined();
+  });
+
+  test("a year with no income entry says so rather than printing four zeros", () => {
+    const analytics = loadAnalytics();
+    const { 2026: _dropped, ...income } = analytics.income;
+    render(
+      <Theme>
+        <TaxView analytics={{ ...analytics, income }} year={2026} />
+      </Theme>,
+    );
+    expect(screen.getByText(/no income data/i)).toBeDefined();
+    expect(screen.queryByText("$0.00")).toBeNull();
+    expect(document.querySelector("[data-tax-estimate]")).toBeNull();
   });
 
   test("the RRSP deduction echoes what was contributed, never unused room", () => {

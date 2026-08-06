@@ -84,7 +84,7 @@ describe("RoomBar", () => {
     const bar = renderBar(
       line({ group: "RRSP", used: 72000, limit: 70752, assessed: true, remaining: -1248 }),
     );
-    expect(bar.getByText(/\$1,248\.00 over the assessed limit/)).toBeDefined();
+    expect(bar.getByText(/\$1,248\.00 over the assessed limit of \$70,752\.00/)).toBeDefined();
     expect(bar.queryByText(/-\$/)).toBeNull();
     expect(bar.queryByText(/\$-/)).toBeNull();
   });
