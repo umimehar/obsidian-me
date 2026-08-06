@@ -1,6 +1,6 @@
 import { Badge, Callout, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { motion } from "motion/react";
-import { useId, useMemo } from "react";
+import { useMemo } from "react";
 import type { ReturnSeries } from "../../analytics/returns";
 import type { AccountSeries } from "../../analytics/types";
 import { formatRate } from "../format";
@@ -23,6 +23,8 @@ import {
 } from "./returnsSeries";
 import { useRevealMotion } from "./reveal";
 import { type ChartScales, buildSignedScales, periodToDate } from "./scales";
+import { DERIVED_DASH, SOURCE_BADGE, SOURCE_CLAUSE } from "./source";
+import { useSvgId } from "./svgId";
 import { CursorMarks, cursorSlots, useChartCursor } from "./useChartCursor";
 
 export interface ReturnsChartProps {
@@ -38,19 +40,6 @@ const INNER_HEIGHT = HEIGHT - MARGIN.top - MARGIN.bottom;
 /** Hoisted so the cursor's pointer handler keeps one identity across renders. */
 const CURSOR_GEOMETRY = { viewBoxWidth: WIDTH, marginLeft: MARGIN.left };
 const DOT_RADIUS = 2;
-/** The dash the derived lines carry. One constant, so the legend swatch cannot drift from the chart. */
-const DERIVED_DASH = "5 4";
-
-const SOURCE_BADGE: Readonly<Record<"stated" | "derived", string>> = {
-  stated: "Stated on statements",
-  derived: "Derived here",
-};
-
-const SOURCE_CLAUSE: Readonly<Record<"stated" | "derived", string>> = {
-  stated: "stated on Wealthsimple statements",
-  derived: "derived here rather than stated on a statement",
-};
-
 const SOURCE_STROKE: Readonly<Record<"stated" | "derived", string>> = {
   stated: "var(--jade-a11)",
   derived: "var(--gray-a11)",
@@ -294,8 +283,7 @@ function AccountReturnsCard({
   /** The shared rate axis, so a card can tell whether its own line is flat against it. */
   rateDomain: readonly [number, number] | null;
 }) {
-  const rawClipId = useId();
-  const clipId = `returns-clip-${rawClipId.replace(/[^a-zA-Z0-9]/g, "")}`;
+  const clipId = useSvgId("returns-clip");
   const reveal = useRevealMotion(INNER_WIDTH);
   const slots = useMemo(() => cursorSlots(xDomain, scales), [xDomain, scales]);
   const cursor = useChartCursor(account.points, slots, CURSOR_GEOMETRY);

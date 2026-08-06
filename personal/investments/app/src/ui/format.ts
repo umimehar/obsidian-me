@@ -4,12 +4,13 @@
  * rounded dollar figure next to a stated statement figure invites a false
  * mismatch. A negative amount keeps its sign, because a loss is a loss.
  *
- * One deliberate exception lives in `charts/ValueOverTime.tsx`: a 0-decimal
- * formatter for the axis ticks, where cents are noise on a $250,000 scale.
- * It is argued in its own comment there, and it is confined to the ticks --
- * every accessible summary, including both charts', formats through this
- * function, so a summary can never announce a coarser figure than the one
- * on screen. Anything else that formats money belongs here.
+ * One deliberate exception lives in `charts/plot.ts`: `formatAxisCurrency`,
+ * a 0-decimal formatter for the axis ticks, where cents are noise on a
+ * $250,000 scale. It is argued in its own comment there, and it is confined
+ * to the ticks -- every accessible summary, every tooltip and every bar
+ * label formats through this function, so a summary can never announce a
+ * coarser figure than the one on screen. Anything else that formats money
+ * belongs here.
  */
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-CA", {

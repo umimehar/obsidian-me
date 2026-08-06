@@ -16,14 +16,37 @@ export function formatPeriodLabel(period: string): string {
 }
 
 /**
+ * An amount for an axis tick only, whole dollars.
+ *
+ * Cents are noise on a $250,000 scale, and the ticks are round numbers
+ * anyway. This is the one place a money figure is allowed to lose precision,
+ * and it is confined to the ticks: every figure a reader can actually read
+ * off a point -- the bar label, the tooltip, the announcement, the accessible
+ * name -- goes through the shared `formatCurrency`. Rounding one of those the
+ * way the axis does is how this project shipped an announced $241,740 beside
+ * a rendered $241,739.67.
+ *
+ * Shared by the portfolio chart and the contributions chart, so the two
+ * cannot end up rounding their axes differently.
+ */
+export function formatAxisCurrency(amount: number): string {
+  return new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+/**
  * A rate for an axis tick only, whole percent.
  *
  * The ticks on a -25% to 50% axis are round numbers, and `-20.00%` beside
- * `0.00%` is noise. This is the rate equivalent of `formatAxisCurrency` in
- * `ValueOverTime`, and confined the same way: every figure a reader can
- * actually read off a point -- the tooltip, the announcement, the accessible
- * name -- goes through `formatRate` at two decimals, which is the precision
- * the statements themselves print.
+ * `0.00%` is noise. This is the rate equivalent of `formatAxisCurrency`
+ * above, and confined the same way: every figure a reader can actually read
+ * off a point -- the tooltip, the announcement, the accessible name -- goes
+ * through `formatRate` at two decimals, which is the precision the statements
+ * themselves print.
  */
 export function formatAxisRate(rate: number): string {
   const digits = new Intl.NumberFormat("en-CA", { maximumFractionDigits: 0 }).format(rate);

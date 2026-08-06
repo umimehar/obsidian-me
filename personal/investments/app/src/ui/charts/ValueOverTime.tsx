@@ -1,12 +1,13 @@
 import { motion } from "motion/react";
-import { useId, useMemo } from "react";
+import { useMemo } from "react";
 import type { AccountSeries } from "../../analytics/types";
 import { formatCurrency } from "../format";
 import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
-import { type PlotPoint, areaPath, formatPeriodLabel, linePath } from "./plot";
+import { type PlotPoint, areaPath, formatAxisCurrency, formatPeriodLabel, linePath } from "./plot";
 import { type PortfolioPoint, buildPortfolioSeries, periodExtent } from "./portfolioSeries";
 import { useRevealMotion } from "./reveal";
 import { type ChartPoint, type ChartScales, buildScales, periodToDate } from "./scales";
+import { useSvgId } from "./svgId";
 import { CursorMarks, cursorSlots, useChartCursor } from "./useChartCursor";
 
 export interface ValueOverTimeProps {
@@ -20,22 +21,6 @@ const INNER_WIDTH = WIDTH - MARGIN.left - MARGIN.right;
 const INNER_HEIGHT = HEIGHT - MARGIN.top - MARGIN.bottom;
 /** Hoisted so the cursor's pointer handler keeps one identity across renders. */
 const CURSOR_GEOMETRY = { viewBoxWidth: WIDTH, marginLeft: MARGIN.left };
-
-/**
- * The axis ticks only, where cents are noise on a $250,000 scale. Every
- * other figure this file prints, including the accessible summary, goes
- * through the shared `formatCurrency` -- the summary is the only thing a
- * screen reader announces for this chart, and rounding it the way the axis
- * does would state an ending value up to a dollar off from the corpus.
- */
-function formatAxisCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-CA", {
-    style: "currency",
-    currency: "CAD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
 
 /** The combined domain of both the market value and the book cost series, so one pair of scales fits both lines. */
 function toDomainPoints(points: readonly PortfolioPoint[]): ChartPoint[] {
@@ -74,8 +59,7 @@ function EmptyState() {
  * implying the market-value/book-cost gap is an exact gain figure.
  */
 export function ValueOverTime({ series }: ValueOverTimeProps) {
-  const rawClipId = useId();
-  const clipId = `value-over-time-clip-${rawClipId.replace(/[^a-zA-Z0-9]/g, "")}`;
+  const clipId = useSvgId("value-over-time-clip");
   const reveal = useRevealMotion(INNER_WIDTH);
   const points = useMemo(() => buildPortfolioSeries(series), [series]);
   const scales = useMemo(

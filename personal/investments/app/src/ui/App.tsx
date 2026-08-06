@@ -5,6 +5,7 @@ import type { AnalyticsOutput } from "../analytics/build";
 import { Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
 import { Tabs } from "./Tabs";
+import { ContributionsChart } from "./charts/ContributionsChart";
 import { ReturnsChart } from "./charts/ReturnsChart";
 import { ValueOverTime } from "./charts/ValueOverTime";
 import { grandTotal, latestPeriod, loadAnalytics, loadReconciliation } from "./data";
@@ -91,7 +92,12 @@ function Dashboard() {
 
   const panels: Record<TabId, ReactNode> = {
     overview: <Overview analytics={analytics} />,
-    growth: <ReturnsChart returns={analytics.returns} series={analytics.series} />,
+    growth: (
+      <Flex direction="column" gap="6">
+        <ReturnsChart returns={analytics.returns} series={analytics.series} />
+        <ContributionsChart analytics={analytics} />
+      </Flex>
+    ),
     wrappers: (
       <YearScopedPanel years={years} year={year} onYearChange={setYear}>
         <RegisteredView analytics={analytics} year={year} />

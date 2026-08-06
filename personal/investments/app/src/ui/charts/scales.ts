@@ -44,6 +44,26 @@ export function monthsBetween(first: string, last: string): string[] {
   return months;
 }
 
+/** A y axis on its own, for a chart whose x is not time -- the years of the contributions chart. */
+export interface ValueAxis {
+  y: ScaleLinear<number, number>;
+  /** `y.ticks(tickCount)`, precomputed so callers never re-derive them. */
+  yTicks: number[];
+}
+
+/**
+ * The linear y axis every value chart shares: zero at the bottom, `max` at
+ * the top, niced, inverted so a larger value draws higher on the page.
+ *
+ * The zero floor is the point. A dollar figure read against a min-value floor
+ * exaggerates small swings, and on a bar chart it would draw a bar whose
+ * height is not proportional to the figure it states.
+ */
+export function buildValueAxis(max: number, height: number, tickCount = 5): ValueAxis {
+  const y = scaleLinear().domain([0, max]).nice().range([height, 0]);
+  return { y, yTicks: y.ticks(tickCount) };
+}
+
 /**
  * Builds the x (time) and y (linear, niced) scales for a set of points,
  * mapped onto `[0, width]` and `[height, 0]` pixel ranges (y inverted, so a
@@ -72,9 +92,8 @@ export function buildScales(
   const maxValue = values.reduce((a, b) => (b > a ? b : a));
 
   const x = scaleTime().domain([minDate, maxDate]).range([0, width]);
-  const y = scaleLinear().domain([0, maxValue]).nice().range([height, 0]);
 
-  return { x, y, yTicks: y.ticks(tickCount) };
+  return { x, ...buildValueAxis(maxValue, height, tickCount) };
 }
 
 /**

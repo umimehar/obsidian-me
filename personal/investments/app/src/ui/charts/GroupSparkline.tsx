@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { useId, useMemo } from "react";
+import { useMemo } from "react";
 import type { AccountSeries } from "../../analytics/types";
 import { formatCurrency } from "../format";
 import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
@@ -7,6 +7,7 @@ import { type PlotPoint, areaPath, formatPeriodLabel, linePath } from "./plot";
 import { type PortfolioPoint, buildPortfolioSeries } from "./portfolioSeries";
 import { useRevealMotion } from "./reveal";
 import { type ChartPoint, buildScales, periodToDate } from "./scales";
+import { useSvgId } from "./svgId";
 import { CursorMarks, cursorSlots, useChartCursor } from "./useChartCursor";
 
 export interface GroupSparklineProps {
@@ -115,8 +116,7 @@ function SingleStatementNote({ period }: { period: string }) {
  * say, so legibility of that shape wins.
  */
 export function GroupSparkline({ label, series, xDomain }: GroupSparklineProps) {
-  const rawClipId = useId();
-  const clipId = `group-sparkline-clip-${rawClipId.replace(/[^a-zA-Z0-9]/g, "")}`;
+  const clipId = useSvgId("group-sparkline-clip");
   const reveal = useRevealMotion(INNER_WIDTH);
   const points = useMemo(() => buildPortfolioSeries(series), [series]);
   const scales = useMemo(
