@@ -186,18 +186,45 @@ export async function ingestAll(sourceDir: string, cacheDir: string): Promise<St
 }
 
 /**
+ * Any raw-account-code-prefixed filename token embedded in free text (a
+ * Finding's `message`, not just its dedicated `sourceFile` field). Matches a
+ * whole `.pdf`-suffixed token and masks its leading account code with that
+ * code's own hash -- not the enclosing finding's `accountShortId`, since a
+ * message can legitimately quote a *different* statement's filename (the
+ * `ingest` check's duplicate-skip message names the file it was found
+ * identical to, not necessarily itself).
+ */
+function maskFilenamesInText(text: string): string {
+  return text.replace(/\S*\.pdf\b/g, (filename) => {
+    const m = /^([A-Z0-9]+)_(.*)$/.exec(filename);
+    if (!m) return filename;
+    const [, accountNo, rest] = m;
+    if (!accountNo || rest === undefined) return filename;
+    return `${maskAccountNo(accountNo).shortId}_${rest}`;
+  });
+}
+
+/**
  * `Finding.sourceFile` carries the account code straight from the statement's
  * own filename -- `checks.ts` builds it from the raw, pre-mask statement, the
  * same way `accountShortId` would if `buildDatastore` hadn't already masked
  * it there. This is the only other place a raw account number reaches a
  * committed file, so the report gets the identical filename-prefix masking
  * `buildDatastore` applies to `source.file`.
+ *
+ * `message` is masked too, by the more general `maskFilenamesInText`: any
+ * finding whose message quotes a raw filename (today, only the `ingest`
+ * check's duplicate-skip message) would otherwise leak an unmasked account
+ * code through a field nothing else touches.
  */
 export function maskFindingSourceFile(finding: Finding): Finding {
-  if (finding.sourceFile === "") return finding;
   return {
     ...finding,
-    sourceFile: finding.sourceFile.replace(/^[A-Z0-9]+_/, `${finding.accountShortId}_`),
+    sourceFile:
+      finding.sourceFile === ""
+        ? finding.sourceFile
+        : finding.sourceFile.replace(/^[A-Z0-9]+_/, `${finding.accountShortId}_`),
+    message: maskFilenamesInText(finding.message),
   };
 }
 

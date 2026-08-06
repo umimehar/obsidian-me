@@ -222,4 +222,24 @@ describe("maskFindingSourceFile", () => {
     maskFindingSourceFile(finding);
     expect(finding.sourceFile).toBe("ACCT0001CAD_2026-06_BROKERAGE.pdf");
   });
+
+  test("masks a raw filename embedded in the message, not just in sourceFile", () => {
+    // The ingest check's duplicate-skip finding quotes the filename of the
+    // file it matched, which is not necessarily this finding's own account.
+    const finding = makeFinding({
+      check: "ingest",
+      message: "skipped: byte-identical to already-ingested ACCT0002CAD_2026-06_BROKERAGE.pdf",
+    });
+    const masked = maskFindingSourceFile(finding);
+    const expectedShortId = maskAccountNo("ACCT0002CAD").shortId;
+    expect(masked.message).toBe(
+      `skipped: byte-identical to already-ingested ${expectedShortId}_2026-06_BROKERAGE.pdf`,
+    );
+    expect(masked.message).not.toContain("ACCT0002CAD");
+  });
+
+  test("leaves a message with no embedded filename untouched", () => {
+    const finding = makeFinding({ message: "does not reconcile" });
+    expect(maskFindingSourceFile(finding).message).toBe("does not reconcile");
+  });
 });

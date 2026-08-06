@@ -42,8 +42,8 @@ async function loadConfig(): Promise<Config> {
 
 /**
  * Splits a configured phrase into tokens on whitespace, PLUS the hyphenated
- * halves of each word: a civic/unit address like "1004-200" can print as one
- * hyphenated bbox word or as two separate ones ("1004" then "200"),
+ * halves of each word: a civic/unit address like "1200-300" can print as one
+ * hyphenated bbox word or as two separate ones ("1200" then "300"),
  * depending on how the source PDF wrapped it. Both forms are kept -- the
  * whole hyphenated word AND its halves -- since either one alone misses the
  * other layout.
@@ -95,8 +95,8 @@ export function scrub(xml: string, accountNo: string, alias: string, cfg: Config
  * A configured name or address word, matched the same way `scrub` itself
  * matches: against one bbox `<word>`'s content, punctuation-stripped and
  * exact, not a raw substring search over the whole document. A short
- * numeric token split from a civic/unit address (e.g. "200" out of
- * "1004-200") is a plausible substring of an unrelated dollar amount or
+ * numeric token split from a civic/unit address (e.g. "300" out of
+ * "1200-300") is a plausible substring of an unrelated dollar amount or
  * date anywhere on the page; only an exact per-word match means the same
  * thing `scrub` would have redacted.
  */
