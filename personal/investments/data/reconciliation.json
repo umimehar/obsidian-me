@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-06T05:22:02.897Z",
+  "generated": "2026-08-06T06:29:13.618Z",
   "statementCount": 220,
   "findings": [
     {
@@ -7,7 +7,18 @@
       "severity": "warning",
       "accountShortId": "d77c",
       "period": "2025-10",
-      "message": "market value differs by -0.02; the statement's fx rate is disclosed to six decimals, so summing 5 converted USD holding(s) drifts by rounding",
+      "message": "US Equities and Alternatives market value differs by -0.02; the statement's fx rate is disclosed to six decimals, so summing 5 converted USD holding(s) drifts by rounding",
+      "expected": 7894.05,
+      "actual": 7894.026429999999,
+      "delta": -0.023570000001200242,
+      "sourceFile": "d77c_2025-10_BROKERAGE.pdf"
+    },
+    {
+      "check": "statement-arithmetic",
+      "severity": "warning",
+      "accountShortId": "d77c",
+      "period": "2025-10",
+      "message": "market value differs by -0.02; the statement's fx rate is disclosed to six decimals, so summing converted USD holding(s) drifts by rounding",
       "expected": 31204.75,
       "actual": 31204.72643,
       "delta": -0.023570000001200242,
@@ -62,7 +73,18 @@
       "severity": "warning",
       "accountShortId": "d77c",
       "period": "2025-12",
-      "message": "market value differs by -0.02; the statement's fx rate is disclosed to six decimals, so summing 3 converted USD holding(s) drifts by rounding",
+      "message": "US Equities and Alternatives market value differs by -0.02; the statement's fx rate is disclosed to six decimals, so summing 3 converted USD holding(s) drifts by rounding",
+      "expected": 7347.92,
+      "actual": 7347.896248000001,
+      "delta": -0.02375199999914912,
+      "sourceFile": "d77c_2025-12_BROKERAGE.pdf"
+    },
+    {
+      "check": "statement-arithmetic",
+      "severity": "warning",
+      "accountShortId": "d77c",
+      "period": "2025-12",
+      "message": "market value differs by -0.02; the statement's fx rate is disclosed to six decimals, so summing converted USD holding(s) drifts by rounding",
       "expected": 30195.21,
       "actual": 30195.186248,
       "delta": -0.02375199999733013,
@@ -249,7 +271,18 @@
       "severity": "warning",
       "accountShortId": "2318",
       "period": "2026-06",
-      "message": "market value differs by 0.01; the statement's fx rate is disclosed to six decimals, so summing 3 converted USD holding(s) drifts by rounding",
+      "message": "US Equities and Alternatives market value differs by 0.01; the statement's fx rate is disclosed to six decimals, so summing 3 converted USD holding(s) drifts by rounding",
+      "expected": 4655.51,
+      "actual": 4655.52283,
+      "delta": 0.012829999999667052,
+      "sourceFile": "2318_2026-06_BROKERAGE.pdf"
+    },
+    {
+      "check": "statement-arithmetic",
+      "severity": "warning",
+      "accountShortId": "2318",
+      "period": "2026-06",
+      "message": "market value differs by 0.01; the statement's fx rate is disclosed to six decimals, so summing converted USD holding(s) drifts by rounding",
       "expected": 14509.7,
       "actual": 14509.71283,
       "delta": 0.012829999999667052,
@@ -905,6 +938,17 @@
       "sourceFile": "d6d9_2025-11_PERFORMANCE.pdf"
     },
     {
+      "check": "style-drift",
+      "severity": "error",
+      "accountShortId": "9710",
+      "period": "2026-06",
+      "message": "account maps to more than one management style across its history: self-directed, managed",
+      "expected": null,
+      "actual": null,
+      "delta": null,
+      "sourceFile": "9710_2026-06_BROKERAGE.pdf"
+    },
+    {
       "check": "ground-truth",
       "severity": "warning",
       "accountShortId": "*",
@@ -914,6 +958,17 @@
       "actual": 241739.66999999995,
       "delta": -279.94000000003143,
       "sourceFile": ""
+    },
+    {
+      "check": "ingest",
+      "severity": "warning",
+      "accountShortId": "d6d9",
+      "period": "2026-06",
+      "message": "skipped: byte-identical to already-ingested WK63GZF41CAD_2026-06_BROKERAGE.pdf",
+      "expected": null,
+      "actual": null,
+      "delta": null,
+      "sourceFile": "d6d9_person-008AocPsEJh4_2026-06_v_0.pdf"
     }
   ]
 }
