@@ -151,6 +151,72 @@ describe("a gap breaks the line and is never drawn at zero", () => {
   });
 });
 
+describe("the audited figures are visible, not only on hover", () => {
+  test("a stated card prints its latest month and since-inception rate", () => {
+    renderChart();
+    expect(card("9710").querySelector("[data-stated-headline]")?.textContent).toBe(
+      "Latest statement, Mar 2026: this month -4.01%, since inception 12.15%.",
+    );
+  });
+
+  test("the visible figures keep two decimals, same as the readout", () => {
+    renderChart();
+    const text = card("9710").querySelector("[data-stated-headline]")?.textContent ?? "";
+    expect(text).not.toContain("-4%");
+    expect(text).not.toContain("12%");
+    expect(text).not.toContain("12.2%");
+  });
+
+  test("a statement with no month rate says so, never 0.00%", () => {
+    renderChart();
+    const text = card("d6d9").querySelector("[data-stated-headline]")?.textContent ?? "";
+    expect(text).toBe(
+      "Latest statement, Apr 2026: no rate stated for this month, since inception 10.31%.",
+    );
+    expect(text).not.toContain("0.00%");
+  });
+
+  test("only the two stated accounts carry one, since only they have a statement rate", () => {
+    renderChart();
+    const headlines = [...document.querySelectorAll("[data-stated-headline]")].map((node) =>
+      node.closest("[data-returns-card]")?.getAttribute("data-returns-card"),
+    );
+    expect(headlines.sort()).toEqual(["9710", "d6d9"]);
+  });
+});
+
+describe("a near-flat card says its range in words", () => {
+  test("the managed RRSP states the range its 0.24 point span cannot show", () => {
+    renderChart();
+    expect(card("d6d9").querySelector("[data-flat-range]")?.textContent).toBe(
+      "Every month with a figure falls between -0.07% and 0.17%, so the line is flat on the shared axis.",
+    );
+  });
+
+  test("an account whose every month is the same rate reads as a single figure", () => {
+    renderChart();
+    // Chequing 18a3 sat still: both its computable months are 0.00%.
+    expect(card("18a3").querySelector("[data-flat-range]")?.textContent).toBe(
+      "Every month with a figure is 0.00%, so the line is flat on the shared axis.",
+    );
+  });
+
+  test("an account with a real spread gets no note, so the note stays meaningful", () => {
+    renderChart();
+    // The self-directed TFSA spans 20.6 points and the managed TFSA 51.3.
+    expect(card("d77c").querySelector("[data-flat-range]")).toBeNull();
+    expect(card("9710").querySelector("[data-flat-range]")).toBeNull();
+  });
+
+  test("exactly the four cards whose span is under 2% of the shared axis carry one", () => {
+    renderChart();
+    const flat = [...document.querySelectorAll("[data-flat-range]")].map((node) =>
+      node.closest("[data-returns-card]")?.getAttribute("data-returns-card"),
+    );
+    expect(flat.sort()).toEqual(["18a3", "2b74", "8cd3", "d6d9"]);
+  });
+});
+
 describe("the rate axis", () => {
   test("labels its ticks in whole percent, the one place a rate is rounded", () => {
     renderChart();

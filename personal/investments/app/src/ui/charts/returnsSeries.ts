@@ -8,13 +8,20 @@ import { formatPeriodLabel } from "./plot";
  * Why a month has no rate to plot.
  *
  * The first three are `DerivedReturnReason` passed through untouched, so the
- * pipeline stays the one authority on why a derived figure is absent. The
- * fourth is this layer's own: a `"stated"` point whose statement printed no
- * current-period rate. Wealthsimple prints `0.00%` for a horizon shorter than
- * the account's life, already parsed to null upstream rather than a measured
- * zero, and the chart has to keep it that way.
+ * pipeline stays the one authority on why a derived figure is absent. The last
+ * two are this layer's own:
+ *
+ * - `"no-stated-rate"`: a `"stated"` point whose statement printed no
+ *   current-period rate. Wealthsimple prints `0.00%` for a horizon shorter
+ *   than the account's life, already parsed to null upstream rather than a
+ *   measured zero, and the chart has to keep it that way.
+ * - `"reason-not-recorded"`: a derived point arrived with no figure and no
+ *   reason, which the pipeline's contract says cannot happen. Naming the
+ *   absence is the only honest thing to render: picking one of the real
+ *   reasons instead would print a confident explanation nobody recorded, in a
+ *   panel whose whole purpose is not doing that.
  */
-export type ReturnGap = DerivedReturnReason | "no-stated-rate";
+export type ReturnGap = DerivedReturnReason | "no-stated-rate" | "reason-not-recorded";
 
 /** One month of one account, ready to plot. */
 export interface ReturnValuePoint {
@@ -31,6 +38,13 @@ export interface ReturnValuePoint {
   /** Populated exactly when `rate` is null. */
   gap: ReturnGap | null;
 }
+
+/**
+ * A month that has a figure. `returnSegments` emits only these, and saying so
+ * in the type rather than in a comment is what keeps a `?? 0` out of the
+ * plotting code: a caller cannot reach a null rate to coerce.
+ */
+export type PlottedReturnPoint = ReturnValuePoint & { rate: number };
 
 /** One account's returns, with the identity its card needs to name itself. */
 export interface AccountReturns {
@@ -78,7 +92,7 @@ function derivedValue(point: ReturnPoint): ReturnValuePoint {
     period: point.period,
     rate: point.periodReturn,
     statedMwr: null,
-    gap: point.periodReturn === null ? (point.reason ?? "insufficient-data") : null,
+    gap: point.periodReturn === null ? (point.reason ?? "reason-not-recorded") : null,
   };
 }
 
@@ -121,6 +135,11 @@ export function plottedCount(points: readonly ReturnValuePoint[]): number {
   return points.filter((point) => point.rate !== null).length;
 }
 
+/** The narrowing that makes `PlottedReturnPoint` reachable without a cast. */
+function hasRate(point: ReturnValuePoint): point is PlottedReturnPoint {
+  return point.rate !== null;
+}
+
 /** A `YYYY-MM` as a count of months, so two periods can be tested for adjacency. */
 function monthIndex(period: string): number {
   const [year, month] = period.split("-").map(Number);
@@ -137,14 +156,16 @@ function monthIndex(period: string): number {
  * three of its six months; joining across them would draw a trend nobody
  * measured.
  */
-export function returnSegments(points: readonly ReturnValuePoint[]): readonly ReturnValuePoint[][] {
-  const segments: ReturnValuePoint[][] = [];
-  let current: ReturnValuePoint[] = [];
+export function returnSegments(
+  points: readonly ReturnValuePoint[],
+): readonly PlottedReturnPoint[][] {
+  const segments: PlottedReturnPoint[][] = [];
+  let current: PlottedReturnPoint[] = [];
   let previousIndex: number | null = null;
 
   for (const point of points) {
     const index = monthIndex(point.period);
-    if (point.rate === null) {
+    if (!hasRate(point)) {
       if (current.length > 0) segments.push(current);
       current = [];
       previousIndex = null;
@@ -210,6 +231,7 @@ const GAP_PHRASES: Readonly<Record<ReturnGap, string>> = {
   "unreconciled-flow":
     "money moved in a way the cash records cannot confirm, so a return here would mislead",
   "no-stated-rate": "the statement printed no rate for this month",
+  "reason-not-recorded": "no reason was recorded for this month",
 };
 
 /** A gap as a sentence fragment a reader can act on, rather than a slug. */
@@ -260,9 +282,51 @@ function statedLines(point: ReturnValuePoint): string[] {
 /** A derived month: its figure, or the reason it has none. */
 function derivedLines(point: ReturnValuePoint): string[] {
   if (point.rate === null) {
-    return [`No figure: ${gapPhrase(point.gap ?? "insufficient-data")}`];
+    return [`No figure: ${gapPhrase(point.gap ?? "reason-not-recorded")}`];
   }
   return [`This month ${formatRate(point.rate)}`];
+}
+
+/**
+ * The most recent statement's own figures, for a card to print in the open.
+ *
+ * These are the only audited rates in the whole corpus: two accounts of
+ * fourteen, and Wealthsimple worked them out rather than this project. Leaving
+ * them reachable only on hover buried the one thing on this page nobody has to
+ * caveat. It also gives the managed RRSP's card something to say, whose six
+ * months span 0.24 percentage points and draw as a flat line on an axis built
+ * for a 47.31% January.
+ *
+ * `currentPeriod` and `sinceInception` only. The other four horizons are null
+ * on every stated point in the corpus, because neither account is a year old,
+ * and a card is not the place to enumerate absences. A null `currentPeriod`
+ * prints as words, never as a rate. Empty for a derived account, which has no
+ * statement to read a rate off.
+ */
+export function latestStatedLines(account: AccountReturns): string[] {
+  const last = account.points[account.points.length - 1];
+  if (account.source !== "stated" || last === undefined) return [];
+
+  const lines = [`Latest statement, ${formatPeriodLabel(last.period)}`];
+  lines.push(
+    last.rate === null ? "no rate stated for this month" : `this month ${formatRate(last.rate)}`,
+  );
+  const inception = last.statedMwr?.sinceInception ?? null;
+  if (inception !== null) lines.push(`since inception ${formatRate(inception)}`);
+  return lines;
+}
+
+/**
+ * The `[min, max]` of one account's own plotted rates, for a card that needs
+ * to say in words what its line is too flat to show. Null when it has fewer
+ * than one figure to take an extent from.
+ */
+export function accountRateExtent(
+  points: readonly ReturnValuePoint[],
+): readonly [number, number] | null {
+  const rates = points.map((point) => point.rate).filter((rate): rate is number => rate !== null);
+  if (rates[0] === undefined) return null;
+  return [Math.min(...rates), Math.max(...rates)];
 }
 
 /**

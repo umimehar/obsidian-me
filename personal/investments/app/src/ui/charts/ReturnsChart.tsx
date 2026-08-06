@@ -3,14 +3,17 @@ import { motion } from "motion/react";
 import { useId, useMemo } from "react";
 import type { ReturnSeries } from "../../analytics/returns";
 import type { AccountSeries } from "../../analytics/types";
+import { formatRate } from "../format";
 import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
 import { type PlotPoint, formatAxisRate, formatPeriodLabel, linePath } from "./plot";
 import {
   type AccountReturns,
-  type ReturnValuePoint,
+  type PlottedReturnPoint,
+  accountRateExtent,
   buildReturnsSeries,
   distinctGaps,
   gapPhrase,
+  latestStatedLines,
   plottedCount,
   provenance,
   returnSegments,
@@ -136,6 +139,57 @@ function accountSummary(account: AccountReturns): string {
   );
 }
 
+/**
+ * The audited figures, in the open rather than behind a hover.
+ *
+ * Only a stated account has any, and there are two of them in fourteen. See
+ * `latestStatedLines` for why these two horizons and not the other four.
+ */
+function StatedHeadline({ account }: { account: AccountReturns }) {
+  const lines = latestStatedLines(account);
+  if (lines.length === 0) return null;
+  return (
+    <Text size="2" color="gray" as="p" mb="2" data-stated-headline="">
+      {`${lines[0]}: ${lines.slice(1).join(", ")}.`}
+    </Text>
+  );
+}
+
+/**
+ * How small a share of the shared axis a card's own rates may span before its
+ * line reads as a rendering failure rather than as a quiet account.
+ *
+ * Two percent of a 68 point axis is about 3px of the 164px plot box. The
+ * managed RRSP spans 0.24 points across its six months, which is well inside
+ * that, and it is one of the two accounts whose rates a statement actually
+ * printed. The shared axis stays: rescaling that card to its own range would
+ * blow a 0.17% month up to full height, which says something far worse.
+ */
+const FLAT_SPAN_FRACTION = 0.02;
+
+/** Says in words what a near-flat line cannot show, so the flatness reads as a fact about the account. */
+function FlatRangeNote({
+  account,
+  domain,
+}: {
+  account: AccountReturns;
+  domain: readonly [number, number];
+}) {
+  const extent = accountRateExtent(account.points);
+  if (extent === null) return null;
+  const domainSpan = domain[1] - domain[0];
+  if (domainSpan <= 0 || extent[1] - extent[0] > domainSpan * FLAT_SPAN_FRACTION) return null;
+  const range =
+    extent[0] === extent[1]
+      ? `is ${formatRate(extent[0])}`
+      : `falls between ${formatRate(extent[0])} and ${formatRate(extent[1])}`;
+  return (
+    <Text size="2" color="gray" as="p" mt="2" data-flat-range="">
+      {`Every month with a figure ${range}, so the line is flat on the shared axis.`}
+    </Text>
+  );
+}
+
 /** An account no month can be computed for. It states the reasons rather than drawing an empty band. */
 function NoFigureNote({ account }: { account: AccountReturns }) {
   const reasons = distinctGaps(account.points).map(gapPhrase);
@@ -147,11 +201,11 @@ function NoFigureNote({ account }: { account: AccountReturns }) {
   );
 }
 
-function toPlotPoints(segment: readonly ReturnValuePoint[], scales: ChartScales): PlotPoint[] {
+/** `PlottedReturnPoint` carries a non-null `rate` in the type, so there is no null here to coerce. */
+function toPlotPoints(segment: readonly PlottedReturnPoint[], scales: ChartScales): PlotPoint[] {
   return segment.map((point) => ({
     x: scales.x(periodToDate(point.period)),
-    // A segment only ever holds points with a rate -- see `returnSegments`.
-    y: scales.y(point.rate ?? 0),
+    y: scales.y(point.rate),
   }));
 }
 
@@ -232,10 +286,13 @@ function AccountReturnsCard({
   account,
   scales,
   xDomain,
+  rateDomain,
 }: {
   account: AccountReturns;
   scales: ChartScales | null;
   xDomain: readonly [string, string] | null;
+  /** The shared rate axis, so a card can tell whether its own line is flat against it. */
+  rateDomain: readonly [number, number] | null;
 }) {
   const rawClipId = useId();
   const clipId = `returns-clip-${rawClipId.replace(/[^a-zA-Z0-9]/g, "")}`;
@@ -271,6 +328,7 @@ function AccountReturnsCard({
             </Badge>
           </Flex>
         </Flex>
+        <StatedHeadline account={account} />
         {!drawable || scales === null ? (
           <NoFigureNote account={account} />
         ) : (
@@ -319,6 +377,7 @@ function AccountReturnsCard({
             )}
           </div>
         )}
+        {rateDomain === null ? null : <FlatRangeNote account={account} domain={rateDomain} />}
       </Card>
     </div>
   );
@@ -380,6 +439,7 @@ export function ReturnsChart({ returns, series }: ReturnsChartProps) {
           account={account}
           scales={scales}
           xDomain={xDomain}
+          rateDomain={rateExtent}
         />
       ))}
     </Flex>

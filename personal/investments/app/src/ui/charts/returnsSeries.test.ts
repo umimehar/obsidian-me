@@ -1,11 +1,14 @@
 import { describe, expect, test } from "bun:test";
+import type { ReturnSeries } from "../../analytics/returns";
 import { loadAnalytics } from "../data";
 import {
   type AccountReturns,
   type ReturnValuePoint,
+  accountRateExtent,
   buildReturnsSeries,
   distinctGaps,
   gapPhrase,
+  latestStatedLines,
   plottedCount,
   provenance,
   returnSegments,
@@ -274,6 +277,7 @@ describe("distinctGaps and gapPhrase", () => {
       "insufficient-data",
       "unreconciled-flow",
       "no-stated-rate",
+      "reason-not-recorded",
     ] as const) {
       expect(gapPhrase(gap).length).toBeGreaterThan(10);
       expect(gapPhrase(gap)).not.toContain("zero");
@@ -284,6 +288,90 @@ describe("distinctGaps and gapPhrase", () => {
     expect(gapPhrase("unreconciled-flow")).toBe(
       "money moved in a way the cash records cannot confirm, so a return here would mislead",
     );
+  });
+});
+
+describe("latestStatedLines, the audited figures a card prints in the open", () => {
+  test("names the statement, the month's rate and the since-inception rate", () => {
+    expect(latestStatedLines(byShortId("9710"))).toEqual([
+      "Latest statement, Mar 2026",
+      "this month -4.01%",
+      "since inception 12.15%",
+    ]);
+  });
+
+  test("keeps two decimals, the precision the statement prints", () => {
+    const lines = latestStatedLines(byShortId("9710")).join(" ");
+    expect(lines).not.toContain("-4%");
+    expect(lines).not.toContain("12%");
+    expect(lines).not.toContain("12.2%");
+  });
+
+  test("a statement with no month rate says so in words, never 0.00%", () => {
+    // The managed RRSP's last statement, Apr 2026, prints no current-period rate.
+    const lines = latestStatedLines(byShortId("d6d9"));
+    expect(lines).toEqual([
+      "Latest statement, Apr 2026",
+      "no rate stated for this month",
+      "since inception 10.31%",
+    ]);
+    expect(lines.join(" ")).not.toContain("0.00%");
+  });
+
+  test("a derived account has no statement to quote, so it prints nothing", () => {
+    expect(latestStatedLines(byShortId("d77c"))).toEqual([]);
+    expect(latestStatedLines(byShortId("e2d6"))).toEqual([]);
+  });
+});
+
+describe("accountRateExtent", () => {
+  test("spans one account's own rates, not the corpus's", () => {
+    const extent = accountRateExtent(byShortId("d6d9").points);
+    expect(extent?.[0]).toBe(-0.07);
+    expect(extent?.[1]).toBe(0.17);
+  });
+
+  test("is null for an account with no figure at all", () => {
+    expect(accountRateExtent(byShortId("e2d6").points)).toBeNull();
+  });
+});
+
+describe("a derived point with no reason recorded", () => {
+  const orphan: ReturnSeries[] = [
+    {
+      maskedId: "acct_test",
+      points: [
+        { period: "2026-01", statedMwr: null, periodReturn: null, reason: null, source: "derived" },
+      ],
+    },
+  ];
+
+  test("names the absence rather than borrowing a real reason", () => {
+    const point = buildReturnsSeries(orphan, [])[0]?.points[0];
+    expect(point?.gap).toBe("reason-not-recorded");
+    expect(gapPhrase("reason-not-recorded")).toBe("no reason was recorded for this month");
+  });
+
+  test("the readout's own fallback names the absence too", () => {
+    // `buildReturnsSeries` always sets a gap alongside a null rate, so this
+    // combination cannot arrive through it. `gap` is nullable in the type
+    // regardless, so `returnsTooltipLines` has to answer for it, and the
+    // answer must not be one of the real reasons.
+    const lines = returnsTooltipLines(
+      "2026-01",
+      { period: "2026-01", rate: null, statedMwr: null, gap: null },
+      "derived",
+    );
+    expect(lines[2]).toBe("No figure: no reason was recorded for this month");
+  });
+
+  test("does not claim a market value was missing, which nothing checked", () => {
+    const built = buildReturnsSeries(orphan, [])[0];
+    const point = built?.points[0];
+    if (built === undefined || point === undefined) throw new Error("expected one built point");
+    const lines = returnsTooltipLines(point.period, point, built.source);
+    expect(lines[2]).toBe("No figure: no reason was recorded for this month");
+    expect(lines.join(" ")).not.toContain("market value is missing");
   });
 });
 
