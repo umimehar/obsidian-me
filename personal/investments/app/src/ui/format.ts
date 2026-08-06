@@ -18,3 +18,22 @@ export function formatCurrency(amount: number): string {
     minimumFractionDigits: 2,
   }).format(amount);
 }
+
+/**
+ * A share of the portfolio, to one decimal place: enough to tell two small
+ * groups apart without implying a precision the figure does not have.
+ *
+ * That decimal is the whole point. In the purpose lens Education is 1.6% and
+ * Business 21.2%, and rounded to whole percent they read 2% and 21%, which
+ * both overstates the small one and collapses the distinction the decimal
+ * exists for. Every rendering of a share, visible text and announced value
+ * alike, goes through this one function so a card and its bar cannot end up
+ * stating the same share two ways.
+ */
+export function formatShare(share: number): string {
+  return new Intl.NumberFormat("en-CA", {
+    style: "percent",
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  }).format(share);
+}

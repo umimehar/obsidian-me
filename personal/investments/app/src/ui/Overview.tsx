@@ -5,22 +5,14 @@ import type { AnalyticsOutput } from "../analytics/build";
 import type { Lens, Rollup, RollupAccount } from "../analytics/rollup";
 import type { AccountSeries } from "../analytics/types";
 import { LensToggle } from "./LensToggle";
+import { ShareBar } from "./ShareBar";
 import { GroupSparkline } from "./charts/GroupSparkline";
 import { buildPortfolioSeries, periodExtent, seriesForAccounts } from "./charts/portfolioSeries";
 import { grandTotal } from "./data";
-import { formatCurrency } from "./format";
+import { formatCurrency, formatShare } from "./format";
 
 export interface OverviewProps {
   analytics: AnalyticsOutput;
-}
-
-/** One decimal place -- enough to distinguish two small groups without a false sense of precision. */
-function formatShare(share: number): string {
-  return new Intl.NumberFormat("en-CA", {
-    style: "percent",
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  }).format(share);
 }
 
 /**
@@ -125,14 +117,17 @@ function GroupCard({ group, grandTotalValue, motionSpec, series, xDomain }: Grou
             {group.accounts.length} {group.accounts.length === 1 ? "account" : "accounts"}
           </Text>
         </Flex>
-        <Flex justify="between" align="center" mb="2">
+        <Flex justify="between" align="center" mb="1">
           <Text size="5" weight="bold" data-group-total="">
             {formatCurrency(group.total)}
           </Text>
-          <Text size="2" color="gray">
+          <Text size="2" color="gray" data-group-share="">
             {formatShare(share)} of total
           </Text>
         </Flex>
+        <Box mb="3">
+          <ShareBar label={group.label} share={share} />
+        </Box>
         <Box mb="3">
           <GroupSparkline label={group.label} series={groupSeries} xDomain={xDomain} />
         </Box>

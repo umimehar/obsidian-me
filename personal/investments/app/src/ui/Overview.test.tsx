@@ -184,10 +184,47 @@ describe("Overview", () => {
     // Six of the seven registration groups have a value history; Cash has none.
     expect(charted).toBe(6);
 
-    // The share figure the bar used to draw is still on the page, at the
-    // precision it belongs at, and no bar is left to round it.
+    // The share bar is back beside that text, and it announces the card's
+    // own string rather than Radix's rounded one. Every card, not just the
+    // one that made the defect visible.
     expect(within(groupCard("RESP")).getByText(/1\.6% of total/)).toBeDefined();
-    expect(document.querySelector('[data-overview-group] [role="progressbar"]')).toBeNull();
+    let barred = 0;
+    for (const card of cards) {
+      const printed = card.querySelector("[data-group-share]")?.textContent ?? "";
+      const announced = card.querySelector('[role="progressbar"]')?.getAttribute("aria-valuetext");
+      if (announced === null || announced === undefined) continue;
+      barred += 1;
+      expect(printed).toBe(`${announced} of total`);
+    }
+    expect(barred).toBe(7);
+  });
+
+  test("the share bar states the two shares a whole percent would distort", () => {
+    renderOverview();
+    fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
+    const announced = (label: string) =>
+      groupCard(label).querySelector('[role="progressbar"]')?.getAttribute("aria-valuetext");
+    // Rounded to whole percent these read 2% and 21%, which is both an
+    // overstatement of the small group and the loss of the decimal that
+    // exists to tell two small groups apart.
+    expect(announced("Education")).toBe("1.6%");
+    expect(announced("Business")).toBe("21.2%");
+  });
+
+  test("each bar's width is its own share of the whole, not of the largest group", () => {
+    renderOverview();
+    fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
+    const width = (label: string): number => {
+      const fill = groupCard(label).querySelector("[data-share-bar-fill]");
+      if (!(fill instanceof HTMLElement)) throw new Error(`expected a fill in the ${label} card`);
+      return Number.parseFloat(fill.style.width);
+    };
+    // Real corpus: Education $3,943.98 and Business $51,232.39 of $241,739.67.
+    expect(width("Education")).toBeCloseTo(1.631, 2);
+    expect(width("Business")).toBeCloseTo(21.192, 2);
+    // Growth is the largest group at $108,953.60 and still fills under half,
+    // which is what "against the whole portfolio" means.
+    expect(width("Growth")).toBeCloseTo(45.071, 2);
   });
 
   test("each group card charts its own history, ending at its own total", () => {
