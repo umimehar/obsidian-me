@@ -1,5 +1,5 @@
-import { describe, expect, test } from "bun:test";
-import { render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, test } from "bun:test";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { App } from "./App";
 
 /**
@@ -39,6 +39,31 @@ function headingLevels(): number[] {
   );
 }
 
+function expectNoSkippedLevel() {
+  const levels = headingLevels();
+  expect(levels.length).toBeGreaterThan(0);
+  let previous = levels[0] ?? 0;
+  for (const level of levels) {
+    expect(level - previous).toBeLessThanOrEqual(1);
+    previous = level;
+  }
+}
+
+/**
+ * Radix's TabsTrigger renders its label twice -- once visible, once hidden
+ * at bold weight, so the visible width never shifts on select -- which
+ * doubles the accessible name. Matching a prefix sidesteps that
+ * implementation detail. Activation is on pointerdown, not click, so the
+ * mousedown event is what a real pointer press sends.
+ */
+function clickTab(name: string) {
+  fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${name}\\b`) }), { button: 0 });
+}
+
+afterEach(() => {
+  window.location.hash = "";
+});
+
 describe("App accessibility", () => {
   test("has exactly one h1, and it names the page", () => {
     render(<App />);
@@ -47,14 +72,16 @@ describe("App accessibility", () => {
     expect(h1s[0]?.textContent).toBe("Investments");
   });
 
-  test("never skips a heading level on the way down", () => {
+  test("never skips a heading level on the way down, on any tab", () => {
+    // A Radix Tabs.Content that is not selected renders no children at all
+    // (see Tabs.tsx), so headingLevels() only ever sees the active panel.
+    // Checking every tab is the only way to cover all six.
     render(<App />);
-    const levels = headingLevels();
-    expect(levels.length).toBeGreaterThan(5);
-    let previous = levels[0] ?? 0;
-    for (const level of levels) {
-      expect(level - previous).toBeLessThanOrEqual(1);
-      previous = level;
+    expectNoSkippedLevel();
+
+    for (const label of ["Growth", "Wrappers", "Tax", "Projections", "Reconciliation"]) {
+      clickTab(label);
+      expectNoSkippedLevel();
     }
   });
 
@@ -69,6 +96,7 @@ describe("App accessibility", () => {
     const controls = [
       ...screen.getAllByRole("button"),
       ...screen.getAllByRole("radio"),
+      ...screen.getAllByRole("tab"),
       ...document.querySelectorAll("summary"),
     ];
     expect(controls.length).toBeGreaterThan(5);
@@ -103,7 +131,9 @@ describe("App accessibility", () => {
     // The control sweep above covers buttons, radios and summaries only, which
     // is how a set of unnamed bars once went unnoticed. A bar is either
     // decorative and hidden, or exposed and named. Never exposed and anonymous.
+    // Room bars live on the wrappers tab, which is not the default panel.
     render(<App />);
+    clickTab("Wrappers");
     const bars = [...document.querySelectorAll('[role="progressbar"]')];
     expect(bars.length).toBeGreaterThan(0);
     const exposed = bars.filter((bar) => bar.getAttribute("aria-hidden") !== "true");
@@ -116,6 +146,8 @@ describe("App accessibility", () => {
   test("every graphic is named, since a chart has no text a reader can fall back to", () => {
     // The same sweep, for the role that replaced the Overview's bars. An
     // unnamed role="img" announces as "image" and says nothing at all.
+    // The portfolio chart is above the tabs and the group sparklines are on
+    // the default overview tab, so no tab switch is needed here.
     render(<App />);
     const graphics = [...document.querySelectorAll('[role="img"]')];
     // One portfolio chart plus one per group card in the default lens.
@@ -126,8 +158,12 @@ describe("App accessibility", () => {
   });
 
   test("both segmented controls say what they group by", () => {
+    // The lens toggle is on the default overview tab; the tax year control
+    // moved to the wrappers and tax tabs.
     render(<App />);
     expect(screen.getByRole("radiogroup", { name: "Group accounts by" })).toBeDefined();
+
+    clickTab("Wrappers");
     expect(screen.getByRole("radiogroup", { name: "Tax year" })).toBeDefined();
   });
 
@@ -138,6 +174,7 @@ describe("App accessibility", () => {
 
   test("the finding groups are native disclosures, so they are keyboard reachable", () => {
     render(<App />);
+    clickTab("Reconciliation");
     const groups = document.querySelectorAll("details[data-finding-group]");
     expect(groups.length).toBeGreaterThan(0);
     for (const group of groups) {

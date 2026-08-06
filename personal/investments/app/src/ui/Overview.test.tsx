@@ -72,24 +72,12 @@ describe("cardMotion", () => {
 });
 
 describe("Overview", () => {
-  test("shows the real grand total as the headline", () => {
-    renderOverview();
-    expect(screen.getByText("$241,739.67")).toBeDefined();
-  });
-
-  test("switching lens never changes the displayed grand total", () => {
-    renderOverview();
-    expect(screen.getByText("$241,739.67")).toBeDefined();
-
-    fireEvent.click(screen.getByRole("radio", { name: /account/i }));
-    expect(screen.getByText("$241,739.67")).toBeDefined();
-
-    fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
-    expect(screen.getByText("$241,739.67")).toBeDefined();
-
-    fireEvent.click(screen.getByRole("radio", { name: /registration/i }));
-    expect(screen.getByText("$241,739.67")).toBeDefined();
-  });
+  // The headline total and the value-over-time chart moved out of Overview
+  // in task 1 (phase 2c): they are the page's subject, not one view of it,
+  // so App now renders them once above every tab panel. What stays testable
+  // here is that a group's own share of that total is stable across lenses,
+  // covered below by "group share of total is computed against the same
+  // headline total".
 
   test("registration lens defaults on and shows the real Cash group at zero with an excluded marker", () => {
     renderOverview();

@@ -6,9 +6,8 @@ import type { Lens, Rollup, RollupAccount } from "../analytics/rollup";
 import type { AccountSeries } from "../analytics/types";
 import { LensToggle } from "./LensToggle";
 import { GroupSparkline } from "./charts/GroupSparkline";
-import { ValueOverTime } from "./charts/ValueOverTime";
 import { buildPortfolioSeries, periodExtent, seriesForAccounts } from "./charts/portfolioSeries";
-import { grandTotal, latestPeriod } from "./data";
+import { grandTotal } from "./data";
 import { formatCurrency } from "./format";
 
 export interface OverviewProps {
@@ -154,18 +153,18 @@ function GroupCard({ group, grandTotalValue, motionSpec, series, xDomain }: Grou
 }
 
 /**
- * The dashboard's home view: headline total, the value-over-time chart,
- * the lens toggle, and the grouped account list for whichever lens is
- * selected. It never recomputes a rollup -- `analytics.rollups[lens]` is
- * already built into the committed `analytics.json` -- so switching lens
- * is purely a read of a different array, which is also why the grand
- * total never moves when the lens does.
+ * The dashboard's account-groups view: the lens toggle, and the grouped
+ * account list for whichever lens is selected. It never recomputes a
+ * rollup -- `analytics.rollups[lens]` is already built into the committed
+ * `analytics.json` -- so switching lens is purely a read of a different
+ * array. The headline total and the value-over-time chart are the page's
+ * subject rather than one view of it, so `App` renders them once above
+ * every panel; `total` is still read here, to compute each group's share.
  */
 export function Overview({ analytics }: OverviewProps) {
   const [lens, setLens] = useState<Lens>("registration");
   const motionSpec = useCardMotion();
   const total = grandTotal(analytics);
-  const period = latestPeriod(analytics);
   const groups = analytics.rollups[lens];
   const xDomain = useMemo(
     () => periodExtent(buildPortfolioSeries(analytics.series)),
@@ -174,17 +173,6 @@ export function Overview({ analytics }: OverviewProps) {
 
   return (
     <Flex direction="column" gap="4">
-      <Flex direction="column" gap="1">
-        {/* The heading is the label, not the figure. A screen reader's heading
-            list is a table of contents, and "$241,739.67" is not a section name. */}
-        <Heading size="2" as="h2" color="gray" weight="regular">
-          Portfolio total{period !== null ? ` as of ${period}` : ""}
-        </Heading>
-        <Text size="8" weight="bold" data-portfolio-total="">
-          {formatCurrency(total)}
-        </Text>
-      </Flex>
-      <ValueOverTime series={analytics.series} />
       <LensToggle lens={lens} onLensChange={setLens} />
       <AnimatePresence mode="popLayout">
         {groups.map((group) => (
