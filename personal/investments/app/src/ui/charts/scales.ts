@@ -1,0 +1,54 @@
+import { type ScaleLinear, type ScaleTime, scaleLinear, scaleTime } from "d3-scale";
+
+/** The minimal shape `buildScales` needs from a chart point -- one value per period. */
+export interface ChartPoint {
+  /** `YYYY-MM`. */
+  period: string;
+  value: number;
+}
+
+export interface ChartScales {
+  x: ScaleTime<number, number>;
+  y: ScaleLinear<number, number>;
+  /** `y.ticks(tickCount)`, precomputed so callers never re-derive them. */
+  yTicks: number[];
+}
+
+/** Parses a `YYYY-MM` period into the first of that month, UTC, so a chart never drifts a day with the viewer's local timezone. */
+export function periodToDate(period: string): Date {
+  const [year, month] = period.split("-").map(Number);
+  return new Date(Date.UTC(year ?? 1970, (month ?? 1) - 1, 1));
+}
+
+/**
+ * Builds the x (time) and y (linear, niced) scales for a set of points,
+ * mapped onto `[0, width]` and `[height, 0]` pixel ranges (y inverted, so a
+ * larger value draws higher on the page). `points` need not be sorted.
+ *
+ * Returns `null` when `points` is empty: there is no domain to build from
+ * zero data points, and the caller must render an empty state rather than
+ * a scale with a degenerate domain or draw axes into nothing.
+ *
+ * The y domain always starts at zero -- an area/line chart of a value over
+ * time should read its height honestly against a true zero, not a
+ * min-value floor that would exaggerate the shape of small swings.
+ */
+export function buildScales(
+  points: readonly ChartPoint[],
+  width: number,
+  height: number,
+  tickCount = 5,
+): ChartScales | null {
+  if (points.length === 0) return null;
+
+  const dates = points.map((p) => periodToDate(p.period));
+  const values = points.map((p) => p.value);
+  const minDate = dates.reduce((a, b) => (b < a ? b : a));
+  const maxDate = dates.reduce((a, b) => (b > a ? b : a));
+  const maxValue = values.reduce((a, b) => (b > a ? b : a));
+
+  const x = scaleTime().domain([minDate, maxDate]).range([0, width]);
+  const y = scaleLinear().domain([0, maxValue]).nice().range([height, 0]);
+
+  return { x, y, yTicks: y.ticks(tickCount) };
+}
