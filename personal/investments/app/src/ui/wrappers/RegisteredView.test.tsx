@@ -26,6 +26,12 @@ function card(group: string) {
 }
 
 describe("RegisteredView", () => {
+  test("a year the corpus does not cover says so rather than rendering nothing", () => {
+    renderYear(1999);
+    expect(screen.getByText(/no registered wrapper has a statement for 1999/i)).toBeDefined();
+    expect(document.querySelectorAll("[data-room-line]").length).toBe(0);
+  });
+
   test("renders one line per registered group in the corpus year", () => {
     renderYear(2026);
     expect(document.querySelectorAll("[data-room-line]").length).toBe(4);
