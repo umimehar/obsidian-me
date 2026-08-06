@@ -2,10 +2,12 @@ import { motion } from "motion/react";
 import { useId, useMemo } from "react";
 import type { AccountSeries } from "../../analytics/types";
 import { formatCurrency } from "../format";
+import { ChartTooltip, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
 import { type PlotPoint, areaPath, formatPeriodLabel, linePath } from "./plot";
-import { type PortfolioPoint, buildPortfolioSeries } from "./portfolioSeries";
+import { type PortfolioPoint, buildPortfolioSeries, periodExtent } from "./portfolioSeries";
 import { useRevealMotion } from "./reveal";
 import { type ChartPoint, type ChartScales, buildScales, periodToDate } from "./scales";
+import { CursorMarks, cursorSlots, useChartCursor } from "./useChartCursor";
 
 export interface ValueOverTimeProps {
   series: readonly AccountSeries[];
@@ -78,6 +80,15 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
     () => buildScales(toDomainPoints(points), INNER_WIDTH, INNER_HEIGHT),
     [points],
   );
+  const slots = useMemo(() => cursorSlots(periodExtent(points), scales), [points, scales]);
+  const cursor = useChartCursor(points, slots, {
+    viewBoxWidth: WIDTH,
+    marginLeft: MARGIN.left,
+  });
+  const countedAccounts = useMemo(
+    () => series.filter((account) => account.inTotals).length,
+    [series],
+  );
 
   const first = points[0];
   const last = points[points.length - 1];
@@ -93,56 +104,82 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
     `Portfolio market value from ${formatPeriodLabel(first.period)} to ` +
     `${formatPeriodLabel(last.period)}, ending at ${formatCurrency(last.marketValue)}. ` +
     "The book cost line is an approximate figure for USD holdings, not a filing figure.";
+  const readout =
+    cursor.period === null
+      ? ""
+      : ` ${tooltipLines(cursor.period, cursor.point, countedAccounts).join(". ")}.`;
 
   return (
-    <svg
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      role="img"
-      aria-label={summary}
-      style={{ width: "100%", height: "auto" }}
-    >
-      <title>Portfolio value over time</title>
-      <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
-        {scales.yTicks.map((tick) => (
-          <g key={tick} transform={`translate(0,${scales.y(tick)})`}>
-            <line x1={0} x2={INNER_WIDTH} stroke="var(--gray-a4)" />
-            <text x={-8} dy="0.32em" textAnchor="end" fontSize={11} fill="var(--gray-a11)">
-              {formatAxisCurrency(tick)}
-            </text>
+    <div style={{ position: "relative" }}>
+      <svg
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        role="img"
+        aria-label={`${summary}${readout}`}
+        // biome-ignore lint/a11y/noNoninteractiveTabindex: a chart is a graphic that still has to be reachable, or its tooltip is mouse-only
+        tabIndex={0}
+        onPointerMove={cursor.onPointerMove}
+        onPointerLeave={cursor.onPointerLeave}
+        onKeyDown={cursor.onKeyDown}
+        onBlur={cursor.onBlur}
+        style={{ width: "100%", height: "auto" }}
+      >
+        <title>Portfolio value over time</title>
+        <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
+          {scales.yTicks.map((tick) => (
+            <g key={tick} transform={`translate(0,${scales.y(tick)})`}>
+              <line x1={0} x2={INNER_WIDTH} stroke="var(--gray-a4)" />
+              <text x={-8} dy="0.32em" textAnchor="end" fontSize={11} fill="var(--gray-a11)">
+                {formatAxisCurrency(tick)}
+              </text>
+            </g>
+          ))}
+          <clipPath id={clipId}>
+            <motion.rect
+              y={0}
+              height={INNER_HEIGHT}
+              initial={{ width: reveal.initialWidth }}
+              animate={{ width: INNER_WIDTH }}
+              transition={{ duration: reveal.duration, ease: "easeOut" }}
+            />
+          </clipPath>
+          <g clipPath={`url(#${clipId})`}>
+            <path d={areaPath(marketPoints, INNER_HEIGHT)} fill="var(--jade-a5)" stroke="none" />
+            <path
+              d={linePath(bookPoints)}
+              fill="none"
+              stroke="var(--gray-a11)"
+              strokeWidth={1.5}
+              strokeDasharray="4 3"
+            />
           </g>
-        ))}
-        <clipPath id={clipId}>
-          <motion.rect
-            y={0}
+          <CursorMarks
+            x={cursor.x}
+            y={cursor.point === null ? null : scales.y(cursor.point.marketValue)}
             height={INNER_HEIGHT}
-            initial={{ width: reveal.initialWidth }}
-            animate={{ width: INNER_WIDTH }}
-            transition={{ duration: reveal.duration, ease: "easeOut" }}
           />
-        </clipPath>
-        <g clipPath={`url(#${clipId})`}>
-          <path d={areaPath(marketPoints, INNER_HEIGHT)} fill="var(--jade-a5)" stroke="none" />
-          <path
-            d={linePath(bookPoints)}
-            fill="none"
-            stroke="var(--gray-a11)"
-            strokeWidth={1.5}
-            strokeDasharray="4 3"
-          />
+          <text x={0} y={INNER_HEIGHT + 20} fontSize={11} fill="var(--gray-a11)">
+            {formatPeriodLabel(first.period)}
+          </text>
+          <text
+            x={INNER_WIDTH}
+            y={INNER_HEIGHT + 20}
+            textAnchor="end"
+            fontSize={11}
+            fill="var(--gray-a11)"
+          >
+            {formatPeriodLabel(last.period)}
+          </text>
         </g>
-        <text x={0} y={INNER_HEIGHT + 20} fontSize={11} fill="var(--gray-a11)">
-          {formatPeriodLabel(first.period)}
-        </text>
-        <text
-          x={INNER_WIDTH}
-          y={INNER_HEIGHT + 20}
-          textAnchor="end"
-          fontSize={11}
-          fill="var(--gray-a11)"
-        >
-          {formatPeriodLabel(last.period)}
-        </text>
-      </g>
-    </svg>
+      </svg>
+      {cursor.period === null ? null : (
+        <div style={{ ...tooltipAnchorStyle(MARGIN.left + (cursor.x ?? 0), WIDTH), top: 0 }}>
+          <ChartTooltip
+            period={cursor.period}
+            point={cursor.point}
+            countedAccounts={countedAccounts}
+          />
+        </div>
+      )}
+    </div>
   );
 }

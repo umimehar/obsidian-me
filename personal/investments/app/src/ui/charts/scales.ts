@@ -21,6 +21,30 @@ export function periodToDate(period: string): Date {
 }
 
 /**
+ * Every `YYYY-MM` from `first` to `last` inclusive, oldest first. Empty when
+ * `last` precedes `first`.
+ *
+ * This is the chart's x axis as months, which is not the same list as the
+ * series' points: a series omits a month it has no statement for, and this
+ * does not. A cursor has to walk the axis rather than the points, or a
+ * position over an unstated month would silently resolve to a neighbour's
+ * figure. Keeping the two lists distinct is what lets a gap stay a gap.
+ */
+export function monthsBetween(first: string, last: string): string[] {
+  const start = periodToDate(first);
+  const end = periodToDate(last);
+  const months: string[] = [];
+  for (
+    let cursor = start;
+    cursor <= end;
+    cursor = new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth() + 1, 1))
+  ) {
+    months.push(`${cursor.getUTCFullYear()}-${String(cursor.getUTCMonth() + 1).padStart(2, "0")}`);
+  }
+  return months;
+}
+
+/**
  * Builds the x (time) and y (linear, niced) scales for a set of points,
  * mapped onto `[0, width]` and `[height, 0]` pixel ranges (y inverted, so a
  * larger value draws higher on the page). `points` need not be sorted.

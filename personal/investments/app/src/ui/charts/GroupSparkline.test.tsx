@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import type { AccountSeries } from "../../analytics/types";
 import { loadAnalytics } from "../data";
 import { GroupSparkline, INNER_HEIGHT, INNER_WIDTH } from "./GroupSparkline";
@@ -130,20 +130,101 @@ describe("GroupSparkline empty state", () => {
   });
 });
 
+/** The account-lens group named `label`, as the series its accounts own. */
+function accountGroup(label: string): readonly AccountSeries[] {
+  const group = analytics.rollups.account.find((g) => g.label === label);
+  if (group === undefined) throw new Error(`expected an account group named ${label}`);
+  return seriesForAccounts(
+    analytics.series,
+    group.accounts.map((a) => a.maskedId),
+  );
+}
+
+function renderCrypto() {
+  render(
+    <GroupSparkline label="Crypto" series={accountGroup("Crypto")} xDomain={PORTFOLIO_DOMAIN} />,
+  );
+}
+
 describe("GroupSparkline single-point group", () => {
   test("draws a visible marker rather than a zero-width area", () => {
     // The account lens's Crypto group holds exactly one statement (2026-06).
-    const group = analytics.rollups.account.find((g) => g.label === "Crypto");
-    if (group === undefined) throw new Error("expected a Crypto group in the account lens");
-    const series = seriesForAccounts(
-      analytics.series,
-      group.accounts.map((a) => a.maskedId),
-    );
-    render(<GroupSparkline label="Crypto" series={series} xDomain={PORTFOLIO_DOMAIN} />);
+    renderCrypto();
 
     const dot = document.querySelector("circle");
     expect(dot).not.toBeNull();
     expect(Number(dot?.getAttribute("r"))).toBeGreaterThan(0);
     expect(screen.getByRole("img").getAttribute("aria-label")).toContain("ending at $1,014.96.");
+  });
+
+  test("says in words that it is one statement, so a lone dot does not read as a broken chart", () => {
+    renderCrypto();
+    expect(screen.getByText(/one statement, Jun 2026/i)).toBeDefined();
+  });
+
+  test("a group with a real line says nothing of the sort", () => {
+    renderGroup("Growth");
+    expect(screen.queryByText(/statement, /i)).toBeNull();
+  });
+});
+
+/** The sparkline svg, with a stub box so a client x maps onto its viewBox one to one. */
+function sparkline(): SVGSVGElement {
+  const node = document.querySelector("svg");
+  if (node === null) throw new Error("expected a sparkline to render");
+  node.getBoundingClientRect = () => new DOMRect(0, 0, 720, 48);
+  return node;
+}
+
+function tooltipText(): string {
+  return document.querySelector("[data-chart-tooltip]")?.textContent ?? "";
+}
+
+describe("GroupSparkline cursor over the shared domain", () => {
+  test("a month this group never reported says so, and states no figure", () => {
+    // Education is the RESP: six statements, Jan 2026 to Jun 2026, drawn on
+    // the portfolio's own Jun 2023 to Jun 2026 axis. Halfway across is 2024,
+    // where this group has nothing at all. A nearest-point lookup would
+    // answer with January 2026's figure for a month two years earlier.
+    renderGroup("Education");
+    fireEvent.pointerMove(sparkline(), { clientX: 360 });
+    expect(tooltipText()).toMatch(/No statement for this month/);
+    expect(tooltipText()).not.toContain("$");
+    expect(tooltipText()).toMatch(/20(23|24)/);
+    // The crosshair is there, and there is deliberately no dot on it: a dot
+    // would put a point on the line where the group reported nothing.
+    expect(document.querySelector("[data-cursor-marks]")).not.toBeNull();
+    expect(document.querySelector("[data-cursor-marker]")).toBeNull();
+  });
+
+  test("a month it did report states that month's own value to the cent", () => {
+    renderGroup("Education");
+    fireEvent.pointerMove(sparkline(), { clientX: 719 });
+    expect(tooltipText()).toContain("Jun 2026");
+    expect(tooltipText()).toContain("$3,943.98");
+    expect(tooltipText()).toContain("1 of 1 account reported this month");
+  });
+
+  test("arrowing from a gap lands on a stated month rather than the next empty one", () => {
+    renderGroup("Education");
+    const svg = sparkline();
+    fireEvent.pointerMove(svg, { clientX: 360 });
+    expect(tooltipText()).toMatch(/No statement/);
+    fireEvent.keyDown(svg, { key: "ArrowRight" });
+    expect(tooltipText()).toContain("Jan 2026");
+    expect(tooltipText()).toContain("$");
+  });
+
+  test("the accessible summary of a group chart follows the cursor too", () => {
+    renderGroup("Education");
+    fireEvent.keyDown(sparkline(), { key: "End" });
+    const summary = screen.getByRole("img").getAttribute("aria-label") ?? "";
+    expect(summary).toContain("Education market value from Jan 2026 to Jun 2026");
+    expect(summary).toContain("Market value $3,943.98");
+  });
+
+  test("the empty-state card has no cursor to move, and no tooltip appears", () => {
+    renderGroup("Spending");
+    expect(document.querySelector("[data-chart-tooltip]")).toBeNull();
   });
 });

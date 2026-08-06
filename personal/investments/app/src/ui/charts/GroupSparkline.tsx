@@ -2,10 +2,12 @@ import { motion } from "motion/react";
 import { useId, useMemo } from "react";
 import type { AccountSeries } from "../../analytics/types";
 import { formatCurrency } from "../format";
+import { ChartTooltip, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
 import { type PlotPoint, areaPath, formatPeriodLabel, linePath } from "./plot";
 import { type PortfolioPoint, buildPortfolioSeries } from "./portfolioSeries";
 import { useRevealMotion } from "./reveal";
 import { type ChartPoint, buildScales, periodToDate } from "./scales";
+import { CursorMarks, cursorSlots, useChartCursor } from "./useChartCursor";
 
 export interface GroupSparklineProps {
   /** The group's own name, so the accessible summary says which card this chart belongs to. */
@@ -77,6 +79,23 @@ function EmptyState({ label }: { label: string }) {
 }
 
 /**
+ * What a group with exactly one statement has to say for itself.
+ *
+ * The account lens's Crypto group holds one statement, so its chart is a
+ * single dot on an otherwise empty band, which at a glance reads as a chart
+ * that failed to draw rather than as a group with one month of history. The
+ * dot is honest and stays; this says in words what it means, so the reader
+ * is not left to work out whether the emptiness is the data or a bug.
+ */
+function SingleStatementNote({ period }: { period: string }) {
+  return (
+    <p style={{ color: "var(--gray-a11)", fontSize: 12, margin: "2px 0 0" }}>
+      One statement, {formatPeriodLabel(period)}. Not enough history to draw a line.
+    </p>
+  );
+}
+
+/**
  * One group's market value over time, filled, sized to sit inside a group
  * card in place of a figure that was already in the card's text.
  *
@@ -105,6 +124,12 @@ export function GroupSparkline({ label, series, xDomain }: GroupSparklineProps) 
         : buildScales(domainPoints(points, xDomain), INNER_WIDTH, INNER_HEIGHT),
     [points, xDomain],
   );
+  const slots = useMemo(() => cursorSlots(xDomain, scales), [xDomain, scales]);
+  const cursor = useChartCursor(points, slots, { viewBoxWidth: WIDTH, marginLeft: PAD });
+  const countedAccounts = useMemo(
+    () => series.filter((account) => account.inTotals).length,
+    [series],
+  );
 
   const first = points[0];
   const last = points[points.length - 1];
@@ -122,35 +147,62 @@ export function GroupSparkline({ label, series, xDomain }: GroupSparklineProps) 
   const summary =
     `${label} market value from ${formatPeriodLabel(first.period)} to ` +
     `${formatPeriodLabel(last.period)}, ending at ${formatCurrency(last.marketValue)}.`;
+  const readout =
+    cursor.period === null
+      ? ""
+      : ` ${tooltipLines(cursor.period, cursor.point, countedAccounts).join(". ")}.`;
 
   return (
-    <svg
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      role="img"
-      aria-label={summary}
-      style={{ width: "100%", height: "auto", display: "block" }}
-    >
-      <title>{`${label} value over time`}</title>
-      <g transform={`translate(${PAD},${PAD})`}>
-        <clipPath id={clipId}>
-          <motion.rect
-            y={0}
+    <div style={{ position: "relative" }}>
+      <svg
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        role="img"
+        aria-label={`${summary}${readout}`}
+        // biome-ignore lint/a11y/noNoninteractiveTabindex: a chart is a graphic that still has to be reachable, or its tooltip is mouse-only
+        tabIndex={0}
+        onPointerMove={cursor.onPointerMove}
+        onPointerLeave={cursor.onPointerLeave}
+        onKeyDown={cursor.onKeyDown}
+        onBlur={cursor.onBlur}
+        style={{ width: "100%", height: "auto", display: "block" }}
+      >
+        <title>{`${label} value over time`}</title>
+        <g transform={`translate(${PAD},${PAD})`}>
+          <clipPath id={clipId}>
+            <motion.rect
+              y={0}
+              height={INNER_HEIGHT}
+              initial={{ width: reveal.initialWidth }}
+              animate={{ width: INNER_WIDTH }}
+              transition={{ duration: reveal.duration, ease: "easeOut" }}
+            />
+          </clipPath>
+          <g clipPath={`url(#${clipId})`}>
+            <path d={areaPath(plotted, INNER_HEIGHT)} fill="var(--jade-a5)" stroke="none" />
+            <path d={linePath(plotted)} fill="none" stroke="var(--jade-a11)" strokeWidth={1.25} />
+            {/* The end marker, which is also the whole chart for a group with a
+                single statement: one point draws a zero-width area and no line. */}
+            {end !== undefined ? (
+              <circle cx={end.x} cy={end.y} r={DOT_RADIUS} fill="var(--jade-a11)" />
+            ) : null}
+          </g>
+          <CursorMarks
+            x={cursor.x}
+            y={cursor.point === null ? null : scales.y(cursor.point.marketValue)}
             height={INNER_HEIGHT}
-            initial={{ width: reveal.initialWidth }}
-            animate={{ width: INNER_WIDTH }}
-            transition={{ duration: reveal.duration, ease: "easeOut" }}
           />
-        </clipPath>
-        <g clipPath={`url(#${clipId})`}>
-          <path d={areaPath(plotted, INNER_HEIGHT)} fill="var(--jade-a5)" stroke="none" />
-          <path d={linePath(plotted)} fill="none" stroke="var(--jade-a11)" strokeWidth={1.25} />
-          {/* The end marker, which is also the whole chart for a group with a
-              single statement: one point draws a zero-width area and no line. */}
-          {end !== undefined ? (
-            <circle cx={end.x} cy={end.y} r={DOT_RADIUS} fill="var(--jade-a11)" />
-          ) : null}
         </g>
-      </g>
-    </svg>
+      </svg>
+      {points.length === 1 ? <SingleStatementNote period={last.period} /> : null}
+      {cursor.period === null ? null : (
+        <div style={{ ...tooltipAnchorStyle(PAD + (cursor.x ?? 0), WIDTH), top: "100%" }}>
+          <ChartTooltip
+            period={cursor.period}
+            point={cursor.point}
+            countedAccounts={countedAccounts}
+          />
+        </div>
+      )}
+    </div>
   );
 }
