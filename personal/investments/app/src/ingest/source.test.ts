@@ -46,17 +46,17 @@ describe("parseSourceFilename", () => {
   test("reads a fresh Wealthsimple download, which carries no template segment", () => {
     // This is what a statement actually downloads as, one at a time, from the
     // app -- unlike the renamed bulk-export form every other test here uses.
-    const p = parseSourceFilename("WK63GZF41CAD_person-008AocPsEJh4_2026-06_v_0.pdf");
-    expect(p?.accountNo).toBe("WK63GZF41CAD");
+    const p = parseSourceFilename("ACCT0001CAD_person-000000000000_2026-06_v_0.pdf");
+    expect(p?.accountNo).toBe("ACCT0001CAD");
     expect(p?.period).toBe("2026-06");
     expect(p?.version).toBe(0);
     expect(p?.templateStated).toBe(false);
   });
 
   test("rejects a malformed fresh-download period or a missing version", () => {
-    expect(parseSourceFilename("WK63GZF41CAD_person-008AocPsEJh4_2026-13_v_0.pdf")).toBeNull();
-    expect(parseSourceFilename("WK63GZF41CAD_person-008AocPsEJh4_2026-06.pdf")).toBeNull();
-    expect(parseSourceFilename("WK63GZF41CAD_person-008AocPsEJh4_2026-06_v_.pdf")).toBeNull();
+    expect(parseSourceFilename("ACCT0001CAD_person-000000000000_2026-13_v_0.pdf")).toBeNull();
+    expect(parseSourceFilename("ACCT0001CAD_person-000000000000_2026-06.pdf")).toBeNull();
+    expect(parseSourceFilename("ACCT0001CAD_person-000000000000_2026-06_v_.pdf")).toBeNull();
   });
 
   test("marks a filename that does state a template", () => {
