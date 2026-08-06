@@ -8,6 +8,7 @@ import {
   checkCrossDocument,
   checkGroundTruth,
   checkKindConsistency,
+  checkReturnDirection,
   checkStyleConsistency,
   checkSupersession,
 } from "./checks";
@@ -1144,5 +1145,141 @@ describe("checkGroundTruth", () => {
     const both = [statement(), statement({ source: src("2026-06", "PERFORMANCE") })];
     const f = checkGroundTruth(both, obs, new Set<string>());
     expect(f[0]?.actual).toBeCloseTo(20498.54, 2);
+  });
+});
+
+describe("checkReturnDirection", () => {
+  interface PerfOver {
+    end: number;
+    sinceInception: number | null;
+    oneYear?: number | null;
+    deposits?: number;
+    withdrawals?: number;
+  }
+
+  /** A PERFORMANCE statement carrying just the fields this check reads. */
+  function perf(period: string, over: PerfOver): Statement {
+    return statement({
+      source: src(period, "PERFORMANCE"),
+      returns: {
+        currentPeriod: null,
+        oneYear: over.oneYear ?? null,
+        threeYears: null,
+        fiveYears: null,
+        tenYears: null,
+        sinceInception: over.sinceInception,
+      },
+      balances: {
+        start: 0,
+        deposits: over.deposits ?? 0,
+        withdrawals: over.withdrawals ?? 0,
+        changeInMarketValue: 0,
+        end: over.end,
+      },
+    });
+  }
+
+  test("flags a stated return falling while market value rises with no flows", () => {
+    const f = checkReturnDirection([
+      perf("2026-01", { end: 11902.63, sinceInception: -0.12 }),
+      perf("2026-02", { end: 11977.14, sinceInception: -3.05 }),
+    ]);
+    expect(f).toHaveLength(1);
+    expect(f[0]?.check).toBe("return-direction");
+    expect(f[0]?.severity).toBe("error");
+    expect(f[0]?.period).toBe("2026-02");
+    expect(f[0]?.expected).toBe(-0.12);
+    expect(f[0]?.actual).toBe(-3.05);
+    expect(f[0]?.message).toContain("market value rose");
+  });
+
+  test("flags a stated return rising while market value falls with no flows", () => {
+    const f = checkReturnDirection([
+      perf("2026-03", { end: 12531.01, sinceInception: -0.52 }),
+      perf("2026-04", { end: 12370.86, sinceInception: 10.31 }),
+    ]);
+    expect(f).toHaveLength(1);
+    expect(f[0]?.period).toBe("2026-04");
+    expect(f[0]?.message).toContain("market value fell");
+  });
+
+  test("passes when the stated return moves the same way as market value", () => {
+    const f = checkReturnDirection([
+      perf("2026-01", { end: 100, sinceInception: 1 }),
+      perf("2026-02", { end: 110, sinceInception: 2 }),
+    ]);
+    expect(f).toHaveLength(0);
+  });
+
+  test("ignores a period carrying a deposit, where a flow explains the move", () => {
+    const f = checkReturnDirection([
+      perf("2026-01", { end: 100, sinceInception: 5 }),
+      perf("2026-02", { end: 160, sinceInception: 2, deposits: 50 }),
+    ]);
+    expect(f).toHaveLength(0);
+  });
+
+  test("ignores a period carrying a withdrawal", () => {
+    const f = checkReturnDirection([
+      perf("2026-01", { end: 100, sinceInception: 5 }),
+      perf("2026-02", { end: 110, sinceInception: 2, withdrawals: 50 }),
+    ]);
+    expect(f).toHaveLength(0);
+  });
+
+  test("ignores a gap in the series, where the missing month's flows are unobserved", () => {
+    const f = checkReturnDirection([
+      perf("2026-01", { end: 100, sinceInception: 5 }),
+      perf("2026-03", { end: 110, sinceInception: 2 }),
+    ]);
+    expect(f).toHaveLength(0);
+  });
+
+  test("ignores an annualized rate, which a printed one-year horizon declares", () => {
+    // The real 9710 pair: market value rose 5974.61 -> 6036.31 with no flows
+    // while since-inception fell 17.32% -> 17.01%. Correct, not a defect: a
+    // month gaining less than the standing run-rate lowers an annualized rate.
+    const f = checkReturnDirection([
+      perf("2025-10", { end: 5974.61, sinceInception: 17.32, oneYear: 20.93 }),
+      perf("2025-11", { end: 6036.31, sinceInception: 17.01, oneYear: 19.1 }),
+    ]);
+    expect(f).toHaveLength(0);
+  });
+
+  test("ignores a pair whose earlier statement has no stated since-inception", () => {
+    const f = checkReturnDirection([
+      perf("2026-01", { end: 100, sinceInception: null }),
+      perf("2026-02", { end: 110, sinceInception: 2 }),
+    ]);
+    expect(f).toHaveLength(0);
+  });
+
+  test("ignores a rate move smaller than the printed precision", () => {
+    const f = checkReturnDirection([
+      perf("2026-01", { end: 110, sinceInception: 2.0 }),
+      perf("2026-02", { end: 100, sinceInception: 2.004 }),
+    ]);
+    expect(f).toHaveLength(0);
+  });
+
+  test("ignores a market value move smaller than a cent, which has no real direction", () => {
+    const f = checkReturnDirection([
+      perf("2026-01", { end: 100, sinceInception: 5 }),
+      perf("2026-02", { end: 100.005, sinceInception: 2 }),
+    ]);
+    expect(f).toHaveLength(0);
+  });
+
+  test("keeps two accounts' series apart", () => {
+    const other = perf("2026-02", { end: 11977.14, sinceInception: -3.05 });
+    const foreign: Statement = {
+      ...other,
+      source: { ...other.source, accountNo: "ACCT0002CAD" },
+    };
+    const f = checkReturnDirection([
+      perf("2026-01", { end: 11902.63, sinceInception: -0.12 }),
+      foreign,
+    ]);
+    expect(f).toHaveLength(0);
   });
 });

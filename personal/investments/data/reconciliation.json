@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-06T16:22:59.635Z",
+  "generated": "2026-08-06T22:33:17.112Z",
   "statementCount": 220,
   "findings": [
     {
@@ -1119,6 +1119,32 @@
       "sourceFile": "9710_2026-06_BROKERAGE.pdf",
       "acknowledged": true,
       "reason": "A real, owner-initiated product change, not a parser defect: this TFSA moved from self-directed to a Wealthsimple Managed portfolio. Its history reads Tax-Free Savings Account (self-directed), then Tax-Free Savings Managed Cash Account, then Managed TFSA Account."
+    },
+    {
+      "check": "return-direction",
+      "severity": "error",
+      "accountShortId": "d6d9",
+      "period": "2026-02",
+      "message": "no deposits or withdrawals since 2026-01, where market value rose by 74.51 but the stated since-inception return fell",
+      "expected": -0.12,
+      "actual": -3.05,
+      "delta": -2.9299999999999997,
+      "sourceFile": "d6d9_2026-02_PERFORMANCE.pdf",
+      "acknowledged": true,
+      "reason": "Wealthsimple's returns block contradicts its own balance summary. This account is under a year old and none of its statements print a one-year rate, so the since-inception figure is cumulative rather than annualized. Over 2026-02 the balance summary prints $0.00 deposits and $0.00 withdrawals with market value rising from $11,902.63 to $11,977.14; against the single $12,000.00 deposit that opened the account that is a cumulative -0.81% moving to -0.19%, yet the printed since-inception rate moves from -0.12% to -3.05%. Not a parser defect: the returns row prints six percentages whose x positions align exactly with the six horizon headers, and every one is read correctly."
+    },
+    {
+      "check": "return-direction",
+      "severity": "error",
+      "accountShortId": "d6d9",
+      "period": "2026-04",
+      "message": "no deposits or withdrawals since 2026-03, where market value fell by 160.15 but the stated since-inception return rose",
+      "expected": -0.52,
+      "actual": 10.31,
+      "delta": 10.83,
+      "sourceFile": "d6d9_2026-04_PERFORMANCE.pdf",
+      "acknowledged": true,
+      "reason": "The same defect as 2026-02 in the opposite direction. Over 2026-04 the balance summary prints $0.00 deposits and $0.00 withdrawals with market value falling from $12,531.01 to $12,370.86, a cumulative +4.43% falling to +3.09%, yet the printed since-inception rate rises from -0.52% to 10.31%. Neither of those two rates matches the cumulative return the same statement's own balance summary implies. 10.31% is the figure the returns chart renders as card text, and it is left visible and wrong: no value is rewritten in the parser."
     },
     {
       "check": "ground-truth",

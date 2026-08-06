@@ -845,6 +845,105 @@ export function checkCrossDocument(statements: readonly Statement[]): Finding[] 
   return out;
 }
 
+/**
+ * Since-inception rates print to two decimals, so half a basis point of slack
+ * is enough to call two of them equal.
+ */
+const RETURN_TOLERANCE = 0.005;
+
+/** PERFORMANCE statements grouped by account, each list in period order. */
+function performanceSeries(statements: readonly Statement[]): Map<string, Statement[]> {
+  const map = new Map<string, Statement[]>();
+  for (const s of statements) {
+    if (s.source.template !== "PERFORMANCE") continue;
+    const list = map.get(s.source.accountNo) ?? [];
+    list.push(s);
+    map.set(s.source.accountNo, list);
+  }
+  for (const list of map.values()) {
+    list.sort((a, b) => a.source.period.localeCompare(b.source.period));
+  }
+  return map;
+}
+
+/**
+ * A since-inception rate is only cumulative while the account is under a year
+ * old; past that Wealthsimple annualizes it, and an annualized rate falls
+ * whenever a month gains less than the run-rate it already carries, with the
+ * market value still rising. The statement declares which regime it is in by
+ * whether it prints a one-year rate at all: a null one-year horizon means
+ * there is under a year of history behind it. Reading the regime off the page
+ * beats inferring an inception date from the corpus, whose own first month is
+ * not any account's opening.
+ *
+ * A genuine measured 0.00% one-year return also reads as null here, which
+ * only makes this skip a decidable step. It can never make it fire wrongly.
+ */
+function isCumulativeRegime(prev: Statement, curr: Statement): boolean {
+  return prev.returns?.oneYear === null && curr.returns?.oneYear === null;
+}
+
+/**
+ * Whether the step from `prev` to `curr` is one the direction rule can decide:
+ * consecutive months, both carrying a balance summary, and no money in or out
+ * over the later period. A gap in the series is skipped rather than assumed
+ * flow-free, because the flows of the missing month are exactly what is
+ * unobserved.
+ */
+function isFlowFreeStep(prev: Statement, curr: Statement): boolean {
+  const after = curr.balances;
+  if (!prev.balances || !after) return false;
+  if (curr.source.period !== nextPeriod(prev.source.period)) return false;
+  return within(after.deposits, 0) && within(after.withdrawals, 0);
+}
+
+/**
+ * With no deposits and no withdrawals over a period, the only thing that can
+ * move a cumulative since-inception return is the market, so the stated rate
+ * must move the same way the market value did. Opposite signs are
+ * arithmetically impossible and mean one of the two printed figures is wrong.
+ */
+function checkReturnDirectionPair(prev: Statement, curr: Statement, out: Finding[]): void {
+  if (!isFlowFreeStep(prev, curr) || !isCumulativeRegime(prev, curr)) return;
+  const before = prev.balances;
+  const after = curr.balances;
+  if (!before || !after) return;
+
+  const priorRate = prev.returns?.sinceInception ?? null;
+  const statedRate = curr.returns?.sinceInception ?? null;
+  if (priorRate === null || statedRate === null) return;
+
+  const valueDelta = after.end - before.end;
+  const rateDelta = statedRate - priorRate;
+  if (within(valueDelta, 0) || Math.abs(rateDelta) <= RETURN_TOLERANCE) return;
+  if (valueDelta > 0 === rateDelta > 0) return;
+
+  const valueWord = valueDelta > 0 ? "rose" : "fell";
+  const rateWord = rateDelta > 0 ? "rose" : "fell";
+  out.push(
+    finding(
+      "return-direction",
+      curr,
+      `no deposits or withdrawals since ${prev.source.period}, where market value ${valueWord} by ${Math.abs(valueDelta).toFixed(2)} but the stated since-inception return ${rateWord}`,
+      priorRate,
+      statedRate,
+    ),
+  );
+}
+
+export function checkReturnDirection(statements: readonly Statement[]): Finding[] {
+  const out: Finding[] = [];
+  for (const list of performanceSeries(statements).values()) {
+    for (let i = 1; i < list.length; i += 1) {
+      const prev = list[i - 1];
+      const curr = list[i];
+      if (!prev || !curr) continue;
+      checkReturnDirectionPair(prev, curr, out);
+    }
+  }
+  return out;
+}
+
 export interface Observation {
   observed: string;
   period: string;
@@ -912,6 +1011,7 @@ export function runChecks(
     ...checkKindConsistency(statements),
     ...checkStyleConsistency(statements),
     ...checkBalanceChain(statements),
+    ...checkReturnDirection(statements),
     ...checkGroundTruth(statements, observations, countedAccounts),
   ];
 }

@@ -33,6 +33,22 @@ export const ACKNOWLEDGED: readonly Acknowledgement[] = [
     reviewed: "2026-08-06",
   },
   {
+    check: "return-direction",
+    shortId: "d6d9",
+    period: "2026-02",
+    reason:
+      "Wealthsimple's returns block contradicts its own balance summary. This account is under a year old and none of its statements print a one-year rate, so the since-inception figure is cumulative rather than annualized. Over 2026-02 the balance summary prints $0.00 deposits and $0.00 withdrawals with market value rising from $11,902.63 to $11,977.14; against the single $12,000.00 deposit that opened the account that is a cumulative -0.81% moving to -0.19%, yet the printed since-inception rate moves from -0.12% to -3.05%. Not a parser defect: the returns row prints six percentages whose x positions align exactly with the six horizon headers, and every one is read correctly.",
+    reviewed: "2026-08-06",
+  },
+  {
+    check: "return-direction",
+    shortId: "d6d9",
+    period: "2026-04",
+    reason:
+      "The same defect as 2026-02 in the opposite direction. Over 2026-04 the balance summary prints $0.00 deposits and $0.00 withdrawals with market value falling from $12,531.01 to $12,370.86, a cumulative +4.43% falling to +3.09%, yet the printed since-inception rate rises from -0.52% to 10.31%. Neither of those two rates matches the cumulative return the same statement's own balance summary implies. 10.31% is the figure the returns chart renders as card text, and it is left visible and wrong: no value is rewritten in the parser.",
+    reviewed: "2026-08-06",
+  },
+  {
     check: "style-drift",
     shortId: "9710",
     period: "2026-06",

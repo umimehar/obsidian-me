@@ -8,6 +8,7 @@ export type CheckName =
   | "kind-drift"
   | "style-drift"
   | "balance-chain"
+  | "return-direction"
   | "ingest"
   | "ground-truth";
 

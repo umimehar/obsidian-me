@@ -14,7 +14,7 @@ function entry(reason: string): Acknowledgement {
 describe("assertReasonsGiven", () => {
   test("accepts the real acknowledgements", () => {
     expect(() => assertReasonsGiven(ACKNOWLEDGED)).not.toThrow();
-    expect(ACKNOWLEDGED.length).toBe(3);
+    expect(ACKNOWLEDGED.length).toBe(5);
   });
 
   test("rejects an empty reason, naming the entry", () => {
