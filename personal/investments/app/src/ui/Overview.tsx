@@ -1,10 +1,13 @@
-import { Badge, Card, Flex, Heading, Progress, Text } from "@radix-ui/themes";
+import { Badge, Box, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
 import type { Lens, Rollup, RollupAccount } from "../analytics/rollup";
+import type { AccountSeries } from "../analytics/types";
 import { LensToggle } from "./LensToggle";
+import { GroupSparkline } from "./charts/GroupSparkline";
 import { ValueOverTime } from "./charts/ValueOverTime";
+import { buildPortfolioSeries, periodExtent, seriesForAccounts } from "./charts/portfolioSeries";
 import { grandTotal, latestPeriod } from "./data";
 import { formatCurrency } from "./format";
 
@@ -82,6 +85,10 @@ interface GroupCardProps {
   group: Rollup;
   grandTotalValue: number;
   motionSpec: CardMotion;
+  /** The whole corpus, narrowed to this group's accounts for its sparkline. */
+  series: readonly AccountSeries[];
+  /** The portfolio's full period range, shared by every card's chart. */
+  xDomain: readonly [string, string] | null;
 }
 
 /**
@@ -90,8 +97,16 @@ interface GroupCardProps {
  * not styling -- the group's DOM position is what changes between lenses,
  * so tests need a way to scope into "this card" that survives the reorder.
  */
-function GroupCard({ group, grandTotalValue, motionSpec }: GroupCardProps) {
+function GroupCard({ group, grandTotalValue, motionSpec, series, xDomain }: GroupCardProps) {
   const share = grandTotalValue > 0 ? group.total / grandTotalValue : 0;
+  const groupSeries = useMemo(
+    () =>
+      seriesForAccounts(
+        series,
+        group.accounts.map((account) => account.maskedId),
+      ),
+    [series, group.accounts],
+  );
   return (
     <motion.div
       key={group.key}
@@ -112,21 +127,16 @@ function GroupCard({ group, grandTotalValue, motionSpec }: GroupCardProps) {
           </Text>
         </Flex>
         <Flex justify="between" align="center" mb="2">
-          <Text size="5" weight="bold">
+          <Text size="5" weight="bold" data-group-total="">
             {formatCurrency(group.total)}
           </Text>
           <Text size="2" color="gray">
             {formatShare(share)} of total
           </Text>
         </Flex>
-        {/* Decorative, and hidden from the accessibility tree on purpose. Radix
-            derives aria-valuetext from the value and rounds to whole percent,
-            so an exposed bar announces 2% for the RESP line whose visible text
-            says 1.6% -- the one decimal formatShare exists for. The figure is
-            already in that text, so the bar has nothing to add. Same defect as
-            the ValueOverTime aria-label task 3a fixed; RoomBar's own bar is
-            labelled instead, because there the bar carries a fill no text does. */}
-        <Progress value={share * 100} mb="3" aria-hidden />
+        <Box mb="3">
+          <GroupSparkline label={group.label} series={groupSeries} xDomain={xDomain} />
+        </Box>
         {group.accounts.length === 0 ? (
           <Text size="2" color="gray">
             No accounts in this group.
@@ -157,6 +167,10 @@ export function Overview({ analytics }: OverviewProps) {
   const total = grandTotal(analytics);
   const period = latestPeriod(analytics);
   const groups = analytics.rollups[lens];
+  const xDomain = useMemo(
+    () => periodExtent(buildPortfolioSeries(analytics.series)),
+    [analytics.series],
+  );
 
   return (
     <Flex direction="column" gap="4">
@@ -179,6 +193,8 @@ export function Overview({ analytics }: OverviewProps) {
             group={group}
             grandTotalValue={total}
             motionSpec={motionSpec}
+            series={analytics.series}
+            xDomain={xDomain}
           />
         ))}
       </AnimatePresence>

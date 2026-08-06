@@ -177,17 +177,66 @@ describe("Overview", () => {
     expect(within(groupCard("FHSA")).getByText("1 account")).toBeDefined();
   });
 
-  test("no group bar announces a percentage coarser than the one on screen", () => {
+  test("no group card announces a figure coarser than the one it prints", () => {
     renderOverview();
-    const bars = [...document.querySelectorAll('[data-overview-group] [role="progressbar"]')];
-    expect(bars.length).toBeGreaterThan(5);
-    for (const bar of bars) {
-      // Exposed, the bar would announce Radix's whole-percent aria-valuetext:
-      // 2% beside a visible 1.6%, 20% beside 20.4%.
-      expect(bar.getAttribute("aria-hidden")).toBe("true");
+    const cards = [...document.querySelectorAll("[data-overview-group]")];
+    expect(cards.length).toBe(7);
+
+    let charted = 0;
+    for (const card of cards) {
+      const total = card.querySelector("[data-group-total]")?.textContent;
+      const summary = card.querySelector('[role="img"]')?.getAttribute("aria-label") ?? "";
+      if (!summary.includes("ending at")) continue;
+      // The defect this replaces: the old progress bar announced Radix's
+      // whole-percent aria-valuetext, 20% beside a visible 20.4%. The chart
+      // that took its place states the card's own total, cents and all.
+      charted += 1;
+      expect(summary).toContain(`ending at ${total}.`);
     }
-    // The figure itself is still on the page, at the precision it belongs at.
+    // Six of the seven registration groups have a value history; Cash has none.
+    expect(charted).toBe(6);
+
+    // The share figure the bar used to draw is still on the page, at the
+    // precision it belongs at, and no bar is left to round it.
     expect(within(groupCard("RESP")).getByText(/1\.6% of total/)).toBeDefined();
+    expect(document.querySelector('[data-overview-group] [role="progressbar"]')).toBeNull();
+  });
+
+  test("each group card charts its own history, ending at its own total", () => {
+    renderOverview();
+    const rrsp = within(groupCard("RRSP")).getByRole("img");
+    expect(rrsp.getAttribute("aria-label")).toContain("RRSP market value");
+    expect(rrsp.getAttribute("aria-label")).toContain("from Aug 2025 to Jun 2026");
+    expect(rrsp.getAttribute("aria-label")).toContain("ending at $49,314.45.");
+
+    const tfsa = within(groupCard("TFSA")).getByRole("img");
+    expect(tfsa.getAttribute("aria-label")).toContain("from Jun 2023 to Jun 2026");
+    expect(tfsa.getAttribute("aria-label")).toContain("ending at $48,155.28.");
+  });
+
+  test("a group with no value history says so rather than charting a flat zero", () => {
+    renderOverview();
+    // The Cash group is three inTotals: false Chequing accounts, so it has no
+    // points at all -- a baseline at zero would read as a real zero balance.
+    const cash = within(groupCard("Cash"));
+    expect(cash.getByText(/no value history/i)).toBeDefined();
+    expect(groupCard("Cash").querySelector("svg")).toBeNull();
+  });
+
+  test("every group chart shares one x domain, so a short history draws short", () => {
+    renderOverview();
+    const startX = (label: string): number => {
+      const d = groupCard(label).querySelector("path")?.getAttribute("d") ?? "";
+      const match = /^M(-?[\d.]+),/.exec(d);
+      if (match === null) throw new Error(`expected a charted path in the ${label} card`);
+      return Number(match[1]);
+    };
+    // TFSA runs the full 2023-06..2026-06; RESP starts 2026-01. Rescaled per
+    // card both would start at 0 and the RESP would imply three years of
+    // history it does not have.
+    expect(startX("TFSA")).toBe(0);
+    expect(startX("RESP")).toBeGreaterThan(startX("FHSA"));
+    expect(startX("FHSA")).toBeGreaterThan(startX("TFSA"));
   });
 
   test("group share of total is computed against the same headline total", () => {

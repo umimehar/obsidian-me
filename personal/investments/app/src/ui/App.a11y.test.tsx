@@ -101,15 +101,27 @@ describe("App accessibility", () => {
 
   test("every progressbar left in the tree is named", () => {
     // The control sweep above covers buttons, radios and summaries only, which
-    // is why seven unnamed Overview bars went unnoticed. A bar is either
+    // is how a set of unnamed bars once went unnoticed. A bar is either
     // decorative and hidden, or exposed and named. Never exposed and anonymous.
     render(<App />);
     const bars = [...document.querySelectorAll('[role="progressbar"]')];
-    expect(bars.length).toBeGreaterThan(5);
+    expect(bars.length).toBeGreaterThan(0);
     const exposed = bars.filter((bar) => bar.getAttribute("aria-hidden") !== "true");
     expect(exposed.length).toBeGreaterThan(0);
     for (const bar of exposed) {
       expect(accessibleName(bar)).not.toBe("");
+    }
+  });
+
+  test("every graphic is named, since a chart has no text a reader can fall back to", () => {
+    // The same sweep, for the role that replaced the Overview's bars. An
+    // unnamed role="img" announces as "image" and says nothing at all.
+    render(<App />);
+    const graphics = [...document.querySelectorAll('[role="img"]')];
+    // One portfolio chart plus one per group card in the default lens.
+    expect(graphics.length).toBeGreaterThan(5);
+    for (const graphic of graphics) {
+      expect(accessibleName(graphic)).not.toBe("");
     }
   });
 

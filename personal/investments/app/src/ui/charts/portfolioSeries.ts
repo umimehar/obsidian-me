@@ -58,3 +58,27 @@ export function buildPortfolioSeries(series: readonly AccountSeries[]): Portfoli
     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
     .map(([period, totals]) => ({ period, ...totals }));
 }
+
+/**
+ * The subset of `series` belonging to one rollup group, matched on
+ * `maskedId`. Exists so a group's value over time is built by handing this
+ * subset to `buildPortfolioSeries` -- the group charts sum exactly the way
+ * the portfolio chart does, including the `inTotals` exclusion and the
+ * no-zero-fill rule, rather than through a second aggregation that could
+ * drift from it.
+ */
+export function seriesForAccounts(
+  series: readonly AccountSeries[],
+  accountIds: readonly string[],
+): AccountSeries[] {
+  const wanted = new Set(accountIds);
+  return series.filter((account) => wanted.has(account.maskedId));
+}
+
+/** A built series' `[first, last]` period, or null when it has no points to take an extent from. */
+export function periodExtent(points: readonly PortfolioPoint[]): readonly [string, string] | null {
+  const first = points[0];
+  const last = points[points.length - 1];
+  if (first === undefined || last === undefined) return null;
+  return [first.period, last.period];
+}
