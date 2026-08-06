@@ -3,6 +3,51 @@ import type { Contributions, Statement } from "../types";
 import type { AccountSeries, MonthPoint } from "./types";
 
 /**
+ * Activity codes counted as a subscriber's own contribution when a
+ * `contributions` figure must be derived from activity rather than read off
+ * a statement: `CONT` itself, plus the codes that mark money arriving from
+ * outside the owner's Wealthsimple accounts (a bank EFT, a pre-authorized
+ * transfer, an e-transfer received, or a generic deposit). `GRANT`/`CLB`
+ * are deliberately absent -- government money is not the subscriber's
+ * contribution and must never count toward a lifetime cap. `TRFINTF` /
+ * `TRFOUT` / `TRFOUTTF` are also absent -- transfers between the owner's
+ * own accounts are not new money in.
+ */
+const CONTRIBUTION_ACTIVITY_CODES = new Set(["CONT", "DEP", "EFT", "AFT_IN", "E_TRFIN", "TRFIN"]);
+
+/** Sums this statement's contribution-shaped activity credits (see `CONTRIBUTION_ACTIVITY_CODES`). */
+function deriveContributionFromActivity(s: Statement): number {
+  let total = 0;
+  for (const row of s.activity) {
+    if (CONTRIBUTION_ACTIVITY_CODES.has(row.code)) total += row.credit;
+  }
+  return total;
+}
+
+/** The fields every `MonthPoint` carries regardless of how contributions are sourced. */
+function baseMonthFields(
+  s: Statement,
+): Omit<
+  MonthPoint,
+  | "contributions"
+  | "contributionMonthsSpanned"
+  | "contributionFirst60Days"
+  | "contributionRestOfYear"
+  | "contributionsSource"
+> {
+  const cadCash = s.cash.find((c) => c.currency === "CAD") ?? null;
+  return {
+    period: s.source.period,
+    marketValue: s.portfolio?.totalMarketValue ?? null,
+    bookCost: s.portfolio?.totalBookCost ?? null,
+    cashBalance: cadCash?.closing ?? null,
+    deposits: cadCash?.paidIn?.deposits ?? 0,
+    withdrawals: cadCash?.paidOut?.withdrawals ?? 0,
+    grants: 0, // task 3: summed from GRANT/CLB activity credits
+  };
+}
+
+/**
  * The account's combined year-to-date contribution figure for one
  * statement -- `yearToDate` directly for a self-directed-style statement,
  * or `first60Days + restOfYear` for the split-style statements the RRSP
@@ -48,10 +93,12 @@ function contributionDelta(
   return { contributions: yearToDate, contributionMonthsSpanned: current.month };
 }
 
+interface MonthsResult {
+  months: MonthPoint[];
+  contributionsByYear: Record<string, number>;
+}
+
 /**
- * Builds one account's `MonthPoint`s and its `contributionsByYear` rollup
- * together, in a single pass over its statements in period order.
- *
  * Each stated year-to-date contribution figure turns into a delta against
  * the last stated figure -- or into the figure itself when it is the first
  * stated point of its calendar year, since the running total resets each
@@ -65,10 +112,7 @@ function contributionDelta(
  * in each calendar year, which equals the sum of that year's monthly deltas
  * by construction, since they telescope back to it.
  */
-function buildMonths(statements: readonly Statement[]): {
-  months: MonthPoint[];
-  contributionsByYear: Record<string, number>;
-} {
+function buildStatedMonths(statements: readonly Statement[]): MonthsResult {
   const months: MonthPoint[] = [];
   const contributionsByYear: Record<string, number> = {};
   let last: { year: number; month: number; yearToDate: number } | null = null;
@@ -83,23 +127,60 @@ function buildMonths(statements: readonly Statement[]): {
       last = { ...current, yearToDate };
     }
 
-    const cadCash = s.cash.find((c) => c.currency === "CAD") ?? null;
     months.push({
-      period: s.source.period,
-      marketValue: s.portfolio?.totalMarketValue ?? null,
-      bookCost: s.portfolio?.totalBookCost ?? null,
-      cashBalance: cadCash?.closing ?? null,
-      deposits: cadCash?.paidIn?.deposits ?? 0,
-      withdrawals: cadCash?.paidOut?.withdrawals ?? 0,
+      ...baseMonthFields(s),
       contributions: delta?.contributions ?? null,
       contributionMonthsSpanned: delta?.contributionMonthsSpanned ?? 1,
       contributionFirst60Days: s.contributions?.first60Days ?? null,
       contributionRestOfYear: s.contributions?.restOfYear ?? null,
-      grants: 0, // task 3: summed from GRANT/CLB activity credits
+      contributionsSource: yearToDate === null ? null : "stated",
     });
   }
 
   return { months, contributionsByYear };
+}
+
+/**
+ * Used only when an account states no contributions figure on any of its
+ * statements -- each month's figure is reconstructed from that statement's
+ * own activity rows instead (see `deriveContributionFromActivity`), rather
+ * than left at zero, which the CSV-era pipeline this app replaces once did
+ * and undercounted a real account by $8,000 as a result. Each derived
+ * figure is a plain per-period total, not a running one, so
+ * `contributionsByYear` sums them directly instead of reading off the last
+ * one the way `buildStatedMonths` does.
+ */
+function buildDerivedMonths(statements: readonly Statement[]): MonthsResult {
+  const months: MonthPoint[] = [];
+  const contributionsByYear: Record<string, number> = {};
+
+  for (const s of statements) {
+    const { year } = parsePeriod(s.source.period);
+    const contributions = deriveContributionFromActivity(s);
+    contributionsByYear[year] = (contributionsByYear[year] ?? 0) + contributions;
+
+    months.push({
+      ...baseMonthFields(s),
+      contributions,
+      contributionMonthsSpanned: 1,
+      contributionFirst60Days: null,
+      contributionRestOfYear: null,
+      contributionsSource: "derived",
+    });
+  }
+
+  return { months, contributionsByYear };
+}
+
+/**
+ * Builds one account's `MonthPoint`s and its `contributionsByYear` rollup.
+ * Reads the stated year-to-date figures when the account prints any --
+ * `buildStatedMonths` -- and falls back to deriving from activity,
+ * flagged as such, only when it prints none at all.
+ */
+function buildMonths(statements: readonly Statement[]): MonthsResult {
+  const statesContributions = statements.some((s) => s.contributions !== null);
+  return statesContributions ? buildStatedMonths(statements) : buildDerivedMonths(statements);
 }
 
 /**

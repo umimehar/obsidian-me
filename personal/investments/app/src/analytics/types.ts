@@ -48,6 +48,16 @@ export interface MonthPoint {
   contributionFirst60Days: number | null;
   /** Verbatim from the statement's `contributions.restOfYear`, never derived from a delta. Null when unstated. */
   contributionRestOfYear: number | null;
+  /**
+   * `"stated"` when `contributions` came from a printed year-to-date figure
+   * (the normal case); `"derived"` when the account states no contributions
+   * block on any statement and the figure is reconstructed from `CONT` and
+   * external-deposit activity rows instead (see `buildMonths` in
+   * `series.ts`). Null alongside a null `contributions`, since there is
+   * nothing to attribute a source to. The UI must show this rather than
+   * present a derived figure as if it were printed.
+   */
+  contributionsSource: "stated" | "derived" | null;
   /** Populated in task 3 from `GRANT`/`CLB` activity credits. */
   grants: number;
 }
@@ -62,10 +72,12 @@ export interface AccountSeries {
   /** Oldest period first. */
   months: MonthPoint[];
   /**
-   * Total contributions per calendar year, keyed on `YYYY`. Equal to the
-   * last stated (or combined split) year-to-date figure observed in that
-   * year -- since the monthly deltas telescope back to it, summing them
-   * would give the same number by construction.
+   * Total contributions per calendar year, keyed on `YYYY`. For a `"stated"`
+   * account this is the last stated (or combined split) year-to-date figure
+   * observed in that year -- equal to the sum of that year's monthly deltas
+   * by construction. For a `"derived"` account it is the plain sum of that
+   * year's derived monthly figures, since there is no running total to read
+   * off directly.
    */
   contributionsByYear: Record<string, number>;
 }

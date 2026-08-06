@@ -1,6 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import type { AccountRecord } from "../store/registry";
-import type { CashSummary, Contributions, PortfolioSummary, Statement } from "../types";
+import type {
+  ActivityRow,
+  CashSummary,
+  Contributions,
+  PortfolioSummary,
+  Statement,
+} from "../types";
 import { buildSeries } from "./series";
 
 function src(
@@ -79,6 +85,20 @@ function ytd(value: number | null): Contributions {
 
 function split(first60Days: number | null, restOfYear: number | null): Contributions {
   return { yearToDate: null, first60Days, restOfYear };
+}
+
+function activity(code: string, credit: number, over: Partial<ActivityRow> = {}): ActivityRow {
+  return {
+    date: "2026-01-15",
+    postedDate: null,
+    code,
+    description: `${code} activity`,
+    debit: 0,
+    credit,
+    balance: 0,
+    currency: "CAD",
+    ...over,
+  };
 }
 
 function account(over: Partial<AccountRecord> = {}): AccountRecord {
@@ -230,6 +250,11 @@ describe("buildSeries contributions", () => {
 
     expect(series?.months.map((m) => m.contributions)).toEqual([1000, 1500, 0]);
     expect(series?.months.map((m) => m.contributionMonthsSpanned)).toEqual([1, 1, 1]);
+    expect(series?.months.map((m) => m.contributionsSource)).toEqual([
+      "stated",
+      "stated",
+      "stated",
+    ]);
   });
 
   test("January's contribution is its own year-to-date figure, not a delta against December", () => {
@@ -291,15 +316,20 @@ describe("buildSeries contributions", () => {
     });
   });
 
-  test("a statement with no contributions object leaves the split fields null too", () => {
+  test("on a stated account, a statement with no contributions object leaves the split fields null too", () => {
     const jan = statement({ source: src("2026-01", "BROKERAGE"), contributions: null });
+    // A later statement carries a stated figure, so the account is on the
+    // stated path -- otherwise a wholly-null account falls to derivation
+    // (see the "buildSeries derived contributions" suite below).
+    const feb = statement({ source: src("2026-02", "BROKERAGE"), contributions: ytd(500) });
 
-    const [series] = buildSeries([jan], [account()]);
+    const [series] = buildSeries([jan, feb], [account()]);
 
     expect(series?.months[0]).toMatchObject({
       contributions: null,
       contributionFirst60Days: null,
       contributionRestOfYear: null,
+      contributionsSource: null,
     });
   });
 
@@ -311,5 +341,82 @@ describe("buildSeries contributions", () => {
     const [series] = buildSeries([dec25, jan26, feb26], [account()]);
 
     expect(series?.contributionsByYear).toEqual({ "2025": 9000, "2026": 1200 });
+  });
+});
+
+describe("buildSeries derived contributions", () => {
+  test("an account that states no contributions block on any statement derives from CONT and DEP activity", () => {
+    const jan = statement({
+      source: src("2026-01", "BROKERAGE"),
+      contributions: null,
+      activity: [activity("CONT", 500), activity("BUY", 0, { debit: 500, credit: 0 })],
+    });
+    const may = statement({
+      source: src("2026-05", "BROKERAGE"),
+      contributions: null,
+      activity: [activity("DEP", 200)],
+    });
+
+    const [series] = buildSeries([jan, may], [account()]);
+
+    expect(series?.months[0]).toMatchObject({ contributions: 500, contributionsSource: "derived" });
+    expect(series?.months[1]).toMatchObject({ contributions: 200, contributionsSource: "derived" });
+    expect(series?.contributionsByYear).toEqual({ "2026": 700 });
+  });
+
+  test("a GRANT credit does not count toward derived contributions", () => {
+    const feb = statement({
+      source: src("2026-02", "BROKERAGE"),
+      contributions: null,
+      activity: [activity("GRANT", 500), activity("CLB", 100)],
+    });
+
+    const [series] = buildSeries([feb], [account()]);
+
+    expect(series?.months[0]).toMatchObject({ contributions: 0, contributionsSource: "derived" });
+  });
+
+  test("a transfer between the owner's own accounts does not count toward derived contributions", () => {
+    const mar = statement({
+      source: src("2026-03", "BROKERAGE"),
+      contributions: null,
+      activity: [activity("TRFINTF", 1000), activity("TRFOUT", 1000)],
+    });
+
+    const [series] = buildSeries([mar], [account()]);
+
+    expect(series?.months[0]).toMatchObject({ contributions: 0, contributionsSource: "derived" });
+  });
+
+  test("a derived account with no matching activity in a month reads zero, not null", () => {
+    const jun = statement({
+      source: src("2026-06", "BROKERAGE"),
+      contributions: null,
+      activity: [],
+    });
+
+    const [series] = buildSeries([jun], [account()]);
+
+    expect(series?.months[0]).toMatchObject({ contributions: 0, contributionsSource: "derived" });
+  });
+
+  test("an account with even one stated contributions statement never falls back to derivation", () => {
+    const jan = statement({
+      source: src("2026-01", "BROKERAGE"),
+      contributions: ytd(1000),
+      activity: [activity("CONT", 9999)],
+    });
+    const feb = statement({
+      source: src("2026-02", "BROKERAGE"),
+      contributions: null,
+      activity: [activity("CONT", 9999)],
+    });
+
+    const [series] = buildSeries([jan, feb], [account()]);
+
+    // February states no figure of its own, so its contribution is null and
+    // folds into whatever the next stated month brings -- not the $9,999 its
+    // own activity would derive, since this account is on the stated path.
+    expect(series?.months[1]).toMatchObject({ contributions: null, contributionsSource: null });
   });
 });
