@@ -170,13 +170,23 @@ describe("rollup", () => {
 
   test("one untagged account brings the unassigned bucket back on its own", () => {
     const tagged = realisticFixture().map((s) => ({ ...s, purpose: "retirement" as Purpose }));
-    const [first, ...rest] = tagged;
-    if (first === undefined) throw new Error("expected the fixture to have accounts");
-    const groups = rollup([{ ...first, purpose: "unassigned" as Purpose }, ...rest], "purpose");
+    const [first, second, ...rest] = tagged;
+    if (first === undefined || second === undefined) {
+      throw new Error("expected the fixture to have at least two accounts");
+    }
+    // A spending account too, so "unassigned is last" is a claim about the
+    // ordering rather than about it being the only group left standing.
+    const groups = rollup(
+      [
+        { ...first, purpose: "unassigned" as Purpose },
+        { ...second, purpose: "spending" as Purpose },
+        ...rest,
+      ],
+      "purpose",
+    );
     const unassigned = groups.find((g) => g.key === "unassigned");
     expect(unassigned?.accounts.length).toBe(1);
-    // Still last, so the ordering did not move when the bucket came back.
-    expect(groups[groups.length - 1]?.key).toBe("unassigned");
+    expect(groups.map((g) => g.key)).toEqual(["retirement", "spending", "unassigned"]);
   });
 
   test("purpose lens omits a non-unassigned purpose with no accounts in it", () => {
