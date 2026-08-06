@@ -160,13 +160,23 @@ describe("rollup", () => {
     expect(groups.every((g) => g.accounts.length === 1)).toBe(true);
   });
 
-  test("purpose lens renders the unassigned bucket even when it is empty", () => {
+  test("purpose lens drops the unassigned bucket once every account is tagged", () => {
+    // The owner's ruling: a dashboard that will not show a figure it does not
+    // have should not carry a standing "Unassigned / 0 accounts / $0.00" card.
     const fixture = realisticFixture().map((s) => ({ ...s, purpose: "retirement" as Purpose }));
     const groups = rollup(fixture, "purpose");
+    expect(groups.find((g) => g.key === "unassigned")).toBeUndefined();
+  });
+
+  test("one untagged account brings the unassigned bucket back on its own", () => {
+    const tagged = realisticFixture().map((s) => ({ ...s, purpose: "retirement" as Purpose }));
+    const [first, ...rest] = tagged;
+    if (first === undefined) throw new Error("expected the fixture to have accounts");
+    const groups = rollup([{ ...first, purpose: "unassigned" as Purpose }, ...rest], "purpose");
     const unassigned = groups.find((g) => g.key === "unassigned");
-    expect(unassigned).toBeDefined();
-    expect(unassigned?.accounts).toEqual([]);
-    expect(unassigned?.total).toBe(0);
+    expect(unassigned?.accounts.length).toBe(1);
+    // Still last, so the ordering did not move when the bucket came back.
+    expect(groups[groups.length - 1]?.key).toBe("unassigned");
   });
 
   test("purpose lens omits a non-unassigned purpose with no accounts in it", () => {
@@ -228,8 +238,6 @@ describe("rollup", () => {
     const groups = rollup(fixture, "purpose");
     const retirement = groups.find((g) => g.key === "retirement");
     expect(retirement?.label).toBe("Retirement");
-    const unassigned = groups.find((g) => g.key === "unassigned");
-    expect(unassigned?.label).toBe("Unassigned");
   });
 
   test("purpose lens renders a growth group between business and spending", () => {
@@ -237,8 +245,8 @@ describe("rollup", () => {
     const groups = rollup(fixture, "purpose");
     const keys = groups.map((g) => g.key);
     expect(keys).toContain("growth");
-    // unassigned always renders too (see the doc comment on rollupByPurpose).
-    expect(keys.indexOf("growth")).toBeLessThan(keys.indexOf("unassigned"));
+    // Every account is tagged growth here, so unassigned is empty and absent.
+    expect(keys).not.toContain("unassigned");
     const growth = groups.find((g) => g.key === "growth");
     expect(growth?.accounts.length).toBe(fixture.length);
   });

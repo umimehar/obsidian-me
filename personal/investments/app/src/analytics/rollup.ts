@@ -161,18 +161,22 @@ function purposeLabel(purpose: Purpose): string {
 }
 
 /**
- * One `Rollup` per `Purpose` that has at least one account, EXCEPT
- * `unassigned`, which always renders even with zero accounts in it. The
- * owner has not tagged any account's purpose yet, so today every account
- * lands in `unassigned` -- but the bucket must render on its own merits,
- * not because it happens to be full: an empty purpose view should read as
- * "not configured yet", not as a bug that silently dropped a group.
+ * One `Rollup` per `Purpose` that has at least one account, `unassigned`
+ * included. All fourteen accounts were tagged in task 3a, so that bucket is
+ * empty today and does not render: a dashboard whose whole principle is not
+ * to print figures it does not have has no business carrying a standing
+ * "Unassigned, 0 accounts, $0.00, 0.0% of total" card.
+ *
+ * `unassigned` stays last in `PURPOSE_ORDER` rather than being removed from
+ * it, so an account added without a purpose brings the bucket back in its
+ * usual place on its own. Nothing is silently dropped: an untagged account
+ * is visible precisely because the group reappears.
  */
 function rollupByPurpose(series: readonly AccountSeries[]): Rollup[] {
   const groups: Rollup[] = [];
   for (const purpose of PURPOSE_ORDER) {
     const accounts = series.filter((s) => s.purpose === purpose);
-    if (accounts.length === 0 && purpose !== "unassigned") continue;
+    if (accounts.length === 0) continue;
     groups.push(buildGroup("purpose", purpose, purposeLabel(purpose), accounts));
   }
   return groups;
