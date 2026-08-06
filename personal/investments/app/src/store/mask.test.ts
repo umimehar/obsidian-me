@@ -48,6 +48,22 @@ describe("redactText", () => {
     // A "." in the name must not act as a wildcard and match "AXB".
     expect(redactText("paid to AXB Corp", ["A.B"])).toBe("paid to AXB Corp");
   });
+
+  test("does not re-match a name that is a substring of its own output placeholder", () => {
+    // A multi-pass loop re-scans the output of every earlier replacement, so
+    // a name like "Red" would re-match inside the literal text "[redacted]"
+    // that an earlier match just wrote, corrupting it into a second
+    // redaction. A single-pass alternation never reads back its own output.
+    expect(redactText("paid to Red and Jane Doe", ["Red", "Jane Doe"])).toBe(
+      "paid to [redacted] and [redacted]",
+    );
+  });
+
+  test("redacts two distinct names in the same text without one consuming the other's match", () => {
+    expect(redactText("Jane Doe paid John Smith", ["Jane Doe", "John Smith"])).toBe(
+      "[redacted] paid [redacted]",
+    );
+  });
 });
 
 describe("classifyAccountType", () => {

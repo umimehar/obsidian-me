@@ -26,18 +26,26 @@ export function maskAccountNo(accountNo: string): MaskedId {
 }
 
 /**
- * Longest name first, regardless of caller order: redacting "Jane" before
+ * Longest name first, regardless of caller order: matching "Jane" before
  * "Jane Doe" would consume the short match and leave "Doe" exposed in the
  * output. Sorting here makes the guarantee a property of the function, not
  * of how the caller happens to order its name list.
+ *
+ * A single alternation regex, replaced in one pass, rather than one
+ * `.replace()` call per name: a multi-pass loop re-scans the *output* of
+ * every earlier replacement, so a configured name that happened to be a
+ * substring of the literal placeholder "[redacted]" would re-match inside
+ * text this same call had just written, corrupting it. One pass never reads
+ * back its own output.
  */
 export function redactText(text: string, names: readonly string[]): string {
-  let out = text;
   const byDescendingLength = [...names].filter(Boolean).sort((a, b) => b.length - a.length);
-  for (const name of byDescendingLength) {
-    out = out.replace(new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), "[redacted]");
-  }
-  return out;
+  if (byDescendingLength.length === 0) return text;
+
+  const alternation = byDescendingLength
+    .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|");
+  return text.replace(new RegExp(alternation, "gi"), "[redacted]");
 }
 
 /**
