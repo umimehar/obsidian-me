@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
-import { render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import type { RoomLine } from "../../analytics/rooms";
 import { RoomBar } from "./RoomBar";
 
@@ -40,6 +40,18 @@ describe("RoomBar", () => {
   test("a null-remaining line says carry-forward is not visible", () => {
     const bar = renderBar(line({}));
     expect(bar.getByText(/carry-forward not visible/i)).toBeDefined();
+  });
+
+  test("the generic annual maximum is the line's own limit, not a constant", () => {
+    // Two different limits, because one would pass against a hardcoded figure.
+    expect(renderBar(line({ limit: 7000 })).getByText(/\$7,000\.00 annual maximum/)).toBeDefined();
+    cleanup();
+    expect(renderBar(line({ limit: 8000 })).getByText(/\$8,000\.00 annual maximum/)).toBeDefined();
+  });
+
+  test("an assessed line names its own limit in the remaining sentence", () => {
+    const bar = renderBar(line({ assessed: true, used: 33000, limit: 70752, remaining: 37752 }));
+    expect(bar.getByText(/\$37,752\.00 remaining of \$70,752\.00\./)).toBeDefined();
   });
 
   test("a null-remaining line renders no bar fill percentage, even at used equal to limit", () => {
