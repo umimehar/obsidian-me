@@ -127,6 +127,7 @@ describe("buildReturns", () => {
       period: "2026-01",
       statedMwr: returns({ currentPeriod: 2.1, sinceInception: 13.41 }),
       periodReturn: null,
+      reason: null,
       source: "stated",
     });
   });
@@ -147,12 +148,20 @@ describe("buildReturns", () => {
     expect(result?.points[0]?.statedMwr?.sinceInception).toBe(10.31);
   });
 
-  test("an account with no PERFORMANCE statement gets a derived period return instead", () => {
+  test("an account with no PERFORMANCE statement gets a derived period return instead, in percent", () => {
     const account = series({
       maskedId: "acct_derived",
       months: [
-        monthPoint({ period: "2026-01", marketValue: 10000, deposits: 0, withdrawals: 0 }),
-        monthPoint({ period: "2026-02", marketValue: 10800, deposits: 500, withdrawals: 0 }),
+        monthPoint({ period: "2026-01", marketValue: 10000, bookCost: 9500 }),
+        // Book cost rises by exactly netDeposits (500), so the flow
+        // reconciles and the market-value move is trusted as performance.
+        monthPoint({
+          period: "2026-02",
+          marketValue: 10800,
+          bookCost: 10000,
+          deposits: 500,
+          withdrawals: 0,
+        }),
       ],
     });
 
@@ -163,27 +172,61 @@ describe("buildReturns", () => {
       period: "2026-01",
       statedMwr: null,
       periodReturn: null,
+      reason: "no-prior-period",
       source: "derived",
     });
-    // (10800 - 10000 - 500) / 10000 = 0.03
-    expect(result?.points[1]?.periodReturn).toBeCloseTo(0.03);
+    // (10800 - 10000 - 500) / 10000 = 0.03, times 100 = 3 -- percent, not a fraction.
+    expect(result?.points[1]?.periodReturn).toBeCloseTo(3);
+    expect(result?.points[1]?.reason).toBeNull();
     expect(result?.points[1]?.source).toBe("derived");
     expect(result?.points[1]?.statedMwr).toBeNull();
+  });
+
+  test("a derived percent and a stated percent of the same real return produce the same number", () => {
+    const derivedAccount = series({
+      maskedId: "acct_derived",
+      months: [
+        monthPoint({ period: "2026-01", marketValue: 1000, bookCost: 900 }),
+        // No flow at all: book cost unchanged, netDeposits zero -- a clean 5% gain.
+        monthPoint({ period: "2026-02", marketValue: 1050, bookCost: 900 }),
+      ],
+    });
+    const statedAccount = series({ maskedId: "acct_stated" });
+    const statement = performanceStatement({
+      source: src("acct_stated", "2026-02", "PERFORMANCE"),
+      returns: returns({ currentPeriod: 5 }),
+    });
+
+    const [derivedResult, statedResult] = buildReturns(
+      [derivedAccount, statedAccount],
+      [statement],
+    );
+
+    expect(derivedResult?.points[1]?.periodReturn).toBeCloseTo(5);
+    expect(statedResult?.points[0]?.statedMwr?.currentPeriod).toBe(5);
   });
 
   test("a withdrawal reduces net deposits in the derived formula", () => {
     const account = series({
       maskedId: "acct_derived",
       months: [
-        monthPoint({ period: "2026-01", marketValue: 10000 }),
-        monthPoint({ period: "2026-02", marketValue: 9700, deposits: 0, withdrawals: 200 }),
+        monthPoint({ period: "2026-01", marketValue: 10000, bookCost: 9000 }),
+        // Book cost falls by exactly netDeposits (-200), so the flow reconciles.
+        monthPoint({
+          period: "2026-02",
+          marketValue: 9700,
+          bookCost: 8800,
+          deposits: 0,
+          withdrawals: 200,
+        }),
       ],
     });
 
     const [result] = buildReturns([account], []);
 
-    // (9700 - 10000 - (0 - 200)) / 10000 = -0.01
-    expect(result?.points[1]?.periodReturn).toBeCloseTo(-0.01);
+    // (9700 - 10000 - (0 - 200)) / 10000 = -0.01, times 100 = -1.
+    expect(result?.points[1]?.periodReturn).toBeCloseTo(-1);
+    expect(result?.points[1]?.reason).toBeNull();
   });
 
   test("a missing prior market value derives null rather than a nonsense return", () => {
@@ -199,6 +242,7 @@ describe("buildReturns", () => {
     const [result] = buildReturns([account], []);
 
     expect(result?.points[1]?.periodReturn).toBeNull();
+    expect(result?.points[1]?.reason).toBe("insufficient-data");
   });
 
   test("a zero prior market value derives null instead of Infinity or NaN", () => {
@@ -215,6 +259,74 @@ describe("buildReturns", () => {
     const value = result?.points[1]?.periodReturn;
     expect(value).toBeNull();
     expect(value === null || Number.isFinite(value)).toBe(true);
+    expect(result?.points[1]?.reason).toBe("insufficient-data");
+  });
+
+  test("a book-cost change that tracks the cash deposits survives as a trusted return, even a large one", () => {
+    // Real corpus shape (masked): $1,250 of cash deposits, $1,651 of
+    // book-cost movement, on a $25,640.57 start value -- a 1.6% gap, well
+    // within statement noise, against a genuine 39% market swing.
+    const account = series({
+      maskedId: "acct_volatile",
+      months: [
+        monthPoint({ period: "2026-04", marketValue: 25640.57, bookCost: 23323.71 }),
+        monthPoint({
+          period: "2026-05",
+          marketValue: 36900.27,
+          bookCost: 24975.18,
+          deposits: 1250,
+          withdrawals: 0,
+        }),
+      ],
+    });
+
+    const [result] = buildReturns([account], []);
+
+    expect(result?.points[1]?.reason).toBeNull();
+    expect(result?.points[1]?.periodReturn).toBeCloseTo(39.04, 1);
+  });
+
+  test("a book-cost change that does not track cash deposits is flagged, not published as performance", () => {
+    // Real corpus shape (masked): only $97.50 of cash deposits, but book
+    // cost jumped $1,268.34 -- money arrived as an in-kind security
+    // transfer the cash block never saw. The naive formula reads this as a
+    // 186% return; it must come back null with a reason instead.
+    const account = series({
+      maskedId: "acct_transfer",
+      months: [
+        monthPoint({ period: "2023-07", marketValue: 695.32, bookCost: 750.72 }),
+        monthPoint({
+          period: "2023-08",
+          marketValue: 2089.82,
+          bookCost: 2019.06,
+          deposits: 97.5,
+          withdrawals: 0,
+        }),
+      ],
+    });
+
+    const [result] = buildReturns([account], []);
+
+    expect(result?.points[1]?.periodReturn).toBeNull();
+    expect(result?.points[1]?.reason).toBe("unreconciled-flow");
+  });
+
+  test("book cost missing on one end cannot be verified and is flagged rather than trusted", () => {
+    const account = series({
+      maskedId: "acct_no_bookcost",
+      months: [
+        monthPoint({ period: "2026-01", marketValue: 1000, bookCost: 900 }),
+        // bookCost stays null -- as if the statement carried no portfolio
+        // breakdown for the closing balance -- even though marketValue is
+        // known and would otherwise arithmetic out to a plausible +10%.
+        monthPoint({ period: "2026-02", marketValue: 1100, bookCost: null }),
+      ],
+    });
+
+    const [result] = buildReturns([account], []);
+
+    expect(result?.points[1]?.periodReturn).toBeNull();
+    expect(result?.points[1]?.reason).toBe("unreconciled-flow");
   });
 
   test("PERFORMANCE statements for a different account do not leak into this one's points", () => {

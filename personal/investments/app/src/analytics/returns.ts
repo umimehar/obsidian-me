@@ -2,11 +2,37 @@ import type { Returns, Statement } from "../types";
 import type { AccountSeries, MonthPoint } from "./types";
 
 /**
+ * Why a derived point's `periodReturn` is null. Always null on a `"stated"`
+ * point, where the concept does not apply.
+ *
+ * - `"no-prior-period"`: the first point in the account's series, with
+ *   nothing to compare against.
+ * - `"insufficient-data"`: a start or end market value is missing (a
+ *   CASH-template statement has no portfolio) or the start value is zero,
+ *   which would otherwise divide by zero.
+ * - `"unreconciled-flow"`: the book-cost change over the period cannot be
+ *   reconciled with the cash-based net deposits -- either it disagrees by
+ *   more than the account's own statement noise, or book cost is missing
+ *   for one end of the period and so cannot be checked at all -- see
+ *   `flowIsReconciled`. Money moved in a way the cash block cannot see
+ *   (typically a security transferred in-kind rather than bought with
+ *   cash), so attributing the whole market-value move to performance would
+ *   overstate the return.
+ */
+export type DerivedReturnReason = "no-prior-period" | "insufficient-data" | "unreconciled-flow";
+
+/**
  * One period's return for one account. Exactly one of `statedMwr` and
  * `periodReturn` is populated -- see `source` -- because the two figures
  * must never be blended: a stated money-weighted rate and a derived
  * approximation answer different questions and mixing them into one number
  * would misrepresent both.
+ *
+ * Both figures are **percent**, matching what the statement itself prints
+ * (`13.41` means 13.41%) -- `periodReturn` is the fraction from the
+ * arithmetic below multiplied by 100 at this boundary, precisely so a
+ * derived point and a stated point can sit on the same chart axis without
+ * one reading a hundred times smaller than the other.
  */
 export interface ReturnPoint {
   /** `YYYY-MM`, from `source.period`. */
@@ -21,14 +47,16 @@ export interface ReturnPoint {
    */
   statedMwr: Returns | null;
   /**
-   * `(endValue - startValue - netDeposits) / startValue` against the
-   * account's monthly series -- an approximation, since it ignores the
-   * timing of flows within the month. Null on a `"stated"` point. Also
-   * null on a `"derived"` point with no prior period to compare against, or
-   * a zero or missing `startValue`, which would otherwise produce
-   * `Infinity` or `NaN`.
+   * `(endValue - startValue - netDeposits) / startValue`, times 100 -- an
+   * approximation, since it ignores the timing of flows within the month.
+   * Null on a `"stated"` point. Also null on a `"derived"` point the
+   * arithmetic or the book-cost cross-check cannot support -- see
+   * `reason`, which is populated in exactly that case. A derived figure
+   * the owner cannot trust is worse than an absent one.
    */
   periodReturn: number | null;
+  /** Populated exactly when `periodReturn` is null on a `"derived"` point -- see `DerivedReturnReason`. */
+  reason: DerivedReturnReason | null;
   /**
    * `"stated"` when the account has at least one PERFORMANCE statement, in
    * which case every point for that account is stated. `"derived"`
@@ -58,17 +86,19 @@ function buildStatedPoints(performance: readonly Statement[]): ReturnPoint[] {
     period: s.source.period,
     statedMwr: s.returns,
     periodReturn: null,
+    reason: null,
     source: "stated",
   }));
 }
 
 /**
- * `(endValue - startValue - netDeposits) / startValue`. Null when either
+ * `(endValue - startValue - netDeposits) / startValue`, as a fraction --
+ * `buildDerivedPoints` converts to percent at the end. Null when either
  * value is unknown (a CASH-template statement has no portfolio) or
  * `startValue` is zero, which would otherwise divide by zero and produce
  * `Infinity` or `NaN`.
  */
-function derivedPeriodReturn(
+function rawDerivedReturn(
   startValue: number | null,
   endValue: number | null,
   netDeposits: number,
@@ -78,11 +108,88 @@ function derivedPeriodReturn(
 }
 
 /**
+ * How far apart the book-cost change and the cash-based `netDeposits` are,
+ * as a fraction of `startValue`. Book cost moves only on a purchase, sale,
+ * or in-kind transfer -- performance never touches it -- so it is a second,
+ * independent read on how much money moved during the period, and one that
+ * a security transferred in without cash changing hands still shows up in.
+ * Null when book cost is unavailable for either end (mirrors the
+ * `startValue` guard above), which the caller treats as unreconciled rather
+ * than assuming agreement.
+ */
+function flowDiscrepancy(
+  startValue: number,
+  previousBookCost: number | null,
+  bookCost: number | null,
+  netDeposits: number,
+): number | null {
+  if (previousBookCost === null || bookCost === null) return null;
+  const impliedFlow = bookCost - previousBookCost;
+  return (impliedFlow - netDeposits) / startValue;
+}
+
+/**
+ * How much a period's book-cost change and cash-based net deposits may
+ * disagree, as a fraction of the start value, before the gap counts as an
+ * unexplained flow rather than statement rounding. $1,651 of book-cost
+ * movement against $1,250 of cash deposits on a $25,641 start value (1.6%)
+ * is real noise; $1,268 of book-cost movement against $98 of cash deposits
+ * on a $695 start value (168%) is a transfer the cash block never saw.
+ */
+const FLOW_MATERIALITY_THRESHOLD = 0.1;
+
+/**
+ * `true` when the book-cost change over the period is close enough to the
+ * cash-based `netDeposits` that the market-value move can be trusted as
+ * performance -- see `flowDiscrepancy`. `false` when book cost is
+ * unavailable to check at all, treated the same as a real disagreement:
+ * the point cannot be verified, so it is not published as a confident
+ * return.
+ */
+function flowIsReconciled(
+  startValue: number,
+  previousBookCost: number | null,
+  bookCost: number | null,
+  netDeposits: number,
+): boolean {
+  const discrepancy = flowDiscrepancy(startValue, previousBookCost, bookCost, netDeposits);
+  return discrepancy !== null && Math.abs(discrepancy) <= FLOW_MATERIALITY_THRESHOLD;
+}
+
+interface DerivedResult {
+  periodReturn: number | null;
+  reason: DerivedReturnReason | null;
+}
+
+/**
+ * One month's derived result against its predecessor: the raw arithmetic
+ * (`rawDerivedReturn`), then a book-cost cross-check (`flowIsReconciled`)
+ * before it is trusted -- a market-value move driven by an in-kind
+ * transfer the cash block cannot see must not be published as performance.
+ */
+function derivedResult(
+  previous: MonthPoint,
+  month: MonthPoint,
+  netDeposits: number,
+): DerivedResult {
+  const raw = rawDerivedReturn(previous.marketValue, month.marketValue, netDeposits);
+  if (raw === null) return { periodReturn: null, reason: "insufficient-data" };
+
+  // previous.marketValue is non-null here -- rawDerivedReturn already
+  // guarded it above -- so it is safe to use as the reconciliation base.
+  const startValue = previous.marketValue as number;
+  if (!flowIsReconciled(startValue, previous.bookCost, month.bookCost, netDeposits)) {
+    return { periodReturn: null, reason: "unreconciled-flow" };
+  }
+  return { periodReturn: raw * 100, reason: null };
+}
+
+/**
  * One point per month in the account's series, each compared against the
  * immediately preceding point in the array -- not the preceding calendar
  * month, since a missing statement leaves a gap in `months` rather than a
  * zero-filled entry (see `MonthPoint`). The first point has no predecessor,
- * so its `periodReturn` is null.
+ * so its `periodReturn` is null with reason `"no-prior-period"`.
  */
 function buildDerivedPoints(months: readonly MonthPoint[]): ReturnPoint[] {
   const points: ReturnPoint[] = [];
@@ -90,11 +197,11 @@ function buildDerivedPoints(months: readonly MonthPoint[]): ReturnPoint[] {
 
   for (const month of months) {
     const netDeposits = month.deposits - month.withdrawals;
-    const periodReturn =
+    const { periodReturn, reason } =
       previous === null
-        ? null
-        : derivedPeriodReturn(previous.marketValue, month.marketValue, netDeposits);
-    points.push({ period: month.period, statedMwr: null, periodReturn, source: "derived" });
+        ? { periodReturn: null, reason: "no-prior-period" as const }
+        : derivedResult(previous, month, netDeposits);
+    points.push({ period: month.period, statedMwr: null, periodReturn, reason, source: "derived" });
     previous = month;
   }
 
