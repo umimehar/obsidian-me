@@ -9,11 +9,25 @@
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "lint": "biome check src",
-    "check": "biome check src && tsc --noEmit && bun test"
+    "check": "biome check src && tsc --noEmit && bun test",
+    "dev": "vite",
+    "build:ui": "vite build"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.1.14",
-    "typescript": "^5.7.2"
+    "@types/d3-scale": "^4.0.9",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "typescript": "^5.7.2",
+    "vite": "^8.2.0"
+  },
+  "dependencies": {
+    "@radix-ui/themes": "^3.3.0",
+    "d3-scale": "^4.0.2",
+    "motion": "^13.0.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   }
 }

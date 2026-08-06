@@ -4,3 +4,4 @@ scripts/.impeccable/
 app/node_modules/
 app/.cache/
 app/redactions.json
+app/dist/
