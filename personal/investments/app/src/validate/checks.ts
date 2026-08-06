@@ -656,7 +656,19 @@ export function checkSupersession(statements: readonly Statement[]): Finding[] {
   return out;
 }
 
-export function checkKindConsistency(statements: readonly Statement[]): Finding[] {
+/**
+ * Shared by `checkKindConsistency` and `checkStyleConsistency`: group a
+ * statement's history by raw account number, then flag any account whose
+ * `select`ed classification is not the same value across every statement.
+ * Wording drifts across the corpus (kind and style both), but what a
+ * drifted wording actually maps to must not.
+ */
+function checkClassificationConsistency(
+  statements: readonly Statement[],
+  check: Finding["check"],
+  label: string,
+  select: (s: Statement) => string,
+): Finding[] {
   const byAccount = new Map<string, Statement[]>();
   for (const s of statements) {
     const list = byAccount.get(s.source.accountNo) ?? [];
@@ -666,21 +678,45 @@ export function checkKindConsistency(statements: readonly Statement[]): Finding[
 
   const out: Finding[] = [];
   for (const list of byAccount.values()) {
-    const kinds = new Set(list.map((s) => classifyAccountType(s.accountType).kind));
-    if (kinds.size <= 1) continue;
+    const values = new Set(list.map(select));
+    if (values.size <= 1) continue;
     const latest = [...list].sort((a, b) => a.source.period.localeCompare(b.source.period)).pop();
     if (!latest) continue;
     out.push(
       finding(
-        "kind-drift",
+        check,
         latest,
-        `account maps to more than one kind across its history: ${[...kinds].join(", ")}`,
+        `account maps to more than one ${label} across its history: ${[...values].join(", ")}`,
         null,
         null,
       ),
     );
   }
   return out;
+}
+
+export function checkKindConsistency(statements: readonly Statement[]): Finding[] {
+  return checkClassificationConsistency(
+    statements,
+    "kind-drift",
+    "kind",
+    (s) => classifyAccountType(s.accountType).kind,
+  );
+}
+
+/**
+ * `kind` drift was checked, but management `style` was not: account 9710's
+ * history reads "Tax-Free Savings Account" -> "Tax-Free Savings Managed Cash
+ * Account" -> "Managed TFSA Account", so its style silently changes from
+ * self-directed to managed with nothing to flag it.
+ */
+export function checkStyleConsistency(statements: readonly Statement[]): Finding[] {
+  return checkClassificationConsistency(
+    statements,
+    "style-drift",
+    "management style",
+    (s) => classifyAccountType(s.accountType).style,
+  );
 }
 
 /**
@@ -872,6 +908,7 @@ export function runChecks(
     ...checkCrossDocument(statements),
     ...checkSupersession(allVersions),
     ...checkKindConsistency(statements),
+    ...checkStyleConsistency(statements),
     ...checkBalanceChain(statements),
     ...checkGroundTruth(statements, observations, countedAccounts),
   ];

@@ -8,6 +8,7 @@ import {
   checkCrossDocument,
   checkGroundTruth,
   checkKindConsistency,
+  checkStyleConsistency,
   checkSupersession,
 } from "./checks";
 
@@ -1080,6 +1081,39 @@ describe("checkKindConsistency", () => {
       statement({ source: src("2026-06", "BROKERAGE"), accountType: "Managed RRSP Account" }),
     ];
     expect(checkKindConsistency(rows).some((f) => f.check === "kind-drift")).toBe(true);
+  });
+});
+
+describe("checkStyleConsistency", () => {
+  test("passes when an account's management style is stable across a renamed wording", () => {
+    const rows = [
+      statement({ source: src("2023-06", "BROKERAGE"), accountType: "Tax-Free Savings Account" }),
+      statement({ source: src("2026-01", "BROKERAGE"), accountType: "Self-directed TFSA Account" }),
+      statement({
+        source: src("2026-06", "BROKERAGE"),
+        accountType: "Order Execution Only TFSA Account",
+      }),
+    ];
+    expect(checkStyleConsistency(rows)).toEqual([]);
+  });
+
+  test("flags an account whose management style changes, even though its kind does not", () => {
+    // Account 9710's real history: Tax-Free Savings Account -> Tax-Free
+    // Savings Managed Cash Account -> Managed TFSA Account. Kind stays TFSA
+    // throughout, so checkKindConsistency alone never catches this.
+    const rows = [
+      statement({ source: src("2023-06", "BROKERAGE"), accountType: "Tax-Free Savings Account" }),
+      statement({
+        source: src("2025-06", "BROKERAGE"),
+        accountType: "Tax-Free Savings Managed Cash Account",
+      }),
+      statement({ source: src("2026-06", "BROKERAGE"), accountType: "Managed TFSA Account" }),
+    ];
+    expect(checkKindConsistency(rows)).toEqual([]);
+    const f = checkStyleConsistency(rows);
+    expect(f).toHaveLength(1);
+    expect(f[0]?.check).toBe("style-drift");
+    expect(f[0]?.message).toMatch(/managed, self-directed|self-directed, managed/);
   });
 });
 

@@ -6,6 +6,7 @@ export type CheckName =
   | "cross-document"
   | "superseded"
   | "kind-drift"
+  | "style-drift"
   | "balance-chain"
   | "ingest"
   | "ground-truth";

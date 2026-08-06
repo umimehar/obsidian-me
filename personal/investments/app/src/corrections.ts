@@ -32,6 +32,14 @@ export const ACKNOWLEDGED: readonly Acknowledgement[] = [
       "The account's first-ever statement, funded mid-period with a $12,000 deposit; the printed Change in Market Value is $0.00, but the securities it bought were actually worth $15.78 less by period end (bought for $11,953.48 net of fees, closed at a portfolio value of $11,937.70). The statement's own start/deposits/withdrawals/change-in-market-value/end row does not reconcile ($12,000.00 derived versus $11,984.22 printed) -- Wealthsimple's Change in Market Value figure does not capture the intra-period revaluation of a position opened and revalued within the same period. Not a parser defect: every input number is read correctly from the page.",
     reviewed: "2026-08-06",
   },
+  {
+    check: "style-drift",
+    shortId: "9710",
+    period: "2026-06",
+    reason:
+      "A real, owner-initiated product change, not a parser defect: this TFSA moved from self-directed to a Wealthsimple Managed portfolio. Its history reads Tax-Free Savings Account (self-directed) -> Tax-Free Savings Managed Cash Account -> Managed TFSA Account.",
+    reviewed: "2026-08-06",
+  },
 ];
 
 export function isAcknowledged(check: CheckName, shortId: string, period: string): boolean {

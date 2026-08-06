@@ -13,6 +13,7 @@ import {
   checkCrossDocument,
   checkGroundTruth,
   checkKindConsistency,
+  checkStyleConsistency,
   checkSupersession,
 } from "./validate/checks";
 
@@ -46,6 +47,16 @@ describe.if(existsSync(SOURCE))("full corpus", () => {
   test("no account changes kind across its history", async () => {
     // Wording drifts; kind must not.
     expect(checkKindConsistency(await ingestAll(SOURCE, CACHE))).toEqual([]);
+  });
+
+  test("the one real management-style change in the corpus is caught and acknowledged", async () => {
+    // Account 9710 genuinely moved from self-directed to Wealthsimple
+    // Managed -- a real product change, not a parser bug. Proves the check
+    // can fire, and that it is the one acknowledged, expected case.
+    const findings = checkStyleConsistency(await ingestAll(SOURCE, CACHE));
+    expect(findings).toHaveLength(1);
+    expect(findings[0]?.accountShortId).toBe("9710");
+    expect(isAcknowledged("style-drift", "9710", findings[0]?.period ?? "")).toBe(true);
   });
 
   test("every date group's running balance chains to the printed figure", async () => {
