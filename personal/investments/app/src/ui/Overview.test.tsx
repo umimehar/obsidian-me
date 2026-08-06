@@ -1,8 +1,9 @@
-import { describe, expect, test } from "bun:test";
+import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
-import { fireEvent, render, screen, within } from "@testing-library/react";
-import { Overview, cardMotion } from "./Overview";
+import { fireEvent, render, renderHook, screen, within } from "@testing-library/react";
+import { Overview, cardMotion, useCardMotion } from "./Overview";
 import { loadAnalytics } from "./data";
+import { restoreReducedMotion, stubReducedMotion } from "./motionPreference";
 
 /**
  * Renders against the real committed corpus (`data/analytics.json`), same
@@ -26,6 +27,31 @@ function groupCard(label: string): HTMLElement {
   if (card === null) throw new Error(`expected the ${label} group card to render`);
   return card as HTMLElement;
 }
+
+describe("useCardMotion", () => {
+  let restore: typeof window.matchMedia | null = null;
+
+  afterEach(() => {
+    if (restore !== null) restoreReducedMotion(restore);
+    restore = null;
+  });
+
+  test("reads the OS preference and hands the rule a true", () => {
+    restore = stubReducedMotion(true);
+    const { result } = renderHook(() => useCardMotion());
+    expect(result.current).toEqual(cardMotion(true));
+    expect(result.current.duration).toBe(0);
+    expect(result.current.layout).toBe(false);
+  });
+
+  test("without the preference it hands the rule a false", () => {
+    restore = stubReducedMotion(false);
+    const { result } = renderHook(() => useCardMotion());
+    expect(result.current).toEqual(cardMotion(false));
+    expect(result.current.duration).toBeGreaterThan(0);
+    expect(result.current.layout).toBe(true);
+  });
+});
 
 describe("cardMotion", () => {
   test("reduced motion removes the fade and the reflow, it does not shorten them", () => {

@@ -1,14 +1,34 @@
-import { describe, expect, test } from "bun:test";
-import { render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, test } from "bun:test";
+import { render, renderHook, screen } from "@testing-library/react";
 import { loadAnalytics } from "../data";
-import { ValueOverTime, revealMotion } from "./ValueOverTime";
+import { restoreReducedMotion, stubReducedMotion } from "../motionPreference";
+import { ValueOverTime, revealMotion, useRevealMotion } from "./ValueOverTime";
 
-/**
- * Renders against the real committed corpus (`data/analytics.json`), the
- * same data `portfolioSeries.test.ts` verifies ends 2023-06..2026-06 at
- * $241,739.67 -- not a hand-made fixture, so this test catches a real
- * accessibility regression, not a fixture drift.
- */
+describe("useRevealMotion", () => {
+  let restore: typeof window.matchMedia | null = null;
+
+  afterEach(() => {
+    if (restore !== null) restoreReducedMotion(restore);
+    restore = null;
+  });
+
+  test("reads the OS preference and hands the rule a true", () => {
+    restore = stubReducedMotion(true);
+    const { result } = renderHook(() => useRevealMotion(716));
+    expect(result.current).toEqual(revealMotion(true, 716));
+    expect(result.current.duration).toBe(0);
+    expect(result.current.initialWidth).toBe(716);
+  });
+
+  test("without the preference it hands the rule a false", () => {
+    restore = stubReducedMotion(false);
+    const { result } = renderHook(() => useRevealMotion(716));
+    expect(result.current).toEqual(revealMotion(false, 716));
+    expect(result.current.duration).toBeGreaterThan(0.5);
+    expect(result.current.initialWidth).toBe(0);
+  });
+});
+
 describe("revealMotion", () => {
   test("reduced motion skips the reveal rather than running it faster", () => {
     const reveal = revealMotion(true, 716);
@@ -23,6 +43,12 @@ describe("revealMotion", () => {
   });
 });
 
+/**
+ * These render against the real committed corpus (`data/analytics.json`), the
+ * same data `portfolioSeries.test.ts` verifies ends 2023-06..2026-06 at
+ * $241,739.67 -- not a hand-made fixture, so they catch a real regression
+ * rather than fixture drift.
+ */
 describe("ValueOverTime", () => {
   test("the chart's accessible name states the real ending value and period range", () => {
     const analytics = loadAnalytics();

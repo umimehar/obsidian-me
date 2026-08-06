@@ -101,6 +101,15 @@ export function revealMotion(prefersReducedMotion: boolean, innerWidth: number):
   return { initialWidth: 0, duration: 1.1 };
 }
 
+/**
+ * `revealMotion` wired to the OS preference. Exported for the same reason as
+ * `useCardMotion`: `useReducedMotion` reads `matchMedia`, which a test can
+ * stub, so the wiring is pinned and not only the rule behind it.
+ */
+export function useRevealMotion(innerWidth: number): Reveal {
+  return revealMotion(useReducedMotion() === true, innerWidth);
+}
+
 function EmptyState() {
   return (
     <div role="img" aria-label="No portfolio value history yet.">
@@ -124,8 +133,7 @@ function EmptyState() {
 export function ValueOverTime({ series }: ValueOverTimeProps) {
   const rawClipId = useId();
   const clipId = `value-over-time-clip-${rawClipId.replace(/[^a-zA-Z0-9]/g, "")}`;
-  const prefersReducedMotion = useReducedMotion();
-  const reveal = revealMotion(prefersReducedMotion === true, INNER_WIDTH);
+  const reveal = useRevealMotion(INNER_WIDTH);
   const points = useMemo(() => buildPortfolioSeries(series), [series]);
   const scales = useMemo(
     () => buildScales(toDomainPoints(points), INNER_WIDTH, INNER_HEIGHT),

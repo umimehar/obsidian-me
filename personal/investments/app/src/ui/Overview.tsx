@@ -68,6 +68,16 @@ export function cardMotion(prefersReducedMotion: boolean): CardMotion {
   return { layout: true, initial: { opacity: 0 }, exit: { opacity: 0 }, duration: 0.25 };
 }
 
+/**
+ * `cardMotion` wired to the OS preference. Exported so the wiring itself is
+ * testable: `useReducedMotion` reads `matchMedia`, which a test can stub, so
+ * `renderHook` pins that the preference actually reaches the rule rather than
+ * only that the rule is correct in isolation.
+ */
+export function useCardMotion(): CardMotion {
+  return cardMotion(useReducedMotion() === true);
+}
+
 interface GroupCardProps {
   group: Rollup;
   grandTotalValue: number;
@@ -136,7 +146,7 @@ function GroupCard({ group, grandTotalValue, motionSpec }: GroupCardProps) {
  */
 export function Overview({ analytics }: OverviewProps) {
   const [lens, setLens] = useState<Lens>("registration");
-  const prefersReducedMotion = useReducedMotion();
+  const motionSpec = useCardMotion();
   const total = grandTotal(analytics);
   const period = latestPeriod(analytics);
   const groups = analytics.rollups[lens];
@@ -161,7 +171,7 @@ export function Overview({ analytics }: OverviewProps) {
             key={group.key}
             group={group}
             grandTotalValue={total}
-            motionSpec={cardMotion(prefersReducedMotion === true)}
+            motionSpec={motionSpec}
           />
         ))}
       </AnimatePresence>
