@@ -942,3 +942,161 @@ describe("activity", () => {
     expect(s.activity).toEqual([]);
   });
 });
+
+// Two same-day, same-code, $0.00 rows (a stock loan/recall or an in-kind
+// transfer, one row per security) were being collapsed into one by the
+// duplicate-row guard above, which measured only balance and ignored
+// description -- for a zero-value row an unchanged balance proves nothing,
+// since that is also exactly what two distinct zero-value rows look like.
+// Found by re-measuring the corpus: 386 real rows dropped this way.
+describe("activity — duplicate detection", () => {
+  const word = (text: string, x0: number, y: number) => ({ x0, x1: x0 + 10, y, text });
+
+  function parseWithActivityRows(rows: { y: number; words: ReturnType<typeof word>[] }[]) {
+    const pages: Page[] = [
+      {
+        rows: [
+          { y: 1, words: [word("Managed RRSP Account", 50, 1)] },
+          { y: 2, words: [word("2026-06-01 - 2026-06-30", 50, 2)] },
+          { y: 3, words: [word("Portfolio Cash", 50, 3)] },
+          {
+            y: 4,
+            words: [
+              word("Last", 50, 4),
+              word("Statement", 90, 4),
+              word("Cash", 140, 4),
+              word("Balance", 170, 4),
+              word("$0.00", 220, 4),
+            ],
+          },
+          {
+            y: 5,
+            words: [
+              word("Closing", 50, 5),
+              word("Cash", 90, 5),
+              word("Balance", 130, 5),
+              word("$0.00", 220, 5),
+            ],
+          },
+          {
+            y: 6,
+            words: [
+              word("Activity", 50, 6),
+              word("-", 90, 6),
+              word("Current", 110, 6),
+              word("period", 160, 6),
+            ],
+          },
+          ...rows,
+        ],
+      },
+    ];
+    const source = parseSourceFilename("ACCT0001CAD_2026-06_BROKERAGE.pdf");
+    if (!source) throw new Error("bad filename");
+    return parseBrokerage(pages, source);
+  }
+
+  test("keeps two same-day, same-code, zero-value rows for different securities", () => {
+    const s = parseWithActivityRows([
+      {
+        y: 7,
+        words: [
+          word("2026-06-01", 37, 7),
+          word("LOAN", 80, 7),
+          word("JEPQ", 128, 7),
+          word("-", 160, 7),
+          word("JPMorgan", 170, 7),
+          word("shares", 250, 7),
+          word("$0.00", 432, 7),
+          word("$0.00", 494, 7),
+          word("$0.00", 518, 7),
+        ],
+      },
+      {
+        y: 8,
+        words: [
+          word("2026-06-01", 37, 8),
+          word("LOAN", 80, 8),
+          word("SCHD", 128, 8),
+          word("-", 160, 8),
+          word("Schwab", 170, 8),
+          word("shares", 250, 8),
+          word("$0.00", 432, 8),
+          word("$0.00", 494, 8),
+          word("$0.00", 518, 8),
+        ],
+      },
+    ]);
+    expect(s.activity).toHaveLength(2);
+    expect(s.activity[0]?.description).toContain("JEPQ");
+    expect(s.activity[1]?.description).toContain("SCHD");
+  });
+
+  test("still drops a true verbatim nonzero duplicate", () => {
+    const s = parseWithActivityRows([
+      {
+        y: 7,
+        words: [
+          word("2026-06-30", 37, 7),
+          word("FEE", 80, 7),
+          word("Management", 128, 7),
+          word("fees", 250, 7),
+          word("$7.52", 432, 7),
+          word("$0.00", 494, 7),
+          word("$122.95", 518, 7),
+        ],
+      },
+      {
+        y: 8,
+        words: [
+          word("2026-06-30", 37, 8),
+          word("FEE", 80, 8),
+          word("Management", 128, 8),
+          word("fees", 250, 8),
+          word("$7.52", 432, 8),
+          word("$0.00", 494, 8),
+          word("$122.95", 518, 8),
+        ],
+      },
+    ]);
+    expect(s.activity).toHaveLength(1);
+  });
+
+  test("does not let the PERFORMANCE glossary get swallowed as a continuation and mask a real duplicate", () => {
+    // GLOSSARY carries no leading date and no money, so without its own end
+    // marker it reads as a continuation of the last row and keeps growing --
+    // which then breaks description-based duplicate detection for the very
+    // row it attached to, since the row's description no longer matches its
+    // verbatim twin.
+    const s = parseWithActivityRows([
+      {
+        y: 7,
+        words: [
+          word("2026-06-02", 37, 7),
+          word("DIV", 80, 7),
+          word("CAD", 128, 7),
+          word("dividend", 170, 7),
+          word("$0.00", 432, 7),
+          word("$40.90", 494, 7),
+          word("$85.53", 518, 7),
+        ],
+      },
+      {
+        y: 8,
+        words: [
+          word("2026-06-02", 37, 8),
+          word("DIV", 80, 8),
+          word("CAD", 128, 8),
+          word("dividend", 170, 8),
+          word("$0.00", 432, 8),
+          word("$40.90", 494, 8),
+          word("$85.53", 518, 8),
+        ],
+      },
+      { y: 9, words: [word("GLOSSARY", 50, 9)] },
+      { y: 10, words: [word("Some", 50, 10), word("glossary", 90, 10), word("text.", 140, 10)] },
+    ]);
+    expect(s.activity).toHaveLength(1);
+    expect(s.activity[0]?.description).toBe("CAD dividend");
+  });
+});

@@ -608,6 +608,17 @@ const ACTIVITY_END = [
   /^LEVERAGE DISCLOSURE/,
   /^STATEMENT NOTES/,
   /^Money-weighted Return Rates/,
+  // The PERFORMANCE template's statement-code glossary. Missing this let the
+  // whole glossary (hundreds of words) get swallowed as a "continuation" of
+  // the last activity row on the page, since it carries no leading date and
+  // no money -- which in turn broke duplicate-row detection below, since the
+  // row's description no longer matched its verbatim twin.
+  /^GLOSSARY/,
+  // The PERFORMANCE template's statement-code glossary. Missing this let the
+  // whole glossary (hundreds of words) get swallowed as a "continuation" of
+  // the last activity row on the page, since it carries no leading date and
+  // no money -- which in turn broke duplicate-row detection below, since the
+  // row's description no longer matched its verbatim twin.
   // A trade placed near period end can settle after it. Wealthsimple prints
   // those in a separate two-column ("To be Debited"/"To be Credited", no
   // running balance) table for the *next* period, dated past periodEnd --
@@ -665,21 +676,48 @@ function parseActivityDataRow(row: Row, currency: Currency): ActivityRow | null 
 
 /**
  * A handful of amended/restated statements print one activity row twice in
- * immediate succession -- same date, code, debit, credit and balance -- with
- * no other row between the two. A real second transaction can never share
- * the first's balance (a nonzero debit or credit always moves it), so this
- * is a rendering duplicate, not two transactions, and must not be summed
- * twice into the reconciliation.
+ * immediate succession -- same date, code, description, debit, credit and
+ * balance -- with no other row between the two. The reasoning that makes
+ * this safe to collapse only holds when a debit or credit is nonzero: a real
+ * second transaction can never then share the first's balance, since a
+ * nonzero amount always moves it. A zero-value row proves nothing that way
+ * -- an unchanged balance is exactly what a real, distinct zero-value row
+ * (a same-day stock loan/recall on a different security, an in-kind
+ * transfer of different shares) looks like too, and only `description`
+ * tells those apart, so it must be compared as well. Two $0.00 rows for
+ * different securities are real, separate transactions and must both
+ * survive.
  */
 function isDuplicateOf(a: ActivityRow, b: ActivityRow): boolean {
+  if (a.debit === 0 && a.credit === 0) return false;
   return (
     a.date === b.date &&
     a.code === b.code &&
     a.currency === b.currency &&
     a.debit === b.debit &&
     a.credit === b.credit &&
-    a.balance === b.balance
+    a.balance === b.balance &&
+    a.description === b.description
   );
+}
+
+/**
+ * The verbatim-duplicate check runs only after every row's description is
+ * fully assembled (see `readActivity`), not while rows are still being
+ * built: the duplicate's own wrapped continuation (e.g. a repeated
+ * "(executed at ...)" tail) has not been appended to it yet at the moment
+ * it is first parsed, so comparing descriptions during the build would
+ * compare a fully-merged first copy against a still-bare second one and
+ * never match.
+ */
+function dropVerbatimDuplicates(rows: readonly ActivityRow[]): ActivityRow[] {
+  const out: ActivityRow[] = [];
+  for (const row of rows) {
+    const prev = out[out.length - 1];
+    if (prev && isDuplicateOf(row, prev)) continue;
+    out.push(row);
+  }
+  return out;
 }
 
 /**
@@ -715,7 +753,6 @@ function readActivity(pages: readonly Page[]): ActivityRow[] {
 
     const parsed = parseActivityDataRow(row, currency);
     if (parsed) {
-      if (current && isDuplicateOf(parsed, current)) continue;
       current = parsed;
       rows.push(current);
       continue;
@@ -725,7 +762,7 @@ function readActivity(pages: readonly Page[]): ActivityRow[] {
       current.description = `${current.description} ${text}`.trim();
     }
   }
-  return rows;
+  return dropVerbatimDuplicates(rows);
 }
 
 export function parseBrokerage(pages: readonly Page[], source: SourceRef): Statement {
