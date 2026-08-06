@@ -33,6 +33,15 @@ describe("App", () => {
     );
   });
 
+  test("the growth tab also holds the contributions chart, one card per wrapper", () => {
+    render(<App />);
+    clickTab("Growth");
+    expect(document.querySelectorAll("[data-contributions-card]").length).toBe(4);
+    expect(document.querySelector("[data-contributions-provenance]")?.textContent).toContain(
+      "3 of 4 wrappers",
+    );
+  });
+
   test("renders the overview, the registered wrappers and the tax view together", () => {
     render(<App />);
     expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");

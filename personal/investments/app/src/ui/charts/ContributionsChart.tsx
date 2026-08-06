@@ -42,7 +42,7 @@ const CURSOR_GEOMETRY = { viewBoxWidth: WIDTH, marginLeft: MARGIN.left };
  * two dashes, and the derived/stated distinction on this chart is carried by
  * the bar's fill instead.
  */
-const GENERIC_LIMIT_DASH = "2 3";
+export const GENERIC_LIMIT_DASH = "2 3";
 
 const STATED_FILL = "var(--jade-a6)";
 const STATED_STROKE = "var(--jade-a11)";
@@ -83,11 +83,12 @@ function BarSwatch({ hatched }: { hatched: boolean }) {
   );
 }
 
-function LineSwatch({ dash }: { dash: string | undefined }) {
+function LineSwatch({ kind, dash }: { kind: "generic" | "assessed"; dash: string | undefined }) {
   return (
     <svg width={28} height={8} aria-hidden="true" style={{ flex: "none" }}>
       <title>A limit line</title>
       <line
+        data-legend-swatch={kind}
         x1={0}
         x2={28}
         y1={4}
@@ -130,11 +131,11 @@ function Legend() {
       <LegendRow swatch={<BarSwatch hatched={true} />}>
         Hatched bar: contributed derived here, reconstructed from activity rows rather than printed.
       </LegendRow>
-      <LegendRow swatch={<LineSwatch dash={GENERIC_LIMIT_DASH} />}>
+      <LegendRow swatch={<LineSwatch kind="generic" dash={GENERIC_LIMIT_DASH} />}>
         Dashed line: the generic CRA annual maximum. Carry-forward is not visible in statement data,
         so a bar reaching or passing this line is not an over-contribution.
       </LegendRow>
-      <LegendRow swatch={<LineSwatch dash={undefined} />}>
+      <LegendRow swatch={<LineSwatch kind="assessed" dash={undefined} />}>
         Solid line: a limit from your notice of assessment, which already includes carry-forward, so
         the gap to it is a real figure.
       </LegendRow>
@@ -148,17 +149,21 @@ function Legend() {
 /**
  * Which wrappers print their contributions and which have them reconstructed.
  * Counted from the built series, so it cannot drift from the cards below it.
+ *
+ * Counted over the wrappers that draw something, not over every wrapper on
+ * the page. A wrapper the corpus has no statement for states nothing, and
+ * folding it into the stated count would have this note claim it prints
+ * figures it does not have.
  */
 function ProvenanceNote({ wrappers }: { wrappers: readonly WrapperContributions[] }) {
-  const derived = wrappers.filter((wrapper) =>
-    wrapper.years.some((year) => year.source === "derived"),
-  );
-  const stated = wrappers.length - derived.length;
+  const drawable = wrappers.filter((wrapper) => drawnYearCount(wrapper) > 0);
+  const derived = drawable.filter((wrapper) => isDerived(wrapper));
+  const stated = drawable.length - derived.length;
 
   return (
     <Callout.Root color="gray" variant="surface" data-contributions-provenance="">
       <Callout.Text>
-        {stated} of {wrappers.length} wrappers state their contribution figures on the statements,
+        {stated} of {drawable.length} wrappers state their contribution figures on the statements,
         as a year-to-date total this reads month over month as a delta.
         {derived.length === 0
           ? ""
@@ -336,7 +341,18 @@ function hasNoAnnualLimit(wrapper: WrapperContributions): boolean {
   return drawnYearCount(wrapper) > 0 && wrapper.years.every((year) => year.limit === null);
 }
 
-/** True when the wrapper contributes a derived figure in any year, which is what the badge marks. */
+/**
+ * True when the wrapper contributes a derived figure in any year.
+ *
+ * Deliberately any-year, where the bars are per-year: one derived year among
+ * three stated ones takes the whole card's badge. That is coarser than the
+ * data, and the direction of the coarseness is the safe one -- it can call a
+ * mostly-stated wrapper derived, never the reverse -- while the bars' fills
+ * and the readout both carry the per-year truth. The corpus does not reach
+ * the mixed case: the RESP is derived in its one year, and the other three
+ * wrappers are stated in every year they cover. If a mixed wrapper ever
+ * appears, this badge is the thing to split, not the bars.
+ */
 function isDerived(wrapper: WrapperContributions): boolean {
   return wrapper.years.some((year) => year.source === "derived");
 }

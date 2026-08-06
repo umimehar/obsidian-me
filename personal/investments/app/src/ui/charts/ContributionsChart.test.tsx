@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { cleanup, fireEvent, render, within } from "@testing-library/react";
 import { loadAnalytics } from "../data";
-import { ContributionsChart } from "./ContributionsChart";
+import { ContributionsChart, GENERIC_LIMIT_DASH } from "./ContributionsChart";
+import { DERIVED_DASH } from "./source";
 
 /**
  * Against the real committed corpus. The figures pinned here -- 2026's
@@ -164,6 +165,50 @@ describe("the limit line, and the trap it is built around", () => {
     ).toBe("RRSP");
   });
 
+  /**
+   * `data-assessed` is a test hook, not a rendered mark. What a reader
+   * actually sees is the dash, and without these three the dash, the stroke
+   * and the height can all be dropped or halved with a green suite. A
+   * generic line rendered solid is the worst of the three: the legend's own
+   * words then convert a $7,000 published maximum into an apparent assessed
+   * ceiling, and the TFSA's 2025 bar reads as a real over-contribution.
+   */
+  test("the generic maximum renders dashed and the assessed limit renders solid", () => {
+    renderChart();
+    for (const line of limitLines("TFSA")) {
+      expect(line.getAttribute("stroke-dasharray")).toBe(GENERIC_LIMIT_DASH);
+    }
+    const assessed = limitLines("RRSP").find((node) => node.getAttribute("data-year") === "2026");
+    const generic = limitLines("RRSP").find((node) => node.getAttribute("data-year") === "2025");
+    expect(assessed?.getAttribute("stroke-dasharray")).toBeNull();
+    expect(generic?.getAttribute("stroke-dasharray")).toBe(GENERIC_LIMIT_DASH);
+  });
+
+  test("both limit lines are stroked, so neither renders invisible", () => {
+    renderChart();
+    for (const line of [...limitLines("TFSA"), ...limitLines("RRSP")]) {
+      const stroke = line.getAttribute("stroke") ?? "";
+      expect(stroke).not.toBe("");
+      expect(stroke).not.toBe("none");
+    }
+  });
+
+  /**
+   * The line's height is a figure, the same as the bar's. Asserting only
+   * that it sits above the bar leaves it free to be drawn at half its real
+   * value. The ratio is taken against the bar's own baseline, so it pins the
+   * figure without pinning the niced domain the axis happens to land on.
+   */
+  test("the assessed line is drawn at 70,752 against a 33,000 bar, not at some fraction of it", () => {
+    renderChart();
+    const rrsp = bar("RRSP", 2026);
+    const baseline = Number(rrsp.getAttribute("y")) + Number(rrsp.getAttribute("height"));
+    const line = limitLines("RRSP").find((node) => node.getAttribute("data-year") === "2026");
+    const limitHeight = baseline - Number(line?.getAttribute("y1"));
+    const barHeight = baseline - Number(rrsp.getAttribute("y"));
+    expect(limitHeight / barHeight).toBeCloseTo(70752 / 33000, 6);
+  });
+
   test("the 2025 TFSA sits above its generic maximum and is never called an over-contribution", () => {
     renderChart();
     const line = limitLines("TFSA").find((node) => node.getAttribute("data-year") === "2025");
@@ -201,7 +246,7 @@ describe("the limit line, and the trap it is built around", () => {
  * first while looking exactly like the second.
  */
 describe("a wrapper the corpus covers in no year at all", () => {
-  test("says no statement covers it, and never that it has no annual limit", () => {
+  function renderWithoutTfsaAccounts() {
     render(
       <ContributionsChart
         analytics={{
@@ -210,10 +255,21 @@ describe("a wrapper the corpus covers in no year at all", () => {
         }}
       />,
     );
+  }
+
+  test("says no statement covers it, and never that it has no annual limit", () => {
+    renderWithoutTfsaAccounts();
     const text = card("TFSA").textContent ?? "";
     expect(text).toContain("No statement covers this wrapper");
     expect(text).not.toContain("no annual contribution limit");
     expect(card("TFSA").querySelector("[data-no-limit-note]")).toBeNull();
+  });
+
+  test("the provenance note counts only the wrappers that state something", () => {
+    renderWithoutTfsaAccounts();
+    const text = document.querySelector("[data-contributions-provenance]")?.textContent ?? "";
+    expect(text).toContain("2 of 3 wrappers");
+    expect(text).not.toContain("of 4 wrappers");
   });
 });
 
@@ -231,6 +287,41 @@ describe("stated and derived are drawn differently, and said in words", () => {
     const resp = bar("RESP", 2026);
     expect(resp.getAttribute("data-source")).toBe("derived");
     expect(resp.getAttribute("fill")).toContain("url(#");
+  });
+
+  /**
+   * A fill of `url(#missing)` is a dangling reference: the bar renders
+   * unfilled and the assertion that the fill string contains `url(#` stays
+   * true. The pattern the fill names has to exist.
+   */
+  test("the hatch the derived bar's fill names is a pattern that exists in the document", () => {
+    renderChart();
+    const fill = bar("RESP", 2026).getAttribute("fill") ?? "";
+    const id = /^url\(#(.+)\)$/.exec(fill)?.[1];
+    expect(id).toBeDefined();
+    const pattern = document.getElementById(id ?? "");
+    expect(pattern).not.toBeNull();
+    expect(pattern?.tagName.toLowerCase()).toBe("pattern");
+    expect(pattern?.querySelector("line")).not.toBeNull();
+  });
+
+  /**
+   * The two dashes carry two different claims across two charts, and the
+   * legend text is what actually distinguishes them. A swatch that goes
+   * solid under a label reading "Dashed line" breaks the only thing holding
+   * the distinction up.
+   */
+  test("the generic dash is not the derived dash of the returns chart", () => {
+    expect(GENERIC_LIMIT_DASH).not.toBe(DERIVED_DASH);
+  });
+
+  test("the legend's generic swatch is dashed and its assessed swatch is solid", () => {
+    renderChart();
+    const legend = document.querySelector("[data-contributions-legend]");
+    const generic = legend?.querySelector('[data-legend-swatch="generic"]');
+    const assessed = legend?.querySelector('[data-legend-swatch="assessed"]');
+    expect(generic?.getAttribute("stroke-dasharray")).toBe(GENERIC_LIMIT_DASH);
+    expect(assessed?.getAttribute("stroke-dasharray")).toBeNull();
   });
 
   test("the RESP card says its figure is derived rather than printed", () => {
