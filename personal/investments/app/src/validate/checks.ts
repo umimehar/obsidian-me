@@ -554,7 +554,8 @@ export function checkSupersession(statements: readonly Statement[]): Finding[] {
       finding(
         "superseded",
         latest,
-        `${sorted.length} versions of this statement; version ${latest.source.version} is used`,
+        `${sorted.length} versions of this statement; version ${latest.source.version} ` +
+          `supersedes ${sorted.length - 1} earlier one(s), which are dropped from every other check`,
         null,
         null,
         "warning",
@@ -699,8 +700,16 @@ export function checkGroundTruth(
   return out;
 }
 
+/**
+ * `allVersions` is only for `checkSupersession`: every other check runs
+ * against `statements`, which the caller has already deduped to one version
+ * per (accountNo, period, template) via `dedupeToLatestVersion`. Passing the
+ * undeduped list to `checkSupersession` is what lets it keep reporting a
+ * dropped amendment even though nothing else in the report ever sees one.
+ */
 export function runChecks(
   statements: readonly Statement[],
+  allVersions: readonly Statement[],
   observations: readonly Observation[],
   countedAccounts: ReadonlySet<string>,
 ): Finding[] {
@@ -709,7 +718,7 @@ export function runChecks(
     ...checkContinuity(statements),
     ...checkCoverage(statements),
     ...checkCrossDocument(statements),
-    ...checkSupersession(statements),
+    ...checkSupersession(allVersions),
     ...checkKindConsistency(statements),
     ...checkGroundTruth(statements, observations, countedAccounts),
   ];

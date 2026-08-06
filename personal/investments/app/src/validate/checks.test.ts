@@ -804,10 +804,24 @@ describe("checkSupersession", () => {
     expect(f).toHaveLength(1);
     expect(f[0]?.check).toBe("superseded");
     expect(f[0]?.severity).toBe("warning");
+    // "is used" was false: nothing in checkSupersession itself selects a
+    // version. Dropping the others is dedupeToLatestVersion's job.
+    expect(f[0]?.message).toMatch(/version 2 supersedes 1 earlier one/);
+    expect(f[0]?.message).not.toMatch(/is used/);
   });
 
   test("says nothing when there is one version", () => {
     expect(checkSupersession([statement()])).toEqual([]);
+  });
+
+  test("counts every earlier version when there are more than two", () => {
+    const f = checkSupersession([
+      statement({ source: src("2026-06", "BROKERAGE", 0) }),
+      statement({ source: src("2026-06", "BROKERAGE", 1) }),
+      statement({ source: src("2026-06", "BROKERAGE", 2) }),
+    ]);
+    expect(f).toHaveLength(1);
+    expect(f[0]?.message).toMatch(/3 versions of this statement; version 2 supersedes 2 earlier/);
   });
 });
 
