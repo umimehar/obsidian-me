@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "bun run src/build.ts",
+    "analytics": "bun run src/analytics/build.ts",
     "fixtures": "bun run src/tools/make-fixtures.ts",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
