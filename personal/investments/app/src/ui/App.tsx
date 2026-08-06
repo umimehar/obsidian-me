@@ -5,6 +5,7 @@ import type { AnalyticsOutput } from "../analytics/build";
 import { Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
 import { Tabs } from "./Tabs";
+import { ReturnsChart } from "./charts/ReturnsChart";
 import { ValueOverTime } from "./charts/ValueOverTime";
 import { grandTotal, latestPeriod, loadAnalytics, loadReconciliation } from "./data";
 import { formatCurrency } from "./format";
@@ -90,9 +91,7 @@ function Dashboard() {
 
   const panels: Record<TabId, ReactNode> = {
     overview: <Overview analytics={analytics} />,
-    growth: (
-      <EmptyPanel title="Growth" note="Growth over time, by scope, is coming in a later task." />
-    ),
+    growth: <ReturnsChart returns={analytics.returns} series={analytics.series} />,
     wrappers: (
       <YearScopedPanel years={years} year={year} onYearChange={setYear}>
         <RegisteredView analytics={analytics} year={year} />

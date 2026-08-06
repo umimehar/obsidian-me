@@ -24,6 +24,15 @@ afterEach(() => {
 });
 
 describe("App", () => {
+  test("the growth tab holds the returns chart, with its provenance stated", () => {
+    render(<App />);
+    clickTab("Growth");
+    expect(document.querySelectorAll("[data-returns-card]").length).toBe(14);
+    expect(document.querySelector("[data-returns-provenance]")?.textContent).toContain(
+      "2 of 14 accounts",
+    );
+  });
+
   test("renders the overview, the registered wrappers and the tax view together", () => {
     render(<App />);
     expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");

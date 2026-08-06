@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { buildScales, periodToDate } from "./scales";
+import { buildScales, buildSignedScales, periodToDate } from "./scales";
 
 describe("periodToDate", () => {
   test("parses a YYYY-MM period to the first of that month, UTC", () => {
@@ -84,5 +84,64 @@ describe("buildScales", () => {
     expect(scales).not.toBeNull();
     const [start, end] = scales?.x.domain() ?? [];
     expect(start?.getTime()).toBe(end?.getTime());
+  });
+});
+
+describe("buildSignedScales", () => {
+  const width = 600;
+  const height = 300;
+
+  test("returns null for an empty points array, the same guard buildScales has", () => {
+    expect(buildSignedScales([], width, height)).toBeNull();
+  });
+
+  test("keeps a negative value inside the domain rather than clipping it at zero", () => {
+    // The corpus's worst derived month is -20.83%. On buildScales' zero-floored
+    // domain it would draw below the plot box and vanish.
+    const points = [
+      { period: "2025-01", value: -20.831744591570732 },
+      { period: "2025-02", value: 47.31 },
+    ];
+    const scales = buildSignedScales(points, width, height);
+    const [min, max] = scales?.y.domain() ?? [];
+    expect(min).toBeLessThanOrEqual(-20.831744591570732);
+    expect(max).toBeGreaterThanOrEqual(47.31);
+  });
+
+  test("always includes zero, so the zero line is on the chart even for an all-negative series", () => {
+    const scales = buildSignedScales(
+      [
+        { period: "2025-01", value: -8 },
+        { period: "2025-02", value: -2 },
+      ],
+      width,
+      height,
+    );
+    const [min, max] = scales?.y.domain() ?? [];
+    expect(min).toBeLessThanOrEqual(-8);
+    expect(max).toBeGreaterThanOrEqual(0);
+  });
+
+  test("puts a larger value higher on the page, same inversion as buildScales", () => {
+    const scales = buildSignedScales(
+      [
+        { period: "2025-01", value: -10 },
+        { period: "2025-02", value: 10 },
+      ],
+      width,
+      height,
+    );
+    expect(scales?.y(10)).toBeLessThan(scales?.y(-10) ?? 0);
+  });
+
+  test("zero sits above the box floor when there are negatives, unlike buildScales", () => {
+    const points = [
+      { period: "2025-01", value: -10 },
+      { period: "2025-02", value: 10 },
+    ];
+    // buildScales floors the domain at zero, so zero is the baseline itself.
+    expect(buildScales(points, width, height)?.y(0)).toBe(height);
+    // Here it is mid-box, which is what leaves room to draw -10 below it.
+    expect(buildSignedScales(points, width, height)?.y(0)).toBeCloseTo(height / 2, 6);
   });
 });

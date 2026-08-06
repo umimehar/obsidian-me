@@ -15,6 +15,21 @@ export function formatPeriodLabel(period: string): string {
   }).format(periodToDate(period));
 }
 
+/**
+ * A rate for an axis tick only, whole percent.
+ *
+ * The ticks on a -25% to 50% axis are round numbers, and `-20.00%` beside
+ * `0.00%` is noise. This is the rate equivalent of `formatAxisCurrency` in
+ * `ValueOverTime`, and confined the same way: every figure a reader can
+ * actually read off a point -- the tooltip, the announcement, the accessible
+ * name -- goes through `formatRate` at two decimals, which is the precision
+ * the statements themselves print.
+ */
+export function formatAxisRate(rate: number): string {
+  const digits = new Intl.NumberFormat("en-CA", { maximumFractionDigits: 0 }).format(rate);
+  return `${digits}%`;
+}
+
 /** An open polyline through `points`, in input order. Empty for no points. */
 export function linePath(points: readonly PlotPoint[]): string {
   return points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");

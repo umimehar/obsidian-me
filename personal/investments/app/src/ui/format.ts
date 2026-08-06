@@ -37,3 +37,24 @@ export function formatShare(share: number): string {
     maximumFractionDigits: 1,
   }).format(share);
 }
+
+/**
+ * A return rate, already in percent, to two decimal places.
+ *
+ * Two is the precision Wealthsimple's own statements print: `3.22`, `-4.01`,
+ * `17.15`. Rounding further would state a rate the statement does not, and
+ * this project has four times shipped an announced figure coarser than the
+ * printed one. Every rendering of a rate goes through here, tooltip and
+ * accessible name alike, so the two cannot disagree.
+ *
+ * The value is a rate in percent, not a fraction, so it is formatted as a
+ * plain number with a percent sign rather than through `style: "percent"`,
+ * which would divide it by a hundred.
+ */
+export function formatRate(rate: number): string {
+  const digits = new Intl.NumberFormat("en-CA", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(rate);
+  return `${digits}%`;
+}

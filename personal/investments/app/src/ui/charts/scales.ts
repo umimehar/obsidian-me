@@ -76,3 +76,38 @@ export function buildScales(
 
   return { x, y, yTicks: y.ticks(tickCount) };
 }
+
+/**
+ * `buildScales` for a quantity that goes negative.
+ *
+ * The y domain runs from the minimum to the maximum, widened to include zero
+ * at whichever end it is missing. `buildScales`' zero floor is right for a
+ * dollar value, which cannot be negative and should read its height against a
+ * true zero; it is wrong for a return rate, where -20.83% is a real month and
+ * a floored domain would draw it below the plot box or clamp it onto the
+ * baseline as if the account had broken even.
+ *
+ * Zero stays in the domain even when the whole series is on one side of it,
+ * because the zero line is what tells a reader which side a point is on.
+ */
+export function buildSignedScales(
+  points: readonly ChartPoint[],
+  width: number,
+  height: number,
+  tickCount = 5,
+): ChartScales | null {
+  if (points.length === 0) return null;
+
+  const dates = points.map((p) => periodToDate(p.period));
+  const values = points.map((p) => p.value);
+  const minDate = dates.reduce((a, b) => (b < a ? b : a));
+  const maxDate = dates.reduce((a, b) => (b > a ? b : a));
+
+  const x = scaleTime().domain([minDate, maxDate]).range([0, width]);
+  const y = scaleLinear()
+    .domain([Math.min(0, ...values), Math.max(0, ...values)])
+    .nice()
+    .range([height, 0]);
+
+  return { x, y, yTicks: y.ticks(tickCount) };
+}
