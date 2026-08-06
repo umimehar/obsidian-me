@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { useId, useMemo } from "react";
 import type { AccountSeries } from "../../analytics/types";
 import { formatCurrency } from "../format";
-import { ChartTooltip, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
+import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
 import { type PlotPoint, areaPath, formatPeriodLabel, linePath } from "./plot";
 import { type PortfolioPoint, buildPortfolioSeries, periodExtent } from "./portfolioSeries";
 import { useRevealMotion } from "./reveal";
@@ -18,6 +18,8 @@ const HEIGHT = 320;
 const MARGIN = { top: 16, right: 16, bottom: 28, left: 68 };
 const INNER_WIDTH = WIDTH - MARGIN.left - MARGIN.right;
 const INNER_HEIGHT = HEIGHT - MARGIN.top - MARGIN.bottom;
+/** Hoisted so the cursor's pointer handler keeps one identity across renders. */
+const CURSOR_GEOMETRY = { viewBoxWidth: WIDTH, marginLeft: MARGIN.left };
 
 /**
  * The axis ticks only, where cents are noise on a $250,000 scale. Every
@@ -81,10 +83,7 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
     [points],
   );
   const slots = useMemo(() => cursorSlots(periodExtent(points), scales), [points, scales]);
-  const cursor = useChartCursor(points, slots, {
-    viewBoxWidth: WIDTH,
-    marginLeft: MARGIN.left,
-  });
+  const cursor = useChartCursor(points, slots, CURSOR_GEOMETRY);
   const countedAccounts = useMemo(
     () => series.filter((account) => account.inTotals).length,
     [series],
@@ -104,10 +103,12 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
     `Portfolio market value from ${formatPeriodLabel(first.period)} to ` +
     `${formatPeriodLabel(last.period)}, ending at ${formatCurrency(last.marketValue)}. ` +
     "The book cost line is an approximate figure for USD holdings, not a filing figure.";
-  const readout =
-    cursor.period === null
-      ? ""
-      : ` ${tooltipLines(cursor.period, cursor.point, countedAccounts).join(". ")}.`;
+  // One call, three consumers: the accessible name, the spoken announcement
+  // and the visible tooltip. Formatting the figures a second time anywhere
+  // is how an announced figure drifts from a printed one.
+  const lines =
+    cursor.period === null ? [] : tooltipLines(cursor.period, cursor.point, countedAccounts);
+  const readout = lines.length === 0 ? "" : ` ${lines.join(". ")}.`;
 
   return (
     <div style={{ position: "relative" }}>
@@ -171,13 +172,10 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
           </text>
         </g>
       </svg>
-      {cursor.period === null ? null : (
+      <CursorAnnouncement lines={lines} />
+      {lines.length === 0 ? null : (
         <div style={{ ...tooltipAnchorStyle(MARGIN.left + (cursor.x ?? 0), WIDTH), top: 0 }}>
-          <ChartTooltip
-            period={cursor.period}
-            point={cursor.point}
-            countedAccounts={countedAccounts}
-          />
+          <ChartTooltip lines={lines} />
         </div>
       )}
     </div>

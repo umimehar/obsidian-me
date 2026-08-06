@@ -109,6 +109,34 @@ describe("ValueOverTime cursor", () => {
     expect(label()).toContain("11 of 11 accounts reported this month");
   });
 
+  test("a live region speaks the focused point, since a name change may not be", () => {
+    render(<ValueOverTime series={loadAnalytics().series} />);
+    const region = screen.getByRole("status");
+    // Present and empty at rest: a live region that arrives with its content
+    // is not reliably announced.
+    expect(region.textContent).toBe("");
+
+    fireEvent.keyDown(chart(), { key: "End" });
+    expect(region.getAttribute("aria-live")).toBe("polite");
+    expect(region.textContent).toContain("Jun 2026");
+    expect(region.textContent).toContain("$241,739.67");
+    expect(region.textContent).toContain("11 of 11 accounts reported this month");
+  });
+
+  test("the spoken copy and the printed copy are the same words", () => {
+    render(<ValueOverTime series={loadAnalytics().series} />);
+    fireEvent.keyDown(chart(), { key: "Home" });
+    const spoken = screen.getByRole("status").textContent ?? "";
+    const printed = document.querySelector("[data-chart-tooltip]")?.textContent ?? "";
+    expect(printed).not.toBe("");
+    // The tooltip renders one div per line, so its textContent is the lines
+    // concatenated. Every line spoken must appear in it, and vice versa.
+    for (const line of spoken.replace(/\.$/, "").split(". ")) {
+      expect(printed).toContain(line);
+    }
+    expect(spoken).toContain("Market value $0.00");
+  });
+
   test("the summary keeps its base sentence, so the chart is still named when focused", () => {
     render(<ValueOverTime series={loadAnalytics().series} />);
     fireEvent.keyDown(chart(), { key: "End" });

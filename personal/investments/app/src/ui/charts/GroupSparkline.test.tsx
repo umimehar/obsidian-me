@@ -223,6 +223,15 @@ describe("GroupSparkline cursor over the shared domain", () => {
     expect(summary).toContain("Market value $3,943.98");
   });
 
+  test("the gap is spoken as well as printed, so an arrow onto it is not silence", () => {
+    renderGroup("Education");
+    fireEvent.pointerMove(sparkline(), { clientX: 360 });
+    const region = screen.getByRole("status");
+    expect(region.getAttribute("aria-live")).toBe("polite");
+    expect(region.textContent).toMatch(/No statement for this month/);
+    expect(region.textContent).not.toContain("$");
+  });
+
   test("the empty-state card has no cursor to move, and no tooltip appears", () => {
     renderGroup("Spending");
     expect(document.querySelector("[data-chart-tooltip]")).toBeNull();

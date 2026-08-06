@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, renderHook, screen } from "@testing-library/react";
 import { monthsBetween } from "./scales";
 import { type CursorSlot, nearestSlotIndex, stepIndex, useChartCursor } from "./useChartCursor";
 
@@ -223,6 +223,29 @@ describe("useChartCursor keyboard", () => {
     fireEvent.keyDown(svg, { key: "Home" });
     fireEvent.keyDown(svg, { key: "a" });
     expect(readout()).toBe("2024-01:100");
+  });
+});
+
+describe("useChartCursor handler identity", () => {
+  test("the pointer handler survives a rerender, so the memo is not decorative", () => {
+    // Both charts pass a module-level geometry constant for this reason. A
+    // fresh object literal per render would rebuild the handler every time
+    // and the useCallback would be doing nothing.
+    const geometry = { viewBoxWidth: 100, marginLeft: 0 };
+    const { result, rerender } = renderHook(() => useChartCursor(SPARSE, SLOTS, geometry));
+    const first = result.current.onPointerMove;
+    rerender();
+    expect(result.current.onPointerMove).toBe(first);
+  });
+
+  test("a changed geometry does rebuild it, so the memo is not stale either", () => {
+    const { result, rerender } = renderHook(
+      ({ geometry }) => useChartCursor(SPARSE, SLOTS, geometry),
+      { initialProps: { geometry: { viewBoxWidth: 100, marginLeft: 0 } } },
+    );
+    const first = result.current.onPointerMove;
+    rerender({ geometry: { viewBoxWidth: 800, marginLeft: 68 } });
+    expect(result.current.onPointerMove).not.toBe(first);
   });
 });
 

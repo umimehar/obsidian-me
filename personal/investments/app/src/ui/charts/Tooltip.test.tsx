@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { render, screen } from "@testing-library/react";
-import { ChartTooltip, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
+import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
 
 /** The real corpus's last point: 2026-06, all eleven counted accounts reporting. */
 const LAST = { marketValue: 241739.67, bookCost: 223675.08, accountCount: 11 };
@@ -83,23 +83,74 @@ describe("tooltipAnchorStyle", () => {
 
 describe("ChartTooltip", () => {
   test("renders every line it was given", () => {
-    render(<ChartTooltip period="2026-06" point={LAST} countedAccounts={11} />);
-    for (const line of tooltipLines("2026-06", LAST, 11)) {
+    const lines = tooltipLines("2026-06", LAST, 11);
+    render(<ChartTooltip lines={lines} />);
+    for (const line of lines) {
       expect(screen.getByText(line)).toBeDefined();
     }
   });
 
   test("the gap tooltip renders the no-statement wording and no money", () => {
-    render(<ChartTooltip period="2024-02" point={null} countedAccounts={11} />);
+    render(<ChartTooltip lines={tooltipLines("2024-02", null, 11)} />);
     expect(screen.getByText("No statement for this month")).toBeDefined();
     expect(document.body.textContent ?? "").not.toContain("$");
   });
 
-  test("is hidden from assistive tech, because the chart's own name carries the same words", () => {
-    // Two announcements of one figure is how the figures drifted apart
-    // before. The svg's aria-label is the single announced copy.
-    render(<ChartTooltip period="2026-06" point={LAST} countedAccounts={11} />);
-    const tooltip = document.querySelector("[data-chart-tooltip]");
-    expect(tooltip?.getAttribute("aria-hidden")).toBe("true");
+  test("is hidden from assistive tech, because the announcement speaks the same words", () => {
+    // Two spoken copies of one figure is how the figures drifted apart
+    // before. CursorAnnouncement is the single announced copy.
+    render(<ChartTooltip lines={tooltipLines("2026-06", LAST, 11)} />);
+    expect(document.querySelector("[data-chart-tooltip]")?.getAttribute("aria-hidden")).toBe(
+      "true",
+    );
+  });
+
+  test("keys repeated lines apart, so React raises no duplicate-key warning", () => {
+    // Keying on the line's own text renders both children and warns, which
+    // the zero-warnings policy does not allow. React only complains through
+    // console.error, so that is where the assertion has to look.
+    const errors: unknown[][] = [];
+    const original = console.error;
+    console.error = (...args: unknown[]) => {
+      errors.push(args);
+    };
+    try {
+      render(<ChartTooltip lines={["Jun 2026", "Jun 2026"]} />);
+    } finally {
+      console.error = original;
+    }
+    expect(screen.getAllByText("Jun 2026").length).toBe(2);
+    expect(errors.map((args) => args.join(" ")).join(" ")).not.toMatch(/same key/i);
+  });
+});
+
+describe("CursorAnnouncement", () => {
+  test("is a polite live region, so a move along the series is spoken", () => {
+    render(<CursorAnnouncement lines={tooltipLines("2026-06", LAST, 11)} />);
+    const region = screen.getByRole("status");
+    expect(region.getAttribute("aria-live")).toBe("polite");
+  });
+
+  test("speaks the same lines the tooltip prints, in one sentence", () => {
+    const lines = tooltipLines("2026-06", LAST, 11);
+    render(<CursorAnnouncement lines={lines} />);
+    expect(screen.getByRole("status").textContent).toBe(`${lines.join(". ")}.`);
+    expect(screen.getByRole("status").textContent).toContain("$241,739.67");
+  });
+
+  test("stays in the tree when the cursor is away, since a region added late is not announced", () => {
+    render(<CursorAnnouncement lines={[]} />);
+    const region = screen.getByRole("status");
+    expect(region).toBeDefined();
+    expect(region.textContent).toBe("");
+  });
+
+  test("is off screen rather than display:none, which would silence it", () => {
+    render(<CursorAnnouncement lines={["Jun 2026"]} />);
+    const region = screen.getByRole("status");
+    if (!(region instanceof HTMLElement)) throw new Error("expected an html live region");
+    expect(region.style.display).not.toBe("none");
+    expect(region.style.position).toBe("absolute");
+    expect(region.style.clipPath).toBe("inset(50%)");
   });
 });

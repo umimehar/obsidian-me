@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { useId, useMemo } from "react";
 import type { AccountSeries } from "../../analytics/types";
 import { formatCurrency } from "../format";
-import { ChartTooltip, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
+import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
 import { type PlotPoint, areaPath, formatPeriodLabel, linePath } from "./plot";
 import { type PortfolioPoint, buildPortfolioSeries } from "./portfolioSeries";
 import { useRevealMotion } from "./reveal";
@@ -38,6 +38,8 @@ const PAD = 3;
 export const INNER_WIDTH = WIDTH - PAD * 2;
 export const INNER_HEIGHT = HEIGHT - PAD * 2;
 const DOT_RADIUS = 2.5;
+/** Hoisted so the cursor's pointer handler keeps one identity across renders. */
+const CURSOR_GEOMETRY = { viewBoxWidth: WIDTH, marginLeft: PAD };
 
 /**
  * The points `buildScales` sees: the group's own values, plus a zero-valued
@@ -125,7 +127,7 @@ export function GroupSparkline({ label, series, xDomain }: GroupSparklineProps) 
     [points, xDomain],
   );
   const slots = useMemo(() => cursorSlots(xDomain, scales), [xDomain, scales]);
-  const cursor = useChartCursor(points, slots, { viewBoxWidth: WIDTH, marginLeft: PAD });
+  const cursor = useChartCursor(points, slots, CURSOR_GEOMETRY);
   const countedAccounts = useMemo(
     () => series.filter((account) => account.inTotals).length,
     [series],
@@ -147,10 +149,11 @@ export function GroupSparkline({ label, series, xDomain }: GroupSparklineProps) 
   const summary =
     `${label} market value from ${formatPeriodLabel(first.period)} to ` +
     `${formatPeriodLabel(last.period)}, ending at ${formatCurrency(last.marketValue)}.`;
-  const readout =
-    cursor.period === null
-      ? ""
-      : ` ${tooltipLines(cursor.period, cursor.point, countedAccounts).join(". ")}.`;
+  // One call, three consumers: the accessible name, the spoken announcement
+  // and the visible tooltip. See the same note in ValueOverTime.
+  const lines =
+    cursor.period === null ? [] : tooltipLines(cursor.period, cursor.point, countedAccounts);
+  const readout = lines.length === 0 ? "" : ` ${lines.join(". ")}.`;
 
   return (
     <div style={{ position: "relative" }}>
@@ -194,13 +197,10 @@ export function GroupSparkline({ label, series, xDomain }: GroupSparklineProps) 
         </g>
       </svg>
       {points.length === 1 ? <SingleStatementNote period={last.period} /> : null}
-      {cursor.period === null ? null : (
+      <CursorAnnouncement lines={lines} />
+      {lines.length === 0 ? null : (
         <div style={{ ...tooltipAnchorStyle(PAD + (cursor.x ?? 0), WIDTH), top: "100%" }}>
-          <ChartTooltip
-            period={cursor.period}
-            point={cursor.point}
-            countedAccounts={countedAccounts}
-          />
+          <ChartTooltip lines={lines} />
         </div>
       )}
     </div>

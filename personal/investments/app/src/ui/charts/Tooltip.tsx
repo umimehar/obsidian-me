@@ -10,15 +10,6 @@ export interface TooltipPoint {
   accountCount: number;
 }
 
-export interface ChartTooltipProps {
-  /** `YYYY-MM` under the cursor. */
-  period: string;
-  /** The point for that month, or null when the series states nothing for it. */
-  point: TooltipPoint | null;
-  /** How many accounts the chart counts in total, so a partial month can say it is partial. */
-  countedAccounts: number;
-}
-
 /**
  * What the cursor says about one month, one line at a time.
  *
@@ -75,12 +66,14 @@ export function tooltipAnchorStyle(x: number, viewBoxWidth: number): CSSProperti
 /**
  * The visible readout beside the cursor.
  *
- * `aria-hidden`, deliberately: the chart's own `aria-label` already carries
- * these exact lines, and a second announced copy is a second figure to drift
- * out of step with the first.
+ * `aria-hidden`, deliberately: `CursorAnnouncement` below speaks these same
+ * lines, and two announced copies of one figure is how they drift apart.
+ *
+ * It takes the finished lines rather than the point, so the caller makes one
+ * `tooltipLines` call and hands the result to the tooltip, the announcement
+ * and the chart's own `aria-label` alike.
  */
-export function ChartTooltip({ period, point, countedAccounts }: ChartTooltipProps) {
-  const lines = tooltipLines(period, point, countedAccounts);
+export function ChartTooltip({ lines }: { lines: readonly string[] }) {
   return (
     <div
       data-chart-tooltip=""
@@ -95,8 +88,11 @@ export function ChartTooltip({ period, point, countedAccounts }: ChartTooltipPro
       }}
     >
       {lines.map((line, index) => (
+        // The month label is always line 0 and no two lines of one readout
+        // repeat, so the line is unique within a readout; the index prefix
+        // keeps that true even if a future line duplicates another.
         <div
-          key={line}
+          key={`${index}:${line}`}
           style={{
             color: index === 0 ? "var(--gray-12)" : "var(--gray-a11)",
             fontSize: index === 0 ? 13 : 12,
@@ -108,5 +104,43 @@ export function ChartTooltip({ period, point, countedAccounts }: ChartTooltipPro
         </div>
       ))}
     </div>
+  );
+}
+
+/** Off-screen but still rendered, so a screen reader reads it and no sighted reader sees it. */
+const VISUALLY_HIDDEN: CSSProperties = {
+  position: "absolute",
+  width: 1,
+  height: 1,
+  margin: -1,
+  padding: 0,
+  overflow: "hidden",
+  clipPath: "inset(50%)",
+  whiteSpace: "nowrap",
+  border: 0,
+};
+
+/**
+ * The spoken copy of the readout.
+ *
+ * The chart's `aria-label` also carries these lines, which satisfies the
+ * accessible name but not much else: screen readers do not reliably
+ * re-announce a name change on an element that is already focused, so a
+ * keyboard user arrowing along the series could hear the first point and
+ * then silence. A polite live region is the thing that actually speaks on
+ * each move.
+ *
+ * It is rendered at all times, empty when the cursor is away, because a live
+ * region that appears at the same moment its content does is not reliably
+ * announced either.
+ *
+ * `<output>` rather than a `div` with `role="status"`: the element carries
+ * that role natively, so there is no role to get wrong.
+ */
+export function CursorAnnouncement({ lines }: { lines: readonly string[] }) {
+  return (
+    <output aria-live="polite" data-cursor-announcement="" style={VISUALLY_HIDDEN}>
+      {lines.length === 0 ? "" : `${lines.join(". ")}.`}
+    </output>
   );
 }
