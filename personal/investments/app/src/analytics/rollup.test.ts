@@ -25,6 +25,7 @@ function series(overrides: Partial<AccountSeries> = {}): AccountSeries {
   return {
     maskedId: "acct_0001",
     shortId: "0001",
+    label: "TFSA 0001",
     kind: "TFSA",
     style: "self-directed" as ManagementStyle,
     purpose: "unassigned" as Purpose,
@@ -199,6 +200,47 @@ describe("rollup", () => {
 
   test("a Cash account appears in the purpose lens with inTotals: false and contributes zero", () => {
     assertCashAppearsButExcluded("purpose");
+  });
+
+  test("account lens labels each group with the registry's own label, not kind+shortId", () => {
+    const fixture = realisticFixture().map((s, i) => ({ ...s, label: `Custom label ${i}` }));
+    const groups = rollup(fixture, "account");
+    expect(groups.map((g) => g.label)).toEqual(fixture.map((s) => s.label));
+    expect(groups[0]?.accounts[0]?.label).toBe(fixture[0]?.label);
+  });
+
+  test("registration lens spells out Non-registered for the NonRegistered group", () => {
+    const groups = rollup(realisticFixture(), "registration");
+    const nonReg = groups.find((g) => g.key === "NonRegistered");
+    expect(nonReg?.label).toBe("Non-registered");
+  });
+
+  test("registration lens leaves acronym group labels alone", () => {
+    const groups = rollup(realisticFixture(), "registration");
+    expect(groups.find((g) => g.key === "TFSA")?.label).toBe("TFSA");
+    expect(groups.find((g) => g.key === "RRSP")?.label).toBe("RRSP");
+    expect(groups.find((g) => g.key === "FHSA")?.label).toBe("FHSA");
+    expect(groups.find((g) => g.key === "RESP")?.label).toBe("RESP");
+  });
+
+  test("purpose lens sentence-cases the display label but keeps the bare enum as the key", () => {
+    const fixture = realisticFixture().map((s) => ({ ...s, purpose: "retirement" as Purpose }));
+    const groups = rollup(fixture, "purpose");
+    const retirement = groups.find((g) => g.key === "retirement");
+    expect(retirement?.label).toBe("Retirement");
+    const unassigned = groups.find((g) => g.key === "unassigned");
+    expect(unassigned?.label).toBe("Unassigned");
+  });
+
+  test("purpose lens renders a growth group between business and spending", () => {
+    const fixture = realisticFixture().map((s) => ({ ...s, purpose: "growth" as Purpose }));
+    const groups = rollup(fixture, "purpose");
+    const keys = groups.map((g) => g.key);
+    expect(keys).toContain("growth");
+    // unassigned always renders too (see the doc comment on rollupByPurpose).
+    expect(keys.indexOf("growth")).toBeLessThan(keys.indexOf("unassigned"));
+    const growth = groups.find((g) => g.key === "growth");
+    expect(growth?.accounts.length).toBe(fixture.length);
   });
 
   test("all three lenses sum to the same real grand total, $241,739.67", () => {

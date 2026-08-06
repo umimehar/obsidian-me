@@ -110,4 +110,52 @@ describe("buildRegistry", () => {
     const [record] = buildRegistry(statements);
     expect(record?.kind).toBe("NonRegistered");
   });
+
+  test("seeds the owner's purpose and label for a known shortId", () => {
+    // d77c is the self-directed TFSA in the owner's real mapping.
+    const accountNo = accountNoWithShortId("d77c");
+    const statements = [
+      makeStatement({ accountNo, period: "2025-01", accountType: "Self-directed TFSA Account" }),
+    ];
+    const [record] = buildRegistry(statements);
+    expect(record?.purpose).toBe("growth");
+    expect(record?.label).toBe("TFSA (self-directed)");
+  });
+
+  test("two same-kind same-style accounts fall back to the masked shortId, not a colliding label", () => {
+    // 1f9a and 2c62 are both self-directed NonRegistered accounts in the
+    // owner's mapping -- kind + style alone cannot tell them apart, so
+    // both keep their shortId in the label.
+    const accountNo1 = accountNoWithShortId("1f9a");
+    const accountNo2 = accountNoWithShortId("2c62");
+    const statements = [
+      makeStatement({
+        accountNo: accountNo1,
+        period: "2025-01",
+        accountType: "Self-directed Non-Registered Cash Account",
+      }),
+      makeStatement({
+        accountNo: accountNo2,
+        period: "2025-01",
+        accountType: "Self-directed Non-Registered Cash Account",
+      }),
+    ];
+    const records = buildRegistry(statements);
+    const labels = records.map((r) => r.label).sort();
+    expect(labels).toEqual(["Non-registered 1f9a", "Non-registered 2c62"]);
+    expect(records.every((r) => r.purpose === "growth")).toBe(true);
+  });
+
+  test("an account outside the owner's mapping defaults to unassigned with a kind+shortId label", () => {
+    const statements = [
+      makeStatement({
+        accountNo: "ACCT0001CAD",
+        period: "2025-01",
+        accountType: "Self-directed RRSP Account",
+      }),
+    ];
+    const [record] = buildRegistry(statements);
+    expect(record?.purpose).toBe("unassigned");
+    expect(record?.label).toBe(`RRSP ${record?.shortId}`);
+  });
 });

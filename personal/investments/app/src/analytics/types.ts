@@ -65,6 +65,7 @@ export interface MonthPoint {
 export interface AccountSeries {
   maskedId: string;
   shortId: string;
+  label: string;
   kind: AccountKind;
   style: ManagementStyle;
   purpose: Purpose;

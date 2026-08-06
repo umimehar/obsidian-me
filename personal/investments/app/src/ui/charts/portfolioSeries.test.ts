@@ -30,6 +30,7 @@ function account(overrides: Partial<AccountSeries> = {}): AccountSeries {
   return {
     maskedId: "acct_0001",
     shortId: "0001",
+    label: "TFSA 0001",
     kind: "TFSA" as AccountKind,
     style: "self-directed" as ManagementStyle,
     purpose: "unassigned" as Purpose,

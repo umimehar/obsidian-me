@@ -119,6 +119,12 @@ function account(over: Partial<AccountRecord> = {}): AccountRecord {
 }
 
 describe("buildSeries", () => {
+  test("carries the registry account's label through to the series", () => {
+    const jan = statement({ source: src("2026-01", "BROKERAGE") });
+    const [series] = buildSeries([jan], [account({ label: "Spousal RRSP" })]);
+    expect(series?.label).toBe("Spousal RRSP");
+  });
+
   test("reads marketValue, bookCost, cashBalance and deposits from a BROKERAGE statement's own fields", () => {
     const paidIn = {
       deposits: 0,

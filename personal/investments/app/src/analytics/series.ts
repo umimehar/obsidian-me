@@ -225,6 +225,7 @@ export function buildSeries(
     return {
       maskedId: account.maskedId,
       shortId: account.shortId,
+      label: account.label,
       kind: account.kind,
       style: account.style,
       purpose: account.purpose,

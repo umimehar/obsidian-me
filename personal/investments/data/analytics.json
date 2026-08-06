@@ -1,16 +1,17 @@
 {
   "meta": {
-    "generated": "2026-08-06T08:45:21.135Z",
-    "datastoreGenerated": "2026-08-06T06:48:39.261Z",
+    "generated": "2026-08-06T14:34:52.737Z",
+    "datastoreGenerated": "2026-08-06T14:34:45.720Z",
     "accountCount": 14
   },
   "series": [
     {
       "maskedId": "acct_18a334f1",
       "shortId": "18a3",
+      "label": "Chequing 18a3",
       "kind": "Chequing",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "spending",
       "inTotals": false,
       "months": [
         {
@@ -77,9 +78,10 @@
     {
       "maskedId": "acct_1f9a1df3",
       "shortId": "1f9a",
+      "label": "Non-registered 1f9a",
       "kind": "NonRegistered",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "growth",
       "inTotals": true,
       "months": [
         {
@@ -217,9 +219,10 @@
     {
       "maskedId": "acct_231879ac",
       "shortId": "2318",
+      "label": "RRSP (self-directed)",
       "kind": "RRSP",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "retirement",
       "inTotals": true,
       "months": [
         {
@@ -385,9 +388,10 @@
     {
       "maskedId": "acct_2b743dc7",
       "shortId": "2b74",
+      "label": "Chequing 2b74",
       "kind": "Chequing",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "spending",
       "inTotals": false,
       "months": [
         {
@@ -581,9 +585,10 @@
     {
       "maskedId": "acct_2c620d2b",
       "shortId": "2c62",
+      "label": "Non-registered 2c62",
       "kind": "NonRegistered",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "growth",
       "inTotals": true,
       "months": [
         {
@@ -707,9 +712,10 @@
     {
       "maskedId": "acct_8cd3372e",
       "shortId": "8cd3",
+      "label": "Chequing 8cd3",
       "kind": "Chequing",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "spending",
       "inTotals": false,
       "months": [
         {
@@ -875,9 +881,10 @@
     {
       "maskedId": "acct_91b82482",
       "shortId": "91b8",
+      "label": "Corporate",
       "kind": "Corporate",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "business",
       "inTotals": true,
       "months": [
         {
@@ -972,9 +979,10 @@
     {
       "maskedId": "acct_97100dd9",
       "shortId": "9710",
+      "label": "TFSA (managed)",
       "kind": "TFSA",
       "style": "managed",
-      "purpose": "unassigned",
+      "purpose": "growth",
       "inTotals": true,
       "months": [
         {
@@ -1506,9 +1514,10 @@
     {
       "maskedId": "acct_97ab4cb2",
       "shortId": "97ab",
+      "label": "Spousal RRSP",
       "kind": "SpousalRRSP",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "retirement",
       "inTotals": true,
       "months": [
         {
@@ -1575,9 +1584,10 @@
     {
       "maskedId": "acct_c2e9345e",
       "shortId": "c2e9",
+      "label": "RESP",
       "kind": "RESP",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "education",
       "inTotals": true,
       "months": [
         {
@@ -1672,9 +1682,10 @@
     {
       "maskedId": "acct_d6d9fb4a",
       "shortId": "d6d9",
+      "label": "RRSP (managed)",
       "kind": "RRSP",
       "style": "managed",
-      "purpose": "unassigned",
+      "purpose": "retirement",
       "inTotals": true,
       "months": [
         {
@@ -1798,9 +1809,10 @@
     {
       "maskedId": "acct_d77c33c7",
       "shortId": "d77c",
+      "label": "TFSA (self-directed)",
       "kind": "TFSA",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "growth",
       "inTotals": true,
       "months": [
         {
@@ -2332,9 +2344,10 @@
     {
       "maskedId": "acct_e2d627ff",
       "shortId": "e2d6",
+      "label": "Crypto",
       "kind": "Crypto",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "growth",
       "inTotals": true,
       "months": [
         {
@@ -2359,9 +2372,10 @@
     {
       "maskedId": "acct_e2ec057d",
       "shortId": "e2ec",
+      "label": "FHSA",
       "kind": "FHSA",
       "style": "self-directed",
-      "purpose": "unassigned",
+      "purpose": "house",
       "inTotals": true,
       "months": [
         {
@@ -4181,16 +4195,18 @@
           {
             "maskedId": "acct_97100dd9",
             "shortId": "9710",
+            "label": "TFSA (managed)",
             "kind": "TFSA",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 7580.33
           },
           {
             "maskedId": "acct_d77c33c7",
             "shortId": "d77c",
+            "label": "TFSA (self-directed)",
             "kind": "TFSA",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 40574.95
           }
@@ -4205,24 +4221,27 @@
           {
             "maskedId": "acct_231879ac",
             "shortId": "2318",
+            "label": "RRSP (self-directed)",
             "kind": "RRSP",
-            "purpose": "unassigned",
+            "purpose": "retirement",
             "inTotals": true,
             "marketValue": 14509.7
           },
           {
             "maskedId": "acct_97ab4cb2",
             "shortId": "97ab",
+            "label": "Spousal RRSP",
             "kind": "SpousalRRSP",
-            "purpose": "unassigned",
+            "purpose": "retirement",
             "inTotals": true,
             "marketValue": 14306.21
           },
           {
             "maskedId": "acct_d6d9fb4a",
             "shortId": "d6d9",
+            "label": "RRSP (managed)",
             "kind": "RRSP",
-            "purpose": "unassigned",
+            "purpose": "retirement",
             "inTotals": true,
             "marketValue": 20498.54
           }
@@ -4237,8 +4256,9 @@
           {
             "maskedId": "acct_e2ec057d",
             "shortId": "e2ec",
+            "label": "FHSA",
             "kind": "FHSA",
-            "purpose": "unassigned",
+            "purpose": "house",
             "inTotals": true,
             "marketValue": 28295.25
           }
@@ -4253,8 +4273,9 @@
           {
             "maskedId": "acct_c2e9345e",
             "shortId": "c2e9",
+            "label": "RESP",
             "kind": "RESP",
-            "purpose": "unassigned",
+            "purpose": "education",
             "inTotals": true,
             "marketValue": 3943.98
           }
@@ -4263,30 +4284,33 @@
       },
       {
         "key": "NonRegistered",
-        "label": "NonRegistered",
+        "label": "Non-registered",
         "lens": "registration",
         "accounts": [
           {
             "maskedId": "acct_1f9a1df3",
             "shortId": "1f9a",
+            "label": "Non-registered 1f9a",
             "kind": "NonRegistered",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 30213.3
           },
           {
             "maskedId": "acct_2c620d2b",
             "shortId": "2c62",
+            "label": "Non-registered 2c62",
             "kind": "NonRegistered",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 29570.06
           },
           {
             "maskedId": "acct_e2d627ff",
             "shortId": "e2d6",
+            "label": "Crypto",
             "kind": "Crypto",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 1014.96
           }
@@ -4301,8 +4325,9 @@
           {
             "maskedId": "acct_91b82482",
             "shortId": "91b8",
+            "label": "Corporate",
             "kind": "Corporate",
-            "purpose": "unassigned",
+            "purpose": "business",
             "inTotals": true,
             "marketValue": 51232.39
           }
@@ -4317,24 +4342,27 @@
           {
             "maskedId": "acct_18a334f1",
             "shortId": "18a3",
+            "label": "Chequing 18a3",
             "kind": "Chequing",
-            "purpose": "unassigned",
+            "purpose": "spending",
             "inTotals": false,
             "marketValue": null
           },
           {
             "maskedId": "acct_2b743dc7",
             "shortId": "2b74",
+            "label": "Chequing 2b74",
             "kind": "Chequing",
-            "purpose": "unassigned",
+            "purpose": "spending",
             "inTotals": false,
             "marketValue": null
           },
           {
             "maskedId": "acct_8cd3372e",
             "shortId": "8cd3",
+            "label": "Chequing 8cd3",
             "kind": "Chequing",
-            "purpose": "unassigned",
+            "purpose": "spending",
             "inTotals": false,
             "marketValue": null
           }
@@ -4351,8 +4379,9 @@
           {
             "maskedId": "acct_18a334f1",
             "shortId": "18a3",
+            "label": "Chequing 18a3",
             "kind": "Chequing",
-            "purpose": "unassigned",
+            "purpose": "spending",
             "inTotals": false,
             "marketValue": null
           }
@@ -4361,14 +4390,15 @@
       },
       {
         "key": "acct_1f9a1df3",
-        "label": "NonRegistered 1f9a",
+        "label": "Non-registered 1f9a",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_1f9a1df3",
             "shortId": "1f9a",
+            "label": "Non-registered 1f9a",
             "kind": "NonRegistered",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 30213.3
           }
@@ -4377,14 +4407,15 @@
       },
       {
         "key": "acct_231879ac",
-        "label": "RRSP 2318",
+        "label": "RRSP (self-directed)",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_231879ac",
             "shortId": "2318",
+            "label": "RRSP (self-directed)",
             "kind": "RRSP",
-            "purpose": "unassigned",
+            "purpose": "retirement",
             "inTotals": true,
             "marketValue": 14509.7
           }
@@ -4399,8 +4430,9 @@
           {
             "maskedId": "acct_2b743dc7",
             "shortId": "2b74",
+            "label": "Chequing 2b74",
             "kind": "Chequing",
-            "purpose": "unassigned",
+            "purpose": "spending",
             "inTotals": false,
             "marketValue": null
           }
@@ -4409,14 +4441,15 @@
       },
       {
         "key": "acct_2c620d2b",
-        "label": "NonRegistered 2c62",
+        "label": "Non-registered 2c62",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_2c620d2b",
             "shortId": "2c62",
+            "label": "Non-registered 2c62",
             "kind": "NonRegistered",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 29570.06
           }
@@ -4431,8 +4464,9 @@
           {
             "maskedId": "acct_8cd3372e",
             "shortId": "8cd3",
+            "label": "Chequing 8cd3",
             "kind": "Chequing",
-            "purpose": "unassigned",
+            "purpose": "spending",
             "inTotals": false,
             "marketValue": null
           }
@@ -4441,14 +4475,15 @@
       },
       {
         "key": "acct_91b82482",
-        "label": "Corporate 91b8",
+        "label": "Corporate",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_91b82482",
             "shortId": "91b8",
+            "label": "Corporate",
             "kind": "Corporate",
-            "purpose": "unassigned",
+            "purpose": "business",
             "inTotals": true,
             "marketValue": 51232.39
           }
@@ -4457,14 +4492,15 @@
       },
       {
         "key": "acct_97100dd9",
-        "label": "TFSA 9710",
+        "label": "TFSA (managed)",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_97100dd9",
             "shortId": "9710",
+            "label": "TFSA (managed)",
             "kind": "TFSA",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 7580.33
           }
@@ -4473,14 +4509,15 @@
       },
       {
         "key": "acct_97ab4cb2",
-        "label": "SpousalRRSP 97ab",
+        "label": "Spousal RRSP",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_97ab4cb2",
             "shortId": "97ab",
+            "label": "Spousal RRSP",
             "kind": "SpousalRRSP",
-            "purpose": "unassigned",
+            "purpose": "retirement",
             "inTotals": true,
             "marketValue": 14306.21
           }
@@ -4489,14 +4526,15 @@
       },
       {
         "key": "acct_c2e9345e",
-        "label": "RESP c2e9",
+        "label": "RESP",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_c2e9345e",
             "shortId": "c2e9",
+            "label": "RESP",
             "kind": "RESP",
-            "purpose": "unassigned",
+            "purpose": "education",
             "inTotals": true,
             "marketValue": 3943.98
           }
@@ -4505,14 +4543,15 @@
       },
       {
         "key": "acct_d6d9fb4a",
-        "label": "RRSP d6d9",
+        "label": "RRSP (managed)",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_d6d9fb4a",
             "shortId": "d6d9",
+            "label": "RRSP (managed)",
             "kind": "RRSP",
-            "purpose": "unassigned",
+            "purpose": "retirement",
             "inTotals": true,
             "marketValue": 20498.54
           }
@@ -4521,14 +4560,15 @@
       },
       {
         "key": "acct_d77c33c7",
-        "label": "TFSA d77c",
+        "label": "TFSA (self-directed)",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_d77c33c7",
             "shortId": "d77c",
+            "label": "TFSA (self-directed)",
             "kind": "TFSA",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 40574.95
           }
@@ -4537,14 +4577,15 @@
       },
       {
         "key": "acct_e2d627ff",
-        "label": "Crypto e2d6",
+        "label": "Crypto",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_e2d627ff",
             "shortId": "e2d6",
+            "label": "Crypto",
             "kind": "Crypto",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 1014.96
           }
@@ -4553,14 +4594,15 @@
       },
       {
         "key": "acct_e2ec057d",
-        "label": "FHSA e2ec",
+        "label": "FHSA",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_e2ec057d",
             "shortId": "e2ec",
+            "label": "FHSA",
             "kind": "FHSA",
-            "purpose": "unassigned",
+            "purpose": "house",
             "inTotals": true,
             "marketValue": 28295.25
           }
@@ -4570,124 +4612,185 @@
     ],
     "purpose": [
       {
-        "key": "unassigned",
-        "label": "unassigned",
+        "key": "retirement",
+        "label": "Retirement",
         "lens": "purpose",
         "accounts": [
           {
-            "maskedId": "acct_18a334f1",
-            "shortId": "18a3",
-            "kind": "Chequing",
-            "purpose": "unassigned",
-            "inTotals": false,
-            "marketValue": null
-          },
-          {
-            "maskedId": "acct_1f9a1df3",
-            "shortId": "1f9a",
-            "kind": "NonRegistered",
-            "purpose": "unassigned",
-            "inTotals": true,
-            "marketValue": 30213.3
-          },
-          {
             "maskedId": "acct_231879ac",
             "shortId": "2318",
+            "label": "RRSP (self-directed)",
             "kind": "RRSP",
-            "purpose": "unassigned",
+            "purpose": "retirement",
             "inTotals": true,
             "marketValue": 14509.7
           },
           {
-            "maskedId": "acct_2b743dc7",
-            "shortId": "2b74",
-            "kind": "Chequing",
-            "purpose": "unassigned",
-            "inTotals": false,
-            "marketValue": null
-          },
-          {
-            "maskedId": "acct_2c620d2b",
-            "shortId": "2c62",
-            "kind": "NonRegistered",
-            "purpose": "unassigned",
-            "inTotals": true,
-            "marketValue": 29570.06
-          },
-          {
-            "maskedId": "acct_8cd3372e",
-            "shortId": "8cd3",
-            "kind": "Chequing",
-            "purpose": "unassigned",
-            "inTotals": false,
-            "marketValue": null
-          },
-          {
-            "maskedId": "acct_91b82482",
-            "shortId": "91b8",
-            "kind": "Corporate",
-            "purpose": "unassigned",
-            "inTotals": true,
-            "marketValue": 51232.39
-          },
-          {
-            "maskedId": "acct_97100dd9",
-            "shortId": "9710",
-            "kind": "TFSA",
-            "purpose": "unassigned",
-            "inTotals": true,
-            "marketValue": 7580.33
-          },
-          {
             "maskedId": "acct_97ab4cb2",
             "shortId": "97ab",
+            "label": "Spousal RRSP",
             "kind": "SpousalRRSP",
-            "purpose": "unassigned",
+            "purpose": "retirement",
             "inTotals": true,
             "marketValue": 14306.21
           },
           {
-            "maskedId": "acct_c2e9345e",
-            "shortId": "c2e9",
-            "kind": "RESP",
-            "purpose": "unassigned",
-            "inTotals": true,
-            "marketValue": 3943.98
-          },
-          {
             "maskedId": "acct_d6d9fb4a",
             "shortId": "d6d9",
+            "label": "RRSP (managed)",
             "kind": "RRSP",
-            "purpose": "unassigned",
+            "purpose": "retirement",
             "inTotals": true,
             "marketValue": 20498.54
+          }
+        ],
+        "total": 49314.45
+      },
+      {
+        "key": "house",
+        "label": "House",
+        "lens": "purpose",
+        "accounts": [
+          {
+            "maskedId": "acct_e2ec057d",
+            "shortId": "e2ec",
+            "label": "FHSA",
+            "kind": "FHSA",
+            "purpose": "house",
+            "inTotals": true,
+            "marketValue": 28295.25
+          }
+        ],
+        "total": 28295.25
+      },
+      {
+        "key": "education",
+        "label": "Education",
+        "lens": "purpose",
+        "accounts": [
+          {
+            "maskedId": "acct_c2e9345e",
+            "shortId": "c2e9",
+            "label": "RESP",
+            "kind": "RESP",
+            "purpose": "education",
+            "inTotals": true,
+            "marketValue": 3943.98
+          }
+        ],
+        "total": 3943.98
+      },
+      {
+        "key": "business",
+        "label": "Business",
+        "lens": "purpose",
+        "accounts": [
+          {
+            "maskedId": "acct_91b82482",
+            "shortId": "91b8",
+            "label": "Corporate",
+            "kind": "Corporate",
+            "purpose": "business",
+            "inTotals": true,
+            "marketValue": 51232.39
+          }
+        ],
+        "total": 51232.39
+      },
+      {
+        "key": "growth",
+        "label": "Growth",
+        "lens": "purpose",
+        "accounts": [
+          {
+            "maskedId": "acct_1f9a1df3",
+            "shortId": "1f9a",
+            "label": "Non-registered 1f9a",
+            "kind": "NonRegistered",
+            "purpose": "growth",
+            "inTotals": true,
+            "marketValue": 30213.3
+          },
+          {
+            "maskedId": "acct_2c620d2b",
+            "shortId": "2c62",
+            "label": "Non-registered 2c62",
+            "kind": "NonRegistered",
+            "purpose": "growth",
+            "inTotals": true,
+            "marketValue": 29570.06
+          },
+          {
+            "maskedId": "acct_97100dd9",
+            "shortId": "9710",
+            "label": "TFSA (managed)",
+            "kind": "TFSA",
+            "purpose": "growth",
+            "inTotals": true,
+            "marketValue": 7580.33
           },
           {
             "maskedId": "acct_d77c33c7",
             "shortId": "d77c",
+            "label": "TFSA (self-directed)",
             "kind": "TFSA",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 40574.95
           },
           {
             "maskedId": "acct_e2d627ff",
             "shortId": "e2d6",
+            "label": "Crypto",
             "kind": "Crypto",
-            "purpose": "unassigned",
+            "purpose": "growth",
             "inTotals": true,
             "marketValue": 1014.96
-          },
-          {
-            "maskedId": "acct_e2ec057d",
-            "shortId": "e2ec",
-            "kind": "FHSA",
-            "purpose": "unassigned",
-            "inTotals": true,
-            "marketValue": 28295.25
           }
         ],
-        "total": 241739.67
+        "total": 108953.6
+      },
+      {
+        "key": "spending",
+        "label": "Spending",
+        "lens": "purpose",
+        "accounts": [
+          {
+            "maskedId": "acct_18a334f1",
+            "shortId": "18a3",
+            "label": "Chequing 18a3",
+            "kind": "Chequing",
+            "purpose": "spending",
+            "inTotals": false,
+            "marketValue": null
+          },
+          {
+            "maskedId": "acct_2b743dc7",
+            "shortId": "2b74",
+            "label": "Chequing 2b74",
+            "kind": "Chequing",
+            "purpose": "spending",
+            "inTotals": false,
+            "marketValue": null
+          },
+          {
+            "maskedId": "acct_8cd3372e",
+            "shortId": "8cd3",
+            "label": "Chequing 8cd3",
+            "kind": "Chequing",
+            "purpose": "spending",
+            "inTotals": false,
+            "marketValue": null
+          }
+        ],
+        "total": 0
+      },
+      {
+        "key": "unassigned",
+        "label": "Unassigned",
+        "lens": "purpose",
+        "accounts": [],
+        "total": 0
       }
     ]
   }

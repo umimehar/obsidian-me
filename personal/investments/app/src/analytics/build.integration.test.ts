@@ -52,14 +52,15 @@ describe.if(existsSync(DATASTORE_PATH))("analytics over the real datastore", () 
     expect(seen.size).toBe(output.series.length);
   });
 
-  test("every account carries a purpose, defaulting to unassigned", async () => {
+  test("every account carries a purpose, and the owner has tagged all 14", async () => {
     const output = await build();
     for (const account of output.series) {
       expect(account.purpose).toBeTruthy();
     }
-    // The owner has not tagged any account yet, so today's real corpus is
-    // entirely `unassigned` -- proves the default is actually reaching
-    // every account rather than some other fallback silently applying.
-    expect(output.series.every((a) => a.purpose === "unassigned")).toBe(true);
+    // The owner has tagged every real account (task 3a), so today's corpus
+    // has none left in `unassigned` -- proves the registry mapping is
+    // actually reaching every account rather than some falling through to
+    // the default silently.
+    expect(output.series.some((a) => a.purpose === "unassigned")).toBe(false);
   });
 });

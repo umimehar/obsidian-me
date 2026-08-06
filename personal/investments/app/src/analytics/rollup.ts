@@ -17,6 +17,7 @@ export type Lens = "registration" | "account" | "purpose";
 export interface RollupAccount {
   maskedId: string;
   shortId: string;
+  label: string;
   kind: AccountKind;
   purpose: Purpose;
   inTotals: boolean;
@@ -52,6 +53,7 @@ function toRollupAccount(account: AccountSeries): RollupAccount {
   return {
     maskedId: account.maskedId,
     shortId: account.shortId,
+    label: account.label,
     kind: account.kind,
     purpose: account.purpose,
     inTotals: account.inTotals,
@@ -116,20 +118,31 @@ const REGISTRATION_GROUP_ORDER = [
   "Cash",
 ] as const;
 
+/** Display casing for each registration group. The acronyms (TFSA, RRSP, FHSA, RESP) stay as-is; only the compound words get spelled out. */
+const REGISTRATION_GROUP_LABEL: Record<(typeof REGISTRATION_GROUP_ORDER)[number], string> = {
+  TFSA: "TFSA",
+  RRSP: "RRSP",
+  FHSA: "FHSA",
+  RESP: "RESP",
+  NonRegistered: "Non-registered",
+  Corporate: "Corporate",
+  Cash: "Cash",
+};
+
 /** One `Rollup` per registration group that has at least one account -- an empty group simply doesn't appear, same as `buildRoomLines`. */
 function rollupByRegistration(series: readonly AccountSeries[]): Rollup[] {
   const groups: Rollup[] = [];
   for (const key of REGISTRATION_GROUP_ORDER) {
     const accounts = series.filter((s) => REGISTRATION_GROUP_BY_KIND[s.kind] === key);
     if (accounts.length === 0) continue;
-    groups.push(buildGroup("registration", key, key, accounts));
+    groups.push(buildGroup("registration", key, REGISTRATION_GROUP_LABEL[key], accounts));
   }
   return groups;
 }
 
-/** All 14 accounts, flat -- one group per account, keyed on `maskedId`. */
+/** All 14 accounts, flat -- one group per account, keyed on `maskedId`, labelled with the registry's own owner-reviewed `label`. */
 function rollupByAccount(series: readonly AccountSeries[]): Rollup[] {
-  return series.map((s) => buildGroup("account", s.maskedId, `${s.kind} ${s.shortId}`, [s]));
+  return series.map((s) => buildGroup("account", s.maskedId, s.label, [s]));
 }
 
 const PURPOSE_ORDER: readonly Purpose[] = [
@@ -137,9 +150,15 @@ const PURPOSE_ORDER: readonly Purpose[] = [
   "house",
   "education",
   "business",
+  "growth",
   "spending",
   "unassigned",
 ];
+
+/** Sentence-cases a bare `Purpose` string for display (`"retirement"` -> `"Retirement"`). */
+function purposeLabel(purpose: Purpose): string {
+  return purpose.charAt(0).toUpperCase() + purpose.slice(1);
+}
 
 /**
  * One `Rollup` per `Purpose` that has at least one account, EXCEPT
@@ -154,7 +173,7 @@ function rollupByPurpose(series: readonly AccountSeries[]): Rollup[] {
   for (const purpose of PURPOSE_ORDER) {
     const accounts = series.filter((s) => s.purpose === purpose);
     if (accounts.length === 0 && purpose !== "unassigned") continue;
-    groups.push(buildGroup("purpose", purpose, purpose, accounts));
+    groups.push(buildGroup("purpose", purpose, purposeLabel(purpose), accounts));
   }
   return groups;
 }
