@@ -599,7 +599,28 @@ describe("checkArithmetic", () => {
     expect(checkArithmetic([bad]).some((x) => x.check === "missing-portfolio")).toBe(true);
   });
 
-  test("skips the cash arithmetic when no totals are printed", () => {
+  test("does not flag a zero-activity CASH statement -- nothing to sum against a static balance", () => {
+    const cashOnly = statement({
+      source: src("2026-06", "CASH"),
+      portfolio: null,
+      holdings: [],
+      cash: [
+        {
+          currency: "CAD",
+          opening: 195.59,
+          closing: 195.59,
+          totalIn: null,
+          totalOut: null,
+          paidIn: null,
+          paidOut: null,
+        },
+      ],
+      activity: [],
+    });
+    expect(checkArithmetic([cashOnly])).toEqual([]);
+  });
+
+  test("reconciles a CASH statement's activity against opening and closing, with no printed totals", () => {
     const cashOnly = statement({
       source: src("2026-06", "CASH"),
       portfolio: null,
@@ -615,8 +636,56 @@ describe("checkArithmetic", () => {
           paidOut: null,
         },
       ],
+      activity: [
+        {
+          date: "2026-06-01",
+          postedDate: null,
+          code: "TRFOUTTF",
+          description: "Tax-free money transfer out",
+          debit: 39.97,
+          credit: 0,
+          balance: 155.62,
+          currency: "CAD",
+        },
+      ],
     });
     expect(checkArithmetic([cashOnly])).toEqual([]);
+  });
+
+  test("flags a CASH statement whose activity does not reach the printed closing balance", () => {
+    const cashOnly = statement({
+      source: src("2026-06", "CASH"),
+      portfolio: null,
+      holdings: [],
+      cash: [
+        {
+          currency: "CAD",
+          opening: 195.59,
+          closing: 155.62,
+          totalIn: null,
+          totalOut: null,
+          paidIn: null,
+          paidOut: null,
+        },
+      ],
+      activity: [
+        {
+          date: "2026-06-01",
+          postedDate: null,
+          code: "TRFOUTTF",
+          description: "Tax-free money transfer out",
+          debit: 10, // should be 39.97 to reach the printed closing balance
+          credit: 0,
+          balance: 155.62,
+          currency: "CAD",
+        },
+      ],
+    });
+    const f = checkArithmetic([cashOnly]);
+    expect(f).toHaveLength(1);
+    expect(f[0]?.message).toMatch(/opening \+ activity credits - debits != closing/);
+    expect(f[0]?.expected).toBeCloseTo(185.59, 2);
+    expect(f[0]?.actual).toBe(155.62);
   });
 });
 

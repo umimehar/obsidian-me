@@ -31,8 +31,38 @@ function finding(
   };
 }
 
+/**
+ * The CASH template prints opening and closing balances but no paid-in/paid-out
+ * totals, so there is nothing to check the activity ledger against except
+ * itself: opening plus every row's credit minus every row's debit must reach
+ * the printed closing balance. A statement with no activity at all is not
+ * checked -- there is nothing to sum, and it is not this check's job to flag
+ * a static balance across a zero-activity period.
+ */
+function checkCashActivitySum(s: Statement, cash: CashSummary, out: Finding[]): void {
+  const rows = s.activity.filter((r) => r.currency === cash.currency);
+  if (rows.length === 0) return;
+
+  const net = rows.reduce((a, r) => a + r.credit - r.debit, 0);
+  const derived = cash.opening + net;
+  if (!within(derived, cash.closing)) {
+    out.push(
+      finding(
+        "statement-arithmetic",
+        s,
+        `${cash.currency} cash does not reconcile: opening + activity credits - debits != closing`,
+        derived,
+        cash.closing,
+      ),
+    );
+  }
+}
+
 function checkCashBlock(s: Statement, cash: CashSummary, out: Finding[]): void {
-  if (cash.totalIn === null || cash.totalOut === null) return;
+  if (cash.totalIn === null || cash.totalOut === null) {
+    checkCashActivitySum(s, cash, out);
+    return;
+  }
 
   const derived = cash.opening + cash.totalIn - cash.totalOut;
   if (!within(derived, cash.closing)) {
