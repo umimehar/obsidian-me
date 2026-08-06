@@ -108,16 +108,35 @@ describe("buildRoomLines", () => {
     const line = lines.find((l) => l.group === "TFSA");
     expect(line?.assessed).toBe(false);
     expect(line?.limit).toBe(7000);
-    expect(line?.remaining).toBe(0);
   });
 
-  test("no OVER flag: remaining is not clamped to zero against the generic maximum", () => {
+  test("no OVER flag: remaining is null (not a negative or clamped number) against a generic maximum", () => {
     const tfsa = series({ kind: "TFSA" as AccountKind, contributionsByYear: { "2025": 21000 } });
     const lines = buildRoomLines([tfsa], [], 2025);
     const line = lines.find((l) => l.group === "TFSA");
     expect(line?.limit).toBe(7000);
-    expect(line?.remaining).toBe(-14000);
+    expect(line?.used).toBe(21000);
+    expect(line?.remaining).toBeNull();
     expect(line).not.toHaveProperty("over");
+  });
+
+  test("remaining stays a real number against an assessed limit but goes null for RRSP in a year with no NOA", () => {
+    const rrsp = series({
+      kind: "RRSP" as AccountKind,
+      contributionsByYear: { "2025": 14000, "2026": 33000 },
+    });
+    const lines2025 = buildRoomLines([rrsp], [], 2025);
+    const lines2026 = buildRoomLines([rrsp], [], 2026);
+    expect(lines2025.find((l) => l.group === "RRSP")?.remaining).toBeNull();
+    expect(lines2026.find((l) => l.group === "RRSP")?.remaining).toBe(70752 - 33000);
+  });
+
+  test("FHSA's generic annual limit also carries a null remaining, same as TFSA and un-assessed RRSP", () => {
+    const fhsa = series({ kind: "FHSA" as AccountKind, contributionsByYear: { "2026": 8000 } });
+    const lines = buildRoomLines([fhsa], [], 2026);
+    const line = lines.find((l) => l.group === "FHSA");
+    expect(line?.assessed).toBe(false);
+    expect(line?.remaining).toBeNull();
   });
 
   test("RESP grant received is summed from GRANT/CLB activity credits, never assumed from contributions", () => {
@@ -178,6 +197,33 @@ describe("buildRoomLines", () => {
     expect(line?.lifetimeContributions?.contributed).toBe(3000);
     expect(line?.lifetimeGrant?.cap).toBe(7200);
     expect(line?.lifetimeGrant?.received).toBe(550);
+  });
+
+  test("RESP has no annual contribution limit -- the $2,500 CESG figure is not reported as one", () => {
+    const resp = series({
+      maskedId: "acct_c2e9",
+      kind: "RESP" as AccountKind,
+      contributionsByYear: { "2026": 3000 },
+    });
+    const lines = buildRoomLines([resp], [], 2026);
+    const line = lines.find((l) => l.group === "RESP");
+    expect(line?.used).toBe(3000);
+    expect(line?.limit).toBeNull();
+    expect(line?.assessed).toBe(false);
+    expect(line?.remaining).toBeNull();
+    expect(line).not.toHaveProperty("over");
+  });
+
+  test("the $2,500 grant-maximizing contribution is reported on the grant line, not as an annual cap", () => {
+    const resp = series({ maskedId: "acct_c2e9", kind: "RESP" as AccountKind });
+    const statements: Statement[] = [
+      statement({ source: src("acct_c2e9", "2026-02"), activity: [activityRow("GRANT", 550)] }),
+    ];
+    const lines = buildRoomLines([resp], statements, 2026);
+    const line = lines.find((l) => l.group === "RESP");
+    expect(line?.lifetimeGrant?.maximizingContribution).toBe(2500);
+    expect(line?.lifetimeGrant?.received).toBe(550);
+    expect(line?.lifetimeGrant?.cap).toBe(7200);
   });
 
   test("lifetime contribution position accumulates across years, bounded by the reporting year", () => {

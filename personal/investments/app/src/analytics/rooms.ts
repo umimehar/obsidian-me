@@ -25,19 +25,18 @@ const REGISTERED_KINDS: Record<RegisteredGroup, readonly AccountKind[]> = {
 /**
  * The generic CRA annual maximum per wrapper per year, published figures.
  * TFSA and RRSP are indexed (to inflation and average wage respectively);
- * FHSA and RESP are flat statutory dollar figures, so their tables just
- * repeat the same value across years. RESP's figure is the annual
- * CESG-matched contribution amount ($2,500), not the $50,000 lifetime
- * contribution cap -- see `RESP_LIFETIME_CONTRIBUTION_CAP` for that.
+ * FHSA is a flat statutory dollar figure, so its table just repeats the
+ * same value across years. RESP is deliberately absent -- it has no annual
+ * contribution limit at all (see `buildRespLine`); its only contribution
+ * bound is the $50,000 lifetime cap in `LIFETIME_CONTRIBUTION_CAPS`.
  *
  * This is the fallback ceiling. Where `ASSESSED_ROOM` has a figure for the
  * same group/year, that one wins instead -- see `resolveLimit`.
  */
-const CONTRIBUTION_LIMITS: Record<RegisteredGroup, Record<number, number>> = {
+const CONTRIBUTION_LIMITS: Partial<Record<RegisteredGroup, Record<number, number>>> = {
   TFSA: { 2022: 6000, 2023: 6500, 2024: 7000, 2025: 7000, 2026: 7000 },
   RRSP: { 2022: 29210, 2023: 30780, 2024: 31560, 2025: 32490, 2026: 33810 },
   FHSA: { 2023: 8000, 2024: 8000, 2025: 8000, 2026: 8000 },
-  RESP: { 2022: 2500, 2023: 2500, 2024: 2500, 2025: 2500, 2026: 2500 },
 };
 
 /**
@@ -75,6 +74,17 @@ const LIFETIME_CONTRIBUTION_CAPS: Partial<Record<RegisteredGroup, number>> = {
 const RESP_LIFETIME_GRANT_CAP = 7200;
 
 /**
+ * The contribution level that attracts the maximum BASIC annual CESG
+ * ($500 = 20% of $2,500). This is not an annual contribution limit -- RESP
+ * has none -- it is where the grant line stops improving in a normal year.
+ * Unused grant room from prior years carries forward, so a catch-up year
+ * can attract CESG on up to $5,000 of contributions (twice the basic
+ * amount, $1,000), which is why a year's true grant entitlement is not
+ * simply "contributed >= this threshold implies $500".
+ */
+const RESP_GRANT_MAXIMIZING_CONTRIBUTION = 2500;
+
+/**
  * Activity codes that represent government grant money landing in an RESP:
  * the Canada Education Savings Grant (`GRANT`) and the Canada Learning Bond
  * (`CLB`). Grant received is always summed from these credits, never
@@ -92,30 +102,43 @@ export interface LifetimePosition {
   remaining: number;
 }
 
-/** The RESP's lifetime CESG/CLB grant position, derived from activity credits. */
+/**
+ * The RESP's lifetime CESG/CLB grant position, derived from activity
+ * credits. `maximizingContribution` is the annual contribution that
+ * attracts the maximum basic CESG in a normal (non-catch-up) year -- see
+ * `RESP_GRANT_MAXIMIZING_CONTRIBUTION`. It is informational, not a cap.
+ */
 export interface RespGrantPosition {
   received: number;
   cap: number;
   remaining: number;
+  maximizingContribution: number;
 }
 
 /**
- * One wrapper's room line for one calendar year. `assessed` is `true` only
- * when `limit` came from `ASSESSED_ROOM` -- the real, carry-forward-inclusive
- * ceiling -- and `false` when it fell back to the generic annual maximum in
- * `CONTRIBUTION_LIMITS`. `remaining` is `limit - used` and is never clamped
- * to zero: unused room carries forward, so a full or over-full bar against
- * the generic maximum is not an over-contribution, and there is deliberately
- * no `over` flag on this shape. Against an assessed limit the comparison is
- * real, but it is still not a filing figure.
+ * One wrapper's room line for one calendar year.
+ *
+ * `limit` is null for RESP, which has no annual contribution limit at all
+ * -- its only contribution bound is the lifetime cap in
+ * `lifetimeContributions`. For every other group `limit` is either the
+ * assessed figure (`assessed: true`) or the generic annual maximum
+ * (`assessed: false`).
+ *
+ * `remaining` is populated ONLY when `assessed` is true: an assessed limit
+ * already has carry-forward baked in, so `limit - used` is a real figure.
+ * Against a generic annual maximum, carry-forward is unknown -- a full or
+ * over-full year is not necessarily an over-contribution -- so `remaining`
+ * is null rather than a number that would misread as an over-contribution
+ * flag by another name. There is deliberately no `over` boolean on this
+ * shape either.
  */
 export interface RoomLine {
   group: RegisteredGroup;
   year: number;
   used: number;
-  limit: number;
+  limit: number | null;
   assessed: boolean;
-  remaining: number;
+  remaining: number | null;
   /**
    * RRSP only: the slice of `used` contributed to a spousal RRSP, already
    * included in `used` (spousal contributions count against the
@@ -181,14 +204,15 @@ function grantsReceivedThrough(
  * that exact year (never a nearby year -- an assessed figure for 2026 must
  * not leak into 2025's line), otherwise the generic annual maximum. Throws
  * when neither table has an entry, since reporting a silent zero would
- * understate room rather than surface the gap.
+ * understate room rather than surface the gap. Never called for RESP,
+ * which has no annual limit -- see `buildRespLine`.
  */
 function resolveLimit(group: RegisteredGroup, year: number): { limit: number; assessed: boolean } {
   const assessedFigure = ASSESSED_ROOM[group]?.[year];
   if (assessedFigure !== undefined) {
     return { limit: assessedFigure, assessed: true };
   }
-  const generic = CONTRIBUTION_LIMITS[group][year];
+  const generic = CONTRIBUTION_LIMITS[group]?.[year];
   if (generic === undefined) {
     throw new Error(`no contribution limit configured for ${group} ${year}`);
   }
@@ -210,14 +234,52 @@ function buildLifetimeGrant(
   year: number,
 ): RespGrantPosition {
   const received = grantsReceivedThrough(statements, maskedIds, year);
-  return { received, cap: RESP_LIFETIME_GRANT_CAP, remaining: RESP_LIFETIME_GRANT_CAP - received };
+  return {
+    received,
+    cap: RESP_LIFETIME_GRANT_CAP,
+    remaining: RESP_LIFETIME_GRANT_CAP - received,
+    maximizingContribution: RESP_GRANT_MAXIMIZING_CONTRIBUTION,
+  };
 }
 
-function buildLine(
-  group: RegisteredGroup,
+/**
+ * RESP has no annual contribution limit -- its only contribution bound is
+ * the $50,000 lifetime cap, reported via `lifetimeContributions`. `limit`,
+ * `assessed` and `remaining` stay null/false rather than repurposing the
+ * $2,500 grant-maximizing contribution as a fake annual ceiling, which is
+ * exactly the conflation that produced a false "over-contributed" reading.
+ */
+function buildRespLine(
   year: number,
   accounts: readonly AccountSeries[],
   statements: readonly Statement[],
+): RoomLine {
+  const lifetimeCap = LIFETIME_CONTRIBUTION_CAPS.RESP;
+  if (lifetimeCap === undefined) throw new Error("RESP lifetime contribution cap not configured");
+  const maskedIds = new Set(accounts.map((a) => a.maskedId));
+
+  return {
+    group: "RESP",
+    year,
+    used: sumContributionsForYear(accounts, year),
+    limit: null,
+    assessed: false,
+    remaining: null,
+    spousalUsed: null,
+    lifetimeContributions: buildLifetimeContributions(accounts, year, lifetimeCap),
+    lifetimeGrant: buildLifetimeGrant(statements, maskedIds, year),
+  };
+}
+
+/**
+ * TFSA, RRSP and FHSA: an annual limit against `used`, either assessed
+ * (real, carry-forward-inclusive -- `remaining` is a real number) or
+ * generic (carry-forward unknown -- `remaining` stays null, see `RoomLine`).
+ */
+function buildAnnualLine(
+  group: Exclude<RegisteredGroup, "RESP">,
+  year: number,
+  accounts: readonly AccountSeries[],
 ): RoomLine {
   const used = sumContributionsForYear(accounts, year);
   const spousalUsed =
@@ -233,22 +295,28 @@ function buildLine(
   const lifetimeContributions =
     lifetimeCap === undefined ? null : buildLifetimeContributions(accounts, year, lifetimeCap);
 
-  const lifetimeGrant =
-    group === "RESP"
-      ? buildLifetimeGrant(statements, new Set(accounts.map((a) => a.maskedId)), year)
-      : null;
-
   return {
     group,
     year,
     used,
     limit,
     assessed,
-    remaining: limit - used,
+    remaining: assessed ? limit - used : null,
     spousalUsed,
     lifetimeContributions,
-    lifetimeGrant,
+    lifetimeGrant: null,
   };
+}
+
+function buildLine(
+  group: RegisteredGroup,
+  year: number,
+  accounts: readonly AccountSeries[],
+  statements: readonly Statement[],
+): RoomLine {
+  return group === "RESP"
+    ? buildRespLine(year, accounts, statements)
+    : buildAnnualLine(group, year, accounts);
 }
 
 /**
