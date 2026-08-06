@@ -317,23 +317,18 @@ function readCash(block: CashBlock): CashSummary[] {
     closing: closing[i] ?? 0,
     totalIn: totalIn[i] ?? 0,
     totalOut: totalOut[i] ?? 0,
-    paidIn: {
-      deposits: paidIn.deposits[i] ?? 0,
-      proceedsFromSales: paidIn.proceedsFromSales[i] ?? 0,
-      dividends: paidIn.dividends[i] ?? 0,
-      interestEarned: paidIn.interestEarned[i] ?? 0,
-      stockLendingIncome: paidIn.stockLendingIncome[i] ?? 0,
-      other: paidIn.other[i] ?? 0,
-    },
-    paidOut: {
-      fees: paidOut.fees[i] ?? 0,
-      taxes: paidOut.taxes[i] ?? 0,
-      interestPaid: paidOut.interestPaid[i] ?? 0,
-      costOfInvestments: paidOut.costOfInvestments[i] ?? 0,
-      withdrawals: paidOut.withdrawals[i] ?? 0,
-      other: paidOut.other[i] ?? 0,
-    },
+    paidIn: pickCurrency(paidIn, i),
+    paidOut: pickCurrency(paidOut, i),
   }));
+}
+
+/** The i-th currency's value out of every `lookup`ed field on a Record built by `readCash`, defaulting each to 0. */
+function pickCurrency<K extends string>(
+  byField: Record<K, number[]>,
+  i: number,
+): Record<K, number> {
+  const entries = (Object.keys(byField) as K[]).map((key) => [key, byField[key][i] ?? 0] as const);
+  return Object.fromEntries(entries) as Record<K, number>;
 }
 
 function readContributions(block: CashBlock): Contributions | null {
@@ -751,40 +746,49 @@ function dropVerbatimDuplicates(rows: readonly ActivityRow[]): ActivityRow[] {
  * neither carries a date and both would otherwise look like a stray
  * continuation.
  */
+interface ActivityScanState {
+  currency: Currency;
+  inSection: boolean;
+  current: ActivityRow | null;
+}
+
+/** One row's worth of the state machine `readActivity` walks, factored out to keep both functions under the complexity budget. */
+function scanActivityRow(row: Row, state: ActivityScanState, rows: ActivityRow[]): void {
+  const text = rowText(row);
+
+  const heading = ACTIVITY_HEADING.exec(text);
+  if (heading) {
+    state.currency = heading[1] === "USD" ? "USD" : "CAD";
+    state.inSection = true;
+    state.current = null;
+    return;
+  }
+  if (!state.inSection) return;
+  if (ACTIVITY_END.some((re) => re.test(text))) {
+    state.inSection = false;
+    state.current = null;
+    return;
+  }
+  if (PAGE_NUMBER.test(text) || COLUMN_HEADER.test(text)) return;
+
+  const parsed = parseActivityDataRow(row, state.currency);
+  if (parsed) {
+    state.current = parsed;
+    rows.push(state.current);
+    return;
+  }
+
+  if (state.current && !row.words.some((w) => isMoney(w.text))) {
+    state.current.description = `${state.current.description} ${text}`.trim();
+  }
+}
+
 function readActivity(pages: readonly Page[]): ActivityRow[] {
   const rows: ActivityRow[] = [];
-  let currency: Currency = "CAD";
-  let inSection = false;
-  let current: ActivityRow | null = null;
+  const state: ActivityScanState = { currency: "CAD", inSection: false, current: null };
 
   for (const row of pages.flatMap((p) => p.rows)) {
-    const text = rowText(row);
-
-    const heading = ACTIVITY_HEADING.exec(text);
-    if (heading) {
-      currency = heading[1] === "USD" ? "USD" : "CAD";
-      inSection = true;
-      current = null;
-      continue;
-    }
-    if (!inSection) continue;
-    if (ACTIVITY_END.some((re) => re.test(text))) {
-      inSection = false;
-      current = null;
-      continue;
-    }
-    if (PAGE_NUMBER.test(text) || COLUMN_HEADER.test(text)) continue;
-
-    const parsed = parseActivityDataRow(row, currency);
-    if (parsed) {
-      current = parsed;
-      rows.push(current);
-      continue;
-    }
-
-    if (current && !row.words.some((w) => isMoney(w.text))) {
-      current.description = `${current.description} ${text}`.trim();
-    }
+    scanActivityRow(row, state, rows);
   }
   return dropVerbatimDuplicates(rows);
 }

@@ -542,6 +542,23 @@ function bySeries(statements: readonly Statement[]): Map<string, Statement[]> {
   return map;
 }
 
+/** One consecutive-period pair within a series: does each currency's opening pick up where the prior statement's closing left off. */
+function checkPairContinuity(prev: Statement, curr: Statement, out: Finding[]): void {
+  for (const cash of curr.cash) {
+    const prior = prev.cash.find((c) => c.currency === cash.currency);
+    if (!prior || within(prior.closing, cash.opening)) continue;
+    out.push(
+      finding(
+        "cash-continuity",
+        curr,
+        `${cash.currency} opening does not match ${prev.source.period} closing`,
+        prior.closing,
+        cash.opening,
+      ),
+    );
+  }
+}
+
 export function checkContinuity(statements: readonly Statement[]): Finding[] {
   const out: Finding[] = [];
 
@@ -550,22 +567,7 @@ export function checkContinuity(statements: readonly Statement[]): Finding[] {
       const prev = list[i - 1];
       const curr = list[i];
       if (!prev || !curr || prev.source.period === curr.source.period) continue;
-
-      for (const cash of curr.cash) {
-        const prior = prev.cash.find((c) => c.currency === cash.currency);
-        if (!prior) continue;
-        if (!within(prior.closing, cash.opening)) {
-          out.push(
-            finding(
-              "cash-continuity",
-              curr,
-              `${cash.currency} opening does not match ${prev.source.period} closing`,
-              prior.closing,
-              cash.opening,
-            ),
-          );
-        }
-      }
+      checkPairContinuity(prev, curr, out);
     }
   }
   return out;

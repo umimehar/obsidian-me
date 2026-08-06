@@ -69,16 +69,8 @@ function scrub(xml: string, accountNo: string, alias: string, cfg: Config): stri
   });
 }
 
-/**
- * Fails loudly, naming the fixture and the fix, rather than letting a token
- * that was added to the redaction list *after* a fixture was generated sit
- * unnoticed in a committed file. Runs against every write below, and again at
- * the end against every `.xml` actually on disk -- not just the ones this
- * run happened to touch -- so a fixture orphaned from `cfg.fixtures` (its
- * spec removed or renamed) still gets checked instead of going quietly
- * stale forever.
- */
-function assertClean(content: string, label: string, cfg: Config, accountNo?: string): void {
+/** A configured name or address word, matched word by word, case-insensitively. */
+function assertNoConfiguredTokens(content: string, label: string, cfg: Config): void {
   const lower = content.toLowerCase();
   for (const phrase of [...cfg.redactions, ...cfg.addressWords]) {
     for (const t of phrase.split(/\s+/)) {
@@ -89,11 +81,21 @@ function assertClean(content: string, label: string, cfg: Config, accountNo?: st
       }
     }
   }
+}
+
+function assertNoAccountNumber(
+  content: string,
+  label: string,
+  accountNo: string | undefined,
+): void {
   if (accountNo && content.includes(accountNo)) {
     throw new Error(
       `stale fixture: account number in ${label} -- run \`bun run fixtures\` to regenerate`,
     );
   }
+}
+
+function assertNoBareNumbers(content: string, label: string): void {
   for (const bare of content.matchAll(/<word[^>]*>(\d{6,})<\/word>/g)) {
     if (bare[1] !== "00000000") {
       throw new Error(
@@ -101,6 +103,9 @@ function assertClean(content: string, label: string, cfg: Config, accountNo?: st
       );
     }
   }
+}
+
+function assertNoPostalCodes(content: string, label: string): void {
   for (const word of content.matchAll(/<word[^>]*>([^<]*)<\/word>/g)) {
     const w = word[1] ?? "";
     if (/^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i.test(w)) {
@@ -114,14 +119,33 @@ function assertClean(content: string, label: string, cfg: Config, accountNo?: st
       );
     }
   }
-  // A sibling account's own filename-derived code, not just the one this fixture
-  // is keyed on — a body row could legitimately name another account.
+}
+
+/** A sibling account's own filename-derived code, not just the one this fixture is keyed on — a body row could legitimately name another account. */
+function assertNoVendorCode(content: string, label: string): void {
   const vendorCode = /(WK|HQ|WZ)[A-Z0-9]{7,}/i.exec(content);
   if (vendorCode) {
     throw new Error(
       `stale fixture: vendor account code "${vendorCode[0]}" in ${label} -- run \`bun run fixtures\` to regenerate`,
     );
   }
+}
+
+/**
+ * Fails loudly, naming the fixture and the fix, rather than letting a token
+ * that was added to the redaction list *after* a fixture was generated sit
+ * unnoticed in a committed file. Runs against every write below, and again at
+ * the end against every `.xml` actually on disk -- not just the ones this
+ * run happened to touch -- so a fixture orphaned from `cfg.fixtures` (its
+ * spec removed or renamed) still gets checked instead of going quietly
+ * stale forever.
+ */
+function assertClean(content: string, label: string, cfg: Config, accountNo?: string): void {
+  assertNoConfiguredTokens(content, label, cfg);
+  assertNoAccountNumber(content, label, accountNo);
+  assertNoBareNumbers(content, label);
+  assertNoPostalCodes(content, label);
+  assertNoVendorCode(content, label);
 }
 
 const cfg = await loadConfig();

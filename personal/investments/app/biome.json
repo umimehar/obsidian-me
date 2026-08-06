@@ -5,6 +5,9 @@
     "enabled": true,
     "rules": {
       "recommended": true,
+      "complexity": {
+        "noExcessiveCognitiveComplexity": { "level": "error", "options": { "maxAllowedComplexity": 15 } }
+      },
       "suspicious": { "noExplicitAny": "error" },
       "style": { "noNonNullAssertion": "error", "useTemplate": "off" }
     }
