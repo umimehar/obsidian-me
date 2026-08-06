@@ -6,17 +6,10 @@ import type { Lens, Rollup, RollupAccount } from "../analytics/rollup";
 import { LensToggle } from "./LensToggle";
 import { ValueOverTime } from "./charts/ValueOverTime";
 import { grandTotal, latestPeriod } from "./data";
+import { formatCurrency } from "./format";
 
 export interface OverviewProps {
   analytics: AnalyticsOutput;
-}
-
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-CA", {
-    style: "currency",
-    currency: "CAD",
-    minimumFractionDigits: 2,
-  }).format(amount);
 }
 
 /** One decimal place -- enough to distinguish two small groups without a false sense of precision. */

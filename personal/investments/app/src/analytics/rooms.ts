@@ -15,7 +15,7 @@ const REGISTERED_GROUPS: readonly RegisteredGroup[] = ["TFSA", "RRSP", "FHSA", "
  * reports the spousal slice of `used` separately so the owner can still see
  * it, without treating it as a distinct group.
  */
-const REGISTERED_KINDS: Record<RegisteredGroup, readonly AccountKind[]> = {
+export const REGISTERED_KINDS: Record<RegisteredGroup, readonly AccountKind[]> = {
   TFSA: ["TFSA"],
   RRSP: ["RRSP", "SpousalRRSP"],
   FHSA: ["FHSA"],
