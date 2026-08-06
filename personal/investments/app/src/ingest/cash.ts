@@ -11,6 +11,8 @@ import type { SourceRef } from "./source";
 const HEADING = /^(?:Wealthsimple )?(\w[\w ]*?) monthly statement$/;
 const PERIOD = /^(\w{3}) (\d{1,2}) - (\w{3}) (\d{1,2}), (\d{4})$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
+/** The "Your <Month> summary" panel's header row, e.g. "JUN 1 BALANCE JUN 30 BALANCE". Two BALANCE tokens, not one, so a stray "closing balance" mention elsewhere never matches. */
+const BALANCE_HEADER = /BALANCE.*BALANCE/;
 
 const MONTHS: Record<string, string> = {
   Jan: "01",
@@ -46,9 +48,19 @@ function readAccountType(pages: readonly Page[]): string {
   return `${m[1].trim()} Account`;
 }
 
-/** The summary block prints the opening and closing balance side by side. */
+/**
+ * The summary block prints the opening and closing balance side by side, one
+ * row below the "...BALANCE...BALANCE" header. Anchored on that header,
+ * rather than on the first row anywhere in the document with exactly two
+ * money words: a running balance or fee table elsewhere could otherwise
+ * match before the real summary is ever reached.
+ */
 function readBalances(pages: readonly Page[]): { opening: number; closing: number } {
-  for (const row of pages.flatMap((p) => p.rows)) {
+  const rows = pages.flatMap((p) => p.rows);
+  const headerIdx = rows.findIndex((r) => BALANCE_HEADER.test(rowText(r)));
+  if (headerIdx === -1) throw new Error("could not find the opening and closing balances");
+
+  for (const row of rows.slice(headerIdx + 1)) {
     const money = row.words.filter((w) => isMoney(w.text));
     if (money.length === 2 && row.words.length === 2) {
       const [a, b] = money;
