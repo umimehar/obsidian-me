@@ -4,8 +4,9 @@ import { parseGeometry } from "./geometry";
 import { parsePerformance } from "./performance";
 import { parseSourceFilename } from "./source";
 
-const source = parseSourceFilename("ACCT0001CAD_2026-04_PERFORMANCE.pdf");
-if (!source) throw new Error("bad fixture filename");
+const parsed = parseSourceFilename("ACCT0001CAD_2026-04_PERFORMANCE.pdf");
+if (!parsed) throw new Error("bad fixture filename");
+const source = parsed;
 
 async function load() {
   const xml = await Bun.file(join(import.meta.dir, "__fixtures__", "performance.xml")).text();
