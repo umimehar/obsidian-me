@@ -119,7 +119,14 @@ function GroupCard({ group, grandTotalValue, motionSpec }: GroupCardProps) {
             {formatShare(share)} of total
           </Text>
         </Flex>
-        <Progress value={share * 100} mb="3" />
+        {/* Decorative, and hidden from the accessibility tree on purpose. Radix
+            derives aria-valuetext from the value and rounds to whole percent,
+            so an exposed bar announces 2% for the RESP line whose visible text
+            says 1.6% -- the one decimal formatShare exists for. The figure is
+            already in that text, so the bar has nothing to add. Same defect as
+            the ValueOverTime aria-label task 3a fixed; RoomBar's own bar is
+            labelled instead, because there the bar carries a fill no text does. */}
+        <Progress value={share * 100} mb="3" aria-hidden />
         {group.accounts.length === 0 ? (
           <Text size="2" color="gray">
             No accounts in this group.

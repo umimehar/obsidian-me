@@ -128,15 +128,14 @@ describe("Overview", () => {
     expect(group.getAllByText(/excluded from totals/i).length).toBe(3);
   });
 
-  test("purpose lens renders the empty unassigned bucket honestly, not as broken", () => {
+  test("purpose lens carries no unassigned card, because every account is tagged", () => {
     renderOverview();
     fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
 
-    const unassignedHeading = screen.getByRole("heading", { name: "Unassigned" });
-    const unassignedCard = unassignedHeading.closest("[data-overview-group]");
-    if (unassignedCard === null) throw new Error("expected the Unassigned group card to render");
-    const group = within(unassignedCard as HTMLElement);
-    expect(group.getByText(/no accounts/i)).toBeDefined();
+    // All fourteen were tagged in task 3a. An empty bucket would be a standing
+    // "Unassigned / 0 accounts / $0.00" card, which is a figure about nothing.
+    expect(screen.queryByRole("heading", { name: "Unassigned" })).toBeNull();
+    expect(screen.queryByText(/no accounts in this group/i)).toBeNull();
   });
 
   test("a group prints its own total, not a share of one", () => {
@@ -176,6 +175,19 @@ describe("Overview", () => {
     expect(within(groupCard("RRSP")).getByText("3 accounts")).toBeDefined();
     expect(within(groupCard("TFSA")).getByText("2 accounts")).toBeDefined();
     expect(within(groupCard("FHSA")).getByText("1 account")).toBeDefined();
+  });
+
+  test("no group bar announces a percentage coarser than the one on screen", () => {
+    renderOverview();
+    const bars = [...document.querySelectorAll('[data-overview-group] [role="progressbar"]')];
+    expect(bars.length).toBeGreaterThan(5);
+    for (const bar of bars) {
+      // Exposed, the bar would announce Radix's whole-percent aria-valuetext:
+      // 2% beside a visible 1.6%, 20% beside 20.4%.
+      expect(bar.getAttribute("aria-hidden")).toBe("true");
+    }
+    // The figure itself is still on the page, at the precision it belongs at.
+    expect(within(groupCard("RESP")).getByText(/1\.6% of total/)).toBeDefined();
   });
 
   test("group share of total is computed against the same headline total", () => {

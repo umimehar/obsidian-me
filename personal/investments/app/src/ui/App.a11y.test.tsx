@@ -99,6 +99,20 @@ describe("App accessibility", () => {
     expect(named("unnamed")).toBe("");
   });
 
+  test("every progressbar left in the tree is named", () => {
+    // The control sweep above covers buttons, radios and summaries only, which
+    // is why seven unnamed Overview bars went unnoticed. A bar is either
+    // decorative and hidden, or exposed and named. Never exposed and anonymous.
+    render(<App />);
+    const bars = [...document.querySelectorAll('[role="progressbar"]')];
+    expect(bars.length).toBeGreaterThan(5);
+    const exposed = bars.filter((bar) => bar.getAttribute("aria-hidden") !== "true");
+    expect(exposed.length).toBeGreaterThan(0);
+    for (const bar of exposed) {
+      expect(accessibleName(bar)).not.toBe("");
+    }
+  });
+
   test("both segmented controls say what they group by", () => {
     render(<App />);
     expect(screen.getByRole("radiogroup", { name: "Group accounts by" })).toBeDefined();
