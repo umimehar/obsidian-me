@@ -205,27 +205,29 @@ function maskFilenamesInText(text: string): string {
 }
 
 /**
- * `Finding.sourceFile` carries the account code straight from the statement's
- * own filename -- `checks.ts` builds it from the raw, pre-mask statement, the
- * same way `accountShortId` would if `buildDatastore` hadn't already masked
- * it there. This is the only other place a raw account number reaches a
- * committed file, so the report gets the identical filename-prefix masking
- * `buildDatastore` applies to `source.file`.
- *
- * `message` is masked too, by the more general `maskFilenamesInText`: any
- * finding whose message quotes a raw filename (today, only the `ingest`
- * check's duplicate-skip message) would otherwise leak an unmasked account
- * code through a field nothing else touches.
+ * Every free-text field on a Finding that could carry a raw filename, not
+ * just `sourceFile` -- `checks.ts` builds `sourceFile` from the raw,
+ * pre-mask statement, the same way `accountShortId` would if
+ * `buildDatastore` hadn't already masked it there, but a `message` can quote
+ * a filename too (the `ingest` check's duplicate-skip message names the file
+ * it matched). Listed once here, rather than masked field by field, so a
+ * finding shape added later inherits the protection by construction instead
+ * of by remembering to wire it in.
  */
-export function maskFindingSourceFile(finding: Finding): Finding {
-  return {
-    ...finding,
-    sourceFile:
-      finding.sourceFile === ""
-        ? finding.sourceFile
-        : finding.sourceFile.replace(/^[A-Z0-9]+_/, `${finding.accountShortId}_`),
-    message: maskFilenamesInText(finding.message),
-  };
+const FINDING_TEXT_FIELDS = ["message", "sourceFile"] as const;
+
+/**
+ * Masks every raw filename embedded in a Finding's text fields. Each match
+ * is masked using ITS OWN embedded account code, not the enclosing finding's
+ * `accountShortId` -- a message can legitimately quote a *different*
+ * statement's filename, and this stays correct either way.
+ */
+export function maskFinding(finding: Finding): Finding {
+  const masked = { ...finding };
+  for (const field of FINDING_TEXT_FIELDS) {
+    masked[field] = maskFilenamesInText(masked[field]);
+  }
+  return masked;
 }
 
 /** Raw account numbers for accounts that count toward investment totals. */
@@ -261,7 +263,7 @@ if (import.meta.main) {
   const report: ReconciliationReport = {
     generated,
     statementCount: statements.length,
-    findings: findings.map(maskFindingSourceFile),
+    findings: findings.map(maskFinding),
   };
 
   await Bun.write(

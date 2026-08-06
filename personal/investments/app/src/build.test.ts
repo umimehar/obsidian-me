@@ -6,7 +6,7 @@ import {
   countedAccountNumbers,
   dedupeToLatestVersion,
   loadRedactions,
-  maskFindingSourceFile,
+  maskFinding,
   resolveTemplate,
 } from "./build";
 import type { ParsedFilename } from "./ingest/source";
@@ -205,21 +205,21 @@ function makeFinding(overrides: Partial<Finding> = {}): Finding {
   };
 }
 
-describe("maskFindingSourceFile", () => {
+describe("maskFinding", () => {
   test("replaces the raw account-code prefix with the finding's own masked short id", () => {
-    const masked = maskFindingSourceFile(makeFinding());
+    const masked = maskFinding(makeFinding());
     expect(masked.sourceFile).toBe("55ce_2026-06_BROKERAGE.pdf");
     expect(masked.sourceFile).not.toContain("ACCT0001CAD");
   });
 
   test("leaves an empty sourceFile alone, and every other field untouched", () => {
     const finding = makeFinding({ sourceFile: "", accountShortId: "*", check: "ground-truth" });
-    expect(maskFindingSourceFile(finding)).toEqual(finding);
+    expect(maskFinding(finding)).toEqual(finding);
   });
 
   test("does not mutate the input finding", () => {
     const finding = makeFinding();
-    maskFindingSourceFile(finding);
+    maskFinding(finding);
     expect(finding.sourceFile).toBe("ACCT0001CAD_2026-06_BROKERAGE.pdf");
   });
 
@@ -230,7 +230,7 @@ describe("maskFindingSourceFile", () => {
       check: "ingest",
       message: "skipped: byte-identical to already-ingested ACCT0002CAD_2026-06_BROKERAGE.pdf",
     });
-    const masked = maskFindingSourceFile(finding);
+    const masked = maskFinding(finding);
     const expectedShortId = maskAccountNo("ACCT0002CAD").shortId;
     expect(masked.message).toBe(
       `skipped: byte-identical to already-ingested ${expectedShortId}_2026-06_BROKERAGE.pdf`,
@@ -240,6 +240,6 @@ describe("maskFindingSourceFile", () => {
 
   test("leaves a message with no embedded filename untouched", () => {
     const finding = makeFinding({ message: "does not reconcile" });
-    expect(maskFindingSourceFile(finding).message).toBe("does not reconcile");
+    expect(maskFinding(finding).message).toBe("does not reconcile");
   });
 });
