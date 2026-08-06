@@ -19,10 +19,18 @@ import type { Finding, ReconciliationReport } from "./validate/report";
 const SOURCE = process.env.STATEMENTS_DIR ?? join(homedir(), "Downloads", "monthly_pdf_statements");
 const CACHE = join(import.meta.dir, "..", ".cache");
 const DATA = join(import.meta.dir, "..", "..", "data");
+const REDACTIONS_PATH = join(import.meta.dir, "..", "redactions.json");
 
-async function loadRedactions(): Promise<string[]> {
-  const file = Bun.file(join(import.meta.dir, "..", "redactions.json"));
-  if (!(await file.exists())) return [];
+/**
+ * Throws rather than failing open: `redactions.json` is gitignored and
+ * per-device, so a missing file on a fresh clone must stop the build, not
+ * silently write raw activity descriptions into the committed datastore.
+ */
+export async function loadRedactions(path: string): Promise<string[]> {
+  const file = Bun.file(path);
+  if (!(await file.exists())) {
+    throw new Error(`missing ${path} -- copy redactions.example.json and fill it in`);
+  }
   const parsed = (await file.json()) as { redactions?: unknown };
   return Array.isArray(parsed.redactions)
     ? parsed.redactions.filter((v): v is string => typeof v === "string")
@@ -87,7 +95,12 @@ async function ingestFile(
   return parseStatement(xml, source);
 }
 
-export async function ingestAll(sourceDir: string, cacheDir: string): Promise<Statement[]> {
+/**
+ * Every version of every statement, including superseded ones -- the raw
+ * material `checkSupersession` needs to report what it dropped. Nothing else
+ * should read this directly; call `ingestAll` or `dedupeToLatestVersion`.
+ */
+export async function ingestRaw(sourceDir: string, cacheDir: string): Promise<Statement[]> {
   const files = (await readdir(sourceDir)).filter((f) => f.endsWith(".pdf")).sort();
   const statements: Statement[] = [];
   const skipped: string[] = [];
@@ -109,6 +122,29 @@ export async function ingestAll(sourceDir: string, cacheDir: string): Promise<St
     );
   }
   return statements;
+}
+
+/**
+ * Keeps only the highest `source.version` per (accountNo, period, template)
+ * group, in first-seen order. Nothing downstream of `ingestAll` -- the
+ * registry, the datastore, or any check besides `checkSupersession` itself --
+ * should ever see two versions of the same statement: an amended statement
+ * beside its original would otherwise double-count a whole account into
+ * ground truth, and `checkCrossDocument` would pick whichever twin happened
+ * to sort first rather than the one that actually supersedes the rest.
+ */
+export function dedupeToLatestVersion(statements: readonly Statement[]): Statement[] {
+  const latestByGroup = new Map<string, Statement>();
+  for (const s of statements) {
+    const key = `${s.source.accountNo}|${s.source.period}|${s.source.template}`;
+    const current = latestByGroup.get(key);
+    if (!current || s.source.version > current.source.version) latestByGroup.set(key, s);
+  }
+  return [...latestByGroup.values()];
+}
+
+export async function ingestAll(sourceDir: string, cacheDir: string): Promise<Statement[]> {
+  return dedupeToLatestVersion(await ingestRaw(sourceDir, cacheDir));
 }
 
 /**
@@ -142,11 +178,17 @@ export function countedAccountNumbers(
 
 if (import.meta.main) {
   const generated = new Date().toISOString();
-  const statements = await ingestAll(SOURCE, CACHE);
+  const allVersions = await ingestRaw(SOURCE, CACHE);
+  const statements = dedupeToLatestVersion(allVersions);
   const accounts = buildRegistry(statements);
-  const names = await loadRedactions();
+  const names = await loadRedactions(REDACTIONS_PATH);
 
-  const findings = runChecks(statements, OBSERVATIONS, countedAccountNumbers(statements, accounts));
+  const findings = runChecks(
+    statements,
+    allVersions,
+    OBSERVATIONS,
+    countedAccountNumbers(statements, accounts),
+  );
   const report: ReconciliationReport = {
     generated,
     statementCount: statements.length,

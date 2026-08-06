@@ -1,8 +1,18 @@
 import { describe, expect, spyOn, test } from "bun:test";
-import { countedAccountNumbers, maskFindingSourceFile, resolveTemplate } from "./build";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import {
+  countedAccountNumbers,
+  dedupeToLatestVersion,
+  loadRedactions,
+  maskFindingSourceFile,
+  resolveTemplate,
+} from "./build";
 import type { ParsedFilename } from "./ingest/source";
 import { maskAccountNo } from "./store/mask";
 import type { Statement } from "./types";
+import { checkGroundTruth } from "./validate/checks";
 import type { Finding } from "./validate/report";
 
 function makeParsedFilename(overrides: Partial<ParsedFilename> = {}): ParsedFilename {
@@ -17,19 +27,26 @@ function makeParsedFilename(overrides: Partial<ParsedFilename> = {}): ParsedFile
   };
 }
 
-function makeStatement(accountNo: string): Statement {
+function makeStatement(
+  accountNo: string,
+  sourceOverrides: Partial<Statement["source"]> = {},
+  portfolio: Statement["portfolio"] = null,
+): Statement {
+  const period = sourceOverrides.period ?? "2026-06";
+  const template = sourceOverrides.template ?? "BROKERAGE";
   return {
     source: {
-      file: `${accountNo}_2026-06_BROKERAGE.pdf`,
+      file: `${accountNo}_${period}_${template}.pdf`,
       accountNo,
-      period: "2026-06",
-      template: "BROKERAGE",
+      period,
+      template,
       version: 0,
+      ...sourceOverrides,
     },
     accountType: "Self-directed RRSP Account",
     periodStart: "2026-06-01",
     periodEnd: "2026-06-30",
-    portfolio: null,
+    portfolio,
     cash: [],
     holdings: [],
     activity: [],
@@ -40,6 +57,89 @@ function makeStatement(accountNo: string): Statement {
     balances: null,
   };
 }
+
+describe("loadRedactions", () => {
+  test("throws naming the missing file and the example to copy, rather than failing open", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "investments-redactions-"));
+    try {
+      const path = join(dir, "redactions.json");
+      await expect(loadRedactions(path)).rejects.toThrow(/redactions\.example\.json/);
+      await expect(loadRedactions(path)).rejects.toThrow(path);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("reads the redactions array from an existing file", async () => {
+    const dir = await mkdtemp(join(tmpdir(), "investments-redactions-"));
+    try {
+      const path = join(dir, "redactions.json");
+      await writeFile(path, JSON.stringify({ redactions: ["Jane Doe", 42] }));
+      expect(await loadRedactions(path)).toEqual(["Jane Doe"]);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("dedupeToLatestVersion", () => {
+  test("keeps only the highest version within a (accountNo, period, template) group", () => {
+    const v0 = makeStatement("ACCT0001CAD", { version: 0 });
+    const v1 = makeStatement("ACCT0001CAD", { version: 1 });
+    const v2 = makeStatement("ACCT0001CAD", { version: 2 });
+    const deduped = dedupeToLatestVersion([v1, v0, v2]);
+    expect(deduped).toHaveLength(1);
+    expect(deduped[0]?.source.version).toBe(2);
+  });
+
+  test("leaves distinct accounts, periods and templates alone", () => {
+    const statements = [
+      makeStatement("ACCT0001CAD", { period: "2026-06" }),
+      makeStatement("ACCT0001CAD", { period: "2026-07" }),
+      makeStatement("ACCT0002CAD", { period: "2026-06" }),
+      makeStatement("ACCT0001CAD", { period: "2026-06", template: "PERFORMANCE" }),
+    ];
+    expect(dedupeToLatestVersion(statements)).toHaveLength(4);
+  });
+
+  test("preserves first-seen order across groups", () => {
+    const first = makeStatement("ACCT0001CAD", { period: "2026-06" });
+    const second = makeStatement("ACCT0002CAD", { period: "2026-06" });
+    const amendedFirst = makeStatement("ACCT0001CAD", { period: "2026-06", version: 1 });
+    const deduped = dedupeToLatestVersion([first, second, amendedFirst]);
+    expect(deduped.map((s) => s.source.accountNo)).toEqual(["ACCT0001CAD", "ACCT0002CAD"]);
+    expect(deduped[0]?.source.version).toBe(1);
+  });
+
+  test("regression: an amended statement no longer double-counts into ground truth", () => {
+    const portfolio = {
+      cashMarketValue: 0,
+      cashBookCost: 0,
+      classes: [],
+      totalMarketValue: 20000,
+      totalBookCost: 20000,
+    };
+    const original = makeStatement("ACCT0001CAD", { version: 0 }, portfolio);
+    const amended = makeStatement("ACCT0001CAD", { version: 1 }, portfolio);
+    const obs = [
+      { observed: "2026-06-30", period: "2026-06", accountValue: 20000, netDeposits: null },
+    ];
+
+    // Before the fix, both versions fed checkGroundTruth and it summed
+    // $40,000 for one account. Feeding it the raw, undeduped pair directly
+    // reproduces that bug and pins the precondition dedupeToLatestVersion
+    // exists to remove.
+    const undeduped = checkGroundTruth([original, amended], obs, new Set(["ACCT0001CAD"]));
+    expect(undeduped[0]?.actual).toBe(40000);
+
+    const deduped = checkGroundTruth(
+      dedupeToLatestVersion([original, amended]),
+      obs,
+      new Set(["ACCT0001CAD"]),
+    );
+    expect(deduped[0]?.actual).toBe(20000);
+  });
+});
 
 describe("countedAccountNumbers", () => {
   test("returns only the raw account numbers of accounts marked inTotals", () => {
