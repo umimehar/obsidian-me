@@ -29,7 +29,7 @@ export const ACKNOWLEDGED: readonly Acknowledgement[] = [
     shortId: "d6d9",
     period: "2025-11",
     reason:
-      "The account's first-ever statement, funded mid-period with a $12,000 deposit; the printed Change in Market Value is $0.00, but the securities it bought were actually worth $15.78 less by period end (bought for $11,953.48 net of fees, closed at a portfolio value of $11,937.70). The statement's own start/deposits/withdrawals/change-in-market-value/end row does not reconcile ($12,000.00 derived versus $11,984.22 printed) -- Wealthsimple's Change in Market Value figure does not capture the intra-period revaluation of a position opened and revalued within the same period. Not a parser defect: every input number is read correctly from the page.",
+      "The account's first-ever statement, funded mid-period with a $12,000 deposit; the printed Change in Market Value is $0.00, but the securities it bought were actually worth $15.78 less by period end (bought for $11,953.48 net of fees, closed at a portfolio value of $11,937.70). The statement's own start/deposits/withdrawals/change-in-market-value/end row does not reconcile ($12,000.00 derived versus $11,984.22 printed), because Wealthsimple's Change in Market Value figure does not capture the intra-period revaluation of a position opened and revalued within the same period. Not a parser defect: every input number is read correctly from the page.",
     reviewed: "2026-08-06",
   },
   {
@@ -37,10 +37,30 @@ export const ACKNOWLEDGED: readonly Acknowledgement[] = [
     shortId: "9710",
     period: "2026-06",
     reason:
-      "A real, owner-initiated product change, not a parser defect: this TFSA moved from self-directed to a Wealthsimple Managed portfolio. Its history reads Tax-Free Savings Account (self-directed) -> Tax-Free Savings Managed Cash Account -> Managed TFSA Account.",
+      "A real, owner-initiated product change, not a parser defect: this TFSA moved from self-directed to a Wealthsimple Managed portfolio. Its history reads Tax-Free Savings Account (self-directed), then Tax-Free Savings Managed Cash Account, then Managed TFSA Account.",
     reviewed: "2026-08-06",
   },
 ];
+
+/**
+ * Throws on an entry whose reason is blank. The type comment on `reason`
+ * calls an unexplained entry a bug, and this is what makes that true: an
+ * empty reason survives `ack?.reason ?? null` intact and reaches the page as
+ * an Acknowledged badge with nothing under it, which reads as "explained"
+ * while explaining nothing. Run over `ACKNOWLEDGED` at module load, so the
+ * build fails rather than the dashboard lying.
+ */
+export function assertReasonsGiven(entries: readonly Acknowledgement[]): void {
+  for (const entry of entries) {
+    if (entry.reason.trim() === "") {
+      throw new Error(
+        `acknowledgement ${entry.check}/${entry.shortId}/${entry.period} has a blank reason`,
+      );
+    }
+  }
+}
+
+assertReasonsGiven(ACKNOWLEDGED);
 
 /** The entry covering this exact (check, account, period), or undefined when there is none. */
 export function acknowledgementFor(
