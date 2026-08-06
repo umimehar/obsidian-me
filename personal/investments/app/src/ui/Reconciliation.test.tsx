@@ -132,11 +132,11 @@ describe("Reconciliation, the ground-truth headline", () => {
 });
 
 describe("Reconciliation, the findings", () => {
-  test("renders every one of the 88 findings, hiding none of them", () => {
+  test("renders every one of the 90 findings, hiding none of them", () => {
     renderReal();
-    // 87 in the groups, plus the ground-truth line promoted into the headline
+    // 89 in the groups, plus the ground-truth line promoted into the headline
     // card. Promoted, not dropped: the card is the fuller rendering of it.
-    expect(document.querySelectorAll("[data-finding-row]").length).toBe(87);
+    expect(document.querySelectorAll("[data-finding-row]").length).toBe(89);
     expect(document.querySelector("[data-recon-ground-truth]")).not.toBeNull();
   });
 
@@ -173,10 +173,10 @@ describe("Reconciliation, the findings", () => {
     renderReal();
     const summary = region("summary");
     expect(summary.getByText(/220 statements/)).toBeDefined();
-    expect(summary.getByText(/88 findings/)).toBeDefined();
-    expect(summary.getByText(/2 errors/)).toBeDefined();
+    expect(summary.getByText(/90 findings/)).toBeDefined();
+    expect(summary.getByText(/4 errors/)).toBeDefined();
     expect(summary.getByText(/86 warnings/)).toBeDefined();
-    expect(summary.getByText(/3 acknowledged/)).toBeDefined();
+    expect(summary.getByText(/5 acknowledged/)).toBeDefined();
   });
 
   test("each group's own summary counts its errors and its acknowledgements", () => {
@@ -189,13 +189,13 @@ describe("Reconciliation, the findings", () => {
     expect(arithmetic?.textContent).toBe("Statement arithmetic 84 findings, 84 warnings");
   });
 
-  test("puts the error groups ahead of the 84-strong warning group", () => {
+  test("puts all three error groups ahead of the 84-strong warning group", () => {
     renderReal();
     const order = [...document.querySelectorAll("[data-finding-group]")].map((node) =>
       node.getAttribute("data-finding-group"),
     );
-    expect(order.slice(0, 2).sort()).toEqual(["cross-document", "style-drift"]);
-    expect(order.indexOf("statement-arithmetic")).toBeGreaterThan(1);
+    expect(order.slice(0, 3).sort()).toEqual(["cross-document", "return-direction", "style-drift"]);
+    expect(order.indexOf("statement-arithmetic")).toBeGreaterThan(2);
   });
 
   test("shows an acknowledged finding with its reason instead of dropping it", () => {

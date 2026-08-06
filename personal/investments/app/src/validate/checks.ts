@@ -866,21 +866,65 @@ function performanceSeries(statements: readonly Statement[]): Map<string, Statem
   return map;
 }
 
+/** The earliest period each account appears in, across every template. */
+function firstSeenByAccount(statements: readonly Statement[]): Map<string, string> {
+  const first = new Map<string, string>();
+  for (const s of statements) {
+    const prior = first.get(s.source.accountNo);
+    if (prior === undefined || s.source.period < prior) {
+      first.set(s.source.accountNo, s.source.period);
+    }
+  }
+  return first;
+}
+
+/** Whole months from `from` to `to`, both "YYYY-MM". Negative when `to` precedes `from`. */
+function monthsBetween(from: string, to: string): number {
+  const [fy, fm] = from.split("-").map(Number);
+  const [ty, tm] = to.split("-").map(Number);
+  if (fy === undefined || fm === undefined || ty === undefined || tm === undefined) return 0;
+  return (ty - fy) * 12 + (tm - fm);
+}
+
 /**
  * A since-inception rate is only cumulative while the account is under a year
  * old; past that Wealthsimple annualizes it, and an annualized rate falls
  * whenever a month gains less than the run-rate it already carries, with the
- * market value still rising. The statement declares which regime it is in by
- * whether it prints a one-year rate at all: a null one-year horizon means
- * there is under a year of history behind it. Reading the regime off the page
- * beats inferring an inception date from the corpus, whose own first month is
- * not any account's opening.
+ * market value still rising. Account 9710 does exactly that at 2025-11, and
+ * checking it against the direction rule reports correct arithmetic as an
+ * error.
  *
- * A genuine measured 0.00% one-year return also reads as null here, which
- * only makes this skip a decidable step. It can never make it fire wrongly.
+ * Two independent signals must agree, because neither is sound alone:
+ *
+ * - The statement prints no one-year rate. That is the account speaking for
+ *   itself, but `orNull` collapses a printed 0.00% into the same null as an
+ *   absent horizon, so a genuine measured 0.00% one-year on an older account
+ *   reads here as "under a year old". On its own this signal FIRES the check
+ *   rather than skipping it, so that collapse is a false-positive risk, not a
+ *   safe one.
+ * - The account has under a year of corpus history behind this statement.
+ *   That is unsound alone in the other direction: the corpus's own first
+ *   month is not any account's opening, so an account picked up late by the
+ *   export looks young when it is not.
+ *
+ * An account that is genuinely old fails the second test, and one whose real
+ * opening predates the corpus still prints a one-year rate and fails the
+ * first. The residual gap needs both at once: an account over a year old,
+ * printing a true 0.00% one-year, that the export also started carrying less
+ * than a year before the statement.
  */
-function isCumulativeRegime(prev: Statement, curr: Statement): boolean {
-  return prev.returns?.oneYear === null && curr.returns?.oneYear === null;
+function isCumulativeRegime(
+  prev: Statement,
+  curr: Statement,
+  firstSeen: string | undefined,
+): boolean {
+  if (prev.returns?.oneYear !== null || curr.returns?.oneYear !== null) return false;
+  // Unreachable by construction: `firstSeenByAccount` scans the same list
+  // `performanceSeries` drew this account from, so every account it yields
+  // has an entry. Kept because `Map.get` is typed `string | undefined` and
+  // `tsc --noEmit` rejects the call without it, not as a live branch.
+  if (firstSeen === undefined) return false;
+  return monthsBetween(firstSeen, curr.source.period) < 12;
 }
 
 /**
@@ -903,8 +947,13 @@ function isFlowFreeStep(prev: Statement, curr: Statement): boolean {
  * must move the same way the market value did. Opposite signs are
  * arithmetically impossible and mean one of the two printed figures is wrong.
  */
-function checkReturnDirectionPair(prev: Statement, curr: Statement, out: Finding[]): void {
-  if (!isFlowFreeStep(prev, curr) || !isCumulativeRegime(prev, curr)) return;
+function checkReturnDirectionPair(
+  prev: Statement,
+  curr: Statement,
+  firstSeen: string | undefined,
+  out: Finding[],
+): void {
+  if (!isFlowFreeStep(prev, curr) || !isCumulativeRegime(prev, curr, firstSeen)) return;
   const before = prev.balances;
   const after = curr.balances;
   if (!before || !after) return;
@@ -933,12 +982,13 @@ function checkReturnDirectionPair(prev: Statement, curr: Statement, out: Finding
 
 export function checkReturnDirection(statements: readonly Statement[]): Finding[] {
   const out: Finding[] = [];
-  for (const list of performanceSeries(statements).values()) {
+  const firstSeen = firstSeenByAccount(statements);
+  for (const [accountNo, list] of performanceSeries(statements)) {
     for (let i = 1; i < list.length; i += 1) {
       const prev = list[i - 1];
       const curr = list[i];
       if (!prev || !curr) continue;
-      checkReturnDirectionPair(prev, curr, out);
+      checkReturnDirectionPair(prev, curr, firstSeen.get(accountNo), out);
     }
   }
   return out;

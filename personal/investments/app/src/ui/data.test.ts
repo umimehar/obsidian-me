@@ -31,15 +31,15 @@ describe("data.ts against the real committed analytics.json", () => {
     expect(totals.purpose).toBeCloseTo(totals.registration, 6);
   });
 
-  test("reconciliation.json carries the real 88 findings over 220 statements", () => {
+  test("reconciliation.json carries the real 90 findings over 220 statements", () => {
     const report = loadReconciliation();
     expect(report.statementCount).toBe(220);
-    expect(report.findings.length).toBe(88);
+    expect(report.findings.length).toBe(90);
   });
 
-  test("exactly three findings are acknowledged, and each carries a non-empty reason", () => {
+  test("exactly five findings are acknowledged, and each carries a non-empty reason", () => {
     const acknowledged = loadReconciliation().findings.filter((f) => f.acknowledged);
-    expect(acknowledged.length).toBe(3);
+    expect(acknowledged.length).toBe(5);
     for (const finding of acknowledged) {
       expect(finding.reason).not.toBeNull();
       expect((finding.reason ?? "").length).toBeGreaterThan(20);
@@ -47,6 +47,8 @@ describe("data.ts against the real committed analytics.json", () => {
     expect(acknowledged.map((f) => f.check).sort()).toEqual([
       "cross-document",
       "ground-truth",
+      "return-direction",
+      "return-direction",
       "style-drift",
     ]);
   });

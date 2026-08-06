@@ -1246,6 +1246,32 @@ describe("checkReturnDirection", () => {
     expect(f).toHaveLength(0);
   });
 
+  test("ignores an old account whose one-year rate is a genuine measured 0.00%", () => {
+    // orNull collapses a printed 0.00% into the same null as an absent
+    // horizon, so the printed-rate signal alone reads this account as under a
+    // year old and checks its annualized rate against the direction rule. The
+    // corpus-age signal is what rejects it: this account has been on file
+    // since 2024-01, so the pair is 25 months in, not 1.
+    const f = checkReturnDirection([
+      statement({ source: src("2024-01", "BROKERAGE") }),
+      perf("2026-01", { end: 100000, sinceInception: 12.5 }),
+      perf("2026-02", { end: 100500, sinceInception: 12.2 }),
+    ]);
+    expect(f).toHaveLength(0);
+  });
+
+  test("still decides a young account whose corpus history is short", () => {
+    // The mirror of the case above: same shape, but the account first appears
+    // one month before the pair, so both signals agree it is under a year old
+    // and the rule applies.
+    const f = checkReturnDirection([
+      statement({ source: src("2025-12", "BROKERAGE") }),
+      perf("2026-01", { end: 100000, sinceInception: 12.5 }),
+      perf("2026-02", { end: 100500, sinceInception: 12.2 }),
+    ]);
+    expect(f).toHaveLength(1);
+  });
+
   test("ignores a pair whose earlier statement has no stated since-inception", () => {
     const f = checkReturnDirection([
       perf("2026-01", { end: 100, sinceInception: null }),

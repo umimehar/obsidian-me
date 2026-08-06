@@ -77,11 +77,13 @@ describe("groupFindings", () => {
     expect(groupFindings([])).toEqual([]);
   });
 
-  test("keeps every one of the real 88 findings across its groups", () => {
+  test("keeps every one of the real 90 findings across its groups", () => {
     const groups = groupFindings(loadReconciliation().findings);
     const total = groups.reduce((sum, group) => sum + group.findings.length, 0);
-    expect(total).toBe(88);
-    expect(groups[0]?.check).toBe("cross-document");
+    expect(total).toBe(90);
+    // Error groups lead, largest first, so the 2-finding return-direction
+    // group now sorts ahead of the 1-finding cross-document group.
+    expect(groups[0]?.check).toBe("return-direction");
   });
 });
 

@@ -48,8 +48,8 @@ describe("App", () => {
     render(<App />);
     clickTab("Reconciliation");
     expect(document.querySelector("[data-recon-ground-truth]")).not.toBeNull();
-    // 87 group rows plus the ground-truth line promoted into the headline card.
-    expect(document.querySelectorAll("[data-finding-row]").length).toBe(87);
+    // 89 group rows plus the ground-truth line promoted into the headline card.
+    expect(document.querySelectorAll("[data-finding-row]").length).toBe(89);
   });
 
   test("the year control drives both the room lines and the tax figures", () => {
