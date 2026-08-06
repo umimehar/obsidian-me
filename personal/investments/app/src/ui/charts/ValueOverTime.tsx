@@ -36,6 +36,22 @@ function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
+/**
+ * Same as `formatCurrency` but keeps cents, for the accessible summary only.
+ * The chart itself rounds to whole dollars on the axis and in visible text,
+ * which is fine for a glanceable scale -- but the summary is the only thing
+ * a screen reader announces for this chart, and rounding there would state
+ * an ending value up to a dollar off from what the corpus actually says.
+ */
+function formatCurrencyPrecise(amount: number): string {
+  return new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+}
+
 /** The combined domain of both the market value and the book cost series, so one pair of scales fits both lines. */
 function toDomainPoints(points: readonly PortfolioPoint[]): ChartPoint[] {
   return [
@@ -106,7 +122,7 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
 
   const summary =
     `Portfolio market value from ${formatPeriodLabel(first.period)} to ` +
-    `${formatPeriodLabel(last.period)}, ending at ${formatCurrency(last.marketValue)}. ` +
+    `${formatPeriodLabel(last.period)}, ending at ${formatCurrencyPrecise(last.marketValue)}. ` +
     "The book cost line is an approximate figure for USD holdings, not a filing figure.";
 
   return (
