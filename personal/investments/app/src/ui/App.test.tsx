@@ -59,4 +59,38 @@ describe("App", () => {
     if (income === null) throw new Error("expected the tax income section to render");
     expect(within(income as HTMLElement).getByText("-$1,067.39")).toBeDefined();
   });
+
+  test("the portfolio total and its chart stay visible on tabs other than overview", () => {
+    // The whole reason these two moved out of Overview and above the
+    // Tabs is so they never disappear when another panel is selected.
+    // Checked on two different non-default tabs, not just one, so the
+    // assertion is about every tab rather than one that happens to work.
+    render(<App />);
+
+    clickTab("Wrappers");
+    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");
+    expect(document.querySelector('[role="img"]')).not.toBeNull();
+
+    clickTab("Reconciliation");
+    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");
+    expect(document.querySelector('[role="img"]')).not.toBeNull();
+  });
+
+  test("the portfolio total never changes as the overview lens changes", () => {
+    // The strongest single invariant in this codebase: all three lenses
+    // regroup the same money, so the headline total above the tabs must
+    // never move when the account-grouping lens does.
+    render(<App />);
+    const total = () => document.querySelector("[data-portfolio-total]")?.textContent;
+    expect(total()).toBe("$241,739.67");
+
+    fireEvent.click(screen.getByRole("radio", { name: /account/i }));
+    expect(total()).toBe("$241,739.67");
+
+    fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
+    expect(total()).toBe("$241,739.67");
+
+    fireEvent.click(screen.getByRole("radio", { name: /registration/i }));
+    expect(total()).toBe("$241,739.67");
+  });
 });
