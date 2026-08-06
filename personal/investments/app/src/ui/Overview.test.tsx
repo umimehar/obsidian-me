@@ -183,32 +183,54 @@ describe("Overview", () => {
     }
     // Six of the seven registration groups have a value history; Cash has none.
     expect(charted).toBe(6);
+  });
 
-    // The share bar is back beside that text, and it announces the card's
-    // own string rather than Radix's rounded one. Every card, not just the
-    // one that made the defect visible.
+  test("no share bar announces anything, so there is no second copy to round", () => {
+    renderOverview();
+    // The card's text is the only copy of the figure. Every bar in every
+    // card is checked, not just the first in each, so a second bar added
+    // later cannot hide behind the first.
     expect(within(groupCard("RESP")).getByText(/1\.6% of total/)).toBeDefined();
     let barred = 0;
-    for (const card of cards) {
-      const printed = card.querySelector("[data-group-share]")?.textContent ?? "";
-      const announced = card.querySelector('[role="progressbar"]')?.getAttribute("aria-valuetext");
-      if (announced === null || announced === undefined) continue;
-      barred += 1;
-      expect(printed).toBe(`${announced} of total`);
+    for (const card of document.querySelectorAll("[data-overview-group]")) {
+      for (const bar of card.querySelectorAll("[data-share-bar]")) {
+        barred += 1;
+        expect(bar.getAttribute("aria-hidden")).toBe("true");
+        expect(bar.getAttribute("role")).toBeNull();
+        expect(bar.getAttribute("aria-valuetext")).toBeNull();
+        expect(bar.textContent).toBe("");
+      }
     }
     expect(barred).toBe(7);
   });
 
-  test("the share bar states the two shares a whole percent would distort", () => {
+  test("nothing inside a group card announces a percentage at all", () => {
+    renderOverview();
+    // Whatever element it hangs off. This is the check that survives a
+    // badge, a title attribute, or a bar that comes back wearing a role.
+    const nodes = [...document.querySelectorAll("[data-overview-group] *")];
+    expect(nodes.length).toBeGreaterThan(20);
+    for (const node of nodes) {
+      for (const attribute of ["aria-valuetext", "aria-label", "title"]) {
+        expect(node.getAttribute(attribute) ?? "").not.toMatch(/\d+(\.\d+)?%/);
+      }
+    }
+  });
+
+  test("the two shares a whole percent would distort are printed, not announced", () => {
     renderOverview();
     fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
-    const announced = (label: string) =>
-      groupCard(label).querySelector('[role="progressbar"]')?.getAttribute("aria-valuetext");
     // Rounded to whole percent these read 2% and 21%, which is both an
     // overstatement of the small group and the loss of the decimal that
-    // exists to tell two small groups apart.
-    expect(announced("Education")).toBe("1.6%");
-    expect(announced("Business")).toBe("21.2%");
+    // exists to tell two small groups apart. They are visible text at one
+    // decimal, and the bar beside them stays silent.
+    expect(within(groupCard("Education")).getByText("1.6% of total")).toBeDefined();
+    expect(within(groupCard("Business")).getByText("21.2% of total")).toBeDefined();
+    for (const label of ["Education", "Business"]) {
+      const bar = groupCard(label).querySelector("[data-share-bar]");
+      expect(bar?.getAttribute("aria-hidden")).toBe("true");
+      expect(bar?.getAttribute("aria-valuetext")).toBeNull();
+    }
   });
 
   test("each bar's width is its own share of the whole, not of the largest group", () => {

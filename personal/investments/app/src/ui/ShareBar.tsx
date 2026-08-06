@@ -1,7 +1,5 @@
-import { formatShare } from "./format";
-
 export interface ShareBarProps {
-  /** The group's name, so the bar says which group's share it is. */
+  /** The group's name. Used by nothing an assistive technology reads, see below. */
   label: string;
   /** The group's total over the portfolio total, as a fraction of one. */
   share: number;
@@ -14,29 +12,28 @@ export interface ShareBarProps {
  * the bar is that figure against the whole, and the sparkline is the shape
  * over time. Only the bar makes a small group visibly small.
  *
- * This is a plain element rather than Radix's `Progress` on purpose. That
- * component derives `aria-valuetext` from the value and rounds it to whole
- * percent, so a card reading `1.6% of total` announced `2%` and a card
- * reading `20.4%` announced `20%`. Both shipped. Here the announced value is
- * `formatShare`'s own output, the same call the visible text makes, so the
- * two cannot say different things about one figure.
+ * It announces nothing at all, and that is the point.
  *
- * It is deliberately not a tab stop. A progressbar here is a read-only
- * graphic rather than a widget, and a stop on every group card that does
- * nothing when it is reached is worse than no stop at all.
+ * The bar this replaces was a Radix `Progress`, which derives
+ * `aria-valuetext` from the value and rounds to whole percent, so a card
+ * reading `1.6% of total` announced `2%`. An explicit `aria-valuetext` fixes
+ * that only where the assistive technology honours it over
+ * `aria-valuenow`/`aria-valuemax`; where it does not, the same 1.6% is
+ * computed back to `2%`. Defending a precision rule with an attribute whose
+ * precedence is an implementation detail is not defending it. The adjacent
+ * text already carries the figure at the right precision, so this is
+ * `aria-hidden` decoration and the failure mode is gone rather than guarded.
+ *
+ * `label` is kept because the card owns the naming of its own bar if this
+ * ever becomes exposed again, and dropping it would make that a two-file
+ * change.
  */
 export function ShareBar({ label, share }: ShareBarProps) {
   const percent = share * 100;
   return (
-    // biome-ignore lint/a11y/useFocusableInteractive: read-only bar, see the note above
     <div
-      role="progressbar"
-      aria-label={`${label} share of the portfolio`}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={percent}
-      aria-valuetext={formatShare(share)}
-      data-share-bar=""
+      aria-hidden="true"
+      data-share-bar={label}
       style={{
         background: "var(--gray-a4)",
         borderRadius: "var(--radius-1)",
