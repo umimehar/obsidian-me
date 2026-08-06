@@ -85,12 +85,12 @@ describe("assertClean", () => {
   });
 
   test("throws on a vendor-prefixed account code built from the configured prefixes", () => {
-    const xml = "WK63GZF41CAD appears in a body row";
+    const xml = "WK1234567CAD appears in a body row";
     expect(() => assertClean(xml, "test.xml", config(), [])).toThrow(/vendor account code/i);
   });
 
   test("does not throw on a vendor prefix not configured", () => {
-    const xml = "ZZ63GZF41CAD appears in a body row";
+    const xml = "ZZ1234567CAD appears in a body row";
     expect(() => assertClean(xml, "test.xml", config(), [])).not.toThrow();
   });
 });
