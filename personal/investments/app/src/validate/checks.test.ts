@@ -201,6 +201,69 @@ describe("checkArithmetic", () => {
     expect(marketFinding?.severity).toBe("error");
   });
 
+  test("flags a real market-value defect in one class even when another converted class reconciles fine", () => {
+    // The whole-statement magnitude budget this replaced could not tell a
+    // real defect in one class from an unrelated converted class -- a USD
+    // holding anywhere on the statement used to excuse a mismatch anywhere
+    // on it. reconcileClassMarketValue is per class, so it cannot.
+    const bad = statement({
+      portfolio: {
+        cashMarketValue: 0,
+        cashBookCost: 0,
+        classes: [
+          { name: "Canadian Equities and Alternatives", marketValue: 100, bookCost: 100 },
+          { name: "US Equities and Alternatives", marketValue: 200, bookCost: 200 },
+        ],
+        totalMarketValue: 300,
+        totalBookCost: 300,
+      },
+      holdings: [
+        {
+          name: "CAD Fund",
+          symbol: "CDF",
+          quantity: 1,
+          segregatedQuantity: 1,
+          marketPrice: 50,
+          priceCurrency: "CAD",
+          marketValue: 50, // wrong: the class expects 100, and nothing here was converted
+          marketValueConverted: false,
+          bookCost: 100,
+          assetClass: "Canadian Equities and Alternatives",
+          pendingValuation: false,
+          bookCostConverted: false,
+        },
+        {
+          name: "US Fund",
+          symbol: "USF",
+          quantity: 1,
+          segregatedQuantity: 1,
+          marketPrice: 200,
+          priceCurrency: "USD",
+          marketValue: 200, // reconciles exactly
+          marketValueConverted: true,
+          bookCost: 200,
+          assetClass: "US Equities and Alternatives",
+          pendingValuation: false,
+          bookCostConverted: true,
+        },
+      ],
+    });
+    const f = checkArithmetic([bad]);
+    const cadFinding = f.find(
+      (x) => x.message.includes("Canadian Equities") && x.message.includes("market value"),
+    );
+    expect(cadFinding).toBeDefined();
+    expect(cadFinding?.severity).toBe("error");
+    expect(
+      f.find((x) => x.message.includes("US Equities") && x.message.includes("market value")),
+    ).toBeUndefined();
+    const wholeFinding = f.find(
+      (x) => x.message === "holdings plus cash do not equal the portfolio total",
+    );
+    expect(wholeFinding).toBeDefined();
+    expect(wholeFinding?.severity).toBe("error");
+  });
+
   test("flags a book-cost mismatch with no converted holding as an error, at any magnitude", () => {
     // No conversion touched this class at all, so there is no excuse for any
     // size of mismatch -- unlike market value, book cost gets no budget: a

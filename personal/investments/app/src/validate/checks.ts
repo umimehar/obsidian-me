@@ -260,38 +260,98 @@ function checkMissingPortfolio(s: Statement, out: Finding[]): void {
   );
 }
 
+interface ClassMarketValueResult {
+  name: string;
+  sum: number;
+  expected: number;
+  convertedCount: number;
+  reconciles: boolean;
+  isRounding: boolean;
+}
+
 /**
- * Checked against the portfolio total rather than per asset class: the
- * summary's class label wraps around mailing-address rows and does not
- * match the assets section's heading. This check is stronger anyway.
+ * Per asset class, same as `reconcileClassBookCost` below -- a whole-statement
+ * magnitude budget was tried first and rejected for exactly the reason
+ * `checkBookCost`'s own comment argues against it: it cannot tell a real
+ * defect in one class from an unrelated converted class reconciling fine
+ * elsewhere on the same statement.
  *
- * A converted USD holding is exactly what the disclosed fx rate covers
- * (unlike book cost below), so a mismatch here is not automatically a
- * parser defect: the statement prints that rate to six decimals, and
- * summing several holdings converted at a rounded rate drifts a cent or two
- * from whatever precision the statement's own total used. A cent per
- * converted holding is the budget for that drift; a residual within it is
- * fx rounding, one bigger than that -- or one on a CAD-only statement, where
- * no conversion touched the numbers at all -- has no such excuse and stays
- * an error.
+ * Unlike book cost, market value's fx rate IS disclosed (the class heading's
+ * own footnote), so a converted class is expected to land within a small,
+ * bounded rounding residual, not an unbounded approximation: a cent of
+ * budget per converted holding in that class, matching the six decimals the
+ * statement prints its rate to. A residual past that budget is not rounding,
+ * converted class or not.
+ */
+function reconcileClassMarketValue(
+  holdings: readonly Holding[],
+  cls: AssetClassTotal,
+): ClassMarketValueResult {
+  const classHoldings = holdings.filter((h) => h.assetClass === cls.name);
+  const sum = classHoldings.reduce((a, h) => a + h.marketValue, 0);
+  const convertedCount = classHoldings.filter((h) => h.marketValueConverted).length;
+  const reconciles = within(sum, cls.marketValue);
+  const delta = sum - cls.marketValue;
+  return {
+    name: cls.name,
+    sum,
+    expected: cls.marketValue,
+    convertedCount,
+    reconciles,
+    isRounding: !reconciles && convertedCount > 0 && Math.abs(delta) <= convertedCount * 0.01,
+  };
+}
+
+function pushClassMarketValueFindings(
+  s: Statement,
+  results: readonly ClassMarketValueResult[],
+  out: Finding[],
+): void {
+  for (const r of results) {
+    if (r.reconciles) continue;
+    const delta = r.sum - r.expected;
+    out.push(
+      finding(
+        "statement-arithmetic",
+        s,
+        r.isRounding
+          ? `${r.name} market value differs by ${delta.toFixed(2)}; the statement's fx rate is disclosed to six decimals, so summing ${r.convertedCount} converted USD holding(s) drifts by rounding`
+          : `${r.name} market value does not reconcile: holdings sum to a different figure than the class total`,
+        r.expected,
+        r.sum,
+        r.isRounding ? "warning" : "error",
+      ),
+    );
+  }
+}
+
+/**
+ * The whole-statement figure is kept too, but its severity is derived from
+ * the per-class results, the same way `checkBookCost` derives it: a real
+ * defect in one class must not be excused by an unrelated converted class
+ * reconciling fine elsewhere on the same statement.
  */
 function checkMarketValue(s: Statement, p: PortfolioSummary, out: Finding[]): void {
+  const results = p.classes.map((cls) => reconcileClassMarketValue(s.holdings, cls));
+  pushClassMarketValueFindings(s, results, out);
+
   const sum = s.holdings.reduce((a, h) => a + h.marketValue, 0) + p.cashMarketValue;
   if (within(sum, p.totalMarketValue)) return;
 
-  const convertedCount = s.holdings.filter((h) => h.marketValueConverted).length;
+  const anyClassError = results.some((r) => !r.reconciles && !r.isRounding);
+  const anyClassWarning = results.some((r) => !r.reconciles && r.isRounding);
+  const isApproximate = !anyClassError && anyClassWarning;
   const delta = sum - p.totalMarketValue;
-  const isRounding = convertedCount > 0 && Math.abs(delta) <= convertedCount * 0.01;
   out.push(
     finding(
       "statement-arithmetic",
       s,
-      isRounding
-        ? `market value differs by ${delta.toFixed(2)}; the statement's fx rate is disclosed to six decimals, so summing ${convertedCount} converted USD holding(s) drifts by rounding`
+      isApproximate
+        ? `market value differs by ${delta.toFixed(2)}; the statement's fx rate is disclosed to six decimals, so summing converted USD holding(s) drifts by rounding`
         : "holdings plus cash do not equal the portfolio total",
       p.totalMarketValue,
       sum,
-      isRounding ? "warning" : "error",
+      isApproximate ? "warning" : "error",
     ),
   );
 }
@@ -413,13 +473,14 @@ function checkBookCost(s: Statement, p: PortfolioSummary, out: Finding[]): void 
 
 /**
  * A holding whose assetClass is empty, or names a class the statement never
- * states, is invisible to reconcileClassBookCost above -- it filters
- * holdings by exact class-name match, so an orphaned holding is silently
- * excluded from every per-class sum while still counting toward the
- * whole-statement sum. Worse, if some other class on the same statement
- * legitimately warns, the whole-statement severity demotes to warning too,
- * hiding the orphan's contribution to a real mismatch entirely. Checked
- * against the statement's own stated classes, never a hardcoded class name.
+ * states, is invisible to reconcileClassBookCost and reconcileClassMarketValue
+ * above -- both filter holdings by exact class-name match, so an orphaned
+ * holding is silently excluded from every per-class sum while still counting
+ * toward the whole-statement sums. Worse, if some other class on the same
+ * statement legitimately warns, the whole-statement severity demotes to
+ * warning too, hiding the orphan's contribution to a real mismatch entirely.
+ * Checked against the statement's own stated classes, never a hardcoded
+ * class name.
  */
 function checkOrphanedHoldings(s: Statement, p: PortfolioSummary, out: Finding[]): void {
   const classNames = new Set(p.classes.map((c) => c.name));
@@ -431,7 +492,7 @@ function checkOrphanedHoldings(s: Statement, p: PortfolioSummary, out: Finding[]
         "statement-arithmetic",
         s,
         h.assetClass === ""
-          ? `holding ${label} carries no asset class and is excluded from every per-class book-cost check`
+          ? `holding ${label} carries no asset class and is excluded from every per-class check`
           : `holding ${label} carries asset class "${h.assetClass}", which the portfolio summary never states`,
         null,
         null,
