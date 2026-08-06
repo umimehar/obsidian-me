@@ -614,6 +614,17 @@ const ACTIVITY_END = [
   // no money -- which in turn broke duplicate-row detection below, since the
   // row's description no longer matched its verbatim twin.
   /^GLOSSARY/,
+  // A registered account's beneficiary designation, printed as a footnote
+  // under whichever activity row happens to be last on the page (any DIV,
+  // LOAN or RECALL row on a registered account can carry it) -- real PII
+  // (a beneficiary's name), not transaction text. Missing this is exactly
+  // the GLOSSARY bug again: the block, and the "Name Beneficiary Type"/
+  // beneficiary-name rows under it, get swallowed as a continuation.
+  /^Designation of Beneficiary/,
+  // The year-end statement's audit notice (auditor name, firm, address,
+  // phone, email), printed once on the December statement and attached to
+  // whichever row is last on the page. Same shape as the two above.
+  /^AUDIT NOTE/,
   // A trade placed near period end can settle after it. Wealthsimple prints
   // those in a separate two-column ("To be Debited"/"To be Credited", no
   // running balance) table for the *next* period, dated past periodEnd --

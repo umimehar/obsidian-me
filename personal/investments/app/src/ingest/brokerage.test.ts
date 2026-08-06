@@ -1099,4 +1099,54 @@ describe("activity — duplicate detection", () => {
     expect(s.activity).toHaveLength(1);
     expect(s.activity[0]?.description).toBe("CAD dividend");
   });
+
+  test("does not let a beneficiary designation leak into the last row's description", () => {
+    // Same GLOSSARY-shaped bug: no leading date, no money, so without its
+    // own end marker "Designation of Beneficiary" and the beneficiary's own
+    // name on the row under it get swallowed as a continuation -- turning a
+    // real person's name into activity data instead of stopping the row.
+    const s = parseWithActivityRows([
+      {
+        y: 7,
+        words: [
+          word("2026-06-02", 37, 7),
+          word("DIV", 80, 7),
+          word("CAD", 128, 7),
+          word("dividend", 170, 7),
+          word("$0.00", 432, 7),
+          word("$40.90", 494, 7),
+          word("$85.53", 518, 7),
+        ],
+      },
+      {
+        y: 8,
+        words: [word("Designation", 50, 8), word("of", 130, 8), word("Beneficiary", 150, 8)],
+      },
+      { y: 9, words: [word("Name", 50, 9), word("Beneficiary", 90, 9), word("Type", 150, 9)] },
+      { y: 10, words: [word("Jane", 50, 10), word("Doe", 90, 10), word("Primary", 130, 10)] },
+    ]);
+    expect(s.activity).toHaveLength(1);
+    expect(s.activity[0]?.description).toBe("CAD dividend");
+  });
+
+  test("does not let the year-end audit notice leak into the last row's description", () => {
+    const s = parseWithActivityRows([
+      {
+        y: 7,
+        words: [
+          word("2026-12-31", 37, 7),
+          word("FEE", 80, 7),
+          word("Management", 128, 7),
+          word("fees", 250, 7),
+          word("$7.52", 432, 7),
+          word("$0.00", 494, 7),
+          word("$122.95", 518, 7),
+        ],
+      },
+      { y: 8, words: [word("AUDIT", 50, 8), word("NOTE", 100, 8)] },
+      { y: 9, words: [word("The", 50, 9), word("annual", 90, 9), word("audit", 140, 9)] },
+    ]);
+    expect(s.activity).toHaveLength(1);
+    expect(s.activity[0]?.description).toBe("Management fees");
+  });
 });
