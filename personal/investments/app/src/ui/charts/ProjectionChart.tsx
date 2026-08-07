@@ -14,7 +14,7 @@ import {
 } from "./projectionSeries";
 import { useRevealMotion } from "./reveal";
 import { monthsBetween, periodToDate } from "./scales";
-import { DERIVED_DASH } from "./source";
+import { DERIVED_DASH, swatchRect } from "./source";
 import { useSvgId } from "./svgId";
 import { CursorMarks, type CursorSlot, useChartCursor } from "./useChartCursor";
 
@@ -144,8 +144,7 @@ function Legend({ hatchId }: { hatchId: string }) {
         <svg width={28} height={12} aria-hidden="true" style={{ flex: "none" }}>
           <rect
             data-legend-swatch="history"
-            width={28}
-            height={12}
+            {...swatchRect(28, 12)}
             fill={HISTORY_FILL}
             stroke={HISTORY_STROKE}
           />
@@ -158,8 +157,7 @@ function Legend({ hatchId }: { hatchId: string }) {
         <svg width={28} height={12} aria-hidden="true" style={{ flex: "none" }}>
           <rect
             data-legend-swatch="projection"
-            width={28}
-            height={12}
+            {...swatchRect(28, 12)}
             fill={`url(#${hatchId})`}
             stroke={PROJECTION_STROKE}
             strokeDasharray={DERIVED_DASH}

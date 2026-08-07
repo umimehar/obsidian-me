@@ -18,7 +18,7 @@ import {
 import { formatAxisCurrency } from "./plot";
 import { useRevealMotion } from "./reveal";
 import { type ValueAxis, buildValueAxis } from "./scales";
-import { SOURCE_BADGE } from "./source";
+import { SOURCE_BADGE, swatchRect } from "./source";
 import { useSvgId } from "./svgId";
 import { CursorMarks, type CursorSlot, useChartCursor } from "./useChartCursor";
 
@@ -72,10 +72,7 @@ function BarSwatch({ hatched }: { hatched: boolean }) {
       <title>{hatched ? "A hatched bar" : "A solid bar"}</title>
       {hatched ? <HatchPattern id={hatchId} /> : null}
       <rect
-        x={0}
-        y={0}
-        width={28}
-        height={12}
+        {...swatchRect(28, 12)}
         fill={hatched ? `url(#${hatchId})` : STATED_FILL}
         stroke={hatched ? DERIVED_STROKE : STATED_STROKE}
       />
@@ -397,7 +394,7 @@ function WrapperCard({ wrapper }: { wrapper: WrapperContributions }) {
           <Heading size="3" as="h3">
             {wrapper.group}
           </Heading>
-          <Badge color={isDerived(wrapper) ? "amber" : "jade"} variant="soft">
+          <Badge color={isDerived(wrapper) ? "amber" : "jade"} variant="soft" highContrast>
             {SOURCE_BADGE[isDerived(wrapper) ? "derived" : "stated"]}
           </Badge>
         </Flex>

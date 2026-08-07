@@ -152,12 +152,12 @@ export function RoomBar({ line, contributionsSource }: RoomBarProps) {
           </Heading>
           <Flex gap="2">
             {line.assessed ? (
-              <Badge color="jade" variant="soft">
+              <Badge color="jade" variant="soft" highContrast>
                 From your notice of assessment
               </Badge>
             ) : null}
             {contributionsSource === "derived" ? (
-              <Badge color="amber" variant="soft">
+              <Badge color="amber" variant="soft" highContrast>
                 Derived, not printed on the statement
               </Badge>
             ) : null}

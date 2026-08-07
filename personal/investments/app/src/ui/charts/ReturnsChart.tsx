@@ -303,13 +303,14 @@ function AccountReturnsCard({
           </Heading>
           <Flex align="center" gap="2">
             {account.inTotals ? null : (
-              <Badge color="gray" variant="soft">
+              <Badge color="gray" variant="soft" highContrast>
                 Excluded from totals
               </Badge>
             )}
             <Badge
               color={account.source === "stated" ? "jade" : "gray"}
               variant="soft"
+              highContrast
               data-returns-source=""
             >
               {SOURCE_BADGE[account.source]}

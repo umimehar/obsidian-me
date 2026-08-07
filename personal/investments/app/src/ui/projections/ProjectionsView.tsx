@@ -50,7 +50,7 @@ function maxRate(fitted: number): number {
  */
 function Disclaimer() {
   return (
-    <Callout.Root color="amber" variant="surface" data-projection-disclaimer="">
+    <Callout.Root color="amber" variant="surface" highContrast data-projection-disclaimer="">
       <Callout.Text>
         This is a scenario, not a forecast. It assumes one flat return every year for thirty years,
         which no real portfolio delivers, and it assumes contributions keep arriving under today's
@@ -111,7 +111,13 @@ function RateControl({
         onChange={(event) => onRateChange(Number(event.target.value) / 100)}
       />
       <Flex gap="2" wrap="wrap">
-        <Button size="1" variant="soft" data-apply-fitted="" onClick={() => onRateChange(fitted)}>
+        <Button
+          size="1"
+          variant="soft"
+          highContrast
+          data-apply-fitted=""
+          onClick={() => onRateChange(fitted)}
+        >
           {`Apply your fitted ${formatRate(fitted * 100)}`}
         </Button>
         <Button

@@ -172,6 +172,31 @@ describe("App accessibility", () => {
     expect(screen.getByRole("button", { name: /switch to (dark|light)/i })).toBeDefined();
   });
 
+  test("every soft badge is high contrast, on every tab that draws one", () => {
+    // Measured in Chrome, not here: at Radix's default soft weight the amber
+    // badge resolved to 4.25:1 and the jade badge to 4.28:1 against their own
+    // backgrounds in the light theme, both under the 4.5:1 AA floor for 12px
+    // text. `highContrast` moves the label to the accent's step 12.
+    //
+    // happy-dom resolves no stylesheet, so the ratio itself is not computable
+    // here and this asserts the class that carries it instead. It is a proxy,
+    // and it fails if the prop is dropped, which is the regression.
+    render(<App />);
+    const sweep = () => {
+      const badges = [...document.querySelectorAll(".rt-Badge.rt-variant-soft")];
+      for (const badge of badges) {
+        expect(badge.className).toContain("rt-high-contrast");
+      }
+      return badges.length;
+    };
+    let seen = sweep();
+    for (const label of ["Growth", "Wrappers", "Reconciliation"]) {
+      clickTab(label);
+      seen += sweep();
+    }
+    expect(seen).toBeGreaterThan(0);
+  });
+
   test("the finding groups are native disclosures, so they are keyboard reachable", () => {
     render(<App />);
     clickTab("Reconciliation");

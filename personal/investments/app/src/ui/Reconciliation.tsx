@@ -60,7 +60,7 @@ function Reason({ reason }: { reason: string }) {
   return (
     <Flex direction="column" gap="1" mt="2" data-recon-reason="">
       <Box>
-        <Badge color="jade" variant="soft">
+        <Badge color="jade" variant="soft" highContrast>
           Acknowledged
         </Badge>
       </Box>
@@ -151,7 +151,7 @@ function FindingRow({ finding }: { finding: ReportedFinding }) {
           <Text size="2" weight="bold">
             {finding.accountShortId} {finding.period}
           </Text>
-          <Badge color={finding.severity === "error" ? "red" : "amber"} variant="soft">
+          <Badge color={finding.severity === "error" ? "red" : "amber"} variant="soft" highContrast>
             {finding.severity === "error" ? "Error" : "Warning"}
           </Badge>
         </Flex>

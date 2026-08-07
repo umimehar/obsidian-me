@@ -32,7 +32,7 @@ function AccountRow({ account }: { account: RollupAccount }) {
       <Flex align="center" gap="2">
         <Text size="2">{account.label}</Text>
         {!account.inTotals ? (
-          <Badge color="gray" variant="soft">
+          <Badge color="gray" variant="soft" highContrast>
             Excluded from totals
           </Badge>
         ) : null}
