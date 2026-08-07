@@ -361,3 +361,78 @@ describe("the empty corpus", () => {
     expect(document.querySelector("[data-returns-card]")).toBeNull();
   });
 });
+
+/**
+ * A plotted rate's height is a figure, so it is pinned to the axis.
+ *
+ * Nothing else here pins magnitude. The zero-line test above asserts exact
+ * equality against the zero gridline and counts the six genuine 0.00% months,
+ * which pins sign and the zero line -- a compression toward zero leaves both
+ * intact, so understating every return by 30% passed all 34 of these tests.
+ *
+ * That matters more on this chart than on most. The shared-axis ruling already
+ * flattens four of the fourteen cards, so the drawn shape is carrying more
+ * weight than usual, and the tooltip and `aria-label` stay correct under a
+ * scale error -- a reader trusting the shape would get a different answer from
+ * a reader trusting the hover.
+ *
+ * `Gridlines` draws its labels from the same `scales` but by a separate code
+ * path from `toPlotPoints`, so two labelled ticks fix the mapping.
+ */
+describe("a plotted rate's height is a figure", () => {
+  /** The extremes `returnsRateExtent` builds the shared axis from, in percent units. */
+  const MANAGED_TFSA_MAX = 47.31;
+  const MANAGED_TFSA_MIN = -4.01;
+
+  /**
+   * `chartTestSupport`'s `tickY` reads the first match in the document, and
+   * fourteen cards each draw the same shared axis. Scoping to one card says
+   * which axis is meant rather than relying on them being identical.
+   */
+  function cardTickY(shortId: string, label: string): number {
+    const text = [...card(shortId).querySelectorAll("svg text")].find(
+      (node) => node.textContent === label,
+    );
+    if (text === undefined) throw new Error(`expected a ${label} tick on ${shortId}`);
+    const transform = text.parentElement?.getAttribute("transform") ?? "";
+    const y = Number(/translate\(0,([\d.]+)\)/.exec(transform)?.[1]);
+    if (Number.isNaN(y)) throw new Error(`could not read the ${label} tick on ${shortId}`);
+    return y;
+  }
+
+  /** Where a card's own labelled gridlines put a rate. The scale is linear, so two ticks fix it. */
+  function axisY(shortId: string, rate: number): number {
+    const zero = cardTickY(shortId, "0%");
+    return zero + (cardTickY(shortId, "20%") - zero) * (rate / 20);
+  }
+
+  function dotYs(shortId: string): number[] {
+    return [...card(shortId).querySelectorAll("[data-returns-dot]")].map((dot) =>
+      Number(dot.getAttribute("cy")),
+    );
+  }
+
+  test("the managed TFSA's 47.31% month is drawn at the axis's 47.31%", () => {
+    renderChart();
+    // Its highest month is its topmost dot, and the axis says where 47.31% is.
+    expect(Math.min(...dotYs("9710"))).toBeCloseTo(axisY("9710", MANAGED_TFSA_MAX), 6);
+  });
+
+  test("the managed TFSA's -4.01% month is drawn at the axis's -4.01%", () => {
+    renderChart();
+    // Below the zero line, so this also pins the sign of the mapping.
+    expect(Math.max(...dotYs("9710"))).toBeCloseTo(axisY("9710", MANAGED_TFSA_MIN), 6);
+  });
+
+  test("the drawn line and its dots agree, so the path is on the same scale", () => {
+    renderChart();
+    // The dots are placed from `toPlotPoints` output and the path is built
+    // from the same list, but a mutation to only one would leave a line that
+    // misses its own markers.
+    const vertices = [
+      ...(lines("9710")[0]?.getAttribute("d") ?? "").matchAll(/[ML](-?[\d.]+),(-?[\d.]+)/g),
+    ].map((match) => Number(match[2]));
+    expect(vertices.length).toBeGreaterThan(1);
+    expect(Math.min(...vertices)).toBeCloseTo(axisY("9710", MANAGED_TFSA_MAX), 6);
+  });
+});

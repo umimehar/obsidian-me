@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { loadAnalytics } from "../data";
 import { ValueOverTime } from "./ValueOverTime";
+import { tickY } from "./chartTestSupport";
 
 /**
  * These render against the real committed corpus (`data/analytics.json`), the
@@ -193,5 +194,86 @@ describe("ValueOverTime cursor", () => {
     // dot on the wrong one would point at the wrong figure to the tooltip.
     expect(cy).toBeCloseTo(marketY ?? Number.NaN, 6);
     expect(Math.abs(cy - (bookY ?? Number.NaN))).toBeGreaterThan(1);
+  });
+});
+
+/**
+ * A mark's position is a figure, so it is pinned to the axis and not to a
+ * sibling mark.
+ *
+ * The marker test above compares the cursor dot against a vertex of the market
+ * path. Both come from the same `scales.y`, so a mutation that scales every
+ * plotted y by one constant moves them together and that test stays green.
+ * That is the sibling-comparison failure mode, and this is the chart it
+ * matters most on: it is hoisted above the tabs, so it is on screen on all six
+ * panels, and a halved line would state half the portfolio while the tooltip,
+ * the accessible summary and the Overview total all still read $241,739.67.
+ *
+ * `scales.yTicks` and the gridline labels are a separate code path from
+ * `toPlotPoints`, so two labelled ticks give a reference the plot mapping
+ * cannot move.
+ */
+describe("a mark's position is a figure", () => {
+  /** The last stated month, Jun 2026, as `portfolioSeries.test.ts` pins it. */
+  const LAST_MARKET = 241739.67;
+  const LAST_BOOK = 223675.08;
+  /** The axis the corpus produces: it tops out at $241,739.67, so the scale nices to $250,000. */
+  const TOP_TICK = 250000;
+
+  /** Where the chart's own labelled gridlines put a dollar figure. The scale is linear, so two ticks fix it. */
+  function axisY(value: number): number {
+    const zero = tickY("$0");
+    return zero + (tickY(`$${TOP_TICK.toLocaleString("en-CA")}`) - zero) * (value / TOP_TICK);
+  }
+
+  function vertices(node: Element | undefined): number[] {
+    return [...(node?.getAttribute("d") ?? "").matchAll(/[ML](-?[\d.]+),(-?[\d.]+)/g)].map(
+      (match) => Number(match[2]),
+    );
+  }
+
+  function marketPath(): Element | undefined {
+    return [...document.querySelectorAll("path")].find(
+      (path) => path.getAttribute("stroke-dasharray") === null,
+    );
+  }
+
+  function bookPath(): Element | undefined {
+    return [...document.querySelectorAll("path")].find(
+      (path) => path.getAttribute("stroke-dasharray") !== null,
+    );
+  }
+
+  test("the market line's last vertex sits where the axis puts $241,739.67", () => {
+    render(<ValueOverTime series={loadAnalytics().series} />);
+    // The area closes down to the baseline and back, so its last real vertex
+    // is three from the end.
+    expect(vertices(marketPath()).at(-3)).toBeCloseTo(axisY(LAST_MARKET), 6);
+  });
+
+  test("the book cost line's last vertex sits where the axis puts $223,675.08", () => {
+    render(<ValueOverTime series={loadAnalytics().series} />);
+    expect(vertices(bookPath()).at(-1)).toBeCloseTo(axisY(LAST_BOOK), 6);
+  });
+
+  test("the cursor marker sits where the axis puts the figure it announces", () => {
+    // The marker is placed by its own `scales.y` call, separate from
+    // `toPlotPoints`, so it needs its own anchor rather than a comparison
+    // against the path it is supposed to sit on.
+    render(<ValueOverTime series={loadAnalytics().series} />);
+    fireEvent.keyDown(chart(), { key: "End" });
+    const cy = Number(document.querySelector("[data-cursor-marker]")?.getAttribute("cy"));
+    expect(cy).toBeCloseTo(axisY(LAST_MARKET), 6);
+    expect(label()).toContain("$241,739.67");
+  });
+
+  test("the first month, a real $0.00, sits on the axis's own $0 tick", () => {
+    // Jun 2023: two accounts open and unfunded. A stated zero, not a gap, so
+    // it is drawn -- and it must be drawn where the axis says zero is.
+    render(<ValueOverTime series={loadAnalytics().series} />);
+    fireEvent.keyDown(chart(), { key: "Home" });
+    const cy = Number(document.querySelector("[data-cursor-marker]")?.getAttribute("cy"));
+    expect(cy).toBeCloseTo(tickY("$0"), 6);
+    expect(label()).toContain("Market value $0.00");
   });
 });

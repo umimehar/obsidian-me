@@ -108,6 +108,11 @@ function RateControl({
         max={limit * 100}
         step="any"
         value={rate * 100}
+        // Without this the slider announces `value` raw, so applying the
+        // fitted rate has the label read 24.84% while the control says
+        // 24.839250232739074, a bare unitless number. One `formatRate` call
+        // for what is read and what is heard, the same rule the tooltips follow.
+        aria-valuetext={formatRate(rate * 100)}
         onChange={(event) => onRateChange(Number(event.target.value) / 100)}
       />
       <Flex gap="2" wrap="wrap">

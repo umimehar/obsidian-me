@@ -310,3 +310,42 @@ describe("nothing to project from", () => {
     expect(document.querySelector("[data-seam]")).toBeNull();
   });
 });
+
+/**
+ * The slider is the one control on the page whose announcement did not come
+ * from the same call as its visible text. A native `<input type="range">`
+ * announces `value` when it carries no `aria-valuetext`, so applying the
+ * fitted rate had the label read 24.84% while the control said
+ * 24.839250232739074 -- a bare unitless number, and a second formatting path
+ * for a figure already formatted once.
+ */
+describe("the slider announces the rate it shows", () => {
+  test("the announced value is the visible label's figure, not the raw float", () => {
+    renderView();
+    fireEvent.click(screen.getByRole("button", { name: /apply your fitted/i }));
+    const announced = slider().getAttribute("aria-valuetext");
+    expect(announced).toBe(formatRate(fitted.rate * 100));
+    expect(announced).toBe("24.84%");
+    // The raw value stays on the control, since that is what the input needs
+    // to position its thumb. It is the announcement that must not be it.
+    expect(announced).not.toBe(slider().value);
+    expect(announced).not.toContain("24.8392");
+  });
+
+  test("the announcement and the visible label are the same string", () => {
+    renderView();
+    // The fitted rate is taken from the engine rather than transcribed: a
+    // literal of it does not survive a double round trip.
+    for (const percent of [6, 12.5, fitted.rate * 100]) {
+      setRate(percent);
+      const announced = slider().getAttribute("aria-valuetext") ?? "";
+      expect(announced).not.toBe("");
+      expect(text("projection-rate-control")).toContain(announced);
+    }
+  });
+
+  test("it carries a unit, so the figure is not announced as a bare number", () => {
+    renderView();
+    expect(slider().getAttribute("aria-valuetext")).toBe("6.00%");
+  });
+});
