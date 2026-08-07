@@ -60,6 +60,22 @@ const ASSESSED_ROOM: Partial<Record<RegisteredGroup, Record<number, number>>> = 
   RRSP: { 2026: 70752 },
 };
 
+/**
+ * The published annual maximum for one group/year, ignoring `ASSESSED_ROOM`
+ * entirely -- null when the table has no figure for that group/year (RESP
+ * always, since it has no annual limit).
+ *
+ * Exists for the projection's `roomBase`, which seeds indexation from the
+ * PUBLISHED limit and must not pick up an assessed figure: an assessed
+ * figure already includes carry-forward, so compounding it forward would
+ * grow the carry-forward as if it were the annual limit itself. That is the
+ * opposite of what `resolveLimit` wants, which is why this is a second
+ * accessor rather than a flag on that one.
+ */
+export function genericAnnualLimit(group: RegisteredGroup, year: number): number | null {
+  return CONTRIBUTION_LIMITS[group]?.[year] ?? null;
+}
+
 /** Lifetime contribution caps, for the two groups that have one. TFSA and RRSP have none -- their room is entirely annual (plus carry-forward), never a lifetime dollar ceiling. */
 const LIFETIME_CONTRIBUTION_CAPS: Partial<Record<RegisteredGroup, number>> = {
   FHSA: 40000,
