@@ -102,6 +102,29 @@ describe("costGapTooltipLines", () => {
     const gapLine = lines.find((line) => line.startsWith("Gap")) ?? "";
     expect(gapLine).toContain("18,064.59");
   });
+
+  /**
+   * The gap line is not the only figure on the readout: the market value and
+   * book cost line repeats both underlying numbers, and `formatAxisCurrency`
+   * swapped in for `formatCurrency` there leaves the whole suite green
+   * without this assertion -- exactly the `$241,740` for `$241,739.67`
+   * defect this codebase has shipped four times before, on the one chart
+   * whose entire subject is comparing these two figures.
+   */
+  test("the market value and book cost line also carries full precision", () => {
+    const lines = costGapTooltipLines("2026-06", {
+      period: "2026-06",
+      marketValue: 241739.67,
+      bookCost: 223675.08,
+      accountCount: 11,
+      gap: 241739.67 - 223675.08,
+    });
+    const detailLine = lines.find((line) => line.includes("converted and approximate")) ?? "";
+    expect(detailLine).toContain("$241,739.67");
+    expect(detailLine).toContain("$223,675.08");
+    expect(detailLine).not.toContain("$241,740");
+    expect(detailLine).not.toContain("$223,675 ");
+  });
 });
 
 describe("against the real committed analytics.json", () => {

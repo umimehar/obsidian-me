@@ -3,7 +3,8 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { AccountSeries, MonthPoint } from "../../analytics/types";
 import type { AccountKind, ManagementStyle } from "../../store/mask";
 import type { Purpose } from "../../store/registry";
-import { loadAnalytics } from "../data";
+import { loadAnalytics, loadReconciliation } from "../data";
+import { formatCurrency } from "../format";
 import { CostGapChart } from "./CostGapChart";
 import { tickY } from "./chartTestSupport";
 
@@ -29,6 +30,25 @@ function announced(): string {
 
 function bars(sign: "above" | "below"): Element[] {
   return [...document.querySelectorAll(`[data-cost-gap-bar="${sign}"]`)];
+}
+
+/**
+ * How many distinct statements state a diverging book cost, and the largest
+ * divergence among them, both read off the real committed reconciliation
+ * report rather than transcribed. `ApproximationNote`'s copy states these
+ * two figures as prose; this derives them independently so a later change to
+ * the reconciliation data reddens this test rather than leaving the callout
+ * to quietly state a stale number.
+ */
+function bookCostDivergence(): { statementCount: number; maxDelta: number } {
+  const matches = loadReconciliation().findings.filter((finding) =>
+    finding.message.includes("book cost differs by"),
+  );
+  const statements = new Set(
+    matches.map((finding) => `${finding.accountShortId}:${finding.period}`),
+  );
+  const maxDelta = Math.max(...matches.map((finding) => Math.abs(finding.delta ?? 0)));
+  return { statementCount: statements.size, maxDelta };
 }
 
 afterEach(cleanup);
@@ -97,6 +117,16 @@ describe("the heading and the caveat", () => {
     expect(legend).toContain("Dashed border on every bar: derived here");
     expect(legend).toContain("real zero gap");
     expect(legend).toContain("no statement covers this month");
+  });
+
+  test("the callout's statement count and largest divergence are the reconciliation report's own figures", () => {
+    const { statementCount, maxDelta } = bookCostDivergence();
+    renderChart();
+    const note = document.querySelector("[data-cost-gap-provenance]")?.textContent ?? "";
+    expect(note).toContain(
+      `Book cost does not reconcile on ${statementCount} of the underlying statements`,
+    );
+    expect(note).toContain(`by up to ${formatCurrency(maxDelta)}`);
   });
 });
 
@@ -204,6 +234,32 @@ describe("bars: one per stated month, none for a gap", () => {
     expect(above?.getAttribute("fill")).not.toBe(below?.getAttribute("fill"));
   });
 
+  /**
+   * "Filled differently" alone is satisfied by an inversion that swaps which
+   * side gets which colour: gains drawing amber and losses drawing jade
+   * still passes an inequality check, while the legend beside "Bar above the
+   * line: market value ahead of book cost" keeps pointing at jade and now
+   * contradicts the chart. Anchoring each bar's fill to its own legend
+   * swatch's fill -- read from the DOM, not from the `ABOVE_FILL`/
+   * `BELOW_FILL` tokens -- is what pins the mark to the words rather than to
+   * a colour that could drift from them on both sides at once.
+   */
+  test("an above bar's fill matches the legend's above swatch, a below bar's the below swatch", () => {
+    const series = [
+      account({
+        maskedId: "a",
+        months: [month("2026-01", 1100, 1000), month("2026-02", 900, 1000)],
+      }),
+    ];
+    render(<CostGapChart series={series} />);
+    const above = bars("above")[0];
+    const below = bars("below")[0];
+    const aboveSwatch = document.querySelector('[data-legend-swatch="above"]');
+    const belowSwatch = document.querySelector('[data-legend-swatch="below"]');
+    expect(above?.getAttribute("fill")).toBe(aboveSwatch?.getAttribute("fill"));
+    expect(below?.getAttribute("fill")).toBe(belowSwatch?.getAttribute("fill"));
+  });
+
   test("every bar carries a dashed border, since none is a stated figure", () => {
     const series = [account({ maskedId: "a", months: [month("2026-01", 1100, 1000)] })];
     render(<CostGapChart series={series} />);
@@ -298,6 +354,23 @@ describe("against the real committed analytics.json", () => {
     expect(spoken).toContain("Gap $18,064.59, approximate");
     expect(spoken).not.toContain("Gap $18,065");
     expect(spoken).toContain("11 accounts reported this month");
+  });
+
+  /**
+   * The gap line is not the only figure the readout carries: the market
+   * value and book cost it is computed from are stated too, and both must
+   * keep their cents. `formatAxisCurrency` swapped in on that one line
+   * leaves every other assertion in this file green, which is exactly how
+   * this codebase has shipped an announced `$241,740` beside a rendered
+   * `$241,739.67` before.
+   */
+  test("2026-06 also announces the market value and book cost at full precision", () => {
+    renderChart();
+    fireEvent.keyDown(chart(), { key: "End" });
+    const spoken = announced();
+    expect(spoken).toContain("Market value $241,739.67, book cost $223,675.08");
+    expect(spoken).not.toContain("$241,740");
+    expect(spoken).not.toContain("$223,675 ");
   });
 
   test("the visible tooltip and the accessible name carry the same words", () => {

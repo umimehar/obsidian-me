@@ -82,11 +82,18 @@ function ApproximationNote() {
   );
 }
 
-/** A bar swatch the same fill the chart draws, so the words below it name something visible. */
-function BarSwatch({ fill }: { fill: string }) {
+/**
+ * A bar swatch the same fill the chart draws, so the words below it name
+ * something visible. `sign` carries onto the rect as `data-legend-swatch`,
+ * so a test can pin a bar's fill to the swatch its own legend row names it
+ * with, rather than to a colour token that could drift from the words
+ * without either side's own test noticing.
+ */
+function BarSwatch({ sign, fill }: { sign: "above" | "below"; fill: string }) {
   return (
     <svg width={28} height={12} aria-hidden="true" style={{ flex: "none" }}>
       <rect
+        data-legend-swatch={sign}
         x={0}
         y={0}
         width={28}
@@ -113,13 +120,13 @@ function Legend() {
   return (
     <Flex direction="column" gap="1" data-cost-gap-legend="">
       <Flex align="center" gap="2">
-        <BarSwatch fill={ABOVE_FILL} />
+        <BarSwatch sign="above" fill={ABOVE_FILL} />
         <Text size="2" color="gray">
           Bar above the line: market value ahead of book cost, an approximate unrealized gain.
         </Text>
       </Flex>
       <Flex align="center" gap="2">
-        <BarSwatch fill={BELOW_FILL} />
+        <BarSwatch sign="below" fill={BELOW_FILL} />
         <Text size="2" color="gray">
           Bar below the line: book cost ahead of market value, an approximate unrealized loss.
         </Text>
