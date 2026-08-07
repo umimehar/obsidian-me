@@ -197,8 +197,8 @@ function EmptyState() {
         Thirty year projection
       </Heading>
       <Text size="2" color="gray" data-projection-empty="">
-        No counted account states a market value, so there is nothing to project from. A projection
-        from zero would be a figure about nothing.
+        The accounts this projection covers state no market value to start from, so there is nothing
+        to project. A projection from zero would be a figure about nothing.
       </Text>
     </Flex>
   );

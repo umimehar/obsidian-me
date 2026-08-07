@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { AnalyticsOutput } from "../../analytics/build";
 import { projectYears } from "../../projection/engine";
 import { fittedReturnRate } from "../../projection/fittedRate";
-import { projectionInputs } from "../../projection/inputs";
+import { projectedAccounts, projectionInputs } from "../../projection/inputs";
 import { loadAnalytics } from "../data";
 import { formatCurrency, formatRate } from "../format";
 import { ProjectionsView } from "./ProjectionsView";
@@ -196,6 +196,25 @@ describe("the seam is real, not cosmetic: the stated half does not move", () => 
     expect(ticks()).toBe(before);
   });
 
+  /**
+   * A fixed axis is only honest if it is wide enough for every scenario the
+   * controls can reach. The fitted rate ends about fifty times higher than the
+   * default's, so an axis built from the default would draw that line off the
+   * top of the plot and clip a figure rather than state it.
+   */
+  test("no mark leaves the plot, even at the highest rate the controls offer", () => {
+    renderView();
+    fireEvent.click(screen.getByRole("button", { name: /Apply your fitted/ }));
+    const ys = [...pathD("projection-line").matchAll(/[ML][\d.-]+,([\d.-]+)/g)].map((match) =>
+      Number(match[1]),
+    );
+    expect(ys.length).toBeGreaterThan(1);
+    for (const y of ys) {
+      expect(y).toBeGreaterThanOrEqual(0);
+      expect(y).toBeLessThanOrEqual(294);
+    }
+  });
+
   test("the seam stays at the last statement period whatever the rate", () => {
     renderView();
     const seamPeriod = () =>
@@ -251,10 +270,37 @@ describe("nothing to project from", () => {
 
   test("says there is nothing to project from", () => {
     renderView(empty);
-    expect(text("projection-empty")).toContain("No counted account states a market value");
+    expect(text("projection-empty")).toContain("state no market value to start from");
     expect(text("projection-empty")).toContain(
       "A projection from zero would be a figure about nothing",
     );
+  });
+
+  /**
+   * The harder half of the same rule. A corpus whose covered accounts have
+   * been drawn down to zero still has contribution rules behind it, so the
+   * engine will happily compound a projection out of nothing but future
+   * contributions. There is no opening balance to project from, and the view
+   * has to say so rather than draw that.
+   */
+  test("a portfolio drawn down to zero is an empty state, not a projection from contributions", () => {
+    const account = projectedAccounts(analytics.series).find((one) => one.months.length > 1);
+    if (account === undefined) throw new Error("expected a covered account with a history");
+    const last = account.months[account.months.length - 1];
+    if (last === undefined) throw new Error("expected a stated month");
+    const drained: AnalyticsOutput = {
+      ...analytics,
+      series: [
+        { ...account, months: [...account.months.slice(0, -1), { ...last, marketValue: 0 }] },
+      ],
+      rollups: {
+        ...analytics.rollups,
+        registration: analytics.rollups.registration.map((group) => ({ ...group, total: 0 })),
+      },
+    };
+    renderView(drained);
+    expect(text("projection-empty")).toContain("state no market value to start from");
+    expect(document.querySelector("[data-projection-end-value]")).toBeNull();
   });
 
   test("draws no chart and states no end value", () => {
