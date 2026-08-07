@@ -58,6 +58,27 @@ describe("App", () => {
     expect(document.querySelectorAll("[data-cost-gap-bar]").length).toBeGreaterThan(0);
   });
 
+  /**
+   * The panel is the mount point, and three charts have been deletable from
+   * their panel with the suite green. This asserts the projections view is
+   * actually reachable from the tab, drawing both halves of its seam, and
+   * defaulting to the 6% assumption rather than the fitted rate.
+   */
+  test("the projections tab holds the projection, seam and all", () => {
+    render(<App />);
+    clickTab("Projections");
+    expect(document.querySelector("[data-projection-chart]")).not.toBeNull();
+    expect(document.querySelector("[data-seam]")?.getAttribute("data-seam-period")).toBe("2026-06");
+    expect(document.querySelector("[data-history-line]")).not.toBeNull();
+    expect(document.querySelector("[data-projection-line]")).not.toBeNull();
+    expect(document.querySelector("[data-projection-rate]")?.textContent).toBe(
+      "Rate in use: 6.00% a year.",
+    );
+    expect(document.querySelector("[data-projection-end-value]")?.textContent).toBe(
+      "$7,636,455.38",
+    );
+  });
+
   test("renders the overview, the registered wrappers and the tax view together", () => {
     render(<App />);
     expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");

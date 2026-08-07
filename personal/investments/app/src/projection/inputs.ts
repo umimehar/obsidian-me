@@ -89,6 +89,23 @@ function accountsIn(series: readonly AccountSeries[], group: ProjectionGroup): A
 }
 
 /**
+ * The counted accounts the projection actually covers, in `analytics.series`
+ * order.
+ *
+ * The projection is not a forecast of the whole portfolio: a non-registered or
+ * crypto account has no contribution rule and no plan behind it, so it holds
+ * money the engine has nothing to say about. A view that drew the whole
+ * portfolio's history and then a projection of a subset would put a step in
+ * its own line at the seam. This is the one place that membership is decided,
+ * so the history a view draws and the opening balances the engine compounds
+ * cover exactly the same accounts.
+ */
+export function projectedAccounts(series: readonly AccountSeries[]): AccountSeries[] {
+  const kinds = new Set(PROJECTION_GROUP_ORDER.flatMap((group) => PROJECTION_KINDS[group]));
+  return series.filter((account) => account.inTotals && kinds.has(account.kind));
+}
+
+/**
  * The latest period any counted account reports, `YYYY-MM`, or null when no
  * counted account reports one. Periods sort correctly as plain strings.
  *

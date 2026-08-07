@@ -12,6 +12,7 @@ import { ReturnsChart } from "./charts/ReturnsChart";
 import { ValueOverTime } from "./charts/ValueOverTime";
 import { grandTotal, latestPeriod, loadAnalytics, loadReconciliation } from "./data";
 import { formatCurrency } from "./format";
+import { ProjectionsView } from "./projections/ProjectionsView";
 import { ErrorBoundary } from "./states/ErrorBoundary";
 import type { TabId } from "./useHashTab";
 import { RegisteredView } from "./wrappers/RegisteredView";
@@ -41,20 +42,6 @@ function yearsCovered(analytics: AnalyticsOutput): number[] {
     .map(Number)
     .filter(Number.isInteger)
     .sort((a, b) => a - b);
-}
-
-/** A tab with nothing built yet. A named heading rather than a blank region, so the tab does not read as broken. */
-function EmptyPanel({ title, note }: { title: string; note: string }) {
-  return (
-    <Flex direction="column" gap="2">
-      <Heading size="5" as="h2">
-        {title}
-      </Heading>
-      <Text size="2" color="gray">
-        {note}
-      </Text>
-    </Flex>
-  );
 }
 
 /** The year picker shared by the wrappers and tax panels, so the two views always report the same year. */
@@ -112,12 +99,7 @@ function Dashboard() {
         <TaxView analytics={analytics} year={year} />
       </YearScopedPanel>
     ),
-    projections: (
-      <EmptyPanel
-        title="Projections"
-        note="A thirty year registered-room projection is coming in a later task."
-      />
-    ),
+    projections: <ProjectionsView analytics={analytics} />,
     reconciliation: <Reconciliation report={report} />,
   };
 
