@@ -138,6 +138,15 @@ function lineFor(lines: readonly RoomLine[], group: RegisteredGroup): RoomLine |
  * someone over-contributed. Grants stay out either way: a `GRANT` credit is
  * government money, never the subscriber's, and it lands as an activity
  * credit rather than in the cash block's `paidIn.deposits`.
+ *
+ * The asymmetry is deliberate: RESP is the ONLY group read from deposits.
+ * TFSA, RRSP and FHSA read the room line's `used`, because deposits
+ * over-count there. Money routes through a hub account on its way to the
+ * RRSPs, so the same dollar lands as a deposit twice -- the CSV-era pipeline
+ * this app replaces read gross deposits as the room basis once and inflated
+ * 2026 RRSP from the real $33,000 to $52,666. The RESP has no hub in front
+ * of it, so it has no such double count to avoid, and reading its deposits
+ * is safe as well as correct.
  */
 function contributedThisYear(
   series: readonly AccountSeries[],

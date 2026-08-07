@@ -92,10 +92,13 @@ describe("projectionInputs, the RESP deposits-not-contributions trap", () => {
     expect(inputs.contributedThisYear.RESP).toBe(3000);
   });
 
-  test("the $450 that tagged contributions alone would miss is included", () => {
+  test("the derived figure sits $450 above the corpus's $2,550 of CONT rows", () => {
     // $2,550 is what the three CONT rows sum to; the two DEP rows carry the
-    // rest. Understating money already in overstates room left, which is the
-    // direction that gets someone over-contributed.
+    // remaining $450. This records the size of the gap, and nothing more --
+    // it passes whichever source the code reads, because `series.ts` already
+    // folds DEP into `contributionsByYear`, so both reconcile to 3,000 here.
+    // The guarantee that deposits are what is read lives in the next test,
+    // on a payload where the two sources disagree.
     expect((inputs.lifetimeContributed.RESP ?? 0) - 2550).toBe(450);
   });
 

@@ -1,4 +1,3 @@
-import { buildCashflowSeries } from "../analytics/cashflowSeries";
 import { buildPortfolioSeries } from "../analytics/portfolioSeries";
 import type { AccountSeries } from "../analytics/types";
 
@@ -47,9 +46,34 @@ function countedAccounts(series: readonly AccountSeries[]): number {
   ).length;
 }
 
-/** Net external money per period: deposits less withdrawals, over the counted accounts. */
+/**
+ * Net external money per period, summed over exactly the account-months that
+ * contributed a market value to that same period's portfolio total.
+ *
+ * Deliberately not `buildCashflowSeries`, whose membership rule is wider: it
+ * counts a month whenever a counted account has a `MonthPoint` at all. That
+ * is right for a cashflow chart, where a CASH-template statement's deposits
+ * are real money moved and belong on the bars. It is wrong here.
+ * `buildPortfolioSeries` skips a month whose `marketValue` is null, so a
+ * counted account filing a CASH-template statement with deposits would have
+ * its flow subtracted from a portfolio total that money never entered --
+ * understating growth and depressing the rate, silently.
+ *
+ * The corpus has no such month today: all 37 periods agree between the two
+ * aggregations. This matches the membership rules so they keep agreeing if
+ * one ever appears, which a test alone would only have recorded.
+ */
 function netFlowsByPeriod(series: readonly AccountSeries[]): Map<string, number> {
-  return new Map(buildCashflowSeries(series).map((p) => [p.period, p.deposits - p.withdrawals]));
+  const byPeriod = new Map<string, number>();
+  for (const account of series) {
+    if (!account.inTotals) continue;
+    for (const month of account.months) {
+      if (month.marketValue === null || month.bookCost === null) continue;
+      const net = month.deposits - month.withdrawals;
+      byPeriod.set(month.period, (byPeriod.get(month.period) ?? 0) + net);
+    }
+  }
+  return byPeriod;
 }
 
 interface Aggregate {

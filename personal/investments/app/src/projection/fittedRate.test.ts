@@ -124,6 +124,19 @@ describe("fittedReturnRate, guards", () => {
     expect(fittedReturnRate(worse).rate).toBe(-1);
   });
 
+  test("a counted account's cash-only month contributes no flow to net out", () => {
+    // A CASH-template statement states deposits but no portfolio, so
+    // `buildPortfolioSeries` skips the month while a cashflow aggregation
+    // would keep it. Netting that $500 against a total it never entered
+    // would read 2024-02 as 1,100 - 500 - 1,000 = -400 of growth, a -99.8%
+    // year on a portfolio that grew 10% in the month.
+    const withCashOnly = [
+      account([month("2024-01", 1000), month("2024-02", 1100)]),
+      account([month("2024-02", null, 500)]),
+    ];
+    expect(fittedReturnRate(withCashOnly).rate).toBeCloseTo(1.1 ** 12 - 1, 10);
+  });
+
   test("excluded accounts contribute neither value nor flow", () => {
     const withChequing = [
       account([month("2024-01", 1000), month("2024-02", 1100)]),
