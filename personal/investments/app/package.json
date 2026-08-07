@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check src",
     "check": "biome check src && tsc --noEmit && bun test",
+    "contrast": "bun run src/tools/contrast/run.ts",
     "dev": "vite",
     "build:ui": "vite build"
   },
@@ -23,6 +24,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",
+    "playwright": "1.62.1",
     "typescript": "^5.7.2",
     "vite": "^8.2.0"
   },

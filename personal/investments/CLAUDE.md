@@ -10,6 +10,19 @@
 >
 > When the rebuild replaces the page, delete `scripts/` and everything below this banner.
 
+## The dashboard app's gates (`app/`)
+
+Two commands, and they are deliberately not one.
+
+- `bun run check` — biome, `tsc --noEmit`, `bun test`. The per-commit gate. It must stay clean and it runs in about ten seconds.
+- `bun run contrast` — renders the dashboard in Chromium on all six tabs in both themes and **measures** the WCAG AA contrast of every rendered run of text against the opaque colour actually painted behind it. About fifteen seconds, and it needs a browser: `bunx playwright install chromium` once, then `bun run contrast`. Run it before shipping anything that changes a colour, a font size, a font weight, or adds a badge, a callout or a chart label.
+
+It is out of `bun run check` on purpose. Folding a browser launch and a dev server into the gate that runs on every commit trades ten seconds for twenty-five, on every commit, to catch a class of regression that only a colour change can cause. The cost is that a colour change with no `bun run contrast` behind it can land green; that is what the line above exists to prevent.
+
+`src/ui/App.a11y.test.tsx` asserts that every soft badge carries `highContrast`. That is a **proxy**, and its own comment says so: happy-dom resolves no stylesheet, so no ratio is computable there. It catches the prop being deleted. It cannot catch a Radix accent scale shifting a step, or a new badge in a colour nobody swept. `bun run contrast` is the check that can, and the two are not redundant.
+
+The colour arithmetic lives in `src/tools/contrast/color.ts` and `audit.ts` and is unit tested; only `collect.ts` runs in the page, and it measures nothing — it reports computed strings so the maths stays testable without a browser. Radix paints most surfaces in alpha steps (`--gray-a2`, `--jade-a3`) and every SVG chart label in `--gray-a11`, so reading one parent's `background-color` gives a translucent colour and a wrong answer; the ancestor chain is composited instead. Large text is 24px, or 18.66px at weight 700 — not 18.66px at any weight, which would drop the requirement from 4.5 to 3.0 and pass real failures.
+
 Personal finance dashboard built from Wealthsimple monthly statement CSVs. A bun/TypeScript pipeline turns the raw exports into a masked datastore, analytics, and one self-contained offline HTML page (`notes/index.html`). These instructions capture hard-won findings about the data and the reporting semantics. Read them before changing analytics, prices, or the numbers shown on the page.
 
 ## Pipeline and commands
