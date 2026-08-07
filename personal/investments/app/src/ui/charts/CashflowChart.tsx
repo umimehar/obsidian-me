@@ -11,7 +11,13 @@ import {
 } from "./cashflowSeries";
 import { formatAxisCurrency, formatPeriodLabel } from "./plot";
 import { useRevealMotion } from "./reveal";
-import { type ChartPoint, type ChartScales, buildSignedScales, periodToDate } from "./scales";
+import {
+  type ChartPoint,
+  type ChartScales,
+  buildSignedScales,
+  monthBandWidth,
+  periodToDate,
+} from "./scales";
 import { useSvgId } from "./svgId";
 import { CursorMarks, cursorSlots, useChartCursor } from "./useChartCursor";
 
@@ -82,12 +88,6 @@ function toDomainPoints(points: readonly CashflowPoint[]): ChartPoint[] {
     ...points.map((p) => ({ period: p.period, value: p.deposits })),
     ...points.map((p) => ({ period: p.period, value: -p.withdrawals })),
   ];
-}
-
-/** How wide one month's band is, so bars stay legible whether the range is six months or six years. */
-function monthBandWidth(monthCount: number): number {
-  if (monthCount <= 0) return 0;
-  return (INNER_WIDTH / monthCount) * BAR_WIDTH_FRACTION;
 }
 
 /** The y ticks, with the zero line drawn heavier because it is the baseline every bar grows from. */
@@ -207,7 +207,10 @@ export function CashflowChart({ series }: CashflowChartProps) {
   );
   const slots = useMemo(() => cursorSlots(extent, scales), [extent, scales]);
   const cursor = useChartCursor(points, slots, CURSOR_GEOMETRY);
-  const bandWidth = useMemo(() => monthBandWidth(slots.length), [slots.length]);
+  const bandWidth = useMemo(
+    () => monthBandWidth(slots.length, INNER_WIDTH, BAR_WIDTH_FRACTION),
+    [slots.length],
+  );
 
   if (scales === null || extent === null) {
     return <EmptyState />;

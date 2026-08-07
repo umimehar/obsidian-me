@@ -49,6 +49,15 @@ describe("App", () => {
     expect(document.querySelectorAll('[data-cashflow-bar="deposit"]').length).toBeGreaterThan(0);
   });
 
+  test("the growth tab also holds the cost gap chart", () => {
+    render(<App />);
+    clickTab("Growth");
+    expect(
+      screen.getByRole("heading", { name: "Value at market against value at cost" }),
+    ).toBeDefined();
+    expect(document.querySelectorAll("[data-cost-gap-bar]").length).toBeGreaterThan(0);
+  });
+
   test("renders the overview, the registered wrappers and the tax view together", () => {
     render(<App />);
     expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");

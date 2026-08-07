@@ -5,6 +5,7 @@ import type { AccountKind, ManagementStyle } from "../../store/mask";
 import type { Purpose } from "../../store/registry";
 import { loadAnalytics } from "../data";
 import { CashflowChart } from "./CashflowChart";
+import { tickY } from "./chartTestSupport";
 
 /**
  * Against the real committed corpus. The figures pinned here -- 2023-06's
@@ -29,26 +30,6 @@ function announced(): string {
 
 function bars(kind: "deposit" | "withdrawal"): Element[] {
   return [...document.querySelectorAll(`[data-cashflow-bar="${kind}"]`)];
-}
-
-/**
- * The y a gridline's own scale places a labelled tick at, read off the DOM
- * rather than recomputed. `Gridlines` and `Bars` are drawn from the same
- * `scales` object, but by separate code paths, so anchoring a bar's height
- * to a tick's position -- rather than only to another bar's height -- is
- * what catches a mutation that scales every bar by one constant factor:
- * that leaves every bar-to-bar ratio unchanged, but leaves a bar disagreeing
- * with the axis it is drawn against.
- */
-function tickY(label: string): number {
-  const text = [...document.querySelectorAll("svg text")].find(
-    (node) => node.textContent === label,
-  );
-  if (text === undefined) throw new Error(`expected a ${label} tick`);
-  const transform = text.parentElement?.getAttribute("transform") ?? "";
-  const y = Number(/translate\(0,([\d.]+)\)/.exec(transform)?.[1]);
-  if (Number.isNaN(y)) throw new Error(`could not read the ${label} tick's position`);
-  return y;
 }
 
 afterEach(cleanup);

@@ -7,6 +7,7 @@ import { Reconciliation } from "./Reconciliation";
 import { Tabs } from "./Tabs";
 import { CashflowChart } from "./charts/CashflowChart";
 import { ContributionsChart } from "./charts/ContributionsChart";
+import { CostGapChart } from "./charts/CostGapChart";
 import { ReturnsChart } from "./charts/ReturnsChart";
 import { ValueOverTime } from "./charts/ValueOverTime";
 import { grandTotal, latestPeriod, loadAnalytics, loadReconciliation } from "./data";
@@ -98,6 +99,7 @@ function Dashboard() {
         <ReturnsChart returns={analytics.returns} series={analytics.series} />
         <ContributionsChart analytics={analytics} />
         <CashflowChart series={analytics.series} />
+        <CostGapChart series={analytics.series} />
       </Flex>
     ),
     wrappers: (

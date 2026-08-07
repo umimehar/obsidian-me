@@ -97,6 +97,20 @@ export function buildScales(
 }
 
 /**
+ * How wide one month's band is on a bar chart, so bars stay legible whether
+ * the range is six months or six years.
+ *
+ * Shared by every bar chart drawn one month at a time -- the cashflow chart
+ * and the cost gap chart both space their bars this way, and a second copy of
+ * this arithmetic is how the two would end up spacing bars differently
+ * without either author noticing.
+ */
+export function monthBandWidth(monthCount: number, innerWidth: number, fraction: number): number {
+  if (monthCount <= 0) return 0;
+  return (innerWidth / monthCount) * fraction;
+}
+
+/**
  * `buildScales` for a quantity that goes negative.
  *
  * The y domain runs from the minimum to the maximum, widened to include zero
