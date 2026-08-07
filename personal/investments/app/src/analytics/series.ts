@@ -1,3 +1,4 @@
+import type { AccountKind } from "../store/mask";
 import type { AccountRecord } from "../store/registry";
 import type { Contributions, Statement } from "../types";
 import type { AccountSeries, MonthPoint } from "./types";
@@ -15,11 +16,52 @@ import type { AccountSeries, MonthPoint } from "./types";
  */
 const CONTRIBUTION_ACTIVITY_CODES = new Set(["CONT", "DEP", "EFT", "AFT_IN", "E_TRFIN", "TRFIN"]);
 
-/** Sums this statement's contribution-shaped activity credits (see `CONTRIBUTION_ACTIVITY_CODES`). */
-function deriveContributionFromActivity(s: Statement): number {
+/**
+ * The wrappers where a derived figure lands on a CRA annual room bar, so
+ * `DEP` must not count toward it. RESP is deliberately absent: see
+ * `contributionCodesFor`.
+ */
+const ANNUAL_ROOM_KINDS: ReadonlySet<AccountKind> = new Set<AccountKind>([
+  "TFSA",
+  "RRSP",
+  "SpousalRRSP",
+  "FHSA",
+]);
+
+/**
+ * `CONTRIBUTION_ACTIVITY_CODES`, minus `DEP` for the wrappers that carry an
+ * annual CRA room bar.
+ *
+ * Every statement's own activity-code legend prints `DEP - Non-contribution
+ * deposit`. Counting it toward `rooms[].used` for a TFSA, RRSP or FHSA would
+ * have this app overrule the document, and land the result on a room bar as
+ * money the statement explicitly says was not a contribution. Deriving a
+ * figure from activity is already a fallback; it must not also disagree with
+ * the page it is derived from.
+ *
+ * RESP keeps `DEP`, and the corpus is why: its $450 arrived under that code,
+ * and CRA counts every dollar a subscriber puts into an RESP against the
+ * $50,000 lifetime cap however it arrived. The RESP has no annual room bar
+ * for this to inflate either.
+ *
+ * No account in today's corpus changes: the only `DEP` credits anywhere are
+ * the RESP's $450 and a chequing account's, and neither is affected. This
+ * closes a hazard the trailing-month derivation opened rather than fixing a
+ * live wrong figure -- before it, `DEP` only ever reached wholly-derived
+ * accounts, none of which had an annual room bar.
+ */
+function contributionCodesFor(kind: AccountKind): ReadonlySet<string> {
+  if (!ANNUAL_ROOM_KINDS.has(kind)) return CONTRIBUTION_ACTIVITY_CODES;
+  const codes = new Set(CONTRIBUTION_ACTIVITY_CODES);
+  codes.delete("DEP");
+  return codes;
+}
+
+/** Sums this statement's contribution-shaped activity credits (see `contributionCodesFor`). */
+function deriveContributionFromActivity(s: Statement, codes: ReadonlySet<string>): number {
   let total = 0;
   for (const row of s.activity) {
-    if (CONTRIBUTION_ACTIVITY_CODES.has(row.code)) total += row.credit;
+    if (codes.has(row.code)) total += row.credit;
   }
   return total;
 }
@@ -144,12 +186,13 @@ function lastStatedIndexByYear(statements: readonly Statement[]): Map<number, nu
 function unstatedContribution(
   s: Statement,
   coveredByLaterStatedFigure: boolean,
+  codes: ReadonlySet<string>,
 ): ContributionFields {
   if (coveredByLaterStatedFigure) {
     return { contributions: null, contributionMonthsSpanned: 1, contributionsSource: null };
   }
   return {
-    contributions: deriveContributionFromActivity(s),
+    contributions: deriveContributionFromActivity(s, codes),
     contributionMonthsSpanned: 1,
     contributionsSource: "derived",
   };
@@ -171,9 +214,10 @@ function unstatedContribution(
  * figure after it. The two never overlap: derivation only happens past the
  * year's last stated index.
  */
-function buildStatedMonths(statements: readonly Statement[]): MonthsResult {
+function buildStatedMonths(statements: readonly Statement[], kind: AccountKind): MonthsResult {
   const months: MonthPoint[] = [];
   const contributionsByYear: Record<string, number> = {};
+  const codes = contributionCodesFor(kind);
   const lastStated = lastStatedIndexByYear(statements);
   let last: { year: number; month: number; yearToDate: number } | null = null;
 
@@ -184,7 +228,7 @@ function buildStatedMonths(statements: readonly Statement[]): MonthsResult {
 
     if (yearToDate === null) {
       const stop = lastStated.get(current.year);
-      fields = unstatedContribution(s, stop !== undefined && index < stop);
+      fields = unstatedContribution(s, stop !== undefined && index < stop, codes);
       const derived = fields.contributions;
       if (derived !== null) {
         contributionsByYear[current.year] = (contributionsByYear[current.year] ?? 0) + derived;
@@ -216,13 +260,14 @@ function buildStatedMonths(statements: readonly Statement[]): MonthsResult {
  * `contributionsByYear` sums them directly instead of reading off the last
  * one the way `buildStatedMonths` does.
  */
-function buildDerivedMonths(statements: readonly Statement[]): MonthsResult {
+function buildDerivedMonths(statements: readonly Statement[], kind: AccountKind): MonthsResult {
   const months: MonthPoint[] = [];
   const contributionsByYear: Record<string, number> = {};
+  const codes = contributionCodesFor(kind);
 
   for (const s of statements) {
     const { year } = parsePeriod(s.source.period);
-    const contributions = deriveContributionFromActivity(s);
+    const contributions = deriveContributionFromActivity(s, codes);
     contributionsByYear[year] = (contributionsByYear[year] ?? 0) + contributions;
 
     months.push({
@@ -244,9 +289,11 @@ function buildDerivedMonths(statements: readonly Statement[]): MonthsResult {
  * `buildStatedMonths` -- and falls back to deriving from activity,
  * flagged as such, only when it prints none at all.
  */
-function buildMonths(statements: readonly Statement[]): MonthsResult {
+function buildMonths(statements: readonly Statement[], kind: AccountKind): MonthsResult {
   const statesContributions = statements.some((s) => s.contributions !== null);
-  return statesContributions ? buildStatedMonths(statements) : buildDerivedMonths(statements);
+  return statesContributions
+    ? buildStatedMonths(statements, kind)
+    : buildDerivedMonths(statements, kind);
 }
 
 /**
@@ -287,7 +334,7 @@ export function buildSeries(
 
   return accounts.map((account) => {
     const picked = pickStatementsByPeriod(byAccount.get(account.maskedId) ?? []);
-    const { months, contributionsByYear } = buildMonths(picked);
+    const { months, contributionsByYear } = buildMonths(picked, account.kind);
     return {
       maskedId: account.maskedId,
       shortId: account.shortId,

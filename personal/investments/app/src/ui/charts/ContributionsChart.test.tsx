@@ -271,7 +271,7 @@ describe("a wrapper the corpus covers in no year at all", () => {
   test("the provenance note counts only the wrappers that state something", () => {
     renderWithoutTfsaAccounts();
     const text = document.querySelector("[data-contributions-provenance]")?.textContent ?? "";
-    expect(text).toContain("1 of 3 wrappers");
+    expect(text).toContain("1 of 3 wrappers states every figure it draws");
     expect(text).not.toContain("of 4 wrappers");
   });
 });
@@ -354,12 +354,15 @@ describe("stated and derived are drawn differently, and said in words", () => {
   test("the provenance note counts the wrappers rather than asserting a number", () => {
     renderChart();
     const text = document.querySelector("[data-contributions-provenance]")?.textContent ?? "";
-    expect(text).toContain("1 of 4 wrappers");
+    expect(text).toContain("1 of 4 wrappers states every figure it draws");
     expect(text).toContain("RESP");
     expect(text).toContain("excludes government grants");
-    // "at least one", not "no statement states a figure at all": the TFSA
-    // and RRSP print figures for most of their months and derive the rest.
-    expect(text).toContain("at least one drawn year is reconstructed here");
+    // Neither "no statement states a figure at all" nor "a whole drawn year
+    // is reconstructed" is true of the TFSA, which prints $21,431.75 of its
+    // $25,000. The note may not imply a printed total is a reconstruction.
+    expect(text).toContain("not every figure these draw is printed on a statement");
+    expect(text).not.toContain("no statement states a contributions figure at all");
+    expect(text).not.toContain("at least one drawn year is reconstructed");
   });
 });
 

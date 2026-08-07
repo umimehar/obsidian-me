@@ -351,7 +351,7 @@ describe("buildSeries contributions", () => {
 });
 
 describe("buildSeries derived contributions", () => {
-  test("an account that states no contributions block on any statement derives from CONT and DEP activity", () => {
+  test("an account that states no contributions block on any statement derives from CONT and EFT activity", () => {
     const jan = statement({
       source: src("2026-01", "BROKERAGE"),
       contributions: null,
@@ -360,7 +360,7 @@ describe("buildSeries derived contributions", () => {
     const may = statement({
       source: src("2026-05", "BROKERAGE"),
       contributions: null,
-      activity: [activity("DEP", 200)],
+      activity: [activity("EFT", 200)],
     });
 
     const [series] = buildSeries([jan, may], [account()]);
@@ -368,6 +368,46 @@ describe("buildSeries derived contributions", () => {
     expect(series?.months[0]).toMatchObject({ contributions: 500, contributionsSource: "derived" });
     expect(series?.months[1]).toMatchObject({ contributions: 200, contributionsSource: "derived" });
     expect(series?.contributionsByYear).toEqual({ "2026": 700 });
+  });
+
+  test("a DEP credit never reaches a wrapper with an annual room bar, whatever route derived it", () => {
+    // Every statement's own legend prints "DEP - Non-contribution deposit".
+    // Counting it against TFSA, RRSP, SpousalRRSP or FHSA room would put
+    // money on a room bar that the document says was not a contribution.
+    const dep = (period: string) =>
+      statement({
+        source: src(period, "BROKERAGE"),
+        contributions: null,
+        activity: [activity("DEP", 900, { date: `${period}-04` })],
+      });
+    const kinds = ["TFSA", "RRSP", "SpousalRRSP", "FHSA"] as const;
+
+    for (const kind of kinds) {
+      // Wholly derived: no statement states a figure anywhere.
+      const [derivedRoute] = buildSeries([dep("2026-05")], [account({ kind })]);
+      expect(derivedRoute?.months[0]?.contributions).toBe(0);
+
+      // The trailing-hole route: a stated figure, then a month with none.
+      const stated = statement({ source: src("2026-01", "BROKERAGE"), contributions: ytd(100) });
+      const [statedRoute] = buildSeries([stated, dep("2026-05")], [account({ kind })]);
+      expect(statedRoute?.months[1]?.contributions).toBe(0);
+      expect(statedRoute?.contributionsByYear).toEqual({ "2026": 100 });
+    }
+  });
+
+  test("the RESP still counts a DEP credit, the one wrapper CRA counts every dollar into", () => {
+    // The corpus case: $450 of real RESP contributions arrived under DEP,
+    // and the $50,000 lifetime cap counts a subscriber's money however it
+    // arrived. The RESP has no annual room bar for this to inflate.
+    const may = statement({
+      source: src("2026-05", "BROKERAGE"),
+      contributions: null,
+      activity: [activity("DEP", 450)],
+    });
+
+    const [series] = buildSeries([may], [account({ kind: "RESP" })]);
+
+    expect(series?.months[0]).toMatchObject({ contributions: 450, contributionsSource: "derived" });
   });
 
   test("a GRANT credit does not count toward derived contributions", () => {

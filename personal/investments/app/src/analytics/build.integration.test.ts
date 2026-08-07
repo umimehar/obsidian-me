@@ -40,6 +40,44 @@ describe.if(existsSync(DATASTORE_PATH))("analytics over the real datastore", () 
     expect(purposeTotal).toBeCloseTo(registrationTotal, 2);
   });
 
+  /**
+   * The live path, not the committed artifact. Every other corpus test reads
+   * `data/analytics.json` through `loadAnalytics`, so reverting the
+   * contributions fix in `series.ts` leaves them all green until someone
+   * regenerates. These two recompute from the datastore, so they redden on a
+   * source change alone.
+   *
+   * Both figures come from months Wealthsimple printed no Contributions
+   * panel for: 2318's $1,000 at 2025-10 closes the RRSP against the notice
+   * of assessment's $60,191 less $45,191 unused, and d77c's $4,000 at
+   * 2025-10 is the same defect on the TFSA.
+   */
+  test("2025's RRSP and TFSA room includes the contributions no statement states a total for", async () => {
+    const output = await build();
+    const lines = output.rooms["2025"] ?? [];
+    expect(lines.find((line) => line.group === "RRSP")?.used).toBe(15000);
+    expect(lines.find((line) => line.group === "TFSA")?.used).toBe(25000);
+  });
+
+  test("2025's RRSP room is assessed at 60,191, leaving a positive 45,191", async () => {
+    const output = await build();
+    const rrsp = (output.rooms["2025"] ?? []).find((line) => line.group === "RRSP");
+    expect(rrsp?.assessed).toBe(true);
+    expect(rrsp?.limit).toBe(60191);
+    expect(rrsp?.remaining).toBe(45191);
+    expect(rrsp?.remaining).toBeGreaterThan(0);
+  });
+
+  test("no room line in any year carries a negative remaining", async () => {
+    const output = await build();
+    for (const lines of Object.values(output.rooms)) {
+      for (const line of lines) {
+        if (line.remaining === null) continue;
+        expect(line.remaining).toBeGreaterThanOrEqual(0);
+      }
+    }
+  });
+
   test("no account appears in more than one registration group", async () => {
     const output = await build();
     const seen = new Set<string>();

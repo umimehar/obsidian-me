@@ -154,20 +154,31 @@ function Legend() {
  * the page. A wrapper the corpus has no statement for states nothing, and
  * folding it into the stated count would have this note claim it prints
  * figures it does not have.
+ *
+ * The wording has to hold at both ends of the same count, which is what
+ * makes it fiddly. `isDerived` is true of a wrapper with one reconstructed
+ * MONTH (the TFSA, which prints $21,431.75 of its $25,000) and equally of
+ * one that prints nothing anywhere (the RESP). "No statement states a figure
+ * at all" is false of the first; "at least one drawn year is reconstructed"
+ * is false of the first too, since one month is not a year. So this counts
+ * the wrappers that print EVERY figure they draw, and says of the rest only
+ * that not all of it is printed, which is exactly true of both.
  */
 function ProvenanceNote({ wrappers }: { wrappers: readonly WrapperContributions[] }) {
   const drawable = wrappers.filter((wrapper) => drawnYearCount(wrapper) > 0);
   const derived = drawable.filter((wrapper) => isDerived(wrapper));
   const stated = drawable.length - derived.length;
+  const printsEverything =
+    stated === 1 ? "states every figure it draws" : "state every figure they draw";
 
   return (
     <Callout.Root color="gray" variant="surface" data-contributions-provenance="">
       <Callout.Text>
-        {stated} of {drawable.length} wrappers state their contribution figures on the statements,
-        as a year-to-date total this reads month over month as a delta.
+        {stated} of {drawable.length} wrappers {printsEverything} on the statements, as a
+        year-to-date total this reads month over month as a delta.
         {derived.length === 0
           ? ""
-          : ` ${derived.map((wrapper) => wrapper.group).join(", ")}: at least one drawn year is reconstructed here from contribution and deposit activity rows rather than printed as a year-to-date total, and excludes government grants.`}
+          : ` ${derived.map((wrapper) => wrapper.group).join(", ")}: not every figure these draw is printed on a statement. The rest is reconstructed here from contribution and deposit activity rows rather than read as a year-to-date total, and excludes government grants.`}
       </Callout.Text>
     </Callout.Root>
   );

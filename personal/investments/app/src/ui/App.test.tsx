@@ -38,7 +38,7 @@ describe("App", () => {
     clickTab("Growth");
     expect(document.querySelectorAll("[data-contributions-card]").length).toBe(4);
     expect(document.querySelector("[data-contributions-provenance]")?.textContent).toContain(
-      "1 of 4 wrappers",
+      "1 of 4 wrappers states every figure it draws",
     );
   });
 
