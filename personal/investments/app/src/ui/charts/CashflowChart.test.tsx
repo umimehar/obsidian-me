@@ -31,6 +31,26 @@ function bars(kind: "deposit" | "withdrawal"): Element[] {
   return [...document.querySelectorAll(`[data-cashflow-bar="${kind}"]`)];
 }
 
+/**
+ * The y a gridline's own scale places a labelled tick at, read off the DOM
+ * rather than recomputed. `Gridlines` and `Bars` are drawn from the same
+ * `scales` object, but by separate code paths, so anchoring a bar's height
+ * to a tick's position -- rather than only to another bar's height -- is
+ * what catches a mutation that scales every bar by one constant factor:
+ * that leaves every bar-to-bar ratio unchanged, but leaves a bar disagreeing
+ * with the axis it is drawn against.
+ */
+function tickY(label: string): number {
+  const text = [...document.querySelectorAll("svg text")].find(
+    (node) => node.textContent === label,
+  );
+  if (text === undefined) throw new Error(`expected a ${label} tick`);
+  const transform = text.parentElement?.getAttribute("transform") ?? "";
+  const y = Number(/translate\(0,([\d.]+)\)/.exec(transform)?.[1]);
+  if (Number.isNaN(y)) throw new Error(`could not read the ${label} tick's position`);
+  return y;
+}
+
 afterEach(cleanup);
 
 function month(period: string, deposits: number, withdrawals = 0): MonthPoint {
@@ -126,6 +146,43 @@ describe("bars: one pair per stated month, none for a gap", () => {
     expect(depositTop + depositHeight).toBeCloseTo(zeroLineY, 0);
     // The withdrawal rect starts at the zero line, growing downward.
     expect(withdrawalTop).toBeCloseTo(zeroLineY, 0);
+  });
+
+  /**
+   * A bar's height is a figure, the same as a bar chart's label. Asserting
+   * only that a bar sits on the correct side of the zero line, as the
+   * previous test does, leaves it free to be drawn at any fraction of its
+   * real value -- direction pinned, magnitude not. A ratio between two bars
+   * is not enough either: a mutation that scales every bar by the same
+   * constant factor changes no bar-to-bar ratio at all. What catches it is
+   * anchoring a bar's height to the axis's own tick, drawn by `Gridlines`
+   * from the same `scales` object but a separate code path, so a $1,000
+   * deposit in a domain topping out at exactly $1,000 must reach the
+   * `$1,000` tick, not merely be taller than a smaller bar.
+   */
+  test("a $1,000 deposit bar's height matches the axis's own $1,000 tick", () => {
+    const series = [account({ maskedId: "a", months: [month("2026-01", 1000, 0)] })];
+    render(<CashflowChart series={series} />);
+    const zeroLineY = Number(
+      /translate\(0,([\d.]+)\)/.exec(
+        document.querySelector("[data-zero-line]")?.parentElement?.getAttribute("transform") ?? "",
+      )?.[1],
+    );
+    const depositHeight = Number(bars("deposit")[0]?.getAttribute("height"));
+    expect(depositHeight).toBeCloseTo(zeroLineY - tickY("$1,000"), 0);
+  });
+
+  /** The same anchor, on the withdrawal side of the zero line. */
+  test("a $1,000 withdrawal bar's height matches the axis's own -$1,000 tick", () => {
+    const series = [account({ maskedId: "a", months: [month("2026-01", 0, 1000)] })];
+    render(<CashflowChart series={series} />);
+    const zeroLineY = Number(
+      /translate\(0,([\d.]+)\)/.exec(
+        document.querySelector("[data-zero-line]")?.parentElement?.getAttribute("transform") ?? "",
+      )?.[1],
+    );
+    const withdrawalHeight = Number(bars("withdrawal")[0]?.getAttribute("height"));
+    expect(withdrawalHeight).toBeCloseTo(tickY("-$1,000") - zeroLineY, 0);
   });
 
   test("deposits and withdrawals are filled and stroked differently, not by position alone", () => {
