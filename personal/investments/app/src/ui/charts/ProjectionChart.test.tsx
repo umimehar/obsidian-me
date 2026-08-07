@@ -186,6 +186,28 @@ describe("a mark's position is a figure", () => {
     expect(projectionFloor).toBe(294);
   });
 
+  /**
+   * Seven evenly spaced labels running $1,000 to $1,000,000,000 look linear,
+   * and a reader who takes them that way reads the plot's midpoint as about
+   * half the end figure when it is really around $31,600, and reads thirty
+   * years of compounding rising less than three years of history as growth
+   * flattening off. Nothing else on screen contradicts either reading, so the
+   * legend has to name the scale rather than leave the gridlines to imply it.
+   */
+  test("the legend names the scale, in the open, not only when the cursor finds a zero month", () => {
+    renderChart(onTickSeries());
+    expect(document.querySelector("[data-projection-scale-note]")?.textContent).toBe(
+      "Each gridline is ten times the one below it, not a fixed step, which is what fits thirty years of compounding beside three years of history.",
+    );
+  });
+
+  test("the accessible summary names the same scale, in the same words", () => {
+    renderChart(onTickSeries());
+    const note = document.querySelector("[data-projection-scale-note]")?.textContent ?? "";
+    expect(note).not.toBe("");
+    expect(chart().getAttribute("aria-label")).toContain(note);
+  });
+
   test("the ticks are the decades of the domain the caller supplied", () => {
     renderChart(onTickSeries());
     const labels = [...document.querySelectorAll("svg text")].map((node) => node.textContent);

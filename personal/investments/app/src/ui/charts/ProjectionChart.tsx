@@ -114,6 +114,24 @@ function Gridlines({ axes }: { axes: Axes }) {
 }
 
 /**
+ * The scale, named in words, because evenly spaced gridlines are exactly the
+ * cue a reader skips.
+ *
+ * The labels read $1,000 through $1,000,000,000 at even spacing, and a reader
+ * who assumes a linear axis reads the plot's midpoint as about half the end
+ * figure. On this axis that midpoint is around $31,600. The same reader sees
+ * thirty years of compounding rise less than three years of history did and
+ * concludes growth flattens off. Both readings are wrong, and nothing else on
+ * screen contradicts either.
+ *
+ * One constant, spoken by the legend and carried in the accessible summary, so
+ * a sighted reader and a screen reader cannot be told two different things
+ * about the same axis.
+ */
+const DECADE_NOTE =
+  "Each gridline is ten times the one below it, not a fixed step, which is what fits thirty years of compounding beside three years of history.";
+
+/**
  * The grammar in words, so the difference between the two halves is not left
  * to colour or to the reader's guess. Both swatches are drawn with the same
  * fills the chart itself uses, so a legend cannot drift from the marks it
@@ -152,6 +170,9 @@ function Legend({ hatchId }: { hatchId: string }) {
           statement states any of it.
         </Text>
       </Flex>
+      <Text size="2" color="gray" data-projection-scale-note="">
+        {DECADE_NOTE}
+      </Text>
     </Flex>
   );
 }
@@ -242,6 +263,17 @@ function Seam({ seam, axes }: { seam: ProjectionPoint; axes: Axes }) {
  * no statement covers stays a gap the cursor reports as one, then one slot per
  * projected year, because the months between two projected Decembers are not
  * missing data. There is nothing annual about them to miss.
+ *
+ * This deliberately starts at `history[0]`, while `buildAxes` starts the x
+ * domain at the first DRAWABLE point. The two disagree by exactly the leading
+ * run of months at or below zero, which the axis cannot place but the cursor
+ * still has to report -- in this corpus one month, putting that slot at
+ * x = -1.66, inside the left margin and effectively unreachable. The readout
+ * is right either way. The offset grows with the length of that leading run,
+ * so a corpus opening with a long unfunded stretch would push several slots
+ * off the plot: reconcile the two here if that ever happens, rather than
+ * moving the axis, which would leave a mark drawn against a domain no
+ * gridline covers.
  */
 function buildSlots(series: ProjectionSeries, axes: Axes): CursorSlot[] {
   const first = series.history[0];
@@ -272,7 +304,7 @@ function summary(series: ProjectionSeries, rate: number): string {
     `${formatCurrency(seam.value)}. To the right of ${formatPeriodLabel(seam.period)} a hatched ` +
     `projection at ${formatRate(rate * 100)} a year reaches ${formatCurrency(end.value)} by ` +
     `${formatPeriodLabel(end.period)}. The projected half is a scenario, not a figure any ` +
-    `statement states.${zeros}`
+    `statement states. ${DECADE_NOTE}${zeros}`
   );
 }
 
