@@ -1,4 +1,4 @@
-import type { AccountSeries } from "../../analytics/types";
+import type { AccountSeries } from "./types";
 
 /**
  * One period's portfolio total, summed over the `inTotals: true` accounts

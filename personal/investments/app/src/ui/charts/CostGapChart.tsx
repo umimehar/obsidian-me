@@ -1,6 +1,7 @@
 import { Callout, Flex, Heading, Text } from "@radix-ui/themes";
 import { motion } from "motion/react";
 import { useMemo } from "react";
+import { buildPortfolioSeries } from "../../analytics/portfolioSeries";
 import type { AccountSeries } from "../../analytics/types";
 import { formatCurrency } from "../format";
 import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
@@ -11,7 +12,6 @@ import {
   costGapTooltipLines,
 } from "./costGapSeries";
 import { formatAxisCurrency, formatPeriodLabel } from "./plot";
-import { buildPortfolioSeries } from "./portfolioSeries";
 import { useRevealMotion } from "./reveal";
 import {
   type ChartPoint,

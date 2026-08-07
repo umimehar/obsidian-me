@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import type { AccountSeries, MonthPoint } from "../../analytics/types";
-import type { AccountKind, ManagementStyle } from "../../store/mask";
-import type { Purpose } from "../../store/registry";
-import { loadAnalytics } from "../data";
+import type { AccountKind, ManagementStyle } from "../store/mask";
+import type { Purpose } from "../store/registry";
+import { loadAnalytics } from "../ui/data";
 import { buildPortfolioSeries } from "./portfolioSeries";
+import type { AccountSeries, MonthPoint } from "./types";
 
 function month(
   period: string,

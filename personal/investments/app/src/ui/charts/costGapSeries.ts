@@ -1,6 +1,6 @@
+import { type PortfolioPoint, periodExtent } from "../../analytics/portfolioSeries";
 import { formatCurrency } from "../format";
 import { formatPeriodLabel } from "./plot";
-import { type PortfolioPoint, periodExtent } from "./portfolioSeries";
 
 export { periodExtent as costGapPeriodExtent };
 

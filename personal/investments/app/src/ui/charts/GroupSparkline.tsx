@@ -1,10 +1,10 @@
 import { motion } from "motion/react";
 import { useMemo } from "react";
+import { type PortfolioPoint, buildPortfolioSeries } from "../../analytics/portfolioSeries";
 import type { AccountSeries } from "../../analytics/types";
 import { formatCurrency } from "../format";
 import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
 import { type PlotPoint, areaPath, formatPeriodLabel, linePath } from "./plot";
-import { type PortfolioPoint, buildPortfolioSeries } from "./portfolioSeries";
 import { useRevealMotion } from "./reveal";
 import { type ChartPoint, buildScales, periodToDate } from "./scales";
 import { useSvgId } from "./svgId";

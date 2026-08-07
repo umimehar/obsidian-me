@@ -2,12 +2,16 @@ import { Badge, Box, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
+import {
+  buildPortfolioSeries,
+  periodExtent,
+  seriesForAccounts,
+} from "../analytics/portfolioSeries";
 import type { Lens, Rollup, RollupAccount } from "../analytics/rollup";
 import type { AccountSeries } from "../analytics/types";
 import { LensToggle } from "./LensToggle";
 import { ShareBar } from "./ShareBar";
 import { GroupSparkline } from "./charts/GroupSparkline";
-import { buildPortfolioSeries, periodExtent, seriesForAccounts } from "./charts/portfolioSeries";
 import { grandTotal } from "./data";
 import { formatCurrency, formatShare } from "./format";
 

@@ -1,9 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import { fireEvent, render, screen } from "@testing-library/react";
+import {
+  buildPortfolioSeries,
+  periodExtent,
+  seriesForAccounts,
+} from "../../analytics/portfolioSeries";
 import type { AccountSeries } from "../../analytics/types";
 import { loadAnalytics } from "../data";
 import { GroupSparkline, INNER_HEIGHT, INNER_WIDTH } from "./GroupSparkline";
-import { buildPortfolioSeries, periodExtent, seriesForAccounts } from "./portfolioSeries";
 
 /**
  * Every case here runs against the real committed corpus

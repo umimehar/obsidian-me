@@ -1,14 +1,14 @@
 import { Flex, Heading, Text } from "@radix-ui/themes";
 import { motion } from "motion/react";
 import { useMemo } from "react";
-import type { AccountSeries } from "../../analytics/types";
-import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
 import {
   type CashflowPoint,
   buildCashflowSeries,
   cashflowPeriodExtent,
-  cashflowTooltipLines,
-} from "./cashflowSeries";
+} from "../../analytics/cashflowSeries";
+import type { AccountSeries } from "../../analytics/types";
+import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
+import { cashflowTooltipLines } from "./cashflowTooltip";
 import { formatAxisCurrency, formatPeriodLabel } from "./plot";
 import { useRevealMotion } from "./reveal";
 import {

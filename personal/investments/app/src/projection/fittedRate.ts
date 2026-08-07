@@ -1,6 +1,6 @@
+import { buildCashflowSeries } from "../analytics/cashflowSeries";
+import { buildPortfolioSeries } from "../analytics/portfolioSeries";
 import type { AccountSeries } from "../analytics/types";
-import { buildCashflowSeries } from "../ui/charts/cashflowSeries";
-import { buildPortfolioSeries } from "../ui/charts/portfolioSeries";
 
 /**
  * A return rate fitted from the portfolio's own market-value history, with

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
+import { buildPortfolioSeries } from "../../analytics/portfolioSeries";
 import { loadAnalytics } from "../data";
 import { buildGapPoints, costGapPeriodExtent, costGapTooltipLines } from "./costGapSeries";
-import { buildPortfolioSeries } from "./portfolioSeries";
 
 describe("buildGapPoints", () => {
   test("subtracts book cost from market value, keeping every other field", () => {
