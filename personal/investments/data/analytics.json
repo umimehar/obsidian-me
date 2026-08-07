@@ -1,7 +1,7 @@
 {
   "meta": {
-    "generated": "2026-08-06T20:07:41.084Z",
-    "datastoreGenerated": "2026-08-06T16:22:59.635Z",
+    "generated": "2026-08-07T07:40:47.479Z",
+    "datastoreGenerated": "2026-08-07T07:40:46.872Z",
     "accountCount": 14
   },
   "series": [
@@ -235,9 +235,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 8,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 0,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 0
         },
         {
           "period": "2025-09",
@@ -249,9 +249,9 @@
           "grants": 0,
           "contributions": 2000,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 2000,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 2000
         },
         {
           "period": "2025-10",
@@ -261,11 +261,11 @@
           "deposits": 1000,
           "withdrawals": 0,
           "grants": 0,
-          "contributions": null,
+          "contributions": 1000,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "derived",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-11",
@@ -275,11 +275,11 @@
           "deposits": 0,
           "withdrawals": 0,
           "grants": 0,
-          "contributions": null,
+          "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "derived",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-12",
@@ -289,11 +289,11 @@
           "deposits": 0,
           "withdrawals": 0,
           "grants": 0,
-          "contributions": null,
+          "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "derived",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-01",
@@ -305,9 +305,9 @@
           "grants": 0,
           "contributions": null,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": null,
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-02",
@@ -319,9 +319,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 2,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 0,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 0
         },
         {
           "period": "2026-03",
@@ -333,9 +333,9 @@
           "grants": 0,
           "contributions": 3000,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 3000,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 3000
         },
         {
           "period": "2026-04",
@@ -347,9 +347,9 @@
           "grants": 0,
           "contributions": 900,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 3900,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 3900
         },
         {
           "period": "2026-05",
@@ -361,9 +361,9 @@
           "grants": 0,
           "contributions": 6100,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 10000,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 10000
         },
         {
           "period": "2026-06",
@@ -375,13 +375,13 @@
           "grants": 0,
           "contributions": 1400,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 11400,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 11400
         }
       ],
       "contributionsByYear": {
-        "2025": 2000,
+        "2025": 3000,
         "2026": 11400
       }
     },
@@ -995,9 +995,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 6,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-07",
@@ -1009,9 +1009,9 @@
           "grants": 0,
           "contributions": 1000,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-08",
@@ -1023,9 +1023,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-09",
@@ -1037,9 +1037,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-10",
@@ -1051,9 +1051,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-11",
@@ -1065,9 +1065,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-12",
@@ -1079,9 +1079,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-01",
@@ -1093,9 +1093,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-02",
@@ -1107,9 +1107,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-03",
@@ -1121,9 +1121,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-04",
@@ -1135,9 +1135,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-05",
@@ -1149,9 +1149,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-06",
@@ -1163,9 +1163,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-07",
@@ -1177,9 +1177,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-08",
@@ -1191,9 +1191,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-09",
@@ -1205,9 +1205,9 @@
           "grants": 0,
           "contributions": 25,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-10",
@@ -1219,9 +1219,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-11",
@@ -1233,9 +1233,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-12",
@@ -1247,9 +1247,9 @@
           "grants": 0,
           "contributions": 100,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-01",
@@ -1261,9 +1261,9 @@
           "grants": 0,
           "contributions": 50,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-02",
@@ -1275,9 +1275,9 @@
           "grants": 0,
           "contributions": 50,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-03",
@@ -1289,9 +1289,9 @@
           "grants": 0,
           "contributions": 75,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-04",
@@ -1303,9 +1303,9 @@
           "grants": 0,
           "contributions": 1350,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-05",
@@ -1317,9 +1317,9 @@
           "grants": 0,
           "contributions": 100,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-06",
@@ -1331,9 +1331,9 @@
           "grants": 0,
           "contributions": 150,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-07",
@@ -1345,9 +1345,9 @@
           "grants": 0,
           "contributions": 500,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-08",
@@ -1359,9 +1359,9 @@
           "grants": 0,
           "contributions": 250,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-09",
@@ -1373,9 +1373,9 @@
           "grants": 0,
           "contributions": 1043.25,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-10",
@@ -1387,9 +1387,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-11",
@@ -1401,9 +1401,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-12",
@@ -1415,9 +1415,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-01",
@@ -1429,9 +1429,9 @@
           "grants": 0,
           "contributions": 856.75,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-02",
@@ -1443,9 +1443,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-03",
@@ -1457,9 +1457,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-04",
@@ -1471,9 +1471,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-05",
@@ -1485,9 +1485,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-06",
@@ -1499,9 +1499,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         }
       ],
       "contributionsByYear": {
@@ -1530,9 +1530,9 @@
           "grants": 0,
           "contributions": 2000,
           "contributionMonthsSpanned": 3,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 2000,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 2000
         },
         {
           "period": "2026-04",
@@ -1544,9 +1544,9 @@
           "grants": 0,
           "contributions": 1700,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 3700,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 3700
         },
         {
           "period": "2026-05",
@@ -1558,9 +1558,9 @@
           "grants": 0,
           "contributions": 8300,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 12000,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 12000
         },
         {
           "period": "2026-06",
@@ -1572,9 +1572,9 @@
           "grants": 0,
           "contributions": 1600,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 13600,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 13600
         }
       ],
       "contributionsByYear": {
@@ -1698,9 +1698,9 @@
           "grants": 0,
           "contributions": 12000,
           "contributionMonthsSpanned": 11,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 12000,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 12000
         },
         {
           "period": "2025-12",
@@ -1712,9 +1712,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 12000,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 12000
         },
         {
           "period": "2026-01",
@@ -1726,9 +1726,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 0,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 0
         },
         {
           "period": "2026-02",
@@ -1740,9 +1740,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 0,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 0
         },
         {
           "period": "2026-03",
@@ -1754,9 +1754,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 0,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 0
         },
         {
           "period": "2026-04",
@@ -1768,9 +1768,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 0,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 0
         },
         {
           "period": "2026-05",
@@ -1782,9 +1782,9 @@
           "grants": 0,
           "contributions": 8000,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 8000,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 8000
         },
         {
           "period": "2026-06",
@@ -1796,9 +1796,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": 0,
-          "contributionRestOfYear": 8000,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": 8000
         }
       ],
       "contributionsByYear": {
@@ -1825,9 +1825,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 6,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-07",
@@ -1839,9 +1839,9 @@
           "grants": 0,
           "contributions": 2195,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-08",
@@ -1853,9 +1853,9 @@
           "grants": 0,
           "contributions": 93,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-09",
@@ -1867,9 +1867,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-10",
@@ -1881,9 +1881,9 @@
           "grants": 0,
           "contributions": 100,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-11",
@@ -1895,9 +1895,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2023-12",
@@ -1909,9 +1909,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-01",
@@ -1923,9 +1923,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-02",
@@ -1937,9 +1937,9 @@
           "grants": 0,
           "contributions": 200,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-03",
@@ -1951,9 +1951,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-04",
@@ -1965,9 +1965,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-05",
@@ -1979,9 +1979,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-06",
@@ -1993,9 +1993,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-07",
@@ -2007,9 +2007,9 @@
           "grants": 0,
           "contributions": 100,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-08",
@@ -2021,9 +2021,9 @@
           "grants": 0,
           "contributions": 500,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-09",
@@ -2035,9 +2035,9 @@
           "grants": 0,
           "contributions": 43,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-10",
@@ -2049,9 +2049,9 @@
           "grants": 0,
           "contributions": 800,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-11",
@@ -2063,9 +2063,9 @@
           "grants": 0,
           "contributions": 1020,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2024-12",
@@ -2077,9 +2077,9 @@
           "grants": 0,
           "contributions": 1270,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-01",
@@ -2091,9 +2091,9 @@
           "grants": 0,
           "contributions": 331,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-02",
@@ -2105,9 +2105,9 @@
           "grants": 0,
           "contributions": 355,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-03",
@@ -2119,9 +2119,9 @@
           "grants": 0,
           "contributions": 2950,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-04",
@@ -2133,9 +2133,9 @@
           "grants": 0,
           "contributions": 2000,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-05",
@@ -2147,9 +2147,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-06",
@@ -2161,9 +2161,9 @@
           "grants": 0,
           "contributions": 198.6899999999996,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-07",
@@ -2175,9 +2175,9 @@
           "grants": 0,
           "contributions": 3141.8,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-08",
@@ -2189,9 +2189,9 @@
           "grants": 0,
           "contributions": 6598.51,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-09",
@@ -2203,9 +2203,9 @@
           "grants": 0,
           "contributions": 1856.75,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-10",
@@ -2215,11 +2215,11 @@
           "deposits": 4000,
           "withdrawals": 0,
           "grants": 0,
-          "contributions": null,
+          "contributions": 4000,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "derived",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-11",
@@ -2229,11 +2229,11 @@
           "deposits": 0,
           "withdrawals": 0,
           "grants": 0,
-          "contributions": null,
+          "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "derived",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-12",
@@ -2243,11 +2243,11 @@
           "deposits": 0,
           "withdrawals": 0,
           "grants": 0,
-          "contributions": null,
+          "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "derived",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-01",
@@ -2259,9 +2259,9 @@
           "grants": 0,
           "contributions": null,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": null,
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-02",
@@ -2273,9 +2273,9 @@
           "grants": 0,
           "contributions": 6143.25,
           "contributionMonthsSpanned": 2,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-03",
@@ -2287,9 +2287,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-04",
@@ -2301,9 +2301,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-05",
@@ -2315,9 +2315,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-06",
@@ -2329,15 +2329,15 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         }
       ],
       "contributionsByYear": {
         "2023": 2388,
         "2024": 3933,
-        "2025": 17431.75,
+        "2025": 21431.75,
         "2026": 6143.25
       }
     },
@@ -2388,9 +2388,9 @@
           "grants": 0,
           "contributions": 8000,
           "contributionMonthsSpanned": 12,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-01",
@@ -2402,9 +2402,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-02",
@@ -2416,9 +2416,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-03",
@@ -2430,9 +2430,9 @@
           "grants": 0,
           "contributions": 4000,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-04",
@@ -2444,9 +2444,9 @@
           "grants": 0,
           "contributions": 3000,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-05",
@@ -2458,9 +2458,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-06",
@@ -2472,9 +2472,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-07",
@@ -2486,9 +2486,9 @@
           "grants": 0,
           "contributions": 1000,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-08",
@@ -2500,9 +2500,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-09",
@@ -2514,9 +2514,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-10",
@@ -2526,11 +2526,11 @@
           "deposits": 0,
           "withdrawals": 0,
           "grants": 0,
-          "contributions": null,
+          "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "derived",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-11",
@@ -2540,11 +2540,11 @@
           "deposits": 0,
           "withdrawals": 0,
           "grants": 0,
-          "contributions": null,
+          "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "derived",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2025-12",
@@ -2554,11 +2554,11 @@
           "deposits": 0,
           "withdrawals": 0,
           "grants": 0,
-          "contributions": null,
+          "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "derived",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-01",
@@ -2570,9 +2570,9 @@
           "grants": 0,
           "contributions": null,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": null,
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": null
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-02",
@@ -2584,9 +2584,9 @@
           "grants": 0,
           "contributions": 8000,
           "contributionMonthsSpanned": 2,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-03",
@@ -2598,9 +2598,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-04",
@@ -2612,9 +2612,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-05",
@@ -2626,9 +2626,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         },
         {
           "period": "2026-06",
@@ -2640,9 +2640,9 @@
           "grants": 0,
           "contributions": 0,
           "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
           "contributionFirst60Days": null,
-          "contributionRestOfYear": null,
-          "contributionsSource": "stated"
+          "contributionRestOfYear": null
         }
       ],
       "contributionsByYear": {
@@ -2775,7 +2775,7 @@
       {
         "group": "TFSA",
         "year": 2025,
-        "used": 21000,
+        "used": 25000,
         "limit": 7000,
         "assessed": false,
         "remaining": null,
@@ -2786,10 +2786,10 @@
       {
         "group": "RRSP",
         "year": 2025,
-        "used": 14000,
-        "limit": 32490,
-        "assessed": false,
-        "remaining": null,
+        "used": 15000,
+        "limit": 60191,
+        "assessed": true,
+        "remaining": 45191,
         "spousalUsed": 0,
         "lifetimeContributions": null,
         "lifetimeGrant": null

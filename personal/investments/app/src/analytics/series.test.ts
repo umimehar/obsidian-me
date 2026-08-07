@@ -406,7 +406,7 @@ describe("buildSeries derived contributions", () => {
     expect(series?.months[0]).toMatchObject({ contributions: 0, contributionsSource: "derived" });
   });
 
-  test("an account with even one stated contributions statement never falls back to derivation", () => {
+  test("an unstated month BEFORE the year's last stated figure never derives, since that figure already covers it", () => {
     const jan = statement({
       source: src("2026-01", "BROKERAGE"),
       contributions: ytd(1000),
@@ -417,12 +417,92 @@ describe("buildSeries derived contributions", () => {
       contributions: null,
       activity: [activity("CONT", 9999)],
     });
+    const mar = statement({
+      source: src("2026-03", "BROKERAGE"),
+      contributions: ytd(4000),
+      activity: [],
+    });
 
-    const [series] = buildSeries([jan, feb], [account()]);
+    const [series] = buildSeries([jan, feb, mar], [account()]);
 
-    // February states no figure of its own, so its contribution is null and
-    // folds into whatever the next stated month brings -- not the $9,999 its
-    // own activity would derive, since this account is on the stated path.
+    // February states no figure of its own, but March's stated year-to-date
+    // figure is authoritative and already includes whatever February brought.
+    // Deriving $9,999 here would double-count it against March's $3,000 delta.
     expect(series?.months[1]).toMatchObject({ contributions: null, contributionsSource: null });
+    expect(series?.months[2]).toMatchObject({ contributions: 3000, contributionsSource: "stated" });
+    expect(series?.contributionsByYear).toEqual({ "2026": 4000 });
+  });
+});
+
+describe("buildSeries trailing unstated months", () => {
+  test("a stated account whose statements stop stating figures derives the rest of the year from activity", () => {
+    const sep = statement({
+      source: src("2025-09", "BROKERAGE"),
+      contributions: split(0, 2000),
+      activity: [activity("CONT", 2000, { date: "2025-09-13" })],
+    });
+    const oct = statement({
+      source: src("2025-10", "BROKERAGE"),
+      contributions: null,
+      activity: [activity("CONT", 1000, { date: "2025-10-14" })],
+    });
+    const nov = statement({ source: src("2025-11", "BROKERAGE"), contributions: null });
+
+    const [series] = buildSeries([sep, oct, nov], [account()]);
+
+    expect(series?.months[0]).toMatchObject({ contributions: 2000, contributionsSource: "stated" });
+    expect(series?.months[1]).toMatchObject({
+      contributions: 1000,
+      contributionsSource: "derived",
+    });
+    expect(series?.months[2]).toMatchObject({ contributions: 0, contributionsSource: "derived" });
+    expect(series?.contributionsByYear).toEqual({ "2025": 3000 });
+  });
+
+  test("a year whose statements never state a figure derives all of it, even when an earlier year did", () => {
+    const dec24 = statement({ source: src("2024-12", "BROKERAGE"), contributions: ytd(5000) });
+    const jun25 = statement({
+      source: src("2025-06", "BROKERAGE"),
+      contributions: null,
+      activity: [activity("CONT", 700, { date: "2025-06-02" })],
+    });
+
+    const [series] = buildSeries([dec24, jun25], [account()]);
+
+    expect(series?.months[1]).toMatchObject({ contributions: 700, contributionsSource: "derived" });
+    expect(series?.contributionsByYear).toEqual({ "2024": 5000, "2025": 700 });
+  });
+
+  test("a trailing derived month carries a span of one, never a span borrowed from the gap it follows", () => {
+    const jan = statement({ source: src("2026-01", "BROKERAGE"), contributions: ytd(1000) });
+    const jun = statement({
+      source: src("2026-06", "BROKERAGE"),
+      contributions: null,
+      activity: [activity("CONT", 300, { date: "2026-06-02" })],
+    });
+
+    const [series] = buildSeries([jan, jun], [account()]);
+
+    expect(series?.months[1]).toMatchObject({
+      contributions: 300,
+      contributionMonthsSpanned: 1,
+      contributionsSource: "derived",
+    });
+  });
+
+  test("a trailing derived month leaves the verbatim first-60-days/rest-of-year fields null", () => {
+    const feb = statement({ source: src("2026-02", "BROKERAGE"), contributions: split(0, 500) });
+    const mar = statement({
+      source: src("2026-03", "BROKERAGE"),
+      contributions: null,
+      activity: [activity("CONT", 250, { date: "2026-03-02" })],
+    });
+
+    const [series] = buildSeries([feb, mar], [account()]);
+
+    expect(series?.months[1]).toMatchObject({
+      contributionFirst60Days: null,
+      contributionRestOfYear: null,
+    });
   });
 });

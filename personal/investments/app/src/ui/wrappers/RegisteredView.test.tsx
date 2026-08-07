@@ -65,7 +65,7 @@ describe("RegisteredView", () => {
   test("the real 2025 TFSA is over its annual maximum and still renders no negative", () => {
     renderYear(2025);
     const tfsa = card("TFSA");
-    expect(within(tfsa).getByText("$21,000.00")).toBeDefined();
+    expect(within(tfsa).getByText("$25,000.00")).toBeDefined();
     expect(within(tfsa).getByText(/carry-forward not visible/i)).toBeDefined();
     expect(within(tfsa).queryByText(/-\$/)).toBeNull();
     expect(tfsa.querySelectorAll('[role="progressbar"]').length).toBe(0);

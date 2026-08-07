@@ -89,18 +89,50 @@ describe("buildRoomLines", () => {
   test("the assessed figure does not leak into an adjacent year", () => {
     const rrsp = series({
       kind: "RRSP" as AccountKind,
-      contributionsByYear: { "2025": 14000, "2026": 19400 },
+      contributionsByYear: { "2024": 9000, "2025": 15000 },
     });
+    const lines2024 = buildRoomLines([rrsp], [], 2024);
     const lines2025 = buildRoomLines([rrsp], [], 2025);
-    const lines2026 = buildRoomLines([rrsp], [], 2026);
 
+    const line2024 = lines2024.find((l) => l.group === "RRSP");
     const line2025 = lines2025.find((l) => l.group === "RRSP");
-    const line2026 = lines2026.find((l) => l.group === "RRSP");
 
-    expect(line2025?.assessed).toBe(false);
-    expect(line2025?.limit).toBe(32490);
-    expect(line2026?.assessed).toBe(true);
-    expect(line2026?.limit).toBe(70752);
+    // 2024 has no notice of assessment on file, so it falls back to the
+    // generic annual maximum; 2025's assessed figure must not reach it.
+    expect(line2024?.assessed).toBe(false);
+    expect(line2024?.limit).toBe(31560);
+    expect(line2025?.assessed).toBe(true);
+    expect(line2025?.limit).toBe(60191);
+  });
+
+  test("the 2025 assessed RRSP limit is the notice of assessment's $60,191", () => {
+    const rrsp = series({ kind: "RRSP" as AccountKind, contributionsByYear: { "2025": 15000 } });
+    const line = buildRoomLines([rrsp], [], 2025).find((l) => l.group === "RRSP");
+
+    expect(line?.assessed).toBe(true);
+    expect(line?.limit).toBe(60191);
+    expect(line?.used).toBe(15000);
+    expect(line?.remaining).toBe(45191);
+  });
+
+  test("the 2025 assessed RRSP line reconciles with the 2026 one: 45,191 unused plus 25,561 earned", () => {
+    // The 2026 assessed figure is documented as 2025's unused room carried
+    // forward plus that year's newly earned limit. If the 2025 line's own
+    // remaining does not equal that carry-forward, one of the two figures --
+    // or the contributions between them -- is wrong.
+    const rrsp = series({ kind: "RRSP" as AccountKind, contributionsByYear: { "2025": 15000 } });
+    const line2025 = buildRoomLines([rrsp], [], 2025).find((l) => l.group === "RRSP");
+    const line2026 = buildRoomLines([rrsp], [], 2026).find((l) => l.group === "RRSP");
+
+    expect(line2025?.remaining).toBe(45191);
+    expect(line2026?.limit).toBe((line2025?.remaining ?? 0) + 25561);
+  });
+
+  test("an assessed remaining is positive, never negative: no room line renders a negative remaining", () => {
+    const rrsp = series({ kind: "RRSP" as AccountKind, contributionsByYear: { "2025": 15000 } });
+    const line = buildRoomLines([rrsp], [], 2025).find((l) => l.group === "RRSP");
+
+    expect(line?.remaining).toBeGreaterThan(0);
   });
 
   test("falls back to the generic annual maximum when no assessed figure exists", () => {
@@ -124,11 +156,11 @@ describe("buildRoomLines", () => {
   test("remaining stays a real number against an assessed limit but goes null for RRSP in a year with no NOA", () => {
     const rrsp = series({
       kind: "RRSP" as AccountKind,
-      contributionsByYear: { "2025": 14000, "2026": 33000 },
+      contributionsByYear: { "2024": 9000, "2026": 33000 },
     });
-    const lines2025 = buildRoomLines([rrsp], [], 2025);
+    const lines2024 = buildRoomLines([rrsp], [], 2024);
     const lines2026 = buildRoomLines([rrsp], [], 2026);
-    expect(lines2025.find((l) => l.group === "RRSP")?.remaining).toBeNull();
+    expect(lines2024.find((l) => l.group === "RRSP")?.remaining).toBeNull();
     expect(lines2026.find((l) => l.group === "RRSP")?.remaining).toBe(70752 - 33000);
   });
 

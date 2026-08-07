@@ -167,7 +167,7 @@ function ProvenanceNote({ wrappers }: { wrappers: readonly WrapperContributions[
         as a year-to-date total this reads month over month as a delta.
         {derived.length === 0
           ? ""
-          : ` ${derived.map((wrapper) => wrapper.group).join(", ")}: no statement states a contributions figure at all, so the figure is reconstructed here from contribution and deposit activity rows, and excludes government grants.`}
+          : ` ${derived.map((wrapper) => wrapper.group).join(", ")}: at least one drawn year is reconstructed here from contribution and deposit activity rows rather than printed as a year-to-date total, and excludes government grants.`}
       </Callout.Text>
     </Callout.Root>
   );

@@ -38,7 +38,7 @@ describe("App", () => {
     clickTab("Growth");
     expect(document.querySelectorAll("[data-contributions-card]").length).toBe(4);
     expect(document.querySelector("[data-contributions-provenance]")?.textContent).toContain(
-      "3 of 4 wrappers",
+      "1 of 4 wrappers",
     );
   });
 
@@ -104,7 +104,7 @@ describe("App", () => {
     expect(within(roomCard("TFSA")).getByText("$7,000.00")).toBeDefined();
 
     fireEvent.click(screen.getByRole("radio", { name: "2025" }));
-    expect(within(roomCard("TFSA")).getByText("$21,000.00")).toBeDefined();
+    expect(within(roomCard("TFSA")).getByText("$25,000.00")).toBeDefined();
 
     // Switching tabs proves the year is shared state, not a control local
     // to the wrappers panel: the tax panel's own year control already

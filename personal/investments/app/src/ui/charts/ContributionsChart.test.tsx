@@ -71,10 +71,10 @@ describe("the figures the bars state", () => {
     expect(card("RESP").querySelector('[data-year-figure="2026"]')?.textContent).toBe("$3,000.00");
   });
 
-  test("2025's TFSA is 21,000 and its RRSP 14,000", () => {
+  test("2025's TFSA is 25,000 and its RRSP 15,000", () => {
     renderChart();
-    expect(card("TFSA").querySelector('[data-year-figure="2025"]')?.textContent).toBe("$21,000.00");
-    expect(card("RRSP").querySelector('[data-year-figure="2025"]')?.textContent).toBe("$14,000.00");
+    expect(card("TFSA").querySelector('[data-year-figure="2025"]')?.textContent).toBe("$25,000.00");
+    expect(card("RRSP").querySelector('[data-year-figure="2025"]')?.textContent).toBe("$15,000.00");
   });
 
   test("2023 and 2024 TFSA are 3,388 and 4,058, with cents kept", () => {
@@ -98,7 +98,7 @@ describe("the figures the bars state", () => {
     renderChart();
     const tall = Number(bar("TFSA", 2025).getAttribute("height"));
     const short = Number(bar("TFSA", 2026).getAttribute("height"));
-    expect(tall / short).toBeCloseTo(3, 5);
+    expect(tall / short).toBeCloseTo(25000 / 7000, 5);
   });
 });
 
@@ -155,14 +155,15 @@ describe("the limit line, and the trap it is built around", () => {
     ]);
   });
 
-  test("only RRSP 2026 is drawn as assessed", () => {
+  test("only the RRSP's 2025 and 2026 are drawn as assessed", () => {
     renderChart();
     const assessed = [...document.querySelectorAll('[data-limit-line][data-assessed="true"]')];
-    expect(assessed).toHaveLength(1);
-    expect(assessed[0]?.getAttribute("data-year")).toBe("2026");
-    expect(
-      assessed[0]?.closest("[data-contributions-card]")?.getAttribute("data-contributions-card"),
-    ).toBe("RRSP");
+    expect(assessed.map((node) => node.getAttribute("data-year"))).toEqual(["2025", "2026"]);
+    for (const node of assessed) {
+      expect(
+        node.closest("[data-contributions-card]")?.getAttribute("data-contributions-card"),
+      ).toBe("RRSP");
+    }
   });
 
   /**
@@ -178,10 +179,12 @@ describe("the limit line, and the trap it is built around", () => {
     for (const line of limitLines("TFSA")) {
       expect(line.getAttribute("stroke-dasharray")).toBe(GENERIC_LIMIT_DASH);
     }
-    const assessed = limitLines("RRSP").find((node) => node.getAttribute("data-year") === "2026");
-    const generic = limitLines("RRSP").find((node) => node.getAttribute("data-year") === "2025");
-    expect(assessed?.getAttribute("stroke-dasharray")).toBeNull();
-    expect(generic?.getAttribute("stroke-dasharray")).toBe(GENERIC_LIMIT_DASH);
+    // Both of the RRSP's drawn years are assessed, so its own card carries
+    // no generic line to contrast against -- the TFSA's every line is that
+    // contrast, and neither RRSP line may pick up the dash.
+    for (const line of limitLines("RRSP")) {
+      expect(line.getAttribute("stroke-dasharray")).toBeNull();
+    }
   });
 
   test("both limit lines are stroked, so neither renders invisible", () => {
@@ -268,7 +271,7 @@ describe("a wrapper the corpus covers in no year at all", () => {
   test("the provenance note counts only the wrappers that state something", () => {
     renderWithoutTfsaAccounts();
     const text = document.querySelector("[data-contributions-provenance]")?.textContent ?? "";
-    expect(text).toContain("2 of 3 wrappers");
+    expect(text).toContain("1 of 3 wrappers");
     expect(text).not.toContain("of 4 wrappers");
   });
 });
@@ -276,7 +279,9 @@ describe("a wrapper the corpus covers in no year at all", () => {
 describe("stated and derived are drawn differently, and said in words", () => {
   test("a stated wrapper's bars carry no hatch", () => {
     renderChart();
-    for (const node of bars("TFSA")) {
+    // The FHSA, not the TFSA: 2025's TFSA is part-derived since Wealthsimple
+    // stopped printing a Contributions panel after 2025-09.
+    for (const node of bars("FHSA")) {
       expect(node.getAttribute("data-source")).toBe("stated");
       expect(node.getAttribute("fill")).not.toContain("url(#");
     }
@@ -349,9 +354,12 @@ describe("stated and derived are drawn differently, and said in words", () => {
   test("the provenance note counts the wrappers rather than asserting a number", () => {
     renderChart();
     const text = document.querySelector("[data-contributions-provenance]")?.textContent ?? "";
-    expect(text).toContain("3 of 4 wrappers");
+    expect(text).toContain("1 of 4 wrappers");
     expect(text).toContain("RESP");
     expect(text).toContain("excludes government grants");
+    // "at least one", not "no statement states a figure at all": the TFSA
+    // and RRSP print figures for most of their months and derive the rest.
+    expect(text).toContain("at least one drawn year is reconstructed here");
   });
 });
 
@@ -384,7 +392,7 @@ describe("the readout carries full precision, in one copy", () => {
     fireEvent.keyDown(svg, { key: "ArrowRight" });
     fireEvent.keyDown(svg, { key: "ArrowRight" });
     const label = svg.getAttribute("aria-label") ?? "";
-    expect(label).toContain("Contributed $21,000.00");
+    expect(label).toContain("Contributed $25,000.00");
     expect(label).toContain("Against the $7,000.00 annual maximum");
     expect(label).toContain("not an over-contribution");
   });
@@ -406,7 +414,15 @@ describe("the readout carries full precision, in one copy", () => {
     fireEvent.keyDown(svg, { key: "ArrowRight" });
     const label = svg.getAttribute("aria-label") ?? "";
     expect(label).toContain("$12,000.00 stated at Nov 2025 covers 11 months");
-    expect(label).toContain("3 months state no contributions figure");
+  });
+
+  test("2026's one unstated month is named in the readout rather than counted away", () => {
+    renderChart();
+    const svg = chart("RRSP");
+    fireEvent.keyDown(svg, { key: "End" });
+    expect(svg.getAttribute("aria-label") ?? "").toContain(
+      "1 month states no contributions figure: Jan 2026",
+    );
   });
 });
 

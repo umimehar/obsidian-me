@@ -52,8 +52,8 @@ describe("2026 contributed, the figures the bars state", () => {
   test("the earlier years the corpus does cover", () => {
     expect(entry("TFSA", 2023).contributed).toBe(3388);
     expect(entry("TFSA", 2024).contributed).toBe(4058);
-    expect(entry("TFSA", 2025).contributed).toBe(21000);
-    expect(entry("RRSP", 2025).contributed).toBe(14000);
+    expect(entry("TFSA", 2025).contributed).toBe(25000);
+    expect(entry("RRSP", 2025).contributed).toBe(15000);
     expect(entry("FHSA", 2024).contributed).toBe(8000);
     expect(entry("FHSA", 2025).contributed).toBe(8000);
   });
@@ -110,13 +110,24 @@ describe("the limit, and the trap it is built around", () => {
     expect(wrapper("RESP").years.every((y) => y.limit === null)).toBe(true);
   });
 
-  test("RRSP 2026 is the only assessed year, at 70,752 with 37,752 remaining", () => {
+  test("RRSP 2025 and 2026 are the assessed years, the two the notice of assessment covers", () => {
     const assessed = wrappers.flatMap((w) =>
       w.years.filter((y) => y.assessed).map((y) => `${w.group} ${y.year}`),
     );
-    expect(assessed).toEqual(["RRSP 2026"]);
+    expect(assessed).toEqual(["RRSP 2025", "RRSP 2026"]);
+    expect(entry("RRSP", 2025).limit).toBe(60191);
+    expect(entry("RRSP", 2025).remaining).toBe(45191);
     expect(entry("RRSP", 2026).limit).toBe(70752);
     expect(entry("RRSP", 2026).remaining).toBe(37752);
+  });
+
+  test("no assessed remaining is negative, on any wrapper or year", () => {
+    for (const w of wrappers) {
+      for (const y of w.years) {
+        if (y.remaining === null) continue;
+        expect(y.remaining).toBeGreaterThanOrEqual(0);
+      }
+    }
   });
 
   test("a generic annual maximum states no remaining, because carry-forward is invisible", () => {
@@ -125,9 +136,9 @@ describe("the limit, and the trap it is built around", () => {
     expect(entry("TFSA", 2025).remaining).toBeNull();
   });
 
-  test("the 2025 TFSA is three times its generic maximum and carries no over flag", () => {
+  test("the 2025 TFSA is more than three times its generic maximum and carries no over flag", () => {
     const tfsa = entry("TFSA", 2025);
-    expect(tfsa.contributed).toBe(21000);
+    expect(tfsa.contributed).toBe(25000);
     expect(tfsa.limit).toBe(7000);
     expect(Object.keys(tfsa)).not.toContain("over");
   });
@@ -138,28 +149,31 @@ describe("stated against derived", () => {
     expect(entry("RESP", 2026).source).toBe("derived");
   });
 
-  test("every other wrapper-year with a figure is stated", () => {
+  test("2025's TFSA and RRSP are part-derived, since their last three months state nothing", () => {
+    // Wealthsimple dropped the Contributions panel from 2025-10 through
+    // 2026-01. Those months' figures come off activity rows, so the years
+    // they land in are marked derived rather than presented as printed.
     const derived = wrappers.flatMap((w) =>
       w.years.filter((y) => y.source === "derived").map((y) => `${w.group} ${y.year}`),
     );
-    expect(derived).toEqual(["RESP 2026"]);
+    expect(derived).toEqual(["TFSA 2025", "RRSP 2025", "RESP 2026"]);
   });
 
   test("TFSA, RRSP and FHSA state their figures on the statements", () => {
     expect(entry("TFSA", 2023).source).toBe("stated");
-    expect(entry("RRSP", 2025).source).toBe("stated");
+    expect(entry("RRSP", 2026).source).toBe("stated");
     expect(entry("FHSA", 2026).source).toBe("stated");
   });
 });
 
 describe("the months the statements say nothing about", () => {
-  test("2318 states no contributions figure for the last three months of 2025", () => {
-    expect(entry("RRSP", 2025).unstatedMonths).toEqual(["2025-10", "2025-11", "2025-12"]);
-  });
-
-  test("the TFSA and FHSA have the same three-month hole", () => {
-    expect(entry("TFSA", 2025).unstatedMonths).toEqual(["2025-10", "2025-11", "2025-12"]);
-    expect(entry("FHSA", 2025).unstatedMonths).toEqual(["2025-10", "2025-11", "2025-12"]);
+  test("2025's unstated tail is no longer a hole: those months derive from activity instead", () => {
+    // Trailing months with no stated figure and nothing later to close them
+    // are derived rather than left null, so they carry a figure and no
+    // longer count as unstated. That is where 2025's missing $1,000 was.
+    expect(entry("RRSP", 2025).unstatedMonths).toEqual([]);
+    expect(entry("TFSA", 2025).unstatedMonths).toEqual([]);
+    expect(entry("FHSA", 2025).unstatedMonths).toEqual([]);
   });
 
   test("January 2026 is unstated across all three, and the RESP has no hole at all", () => {
@@ -176,7 +190,7 @@ describe("a multi-month lump is not this month's contribution", () => {
     ]);
   });
 
-  test("the other 2,000 of RRSP 2025 spans one month, so it is not a lump", () => {
+  test("the other 3,000 of RRSP 2025 spans one month at a time, so none of it is a lump", () => {
     expect(entry("RRSP", 2025).lumps.map((l) => l.shortId)).not.toContain("2318");
   });
 
@@ -193,7 +207,7 @@ describe("a multi-month lump is not this month's contribution", () => {
 
 describe("contributionsMax, the top of one card's own axis", () => {
   test("TFSA is topped by its 2025 contribution, not by its maximum", () => {
-    expect(contributionsMax(wrapper("TFSA"))).toBe(21000);
+    expect(contributionsMax(wrapper("TFSA"))).toBe(25000);
   });
 
   test("RRSP is topped by its assessed 2026 limit, not by anything contributed", () => {
@@ -250,7 +264,7 @@ describe("contributionsTooltipLines, the one source of every announced figure", 
 
   test("a generic maximum states the carry-forward caveat and never an over-contribution", () => {
     const lines = contributionsTooltipLines("TFSA", entry("TFSA", 2025));
-    expect(lines).toContain("Contributed $21,000.00");
+    expect(lines).toContain("Contributed $25,000.00");
     expect(lines).toContain("Against the $7,000.00 annual maximum");
     expect(lines).toContain(
       "Carry-forward not visible in statement data, so this is not an over-contribution",
@@ -259,8 +273,10 @@ describe("contributionsTooltipLines, the one source of every announced figure", 
   });
 
   test("the unstated months are named, not counted away", () => {
-    const lines = contributionsTooltipLines("RRSP", entry("RRSP", 2025));
-    expect(lines).toContain("3 months state no contributions figure: Oct 2025, Nov 2025, Dec 2025");
+    // 2026 is the year that still has one: 2026-01 states nothing and
+    // 2026-02's stated year-to-date figure closes it, so it stays unstated.
+    const lines = contributionsTooltipLines("RRSP", entry("RRSP", 2026));
+    expect(lines).toContain("1 month states no contributions figure: Jan 2026");
   });
 
   test("a lump says how many months it covers and which month states it", () => {

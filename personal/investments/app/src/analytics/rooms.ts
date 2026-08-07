@@ -49,15 +49,25 @@ const CONTRIBUTION_LIMITS: Partial<Record<RegisteredGroup, Record<number, number
  * maximum. A group/year absent from this table simply falls back to
  * `CONTRIBUTION_LIMITS`.
  *
- * RRSP 2026 = 70,752, from the 2025 notice of assessment: 45,191 unused
+ * RRSP 2025 = 60,191, the 2025 RRSP deduction limit stated on the 2025
+ * notice of assessment (owner-supplied 2026-08-06).
+ *
+ * RRSP 2026 = 70,752, from the same notice of assessment: 45,191 unused
  * room at the end of 2025, plus 25,561 additional limit earned in 2025
  * (18% of 2025 earned income), with no PSPA, PAR, or previously reported
  * undeducted contributions. Add next year's figure here when its NOA
  * arrives -- leaving this stale silently reverts that year to the generic
  * maximum, understating room by the carry-forward.
+ *
+ * The two entries reconcile: 60,191 assessed for 2025 minus the 45,191 left
+ * unused at the end of it means 15,000 was contributed during 2025, which is
+ * what this pipeline computes. It computed 14,000 until 2026-08-06, when the
+ * missing 1,000 was traced to a 2025-10 CONT activity row on account 2318
+ * that the contributions layer was dropping -- see `unstatedContribution` in
+ * `series.ts`.
  */
 const ASSESSED_ROOM: Partial<Record<RegisteredGroup, Record<number, number>>> = {
-  RRSP: { 2026: 70752 },
+  RRSP: { 2025: 60191, 2026: 70752 },
 };
 
 /**
