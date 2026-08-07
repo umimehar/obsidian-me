@@ -20,3 +20,6 @@ __pycache__/
 
 # Superpowers SDD scratch (briefs, reports, diffs, ledger)
 .superpowers/
+
+# Playwright MCP scratch (browser console logs, screenshots)
+.playwright-mcp/
