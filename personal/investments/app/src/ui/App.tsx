@@ -131,7 +131,13 @@ export function App() {
   }
 
   return (
-    <Theme appearance={appearance} accentColor="jade" grayColor="slate" radius="large">
+    // `effectiveAppearance`, never `appearance`. Radix Themes ships no
+    // `prefers-color-scheme` media query, so `"inherit"` at the root resolves
+    // to light on every machine -- while the button below is labelled from
+    // `effectiveAppearance` and does read the OS preference. Passing the raw
+    // state opened a white page on a dark-mode machine under a button offering
+    // to switch to light, whose first press then changed nothing visible.
+    <Theme appearance={effectiveAppearance} accentColor="jade" grayColor="slate" radius="large">
       <main style={{ padding: "3rem", maxWidth: "48rem", margin: "0 auto" }}>
         <Flex justify="between" align="center" gap="3" mb="5" wrap="wrap">
           <Heading size="6" as="h1">

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { App } from "./App";
+import { restoreReducedMotion } from "./motionPreference";
 
 /**
  * The accessible name of an element, following the accname order: an
@@ -170,6 +171,91 @@ describe("App accessibility", () => {
   test("the theme toggle is a real button that says which way it switches", () => {
     render(<App />);
     expect(screen.getByRole("button", { name: /switch to (dark|light)/i })).toBeDefined();
+  });
+
+  describe("the theme follows the OS preference, and the toggle overrides it", () => {
+    let originalMatchMedia: typeof window.matchMedia | null = null;
+
+    /**
+     * A `matchMedia` that answers the colour-scheme query.
+     *
+     * happy-dom's own always reports `matches: false`, so without this
+     * `useSystemAppearance` can only ever see a light OS and the dark
+     * direction is untestable. Reduced motion is answered `false`, which is
+     * what happy-dom already reported and what the rest of this file assumes.
+     */
+    function stubColorScheme(dark: boolean) {
+      originalMatchMedia = window.matchMedia;
+      window.matchMedia = ((query: string) => ({
+        matches: dark && query.includes("prefers-color-scheme: dark"),
+        media: query,
+        onchange: null,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        addListener: () => {},
+        removeListener: () => {},
+        dispatchEvent: () => false,
+      })) as typeof window.matchMedia;
+    }
+
+    /** The root Radix element carries the appearance as a class once it is explicit. */
+    function themeClass(): string {
+      const root = document.querySelector(".radix-themes");
+      if (root === null) throw new Error("expected a .radix-themes root to render");
+      return root.classList.contains("dark") ? "dark" : "light";
+    }
+
+    function toggle() {
+      fireEvent.click(screen.getByRole("button", { name: /switch to (dark|light)/i }));
+    }
+
+    function toggleLabel(): string {
+      return screen.getByRole("button", { name: /switch to (dark|light)/i }).textContent ?? "";
+    }
+
+    afterEach(() => {
+      // `restoreReducedMotion` also clears motion's two cached refs, which
+      // matters because this stub is installed for the whole test.
+      if (originalMatchMedia !== null) restoreReducedMotion(originalMatchMedia);
+      originalMatchMedia = null;
+    });
+
+    test("a dark OS renders dark, and the button offers the other theme", () => {
+      // The defect this replaced: `appearance` went to `<Theme>` raw, so
+      // `"inherit"` rendered light on every machine -- Radix Themes ships no
+      // `prefers-color-scheme` media query -- while the button was labelled
+      // from the OS. A dark-mode reader got a white page under a button
+      // offering to switch to light, and its first press did nothing visible.
+      stubColorScheme(true);
+      render(<App />);
+      expect(themeClass()).toBe("dark");
+      expect(toggleLabel()).toBe("Switch to light");
+    });
+
+    test("a light OS renders light, and the button offers the other theme", () => {
+      stubColorScheme(false);
+      render(<App />);
+      expect(themeClass()).toBe("light");
+      expect(toggleLabel()).toBe("Switch to dark");
+    });
+
+    test("the toggle overrides a dark OS, and keeps overriding it", () => {
+      stubColorScheme(true);
+      render(<App />);
+      toggle();
+      expect(themeClass()).toBe("light");
+      toggle();
+      expect(themeClass()).toBe("dark");
+    });
+
+    test("the toggle overrides a light OS, and keeps overriding it", () => {
+      stubColorScheme(false);
+      render(<App />);
+      toggle();
+      expect(themeClass()).toBe("dark");
+      toggle();
+      expect(themeClass()).toBe("light");
+    });
   });
 
   test("every soft badge is high contrast, on every tab that draws one", () => {
