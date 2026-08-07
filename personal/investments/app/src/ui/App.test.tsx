@@ -42,6 +42,13 @@ describe("App", () => {
     );
   });
 
+  test("the growth tab also holds the monthly cashflow chart", () => {
+    render(<App />);
+    clickTab("Growth");
+    expect(screen.getByRole("heading", { name: "Monthly cashflow" })).toBeDefined();
+    expect(document.querySelectorAll('[data-cashflow-bar="deposit"]').length).toBeGreaterThan(0);
+  });
+
   test("renders the overview, the registered wrappers and the tax view together", () => {
     render(<App />);
     expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");

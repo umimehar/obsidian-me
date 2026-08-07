@@ -5,6 +5,7 @@ import type { AnalyticsOutput } from "../analytics/build";
 import { Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
 import { Tabs } from "./Tabs";
+import { CashflowChart } from "./charts/CashflowChart";
 import { ContributionsChart } from "./charts/ContributionsChart";
 import { ReturnsChart } from "./charts/ReturnsChart";
 import { ValueOverTime } from "./charts/ValueOverTime";
@@ -96,6 +97,7 @@ function Dashboard() {
       <Flex direction="column" gap="6">
         <ReturnsChart returns={analytics.returns} series={analytics.series} />
         <ContributionsChart analytics={analytics} />
+        <CashflowChart series={analytics.series} />
       </Flex>
     ),
     wrappers: (

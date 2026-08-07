@@ -75,8 +75,17 @@ export function seriesForAccounts(
   return series.filter((account) => wanted.has(account.maskedId));
 }
 
-/** A built series' `[first, last]` period, or null when it has no points to take an extent from. */
-export function periodExtent(points: readonly PortfolioPoint[]): readonly [string, string] | null {
+/**
+ * A built series' `[first, last]` period, or null when it has no points to
+ * take an extent from.
+ *
+ * Generic over anything shaped like a `{ period }`, so `buildCashflowSeries`
+ * shares this rather than carrying its own copy -- both series are sorted
+ * period lists built the same way, and a caller only ever needs the two ends.
+ */
+export function periodExtent(
+  points: readonly { period: string }[],
+): readonly [string, string] | null {
   const first = points[0];
   const last = points[points.length - 1];
   if (first === undefined || last === undefined) return null;
