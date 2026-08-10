@@ -14,6 +14,8 @@ Bidding on Canadian public sector website and digital services work. Federal, pr
 
 ## Pages
 
+- [Bid plan](notes/bid-plan.html) — the four August tenders, go or no go on each, and a dated calendar. **Start here.**
+- [[proposal-kit]] — fill-once blocks every submission reuses, plus the NDA permission email and the final compliance pass.
 - [Market and strategy](notes/strategy.html) — what the market actually looks like, where the work lives, what disqualifies you before anyone reads your proposal.
 - [Latest digest](notes/latest-digest.html) — the most recent scan, regenerated on every run.
 - [[tracking]] — bids in flight, outcomes, qualification status.
