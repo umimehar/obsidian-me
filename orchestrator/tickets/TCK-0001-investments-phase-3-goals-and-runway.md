@@ -5,7 +5,7 @@ created: 2026-08-10
 updated: 2026-08-10
 type: ticket
 id: TCK-0001
-status: claimed
+status: in-progress
 project: system
 ticket_type: feature
 assigned_device: any
@@ -16,7 +16,7 @@ priority: p2
 effort: large
 depends_on: []
 created_by: umar
-session: null
+session: 445aac3a-b5b2-4e58-b15d-4dab0235e023
 ---
 
 # TCK-0001 — Investments phase 3: goal tracking and room runway
