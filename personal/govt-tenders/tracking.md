@@ -31,8 +31,10 @@ Status as of 2026-08-10: incorporated, operating, with revenue. No insurance cer
 
 | Requirement | Status | Notes |
 |---|---|---|
-| Commercial general liability, $2M to $5M | ☐ **blocking** | Not in hand. Call a broker 2026-08-10; a first policy takes days. Buyer named as additional insured. |
-| Errors and omissions / professional liability | ☐ **blocking** | Commonly $1M to $2M for digital work. Same broker call. |
+| Commercial general liability, $2M to $5M | ☐ | **Not blocking in most cases.** Normally required prior to contract execution, not at submission. Buyer named as additional insured. |
+| Errors and omissions / professional liability | ☐ | Commonly $1M to $2M for digital work. Same treatment as above. |
+| Broker's letter of intent to insure | ☐ | The cheap unlock: confirms insurability at the stated limits without binding a policy. A day or two, often free. Ask for this rather than a bound policy. |
+| Check each RFP for a mandatory certificate | ☐ **do this first** | The one case that genuinely disqualifies is a submission checklist demanding a certificate attached to the proposal. Rare on professional services, common on construction. Check Rocky Mountain House hardest, since hosting and support raise insurance sensitivity. |
 | WCB or CNESST clearance letter | ☐ | Province of the registered office. Usually same day online. |
 | Three comparable references | ◐ | Commercial only. Send the NDA permission email in [[proposal-kit]] today, since replies are the long pole. Argue comparability, never claim public sector work you do not have. |
 | One public sector reference | ☐ | Chicken and egg. Subcontract under a prime, which is what BC Pension is for. |
