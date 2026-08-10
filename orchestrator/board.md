@@ -11,12 +11,12 @@ kanban-plugin: board
 
 ## Ready
 
-- [ ] [[TCK-0001-investments-phase-3-goals-and-runway]] #project/system #type/feature #p2
 
 
 
 ## Claimed
 
+- [ ] [[TCK-0001-investments-phase-3-goals-and-runway]] #project/system #type/feature #p2
 
 
 

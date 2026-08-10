@@ -4,7 +4,7 @@ tags:
   - meta/system
   - device
 created: 2026-07-13
-updated: 2026-07-13
+updated: 2026-08-10
 status: active
 type: device
 slug: mac-studio
@@ -19,7 +19,7 @@ capabilities:
   - git
 repos: []
 daemon: false
-last_heartbeat: 2026-07-13T12:00:00
+last_heartbeat: 2026-08-10T16:51:53
 ---
 
 # Device — mac-studio
