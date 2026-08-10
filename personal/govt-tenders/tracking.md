@@ -38,7 +38,8 @@ Status as of 2026-08-10: incorporated, operating, with revenue. No insurance cer
 | WCB or CNESST clearance letter | ☐ | Province of the registered office. Usually same day online. |
 | Three comparable references | ◐ | Commercial only. Send the NDA permission email in [[proposal-kit]] today, since replies are the long pole. Argue comparability, never claim public sector work you do not have. |
 | One public sector reference | ☐ | Chicken and egg. Subcontract under a prime, which is what BC Pension is for. |
-| BC Bid account | ☐ **blocking** | Qualicum Beach and BC Pension. No documents without it. |
+| Business BCeID, `bceid.ca` | ☐ **start first** | BC Bid issues no login of its own. This is the prerequisite, and it is the longest chain in the plan. |
+| BC Bid account | ☐ **blocking** | Qualicum Beach and BC Pension. Needs the BCeID above, then activation review taking up to two business days. Help desk 250 387 7301, `bcbid@gov.bc.ca`. |
 | Alberta Purchasing Connection account | ☐ **blocking** | Rocky Mountain House. Its posting page is a JS app, so there is no way around registering. |
 | Bonfire account, `kpu.bonfirehub.ca` | ☐ | KPU runs its own instance rather than using BC Bid. |
 | bids&tenders / Biddingo accounts | ☐ | Not needed for these four. Register for future Ontario and Atlantic flow. |
