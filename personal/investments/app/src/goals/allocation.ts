@@ -1,5 +1,4 @@
 import { latestMarketValue } from "../analytics/rollup";
-import { REGISTERED_KINDS, type RegisteredGroup } from "../analytics/rooms";
 import type { AccountSeries } from "../analytics/types";
 import {
   type AccountAllocation,
@@ -7,23 +6,7 @@ import {
   type ProjectionYear,
   allocateByAccount,
 } from "../projection/engine";
-import { type ProjectionGroup, projectedAccounts } from "../projection/inputs";
-import type { AccountKind } from "../store/mask";
-
-/**
- * Corporate carries no CRA room, so `REGISTERED_KINDS` has no entry for it --
- * the same gap `scope.ts`'s `CORPORATE_KINDS` fills for the same reason.
- */
-const CORPORATE_KINDS: readonly AccountKind[] = ["Corporate"];
-
-const REGISTERED_GROUP_LIST: readonly RegisteredGroup[] = ["TFSA", "RRSP", "FHSA", "RESP"];
-
-/** The projection group an account's kind belongs to, or null for a kind the projection does not cover. */
-function groupOf(kind: AccountKind): ProjectionGroup | null {
-  const registered = REGISTERED_GROUP_LIST.find((group) => REGISTERED_KINDS[group].includes(kind));
-  if (registered !== undefined) return registered;
-  return CORPORATE_KINDS.includes(kind) ? "Corporate" : null;
-}
+import { type ProjectionGroup, groupOf, projectedAccounts } from "../projection/inputs";
 
 /** An account's total `contributionsByYear` from 2025 onward, the owner's recent funding pattern. */
 function recentContribution(account: AccountSeries): number {

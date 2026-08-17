@@ -61,12 +61,16 @@ describe("buildAllocations, shares against the real corpus", () => {
     );
   });
 
-  // The real corpus has no `inTotals: false` account of a covered kind --
-  // its three excluded accounts (1f9a, 2c62, e2d6) are NonRegistered/Crypto,
-  // which `groupOf` already turns away regardless of `inTotals`. A fixture is
-  // the only way to prove `buildAllocations` still routes through
-  // `projectedAccounts` (and so its `inTotals` filter) rather than `series`
-  // directly, per the brief's Step 5 mutation.
+  // The engine's own opening for a group comes from `openingByGroup` in
+  // `inputs.ts`, which reads `analytics.rollups.registration[].total` --
+  // `groupTotal` in `rollup.ts`, summed over `inTotals: true` rows only. For
+  // the sum invariant in the tests below to hold, `buildAllocations` has to
+  // apply that same `inTotals` filter, which is exactly what routing through
+  // `projectedAccounts` (rather than `series` directly) does. The real
+  // corpus cannot exercise this: `inTotals` is a pure function of `kind`
+  // (`registry.ts`'s `EXCLUDED_KINDS = ["Chequing"]`), so no real RRSP/TFSA/
+  // FHSA/RESP/Corporate account is ever `inTotals: false`. A fixture is the
+  // only way to write down the symmetry as an executable statement.
   test("an excluded RRSP that fails inTotals is not allocated a share", () => {
     const realRrsp = analytics.series.find((a) => a.shortId === "2318");
     if (realRrsp === undefined) throw new Error("fixture base account 2318 missing from corpus");

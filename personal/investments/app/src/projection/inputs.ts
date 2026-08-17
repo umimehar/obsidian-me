@@ -106,6 +106,23 @@ export function projectedAccounts(series: readonly AccountSeries[]): AccountSeri
 }
 
 /**
+ * The projection group an account kind belongs to, or null for a kind the
+ * projection does not cover (`NonRegistered`, `Crypto`, `Chequing`).
+ *
+ * Derived from `PROJECTION_KINDS` -- the same table `projectedAccounts`
+ * reads -- rather than restated. Before this function existed, `scope.ts`
+ * and `allocation.ts` each kept their own copy of "which kind belongs to
+ * which group," and a kind added to `PROJECTION_KINDS` alone (to get it
+ * projected) could silently fall through either copy: `resolveScope` would
+ * call it uncovered, or `buildAllocations` would skip its opening balance
+ * while the engine's own group total still included it. One function, one
+ * place a new kind has to be taught.
+ */
+export function groupOf(kind: AccountKind): ProjectionGroup | null {
+  return PROJECTION_GROUP_ORDER.find((group) => PROJECTION_KINDS[group].includes(kind)) ?? null;
+}
+
+/**
  * The latest period any counted account reports, `YYYY-MM`, or null when no
  * counted account reports one. Periods sort correctly as plain strings.
  *

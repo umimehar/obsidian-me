@@ -1,8 +1,6 @@
 import { latestMarketValue } from "../analytics/rollup";
-import { REGISTERED_KINDS } from "../analytics/rooms";
 import type { AccountSeries } from "../analytics/types";
-import { type ProjectionGroup, projectedAccounts } from "../projection/inputs";
-import type { AccountKind } from "../store/mask";
+import { type ProjectionGroup, groupOf, projectedAccounts } from "../projection/inputs";
 import type { Purpose } from "../store/registry";
 
 export type GoalScope =
@@ -21,23 +19,13 @@ export interface ScopeCoverage {
   scopeValue: number;
 }
 
-/**
- * Corporate carries no CRA room, so `REGISTERED_KINDS` has no entry for it --
- * the same gap `PROJECTION_KINDS` in `inputs.ts` fills the same way.
- */
-const CORPORATE_KINDS: readonly AccountKind[] = ["Corporate"];
-
-function kindsForGroup(group: ProjectionGroup): readonly AccountKind[] {
-  return group === "Corporate" ? CORPORATE_KINDS : REGISTERED_KINDS[group];
-}
-
 function matchesScope(account: AccountSeries, scope: GoalScope): boolean {
   switch (scope.kind) {
     case "portfolio":
       return true;
     case "groups": {
-      const kinds = new Set(scope.groups.flatMap(kindsForGroup));
-      return kinds.has(account.kind);
+      const group = groupOf(account.kind);
+      return group !== null && scope.groups.includes(group);
     }
     case "purpose":
       return account.purpose === scope.purpose;
