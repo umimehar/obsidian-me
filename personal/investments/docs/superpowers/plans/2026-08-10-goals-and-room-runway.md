@@ -28,6 +28,8 @@ personal: investments
 - Every chart or bar is responsive via `viewBox`, carries `role="img"` and a text summary. Dark and light both supported. Contrast AA in both themes.
 - Never source anything from `/tmp`. `cp` is aliased to `cp -i` and zsh `noclobber` is set, so both silently refuse rather than erroring: verify every restore by checksum or diff, never by exit code.
 - `git grep` silently ignores `\b` here. Never use it to prove an absence.
+- **This project has no jest-dom matchers wired in.** `toHaveTextContent`, `toBeInTheDocument` and friends DO NOT EXIST here. Every component test reads `.textContent` or `.getAttribute` and asserts with `toContain`, `toMatch` or `toBe`, the idiom `ProjectionsView.test.tsx` already uses. The test bodies in tasks 4 and 6 below were written with jest-dom matchers by mistake, corrected 2026-08-17 after the task 4 implementer caught it. Treat them as pseudocode for the assertion's intent and write the real idiom.
+- **Never assert a coarse money figure absent by plain substring.** `"$50,180.10"` contains `"$50,180"`, so an assertion that the coarse form is absent fails on correct output. Use a lookahead excluding the decimal point, `/\$50,180(?!\.)/`. That is what every precision assertion in this plan means, including the one in task 4 step 1 that was written the unsatisfiable way.
 
 ## The test bar this project holds
 
