@@ -26,7 +26,7 @@ describe("evaluateGoal, the two shipped goals against the real corpus", () => {
   test("the education goal clears its 50,000 target in 2042", () => {
     const v = evaluateGoal(educationGoal, analytics, rows6, 0.06, "2039");
     expect(v.projected).toBeCloseTo(92547.67, 2);
-    expect(v.gap).toBeGreaterThan(0);
+    expect(v.gap).toBeCloseTo(42547.67, 2);
     expect(v.monthlyToClose).toBeNull();
     expect(v.blocked).toBeNull();
   });
@@ -70,7 +70,7 @@ describe("evaluateGoal, the shortfall solve -- fixture only, the corpus cannot r
     const v = evaluateGoal(stretch, analytics, rows0, 0, "2039");
     expect(v.gap).toBeLessThan(0);
     const years = 2028 - 2026 + 1;
-    expect(Number.isFinite(contributionToClose(v.gap ?? 0, years, 0))).toBe(true);
+    expect(contributionToClose(v.gap ?? 0, years, 0)).toBeCloseTo(15234.92, 2);
   });
 
   test("a shortfall the wrapper has no room to close is blocked with a reason", () => {
@@ -116,8 +116,8 @@ describe("evaluateGoal, Corporate has no CRA room to exhaust", () => {
       source: "fixture",
     };
     const v = evaluateGoal(goal, analytics, rows6, 0.06, "2039");
-    expect(v.gap).toBeLessThan(0);
+    expect(v.gap).toBeCloseTo(-784875.09, 2);
     expect(v.blocked).toBeNull();
-    expect(v.monthlyToClose).not.toBeNull();
+    expect(v.monthlyToClose).toBeCloseTo(11602.83, 2);
   });
 });

@@ -99,7 +99,7 @@ export function evaluateGoal(
   if (coverage.covered.length === 0) return unprojectable(goal, coverage);
 
   const coveredIds = new Set(coverage.covered.map((a) => a.shortId));
-  const values = accountValues(rows.slice(), analytics.series, returnRate, fhsaCloseYear);
+  const values = accountValues(rows, analytics.series, returnRate, fhsaCloseYear);
   const scoped = values.filter((v) => coveredIds.has(v.accountId));
 
   const targetIndex = rows.findIndex((row) => row.year === goal.by);
