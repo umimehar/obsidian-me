@@ -12,9 +12,13 @@ import { GoalsPanel } from "./GoalsPanel";
 /**
  * Against the real committed corpus, same as `evaluate.test.ts` (task 3):
  * the house goal projects to $50,180.10 by 2028 and the education goal to
- * $92,547.67 by 2042, both at 6%. Every expected figure below is recomputed
- * from the engine rather than transcribed, so a corpus change reddens these
- * tests instead of quietly changing what the panel claims.
+ * $92,547.67 by 2042, both at 6%. The figures below are numeric literals,
+ * not recomputed at run time, but a wrong literal cannot go unnoticed: every
+ * one is first asserted with `toContain(formatCurrency(x))`, the exact
+ * string the card renders, before that same `x` is ever handed to
+ * `expectNoCoarseForm(text, x)` for the coarse-absence check. A stale or
+ * mistyped literal reddens the precise assertion first, so the coarse guard
+ * can never end up silently checking the wrong number.
  */
 const analytics: AnalyticsOutput = loadAnalytics();
 const rows6 = projectYears(projectionInputs(analytics, { returnRate: 0.06 }));
@@ -49,14 +53,17 @@ function coarseForm(amount: number): string {
  * ($50,180.10 to $50,180), which makes the coarse form a literal prefix of
  * the precise one -- a plain `not.toContain` would fail on a card printing
  * only the correct precise figure, since the prefix is still there as its
- * leading digits. The negative lookahead accepts that prefix only when it is
- * immediately followed by the decimal point that continues it into the real
- * figure, so a genuinely separate coarse reading is still caught regardless
- * of which way the real figure rounds.
+ * leading digits. The negative lookahead accepts that prefix only when a
+ * digit follows the period, since only a digit continues the coarse prefix
+ * into the real figure's cents -- `(?!\.)` alone was tried first and missed
+ * a sentence-final coarse figure, where a period follows the digits too but
+ * ends the sentence rather than introducing cents. `projectedLine` and
+ * `coverageLine` both put a figure right before a sentence-final period, so
+ * this is not a hypothetical case for this panel.
  */
 function expectNoCoarseForm(text: string, amount: number): void {
   const escaped = coarseForm(amount).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  expect(text).not.toMatch(new RegExp(`${escaped}(?!\\.)`));
+  expect(text).not.toMatch(new RegExp(`${escaped}(?!\\.\\d)`));
 }
 
 function renderPanel(rows = rows6, rate = 0.06, goals?: readonly Goal[]) {
@@ -85,9 +92,21 @@ function cardLabel(id: string): string {
 afterEach(cleanup);
 
 describe("every card carries role=group, so its aria-label lands on a nameable node", () => {
-  test("the house card's role supports an accessible name", () => {
+  test("a projected card's role supports an accessible name", () => {
     renderPanel();
     expect(screen.getByTestId("goal-house").getAttribute("role")).toBe("group");
+  });
+
+  // The unprojectable card is a second, separate JSX return -- its own
+  // `role="group"` cannot be inferred from `ProjectedCard`'s.
+  test("an unprojectable card's role supports an accessible name too", () => {
+    const spendingGoal: Goal = {
+      ...houseGoal,
+      id: "none",
+      scope: { kind: "purpose", purpose: "spending" },
+    };
+    renderPanel(rows6, 0.06, [spendingGoal]);
+    expect(screen.getByTestId("goal-none").getAttribute("role")).toBe("group");
   });
 });
 

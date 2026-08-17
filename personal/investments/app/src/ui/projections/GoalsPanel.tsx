@@ -41,19 +41,14 @@ interface GoalCardProps {
 }
 
 /**
- * A Radix `Card` renders a bare `<div>`, `role="generic"` in the
- * accessibility tree, and ARIA prohibits naming a generic role -- an
- * `aria-label` on one is not guaranteed to reach a screen reader at all.
- * Both cards below carry `role="group"`, which supports naming and keeps
- * every child exposed exactly as before, so the `aria-label` this file is
- * built around has somewhere valid to land.
- */
-
-/**
  * The card for a goal the projection cannot reach: no covered account, or a
  * target year outside `rows`. It says so in words rather than falling back
  * to a projected or a gap of zero, which would read as "on track" for a
  * goal the projection never looked at.
+ *
+ * Carries `role="group"`: a Radix `Card` renders a bare `<div>`
+ * (`role="generic"`), and ARIA prohibits naming a generic role, so without
+ * this the `aria-label` below would have nowhere valid to land.
  */
 function UnprojectableCard({ goal, verdict }: GoalCardProps) {
   const targetLine = `Target: ${formatCurrency(goal.target)} by ${goal.by}.`;
@@ -91,6 +86,9 @@ function UnprojectableCard({ goal, verdict }: GoalCardProps) {
  * and the card's `aria-label` -- so the two can never disagree. Six defects
  * of an announcement reading a coarser figure than the card's own text have
  * shipped in this project; this is what closes that class off for good.
+ *
+ * Carries `role="group"` for the same reason `UnprojectableCard` does: a
+ * Radix `Card` is `role="generic"`, which ARIA prohibits naming.
  */
 function ProjectedCard({ goal, verdict }: GoalCardProps) {
   const projected = verdict.projected;
