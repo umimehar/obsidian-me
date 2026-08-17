@@ -2,7 +2,7 @@
 title: Lessons
 tags: [knowledge, lessons]
 created: 2026-07-13
-updated: 2026-08-05
+updated: 2026-08-17
 status: active
 type: permanent
 ---
@@ -81,3 +81,27 @@ Why:
 NEVER use `\b` in a `git grep` pattern. Use `grep -E` over `git show <rev>:<path>` or over `git diff` output, or use explicit character-class boundaries `(^|[^A-Z0-9])…([^A-Z0-9]|$)` which git grep does honour.
 
 ALWAYS prove a search tool can find the thing before trusting it to report absence: run it once against known-present content. A grep that has never returned a hit is not evidence of a clean tree.
+
+## Testing
+
+### key a coarse-form absence assertion to the computed rounding, never to a truncation (2026-08-17)
+
+Why:
+- The test written to catch a codebase's most-repeated defect could not catch it. It asserted `not.toMatch(/\$92,547(?!\.)/)` against a rendered `$92,547.67`, but the coarse form of that figure is `$92,548`. Different digits, so no mutation could ever match the pattern. A reviewer proved it by injecting the coarsened figure into the accessible label: all 13 tests stayed green.
+- The sibling assertion on `$50,180.10` worked, but only by luck, because `.10` rounds down and `.67` rounds up. Half of all figures are undefended by a truncation-shaped guard, and which half is invisible at the point you write it.
+- The founding instance of the defect was itself a round-up: `$241,740` announced beside a rendered `$241,739.67`. So the guard as written would have missed the exact bug it descends from.
+
+NEVER write an absence assertion by chopping digits off the precise string. `"$92,547.67"` does not contain `"$92,548"`, and it DOES contain `"$92,547"`, so a plain `toContain` check on the truncated form fails on correct output while the rounded form goes unguarded.
+
+ALWAYS derive the coarse string in the test from the figure itself, by applying the real coarsening function, so the assertion tracks the value rather than a hand-typed prefix. Verify with a mutation that prints the rounded form and confirm the test reddens.
+
+### mutate the second rendering path, not the shared variable (2026-08-17)
+
+Why:
+- An audit reported "6 of 6 rendered figures caught, 0 silent" and was wrong in direction, not in count. Every one of its six mutations changed a shared variable that feeds both the visible text and the accessible label, so each hit both by construction and proved nothing about drift between them.
+- The summary assembly, where the label is composed separately, was never mutated. Three drift mutations there each left the whole suite green: a coarsened monthly figure, a wrong target, a cents-stripped total.
+- Every precision defect this project has ever shipped lived in that second path. The audit tested the one place the bug has never appeared.
+
+ALWAYS mutate each rendering path independently when a figure is rendered twice (visible text, `aria-label`, live region, tooltip). A shared-variable mutation tests that the variable is used; only a per-path mutation tests that the paths agree.
+
+NEVER report a figure audit as complete without stating which paths it mutated. "N of N figures" hides whether N counted variables or renderings.
