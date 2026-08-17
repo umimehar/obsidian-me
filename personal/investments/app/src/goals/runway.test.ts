@@ -33,6 +33,10 @@ describe("buildRunway, the CESG finding", () => {
     const row = buildRunway(rows6, inputs6).find((r) => r.id === "cesg");
     expect(row?.year).toBe("2042");
     expect(row?.unclaimed).toBeCloseTo(550, 2);
+    // The prose must not contradict the number: a note claiming the cap was
+    // reached, paired with a nonzero unclaimed figure, is a row that denies
+    // its own finding to whoever reads the sentence instead of the number.
+    expect(row?.note).toMatch(/ages out|forfeit/i);
   });
 
   test("the final row's cumulativeGrant is 6,650, which is where the 550 comes from", () => {
@@ -77,6 +81,73 @@ describe("buildRunway, statutory deadlines are pinned against the rate", () => {
   });
 });
 
+describe("buildRunway, unclaimed is pinned across every row", () => {
+  test("every row but cesg carries a null unclaimed against the real corpus", () => {
+    for (const row of buildRunway(rows6, inputs6)) {
+      if (row.id === "cesg") continue;
+      expect(row.unclaimed).toBeNull();
+    }
+  });
+
+  test("the same holds at a higher rate", () => {
+    for (const row of buildRunway(rows12, inputs12)) {
+      if (row.id === "cesg") continue;
+      expect(row.unclaimed).toBeNull();
+    }
+  });
+});
+
+// A cap that is never reached inside the projection is unreachable on the
+// real corpus at any rate the app offers: the FHSA and RESP caps both fill
+// well inside the default 30-year, 6% projection. A projection window short
+// enough to end first is not a fabricated fixture -- projectYears(inputs)
+// runs for real, over the real corpus, with a real ProjectionOverrides.years
+// -- so this exercises the "never reached" branch of capBound with numbers
+// the engine actually produced, the same way rows12 above exercises the
+// rate axis.
+describe("buildRunway, the never-reached branch of a lifetime cap", () => {
+  const shortInputs = projectionInputs(analytics, { returnRate: 0.06, years: 1 });
+  const shortRows = projectYears(shortInputs);
+
+  test("a projection window that ends before either cap fills reports null years and real leftover room", () => {
+    const runway = buildRunway(shortRows, shortInputs);
+    const fhsaCap = runway.find((r) => r.id === "fhsa-cap");
+    const respCap = runway.find((r) => r.id === "resp-cap");
+    expect(fhsaCap?.year).toBeNull();
+    expect(fhsaCap?.unclaimed).toBeCloseTo(8000, 2);
+    expect(respCap?.year).toBeNull();
+    expect(respCap?.unclaimed).toBeCloseTo(42250, 2);
+  });
+});
+
+describe("buildRunway, an excluded group is omitted, never fabricated", () => {
+  test("excluding FHSA from inputs.groups drops both FHSA rows instead of reporting a false cap year", () => {
+    const allGroups = inputs6.groups ?? [];
+    expect(allGroups).toContain("FHSA");
+    const withoutFhsa = { ...inputs6, groups: allGroups.filter((g) => g !== "FHSA") };
+    const rowsWithoutFhsa = projectYears(withoutFhsa);
+    const runway = buildRunway(rowsWithoutFhsa, withoutFhsa);
+    expect(runway.find((r) => r.id === "fhsa-cap")).toBeUndefined();
+    expect(runway.find((r) => r.id === "fhsa-close")).toBeUndefined();
+    expect(runway.map((r) => r.id)).toEqual(["resp-cap", "cesg", "rrsp-last", "tfsa"]);
+  });
+});
+
+// projectionInputs (src/projection/inputs.ts) only ever returns "" for
+// fhsaCloseYear when the corpus has no FHSA account, and the same absence
+// also drops FHSA out of inputs.groups -- so on any real ProjectionInputs
+// this function can be handed, fhsaCloseYear === "" and FHSA in inputs.groups
+// cannot both be true, and the corpus cannot manufacture the combination.
+// buildRunway's own contract does not assume that pairing, so this pins the
+// guard directly against a hand-built ProjectionInputs.
+describe("buildRunway, the fhsaCloseYear empty-string contract", () => {
+  test("an empty fhsaCloseYear reports a null year rather than the literal empty string", () => {
+    const inputsWithNoCloseYear = { ...inputs6, fhsaCloseYear: "" };
+    const row = buildRunway(rows6, inputsWithNoCloseYear).find((r) => r.id === "fhsa-close");
+    expect(row?.year).toBeNull();
+  });
+});
+
 describe("buildRunway, row completeness", () => {
   test("every row carries a non-empty id, wrapper, bound and note", () => {
     for (const row of buildRunway(rows6, inputs6)) {
@@ -90,5 +161,30 @@ describe("buildRunway, row completeness", () => {
   test("six rows, one per wrapper concern: fhsa-cap, fhsa-close, resp-cap, cesg, rrsp-last, tfsa", () => {
     const ids = buildRunway(rows6, inputs6).map((r) => r.id);
     expect(ids).toEqual(["fhsa-cap", "fhsa-close", "resp-cap", "cesg", "rrsp-last", "tfsa"]);
+  });
+
+  test("each row's wrapper and note are the real pinned strings, not a mismatched label", () => {
+    const runway = buildRunway(rows6, inputs6);
+    const byId = new Map(runway.map((r) => [r.id, r]));
+    expect(byId.get("fhsa-cap")?.wrapper).toBe("FHSA");
+    expect(byId.get("fhsa-close")?.wrapper).toBe("FHSA");
+    expect(byId.get("resp-cap")?.wrapper).toBe("RESP");
+    expect(byId.get("cesg")?.wrapper).toBe("RESP (CESG)");
+    expect(byId.get("rrsp-last")?.wrapper).toBe("RRSP");
+    expect(byId.get("tfsa")?.wrapper).toBe("TFSA");
+
+    expect(byId.get("fhsa-cap")?.bound).toBe("$40,000 lifetime contribution cap");
+    expect(byId.get("resp-cap")?.bound).toBe("$50,000 lifetime contribution cap");
+    expect(byId.get("cesg")?.bound).toBe("$7,200 lifetime CESG cap");
+
+    expect(byId.get("fhsa-close")?.note).toBe(
+      "A statutory deadline set by the account's first activity, not by the return rate.",
+    );
+    expect(byId.get("rrsp-last")?.note).toBe(
+      "The owner turns 71 in this year, a statutory cutoff that outruns the projection itself.",
+    );
+    expect(byId.get("tfsa")?.note).toBe(
+      "The TFSA has no lifetime contribution cap, so there is no bound to reach.",
+    );
   });
 });
