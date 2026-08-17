@@ -330,9 +330,7 @@ test("a shortfall solves to a monthly figure that, fed back, lands on the target
 });
 
 test("a zero return rate solves without dividing by zero", () => {
-  const stretch: Goal = { ...GOALS[0]!, id: "stretch", target: 90000 };
-  const v = evaluateGoal(stretch, analytics, projectYears(projectionInputs(analytics, { returnRate: 0 })), 0, "2039");
-  expect(Number.isFinite(v.monthlyToClose ?? Number.NaN)).toBe(true);
+  expect(Number.isFinite(contributionToClose(-50000, 3, 0))).toBe(true);
 });
 ```
 
@@ -365,7 +363,9 @@ test("a shortfall the wrapper has no room to close is blocked with a reason", ()
 });
 ```
 
-Reconcile this with step 2: the solve is computed either way, and `monthlyToClose` is surfaced only when the room exists to use it. Step 2's assertion on the returned figure therefore reads it off an exported helper rather than off `monthlyToClose`. Name that helper `contributionToClose(gap, years, rate)` and export it, so both tests read the same arithmetic.
+Reconcile this with step 2: the solve is computed either way, and `monthlyToClose` is surfaced only when the room exists to use it. BOTH of step 2's assertions on the returned figure therefore read it off an exported helper rather than off `monthlyToClose`. Name that helper `contributionToClose(gap, years, rate)` and export it, so every test reads the same arithmetic.
+
+Corrected 2026-08-17, mid-execution, after the task 3 implementer caught it: step 2's zero-rate test as first written asserted `monthlyToClose` is finite, which cannot pass for the FHSA fixture at ANY rate. The engine's contribution and room schedule never reads `returnRate`, so FHSA lifetime room is exhausted in 2028 at 0% exactly as it is at 6%, leaving that fixture room-blocked and `monthlyToClose` null in both. The plan was wrong, not the implementation.
 
 - [ ] **Step 5: Run every test, confirm they fail, implement, confirm they pass.**
 
