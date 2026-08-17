@@ -4,19 +4,37 @@
  * rounded dollar figure next to a stated statement figure invites a false
  * mismatch. A negative amount keeps its sign, because a loss is a loss.
  *
- * One deliberate exception lives in `charts/plot.ts`: `formatAxisCurrency`,
- * a 0-decimal formatter for the axis ticks, where cents are noise on a
- * $250,000 scale. It is argued in its own comment there, and it is confined
- * to the ticks -- every accessible summary, every tooltip and every bar
- * label formats through this function, so a summary can never announce a
- * coarser figure than the one on screen. Anything else that formats money
- * belongs here.
+ * The one deliberate 0-decimal exception is `formatWholeDollars` below --
+ * every accessible summary, every tooltip and every bar label still formats
+ * through this function, so a summary can never announce a coarser figure
+ * than the one on screen. Anything else that formats money belongs here.
  */
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-CA", {
     style: "currency",
     currency: "CAD",
     minimumFractionDigits: 2,
+  }).format(amount);
+}
+
+/**
+ * A whole-dollar figure with thousands separators, no cents.
+ *
+ * Confined to two contexts where cents are noise on a large, round figure:
+ * a chart axis tick (`charts/plot.ts`'s `formatAxisCurrency` delegates here
+ * rather than keeping its own `Intl.NumberFormat`, so the two never drift
+ * apart) and a statutory lifetime cap like the room runway's $40,000 FHSA
+ * bound. Both are one call to this function, not a second definition of it --
+ * this codebase has been sent back three times for exactly that (a second
+ * `latestMarketValue`, four kind-to-group tables, and a `money()` that
+ * put a negative sign in the wrong place).
+ */
+export function formatWholeDollars(amount: number): string {
+  return new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(amount);
 }
 

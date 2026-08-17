@@ -1,3 +1,4 @@
+import { formatWholeDollars } from "../format";
 import { periodToDate } from "./scales";
 
 /** One point in pixel space, after the scales have been applied to a period and a value. */
@@ -26,16 +27,12 @@ export function formatPeriodLabel(period: string): string {
  * way the axis does is how this project shipped an announced $241,740 beside
  * a rendered $241,739.67.
  *
- * Shared by the portfolio chart and the contributions chart, so the two
- * cannot end up rounding their axes differently.
+ * Delegates to `format.ts`'s `formatWholeDollars` rather than keeping its own
+ * `Intl.NumberFormat`, so the axis concern (this file) and the formatting
+ * rule (`format.ts`, beside `formatCurrency`) share one implementation.
  */
 export function formatAxisCurrency(amount: number): string {
-  return new Intl.NumberFormat("en-CA", {
-    style: "currency",
-    currency: "CAD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+  return formatWholeDollars(amount);
 }
 
 /**

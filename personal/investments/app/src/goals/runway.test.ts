@@ -120,16 +120,48 @@ describe("buildRunway, the never-reached branch of a lifetime cap", () => {
   });
 });
 
+// Parameterised over all four groups, not just FHSA: pinning only the FHSA
+// case left `if (inScope(inputs, "TFSA"))` free to typo into
+// `if (inScope(inputs, "RESP"))` with the suite still green, since nothing
+// ever excluded TFSA to notice its row vanish or double up.
+const GROUP_ROW_IDS: Record<string, readonly string[]> = {
+  FHSA: ["fhsa-cap", "fhsa-close"],
+  RESP: ["resp-cap", "cesg"],
+  RRSP: ["rrsp-last"],
+  TFSA: ["tfsa"],
+};
+
 describe("buildRunway, an excluded group is omitted, never fabricated", () => {
-  test("excluding FHSA from inputs.groups drops both FHSA rows instead of reporting a false cap year", () => {
-    const allGroups = inputs6.groups ?? [];
-    expect(allGroups).toContain("FHSA");
-    const withoutFhsa = { ...inputs6, groups: allGroups.filter((g) => g !== "FHSA") };
-    const rowsWithoutFhsa = projectYears(withoutFhsa);
-    const runway = buildRunway(rowsWithoutFhsa, withoutFhsa);
-    expect(runway.find((r) => r.id === "fhsa-cap")).toBeUndefined();
-    expect(runway.find((r) => r.id === "fhsa-close")).toBeUndefined();
-    expect(runway.map((r) => r.id)).toEqual(["resp-cap", "cesg", "rrsp-last", "tfsa"]);
+  for (const [group, ownRowIds] of Object.entries(GROUP_ROW_IDS)) {
+    test(`excluding ${group} from inputs.groups drops exactly its own rows`, () => {
+      const allGroups = inputs6.groups ?? [];
+      expect(allGroups).toContain(group);
+      const filtered = { ...inputs6, groups: allGroups.filter((g) => g !== group) };
+      const filteredRows = projectYears(filtered);
+      const runway = buildRunway(filteredRows, filtered);
+      const ids = runway.map((r) => r.id);
+      for (const ownId of ownRowIds) expect(ids).not.toContain(ownId);
+      expect(ids).toHaveLength(6 - ownRowIds.length);
+    });
+  }
+
+  // `inputs.groups === undefined` means "all four", per engine.ts's own
+  // contract ("Omitted (undefined) means all four"). Flipping the `||` to
+  // `&&` in `inScope` reads an omitted `groups` as excluding everything
+  // instead, and nothing above catches it: inputs6 always carries a real
+  // `groups` array, so this is the one test that exercises the branch the
+  // corpus never takes.
+  test("an omitted inputs.groups (undefined) reports all six rows, not zero", () => {
+    const allGroupsOmitted = { ...inputs6, groups: undefined };
+    const runway = buildRunway(rows6, allGroupsOmitted);
+    expect(runway.map((r) => r.id)).toEqual([
+      "fhsa-cap",
+      "fhsa-close",
+      "resp-cap",
+      "cesg",
+      "rrsp-last",
+      "tfsa",
+    ]);
   });
 });
 
@@ -174,8 +206,12 @@ describe("buildRunway, row completeness", () => {
     expect(byId.get("tfsa")?.wrapper).toBe("TFSA");
 
     expect(byId.get("fhsa-cap")?.bound).toBe("$40,000 lifetime contribution cap");
+    expect(byId.get("fhsa-close")?.bound).toBe(
+      "must close 15 years after the first FHSA contribution",
+    );
     expect(byId.get("resp-cap")?.bound).toBe("$50,000 lifetime contribution cap");
     expect(byId.get("cesg")?.bound).toBe("$7,200 lifetime CESG cap");
+    expect(byId.get("rrsp-last")?.bound).toBe("last calendar year RRSP room accrues");
 
     expect(byId.get("fhsa-close")?.note).toBe(
       "A statutory deadline set by the account's first activity, not by the return rate.",

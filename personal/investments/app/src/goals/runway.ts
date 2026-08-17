@@ -1,5 +1,6 @@
 import type { ProjectionInputs, ProjectionYear } from "../projection/engine";
 import type { ProjectionGroup } from "../projection/inputs";
+import { formatWholeDollars } from "../ui/format";
 
 export interface RunwayRow {
   id: string;
@@ -22,11 +23,6 @@ function inScope(inputs: ProjectionInputs, group: ProjectionGroup): boolean {
   return inputs.groups === undefined || inputs.groups.includes(group);
 }
 
-/** A whole-dollar figure with thousands separators, matching how the brief itself writes these caps. */
-function money(amount: number): string {
-  return `$${amount.toLocaleString("en-CA")}`;
-}
-
 /**
  * The first row where a group's `roomRemaining` reaches zero, and what is
  * left in that room at the end of the projection when it never does.
@@ -35,18 +31,23 @@ function money(amount: number): string {
  * the intended reading, but the same zero also appears for a group the
  * caller has excluded (`inScope` in `engine.ts` substitutes a flat zero) and,
  * for FHSA, for any row past the close year regardless of how much room was
- * actually used. The caller of this function only invokes it once `inScope`
- * above has confirmed the group is selected, which removes the first
- * overlap. FHSA closing before its cap fills is a real remaining overlap,
- * but it is unreachable in the corpus -- the cap fills in 2028, eleven years
- * before the 2039 close -- and is left as a known limitation rather than
- * guessed at here.
+ * actually used. Every caller in this file only invokes `capBound` once
+ * `inScope` above has confirmed the group is selected -- pinned across all
+ * four groups by the "excluded group" test in `runway.test.ts`, not just
+ * assumed here -- which removes the first overlap. FHSA closing before its
+ * cap fills is a real remaining overlap, but it is unreachable in the corpus
+ * -- the cap fills in 2028, eleven years before the 2039 close -- and is
+ * left as a known limitation rather than guessed at here.
  *
- * Defaults the lookup to `Number.POSITIVE_INFINITY`, not zero:
- * `noUncheckedIndexedAccess` forces a default for a key that in practice is
- * always present, and zero would read as "cap reached" under this function's
- * own predicate, fabricating a finding a missing key never actually
- * reported.
+ * Defaults the lookup to `Number.POSITIVE_INFINITY`, not zero, as
+ * belt-and-braces against the same fabrication if a future caller ever
+ * invokes this function for a group `inScope` has not confirmed: with the
+ * guard in place today the default is unreachable by construction (every
+ * key `capBound` reads is always present in a real `ProjectionYear`), not a
+ * behaviour any test here exercises directly. `noUncheckedIndexedAccess`
+ * still forces some default to be chosen, and zero would read as "cap
+ * reached" under this function's own predicate, which is the wrong default
+ * to leave lying around even unreachable.
  */
 function capBound(
   rows: readonly ProjectionYear[],
@@ -71,7 +72,7 @@ function capBound(
  * brief exists to surface, and it must survive a reworded `notes` array.
  */
 function cesgRow(rows: readonly ProjectionYear[], inputs: ProjectionInputs): RunwayRow {
-  const bound = `${money(inputs.rules.cesgLifetime)} lifetime CESG cap`;
+  const bound = `${formatWholeDollars(inputs.rules.cesgLifetime)} lifetime CESG cap`;
   const capRow = rows.find((row) => row.cumulativeGrant >= inputs.rules.cesgLifetime);
   if (capRow !== undefined) {
     return {
@@ -127,7 +128,7 @@ export function buildRunway(
     result.push({
       id: "fhsa-cap",
       wrapper: "FHSA",
-      bound: `${money(inputs.rules.fhsaLifetime)} lifetime contribution cap`,
+      bound: `${formatWholeDollars(inputs.rules.fhsaLifetime)} lifetime contribution cap`,
       year: cap.year,
       unclaimed: cap.unclaimed,
       note: "The FHSA lifetime contribution cap, reached by the money going in.",
@@ -152,7 +153,7 @@ export function buildRunway(
     result.push({
       id: "resp-cap",
       wrapper: "RESP",
-      bound: `${money(inputs.rules.respLifetime)} lifetime contribution cap`,
+      bound: `${formatWholeDollars(inputs.rules.respLifetime)} lifetime contribution cap`,
       year: cap.year,
       unclaimed: cap.unclaimed,
       note: "The RESP lifetime contribution cap, reached by the money going in.",
