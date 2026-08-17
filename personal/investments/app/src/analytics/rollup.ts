@@ -44,7 +44,17 @@ export interface Rollup {
   total: number;
 }
 
-function latestMarketValue(account: AccountSeries): number | null {
+/**
+ * The account's latest stated market value: the last month's `marketValue`,
+ * null when that last statement is a CASH-template statement that carries
+ * no market value, or when the account has no statements at all. Never
+ * walked backward past a null -- a stale figure from a prior month is not
+ * "the latest stated value", it is a value the account has since stopped
+ * stating. Exported so every consumer that needs "latest stated market
+ * value" reads this one definition instead of growing a second one that
+ * can silently disagree with it (see `goals/scope.ts`).
+ */
+export function latestMarketValue(account: AccountSeries): number | null {
   const last = account.months[account.months.length - 1];
   return last?.marketValue ?? null;
 }

@@ -46,7 +46,6 @@ export const GOALS: readonly Goal[] = [
     scope: { kind: "purpose", purpose: "education" },
     target: 50000,
     by: String(RESP_CESG_LAST_YEAR),
-    source:
-      "Target is the RESP's $50,000 lifetime contribution cap. The 2042 year is cesgLastYear, DEFAULT_RESP_BIRTH_YEAR (2025) plus 17, a documented default rather than a confirmed beneficiary birth year.",
+    source: `Target is the RESP's $50,000 lifetime contribution cap. The ${RESP_CESG_LAST_YEAR} year is cesgLastYear, DEFAULT_RESP_BIRTH_YEAR (${DEFAULT_RESP_BIRTH_YEAR}) plus 17, a documented default rather than a confirmed beneficiary birth year.`,
   },
 ];

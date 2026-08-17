@@ -1,3 +1,4 @@
+import { latestMarketValue } from "../analytics/rollup";
 import { REGISTERED_KINDS } from "../analytics/rooms";
 import type { AccountSeries } from "../analytics/types";
 import { type ProjectionGroup, projectedAccounts } from "../projection/inputs";
@@ -44,24 +45,19 @@ function matchesScope(account: AccountSeries, scope: GoalScope): boolean {
 }
 
 /**
- * The account's latest stated market value, walking `months` backwards to
- * the last entry that actually states one. A month with no statement is
- * absent from `months` entirely rather than zero-filled, and a statement
- * that states one but leaves `marketValue` null (a CASH-template statement)
- * is skipped the same way -- this mirrors how `inputs.ts` derives opening
- * balances. An account with no non-null `marketValue` anywhere contributes 0.
+ * Sums each account's latest stated market value (`latestMarketValue` from
+ * `analytics/rollup.ts`, coerced null to 0 here the same way `groupTotal`
+ * does for a rollup group). Reusing that one function -- rather than
+ * re-deriving "latest stated market value" a second time -- is what keeps
+ * this figure from ever disagreeing with `analytics.rollups.registration`,
+ * which the rest of the dashboard reads for the same fact (`inputs.ts`'s
+ * `openingByGroup` reads that rollup rather than re-summing for the same
+ * reason). `scope.test.ts` pins that a `portfolio` scope's `scopeValue`
+ * equals the sum of the registration rollup's totals.
  */
-function latestMarketValue(account: AccountSeries): number {
-  for (let i = account.months.length - 1; i >= 0; i--) {
-    const month = account.months[i];
-    if (month !== undefined && month.marketValue !== null) return month.marketValue;
-  }
-  return 0;
-}
-
 function sumLatestMarketValue(accounts: readonly AccountSeries[]): number {
   let total = 0;
-  for (const account of accounts) total += latestMarketValue(account);
+  for (const account of accounts) total += latestMarketValue(account) ?? 0;
   return total;
 }
 
