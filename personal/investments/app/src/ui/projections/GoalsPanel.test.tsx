@@ -6,6 +6,7 @@ import { GOALS, type Goal } from "../../goals/config";
 import { projectYears } from "../../projection/engine";
 import { projectionInputs } from "../../projection/inputs";
 import { loadAnalytics } from "../data";
+import { formatCurrency } from "../format";
 import { GoalsPanel } from "./GoalsPanel";
 
 /**
@@ -23,6 +24,40 @@ const houseGoal = GOALS[0];
 if (houseGoal === undefined) throw new Error("GOALS is missing the house entry");
 const educationGoal = GOALS[1];
 if (educationGoal === undefined) throw new Error("GOALS is missing the education entry");
+
+/**
+ * The whole-dollar form of a figure, rounded the way a reader would round it
+ * -- never assumed to be a truncation. Round-tripping every coarse-form
+ * assertion through this one function, fed the same numeric literal the
+ * precise assertion uses, is what caught the review's finding: several of
+ * this project's real figures round UP ($92,547.67 to $92,548, not
+ * $92,547), so a truncated guess would have missed exactly the direction the
+ * project's own ancestor defect (`plot.ts`'s $241,740 beside $241,739.67)
+ * took.
+ */
+function coarseForm(amount: number): string {
+  return new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD",
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+/**
+ * Fails unless the coarse, whole-dollar form of `amount` is absent from
+ * `text` as its own standalone reading. Some real figures round DOWN
+ * ($50,180.10 to $50,180), which makes the coarse form a literal prefix of
+ * the precise one -- a plain `not.toContain` would fail on a card printing
+ * only the correct precise figure, since the prefix is still there as its
+ * leading digits. The negative lookahead accepts that prefix only when it is
+ * immediately followed by the decimal point that continues it into the real
+ * figure, so a genuinely separate coarse reading is still caught regardless
+ * of which way the real figure rounds.
+ */
+function expectNoCoarseForm(text: string, amount: number): void {
+  const escaped = coarseForm(amount).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  expect(text).not.toMatch(new RegExp(`${escaped}(?!\\.)`));
+}
 
 function renderPanel(rows = rows6, rate = 0.06, goals?: readonly Goal[]) {
   render(
@@ -49,23 +84,37 @@ function cardLabel(id: string): string {
 
 afterEach(cleanup);
 
+describe("every card carries role=group, so its aria-label lands on a nameable node", () => {
+  test("the house card's role supports an accessible name", () => {
+    renderPanel();
+    expect(screen.getByTestId("goal-house").getAttribute("role")).toBe("group");
+  });
+});
+
 describe("the house card, against the real corpus", () => {
+  const projected = 50180.1;
+  const target = 40000;
+  const gap = 10180.1;
+
   test("prints its projected figure at full precision, never the coarse form", () => {
     renderPanel();
     const text = cardText("house");
-    expect(text).toContain("$50,180.10");
-    expect(text).toContain("$40,000.00");
+    expect(text).toContain(formatCurrency(projected));
+    expect(text).toContain(formatCurrency(target));
     expect(text).toMatch(/ahead of target/i);
-    // The coarse, whole-dollar form is never present on its own -- only ever
-    // as the leading digits of the full-precision figure above.
-    expect(text).not.toMatch(/\$50,180(?!\.)/);
+    // The coarse, whole-dollar form of the projected figure happens to share
+    // its leading digits with the precise one here ($50,180 rounds down from
+    // $50,180.10) -- checked against the real rounded value, not assumed.
+    expectNoCoarseForm(text, projected);
   });
 
-  test("the card's aria-label carries the same figure the card prints, never a drifted one", () => {
+  test("the card's aria-label carries the same figures the card prints, never a drifted one", () => {
     renderPanel();
     const label = cardLabel("house");
-    expect(label).toContain("$50,180.10");
-    expect(label).not.toMatch(/\$50,180(?!\.)/);
+    expect(label).toContain(formatCurrency(projected));
+    expect(label).toContain(formatCurrency(target));
+    expect(label).toContain(formatCurrency(gap));
+    expectNoCoarseForm(label, projected);
   });
 
   test("prints its source, rendered rather than decorative", () => {
@@ -75,24 +124,31 @@ describe("the house card, against the real corpus", () => {
 
   test("prints the gap itself, not just the direction word", () => {
     renderPanel();
-    expect(cardText("house")).toContain("$10,180.10");
+    expect(cardText("house")).toContain(formatCurrency(gap));
   });
 });
 
 describe("the education card, against the real corpus", () => {
-  test("prints its projected figure at full precision", () => {
+  const projected = 92547.67;
+  const target = 50000;
+
+  test("prints its projected figure at full precision, never the coarse form", () => {
     renderPanel();
     const text = cardText("education");
-    expect(text).toContain("$92,547.67");
-    expect(text).toContain("$50,000.00");
+    expect(text).toContain(formatCurrency(projected));
+    expect(text).toContain(formatCurrency(target));
     expect(text).toMatch(/ahead of target/i);
+    // $92,547.67 rounds UP to $92,548 -- a different digit than the precise
+    // form, not a prefix of it, so this is where a truncation-based guard
+    // would have missed the defect entirely.
+    expectNoCoarseForm(text, projected);
   });
 
-  test("its aria-label carries the same full-precision figure", () => {
+  test("its aria-label carries the same full-precision figure, and never the rounded-up coarse form", () => {
     renderPanel();
     const label = cardLabel("education");
-    expect(label).toContain("$92,547.67");
-    expect(label).not.toMatch(/\$92,547(?!\.)/);
+    expect(label).toContain(formatCurrency(projected));
+    expectNoCoarseForm(label, projected);
   });
 
   test("raising the rate raises the projected figure, and the history stays the same page", () => {
@@ -115,7 +171,9 @@ describe("the education card, against the real corpus", () => {
 });
 
 describe("a card whose scope outruns the projection", () => {
-  test("names how many accounts it covers and what it left out", () => {
+  const uncoveredValue = 60798.32;
+
+  test("names exactly how many accounts it covers, not any count containing those digits", () => {
     const growthGoal: Goal = {
       ...houseGoal,
       id: "growth",
@@ -124,13 +182,36 @@ describe("a card whose scope outruns the projection", () => {
     };
     renderPanel(rows6, 0.06, [growthGoal]);
     const text = cardText("growth");
-    expect(text).toContain("2 of 5");
-    expect(text).toMatch(/does not forecast/i);
-    expect(text).toContain("$60,798.32");
+    // The exact sentence, not a loose substring: "Covers 2 of 5" alone would
+    // also match a card that actually printed "Covers 12 of 5", since "2 of
+    // 5" is a substring of "12 of 5". Anchoring the whole phrase (and its
+    // word boundary before the count) rules that out.
+    expect(text).toContain("Covers 2 of 5 accounts in scope.");
+    expect(text).toContain(
+      `does not forecast 3 accounts holding ${formatCurrency(uncoveredValue)}.`,
+    );
+    expectNoCoarseForm(text, uncoveredValue);
+  });
+
+  test("the aria-label carries the same exact counts and figure", () => {
+    const growthGoal: Goal = {
+      ...houseGoal,
+      id: "growth",
+      scope: { kind: "purpose", purpose: "growth" },
+      by: "2028",
+    };
+    renderPanel(rows6, 0.06, [growthGoal]);
+    const label = cardLabel("growth");
+    expect(label).toContain("Covers 2 of 5 accounts in scope.");
+    expect(label).toContain(
+      `does not forecast 3 accounts holding ${formatCurrency(uncoveredValue)}.`,
+    );
   });
 });
 
 describe("an unprojectable goal", () => {
+  const target = 40000;
+
   test("says so in words rather than reading a zero", () => {
     const spendingGoal: Goal = {
       ...houseGoal,
@@ -143,7 +224,22 @@ describe("an unprojectable goal", () => {
     expect(text).not.toContain("$0.00");
     // The target is still real and still printed -- only the projection and
     // the gap are absent -- so its full-precision figure is pinned here too.
-    expect(text).toContain("$40,000.00");
+    expect(text).toContain(formatCurrency(target));
+    // "Covers 0 of 0" -- the spending purpose matches no `inTotals` account
+    // at all, so this is a real, exact count, not a placeholder.
+    expect(text).toContain("Covers 0 of 0 accounts in scope.");
+  });
+
+  test("the aria-label carries the same target figure the card prints, not a drifted one", () => {
+    const spendingGoal: Goal = {
+      ...houseGoal,
+      id: "none",
+      scope: { kind: "purpose", purpose: "spending" },
+    };
+    renderPanel(rows6, 0.06, [spendingGoal]);
+    const label = cardLabel("none");
+    expect(label).toContain(formatCurrency(target));
+    expect(label).toMatch(/cannot be projected/i);
   });
 
   test("a target year past the projection's last row is unprojectable too", () => {
@@ -156,12 +252,29 @@ describe("an unprojectable goal", () => {
 });
 
 describe("a shortfall the wrapper has no room to close", () => {
-  test("renders the blocked reason legibly, not as an error", () => {
-    const stretchGoal: Goal = { ...houseGoal, id: "stretch", target: 90000 };
+  const target = 90000;
+  const projected = 50180.095474;
+  const gap = 39819.904526;
+
+  test("renders the blocked reason legibly, not as an error, at full precision", () => {
+    const stretchGoal: Goal = { ...houseGoal, id: "stretch", target };
     renderPanel(rows6, 0.06, [stretchGoal]);
     const text = cardText("stretch");
     expect(text).toMatch(/short of target/i);
     expect(text).toMatch(/no CRA room left/i);
+    expect(text).toContain(formatCurrency(target));
+    expect(text).toContain(formatCurrency(projected));
+    expect(text).toContain(formatCurrency(gap));
+  });
+
+  test("the aria-label carries the same figures and the same blocked reason", () => {
+    const stretchGoal: Goal = { ...houseGoal, id: "stretch", target };
+    renderPanel(rows6, 0.06, [stretchGoal]);
+    const label = cardLabel("stretch");
+    expect(label).toContain(formatCurrency(target));
+    expect(label).toContain(formatCurrency(projected));
+    expect(label).toContain(formatCurrency(gap));
+    expect(label).toMatch(/no CRA room left/i);
   });
 });
 
@@ -172,21 +285,42 @@ describe("a shortfall the wrapper has no room to close", () => {
 // real corpus can force (the FHSA-scoped house goal, stretched) is always
 // room-blocked. Fixture only, the same way task 3 declared this goal.
 describe("a shortfall that solves to a monthly contribution", () => {
-  test("prints the monthly figure at full precision", () => {
-    const corporateGoal: Goal = {
+  const target = 1_000_000;
+  const projected = 215124.91165957847;
+  const gap = 784875.0883404216;
+  const monthly = 11602.83462164188;
+
+  function corporateGoal(): Goal {
+    return {
       id: "corp-stretch",
       label: "Corporate stretch",
       scope: { kind: "groups", groups: ["Corporate"] },
-      target: 1_000_000,
+      target,
       by: "2030",
       source: "fixture",
     };
-    renderPanel(rows6, 0.06, [corporateGoal]);
+  }
+
+  test("prints every figure at full precision, never the coarse form", () => {
+    renderPanel(rows6, 0.06, [corporateGoal()]);
     const text = cardText("corp-stretch");
     expect(text).toMatch(/short of target/i);
-    expect(text).toContain("$784,875.09");
-    expect(text).toContain("$11,602.83");
+    expect(text).toContain(formatCurrency(target));
+    expect(text).toContain(formatCurrency(projected));
+    expect(text).toContain(formatCurrency(gap));
+    expect(text).toContain(formatCurrency(monthly));
     expect(text).toMatch(/a month closes the gap/i);
+    // $11,602.83 rounds UP to $11,603 -- again a different digit, not a
+    // prefix, and the direction the review's mutation actually exploited.
+    expectNoCoarseForm(text, monthly);
+  });
+
+  test("the aria-label carries the same monthly figure, never a coarsened one", () => {
+    renderPanel(rows6, 0.06, [corporateGoal()]);
+    const label = cardLabel("corp-stretch");
+    expect(label).toContain(formatCurrency(monthly));
+    expect(label).toContain(formatCurrency(gap));
+    expectNoCoarseForm(label, monthly);
   });
 });
 

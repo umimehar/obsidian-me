@@ -41,6 +41,15 @@ interface GoalCardProps {
 }
 
 /**
+ * A Radix `Card` renders a bare `<div>`, `role="generic"` in the
+ * accessibility tree, and ARIA prohibits naming a generic role -- an
+ * `aria-label` on one is not guaranteed to reach a screen reader at all.
+ * Both cards below carry `role="group"`, which supports naming and keeps
+ * every child exposed exactly as before, so the `aria-label` this file is
+ * built around has somewhere valid to land.
+ */
+
+/**
  * The card for a goal the projection cannot reach: no covered account, or a
  * target year outside `rows`. It says so in words rather than falling back
  * to a projected or a gap of zero, which would read as "on track" for a
@@ -52,7 +61,8 @@ function UnprojectableCard({ goal, verdict }: GoalCardProps) {
   const summary = `${goal.label}. ${targetLine} This goal cannot be projected. ${coverage} ${goal.source}`;
 
   return (
-    <Card mb="3" data-testid={`goal-${goal.id}`} aria-label={summary}>
+    // biome-ignore lint/a11y/useSemanticElements: this is a summary card, not a form -- a <fieldset> would imply grouped inputs that do not exist here
+    <Card mb="3" role="group" data-testid={`goal-${goal.id}`} aria-label={summary}>
       <Flex direction="column" gap="2">
         <Heading size="3" as="h3">
           {goal.label}
@@ -115,7 +125,8 @@ function ProjectedCard({ goal, verdict }: GoalCardProps) {
     .join(" ");
 
   return (
-    <Card mb="3" data-testid={`goal-${goal.id}`} aria-label={summary}>
+    // biome-ignore lint/a11y/useSemanticElements: this is a summary card, not a form -- a <fieldset> would imply grouped inputs that do not exist here
+    <Card mb="3" role="group" data-testid={`goal-${goal.id}`} aria-label={summary}>
       <Flex direction="column" gap="2">
         <Heading size="3" as="h3">
           {goal.label}
@@ -171,7 +182,7 @@ export function GoalsPanel({
   goals = GOALS,
 }: GoalsPanelProps) {
   return (
-    <Flex direction="column" gap="2" data-goals-panel="">
+    <Flex direction="column" gap="2">
       {goals.map((goal) => (
         <GoalCard
           key={goal.id}
