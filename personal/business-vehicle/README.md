@@ -14,13 +14,13 @@ Everything about the 2026 Mercedes-Benz GLC 43 AMG leased in 15248132 Canada Inc
 
 ## Pages
 
-- [Overview](notes/index.html) — cost per month, what is due next, what needs doing. **Start here.**
-- [Lease](notes/lease.html) — term, payments, residual, what Mercedes-Benz Financial requires of the insurance.
-- [Insurance](notes/insurance.html) — both terms line by line, the brokers, the open questions.
-- [Service](notes/service.html) — every visit, the prepaid plan, what the dealer flagged.
-- [Compliance](notes/compliance.html) — business against personal use, mileage, tax questions.
-- [Fleet history](notes/fleet-history.html) — every leased vehicle.
-- [[tracking]] — deadlines and the running odometer.
+- [Overview](notes/index.html). Cost per month, what is due next, what needs doing. **Start here.**
+- [Lease](notes/lease.html). Term, payments, residual, what Mercedes-Benz Financial requires of the insurance.
+- [Insurance](notes/insurance.html). Both terms line by line, the brokers, the open questions.
+- [Service](notes/service.html). Every visit, the prepaid plan, what the dealer flagged.
+- [Compliance](notes/compliance.html). Business against personal use, mileage, tax questions.
+- [Fleet history](notes/fleet-history.html). Every leased vehicle.
+- [[tracking]]. Deadlines and the running odometer.
 
 ## The one thing to know
 

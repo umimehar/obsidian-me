@@ -10,7 +10,7 @@ personal: business-vehicle
 
 # Tracking
 
-Deadlines, readings and running costs. The detail lives in [[README|the pages]]; this is the at a glance sheet.
+Deadlines, readings and running costs. The detail lives in [[README|the pages]]. This is the at a glance sheet.
 
 ## Deadlines
 

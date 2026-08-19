@@ -1,14 +1,7 @@
+import { deltaHtml } from "../delta";
 import { escapeHtml, money, percent, plainDate, wholeMoney } from "../format";
 import { callout, kv, layout, section, table } from "../layout";
 import type { Endorsement, Policy, VehicleData } from "../types";
-
-function delta(prior: number, renewal: number): string {
-  const diff = renewal - prior;
-  if (diff === 0) return '<span class="num">0</span>';
-  const cls = diff > 0 ? "neg" : "pos";
-  const sign = diff > 0 ? "+" : "-";
-  return `<span class="num ${cls}">${sign}${wholeMoney(Math.abs(diff)).slice(1)}</span>`;
-}
 
 function endorsementRows(policy: Policy): readonly (readonly string[])[] {
   return policy.endorsements.map((e: Endorsement) => [
@@ -35,7 +28,7 @@ export function insurancePage(data: VehicleData): string {
       row.line === "Total" ? `<strong>${escapeHtml(row.line)}</strong>` : escapeHtml(row.line),
       wholeMoney(row.prior),
       wholeMoney(row.renewal),
-      delta(row.prior, row.renewal),
+      deltaHtml(row.prior, row.renewal),
     ]),
     [1, 2, 3],
   );
@@ -44,7 +37,7 @@ export function insurancePage(data: VehicleData): string {
     .map(
       (w) => `        <div class="card">
           <p class="card-title">${escapeHtml(w.driver)}</p>
-          <p class="card-meta">${delta(0, w.delta)} on the year</p>
+          <p class="card-meta">${deltaHtml(0, w.delta)} on the year</p>
           <p>${escapeHtml(w.detail)}</p>
         </div>`,
     )
@@ -115,7 +108,7 @@ ${kv([
   ],
   [
     "Year over year",
-    `<span class="num neg">${percent(change)}</span> — ${wholeMoney(renewal.totalPremium - prior.totalPremium)} more`,
+    `<span class="num pos">${percent(change)}</span>, ${wholeMoney(renewal.totalPremium - prior.totalPremium)} more`,
   ],
   ["Insurer", `${escapeHtml(renewal.insurer)}, underwritten by ${escapeHtml(renewal.underwriter)}`],
   ["Policy", escapeHtml(renewal.policyNumberMasked)],
