@@ -34,8 +34,20 @@ About 16,000 km a year at that pace, against an 18,000 km policy allowance.
 
 Front tyres read 4 mm on 12 August 2026, the shallowest measurement on the car. Rears were 5 mm, front pads 9 mm, rear pads 8 mm. Four millimetres is the number to watch before winter.
 
+## Costs
+
+| Item | Amount |
+|---|---|
+| Lease, monthly including tax | $1,750.01 |
+| Insurance, monthly from 1 October | $804.75 |
+| Total per month | $2,554.76 |
+| Total cost of the lease transaction | $68,000.36 |
+| Residual and purchase option at maturity | $58,580.00 |
+
 ## Watch list
 
 The steering clock spring makes a faint noise on full lock. Road tested 12 August 2026, no repair, customer monitoring. It sits inside the warranty window until 29 September 2028, so raise it again at the next service rather than after.
 
 Coolant read slightly low on the same visit. Topped up, pressure test found no leak. Recheck the level.
+
+Kilometre headroom is 965 km as of 12 August 2026: 15,000 km of allowance earned against 14,035 km driven. That margin is thin enough to matter over 26 remaining months at 20 cents a kilometre for anything over 54,090.

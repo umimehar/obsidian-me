@@ -20,6 +20,11 @@ const publicIdentifiers: string[] = [
   data.parties.dealer.hst,
   data.parties.dealer.customerNumber,
   ...data.fleet[0].service.map((s: { invoiceNumber: string }) => s.invoiceNumber),
+  ...data.fleet[0].protection.flatMap((p: Record<string, unknown>) =>
+    [p.agreementNumber, p.documentNumber, p.vehicleMarkingNumber].filter(
+      (x): x is string => typeof x === "string",
+    ),
+  ),
 ]
   .filter(Boolean)
   .flatMap((v: string) => v.match(/\d{7,}/g) ?? [])
@@ -61,7 +66,7 @@ describe("every rendered page", () => {
 
     test(`${page.file} exposes no unmasked account or bank number`, () => {
       // Public identifiers legitimately run long: the VIN, the federal corporation number,
-      // the dealer's own numbers, and service invoice numbers. They are read from the data
+      // the dealer's own numbers, service invoice numbers, and protection agreement numbers. They are read from the data
       // file rather than hardcoded, so a new record cannot silently widen the allowance.
       // Anything else with seven or more consecutive digits is an account number that
       // escaped masking.

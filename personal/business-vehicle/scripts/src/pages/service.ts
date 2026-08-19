@@ -64,9 +64,10 @@ export function servicePage(data: VehicleData): string {
       )
     : null;
 
+  const interval = plan?.serviceInterval ?? { km: null, months: null };
   const due = latest
     ? nextServiceDue(
-        { intervalKm: 20000, intervalMonths: 12 },
+        { intervalKm: interval.km ?? null, intervalMonths: interval.months ?? null },
         { date: latest.date, odometer: latest.odometerOut, coveredByPlan: latest.coveredByPlan },
       )
     : null;
@@ -107,7 +108,7 @@ ${kv([
   [
     "Services used",
     drawdown
-      ? `<span class="num">${drawdown.servicesUsed}</span> of ${plan?.numberOfServices ?? "—"} on the prepaid plan`
+      ? `<span class="num">${drawdown.servicesUsed}</span> of ${plan?.numberOfServices ?? "—"} on the prepaid plan, <span class="num">${drawdown.servicesRemaining ?? "—"}</span> left`
       : "—",
   ],
   [
@@ -123,6 +124,12 @@ ${kv([
 ])}
 
 ${latest?.notes ? callout(`<strong>${escapeHtml(latest.notes)}</strong>`) : ""}
+${
+  plan?.serviceInterval?.note
+    ? `      <p class="section-note">${escapeHtml(plan.serviceInterval.note)}</p>`
+    : ""
+}
+${plan?.valueNote ? `      <p class="section-note">${escapeHtml(plan.valueNote)}</p>` : ""}
 
       <hr class="hr mt-rule" />
 ${section("Service history")}

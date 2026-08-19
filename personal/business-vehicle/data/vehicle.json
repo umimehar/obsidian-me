@@ -712,7 +712,461 @@
           "notes": "Minor service performed at no charge under the prepaid maintenance plan. Front tyres are at 4 mm, which is the shallowest reading on the vehicle and the number to watch before winter."
         }
       ],
-      "protection": []
+      "protection": [
+        {
+          "name": "First Class Lease Protection Classic",
+          "kind": "wear-and-tear",
+          "price": 1615.0,
+          "provider": "Mercedes-Benz Financial Services",
+          "documentNumber": "5003012441001",
+          "document": "docs/lease/lease-agreement-fclp-classic-addendum.pdf",
+          "purchasedOn": "2025-09-30",
+          "termMonths": 36,
+          "termKm": null,
+          "expiryDate": "2028-09-30",
+          "expiryKm": null,
+          "waiverLimit": 7500.0,
+          "detail": "Waives excess wear and tear charges at lease end, up to $7,500.",
+          "cancellable": "Within the first 90 days of the lease term, in writing signed by both lessee and co lessee. The refund is prorated over the remaining full months and credited as a security deposit, not cash.",
+          "voidIf": [
+            "Repossession, total loss, or voluntary early termination",
+            "The purchase option is exercised",
+            "No signed condition report on return",
+            "Incomplete maintenance to manufacturer recommendations",
+            "Lease term over 60 months, or extended more than 12 months past maturity"
+          ],
+          "neverCovers": [
+            "Excess kilometre charges",
+            "Any single incident over $1,500 that insurance would normally cover, deductible notwithstanding",
+            "Missing parts costing more than $150 each",
+            "Frame and alignment damage, alterations, improper repairs, mismatched paint",
+            "Damage covered by a service contract, warranty or repairer's guarantee",
+            "Damage from racing or any speed contest",
+            "Parts or accessories added after delivery",
+            "Seizure or confiscation"
+          ]
+        },
+        {
+          "name": "Mercedes-Benz Prepaid Maintenance",
+          "kind": "maintenance",
+          "price": 1779.0,
+          "provider": "Mercedes-Benz Canada Inc.",
+          "providerContact": "1-800-387-0100, cs.can@cac.mercedes-benz.com",
+          "planCode": "L-PPM C, GLC, SLC 45M/3 Serv",
+          "invoiceCode": "PPM: 45M/3S/90KM",
+          "formCode": "PPM-CA-PC-2025-E (02/25)",
+          "document": "docs/warranty/prepaid-maintenance-plan.pdf",
+          "purchasedOn": "2025-09-29",
+          "dealerCode": "607",
+          "termMonths": 45,
+          "numberOfServices": 3,
+          "termKm": null,
+          "expiryDate": "2029-06-30",
+          "expiryKm": null,
+          "coverageEndsOn": "The first of 45 months from the 2025-09-30 delivery date, or the third service being taken.",
+          "serviceInterval": {
+            "km": 20000,
+            "months": 12,
+            "note": "The GLC 43 falls under the gasoline schedule at 20,000 km or 1 year, because the pricing and coverage tables list 43 models with the 450, 35 and 53 cars. The 15,000 km AMG schedule on page 1 does not govern this car. Work is not covered more than 2 months or 4,000 km before it is due."
+          },
+          "servicesIncluded": [
+            {
+              "service": "Service A",
+              "dueAtKm": 20000,
+              "description": "Synthetic oil and filter, remote key battery, washer fluid, tyre rotation, fluid levels, tyre inflation, brake pad inspection, maintenance counter reset"
+            },
+            {
+              "service": "Service B",
+              "dueAtKm": 40000,
+              "description": "Service A items plus the combination filter"
+            },
+            {
+              "service": "Service A",
+              "dueAtKm": 60000,
+              "description": "As the first Service A. Brake fluid every two years and panoramic roof lubrication every three years fall inside the plan where applicable."
+            }
+          ],
+          "notCovered": [
+            "Tyres of any type, wheel alignment and balancing",
+            "Wiper blades, light bulbs, brake pads and rotors",
+            "Fuel, oil and gasoline additives",
+            "Oil top ups between services",
+            "Any maintenance beyond the plan, or performed more frequently than scheduled",
+            "Work at a dealer not authorised by Mercedes-Benz Canada",
+            "Anything on a vehicle written off as a total loss"
+          ],
+          "valueNote": "The $1,779 price is exactly the sum of the three retail service prices for the C, GLC and SLC line as of 3 February 2025: $480 plus $801 plus $498. Buying the plan bought a fixed price, not a discount.",
+          "transferable": "To a private party purchaser only, using the Mercedes-Benz transfer form. Never to another vehicle, and never to a dealer or anyone in the business of buying and selling vehicles.",
+          "cancellable": "On 30 days notice as an optional service under Ontario legislation, by writing to cs.can@cac.mercedes-benz.com. The refund reduces the final lease payments rather than being paid out.",
+          "refundOnTotalLoss": false
+        },
+        {
+          "name": "Platinum Security Protection Service",
+          "kind": "other",
+          "price": 349.0,
+          "provider": "First Canadian Protection Products, operating as Data Gathering Service Inc.",
+          "providerAddress": "320 Sioux Road, Sherwood Park AB T8A 3X6",
+          "providerContact": "1-800-381-2580, etchclaim@firstcanadian.ca",
+          "agreementNumber": "AP-12876238",
+          "formCode": "GA7730 (07/22)",
+          "vehicleMarkingNumber": "0000846415",
+          "document": "docs/warranty/platinum-auto-plus-agreement.pdf",
+          "purchasedOn": "2025-09-30",
+          "soldBy": "Mark Konderak, Financial Services Manager, Mercedes-Benz Mississauga",
+          "termMonths": 48,
+          "expiryDate": "2029-09-30",
+          "expiryKm": null,
+          "marking": "Body panel label. Window glass etching was not taken.",
+          "detail": "The only service taken on the Platinum AutoPlus agreement. It is a theft deterrent marking plus a compensation promise. It is explicitly not an insurance policy.",
+          "benefits": [
+            {
+              "benefit": "Total loss replacement compensation",
+              "limit": "The lesser of $5,000 or the cash value settled under the primary policy",
+              "form": "A credit at the dealer toward a replacement vehicle, goods or services. Paid only if the vehicle is stolen and written off."
+            },
+            {
+              "benefit": "Away from home costs",
+              "limit": "$1,000 aggregate",
+              "form": "Rental at up to $50 a day and accommodation at up to $80 a day for at most five days, if the theft happens more than 150 km from home."
+            },
+            {
+              "benefit": "Deductible reimbursement",
+              "limit": "$1,000 per claim on the auto policy, plus $1,000 per claim on a home policy",
+              "form": "Paid if the vehicle is stolen, recovered, and repairable."
+            }
+          ],
+          "maximumAggregate": "The lesser of the vehicle's cash value or $7,000",
+          "notEligibleIf": [
+            "The loss was not the direct result of theft",
+            "The thief had access to the keys at any time",
+            "The loss was vandalism or attempted theft",
+            "The primary insurance policy was not in force",
+            "The theft happened outside Canada or the continental United States",
+            "The loss followed a negligent act such as leaving the vehicle unlocked or the keys in it"
+          ],
+          "declinedServices": [
+            "Platinum AutoGuard, dents, dings, scratches, cuts, tears and burns",
+            "Platinum Road Hazard, tyres, rims, glass and exterior lights",
+            "Platinum Key and Remote Exchange",
+            "Platinum Shield Protection, paint, fabric, leather, rust and undercoat"
+          ],
+          "cancellable": "Only within 30 days of the 2025-09-30 purchase date. That window closed on 2025-10-30.",
+          "eligibilityWarning": "Section 3.4 makes a vehicle used for commercial or business purposes an Ineligible Vehicle, with no entitlement to any service under the agreement.",
+          "conflictsWith": "The lease's signed corporate declaration of primarily business or commercial use.",
+          "discrepancy": true
+        },
+        {
+          "name": "Manufacturer new vehicle warranty",
+          "kind": "mechanical",
+          "price": null,
+          "termMonths": 48,
+          "termKm": 80000,
+          "expiryDate": "2029-09-29",
+          "expiryKm": 80000,
+          "detail": "The lease pricing worksheet states MB 4 years or 80,000 km. The dealer invoice of 12 August 2026 prints a warranty expiry of 29 September 2028, which is three years. Confirm which governs before relying on either.",
+          "discrepancy": true
+        }
+      ],
+      "lease": {
+        "agreementNumber": "5003012441001",
+        "quoteId": "2509271563010",
+        "dealerQuote": "41413648",
+        "product": "The First Class Lease, closed end motor vehicle lease agreement",
+        "formCode": "84-001-0533 EE (04/24)",
+        "dateOfLease": "2025-09-30",
+        "offerPrepared": "2025-09-29",
+        "preparedBy": "Amim Kurbani",
+        "expectedDelivery": "2025-09-30",
+        "lessee": "15248132 Canada Inc",
+        "coLessee": "Umar Farooq Aslam",
+        "lessorAtSigning": "1000035337 Ontario Inc.",
+        "assignedTo": "Mercedes-Benz Financial Services Canada Corporation",
+        "termMonths": 36,
+        "paymentDueDay": 30,
+        "odometerAtDelivery": 90,
+        "kmPerYear": 18000,
+        "maximumAllowableKm": 54090,
+        "excessKmRate": 0.2,
+        "highMileageLease": false,
+        "interestRate": 0.0449,
+        "annualPercentageRate": 0.0449,
+        "monthlyPaymentBeforeTax": 1548.68,
+        "monthlyHst": 201.33,
+        "monthlyPst": 0.0,
+        "monthlyPaymentTotal": 1750.01,
+        "leasedVehicleAmount": 104459.95,
+        "leaseValueOfLeasedGoods": 104459.95,
+        "sumOfAdvances": 3439.76,
+        "capitalizedAmount": 103474.93,
+        "paymentCalculationAmount": 44894.93,
+        "implicitFinanceCharge": 10857.55,
+        "residualValue": 58580.0,
+        "residualPercent": 0.58,
+        "purchaseOptionPrice": 58580.0,
+        "cashDownPayment": 4424.78,
+        "securityDeposit": 0.0,
+        "tradeInAllowance": 0.0,
+        "dueAtSigning": 6750.01,
+        "dueAtSigningBreakdown": [
+          {
+            "item": "First base monthly payment, pre tax",
+            "amount": 1548.68
+          },
+          {
+            "item": "Cash and rebates",
+            "amount": 4424.78
+          },
+          {
+            "item": "Security deposit",
+            "amount": 0.0
+          },
+          {
+            "item": "GST/HST on the above",
+            "amount": 776.55
+          }
+        ],
+        "customerDepositApplied": 4000.0,
+        "dueOnDelivery": 2750.01,
+        "totalOfMonthlyPayments": 63000.36,
+        "totalOfMonthlyPaymentsExcludingTaxes": 55752.48,
+        "totalCostOfLeaseTransaction": 68000.36,
+        "ppsaFilingFees": 45.76,
+        "pricing": {
+          "basePrice": 82100.0,
+          "totalSalePrice": 99500.0,
+          "optionsTotal": 10429.95,
+          "totalList": 109929.95,
+          "adjustment": -2076.0,
+          "difference": 107853.95,
+          "financedAmount": 103474.93,
+          "lineItems": [
+            {
+              "code": "DA2",
+              "description": "AMG Dynamic Plus package",
+              "price": 2400.0
+            },
+            {
+              "code": "DL1",
+              "description": "Driver's Assistance package",
+              "price": 2600.0
+            },
+            {
+              "code": "DP2",
+              "description": "Pinnacle trim",
+              "price": 6000.0
+            },
+            {
+              "code": "P60",
+              "description": "AMG Night package",
+              "price": 1100.0
+            },
+            {
+              "code": "RWN",
+              "description": "21 inch AMG multi spoke wheels, black",
+              "price": 1900.0
+            },
+            {
+              "code": "R01",
+              "description": "Summer performance tyres",
+              "price": 0.0
+            },
+            {
+              "code": "831U",
+              "description": "Graphite Grey Metallic paint",
+              "price": 1100.0
+            },
+            {
+              "code": "297A",
+              "description": "Power Red and Black leather upholstery",
+              "price": 2300.0
+            },
+            {
+              "code": "51U",
+              "description": "Black fabric roof liner",
+              "price": 0.0
+            },
+            {
+              "code": "H64",
+              "description": "Metal weave trim",
+              "price": 0.0
+            },
+            {
+              "code": "873",
+              "description": "Heated front bucket seats",
+              "price": 0.0
+            },
+            {
+              "code": "251-0",
+              "description": "Electronic speed limiter deletion",
+              "price": 0.0
+            },
+            {
+              "code": "PBG",
+              "description": "MBUX Navigation Premium, with DP2",
+              "price": 0.0
+            },
+            {
+              "code": "810",
+              "description": "Burmester surround sound, with DP2",
+              "price": 0.0
+            },
+            {
+              "code": null,
+              "description": "Window tint, front",
+              "price": 499.0
+            },
+            {
+              "code": null,
+              "description": "All season floor liners and mats",
+              "price": 0.0
+            },
+            {
+              "code": null,
+              "description": "Administration fee",
+              "price": 695.0
+            },
+            {
+              "code": null,
+              "description": "Federal air conditioning levy",
+              "price": 100.0
+            },
+            {
+              "code": null,
+              "description": "Platinum Security theft deterrent protection, 48 months",
+              "price": 349.0
+            },
+            {
+              "code": null,
+              "description": "Freight and PDI, group 2",
+              "price": 4295.0
+            },
+            {
+              "code": null,
+              "description": "Fuel surcharge, group 2",
+              "price": 155.0
+            },
+            {
+              "code": null,
+              "description": "First Class Lease Protection Classic",
+              "price": 1615.0
+            },
+            {
+              "code": null,
+              "description": "Federal luxury tax",
+              "price": 750.95
+            },
+            {
+              "code": null,
+              "description": "OMVIC fee",
+              "price": 22.0
+            },
+            {
+              "code": null,
+              "description": "Prepaid maintenance, 45 months, 3 services",
+              "price": 1779.0
+            },
+            {
+              "code": null,
+              "description": "Wheel locks",
+              "price": 170.0
+            }
+          ]
+        },
+        "insuranceRequirements": {
+          "minimumLiability": 1000000,
+          "maximumDeductibleRule": "$2,500 or 5% of the price of the vehicle, whichever is greater",
+          "maximumDeductibleComputed": 5222.99,
+          "maximumDeductibleNote": "The lease says whichever is greater, so 5% of the $104,459.95 leased vehicle amount governs: about $5,223. The separate Agreement to Furnish Insurance is worded 'shall not exceed 2500 or 5% of the capitalized cost' without the tie breaker. The lease is the operative contract.",
+          "additionalNamedInsuredAndLossPayee": "For comprehensive, fire, theft and collision",
+          "additionalNamedInsured": "For third party liability",
+          "noticeOfChange": "The insurer must give MBFS 15 days written notice of any change or cancellation",
+          "onLapse": "Immediate and automatic default under the lease"
+        },
+        "gapProtection": {
+          "included": true,
+          "detail": "Built into the lease. When the insurer pays out on a total loss the lease terminates and the proceeds clear the balance. The only amounts still owed are the deductible, any arrears, amounts owing from a breach, and prorated excess kilometre charges.",
+          "conditions": "MBFS must be consulted before agreeing to any actual cash value settlement. Agreeing without consulting them forfeits gap protection and puts the lease in default.",
+          "excludes": "The charging station price, any optional products, and any balance rolled in from a prior lease."
+        },
+        "endOfLease": {
+          "maturityDate": "2028-09-30",
+          "returnObligations": [
+            "Any unpaid amounts",
+            "The cost of repairing excess wear and tear, whether or not MBFS repairs it",
+            "Excess kilometre charges",
+            "Fees or taxes on termination",
+            "$250 if the maintenance booklets are missing"
+          ],
+          "excessWearAndTearIncludes": [
+            "Overdue service or maintenance",
+            "Driveline damage",
+            "Dents, scratches, cracks, rips, holes, tears, leaks or rust",
+            "Frame damage",
+            "Missing parts or accessories",
+            "Missing tyres, tyres of lesser quality than original, or tyres with less than 3.2 mm tread remaining",
+            "Water damage",
+            "Electrical or mechanical parts not working",
+            "Broken or burned out lights, chipped or cracked glass, any glass the lessee tinted",
+            "Damage making the vehicle unsafe or unlawful",
+            "Any damage insurance would cover, whether or not insurance is in force"
+          ],
+          "overholding": "Double the monthly payment for each of the first two months, triple every month after",
+          "purchaseOption": "$58,580.00 as is, plus taxes and transfer fees. No administration, transfer or documentation fee is charged."
+        },
+        "earlyTermination": {
+          "charge": "One base monthly payment, $1,548.68",
+          "waiver": "Waivable if a new Mercedes-Benz is leased or financed and delivered within 60 days of the early termination",
+          "alsoOwed": "Residual value plus the balance of the remaining payments, discounted on a constant yield basis, less insurance proceeds and net disposition proceeds. Any shortfall bears interest at 20% a year."
+        },
+        "fees": {
+          "leaseTransferToThirdParty": 500.0,
+          "lateCharge": "The lesser of $50 or 5% of the total monthly payment, after 10 days",
+          "nsf": 25.0,
+          "trafficTicketHandling": 25.0
+        },
+        "restrictions": [
+          "No use outside Canada and the continental United States beyond a three month visit",
+          "No relocation to another province without written notice",
+          "No transport of goods or people for pay",
+          "No body, colour or interior changes without written consent",
+          "No transfer, sublease, rent or assignment without written consent"
+        ],
+        "governingLaw": "Ontario, the province of the dealer's principal place of business. The limitation period for MBFS claims is extended to six years.",
+        "corporateDeclaration": {
+          "signed": true,
+          "text": "I confirm that the vehicle will be used primarily for business or commercial purposes. Consequently, I agree that the provisions of any consumer protection legislation and cost of consumer credit disclosure legislation are not applicable to this Lease.",
+          "signedBy": [
+            "15248132 Canada Inc",
+            "Umar Farooq Aslam"
+          ],
+          "preauthorizedPaymentPurpose": "business"
+        },
+        "documents": [
+          "docs/lease/lease-agreement-detailed.pdf",
+          "docs/lease/lease-pricing-worksheet.pdf",
+          "docs/lease/lease-agreement-fclp-classic-addendum.pdf"
+        ]
+      },
+      "payments": [
+        {
+          "date": "2025-09-30",
+          "time": "18:17",
+          "description": "Due on delivery",
+          "method": "Mastercard ****2898, contactless",
+          "transaction": "306849",
+          "invoice": "1218230",
+          "amount": 2750.01
+        },
+        {
+          "date": "2025-09-30",
+          "time": "18:16",
+          "description": "Dealer counter charge, purpose not stated on the receipt",
+          "method": "Visa ****1868, contactless",
+          "transaction": "306848",
+          "invoice": "1218230",
+          "amount": 59.0
+        }
+      ]
     }
   ],
   "insuranceShopping": {
@@ -885,13 +1339,19 @@
       "businessKmOnPolicy": null,
       "annualKmOnPolicy": 18000,
       "businessUsePercent": null,
-      "risk": "The policy is rated personal: business kilometres are blank and the payment schedule is marked Personal. If the vehicle is in fact used for business, the rating is wrong and a claim can be denied. This needs settling before renewal."
+      "risk": "The lease is signed on the basis of primarily business use and the insurance is rated personal, with business kilometres blank on both certificates. One of the two is wrong. If the insurer's version is the wrong one, a claim can be denied outright. Settle this before the renewal binds.",
+      "leaseDeclaration": "Signed on page 7 of the lease: the vehicle will be used primarily for business or commercial purposes. The preauthorized payment authorisation is ticked business purposes."
     },
     "mileageLog": {
       "kept": false,
       "note": "CRA requires a log to support any business use claim. Odometer was 14,035 km on 2026-08-12, about 10.5 months after the 2025-09-30 in service date, which annualises to roughly 16,000 km against the 18,000 km policy allowance."
     },
     "taxTreatment": [
+      {
+        "topic": "Declared use on the lease",
+        "detail": "By signing the corporate declaration the lessee also gave up the protections of Ontario consumer protection and cost of credit disclosure legislation for this lease. That is the trade for the business characterisation, and it is already made.",
+        "status": "settled, on the record"
+      },
       {
         "topic": "Lease deduction limit",
         "detail": "CRA caps the deductible monthly lease cost for a passenger vehicle. The cap is set by the year the lease began, and any monthly payment above it is not deductible. Confirm the 2025 figure with the accountant before filing.",
@@ -949,17 +1409,39 @@
       "question": "What is the maximum deductible Mercedes-Benz Financial permits under the lease?",
       "askedOf": "MBFS",
       "status": "answered",
-      "answer": "The Agreement to Furnish Insurance caps the deductible at $2,500 or 5% of the capitalised cost of the vehicle, whichever applies, and requires third party liability of at least $1,000,000 per occurrence plus MBFS as an additional named insured. Source: docs/insurance/mbfs-agreement-to-furnish-insurance.pdf."
+      "answer": "The lease requires a maximum deductible of $2,500 or 5% of the price of the vehicle, whichever is greater, so about $5,223 on the $104,459.95 leased vehicle amount. Minimum third party liability is $1,000,000 per occurrence, with MBFS named as Additional Named Insured and Loss Payee. The insurer must give MBFS 15 days written notice of any change or cancellation. Source: the lease, section 12."
     },
     {
       "id": "q6",
-      "question": "What is the true business use percentage? The current policy is rated personal, with business kilometres blank and billing marked Personal. Misrating voids claims.",
+      "question": "What is the true business use percentage? The lease declares primarily business use and the insurance is rated personal. These cannot both be right.",
       "askedOf": "owner",
+      "status": "open",
+      "answer": null
+    },
+    {
+      "id": "q7",
+      "question": "Does the Platinum Security Protection agreement stand at all, given section 3.4 excludes vehicles used for business purposes?",
+      "askedOf": "First Canadian Protection Products",
+      "status": "open",
+      "answer": null
+    },
+    {
+      "id": "q8",
+      "question": "Which warranty end date governs, 29 September 2028 as printed on the dealer invoice or 29 September 2029 implied by the 4 year term on the pricing worksheet?",
+      "askedOf": "Mercedes-Benz Mississauga",
       "status": "open",
       "answer": null
     }
   ],
   "nextActions": [
+    {
+      "action": "Settle the business use percentage and align the insurance rating with the lease declaration",
+      "owner": "Umar",
+      "due": "2026-09-30",
+      "status": "todo",
+      "priority": 1,
+      "why": "The lease is signed on primarily business use. Both insurance certificates rate the car personal. A wrong declared use can void a claim."
+    },
     {
       "action": "Pull the driver's abstract from ServiceOntario ($12 online) and verify the minor conviction",
       "owner": "Umar",
@@ -1015,6 +1497,102 @@
       "status": "todo",
       "priority": 1,
       "why": "The renewal takes effect 2026-10-01 and the first debit of $804.75 lands that day."
+    }
+  ],
+  "findings": [
+    {
+      "id": "f1",
+      "severity": "high",
+      "title": "The lease declares business use, the insurance is rated personal",
+      "detail": "Page 7 of the lease carries a signed corporate declaration: the vehicle will be used primarily for business or commercial purposes. The preauthorized payment authorisation on the same page is ticked business purposes. Both insurance certificates rate the car as personal use, with the business kilometre field blank and the payment schedule marked Personal.",
+      "why": "An insurer that finds the declared use wrong can deny a claim on the whole policy, not just adjust the premium. This is the largest uninsured exposure on the file and it costs nothing to fix.",
+      "action": "Settle the real business use percentage, then correct the rating with Desjardins or disclose it to the brokers before anyone binds.",
+      "sources": [
+        "docs/lease/lease-agreement-detailed.pdf, page 7",
+        "docs/insurance/policy-2026-10-01-renewal.pdf, rating information"
+      ]
+    },
+    {
+      "id": "f2",
+      "severity": "high",
+      "title": "Platinum Security may already be void for the same reason",
+      "detail": "Section 3.4 of the Platinum AutoPlus agreement makes a vehicle used for commercial or business purposes an Ineligible Vehicle, with no entitlement to any service. The lease declares exactly that use.",
+      "why": "$349 was paid for theft compensation worth up to $7,000 that may not be payable. The 30 day cancellation window closed on 30 October 2025, so the only move left is to establish in writing whether the agreement stands.",
+      "action": "Put the question to First Canadian Protection Products at 1-800-381-2580 in writing, quoting agreement AP-12876238.",
+      "sources": [
+        "docs/warranty/platinum-auto-plus-agreement.pdf, section 3.4",
+        "docs/lease/lease-agreement-detailed.pdf, page 7"
+      ]
+    },
+    {
+      "id": "f3",
+      "severity": "medium",
+      "title": "A minor conviction appeared between the two certificates",
+      "detail": "The 2025-26 certificate shows no convictions in the past three years. The 2026-27 renewal shows one minor. Nothing else in the rating changed: same territory 717, same rate groups, same driving record 6, same 3% winter tyre discount.",
+      "why": "The opening emails to all four brokers said no claims or convictions, ever. An undisclosed conviction discovered at bind is a misrepresentation.",
+      "action": "Pull the abstract from ServiceOntario for $12, then correct the disclosure in writing with all four brokers.",
+      "sources": [
+        "docs/insurance/policy-2025-10-01-current.pdf",
+        "docs/insurance/policy-2026-10-01-renewal.pdf"
+      ]
+    },
+    {
+      "id": "f4",
+      "severity": "medium",
+      "title": "The deductible ceiling is about $5,223, not $2,500",
+      "detail": "The lease requires a maximum deductible of $2,500 or 5% of the price of the vehicle, whichever is greater. Five percent of the $104,459.95 leased vehicle amount is $5,222.99. The separate Agreement to Furnish Insurance drops the tie breaker and reads as though $2,500 were the cap.",
+      "why": "Collision and comprehensive sit at $1,000 each, costing $3,401 combined on the renewal. There is contractual room to take a much higher deductible if a quote prices it well.",
+      "action": "Ask each broker to price collision and comprehensive at $2,500 alongside the $1,000 they will quote by default.",
+      "sources": [
+        "docs/lease/lease-agreement-detailed.pdf, section 12",
+        "docs/insurance/mbfs-agreement-to-furnish-insurance.pdf"
+      ]
+    },
+    {
+      "id": "f5",
+      "severity": "medium",
+      "title": "The lease already carries gap protection",
+      "detail": "Section 13 of the lease provides gap protection as standard. On a total loss the insurance proceeds clear the lease balance and the only amounts still owed are the deductible, arrears, breach amounts and prorated excess kilometre charges. MBFS must be consulted before any actual cash value settlement is agreed, or the protection is forfeited.",
+      "why": "It changes what the $794 5 Year New Vehicle Protection is actually buying. It is not gap cover. It buys a new current year replacement car instead of a cash settlement, which is a different and more valuable thing, and it is the reason a cheaper quote carrying plain OPCF 43R is a downgrade.",
+      "action": "Do not let any broker sell separate gap or loan protection coverage. Ask instead whether their carrier offers true new vehicle replacement.",
+      "sources": [
+        "docs/lease/lease-agreement-detailed.pdf, section 13"
+      ]
+    },
+    {
+      "id": "f6",
+      "severity": "low",
+      "title": "Front tyres are 0.8 mm above the lease return threshold",
+      "detail": "The 12 August 2026 inspection read 4 mm at both front wheels and 5 mm at the rear. The lease counts tyres with less than 3.2 mm tread remaining as excess wear and tear. Tyres are also excluded from the prepaid maintenance plan.",
+      "why": "Replacement is at the lessee's expense either way, and summer performance tyres on 21 inch AMG wheels are not cheap. Worth planning rather than discovering at return.",
+      "action": "Recheck the tread at the next service and budget for front tyres before lease maturity on 30 September 2028.",
+      "sources": [
+        "docs/service/invoice-1137630-2026-08-12-page1.png",
+        "docs/lease/lease-agreement-detailed.pdf, section 15"
+      ]
+    },
+    {
+      "id": "f7",
+      "severity": "low",
+      "title": "The brief says the payment method changed. The documents say only the amount did",
+      "detail": "The renewal document shows the expiring 2025-26 term was already billed monthly by preauthorized withdrawal, at $700.84. The renewal is monthly at $804.75.",
+      "why": "A small thing, but the comparison sent to brokers should be accurate.",
+      "action": "None. Recorded so the same correction is not made twice.",
+      "sources": [
+        "docs/insurance/policy-2026-10-01-renewal.pdf, billing account details"
+      ]
+    },
+    {
+      "id": "f8",
+      "severity": "low",
+      "title": "Two documents disagree on the warranty expiry",
+      "detail": "The lease pricing worksheet states MB 4 years or 80,000 km, which puts expiry at 29 September 2029. The dealer invoice prints a warranty expiry of 29 September 2028.",
+      "why": "The steering clock spring noise is unrepaired and being monitored. Which date governs decides how long that stays free to fix.",
+      "action": "Ask Mercedes-Benz Mississauga to confirm the governing warranty end date and get it in writing.",
+      "sources": [
+        "docs/lease/lease-pricing-worksheet.pdf",
+        "docs/service/invoice-1137630-2026-08-12-page1.png"
+      ]
     }
   ]
 }

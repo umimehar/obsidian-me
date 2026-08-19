@@ -7,6 +7,7 @@ export interface VehicleData {
   fleet: Vehicle[];
   insuranceShopping: InsuranceShopping;
   compliance: Compliance;
+  findings: Finding[];
   openQuestions: OpenQuestion[];
   nextActions: NextAction[];
 }
@@ -63,8 +64,57 @@ export interface Identity {
   [key: string]: unknown;
 }
 
+export interface PriceLine {
+  code: string | null;
+  description: string;
+  price: number | null;
+}
+
 export interface Lease {
   agreementNumber?: string;
+  lessorAtSigning?: string;
+  assignedTo?: string;
+  paymentDueDay?: number;
+  interestRate?: number;
+  residualPercent?: number;
+  maximumAllowableKm?: number;
+  implicitFinanceCharge?: number;
+  totalCostOfLeaseTransaction?: number;
+  totalOfMonthlyPayments?: number;
+  dueOnDelivery?: number;
+  customerDepositApplied?: number;
+  dueAtSigningBreakdown?: { item: string; amount: number }[];
+  pricing?: {
+    basePrice?: number;
+    totalSalePrice?: number;
+    totalList?: number;
+    adjustment?: number;
+    lineItems?: PriceLine[];
+  };
+  insuranceRequirements?: {
+    minimumLiability?: number;
+    maximumDeductibleRule?: string;
+    maximumDeductibleComputed?: number;
+    maximumDeductibleNote?: string;
+    additionalNamedInsuredAndLossPayee?: string;
+    noticeOfChange?: string;
+    onLapse?: string;
+  };
+  gapProtection?: { included?: boolean; detail?: string; conditions?: string; excludes?: string };
+  endOfLease?: {
+    maturityDate?: string;
+    excessWearAndTearIncludes?: string[];
+    overholding?: string;
+  };
+  earlyTermination?: { charge?: string; waiver?: string; alsoOwed?: string };
+  fees?: {
+    leaseTransferToThirdParty?: number;
+    lateCharge?: string;
+    nsf?: number;
+    trafficTicketHandling?: number;
+  };
+  restrictions?: string[];
+  governingLaw?: string;
   dateOfLease?: string;
   termMonths?: number | null;
   kmPerYear?: number | null;
@@ -88,6 +138,11 @@ export interface Protection {
   expiryKm?: number | null;
   numberOfServices?: number | null;
   waiverLimit?: number | null;
+  serviceInterval?: { km: number | null; months: number | null; note?: string };
+  valueNote?: string;
+  notCovered?: string[];
+  eligibilityWarning?: string;
+  discrepancy?: boolean;
   detail?: string;
   document?: string;
   [key: string]: unknown;
@@ -212,10 +267,23 @@ export interface Compliance {
     annualKmOnPolicy: number;
     businessUsePercent: number | null;
     risk: string;
+    leaseDeclaration?: string;
   };
   mileageLog: { kept: boolean; note: string };
   taxTreatment: { topic: string; detail: string; status: string }[];
   note: string;
+}
+
+export type Severity = "high" | "medium" | "low";
+
+export interface Finding {
+  id: string;
+  severity: Severity;
+  title: string;
+  detail: string;
+  why: string;
+  action: string;
+  sources: string[];
 }
 
 export interface OpenQuestion {

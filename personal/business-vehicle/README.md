@@ -24,9 +24,13 @@ Everything about the 2026 Mercedes-Benz GLC 43 AMG leased in 15248132 Canada Inc
 
 ## The one thing to know
 
-The Desjardins renewal lands 1 October 2026 at $9,657, up $1,247 on the year. Do not cancel it until a replacement is bound in writing.
+Page 7 of the lease carries a signed corporate declaration: the vehicle will be used primarily for business or commercial purposes. The preauthorized payment authorisation on the same page is ticked business. Both insurance certificates rate the car as personal use, with the business kilometre field blank.
 
-Nearly half that increase is one endorsement. The 5 Year New Vehicle Protection went from $303 to $794 because it pays the gap between current value and original price, and that gap widens as the car depreciates. It also does something no broker will match by default: it replaces the car with a new current-year equivalent on a total loss, for 60 months from delivery. Brokers quote OPCF 43R instead, capped at 24 to 30 months. A cheaper quote carrying plain 43R is a downgrade.
+One of those is wrong. An insurer that decides the declared use was misstated can refuse a claim outright rather than adjust the premium, and the same wording makes the $349 Platinum Security agreement void by its own section 3.4, which excludes any vehicle used for business purposes. Settle the real percentage before the renewal binds on 1 October.
+
+The second thing: the Desjardins renewal is $9,657, up $1,247. Nearly half of that is one endorsement, the 5 Year New Vehicle Protection going from $303 to $794. It replaces the car with a new current year equivalent on a total loss, for 60 months from delivery. Brokers quote OPCF 43R instead, a depreciation waiver usually capped at 24 to 30 months. A cheaper quote carrying plain 43R is a downgrade. Gap coverage is not the reason to keep it, because section 13 of the lease already provides gap protection.
+
+Do not cancel Desjardins until a replacement is bound in writing.
 
 ## How the data works
 
@@ -39,6 +43,6 @@ Source documents are committed under `docs/`, split by lease, insurance, service
 
 ## Open at the moment
 
-The 2026-27 certificate shows one minor conviction in the past three years. The 2025-26 certificate showed none, and the opening emails to all four brokers said no claims or convictions ever. Pull the abstract from ServiceOntario, then correct the disclosure in writing before anybody binds.
+Eight findings came out of reading the contracts against each other. Two are rated high, and both trace back to the same declared use conflict. The [overview page](notes/index.html) lists them all with what to do about each.
 
-The policy is rated personal use. Business kilometres are blank on both certificates and the payment schedule is marked Personal. If the car is genuinely used for business, that rating is wrong and a claim can be refused.
+The rest, briefly. A minor conviction appeared on the 2026-27 certificate that was not on the 2025-26 one, and the opening emails to all four brokers said no convictions ever. The lease permits a deductible up to about $5,223, not the $2,500 the Agreement to Furnish Insurance implies, so there is room to price collision and comprehensive higher than the $1,000 they sit at now. Front tyres read 4 mm against a 3.2 mm lease return threshold. Two documents disagree about whether the warranty ends in September 2028 or September 2029, which matters because the steering clock spring noise is unrepaired and being monitored.

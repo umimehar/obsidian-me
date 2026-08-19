@@ -37,6 +37,16 @@ describe("percent", () => {
   });
 });
 
+describe("percent precision", () => {
+  test("defaults to one decimal", () => {
+    expect(percent(0.148)).toBe("+14.8%");
+  });
+  test("takes a digit count, so an interest rate keeps its cents", () => {
+    expect(percent(0.0449, 2)).toBe("+4.49%");
+    expect(percent(0.58, 0)).toBe("+58%");
+  });
+});
+
 describe("monthsBetween", () => {
   test("counts whole months between two ISO dates", () => {
     expect(monthsBetween("2025-09-30", "2026-08-19")).toBe(10);

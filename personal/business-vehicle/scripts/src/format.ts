@@ -40,9 +40,9 @@ export function wholeMoney(value: number | null | undefined): string {
   return value === null || value === undefined ? DASH : WHOLE_MONEY.format(value);
 }
 
-export function percent(value: number | null | undefined): string {
+export function percent(value: number | null | undefined, digits = 1): string {
   if (value === null || value === undefined) return DASH;
-  const rendered = `${Math.abs(value * 100).toFixed(1)}%`;
+  const rendered = `${Math.abs(value * 100).toFixed(digits)}%`;
   if (value > 0) return `+${rendered}`;
   if (value < 0) return `-${rendered}`;
   return rendered;

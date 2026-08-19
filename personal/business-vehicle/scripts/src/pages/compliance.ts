@@ -1,3 +1,4 @@
+import { findingsHtml } from "../findings";
 import { escapeHtml, plainDate } from "../format";
 import { callout, kv, layout, section, table } from "../layout";
 import type { VehicleData } from "../types";
@@ -47,6 +48,12 @@ ${kv([
 ])}
 
 ${callout(`<strong>${escapeHtml(c.useSplit.risk)}</strong>`)}
+
+      <hr class="hr mt-rule" />
+${section("Where this bites", "The declared use conflict, everywhere it shows up.")}
+      <div class="card-grid">
+${findingsHtml(data.findings, { only: "high" })}
+      </div>
 
       <hr class="hr mt-rule" />
 ${section("Mileage")}

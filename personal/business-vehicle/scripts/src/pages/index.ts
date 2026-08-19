@@ -1,4 +1,5 @@
 import { leaseProgress } from "../coverage";
+import { findingsHtml } from "../findings";
 import { escapeHtml, money, plainDate, wholeMoney } from "../format";
 import { callout, layout, section, table } from "../layout";
 import type { VehicleData } from "../types";
@@ -67,6 +68,12 @@ ${hero("Odometer", latestService?.odometerOut ? `${latestService.odometerOut.toL
 ${callout(
   "<strong>Do not cancel Desjardins until a replacement policy is bound in writing.</strong> The renewal takes effect on 1 October 2026 and four brokers were contacted on 19 August. Nothing has come back yet.",
 )}
+
+      <hr class="hr mt-rule" />
+${section("What the documents disagree about", "Every one of these came out of reading the contracts against each other.")}
+      <div class="card-grid">
+${findingsHtml(data.findings)}
+      </div>
 
       <hr class="hr mt-rule" />
 ${section("What needs doing", "Highest priority first.")}
