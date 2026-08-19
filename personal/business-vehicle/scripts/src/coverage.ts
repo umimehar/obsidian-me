@@ -1,0 +1,117 @@
+/** Lease progress, prepaid plan drawdown, and warranty window arithmetic.
+    Every function takes the "as of" date explicitly so a rendered page is reproducible. */
+
+import { monthsBetween } from "./format";
+
+export interface LeaseShape {
+  readonly startDate: string;
+  readonly termMonths: number;
+  readonly kmPerYear: number | null;
+}
+
+export interface LeaseProgress {
+  readonly monthsElapsed: number;
+  readonly monthsRemaining: number;
+  readonly kmAllowanceToDate: number | null;
+  readonly maturityDate: string;
+}
+
+export interface ServiceEvent {
+  readonly date: string;
+  readonly odometer: number | null;
+  readonly coveredByPlan: boolean;
+}
+
+export interface PlanShape {
+  readonly numberOfServices: number | null;
+  readonly termMonths: number | null;
+  readonly termKm: number | null;
+}
+
+export interface Drawdown {
+  readonly servicesUsed: number;
+  readonly servicesRemaining: number | null;
+}
+
+export interface CoverageWindow {
+  readonly expiryDate: string | null;
+  readonly expiryKm: number | null;
+}
+
+export interface WindowStatus {
+  readonly active: boolean;
+  readonly kmRemaining: number | null;
+  readonly monthsRemaining: number | null;
+  readonly expiresBy: "date" | "kilometres" | null;
+}
+
+function addMonths(iso: string, months: number): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  const targetDay = d.getUTCDate();
+  d.setUTCDate(1);
+  d.setUTCMonth(d.getUTCMonth() + months);
+  const lastDay = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+  d.setUTCDate(Math.min(targetDay, lastDay));
+  return d.toISOString().slice(0, 10);
+}
+
+export function leaseProgress(lease: LeaseShape, asOf: string): LeaseProgress {
+  const raw = monthsBetween(lease.startDate, asOf);
+  const monthsElapsed = Math.min(Math.max(raw, 0), lease.termMonths);
+  return {
+    monthsElapsed,
+    monthsRemaining: lease.termMonths - monthsElapsed,
+    kmAllowanceToDate:
+      lease.kmPerYear === null ? null : Math.round((lease.kmPerYear * monthsElapsed) / 12),
+    maturityDate: addMonths(lease.startDate, lease.termMonths),
+  };
+}
+
+export function planDrawdown(plan: PlanShape, services: readonly ServiceEvent[]): Drawdown {
+  const servicesUsed = services.filter((s) => s.coveredByPlan).length;
+  if (plan.numberOfServices === null) return { servicesUsed, servicesRemaining: null };
+  return {
+    servicesUsed,
+    servicesRemaining: Math.max(plan.numberOfServices - servicesUsed, 0),
+  };
+}
+
+export function windowStatus(
+  window: CoverageWindow,
+  asOf: string,
+  odometer: number | null,
+): WindowStatus {
+  const dateOk = window.expiryDate === null || asOf <= window.expiryDate;
+  const kmRemaining =
+    window.expiryKm === null || odometer === null ? null : window.expiryKm - odometer;
+  const kmOk = kmRemaining === null || kmRemaining > 0;
+  const monthsRemaining =
+    window.expiryDate === null ? null : Math.max(monthsBetween(asOf, window.expiryDate), 0);
+
+  let expiresBy: "date" | "kilometres" | null = null;
+  if (dateOk && kmOk) {
+    if (kmRemaining === null || monthsRemaining === null) {
+      expiresBy = window.expiryDate === null ? "kilometres" : "date";
+    } else {
+      // Whichever limit the current pace reaches first. Compared on the km the remaining
+      // months would consume at the plan's own allowance, not on raw units.
+      expiresBy = kmRemaining <= (monthsRemaining / 12) * 20000 ? "kilometres" : "date";
+    }
+  }
+
+  return { active: dateOk && kmOk, kmRemaining, monthsRemaining, expiresBy };
+}
+
+export function nextServiceDue(
+  interval: { intervalKm: number | null; intervalMonths: number | null },
+  last: ServiceEvent | undefined,
+): { date: string | null; odometer: number | null } | null {
+  if (!last) return null;
+  return {
+    date: interval.intervalMonths === null ? null : addMonths(last.date, interval.intervalMonths),
+    odometer:
+      interval.intervalKm === null || last.odometer === null
+        ? null
+        : last.odometer + interval.intervalKm,
+  };
+}

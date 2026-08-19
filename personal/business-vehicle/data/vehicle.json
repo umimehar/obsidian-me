@@ -1,0 +1,1020 @@
+{
+  "meta": {
+    "schemaVersion": 1,
+    "asOf": "2026-08-19",
+    "maskingPolicy": "Bank, PAD and finance account numbers are masked to their last four digits. Source PDFs under docs/ are committed unmasked at the owner's instruction.",
+    "sources": [
+      {
+        "id": "lease-detailed",
+        "file": "docs/lease/lease-agreement-detailed.pdf",
+        "pages": 7,
+        "sensitive": true
+      },
+      {
+        "id": "lease-fclp",
+        "file": "docs/lease/lease-agreement-fclp-classic-addendum.pdf",
+        "pages": 3,
+        "sensitive": false
+      },
+      {
+        "id": "lease-pricing",
+        "file": "docs/lease/lease-pricing-worksheet.pdf",
+        "pages": 4,
+        "sensitive": true
+      },
+      {
+        "id": "payment-receipts",
+        "file": "docs/lease/payment-receipts.pdf",
+        "pages": 1,
+        "sensitive": true
+      },
+      {
+        "id": "platinum",
+        "file": "docs/warranty/platinum-auto-plus-agreement.pdf",
+        "pages": 5,
+        "sensitive": false
+      },
+      {
+        "id": "prepaid-maintenance",
+        "file": "docs/warranty/prepaid-maintenance-plan.pdf",
+        "pages": 5,
+        "sensitive": false
+      },
+      {
+        "id": "policy-2025",
+        "file": "docs/insurance/policy-2025-10-01-current.pdf",
+        "pages": 26,
+        "sensitive": true
+      },
+      {
+        "id": "policy-2026",
+        "file": "docs/insurance/policy-2026-10-01-renewal.pdf",
+        "pages": 20,
+        "sensitive": true
+      },
+      {
+        "id": "mbfs-insurance-form",
+        "file": "docs/insurance/mbfs-agreement-to-furnish-insurance.pdf",
+        "pages": 1,
+        "sensitive": false
+      },
+      {
+        "id": "service-1137630",
+        "file": "docs/service/invoice-1137630-2026-08-12-page1.png",
+        "pages": 4,
+        "sensitive": false
+      }
+    ]
+  },
+  "parties": {
+    "driver": {
+      "name": "Umar Farooq Aslam",
+      "dateOfBirth": "1994-04-13",
+      "address": "1004-200 Burnhamthorpe Rd E, Mississauga ON L5A 4L4",
+      "phone": "+1 647 762 8949",
+      "licencedSince": "2021-12",
+      "principalOperatorSince": "2022-03",
+      "priorDrivingExperienceAbroadSince": "2015",
+      "letterOfExperienceObtained": false
+    },
+    "corporation": {
+      "legalName": "15248132 Canada Inc",
+      "role": "Lessee and named insured",
+      "address": "1004-200 Burnhamthorpe Rd E, Mississauga ON L5A 4L4"
+    },
+    "lessor": {
+      "name": "Mercedes-Benz Financial Services Canada Corporation",
+      "role": "Lessor and loss payee, by assignment from the dealer",
+      "address": "500-2680 Matheson Blvd E, Mississauga ON L4W 0A5"
+    },
+    "dealer": {
+      "legalName": "1000035337 Ontario Inc.",
+      "operatingAs": "Mercedes-Benz Mississauga",
+      "group": "Zanchin Automotive Group",
+      "address": "6120 Mavis Road, Mississauga ON L5V 2X4",
+      "phones": {
+        "main": "+1 905 363 3322",
+        "service": "+1 905 363 3322",
+        "parts": "+1 905 593 2250",
+        "fax": "+1 905 363 0385"
+      },
+      "website": "www.mbmississauga.ca",
+      "hst": "76359 6400 RT0001",
+      "customerNumber": "1218230"
+    },
+    "insurer": {
+      "brand": "Desjardins Insurance",
+      "underwriter": "Certas Direct Insurance Company",
+      "channel": "Direct writer, not available through any broker",
+      "claims": "1-800-794-0008",
+      "mailing": "P.O. Box 7065, Station A, Mississauga ON L5A 4K7"
+    }
+  },
+  "fleet": [
+    {
+      "id": "glc43-2026",
+      "status": "current",
+      "identity": {
+        "year": 2026,
+        "make": "Mercedes-Benz",
+        "model": "GLC 43 AMG",
+        "variant": "GLC43 4D AWD 4MATIC",
+        "body": "SUV",
+        "vin": "W1NKM8HB1TF465706",
+        "colourCode": "831",
+        "colourName": "Graphite",
+        "condition": "New",
+        "purchased": "2025-09",
+        "inServiceDate": "2025-09-30",
+        "stockNumber": "26518273",
+        "dealerCode": "5607",
+        "transmission": "Automatic",
+        "vehicleRateCode": "888600"
+      },
+      "insurance": [
+        {
+          "term": "2025-10-01 to 2026-10-01",
+          "status": "expiring",
+          "documentType": "New policy",
+          "policyNumberMasked": "****XTW6",
+          "insurer": "Desjardins Insurance",
+          "underwriter": "Certas Direct Insurance Company",
+          "producedOn": "2025-09-30",
+          "source": "policy-2025",
+          "namedInsured": [
+            "Umar Farooq Aslam",
+            "15248132 Canada Inc"
+          ],
+          "lossPayee": "Mercedes-Benz Financial Services, 500-2680 Matheson Blvd E, Mississauga ON L4W 0A5",
+          "totalPremium": 8410,
+          "paymentFrequency": "Monthly",
+          "paymentAmount": 700.84,
+          "paymentMethod": "Preauthorized withdrawals",
+          "billingCategory": "Personal",
+          "coverages": [
+            {
+              "coverage": "Liability — Bodily Injury",
+              "limit": 2000000,
+              "deductible": null,
+              "premium": 850,
+              "note": null
+            },
+            {
+              "coverage": "Liability — Property Damage",
+              "limit": null,
+              "deductible": null,
+              "premium": 0,
+              "note": "Included, rated at 5% of the bodily injury premium"
+            },
+            {
+              "coverage": "Accident Benefits (Standard)",
+              "limit": null,
+              "deductible": null,
+              "premium": 1098,
+              "note": "As stated in Section 4 of the policy"
+            },
+            {
+              "coverage": "Optional and increased accident benefits",
+              "limit": null,
+              "deductible": null,
+              "premium": 0,
+              "note": "Every optional benefit marked Not included"
+            },
+            {
+              "coverage": "Uninsured Automobile",
+              "limit": null,
+              "deductible": null,
+              "premium": 0,
+              "note": "Included, rated at 3% of the standard accident benefits premium"
+            },
+            {
+              "coverage": "Direct Compensation — Property Damage",
+              "limit": null,
+              "deductible": 0,
+              "premium": 3065,
+              "note": null
+            },
+            {
+              "coverage": "All Perils",
+              "limit": null,
+              "deductible": null,
+              "premium": 0,
+              "note": "Included"
+            },
+            {
+              "coverage": "Collision or Upset",
+              "limit": null,
+              "deductible": 1000,
+              "premium": 2161,
+              "note": null
+            },
+            {
+              "coverage": "Comprehensive (excluding collision or upset)",
+              "limit": null,
+              "deductible": 1000,
+              "premium": 833,
+              "note": null
+            },
+            {
+              "coverage": "Specified Perils (excluding collision or upset)",
+              "limit": null,
+              "deductible": null,
+              "premium": 0,
+              "note": "Included"
+            }
+          ],
+          "endorsements": [
+            {
+              "code": "New Vehicle",
+              "name": "5 Year New Vehicle Protection",
+              "limit": null,
+              "premium": 303,
+              "note": "Runs 60 months from the date of purchase or lease, never ending before the policy expiry"
+            },
+            {
+              "code": "Trouble-Free",
+              "name": "Trouble-Free Option",
+              "limit": null,
+              "premium": 75,
+              "note": null
+            },
+            {
+              "code": "OPCF 5",
+              "name": "Permission to rent or lease and extend coverage to the specified lessee",
+              "limit": null,
+              "premium": 0,
+              "note": "Required by the lease"
+            },
+            {
+              "code": "OPCF 20",
+              "name": "Coverage for transportation replacement",
+              "limit": 1500,
+              "premium": 0,
+              "note": "Included"
+            },
+            {
+              "code": "OPCF 35",
+              "name": "Coverage for emergency road service",
+              "limit": null,
+              "premium": 0,
+              "note": "Included"
+            },
+            {
+              "code": "OPCF 27",
+              "name": "Liability for damage to non-owned automobiles",
+              "limit": 100000,
+              "premium": 0,
+              "note": "Included. $500 deductible for collision and for comprehensive"
+            },
+            {
+              "code": "OPCF 44R",
+              "name": "Family protection coverage",
+              "limit": 2000000,
+              "premium": 25,
+              "note": null
+            }
+          ],
+          "rating": {
+            "territory": "717",
+            "parking": "Underground parking",
+            "annualKm": 18000,
+            "businessKm": null,
+            "drivingRecord": 6,
+            "rateGroups": {
+              "TPL": 11,
+              "AB": 35,
+              "DCPD": 76,
+              "COL": 72,
+              "CMP_SP": 64
+            },
+            "discounts": [
+              {
+                "description": "Winter tires",
+                "applied": "3%"
+              }
+            ],
+            "otherFactors": [
+              "Loyalty"
+            ],
+            "convictionsPast3Years": {
+              "minor": 0,
+              "major": 0,
+              "serious": 0
+            },
+            "chargeableClaims": []
+          }
+        },
+        {
+          "term": "2026-10-01 to 2027-10-01",
+          "status": "renewal offered",
+          "documentType": "Renewal",
+          "policyNumberMasked": "****XTW6",
+          "insurer": "Desjardins Insurance",
+          "underwriter": "Certas Direct Insurance Company",
+          "producedOn": "2026-08-02",
+          "source": "policy-2026",
+          "namedInsured": [
+            "Umar Farooq Aslam",
+            "15248132 Canada Inc"
+          ],
+          "lossPayee": "Mercedes-Benz Financial Services, 500-2680 Matheson Blvd E, Mississauga ON L4W 0A5",
+          "totalPremium": 9657,
+          "paymentFrequency": "Monthly",
+          "paymentAmount": 804.75,
+          "paymentMethod": "Preauthorized withdrawals",
+          "billingCategory": "Personal",
+          "firstRenewalDebit": "2026-10-01",
+          "lastCurrentTermDebit": "2026-09-01",
+          "coverages": [
+            {
+              "coverage": "Liability — Bodily Injury",
+              "limit": 2000000,
+              "deductible": null,
+              "premium": 828,
+              "note": null
+            },
+            {
+              "coverage": "Liability — Property Damage",
+              "limit": null,
+              "deductible": null,
+              "premium": 0,
+              "note": "Included, rated at 5% of the bodily injury premium"
+            },
+            {
+              "coverage": "Accident Benefits (Standard)",
+              "limit": null,
+              "deductible": null,
+              "premium": 1070,
+              "note": "As stated in Section 4 of the policy"
+            },
+            {
+              "coverage": "Optional accident benefits (itemised)",
+              "limit": null,
+              "deductible": null,
+              "premium": 253,
+              "note": "Nine separately priced lines, listed under optionalAccidentBenefits"
+            },
+            {
+              "coverage": "Uninsured Automobile",
+              "limit": null,
+              "deductible": null,
+              "premium": 0,
+              "note": "Included, rated at 3% of the standard accident benefits premium"
+            },
+            {
+              "coverage": "Direct Compensation — Property Damage",
+              "limit": null,
+              "deductible": 0,
+              "premium": 3211,
+              "note": null
+            },
+            {
+              "coverage": "All Perils",
+              "limit": null,
+              "deductible": null,
+              "premium": 0,
+              "note": "Included"
+            },
+            {
+              "coverage": "Collision or Upset",
+              "limit": null,
+              "deductible": 1000,
+              "premium": 2405,
+              "note": null
+            },
+            {
+              "coverage": "Comprehensive (excluding collision or upset)",
+              "limit": null,
+              "deductible": 1000,
+              "premium": 996,
+              "note": null
+            },
+            {
+              "coverage": "Specified Perils (excluding collision or upset)",
+              "limit": null,
+              "deductible": null,
+              "premium": 0,
+              "note": "Included"
+            }
+          ],
+          "optionalAccidentBenefits": [
+            {
+              "benefit": "Income replacement",
+              "limit": "Up to $400 per week",
+              "premium": 188
+            },
+            {
+              "benefit": "Non-earner",
+              "limit": "Up to $185 per week",
+              "premium": 31
+            },
+            {
+              "benefit": "Caregiver",
+              "limit": "$250 per week first person, $50 additional",
+              "premium": 1,
+              "basis": "Catastrophic"
+            },
+            {
+              "benefit": "Lost educational expenses",
+              "limit": "Up to $15,000",
+              "premium": 1
+            },
+            {
+              "benefit": "Expenses of visitors",
+              "limit": "Necessary expenses",
+              "premium": 4
+            },
+            {
+              "benefit": "Housekeeping and home maintenance",
+              "limit": "Up to $100 per week",
+              "premium": 20,
+              "basis": "Catastrophic"
+            },
+            {
+              "benefit": "Damage to personal items",
+              "limit": "Necessary expenses",
+              "premium": 3
+            },
+            {
+              "benefit": "Death",
+              "limit": "Spouse $25,000, dependant $10,000",
+              "premium": 4
+            },
+            {
+              "benefit": "Funeral",
+              "limit": "Up to $6,000",
+              "premium": 1
+            }
+          ],
+          "notIncluded": [
+            "Increased medical, rehabilitation and attendant care ($130,000/$1,000,000)",
+            "Optional catastrophic impairment (additional $1,000,000)",
+            "Dependant care",
+            "Indexation benefit (CPI)"
+          ],
+          "endorsements": [
+            {
+              "code": "New Vehicle",
+              "name": "5 Year New Vehicle Protection",
+              "limit": null,
+              "premium": 794,
+              "note": "Runs 60 months from the date of purchase or lease, never ending before the policy expiry"
+            },
+            {
+              "code": "Trouble-Free",
+              "name": "Trouble-Free Option",
+              "limit": null,
+              "premium": 75,
+              "note": null
+            },
+            {
+              "code": "OPCF 5",
+              "name": "Permission to rent or lease and extend coverage to the specified lessee",
+              "limit": null,
+              "premium": 0,
+              "note": "Required by the lease"
+            },
+            {
+              "code": "OPCF 20",
+              "name": "Coverage for transportation replacement",
+              "limit": 1500,
+              "premium": 0,
+              "note": "Included"
+            },
+            {
+              "code": "OPCF 35",
+              "name": "Coverage for emergency road service",
+              "limit": null,
+              "premium": 0,
+              "note": "Included"
+            },
+            {
+              "code": "OPCF 47R",
+              "name": "Optional accident benefits coverage and priority of payment",
+              "limit": null,
+              "premium": 0,
+              "note": "New on this term. Carries the itemised optional benefits above"
+            },
+            {
+              "code": "OPCF 27",
+              "name": "Liability for damage to non-owned automobiles",
+              "limit": 100000,
+              "premium": 0,
+              "note": "Included. $500 deductible for collision and for comprehensive"
+            },
+            {
+              "code": "OPCF 44R",
+              "name": "Family protection coverage",
+              "limit": 2000000,
+              "premium": 25,
+              "note": null
+            }
+          ],
+          "premiumSummary": {
+            "vehicle": 9632,
+            "policyEndorsements": 25,
+            "total": 9657
+          },
+          "rating": {
+            "territory": "717",
+            "parking": "Underground parking",
+            "annualKm": 18000,
+            "businessKm": null,
+            "drivingRecord": 6,
+            "rateGroups": {
+              "TPL": 11,
+              "AB": 35,
+              "DCPD": 76,
+              "COL": 72,
+              "CMP_SP": 64
+            },
+            "discounts": [
+              {
+                "description": "Winter tires",
+                "applied": "3%"
+              }
+            ],
+            "otherFactors": [
+              "Loyalty"
+            ],
+            "convictionsPast3Years": {
+              "minor": 1,
+              "major": 0,
+              "serious": 0
+            },
+            "chargeableClaims": []
+          }
+        }
+      ],
+      "service": [
+        {
+          "invoiceNumber": "1137630",
+          "date": "2026-08-12",
+          "roOpened": "2026-08-12",
+          "roReady": "2026-08-12",
+          "dealer": "Mercedes-Benz Mississauga",
+          "serviceAdvisor": "438 Valentina Granic",
+          "tag": "T5481",
+          "odometerIn": 14035,
+          "odometerOut": 14035,
+          "labourRate": 215.0,
+          "paymentMethod": "Cash",
+          "coveredByPlan": true,
+          "customerPaid": 0.0,
+          "source": "service-1137630",
+          "shuttleBooked": "2026-08-05T11:55:00",
+          "planCodes": {
+            "FCLP": "CLASSIC",
+            "PPM": "45M/3S/90KM"
+          },
+          "warrantyExpiryOnInvoice": "2028-09-29",
+          "lines": [
+            {
+              "code": "A",
+              "opcode": "001157",
+              "description": "Service A with Plus Package (WS#505)",
+              "hours": 1.1,
+              "charge": 0.0,
+              "parts": [
+                {
+                  "qty": 1,
+                  "part": "139-180-21-00",
+                  "description": "Parts kit, engine oil filter"
+                },
+                {
+                  "qty": 1,
+                  "part": "007603-014106",
+                  "description": "Sealing ring"
+                },
+                {
+                  "qty": 6,
+                  "part": "000-989-17-11-11-FBAU",
+                  "description": "MB GEO SAE 0W-20 engine oil, 1L",
+                  "unitPrice": 229.71
+                },
+                {
+                  "qty": 1,
+                  "part": "254-830-14-02",
+                  "description": "Dust filter"
+                },
+                {
+                  "qty": 2,
+                  "part": "INTN000000002008",
+                  "description": "CR2032 coin cell battery"
+                },
+                {
+                  "qty": 4,
+                  "part": "ULT11-WWF-PIOT",
+                  "description": "Windshield washer fluid, pink"
+                }
+              ],
+              "extraWork": [
+                {
+                  "opcode": "001612",
+                  "description": "Remove and install 4 complete wheels",
+                  "hours": 0.4
+                },
+                {
+                  "opcode": "401468",
+                  "description": "Remove and install 4 wheel and tire assemblies with a wheel lift dolly",
+                  "hours": 0.2
+                },
+                {
+                  "opcode": "ZM001633",
+                  "description": "Remove and install complete wheels, clean threaded wheel connections",
+                  "hours": 0.2
+                },
+                {
+                  "opcode": "ZM401471",
+                  "description": "Remove and install wheel and tire assemblies on disk wheels with bolted hub cap",
+                  "hours": 0.2
+                }
+              ],
+              "authCode": "000012SV7",
+              "claimType": "N"
+            },
+            {
+              "code": "B",
+              "description": "Ticking noise from steering when turning fully or in reverse",
+              "charge": 0.0,
+              "finding": "Road tested. Very faint slight noise from the steering clock spring area when turning. Advisor informed, customer will monitor.",
+              "outcome": "monitor"
+            },
+            {
+              "code": "C",
+              "opcode": "ZM201010",
+              "description": "Coolant low message — check cooling and heating system for leaks",
+              "hours": 0.3,
+              "charge": 0.0,
+              "finding": "Warning was displayed but not currently on. Coolant level found slightly low, topped up. Cooling system pressure test performed, panels removed and refitted, no visible external leaks, pressure did not drop. Level rechecked, OK.",
+              "outcome": "resolved, watch level"
+            },
+            {
+              "code": "D",
+              "description": "Vehicle has prepaid maintenance",
+              "charge": 0.0
+            },
+            {
+              "code": "E",
+              "description": "Dash cameras or recording devices may be disconnected on vehicle entry for privacy and security",
+              "charge": 0.0
+            },
+            {
+              "code": "F",
+              "opcode": "00MPI",
+              "description": "Complimentary multi-point inspection",
+              "hours": 0.2,
+              "charge": 0.0
+            },
+            {
+              "code": "G",
+              "description": "No outstanding recalls or service actions",
+              "charge": 0.0
+            }
+          ],
+          "inspection": {
+            "tireTreadDepthMm": {
+              "leftFront": 4,
+              "rightFront": 4,
+              "leftRear": 5,
+              "rightRear": 5
+            },
+            "brakePadsMm": {
+              "front": 9,
+              "rear": 8
+            }
+          },
+          "estimates": [
+            {
+              "amount": 0.0,
+              "at": "2026-08-12T08:27",
+              "advisor": "438",
+              "contact": "G"
+            },
+            {
+              "amount": 709.44,
+              "at": "2026-08-12T08:27",
+              "advisor": "438",
+              "contact": null
+            }
+          ],
+          "totals": {
+            "labour": 0.0,
+            "parts": 0.0,
+            "gasOilLube": 0.0,
+            "sublet": 0.0,
+            "misc": 0.0,
+            "totalCharges": 0.0,
+            "lessInsurance": 0.0,
+            "salesHst": 0.0,
+            "amountDue": 0.0
+          },
+          "notes": "Minor service performed at no charge under the prepaid maintenance plan. Front tyres are at 4 mm, which is the shallowest reading on the vehicle and the number to watch before winter."
+        }
+      ],
+      "protection": []
+    }
+  ],
+  "insuranceShopping": {
+    "objective": "Replace the Desjardins policy at the 2026-10-01 renewal with reasonable to full coverage at a fair price. Not the cheapest available.",
+    "benchmark": {
+      "insurer": "Desjardins",
+      "annualPremium": 9657,
+      "monthly": 804.75,
+      "note": "Desjardins is a direct writer, so no broker can quote it. The renewal is the number to beat on value, not on price alone."
+    },
+    "premiumIsWithheldFromBrokers": true,
+    "premiumWithheldReason": "Quotes come back on merit rather than landing just under a known number.",
+    "yearOverYear": [
+      {
+        "line": "Liability ($2M)",
+        "prior": 850,
+        "renewal": 828
+      },
+      {
+        "line": "Accident Benefits (standard)",
+        "prior": 1098,
+        "renewal": 1070
+      },
+      {
+        "line": "Optional accident benefits (itemised)",
+        "prior": 0,
+        "renewal": 253
+      },
+      {
+        "line": "DCPD ($0 deductible)",
+        "prior": 3065,
+        "renewal": 3211
+      },
+      {
+        "line": "Collision ($1,000 deductible)",
+        "prior": 2161,
+        "renewal": 2405
+      },
+      {
+        "line": "Comprehensive ($1,000 deductible)",
+        "prior": 833,
+        "renewal": 996
+      },
+      {
+        "line": "5 Year New Vehicle Protection",
+        "prior": 303,
+        "renewal": 794
+      },
+      {
+        "line": "Trouble-Free Option",
+        "prior": 75,
+        "renewal": 75
+      },
+      {
+        "line": "OPCF 44R",
+        "prior": 25,
+        "renewal": 25
+      },
+      {
+        "line": "Total",
+        "prior": 8410,
+        "renewal": 9657
+      }
+    ],
+    "whyItRose": [
+      {
+        "driver": "5 Year New Vehicle Protection more than doubled",
+        "detail": "$303 to $794. The endorsement pays the gap between current value and original price, so exposure grows as the car depreciates. Expect another increase next year.",
+        "delta": 491
+      },
+      {
+        "driver": "$253 of newly itemised accident benefits",
+        "detail": "Ontario's 2026-07-01 reform (O. Reg. 383/24) unbundled income replacement, non-earner, caregiver, death and funeral from the mandatory package. Desjardins carried them forward under OPCF 47R and now prices them separately. On the 2025-26 certificate every optional accident benefit line read Not included, because those benefits sat inside the mandatory Standard Benefits premium.",
+        "delta": 253
+      },
+      {
+        "driver": "Comprehensive up 19.6%, faster than collision",
+        "detail": "Consistent with the GTA Mercedes theft loading.",
+        "delta": 163
+      },
+      {
+        "driver": "Collision up 11.3%",
+        "detail": "No rating factor changed to explain it.",
+        "delta": 244
+      },
+      {
+        "driver": "DCPD up 4.8%",
+        "detail": "Still the single largest line at $3,211.",
+        "delta": 146
+      }
+    ],
+    "unchangedRatingFactors": [
+      "Territory 717",
+      "Rate groups TPL 11 / AB 35 / DCPD 76 / COL 72 / CMP 64",
+      "Driving record 6",
+      "3% winter tyre discount",
+      "18,000 km per year",
+      "Underground parking"
+    ],
+    "coverageToMatch": {
+      "note": "The 5 Year New Vehicle Protection runs 60 months from delivery and replaces the car with a new current-year equivalent on a total loss. Most brokers quote OPCF 43R instead, a limited depreciation waiver usually capped at 24 to 30 months. A cheaper quote carrying plain 43R is a downgrade, not a saving.",
+      "musts": [
+        "$2M third party liability",
+        "DCPD at $0 deductible, or a priced comparison at $500 and $1,000",
+        "Collision and comprehensive at $1,000",
+        "All Perils and Specified Perils included",
+        "Five year new vehicle replacement, not OPCF 43R",
+        "OPCF 5 naming Mercedes-Benz Financial Services",
+        "OPCF 20 at $1,500",
+        "OPCF 27 at $100,000",
+        "OPCF 35 roadside",
+        "OPCF 44R at $2M",
+        "OPCF 47R optional accident benefits"
+      ]
+    },
+    "brokers": [
+      {
+        "name": "Mitch Insurance",
+        "contact": "Trevor Martin, RIBO licensed",
+        "email": "tmartin@mitchinsurance.com",
+        "generalEmail": "info@mitchinsurance.com",
+        "phone": "1-800-731-2228 x5338",
+        "contactedOn": "2026-08-19",
+        "status": "Replied with an intake questionnaire",
+        "nextStep": "Send the completed intake reply, already drafted",
+        "marketNeutral": true,
+        "note": null
+      },
+      {
+        "name": "isure",
+        "location": "Vaughan",
+        "email": "bsure@isure.ca",
+        "contactedOn": "2026-08-19",
+        "status": "No reply yet",
+        "nextStep": "Follow up",
+        "marketNeutral": true,
+        "note": null
+      },
+      {
+        "name": "KASE Insurance",
+        "location": "Toronto",
+        "email": "quotes@kaseinsurance.com",
+        "contactedOn": "2026-08-19",
+        "status": "No reply yet",
+        "nextStep": "Follow up",
+        "marketNeutral": true,
+        "note": "Commercial specialist. May pass on a one-car account."
+      },
+      {
+        "name": "Benson Kearley IFG",
+        "email": "acarr@bkifg.com",
+        "contactedOn": "2026-08-19",
+        "status": "No reply yet",
+        "nextStep": "Follow up",
+        "marketNeutral": false,
+        "note": "A BrokerLink company, owned by Intact, so not a neutral market. Skip ThinkInsure if using them, same parent since September 2025."
+      }
+    ],
+    "quotes": [],
+    "rules": [
+      "Do not cancel Desjardins until a replacement policy is bound in writing.",
+      "Compare declaration pages side by side, not headline premiums.",
+      "Ask each broker which carriers they intend to approach. Submitting to a carrier locks it to that broker for 30 to 60 days."
+    ]
+  },
+  "compliance": {
+    "corporateOwner": "15248132 Canada Inc",
+    "useSplit": {
+      "declared": "Personal",
+      "businessKmOnPolicy": null,
+      "annualKmOnPolicy": 18000,
+      "businessUsePercent": null,
+      "risk": "The policy is rated personal: business kilometres are blank and the payment schedule is marked Personal. If the vehicle is in fact used for business, the rating is wrong and a claim can be denied. This needs settling before renewal."
+    },
+    "mileageLog": {
+      "kept": false,
+      "note": "CRA requires a log to support any business use claim. Odometer was 14,035 km on 2026-08-12, about 10.5 months after the 2025-09-30 in service date, which annualises to roughly 16,000 km against the 18,000 km policy allowance."
+    },
+    "taxTreatment": [
+      {
+        "topic": "Lease deduction limit",
+        "detail": "CRA caps the deductible monthly lease cost for a passenger vehicle. The cap is set by the year the lease began, and any monthly payment above it is not deductible. Confirm the 2025 figure with the accountant before filing.",
+        "status": "to confirm"
+      },
+      {
+        "topic": "HST input tax credits",
+        "detail": "A GST/HST registrant can generally claim ITCs on the lease payments to the extent of commercial use. This depends directly on the business use percentage that is still unsettled.",
+        "status": "blocked on business use percentage"
+      },
+      {
+        "topic": "CCA",
+        "detail": "Not applicable while the vehicle is leased rather than owned. It becomes relevant only if the purchase option is exercised at lease end.",
+        "status": "not applicable"
+      },
+      {
+        "topic": "Standby charge and operating benefit",
+        "detail": "A corporate vehicle available for an employee or shareholder's personal use creates a taxable benefit. With the policy rated personal and a sole driver, this is the most likely exposure on the file.",
+        "status": "to confirm"
+      }
+    ],
+    "note": "Nothing here is tax advice. These are the questions to put to the accountant, with the numbers already assembled."
+  },
+  "openQuestions": [
+    {
+      "id": "q1",
+      "question": "Does the carrier offer a five year new vehicle replacement endorsement, or only OPCF 43R? If 43R, will they write it given the 2025-09-30 in service date?",
+      "askedOf": "all brokers",
+      "status": "open",
+      "answer": null
+    },
+    {
+      "id": "q2",
+      "question": "Can this be written as a personal auto policy with the company as named insured rather than commercial auto, and what is the premium difference?",
+      "askedOf": "all brokers",
+      "status": "open",
+      "answer": null
+    },
+    {
+      "id": "q3",
+      "question": "Is there a theft surcharge, and would a Tag or Ghost immobiliser reduce it or open markets that would otherwise decline?",
+      "askedOf": "all brokers",
+      "status": "open",
+      "answer": null
+    },
+    {
+      "id": "q4",
+      "question": "What does DCPD cost at $500 and at $1,000 deductible versus the current $0? It is the largest single line at $3,211 and a DCPD claim does not count as at fault.",
+      "askedOf": "all brokers",
+      "status": "open",
+      "answer": null
+    },
+    {
+      "id": "q5",
+      "question": "What is the maximum deductible Mercedes-Benz Financial permits under the lease?",
+      "askedOf": "MBFS",
+      "status": "answered",
+      "answer": "The Agreement to Furnish Insurance caps the deductible at $2,500 or 5% of the capitalised cost of the vehicle, whichever applies, and requires third party liability of at least $1,000,000 per occurrence plus MBFS as an additional named insured. Source: docs/insurance/mbfs-agreement-to-furnish-insurance.pdf."
+    },
+    {
+      "id": "q6",
+      "question": "What is the true business use percentage? The current policy is rated personal, with business kilometres blank and billing marked Personal. Misrating voids claims.",
+      "askedOf": "owner",
+      "status": "open",
+      "answer": null
+    }
+  ],
+  "nextActions": [
+    {
+      "action": "Pull the driver's abstract from ServiceOntario ($12 online) and verify the minor conviction",
+      "owner": "Umar",
+      "due": null,
+      "status": "todo",
+      "priority": 1,
+      "why": "The 2026-27 certificate shows one minor conviction in the past three years. The 2025-26 certificate showed none."
+    },
+    {
+      "action": "Correct the conviction disclosure in writing with all four brokers before anyone binds",
+      "owner": "Umar",
+      "due": null,
+      "status": "todo",
+      "priority": 1,
+      "why": "The initial broker emails stated no claims or convictions, ever. An undisclosed conviction found at bind is a misrepresentation."
+    },
+    {
+      "action": "Send Trevor Martin the completed Mitch Insurance intake reply",
+      "owner": "Umar",
+      "due": null,
+      "status": "todo",
+      "priority": 2,
+      "why": "Drafted, not yet sent. Mitch replied first."
+    },
+    {
+      "action": "Start the letter of experience for driving abroad from 2015 to 2021",
+      "owner": "Umar",
+      "due": null,
+      "status": "todo",
+      "priority": 2,
+      "why": "Longest lead time of anything on this list, and it is worth years of rated experience."
+    },
+    {
+      "action": "Confirm the business use percentage and correct the rating if it is not genuinely personal",
+      "owner": "Umar",
+      "due": null,
+      "status": "todo",
+      "priority": 2,
+      "why": "Misrating voids claims."
+    },
+    {
+      "action": "Follow up isure, KASE and Benson Kearley",
+      "owner": "Umar",
+      "due": null,
+      "status": "todo",
+      "priority": 3,
+      "why": "Only Mitch has replied."
+    },
+    {
+      "action": "Decide and bind a replacement policy, or accept the Desjardins renewal",
+      "owner": "Umar",
+      "due": "2026-09-30",
+      "status": "todo",
+      "priority": 1,
+      "why": "The renewal takes effect 2026-10-01 and the first debit of $804.75 lands that day."
+    }
+  ]
+}
