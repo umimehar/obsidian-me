@@ -5,7 +5,7 @@ created: 2026-08-19
 updated: 2026-08-19
 type: ticket
 id: TCK-0002
-status: in-progress
+status: review
 project: system
 ticket_type: feature
 assigned_device: any
@@ -17,7 +17,7 @@ effort: large
 depends_on: []
 created_by: umar
 session: 9107a6e3-2d57-4110-8298-3259d1de2bc7
-human_review_required: false
+human_review_required: true
 ---
 
 # TCK-0002 — Business vehicle info database
@@ -38,7 +38,7 @@ A single JSON file is the source of truth. A Bun render script emits six HTML pa
 - [x] Every page carries the same nav header linking all six, current page marked
 - [x] Render helpers unit-tested (currency, dates, prepaid-maintenance drawdown, lease countdown); tests pass
 - [x] Typecheck and lint clean
-- [ ] Spec and plan files deleted at the end (owner's instruction)
+- [x] Spec and plan files deleted at the end (owner's instruction)
 
 ## Context
 
@@ -65,3 +65,16 @@ Design approved in session before this ticket was opened. Approach B of three: J
 
 - 2026-08-19 17:50 — Two lessons captured in `knowledge/lessons.md`: zsh `noclobber` silently refusing a heredoc overwrite, and symlinked skill scripts never firing their own CLI entrypoint guard.
 - 2026-08-19 17:55 — Agent review dispatched at the owner's chosen model over both commits.
+- 2026-08-19 18:20 — The agent reviewer never returned, exactly as the five extraction subagents did not. The subagent lane produced no output in this session. Rather than self close on an unperformed review, `human_review_required` is set and the ticket moves to Review.
+- 2026-08-19 18:25 — Verified independently instead. Arithmetic cross checked against the source documents: monthly payment times term reconciles to the stated $63,000.36, both insurance certificates' coverage and endorsement lines sum exactly to their stated totals of $8,410 and $9,657, the nine itemised optional accident benefits sum to $253, and the kilometre headroom of 965 km follows from 15,000 earned against 14,035 driven. That pass found two real defects, both fixed: `maximumDeductibleComputed` was stored rounded down at $5,222.99 against a true $5,222.9975, and the 58% residual was labelled as a percentage of the list price when it is the lessor's residual factor ($58,580 is 53.3% of total list, 58.9% of sale price).
+- 2026-08-19 18:35 — Rendered every page in headless Chrome and read the screenshots. Found a third defect: the change column mapped increases to `.neg` (muted grey) and savings to `.pos` (accent), so on a page about a premium rising $1,247 the only figures drawing the eye were two small savings. Extracted into `src/delta.ts` with tests and inverted.
+- 2026-08-19 18:40 — Prose checked against the owner's style rules. Removed dash punctuation from the README page list, the log title and the tracking intro. The remaining instances of "comprehensive" are the insurance coverage of that name, not the banned adjective.
+- 2026-08-19 18:45 — Final state: `bun run check` green, 85 tests across 6 files, biome and `tsc --noEmit` clean. Spec and plan deleted per the owner's instruction.
+
+## What a human reviewer should check
+
+The agent review did not happen, so these are unverified by a second pair of eyes:
+
+1. The two high severity findings both rest on reading page 7 of `docs/lease/lease-agreement-detailed.pdf` as a binding declaration of business use. That reading drives the recommendation to change the insurance rating, which is a consequential call.
+2. Whether the vault's masking policy is satisfied by masking the insurance policy number to `****XTW6` while committing the source PDFs unmasked.
+3. Whether the tax positions on the compliance page are framed correctly as questions for an accountant rather than as advice.
