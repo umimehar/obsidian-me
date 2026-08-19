@@ -5,7 +5,7 @@ created: 2026-08-19
 updated: 2026-08-19
 type: ticket
 id: TCK-0002
-status: claimed
+status: in-progress
 project: system
 ticket_type: feature
 assigned_device: any
@@ -16,7 +16,7 @@ priority: p1
 effort: large
 depends_on: []
 created_by: umar
-session: null
+session: 9107a6e3-2d57-4110-8298-3259d1de2bc7
 human_review_required: false
 ---
 
