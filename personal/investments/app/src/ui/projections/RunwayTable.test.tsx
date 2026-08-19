@@ -293,3 +293,20 @@ describe("RunwayTable, every group excluded", () => {
     expect(screen.getByRole("heading", { level: 3, name: /room runway/i })).toBeDefined();
   });
 });
+
+describe("RunwayTable, an empty rows array is a caller bug, not a state to render", () => {
+  // `ProjectionsView` renders its own `EmptyState` whenever `rows` is
+  // empty, so this component's one real caller never reaches here with
+  // `rows={[]}`. Fails fast rather than rendering a table whose window
+  // line and cap rows would misstate a wrapper's own rules (see the
+  // comment on `RunwayTable` itself).
+  test("throws rather than rendering a table built from no projection", () => {
+    expect(() =>
+      render(
+        <Theme>
+          <RunwayTable rows={[]} inputs={inputs6} />
+        </Theme>,
+      ),
+    ).toThrow(/non-empty projection/);
+  });
+});
