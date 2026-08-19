@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { cleanup, render, screen, within } from "@testing-library/react";
+import { buildRunway } from "../../goals/runway";
 import { projectYears } from "../../projection/engine";
 import { projectionInputs } from "../../projection/inputs";
 import { loadAnalytics } from "../data";
@@ -18,6 +19,13 @@ import { RunwayTable } from "./RunwayTable";
 const analytics = loadAnalytics();
 const inputs6 = projectionInputs(analytics, { returnRate: 0.06 });
 const rows6 = projectYears(inputs6);
+const runway6 = buildRunway(rows6, inputs6);
+
+function findRow(id: string) {
+  const row = runway6.find((r) => r.id === id);
+  if (row === undefined) throw new Error(`expected buildRunway to produce a ${id} row`);
+  return row;
+}
 
 function renderTable() {
   render(
@@ -25,6 +33,22 @@ function renderTable() {
       <RunwayTable rows={rows6} inputs={inputs6} />
     </Theme>,
   );
+}
+
+/**
+ * The four `<td>` cells of a row, in column order, skipping the leading
+ * `<th scope="row">` wrapper cell (`Table.RowHeaderCell` renders `rowheader`,
+ * not `cell`, so `getAllByRole("cell")` never includes it). Index 0 is
+ * Bound, 1 is Year, 2 is Unclaimed, 3 is Detail.
+ */
+function dataCells(testId: string): HTMLElement[] {
+  return within(screen.getByTestId(testId)).getAllByRole("cell");
+}
+
+function cellAt(testId: string, index: number): HTMLElement {
+  const cell = dataCells(testId)[index];
+  if (cell === undefined) throw new Error(`expected a cell at index ${index} in ${testId}`);
+  return cell;
 }
 
 afterEach(cleanup);
@@ -49,6 +73,59 @@ describe("RunwayTable renders every bound with its year", () => {
     expect(headers.length).toBeGreaterThanOrEqual(4);
     expect(headers.map((h) => h.textContent).join(" ")).toMatch(/wrapper/i);
   });
+
+  // Pins the literal header row, not just "wrapper appears somewhere" --
+  // a header renamed to "Zzz" left the earlier assertion green because it
+  // only ever checked for the word "wrapper".
+  test("the header row reads exactly Wrapper, Bound, Year, Unclaimed, Detail, in that order", () => {
+    renderTable();
+    const headers = within(screen.getByRole("table")).getAllByRole("columnheader");
+    expect(headers.map((h) => h.textContent)).toEqual([
+      "Wrapper",
+      "Bound",
+      "Year",
+      "Unclaimed",
+      "Detail",
+    ]);
+  });
+
+  // Pins row order at the RENDER layer, not just inside buildRunway (which
+  // runway.test.ts already covers). `runway.map` reordering to
+  // `runway.slice().reverse().map` would leave every per-row testid lookup
+  // in this file passing, since each still finds its own row -- only the
+  // DOM's own top-to-bottom order catches it.
+  test("rows appear in the DOM in buildRunway's own order, not reversed or shuffled by the component", () => {
+    renderTable();
+    const domIds = [...screen.getByRole("table").querySelectorAll("tbody tr")].map((tr) =>
+      tr.getAttribute("data-testid"),
+    );
+    expect(domIds).toEqual(runway6.map((row) => `runway-${row.id}`));
+  });
+});
+
+describe("RunwayTable, every row's Wrapper and Bound cells", () => {
+  // Closes the gap where neither column had a value assertion: a `{"XX"}`
+  // mutation on `row.wrapper` or `row.bound` left every existing test
+  // green, since none of them read the Wrapper or Bound cell specifically.
+  // Expected values come from `buildRunway` itself, not a transcribed
+  // guess, so a real change to task 5's wording moves both sides together.
+  for (const row of runway6) {
+    test(`${row.id}: Wrapper reads "${row.wrapper}" and Bound reads "${row.bound}"`, () => {
+      renderTable();
+      const testId = `runway-${row.id}`;
+      const wrapperCell = within(screen.getByTestId(testId)).getByRole("rowheader");
+      expect(wrapperCell.textContent).toBe(row.wrapper);
+      expect(cellAt(testId, 0).textContent).toBe(row.bound);
+    });
+  }
+});
+
+describe("RunwayTable, the Detail column", () => {
+  test("the CESG row's Detail cell states buildRunway's own note verbatim", () => {
+    renderTable();
+    const note = findRow("cesg").note;
+    expect(cellAt("runway-cesg", 3).textContent).toBe(note);
+  });
 });
 
 describe("RunwayTable, the FHSA's two rows", () => {
@@ -69,6 +146,11 @@ describe("RunwayTable, the forfeited CESG", () => {
     expect(row.textContent ?? "").toContain(formatCurrency(550));
     expect(row.textContent ?? "").toContain("$550.00");
   });
+
+  test("the Unclaimed cell specifically carries the figure, not some other cell", () => {
+    renderTable();
+    expect(cellAt("runway-cesg", 2).textContent).toBe(formatCurrency(550));
+  });
 });
 
 describe("RunwayTable, the TFSA row", () => {
@@ -87,31 +169,70 @@ describe("RunwayTable, the TFSA row", () => {
   // one -- it stays green either way. This pins the year cell's own text.
   test("the year cell specifically, not just the bound cell, states there is no cap", () => {
     renderTable();
-    const row = screen.getByTestId("runway-tfsa");
-    const cells = within(row).getAllByRole("cell");
-    const yearCell = cells[1];
-    if (yearCell === undefined) throw new Error("expected a year cell in the tfsa row");
-    expect(yearCell.textContent ?? "").toMatch(/no lifetime cap/i);
+    expect(cellAt("runway-tfsa", 1).textContent ?? "").toMatch(/no lifetime cap/i);
+  });
+
+  test("the unclaimed cell states there is no cap concept to leave anything unclaimed against", () => {
+    renderTable();
+    expect(cellAt("runway-tfsa", 2).textContent ?? "").toMatch(/no lifetime cap/i);
   });
 });
 
 describe("RunwayTable, a null unclaimed figure never reads as zero or as blank", () => {
-  test("every row but cesg states its unclaimed cell in words, never as $0.00", () => {
+  // Isolated to the Unclaimed cell alone (index 2), never the whole row --
+  // a row-wide `trim().length > 0` check is satisfied by the Wrapper,
+  // Bound, Year and Detail cells no matter what the Unclaimed cell holds,
+  // which is exactly why a dash or a blank Unclaimed cell would have stayed
+  // undetected under that assertion. `/[a-z]/i` requires real prose, not
+  // just "some character", so a lone dash or an empty string both fail it.
+  test("every row but cesg carries real words in its Unclaimed cell, never $0.00, a dash, or blank", () => {
     renderTable();
     for (const id of ["fhsa-cap", "fhsa-close", "resp-cap", "rrsp-last", "tfsa"]) {
-      const row = screen.getByTestId(`runway-${id}`);
-      const text = row.textContent ?? "";
+      const cell = cellAt(`runway-${id}`, 2);
+      const text = cell.textContent ?? "";
       expect(text).not.toMatch(/\$0\.00/);
-      expect(text.trim().length).toBeGreaterThan(0);
+      expect(text).not.toMatch(/^-+$/);
+      expect(text).toMatch(/[a-z]/i);
     }
+  });
+
+  test("a reached lifetime cap (fhsa-cap, resp-cap) reads differently from a statutory row with no leftover concept (fhsa-close, rrsp-last)", () => {
+    renderTable();
+    const capReached = cellAt("runway-fhsa-cap", 2).textContent;
+    const statutory = cellAt("runway-fhsa-close", 2).textContent;
+    expect(capReached).not.toBe(statutory);
+    expect(capReached ?? "").toMatch(/cap/i);
+    expect(statutory ?? "").toMatch(/statutory/i);
+  });
+
+  test("the statutory rows and the TFSA's no-cap row also read differently from each other", () => {
+    renderTable();
+    const statutory = cellAt("runway-rrsp-last", 2).textContent;
+    const noCap = cellAt("runway-tfsa", 2).textContent;
+    expect(statutory).not.toBe(noCap);
   });
 });
 
 describe("RunwayTable, the out-of-window year", () => {
   test("states the projected window's own range, read off the real rows", () => {
     renderTable();
-    expect(document.querySelector("[data-runway-window]")?.textContent ?? "").toContain("2026");
-    expect(document.querySelector("[data-runway-window]")?.textContent ?? "").toContain("2056");
+    const text = document.querySelector("[data-runway-window]")?.textContent ?? "";
+    expect(text).toContain("2026");
+    expect(text).toContain("2056");
+  });
+
+  // A swapped window ("runs from 2056 to 2026") still contains both
+  // literal years, so a plain `toContain` pair passes it -- only checking
+  // that the start year's occurrence precedes the end year's catches a
+  // reversal. `indexOf` on the SAME string a swap would corrupt, not a
+  // second copy, so this fails on both a swap and a deletion of either year.
+  test("states the range in the right order: the start year before the end year, not swapped", () => {
+    renderTable();
+    const text = document.querySelector("[data-runway-window]")?.textContent ?? "";
+    const startIndex = text.indexOf("2026");
+    const endIndex = text.indexOf("2056", startIndex + 1);
+    expect(startIndex).toBeGreaterThanOrEqual(0);
+    expect(endIndex).toBeGreaterThan(startIndex);
   });
 
   test("marks the RRSP's 2068 as beyond that window rather than letting it read as a plain projected fact", () => {
@@ -126,5 +247,44 @@ describe("RunwayTable, the out-of-window year", () => {
     renderTable();
     const row = screen.getByTestId("runway-fhsa-cap");
     expect(row.textContent ?? "").not.toMatch(/beyond/i);
+  });
+});
+
+describe("RunwayTable, a cap never reached inside a short window", () => {
+  // The same one-year fixture `runway.test.ts` uses to exercise
+  // `capBound`'s never-reached branch, rendered through the component this
+  // time -- proving "Not reached within the window above." actually
+  // reaches the screen, not just `buildRunway`'s return value.
+  const shortInputs = projectionInputs(analytics, { returnRate: 0.06, years: 1 });
+  const shortRows = projectYears(shortInputs);
+
+  test("the FHSA cap's year cell says it was not reached within the window, not a fabricated year", () => {
+    render(
+      <Theme>
+        <RunwayTable rows={shortRows} inputs={shortInputs} />
+      </Theme>,
+    );
+    const cell = cellAt("runway-fhsa-cap", 1);
+    expect(cell.textContent ?? "").toMatch(/not reached/i);
+  });
+});
+
+describe("RunwayTable, every group excluded", () => {
+  // Reachable by corpus even though not by today's UI: `PROJECTION_GROUP_ORDER`
+  // includes `Corporate`, which `buildRunway` never produces a row for, so a
+  // scope covering only `Corporate` yields zero runway rows.
+  test("states the absence in words rather than rendering nothing", () => {
+    const emptyInputs = { ...inputs6, groups: [] as const };
+    const emptyRows = projectYears(emptyInputs);
+    render(
+      <Theme>
+        <RunwayTable rows={emptyRows} inputs={emptyInputs} />
+      </Theme>,
+    );
+    expect(screen.queryByRole("table")).toBeNull();
+    const empty = document.querySelector("[data-runway-empty]");
+    expect(empty).not.toBeNull();
+    expect((empty?.textContent ?? "").trim().length).toBeGreaterThan(0);
+    expect(screen.getByRole("heading", { level: 3, name: /room runway/i })).toBeDefined();
   });
 });
