@@ -282,9 +282,13 @@ describe("RunwayTable, every group excluded", () => {
       </Theme>,
     );
     expect(screen.queryByRole("table")).toBeNull();
-    const empty = document.querySelector("[data-runway-empty]");
-    expect(empty).not.toBeNull();
-    expect((empty?.textContent ?? "").trim().length).toBeGreaterThan(0);
+    expect(document.querySelector("[data-runway-empty]")).not.toBeNull();
+    // Isolated to the message text itself, not the whole container: the
+    // container also holds the h3 heading, whose own non-empty text would
+    // keep a row-wide `trim().length > 0` check green even if the message
+    // sentence beside it were blanked out.
+    const message = document.querySelector("[data-runway-empty-message]")?.textContent ?? "";
+    expect(message.trim().length).toBeGreaterThan(0);
     expect(screen.getByRole("heading", { level: 3, name: /room runway/i })).toBeDefined();
   });
 });

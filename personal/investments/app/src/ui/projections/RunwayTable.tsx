@@ -99,7 +99,7 @@ function EmptyRunway() {
       <Heading size="4" as="h3">
         Room runway
       </Heading>
-      <Text size="2" color="gray">
+      <Text size="2" color="gray" data-runway-empty-message="">
         No account in this projection carries a lifetime cap or a statutory deadline to report here.
       </Text>
     </Flex>
