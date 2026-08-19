@@ -545,7 +545,7 @@ test("a higher rate does not move a statutory deadline", () => {
 });
 ```
 
-The contribution-driven rows may move and the statutory ones must not, which is the distinction this table exists to hold. Assert the deadlines pinned; do not assert a specific moved year unless you verify it by running the engine.
+**Corrected 2026-08-19.** This step was written expecting the contribution-driven rows to move with the rate while the statutory ones held still. Measured over the real corpus at 0%, 6%, 12% and 25%, NOTHING in the table moves: every runway year is identical, and the engine's `contributions` and `roomRemaining` schedules are byte-identical between 0% and 25%. A contribution cap is consumed by contributions, not by growth. The task 5 implementer correctly asserted no moved year; task 7's audit then found a doc comment in `runway.ts` still repeating the plan's wrong claim. Assert that every row holds still across rates, and do not describe any row as rate-sensitive.
 
 - [ ] **Step 6: Run them, confirm they fail, implement, confirm they pass.**
 

@@ -75,7 +75,9 @@ One table, derived from the same `ProjectionYear[]` the chart draws, read struct
 
 The FHSA needs both of its rows visible together. Contributions stop at the cap in 2028 and the account itself ends in 2039, and those are unrelated facts that a single "FHSA deadline" row would blur into one. The TFSA row exists for the same reason a Cash account stays visible and excluded: a wrapper missing from the table reads as an oversight, while a wrapper stating it has no cap reads as an answer.
 
-Every year in this table moves with the rate, because a higher return fills a lifetime cap sooner. The table is inside the rate control's blast radius and re-derives with it, which is the same guarantee the goals carry.
+**Corrected 2026-08-19, and the original claim here was wrong.** This section first said every year in the table moves with the rate, because a higher return fills a lifetime cap sooner. That is false, and the error is in the reasoning rather than the code: a contribution cap is consumed by contributions, not by growth, so a portfolio compounding faster does not use up its RESP room any sooner. Measured across the real corpus at 0%, 6%, 12% and 25%, every runway year is identical, and the engine's `contributions` and `roomRemaining` schedules are byte-identical between 0% and 25%.
+
+So the runway is rate-INDEPENDENT, unlike the goals, which are re-judged live. That is a genuine difference between the two features on one page and the table should not imply otherwise. The goals move with the slider; the runway does not, because none of what it reports depends on returns.
 
 ## Testing
 
