@@ -105,3 +105,14 @@ Why:
 ALWAYS mutate each rendering path independently when a figure is rendered twice (visible text, `aria-label`, live region, tooltip). A shared-variable mutation tests that the variable is used; only a per-path mutation tests that the paths agree.
 
 NEVER report a figure audit as complete without stating which paths it mutated. "N of N figures" hides whether N counted variables or renderings.
+
+### git checkout -- is not an undo for a mutation, it is a reset to HEAD (2026-08-19)
+
+Why:
+- Mid-audit, an agent applied a real fix on top of an uncommitted state, then ran `git checkout -- <file>` to revert a test mutation. That silently discarded the real fix too, because checkout restores the file to the last COMMIT, not to "how it looked a moment ago". The mutation and the improvement went together.
+- It was caught only because the restore was verified by `shasum` against the expected pre-mutation hash rather than by the command's exit code, which was 0 and meaningless.
+- The same shape as the mutation traps on this project: a step that reports success while doing something other than what was intended.
+
+ALWAYS commit real work BEFORE starting a mutation audit, so `git checkout -- <file>` has a correct target. If that is not possible, snapshot with the Write tool and restore from that snapshot instead.
+
+NEVER verify a restore by exit code. Compare `shasum` against the known pre-mutation hash, or use `git diff --quiet`. On macOS with `cp` aliased to `cp -i` and zsh `noclobber` set, a failed restore is SILENT: both refuse rather than erroring, so the tree keeps the mutation while the command reports success and later mutations stack on top of it.
