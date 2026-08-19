@@ -110,12 +110,13 @@ function cesgRow(rows: readonly ProjectionYear[], inputs: ProjectionInputs): Run
  * Contribution-driven rows (`fhsa-cap`, `resp-cap`) do NOT move with the
  * return rate, and neither do the statutory rows (`fhsa-close`, `rrsp-last`,
  * and the CESG row's ages-out year). `roomRemaining` (`engine.ts`) is
- * computed from `contributedThisYear` alone -- a lifetime cap is consumed by
- * contributions, never by `advanceValues`'s return-compounded balances -- so
- * every row this function produces is rate-invariant, pinned across 0%, 3%,
- * 6%, 12%, 25% and 50% in `runway.test.ts`. Corrected 2026-08-19: this
- * comment previously claimed contribution-driven rows moved with a higher
- * return filling the cap sooner. That was never true of this engine.
+ * computed from `contributedThisYear` alone -- no room-tracking step in
+ * `engine.ts` reads a return-compounded balance, so this is structural, not
+ * merely true of the corpus this app ships with -- and every row this
+ * function produces is rate-invariant, pinned across 0%, 6%, 12% and 25% in
+ * `runway.test.ts`. Corrected 2026-08-19: this comment previously claimed
+ * contribution-driven rows moved with a higher return filling the cap
+ * sooner. That was never true of this engine.
  *
  * A wrapper's rows are omitted entirely, not reported with a fabricated
  * year, when `inputs.groups` excludes its group -- the same "no selected

@@ -357,7 +357,9 @@ describe("heading structure", () => {
  * Neither shipped goal can observe `fhsaCloseYear`: `house` targets 2028,
  * well before the 2039 close, and `education`'s scope is the RESP, which
  * `fhsaCloseYear` has no effect on at any target year -- it only zeroes an
- * FHSA account's own value (`engine.ts:427`). The gap is SCOPE, not year:
+ * FHSA account's own value (`allocateByAccount`'s `if (a.group === "FHSA"
+ * && row.year === fhsaCloseYear) value = 0;` in `engine.ts`). The gap is
+ * SCOPE, not year:
  * only a goal whose scope reaches the FHSA can ever see this prop move
  * anything, so this uses the `goals` seam `GoalsPanel`'s own doc comment
  * says exists for exactly this -- a scope the shipped config does not

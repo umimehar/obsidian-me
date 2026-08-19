@@ -1,11 +1,13 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { AnalyticsOutput } from "../../analytics/build";
+import { GOALS } from "../../goals/config";
+import { evaluateGoal } from "../../goals/evaluate";
 import { projectYears } from "../../projection/engine";
 import { fittedReturnRate } from "../../projection/fittedRate";
 import { projectedAccounts, projectionInputs } from "../../projection/inputs";
 import { loadAnalytics } from "../data";
-import { formatCurrency, formatRate } from "../format";
+import { formatCurrency, formatRate, formatWholeDollars } from "../format";
 import { ProjectionsView } from "./ProjectionsView";
 
 /**
@@ -343,6 +345,26 @@ describe("the goals panel and the room runway table are mounted below the chart"
   });
 
   /**
+   * `rows` is pinned by the window-line test above; `inputs` itself was not.
+   * `<RunwayTable inputs={{ ...inputs, fhsaCloseYear: "2050" }} />` and
+   * `<RunwayTable inputs={{ ...inputs, rules: { ...inputs.rules, fhsaLifetime: 999 } }} />`
+   * were both 1157 pass / 0 fail without this: the runway would state a
+   * close year or a lifetime cap that disagrees with the goal card two
+   * inches above it, and nothing would notice. Both figures are recomputed
+   * straight from the engine, never transcribed.
+   */
+  test("the runway table's FHSA close year and lifetime cap state the same figures the engine's own inputs carry", () => {
+    renderView();
+    const engineInputs = projectionInputs(analytics, { returnRate: 0.06 });
+    expect(screen.getByTestId("runway-fhsa-close").textContent).toContain(
+      engineInputs.fhsaCloseYear,
+    );
+    expect(screen.getByTestId("runway-fhsa-cap").textContent).toContain(
+      formatWholeDollars(engineInputs.rules.fhsaLifetime),
+    );
+  });
+
+  /**
    * The describe title says "mounted below the chart", and that claim was
    * never checked: swapping the two new sections, or moving either above
    * `<ProjectionChart>` or above the view's own `h2`, was 1151 pass / 0 fail
@@ -376,12 +398,29 @@ describe("the goals panel and the room runway table are mounted below the chart"
    * in `ProjectionsView.tsx`), so `fireEvent.change` through `setRate` is
    * the real interaction path a drag takes under happy-dom, not a
    * substitute for one the keyboard path would otherwise cover.
+   *
+   * Asserts equality against the engine's own value at the moved rate, not
+   * merely that the figure differs from before. "It changed" is the weaker
+   * claim, and it stays green for `<GoalsPanel rows={rows at 6%} rate={live}
+   * />`: `evaluateGoal` (`evaluate.ts:102`) passes the live `rate` straight
+   * into `accountValues`, so frozen rows plus a live rate compounds
+   * contribution inflows computed at 6% at 20% instead -- a scenario that
+   * exists nowhere on this page -- and the figure still moves, so a
+   * before/after inequality check cannot tell that mutation from a correct
+   * one. Equality against the real engine output at the real rate can.
    */
-  test("moving the rate slider changes a goal's projected figure", () => {
+  test("moving the rate slider changes a goal's projected figure to the engine's own value at that rate", () => {
     renderView();
-    const before = screen.getByTestId("goal-education").textContent ?? "";
     setRate(20);
-    expect(screen.getByTestId("goal-education").textContent).not.toBe(before);
+    const rows20 = projectYears(projectionInputs(analytics, { returnRate: 0.2 }));
+    const inputs20 = projectionInputs(analytics, { returnRate: 0.2 });
+    const educationGoal = GOALS.find((g) => g.id === "education");
+    if (educationGoal === undefined) throw new Error("expected the education goal");
+    const verdict = evaluateGoal(educationGoal, analytics, rows20, 0.2, inputs20.fhsaCloseYear);
+    if (verdict.projected === null) throw new Error("expected a projectable goal at 20%");
+    expect(screen.getByTestId("goal-education").textContent).toContain(
+      formatCurrency(verdict.projected),
+    );
   });
 
   /**
