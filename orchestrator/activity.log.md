@@ -17,3 +17,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-08-10 16:51 · umar · create · TCK-0001 · investments phase 3: goal tracking and room runway, created into Ready by owner instruction
 - 2026-08-10 16:51 · mac-studio · claim · TCK-0001 · claimed for the phase 3 build
 - 2026-08-10 16:52 · mac-studio · start · TCK-0001 · phase 3 build begins, session recorded
+- 2026-08-19 15:46 · mac-studio · create · TCK-0002 · Business vehicle info database opened at owner request

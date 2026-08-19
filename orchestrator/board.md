@@ -11,6 +11,7 @@ kanban-plugin: board
 
 ## Ready
 
+- [ ] [[TCK-0002-business-vehicle-info-database]] #project/system #type/feature #p1
 
 
 
