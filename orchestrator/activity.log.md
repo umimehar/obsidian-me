@@ -18,3 +18,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-08-10 16:51 · mac-studio · claim · TCK-0001 · claimed for the phase 3 build
 - 2026-08-10 16:52 · mac-studio · start · TCK-0001 · phase 3 build begins, session recorded
 - 2026-08-19 15:46 · mac-studio · create · TCK-0002 · Business vehicle info database opened at owner request
+- 2026-08-19 15:47 · mac-studio · claim · TCK-0002 · claimed at owner request
