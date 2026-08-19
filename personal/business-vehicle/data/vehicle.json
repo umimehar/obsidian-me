@@ -147,10 +147,9 @@
           ],
           "lossPayee": "Mercedes-Benz Financial Services, 500-2680 Matheson Blvd E, Mississauga ON L4W 0A5",
           "totalPremium": 8410,
-          "paymentFrequency": "Monthly",
-          "paymentAmount": 700.84,
-          "paymentMethod": "Preauthorized withdrawals",
-          "billingCategory": "Personal",
+          "paymentFrequency": "In full on invoice, as issued",
+          "paymentAmount": 8410.0,
+          "paymentMethod": "Invoice, payable in full on the date indicated",
           "coverages": [
             {
               "coverage": "Liability — Bodily Injury",
@@ -302,7 +301,9 @@
               "serious": 0
             },
             "chargeableClaims": []
-          }
+          },
+          "invoiceDueDate": "2025-11-01",
+          "convertedDuringTerm": "The renewal's billing table shows this term running at $700.84 monthly by August 2026, so it moved to preauthorized debit partway through. The certificate as issued says Invoice."
         },
         {
           "term": "2026-10-01 to 2027-10-01",
@@ -1575,11 +1576,12 @@
     {
       "id": "f7",
       "severity": "low",
-      "title": "The brief says the payment method changed. The documents say only the amount did",
-      "detail": "The renewal document shows the expiring 2025-26 term was already billed monthly by preauthorized withdrawal, at $700.84. The renewal is monthly at $804.75.",
-      "why": "A small thing, but the comparison sent to brokers should be accurate.",
-      "action": "None. Recorded so the same correction is not made twice.",
+      "title": "The payment method really did change, and the certificates disagree about when",
+      "detail": "The 2025-26 certificate as issued says method of payment Invoice, payable in full on receipt, $8,410 due 1 November 2025. The renewal's billing table shows that same term running at $700.84 monthly. So it converted to preauthorized debit partway through the term rather than at renewal.",
+      "why": "Only that the year over year comparison should describe two different billing arrangements, not one amount changing.",
+      "action": "None. Recorded so the 2025-26 figures are not read as monthly from the start.",
       "sources": [
+        "docs/insurance/policy-2025-10-01-current.pdf, invoice and certificate",
         "docs/insurance/policy-2026-10-01-renewal.pdf, billing account details"
       ]
     },
