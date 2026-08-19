@@ -535,7 +535,7 @@ test("rewording the engine's notes cannot move a single runway year", () => {
 });
 ```
 
-- [ ] **Step 5: Write the failing test that the table moves with the rate.** A higher return fills a lifetime cap sooner, so the table sits inside the rate control's blast radius exactly as the goals do.
+- [ ] **Step 5: Write the failing test that the table does NOT move with the rate.** Corrected 2026-08-19: this heading previously claimed the opposite, that a higher return fills a lifetime cap sooner and the table therefore sits inside the rate control's blast radius as the goals do. That is false at every rate measured. A contribution cap is consumed by contributions, not by growth.
 
 ```ts
 test("a higher rate does not move a statutory deadline", () => {
