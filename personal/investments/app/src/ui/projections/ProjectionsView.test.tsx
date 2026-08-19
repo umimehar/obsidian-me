@@ -311,14 +311,6 @@ describe("nothing to project from", () => {
   });
 });
 
-/**
- * The slider is the one control on the page whose announcement did not come
- * from the same call as its visible text. A native `<input type="range">`
- * announces `value` when it carries no `aria-valuetext`, so applying the
- * fitted rate had the label read 24.84% while the control said
- * 24.839250232739074 -- a bare unitless number, and a second formatting path
- * for a figure already formatted once.
- */
 describe("the goals panel and the room runway table are mounted below the chart", () => {
   test("the projections tab renders the goals panel", () => {
     renderView();
@@ -329,6 +321,45 @@ describe("the goals panel and the room runway table are mounted below the chart"
   test("the projections tab renders the runway table", () => {
     renderView();
     expect(screen.getByTestId("runway-fhsa-close")).toBeDefined();
+  });
+
+  /**
+   * `RunwayTable` is handed `rows` rather than deriving its own, so it and
+   * the chart beside it read the same projection -- but nothing else pins
+   * that the two actually agree: `rows={rows.slice(1)}` at the call site is
+   * 1151 pass / 0 fail without this, and would silently open the window
+   * line a year later than the chart's own history actually starts. The
+   * years are recomputed straight from the engine here, the same way every
+   * other expected figure in this file is, rather than transcribed.
+   */
+  test("the runway table's window line states the same first and last year the engine's own rows carry", () => {
+    renderView();
+    const engineRows = projectYears(projectionInputs(analytics, { returnRate: 0.06 }));
+    const firstYear = engineRows[0]?.year;
+    const lastYear = engineRows.at(-1)?.year;
+    if (firstYear === undefined || lastYear === undefined)
+      throw new Error("expected projection rows");
+    expect(text("runway-window")).toContain(`runs from ${firstYear} to ${lastYear}`);
+  });
+
+  /**
+   * The describe title says "mounted below the chart", and that claim was
+   * never checked: swapping the two new sections, or moving either above
+   * `<ProjectionChart>` or above the view's own `h2`, was 1151 pass / 0 fail
+   * before this test existed.
+   */
+  test("the heading, the chart, the goals panel and the runway table appear in that document order", () => {
+    renderView();
+    const nodes = [...document.body.querySelectorAll("*")];
+    const index = (el: Element | null) => nodes.indexOf(el as Element);
+    const heading = screen.getByRole("heading", { level: 2, name: "Thirty year projection" });
+    const chart = document.querySelector("[data-projection-chart]");
+    const goalCard = screen.getByTestId("goal-house");
+    const runwayTable = document.querySelector("[data-runway-table]");
+    expect(index(heading)).toBeGreaterThanOrEqual(0);
+    expect(index(heading)).toBeLessThan(index(chart));
+    expect(index(chart)).toBeLessThan(index(goalCard));
+    expect(index(goalCard)).toBeLessThan(index(runwayTable));
   });
 
   test("both sit at h3, one level under the view's own h2, with no level skipped", () => {
@@ -354,16 +385,15 @@ describe("the goals panel and the room runway table are mounted below the chart"
   });
 
   /**
-   * `runway.ts`'s own comment on `buildRunway` claims the contribution-driven
-   * rows (`fhsa-cap`, `resp-cap`) "move with the return rate, because a
-   * higher return fills a lifetime cap sooner." Checked against the engine
-   * directly: they do not. `roomRemaining` (`engine.ts:320-324`) is computed
-   * from `contributedThisYear` alone, never from `advanceValues`'s
-   * return-compounded balances, so the FHSA and RESP cap years come back
-   * identical at 0%, 6%, 20% and 30% for this corpus. That claim is stale
-   * documentation, not something this test can honestly assert -- flagged in
-   * the report rather than encoded here as a passing assertion of something
-   * that is not true.
+   * `buildRunway`'s own doc comment (`runway.ts`) states that no row it
+   * produces moves with the return rate, contribution-driven or statutory --
+   * `roomRemaining` (`engine.ts:320-324`) is computed from
+   * `contributedThisYear` alone, never from `advanceValues`'s
+   * return-compounded balances. That property is pinned directly against the
+   * engine in `runway.test.ts` ("the entire runway is byte-for-byte
+   * identical at 0% and at 25%"); this is the same fact checked at the
+   * mounted-page level, through the live rate slider rather than a
+   * hand-built `ProjectionInputs`.
    */
   test("the runway table still renders correctly after the rate moves, even though its contribution-driven years do not follow it", () => {
     renderView();
@@ -379,12 +409,21 @@ describe("the goals panel and the room runway table are mounted below the chart"
       rollups: { ...analytics.rollups, registration: [] },
     };
     renderView(empty);
+    expect(text("projection-empty")).toContain("state no market value to start from");
     expect(screen.queryByTestId("goal-house")).toBeNull();
     expect(screen.queryByTestId("goal-education")).toBeNull();
     expect(screen.queryByRole("table")).toBeNull();
   });
 });
 
+/**
+ * The slider is the one control on the page whose announcement did not come
+ * from the same call as its visible text. A native `<input type="range">`
+ * announces `value` when it carries no `aria-valuetext`, so applying the
+ * fitted rate had the label read 24.84% while the control said
+ * 24.839250232739074 -- a bare unitless number, and a second formatting path
+ * for a figure already formatted once.
+ */
 describe("the slider announces the rate it shows", () => {
   test("the announced value is the visible label's figure, not the raw float", () => {
     renderView();

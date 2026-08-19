@@ -352,3 +352,56 @@ describe("heading structure", () => {
     expect(screen.queryByRole("heading", { level: 2 })).toBeNull();
   });
 });
+
+/**
+ * Neither shipped goal can observe `fhsaCloseYear`: `house` targets 2028,
+ * well before the 2039 close, and `education`'s scope is the RESP, which
+ * `fhsaCloseYear` has no effect on at any target year -- it only zeroes an
+ * FHSA account's own value (`engine.ts:427`). The gap is SCOPE, not year:
+ * only a goal whose scope reaches the FHSA can ever see this prop move
+ * anything, so this uses the `goals` seam `GoalsPanel`'s own doc comment
+ * says exists for exactly this -- a scope the shipped config does not
+ * carry -- rather than adding a goal to `GOALS` that nothing in the app
+ * needs.
+ */
+describe("fhsaCloseYear reaches evaluateGoal through the panel's own prop, not a recomputed one", () => {
+  const lateHouseGoal: Goal = {
+    id: "house-late",
+    label: "House down payment (test fixture, past the FHSA close)",
+    scope: { kind: "purpose", purpose: "house" },
+    target: 40000,
+    by: "2040",
+    source: "fixture: an FHSA-scoped goal targeting a year past the 2039 close",
+  };
+
+  test("the projected figure differs between a real close year and none", () => {
+    render(
+      <Theme>
+        <GoalsPanel
+          analytics={analytics}
+          rows={rows6}
+          rate={0.06}
+          fhsaCloseYear="2039"
+          goals={[lateHouseGoal]}
+        />
+      </Theme>,
+    );
+    const withClose = cardText("house-late");
+    cleanup();
+
+    render(
+      <Theme>
+        <GoalsPanel
+          analytics={analytics}
+          rows={rows6}
+          rate={0.06}
+          fhsaCloseYear=""
+          goals={[lateHouseGoal]}
+        />
+      </Theme>,
+    );
+    const withoutClose = cardText("house-late");
+
+    expect(withClose).not.toBe(withoutClose);
+  });
+});

@@ -125,27 +125,25 @@ function EmptyRunway() {
  * `yearText` together.
  */
 export function RunwayTable({ rows, inputs }: RunwayTableProps) {
+  // `rows={[]}` makes `capBound` (`runway.ts`) return a bare `{ year: null,
+  // unclaimed: null }` for `fhsa-cap`/`resp-cap`, which reads as "no lifetime
+  // cap" for a wrapper that has one. The one caller in this app never
+  // reaches here with an empty `rows`: `ProjectionsView` renders its own
+  // `EmptyState` first whenever `rows` is empty. Failing fast surfaces that
+  // as the caller bug it would be, rather than rendering a false table.
+  if (rows.length === 0) {
+    throw new Error(
+      "RunwayTable needs a non-empty projection; ProjectionsView renders EmptyState for this case",
+    );
+  }
+
   const runway = buildRunway(rows, inputs);
   const windowStart = rows[0]?.year ?? null;
   const windowEnd = rows.at(-1)?.year ?? null;
 
   if (runway.length === 0) return <EmptyRunway />;
 
-  // `rows={[]}` (no-rows) is a real branch below, and it is not merely
-  // untested -- it is where `capBound` (`runway.ts`) returns a bare
-  // `{ year: null, unclaimed: null }` for `fhsa-cap` and `resp-cap`, so
-  // `yearText` takes its no-lifetime-cap arm for a wrapper that genuinely
-  // has one. Left unguarded here rather than fixed, because the one caller
-  // in this app, `ProjectionsView`, never reaches this component with an
-  // empty `rows`: it renders its own `EmptyState` first whenever
-  // `end === undefined`, which is exactly the condition an empty `rows`
-  // produces. Guarding it here would hide that a future caller passing an
-  // empty projection is a caller bug, not a state this table should paper
-  // over with a second empty-runway message.
-  const windowLine =
-    windowStart !== null && windowEnd !== null
-      ? `The projection behind this table runs from ${windowStart} to ${windowEnd}. A year outside that range is stated as a fact about the account's rules, not as something this projection produced.`
-      : "The projection behind this table has no rows, so no year below was produced by it.";
+  const windowLine = `The projection behind this table runs from ${windowStart} to ${windowEnd}. A year outside that range is stated as a fact about the account's rules, not as something this projection produced.`;
 
   return (
     <Table.Root data-runway-table="" variant="surface">

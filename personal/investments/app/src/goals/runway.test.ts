@@ -5,10 +5,14 @@ import { loadAnalytics } from "../ui/data";
 import { buildRunway } from "./runway";
 
 const analytics = loadAnalytics();
+const inputs0 = projectionInputs(analytics, { returnRate: 0 });
+const rows0 = projectYears(inputs0);
 const inputs6 = projectionInputs(analytics, { returnRate: 0.06 });
 const rows6 = projectYears(inputs6);
 const inputs12 = projectionInputs(analytics, { returnRate: 0.12 });
 const rows12 = projectYears(inputs12);
+const inputs25 = projectionInputs(analytics, { returnRate: 0.25 });
+const rows25 = projectYears(inputs25);
 
 describe("buildRunway, the cap and deadline years against the real corpus", () => {
   test("the FHSA fills its lifetime cap in 2028 and closes in 2039", () => {
@@ -68,7 +72,7 @@ describe("buildRunway, structural derivation only", () => {
   });
 });
 
-describe("buildRunway, statutory deadlines are pinned against the rate", () => {
+describe("buildRunway, no row moves with the rate -- statutory or contribution-driven", () => {
   test("a higher rate does not move a statutory deadline", () => {
     const r12 = buildRunway(rows12, inputs12);
     expect(r12.find((x) => x.id === "fhsa-close")?.year).toBe("2039");
@@ -78,6 +82,24 @@ describe("buildRunway, statutory deadlines are pinned against the rate", () => {
   test("a higher rate does not move the CESG ages-out year either, since it is statutory too", () => {
     const r12 = buildRunway(rows12, inputs12);
     expect(r12.find((x) => x.id === "cesg")?.year).toBe("2042");
+  });
+
+  test("a higher rate does not move the contribution-driven caps either -- a lifetime cap is filled by contributions, never by growth", () => {
+    const r12 = buildRunway(rows12, inputs12);
+    expect(r12.find((x) => x.id === "fhsa-cap")?.year).toBe("2028");
+    expect(r12.find((x) => x.id === "resp-cap")?.year).toBe("2044");
+  });
+
+  /**
+   * The positive statement, not just two spot-checked ids: the whole
+   * `buildRunway` output, every field, is identical at 0% and 25% -- the
+   * full span the rate slider offers. This is the property `runway.ts`'s
+   * own doc comment on `buildRunway` got backwards until 2026-08-19. It
+   * passes today and it reddens the day an engine change ever makes room
+   * tracking sensitive to the return rate.
+   */
+  test("the entire runway is byte-for-byte identical at 0% and at 25%", () => {
+    expect(buildRunway(rows0, inputs0)).toEqual(buildRunway(rows25, inputs25));
   });
 });
 
@@ -98,13 +120,14 @@ describe("buildRunway, unclaimed is pinned across every row", () => {
 });
 
 // A cap that is never reached inside the projection is unreachable on the
-// real corpus at any rate the app offers: the FHSA and RESP caps both fill
-// well inside the default 30-year, 6% projection. A projection window short
-// enough to end first is not a fabricated fixture -- projectYears(inputs)
-// runs for real, over the real corpus, with a real ProjectionOverrides.years
-// -- so this exercises the "never reached" branch of capBound with numbers
-// the engine actually produced, the same way rows12 above exercises the
-// rate axis.
+// real corpus over its default 30-year window: the FHSA and RESP caps both
+// fill well before year 30, regardless of rate -- the caps are filled by
+// contributions, not by growth (see the describe above). A shorter window
+// is what makes the never-reached branch reachable, not a different rate.
+// It is not a fabricated fixture either -- projectYears(inputs) runs for
+// real, over the real corpus, with a real ProjectionOverrides.years -- so
+// this exercises the "never reached" branch of capBound with numbers the
+// engine actually produced.
 describe("buildRunway, the never-reached branch of a lifetime cap", () => {
   const shortInputs = projectionInputs(analytics, { returnRate: 0.06, years: 1 });
   const shortRows = projectYears(shortInputs);
