@@ -76,7 +76,7 @@ ${kv([
   ["Interest rate", `${percent(lease.interestRate ?? null, 2).replace("+", "")} a year`],
   [
     "Residual",
-    `<span class="num">${wholeMoney(lease.residualValue ?? null)}</span> at maturity, ${percent(lease.residualPercent ?? null, 0).replace("+", "")} of the list price`,
+    `<span class="num">${wholeMoney(lease.residualValue ?? null)}</span> at maturity, on a ${percent(lease.residualFactor ?? null, 0).replace("+", "")} residual factor`,
   ],
   [
     "Purchase option",
@@ -87,6 +87,8 @@ ${kv([
     `<span class="num">${wholeMoney(lease.totalCostOfLeaseTransaction ?? null)}</span> in total, of which ${wholeMoney(lease.implicitFinanceCharge ?? null)} is finance charge`,
   ],
 ])}
+
+      <p class="section-note">${escapeHtml(lease.residualFactorNote ?? "")}</p>
 
       <hr class="hr mt-rule" />
 ${section("Kilometres", "The allowance accrues monthly. Being under it today is not the same as finishing under it.")}

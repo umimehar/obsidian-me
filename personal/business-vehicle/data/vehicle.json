@@ -901,7 +901,6 @@
         "paymentCalculationAmount": 44894.93,
         "implicitFinanceCharge": 10857.55,
         "residualValue": 58580.0,
-        "residualPercent": 0.58,
         "purchaseOptionPrice": 58580.0,
         "cashDownPayment": 4424.78,
         "securityDeposit": 0.0,
@@ -1075,7 +1074,7 @@
         "insuranceRequirements": {
           "minimumLiability": 1000000,
           "maximumDeductibleRule": "$2,500 or 5% of the price of the vehicle, whichever is greater",
-          "maximumDeductibleComputed": 5222.99,
+          "maximumDeductibleComputed": 5222.9975,
           "maximumDeductibleNote": "The lease says whichever is greater, so 5% of the $104,459.95 leased vehicle amount governs: about $5,223. The separate Agreement to Furnish Insurance is worded 'shall not exceed 2500 or 5% of the capitalized cost' without the tie breaker. The lease is the operative contract.",
           "additionalNamedInsuredAndLossPayee": "For comprehensive, fire, theft and collision",
           "additionalNamedInsured": "For third party liability",
@@ -1145,7 +1144,9 @@
           "docs/lease/lease-agreement-detailed.pdf",
           "docs/lease/lease-pricing-worksheet.pdf",
           "docs/lease/lease-agreement-fclp-classic-addendum.pdf"
-        ]
+        ],
+        "residualFactor": 0.58,
+        "residualFactorNote": "Stated as 58% on the dealer worksheet. It is the lessor's residual factor, not 58% of any figure printed on the deal: $58,580 is 53.3% of the $109,929.95 total list and 58.9% of the $99,500 sale price."
       },
       "payments": [
         {
@@ -1540,7 +1541,7 @@
       "id": "f4",
       "severity": "medium",
       "title": "The deductible ceiling is about $5,223, not $2,500",
-      "detail": "The lease requires a maximum deductible of $2,500 or 5% of the price of the vehicle, whichever is greater. Five percent of the $104,459.95 leased vehicle amount is $5,222.99. The separate Agreement to Furnish Insurance drops the tie breaker and reads as though $2,500 were the cap.",
+      "detail": "The lease requires a maximum deductible of $2,500 or 5% of the price of the vehicle, whichever is greater. Five percent of the $104,459.95 leased vehicle amount is $5,223. The separate Agreement to Furnish Insurance drops the tie breaker and reads as though $2,500 were the cap.",
       "why": "Collision and comprehensive sit at $1,000 each, costing $3,401 combined on the renewal. There is contractual room to take a much higher deductible if a quote prices it well.",
       "action": "Ask each broker to price collision and comprehensive at $2,500 alongside the $1,000 they will quote by default.",
       "sources": [

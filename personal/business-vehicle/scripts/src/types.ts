@@ -76,7 +76,8 @@ export interface Lease {
   assignedTo?: string;
   paymentDueDay?: number;
   interestRate?: number;
-  residualPercent?: number;
+  residualFactor?: number;
+  residualFactorNote?: string;
   maximumAllowableKm?: number;
   implicitFinanceCharge?: number;
   totalCostOfLeaseTransaction?: number;
