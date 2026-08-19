@@ -116,3 +116,24 @@ Why:
 ALWAYS commit real work BEFORE starting a mutation audit, so `git checkout -- <file>` has a correct target. If that is not possible, snapshot with the Write tool and restore from that snapshot instead.
 
 NEVER verify a restore by exit code. Compare `shasum` against the known pre-mutation hash, or use `git diff --quiet`. On macOS with `cp` aliased to `cp -i` and zsh `noclobber` set, a failed restore is SILENT: both refuse rather than erroring, so the tree keeps the mutation while the command reports success and later mutations stack on top of it.
+
+### noclobber blocks overwrite, not just creation (2026-08-19)
+
+Why:
+- Rewriting a source file with `cat > src/pages/lease.ts <<'EOF'` printed `(eval):1: file exists:` and wrote nothing. The next command in the same call was `bun run typecheck`, which passed, because the OLD file still type checked against the newly widened types. The failure read as success.
+- The existing note on `noclobber` covers the append case, `>>` refusing to create a missing file. The overwrite case is the more dangerous one: nothing is missing, so nothing looks wrong, and a stale file survives a rewrite that appeared to happen.
+
+ALWAYS use `cat >| file` when rewriting an existing file from a heredoc on this machine. `>|` overrides `noclobber` explicitly.
+
+NEVER read a passing typecheck or test run as evidence that the preceding write landed. Chain the write and its verification in separate calls, or grep the file for a string only the new version contains.
+
+### a symlinked .mjs never runs its own CLI entrypoint (2026-08-19)
+
+Why:
+- `node ~/.claude/skills/obsidian-loop/select-tickets.mjs --device mac-studio` printed nothing at all and exited 0. Not an empty JSON array, no output, no error. It looked like "no claimable tickets" and would have been read that way.
+- The script guards its CLI with `if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)`. `~/.claude/skills/` is a symlink into the dev vault, so `process.argv[1]` is the symlink path while `import.meta.url` resolves to the real path. They never match, so `main()` is never called.
+- Same shape for every script under `~/.claude/skills/`, because the whole config tree is symlinked out of `obsidian-dev`.
+
+ALWAYS invoke skill scripts through the resolved real path: `node "$(readlink -f ~/.claude/skills/<skill>)/<script>.mjs"`.
+
+NEVER treat empty stdout from one of these scripts as a real empty result. A genuine empty result prints `[]`. No output at all means the entrypoint guard did not fire.

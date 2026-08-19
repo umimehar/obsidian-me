@@ -20,3 +20,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-08-19 15:46 · mac-studio · create · TCK-0002 · Business vehicle info database opened at owner request
 - 2026-08-19 15:47 · mac-studio · claim · TCK-0002 · claimed at owner request
 - 2026-08-19 15:47 · mac-studio · start · TCK-0002 · extraction and scaffold begin
+- 2026-08-19 16:09 · mac-studio · progress · TCK-0002 · six pages rendered, 81 tests green, review dispatched
