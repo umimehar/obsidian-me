@@ -9,6 +9,8 @@ import { ProjectionChart } from "../charts/ProjectionChart";
 import { buildProjectionSeries, logDecadeDomain } from "../charts/projectionSeries";
 import { grandTotal } from "../data";
 import { formatCurrency, formatRate } from "../format";
+import { GoalsPanel } from "./GoalsPanel";
+import { RunwayTable } from "./RunwayTable";
 
 export interface ProjectionsViewProps {
   analytics: AnalyticsOutput;
@@ -230,10 +232,14 @@ export function ProjectionsView({ analytics }: ProjectionsViewProps) {
 
   const accounts = useMemo(() => projectedAccounts(analytics.series), [analytics]);
   const history = useMemo(() => buildPortfolioSeries(accounts), [accounts]);
-  const rows = useMemo(
-    () => projectYears(projectionInputs(analytics, { returnRate: rate })),
+  // Held once so the goals panel and the runway table read the same inputs
+  // the chart's own rows came from, rather than each deriving its own and
+  // risking the two halves of the page disagreeing about one projection.
+  const inputs = useMemo(
+    () => projectionInputs(analytics, { returnRate: rate }),
     [analytics, rate],
   );
+  const rows = useMemo(() => projectYears(inputs), [inputs]);
   // The axis is built from the largest scenario the controls offer, never from
   // the one on screen: that is what holds the stated half still while the rate
   // slider moves.
@@ -267,6 +273,13 @@ export function ProjectionsView({ analytics }: ProjectionsViewProps) {
         portfolioTotal={grandTotal(analytics)}
       />
       <ProjectionChart series={series} domain={domain} rate={rate} />
+      <GoalsPanel
+        analytics={analytics}
+        rows={rows}
+        rate={rate}
+        fhsaCloseYear={inputs.fhsaCloseYear}
+      />
+      <RunwayTable rows={rows} inputs={inputs} />
     </Flex>
   );
 }

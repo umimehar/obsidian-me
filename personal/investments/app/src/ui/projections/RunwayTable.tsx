@@ -131,6 +131,17 @@ export function RunwayTable({ rows, inputs }: RunwayTableProps) {
 
   if (runway.length === 0) return <EmptyRunway />;
 
+  // `rows={[]}` (no-rows) is a real branch below, and it is not merely
+  // untested -- it is where `capBound` (`runway.ts`) returns a bare
+  // `{ year: null, unclaimed: null }` for `fhsa-cap` and `resp-cap`, so
+  // `yearText` takes its no-lifetime-cap arm for a wrapper that genuinely
+  // has one. Left unguarded here rather than fixed, because the one caller
+  // in this app, `ProjectionsView`, never reaches this component with an
+  // empty `rows`: it renders its own `EmptyState` first whenever
+  // `end === undefined`, which is exactly the condition an empty `rows`
+  // produces. Guarding it here would hide that a future caller passing an
+  // empty projection is a caller bug, not a state this table should paper
+  // over with a second empty-runway message.
   const windowLine =
     windowStart !== null && windowEnd !== null
       ? `The projection behind this table runs from ${windowStart} to ${windowEnd}. A year outside that range is stated as a fact about the account's rules, not as something this projection produced.`

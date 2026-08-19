@@ -288,7 +288,8 @@ describe("RunwayTable, every group excluded", () => {
     // keep a row-wide `trim().length > 0` check green even if the message
     // sentence beside it were blanked out.
     const message = document.querySelector("[data-runway-empty-message]")?.textContent ?? "";
-    expect(message.trim().length).toBeGreaterThan(0);
+    expect(message).toMatch(/[a-z]/i);
+    expect(message).not.toMatch(/^-+$/);
     expect(screen.getByRole("heading", { level: 3, name: /room runway/i })).toBeDefined();
   });
 });

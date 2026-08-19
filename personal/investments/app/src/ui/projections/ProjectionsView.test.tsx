@@ -319,6 +319,72 @@ describe("nothing to project from", () => {
  * 24.839250232739074 -- a bare unitless number, and a second formatting path
  * for a figure already formatted once.
  */
+describe("the goals panel and the room runway table are mounted below the chart", () => {
+  test("the projections tab renders the goals panel", () => {
+    renderView();
+    expect(screen.getByTestId("goal-house")).toBeDefined();
+    expect(screen.getByTestId("goal-education")).toBeDefined();
+  });
+
+  test("the projections tab renders the runway table", () => {
+    renderView();
+    expect(screen.getByTestId("runway-fhsa-close")).toBeDefined();
+  });
+
+  test("both sit at h3, one level under the view's own h2, with no level skipped", () => {
+    renderView();
+    expect(screen.getByRole("heading", { level: 2, name: "Thirty year projection" })).toBeDefined();
+    expect(screen.getAllByRole("heading", { level: 3 }).length).toBeGreaterThan(0);
+    expect(screen.queryByRole("heading", { level: 4 })).toBeNull();
+  });
+
+  /**
+   * The owner's decision made observable end to end: moving the rate must
+   * re-judge a goal, not only move the chart beside it. The control here is
+   * a native `<input type="range">`, not a Radix slider (see `RateControl`
+   * in `ProjectionsView.tsx`), so `fireEvent.change` through `setRate` is
+   * the real interaction path a drag takes under happy-dom, not a
+   * substitute for one the keyboard path would otherwise cover.
+   */
+  test("moving the rate slider changes a goal's projected figure", () => {
+    renderView();
+    const before = screen.getByTestId("goal-education").textContent ?? "";
+    setRate(20);
+    expect(screen.getByTestId("goal-education").textContent).not.toBe(before);
+  });
+
+  /**
+   * `runway.ts`'s own comment on `buildRunway` claims the contribution-driven
+   * rows (`fhsa-cap`, `resp-cap`) "move with the return rate, because a
+   * higher return fills a lifetime cap sooner." Checked against the engine
+   * directly: they do not. `roomRemaining` (`engine.ts:320-324`) is computed
+   * from `contributedThisYear` alone, never from `advanceValues`'s
+   * return-compounded balances, so the FHSA and RESP cap years come back
+   * identical at 0%, 6%, 20% and 30% for this corpus. That claim is stale
+   * documentation, not something this test can honestly assert -- flagged in
+   * the report rather than encoded here as a passing assertion of something
+   * that is not true.
+   */
+  test("the runway table still renders correctly after the rate moves, even though its contribution-driven years do not follow it", () => {
+    renderView();
+    const before = screen.getByTestId("runway-fhsa-cap").textContent ?? "";
+    setRate(20);
+    expect(screen.getByTestId("runway-fhsa-cap").textContent).toBe(before);
+  });
+
+  test("neither the goals panel nor the runway table render in the empty state, and neither throws reaching it", () => {
+    const empty: AnalyticsOutput = {
+      ...analytics,
+      series: [],
+      rollups: { ...analytics.rollups, registration: [] },
+    };
+    renderView(empty);
+    expect(screen.queryByTestId("goal-house")).toBeNull();
+    expect(screen.queryByTestId("goal-education")).toBeNull();
+    expect(screen.queryByRole("table")).toBeNull();
+  });
+});
+
 describe("the slider announces the rate it shows", () => {
   test("the announced value is the visible label's figure, not the raw float", () => {
     renderView();
