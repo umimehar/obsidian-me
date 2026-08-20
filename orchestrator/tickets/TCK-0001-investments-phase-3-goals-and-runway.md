@@ -2,10 +2,10 @@
 title: "TCK-0001 — Investments phase 3: goal tracking and room runway"
 tags: [ticket, project/system, type/feature, personal/investments]
 created: 2026-08-10
-updated: 2026-08-19
+updated: 2026-08-20
 type: ticket
 id: TCK-0001
-status: review
+status: done
 project: system
 ticket_type: feature
 assigned_device: any
@@ -75,3 +75,6 @@ Do not delete `scripts/` — `scripts/src/client/projection.ts` is the byte-iden
 - 2026-08-19 — Phase 3 built and moved to Review. Eight tasks, 28 commits (037fe60..HEAD scoped to `personal/investments`), 1054 tests to 1158. Every task passed its own review, each after one or two fix rounds. `bun run check` exit 0; `bun run contrast` AA pass in both themes, worst light 4.67, worst dark 7.50; `engine.ts` still byte-identical to `scripts/src/client/projection.ts`; exactly one `groupOf`, one `latestMarketValue`, one `formatWholeDollars`; leak scan clean over all 3,235 added lines. Every corpus figure re-verified unmoved: $241,739.67 across all three lenses, RRSP 2025 15,000 of 60,191 leaving 45,191, RRSP 2026 33,000 of 70,752 leaving 37,752, TFSA 2025 25,000, FHSA 24,000 of 40,000, RESP 3,000 of 50,000 with CESG 550 of 7,200.
 - 2026-08-19 — NOT moved to Done, deliberately. The whole-branch review across all 28 commits hit a session limit before it could report, so the last gate has not run. Per-task review is not a substitute for it: this phase's per-task reviewers found five, seven and ten green mutations behind audits their own implementers had reported as complete, and the whole-branch pass is the only one that sees the seams between tasks. Re-dispatch it when limits reset, then close.
 - 2026-08-19 — Outstanding owner input, blocking nothing: the assessed TFSA contribution room for `ASSESSED_ROOM` in `app/src/analytics/rooms.ts`. Without it the TFSA line falls back to the generic annual maximum with a correctly null `remaining`, and 2025 renders $25,000 used against a $7,000 maximum with no signal.
+- 2026-08-20 — Whole-branch review passed and the fix wave closed. 46 mutations constructed, 37 killed, 9 survived, and the four that mattered are fixed: `GoalsPanel`'s `fhsaCloseYear` prop pinned against `"2028"` (the only value that bites, since `""` and `"2050"` are both inert), a coarse-form guard on the last unguarded money figure, all six runway notes pinned under a test whose name no longer overstates its coverage, and the gap line's direction colour. One sentence of production copy now tells a reader why the runway holds still when the rate moves, pinned four independent ways. Final: 1162 tests from 1054 at phase start, `bun run check` exit 0, `bun run contrast` AA pass (worst light 4.67, worst dark 7.50), engine port byte-identical, leak scan clean, every corpus figure unmoved.
+- 2026-08-20 — Closed to Done on the agent-review path, `control.md` `require_review: false`. Both the whole-branch review and its scoped re-review passed, the second verifying each fix by replaying the mutation that exposed it rather than by inspection.
+- 2026-08-20 — Follow-up filed as a process risk rather than a code defect: three separate concurrent-session commits swept `personal/investments` files during this ticket, one of them landing a live bug (a runway row whose note contradicted its own bound) in shared main for several commits. Reverted and verified byte-identical, but the branch survived that rather than solving it. Lessons captured in `knowledge/lessons.md`.
