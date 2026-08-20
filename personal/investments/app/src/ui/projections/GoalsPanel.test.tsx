@@ -290,6 +290,41 @@ describe("an unprojectable goal", () => {
   });
 });
 
+/**
+ * The gap line's colour is reinforcement, not the carrier of meaning here --
+ * the words "ahead of target" and "short of target" already say which way
+ * the goal is going, so a reader is never misinformed if this ternary ever
+ * inverted. But every other rendered property on this card is pinned, and
+ * an inverted ternary paints the dashboard's attention colour (amber) on a
+ * goal that is actually met, and its reassuring colour (jade) on a real
+ * shortfall, with nothing catching it. Read via Radix's own
+ * `data-accent-color` attribute, the same one `evaluate.test.ts` and this
+ * file already rely on the surrounding `Theme` to resolve, rather than a
+ * fragile class-name match.
+ */
+describe("the gap line's colour follows the direction, not the other way around", () => {
+  test("a surplus paints jade, the reassuring colour, on the house card", () => {
+    renderPanel();
+    const card = screen.getByTestId("goal-house");
+    const gapEl = [...card.querySelectorAll("[data-accent-color]")].find((el) =>
+      el.textContent?.includes("ahead of target"),
+    );
+    if (gapEl === undefined) throw new Error("expected the gap line element");
+    expect(gapEl.getAttribute("data-accent-color")).toBe("jade");
+  });
+
+  test("a shortfall paints amber, the dashboard's attention colour", () => {
+    const stretchGoal: Goal = { ...houseGoal, id: "stretch", target: 90000 };
+    renderPanel(rows6, 0.06, [stretchGoal]);
+    const card = screen.getByTestId("goal-stretch");
+    const gapEl = [...card.querySelectorAll("[data-accent-color]")].find((el) =>
+      el.textContent?.includes("short of target"),
+    );
+    if (gapEl === undefined) throw new Error("expected the gap line element");
+    expect(gapEl.getAttribute("data-accent-color")).toBe("amber");
+  });
+});
+
 describe("a shortfall the wrapper has no room to close", () => {
   const target = 90000;
   const projected = 50180.095474;
