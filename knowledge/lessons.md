@@ -2,7 +2,7 @@
 title: Lessons
 tags: [knowledge, lessons]
 created: 2026-07-13
-updated: 2026-08-17
+updated: 2026-08-20
 status: active
 type: permanent
 ---
@@ -137,3 +137,14 @@ Why:
 ALWAYS invoke skill scripts through the resolved real path: `node "$(readlink -f ~/.claude/skills/<skill>)/<script>.mjs"`.
 
 NEVER treat empty stdout from one of these scripts as a real empty result. A genuine empty result prints `[]`. No output at all means the entrypoint guard did not fire.
+
+### commit before mutating when other sessions share the branch (2026-08-20)
+
+Why:
+- An agent left a test mutation uncommitted in the working tree. A concurrent session on the same branch ran `git add`/`commit` for its own unrelated work, swept the mutation up, and pushed a genuine bug into shared main history: a table row that read wrapper "FHSA", bound "$40,000 lifetime contribution cap", note "The RESP lifetime contribution cap" -- the exact self-contradiction the test being written was meant to catch.
+- The restore that should have caught it did not, twice over: `git checkout --` restores to the last COMMIT, which by then already contained the mutation, and the `shasum` baseline it compared against had been captured in a parallel tool call that could race the edit itself.
+- Nothing was lost and the final state is correct, but the bug was live in shared history for several commits.
+
+ALWAYS commit real work before starting a mutation audit, and verify each restore against a KNOWN COMMIT SHA (`git diff <sha> -- <file>`), not against a shasum captured earlier in the same session and not against a bare `git checkout` exit code. A shasum baseline is only trustworthy if it was taken before any edit and never re-taken concurrently.
+
+NEVER assume the working tree is yours alone. On a shared branch, `git status` showing your file dirty means any other session's `git add` can capture it. Scope every review range to your own paths (`git diff A B -- <path>`) so a foreign commit cannot silently enter your diff either.
