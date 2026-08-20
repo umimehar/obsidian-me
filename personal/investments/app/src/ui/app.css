@@ -43,3 +43,20 @@ summary {
     transition: none !important;
   }
 }
+
+/*
+ * The Overview group cards' sparkline tooltip is meant to paint over the
+ * card and whatever sits below it, not be squeezed inside it (owner
+ * decision, 2026-08-20). Radix's `.rt-BaseCard` clips a descendant to its
+ * own box two different ways at once -- `overflow: hidden` and
+ * `contain: paint` -- so both have to be lifted here, not just one, or the
+ * tooltip is still cut at the card's edge even with paint containment gone.
+ * Scoped to this one card class rather than `.rt-BaseCard` itself: every
+ * other card in the app (Growth's return-rate and contribution cards, Tax,
+ * Reconciliation) still wants both, either because its tooltip already fits
+ * or because it never draws a chart at all.
+ */
+.ivt-group-card {
+  overflow: visible;
+  contain: none;
+}

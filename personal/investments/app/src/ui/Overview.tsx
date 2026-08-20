@@ -112,7 +112,7 @@ function GroupCard({ group, grandTotalValue, motionSpec, series, xDomain }: Grou
       transition={{ duration: motionSpec.duration }}
       data-overview-group=""
     >
-      <Card mb="3">
+      <Card mb="3" className="ivt-group-card">
         <Flex justify="between" align="baseline" mb="2">
           <Heading size="3" as="h3">
             {group.label}

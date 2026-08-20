@@ -270,6 +270,19 @@ describe("Overview", () => {
     expect(groupCard("Cash").querySelector("svg")).toBeNull();
   });
 
+  // A proxy, not a containment proof: happy-dom has no layout engine, so it
+  // cannot show the tooltip actually escaping the card the way a real
+  // browser measurement can (see the fix report for that). What this DOES
+  // prove is that the card carrying the sparkline is wired to the
+  // `ivt-group-card` override in app.css that lifts Radix's own
+  // `overflow: hidden`/`contain: paint`, which is the one class name a
+  // future edit could silently rename or drop.
+  test("every group card is wired to let its chart tooltip paint outside it", () => {
+    renderOverview();
+    const card = groupCard("TFSA").querySelector(".rt-BaseCard");
+    expect(card?.className).toContain("ivt-group-card");
+  });
+
   test("every group chart shares one x domain, so a short history draws short", () => {
     renderOverview();
     const startX = (label: string): number => {
