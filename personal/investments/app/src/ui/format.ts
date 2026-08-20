@@ -39,6 +39,23 @@ export function formatWholeDollars(amount: number): string {
 }
 
 /**
+ * `formatCurrency`, with an explicit leading "+" on a nonnegative amount.
+ *
+ * `Intl` already prints its own minus sign for a negative amount, so a loss
+ * passes straight through `formatCurrency` untouched; this only adds the
+ * "+" a gain does not otherwise carry. The sign is the one channel that
+ * survives without colour: in greyscale, forced-colours mode, or for a
+ * colour-blind reader, "+$4,786.22" and "-$45.04" still read correctly on
+ * their own, before any green or red is applied. The digits themselves
+ * still come from the one `formatCurrency` call, so an accessible name
+ * built from this cannot state a different figure than what is printed.
+ */
+export function formatSignedCurrency(amount: number): string {
+  const formatted = formatCurrency(amount);
+  return amount >= 0 ? `+${formatted}` : formatted;
+}
+
+/**
  * A share of the portfolio, to one decimal place: enough to tell two small
  * groups apart without implying a precision the figure does not have.
  *

@@ -2,6 +2,7 @@ import { Badge, Box, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
+import { latestGroupGain } from "../analytics/groupGain";
 import {
   buildPortfolioSeries,
   periodExtent,
@@ -13,7 +14,7 @@ import { LensToggle } from "./LensToggle";
 import { ShareBar } from "./ShareBar";
 import { GroupSparkline } from "./charts/GroupSparkline";
 import { grandTotal } from "./data";
-import { formatCurrency, formatShare } from "./format";
+import { formatCurrency, formatShare, formatSignedCurrency } from "./format";
 
 export interface OverviewProps {
   analytics: AnalyticsOutput;
@@ -39,6 +40,56 @@ function AccountRow({ account }: { account: RollupAccount }) {
       </Flex>
       <Text size="2" color="gray">
         {account.marketValue === null ? "No figure" : formatCurrency(account.marketValue)}
+      </Text>
+    </Flex>
+  );
+}
+
+/**
+ * The book value and the gain against it, directly under the card's total
+ * -- the total they qualify, and the figures the owner asked to see
+ * alongside it. Both come from `latestGroupGain`, which reads market value
+ * and book cost from the same series point, so this line can never state
+ * a market-basis total beside a series-basis book cost.
+ *
+ * A `null` figures means the group has no period with a stated market
+ * value and book cost at all (Cash in the registration lens, Spending in
+ * the purpose lens) -- never zero, since a coerced "$0.00" gain would read
+ * as a real position that happens to be flat rather than as no history to
+ * compare against.
+ *
+ * The colour is `jade` for a gain, `red` for a loss, matching this app's
+ * existing `jade`/`amber` split in `GoalsPanel`; a loss here is a shortfall
+ * against cost rather than a goal warning, so `red` reads more accurately
+ * than reusing `amber`. The leading "+"/"-" from `formatSignedCurrency`
+ * carries the sign on its own, so the colour only reinforces what the
+ * character already says -- a colour-blind or greyscale reading still gets
+ * it right. The caveat sentence sits on its own line directly below the
+ * figure it qualifies, the same "adjacent, not a footnote" placement
+ * `ValueOverTime`'s accessible summary and `CostGapChart`'s callout use for
+ * the same USD book-cost caveat.
+ */
+export function GroupGainLine({ figures }: { figures: ReturnType<typeof latestGroupGain> }) {
+  if (figures === null) {
+    return (
+      <Text size="2" color="gray" mb="3" data-group-gain-absent="">
+        No market value to compare against book cost.
+      </Text>
+    );
+  }
+  const { bookCost, gain } = figures;
+  return (
+    <Flex direction="column" gap="1" mb="3">
+      <Text size="2" color="gray" data-group-book-value="">
+        Book value {formatCurrency(bookCost)}
+        {" · "}
+        Gain against book cost{" "}
+        <Text color={gain >= 0 ? "jade" : "red"} data-group-gain="">
+          {formatSignedCurrency(gain)}
+        </Text>
+      </Text>
+      <Text size="1" color="gray">
+        An estimate: book cost for USD holdings is a converted approximation, not a filing figure.
       </Text>
     </Flex>
   );
@@ -102,6 +153,7 @@ function GroupCard({ group, grandTotalValue, motionSpec, series, xDomain }: Grou
       ),
     [series, group.accounts],
   );
+  const gainFigures = useMemo(() => latestGroupGain(groupSeries), [groupSeries]);
   return (
     <motion.div
       key={group.key}
@@ -129,6 +181,7 @@ function GroupCard({ group, grandTotalValue, motionSpec, series, xDomain }: Grou
             {formatShare(share)} of total
           </Text>
         </Flex>
+        <GroupGainLine figures={gainFigures} />
         <Box mb="3">
           <ShareBar label={group.label} share={share} />
         </Box>

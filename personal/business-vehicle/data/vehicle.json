@@ -1,7 +1,7 @@
 {
   "meta": {
     "schemaVersion": 1,
-    "asOf": "2026-08-19",
+    "asOf": "2026-08-20",
     "maskingPolicy": "Bank, PAD and finance account numbers are masked to their last four digits. Source PDFs under docs/ are committed unmasked at the owner's instruction.",
     "sources": [
       {
@@ -1348,13 +1348,13 @@
       "declared": "Personal",
       "businessKmOnPolicy": null,
       "annualKmOnPolicy": 18000,
-      "businessUsePercent": null,
-      "risk": "The lease is signed on the basis of primarily business use and the insurance is rated personal, with business kilometres blank on both certificates. One of the two is wrong. If the insurer's version is the wrong one, a claim can be denied outright. Settle this before the renewal binds.",
+      "businessUsePercent": 95,
+      "risk": "Settled by the owner on 2026-08-20 at about 95% business. The lease was always right and both insurance certificates are wrong: rated personal, business kilometres blank. Every quote taken before this date, Desjardins' $9,657 renewal and both isure quotes included, is rated on a basis that no longer applies and none of them are safe to bind as they stand. Redeclare to Desjardins before 2026-10-01 and to every broker still quoting.",
       "leaseDeclaration": "Signed on page 7 of the lease: the vehicle will be used primarily for business or commercial purposes. The preauthorized payment authorisation is ticked business purposes."
     },
     "mileageLog": {
       "kept": false,
-      "note": "CRA requires a log to support any business use claim. Odometer was 14,035 km on 2026-08-12, about 10.5 months after the 2025-09-30 in service date, which annualises to roughly 16,000 km against the 18,000 km policy allowance."
+      "note": "No log exists, and a 95% claim is exactly the kind CRA asks to see supported. This is now the weakest part of the tax position, not the insurance one. Start a log immediately and reconstruct what can be reconstructed back to 2025-09-30. Odometer was 14,035 km on 2026-08-12, about 10.5 months after the 2025-09-30 in service date, which annualises to roughly 16,000 km against the 18,000 km policy allowance."
     },
     "taxTreatment": [
       {
@@ -1369,8 +1369,8 @@
       },
       {
         "topic": "HST input tax credits",
-        "detail": "A GST/HST registrant can generally claim ITCs on the lease payments to the extent of commercial use. This depends directly on the business use percentage that is still unsettled.",
-        "status": "blocked on business use percentage"
+        "detail": "A GST/HST registrant can claim ITCs on the lease payments to the extent of commercial use. With business use set at 95% on 2026-08-20 this is no longer blocked, but it is only as good as the mileage log behind it.",
+        "status": "to confirm with the accountant"
       },
       {
         "topic": "CCA",
@@ -1379,7 +1379,7 @@
       },
       {
         "topic": "Standby charge and operating benefit",
-        "detail": "A corporate vehicle available for an employee or shareholder's personal use creates a taxable benefit. With the policy rated personal and a sole driver, this is the most likely exposure on the file.",
+        "detail": "A corporate vehicle available for an employee or shareholder's personal use creates a taxable benefit. At 95% business the remaining 5% still creates one, and the standby charge turns on availability rather than actual use. Sole driver, so availability is total.",
         "status": "to confirm"
       }
     ],
@@ -1425,8 +1425,8 @@
       "id": "q6",
       "question": "What is the true business use percentage? The lease declares primarily business use and the insurance is rated personal. These cannot both be right.",
       "askedOf": "owner",
-      "status": "open",
-      "answer": null
+      "status": "answered",
+      "answer": "About 95% business, confirmed by the owner on 2026-08-20 and the figure going to CRA. The lease declaration was correct and both insurance certificates are wrong. Consequences: every premium on file is rated on the wrong use basis, the Platinum AutoPlus section 3.4 business use exclusion now clearly bites, and no mileage log exists to support the 95%."
     },
     {
       "id": "q7",

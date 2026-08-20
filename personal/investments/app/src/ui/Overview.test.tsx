@@ -1,9 +1,11 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { fireEvent, render, renderHook, screen, within } from "@testing-library/react";
-import { Overview, cardMotion, useCardMotion } from "./Overview";
+import { GroupGainLine, Overview, cardMotion, useCardMotion } from "./Overview";
 import { loadAnalytics } from "./data";
+import { formatCurrency } from "./format";
 import { restoreReducedMotion, stubReducedMotion } from "./motionPreference";
+import { coarseForm, expectNoCoarseForm } from "./testSupport/coarseForm";
 
 /**
  * Renders against the real committed corpus (`data/analytics.json`), same
@@ -307,5 +309,142 @@ describe("Overview", () => {
     if (corporateCard === null) throw new Error("expected the Corporate group card to render");
     const group = within(corporateCard as HTMLElement);
     expect(group.getByText(/21\.2%/)).toBeDefined();
+  });
+
+  // Real corpus, registration lens (verified independently in
+  // groupGain.test.ts against the same committed analytics.json, and
+  // reproduced here at the rendered-DOM level). All of these are gains, so
+  // the loss path below is covered separately.
+  describe("book value and gain against book cost", () => {
+    test("TFSA prints book value $43,369.06 and gain +$4,786.22", () => {
+      renderOverview();
+      const card = within(groupCard("TFSA"));
+      expect(card.getByText(/Book value \$43,369\.06/)).toBeDefined();
+      expect(card.getByText("+$4,786.22")).toBeDefined();
+    });
+
+    test("Non-registered prints book value $55,759.88 and gain +$5,038.44", () => {
+      renderOverview();
+      const card = within(groupCard("Non-registered"));
+      expect(card.getByText(/Book value \$55,759\.88/)).toBeDefined();
+      expect(card.getByText("+$5,038.44")).toBeDefined();
+    });
+
+    test("Growth (purpose lens) prints book value $99,128.94 and gain +$9,824.66", () => {
+      renderOverview();
+      fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
+      const card = within(groupCard("Growth"));
+      expect(card.getByText(/Book value \$99,128\.94/)).toBeDefined();
+      expect(card.getByText("+$9,824.66")).toBeDefined();
+    });
+
+    // Cash (registration) and Spending (purpose) have no counted account, so
+    // no series and no PortfolioPoint to read a gain from at all.
+    test("Cash (registration lens) states there is no market value to compare, not $0.00", () => {
+      renderOverview();
+      const card = within(groupCard("Cash"));
+      expect(card.getByText(/no market value to compare/i)).toBeDefined();
+      expect(card.queryByText(/gain against book cost/i)).toBeNull();
+    });
+
+    test("Spending (purpose lens) states there is no market value to compare, not $0.00", () => {
+      renderOverview();
+      fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
+      const card = within(groupCard("Spending"));
+      expect(card.getByText(/no market value to compare/i)).toBeDefined();
+      expect(card.queryByText(/gain against book cost/i)).toBeNull();
+    });
+
+    test("a real per-account loss (account lens, RRSP (managed)) prints an explicit minus sign", () => {
+      // This group is a real loss in the committed corpus, not a fabricated
+      // fixture: market $20,498.54 against book $20,501.70, gain -$3.16
+      // (pinned independently in groupGain.test.ts). The dedicated fixture
+      // test below still exists per the loss-path requirement, but this one
+      // shows the red/negative path is not actually unreachable from the
+      // real data the way every group in the registration and purpose
+      // lenses happens to be.
+      renderOverview();
+      fireEvent.click(screen.getByRole("radio", { name: /account/i }));
+      const card = within(groupCard("RRSP (managed)"));
+      const gain = card.getByText("-$3.16");
+      expect(gain).toBeDefined();
+      expect(gain.getAttribute("data-accent-color")).toBe("red");
+    });
+
+    test("no figure here announces coarser than what it prints (TFSA and Growth)", () => {
+      renderOverview();
+      const tfsaText = groupCard("TFSA").textContent ?? "";
+      expect(tfsaText).toContain(formatCurrency(43369.06));
+      expect(tfsaText).toContain(formatCurrency(4786.22));
+      expectNoCoarseForm(tfsaText, 43369.06);
+      expectNoCoarseForm(tfsaText, 4786.22);
+
+      fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
+      const growthText = groupCard("Growth").textContent ?? "";
+      expect(growthText).toContain(formatCurrency(99128.94));
+      expect(growthText).toContain(formatCurrency(9824.66));
+      expectNoCoarseForm(growthText, 99128.94);
+      // $9,824.66 rounds DOWN to $9,825 as a coarse form -- the direction
+      // expectNoCoarseForm's own docstring says a plain not.toContain would
+      // miss, since the coarse form is then a literal prefix of the precise
+      // one. Asserted here so this suite exercises both rounding directions,
+      // not just the "rounds up" case TFSA's $4,786.22 already covers.
+      expect(coarseForm(9824.66)).toBe("$9,825");
+      expectNoCoarseForm(growthText, 9824.66);
+    });
+
+    test("the gain carries an explicit sign in colour and in Radix's own accent token", () => {
+      renderOverview();
+      const gain = within(groupCard("TFSA")).getByText("+$4,786.22");
+      expect(gain.getAttribute("data-accent-color")).toBe("jade");
+    });
+
+    test("the USD book-cost caveat sits next to the figure on every card that has one", () => {
+      renderOverview();
+      const cardsWithGain = [...document.querySelectorAll("[data-overview-group]")].filter(
+        (card) => card.querySelector("[data-group-book-value]") !== null,
+      );
+      // Six of the seven registration groups have a gain; Cash does not.
+      expect(cardsWithGain.length).toBe(6);
+      for (const card of cardsWithGain) {
+        expect(card.textContent).toMatch(/approximate|estimate/i);
+      }
+    });
+  });
+});
+
+/**
+ * `GroupGainLine` in isolation, with a hand-built loss the real registration
+ * and purpose lenses never produce (every one of those groups is a gain in
+ * the committed corpus). The account lens does carry a real loss --
+ * "a real per-account loss" above renders it from `loadAnalytics()` -- so
+ * this fixture is a second, independent proof rather than the only one: it
+ * pins the loss path even if the corpus's own numbers ever moved and
+ * stopped containing one.
+ */
+describe("GroupGainLine, forced loss fixture", () => {
+  function renderLoss() {
+    render(
+      <Theme>
+        <GroupGainLine figures={{ marketValue: 900, bookCost: 1000, gain: -100 }} />
+      </Theme>,
+    );
+  }
+
+  test("prints the loss with an explicit minus sign, not just a colour", () => {
+    renderLoss();
+    expect(screen.getByText("-$100.00")).toBeDefined();
+    expect(screen.queryByText("+$100.00")).toBeNull();
+  });
+
+  test("colours the loss red, not the gain colour", () => {
+    renderLoss();
+    const gain = screen.getByText("-$100.00");
+    expect(gain.getAttribute("data-accent-color")).toBe("red");
+  });
+
+  test("still prints the book value beside the loss", () => {
+    renderLoss();
+    expect(screen.getByText(/Book value \$1,000\.00/)).toBeDefined();
   });
 });
