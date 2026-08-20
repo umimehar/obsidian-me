@@ -221,6 +221,19 @@ describe("RunwayTable, the out-of-window year", () => {
     expect(text).toContain("2056");
   });
 
+  // The rate slider moves the chart and every goal card beside this table,
+  // but touches none of this table's own years -- a fact stated three times
+  // in doc comments and the plan, and nowhere a reader of the page would
+  // ever see it. Without a sentence saying so, a reader who drags the rate
+  // and watches this table hold still has no way to tell a stale table from
+  // a correct one.
+  test("states that these years do not move with the return rate, and why", () => {
+    renderTable();
+    const text = document.querySelector("[data-runway-window]")?.textContent ?? "";
+    expect(text).toMatch(/none of the years in this table move when you change the return rate/i);
+    expect(text).toMatch(/contribution cap is filled by money going in, not by investment growth/i);
+  });
+
   // A swapped window ("runs from 2056 to 2026") still contains both
   // literal years, so a plain `toContain` pair passes it -- only checking
   // that the start year's occurrence precedes the end year's catches a

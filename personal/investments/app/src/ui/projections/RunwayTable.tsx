@@ -143,7 +143,7 @@ export function RunwayTable({ rows, inputs }: RunwayTableProps) {
 
   if (runway.length === 0) return <EmptyRunway />;
 
-  const windowLine = `The projection behind this table runs from ${windowStart} to ${windowEnd}. A year outside that range is stated as a fact about the account's rules, not as something this projection produced.`;
+  const windowLine = `The projection behind this table runs from ${windowStart} to ${windowEnd}. A year outside that range is stated as a fact about the account's rules, not as something this projection produced. None of the years in this table move when you change the return rate above, because a contribution cap is filled by money going in, not by investment growth.`;
 
   return (
     <Table.Root data-runway-table="" variant="surface">
