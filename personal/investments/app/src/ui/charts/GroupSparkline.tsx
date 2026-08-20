@@ -199,12 +199,7 @@ export function GroupSparkline({ label, series, xDomain }: GroupSparklineProps) 
       {points.length === 1 ? <SingleStatementNote period={last.period} /> : null}
       <CursorAnnouncement lines={lines} />
       {lines.length === 0 ? null : (
-        // reserveSpace: true, unlike ValueOverTime's overlay -- this chart
-        // sits inside a Radix Card (see the doc comment on
-        // tooltipAnchorStyle), so the tooltip has to push the card's layout
-        // open rather than float over it and risk being clipped by the
-        // card's own `contain: paint`.
-        <div style={tooltipAnchorStyle(PAD + (cursor.x ?? 0), WIDTH, true)}>
+        <div style={{ ...tooltipAnchorStyle(PAD + (cursor.x ?? 0), WIDTH), top: "100%" }}>
           <ChartTooltip lines={lines} />
         </div>
       )}
