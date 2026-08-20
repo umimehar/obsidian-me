@@ -137,7 +137,7 @@ export function buildRunway(
       bound: `${formatWholeDollars(inputs.rules.fhsaLifetime)} lifetime contribution cap`,
       year: cap.year,
       unclaimed: cap.unclaimed,
-      note: "The RESP lifetime contribution cap, reached by the money going in.",
+      note: "The FHSA lifetime contribution cap, reached by the money going in.",
     });
     result.push({
       id: "fhsa-close",

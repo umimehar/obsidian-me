@@ -445,13 +445,7 @@ describe("the goals panel and the room runway table are mounted below the chart"
     const rows6 = projectYears(engineInputs);
     const houseGoal = GOALS.find((g) => g.id === "house");
     if (houseGoal === undefined) throw new Error("expected the house goal");
-    const verdict = evaluateGoal(
-      houseGoal,
-      analytics,
-      rows6,
-      0.06,
-      engineInputs.fhsaCloseYear,
-    );
+    const verdict = evaluateGoal(houseGoal, analytics, rows6, 0.06, engineInputs.fhsaCloseYear);
     if (verdict.projected === null) throw new Error("expected a projectable house goal");
     expect(screen.getByTestId("goal-house").textContent).toContain(
       formatCurrency(verdict.projected),
