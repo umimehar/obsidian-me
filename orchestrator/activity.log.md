@@ -24,3 +24,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-08-19 16:14 · mac-studio · review · TCK-0002 · agent reviewer never reported; verified independently and escalated to human review
 - 2026-08-19 20:32 · mac-studio · review · TCK-0001 · phase 3 built, 1158 tests; whole-branch review outstanding on a session limit
 - 2026-08-19 20:33 · mac-studio · review · TCK-0002 · agent review returned FAIL on 4 defects; all four fixed plus minors, still awaiting human review
+- 2026-08-20 15:24 · mac-studio · progress · TCK-0002 · both open reviewer points closed; hot.md updated; 91 tests green

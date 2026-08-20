@@ -86,9 +86,14 @@ The agent review did not happen, so these are unverified by a second pair of eye
 - 2026-08-19 20:50 — The leak test was mutation checked: injecting a card number and a long account number into a rendered field reddens it, and the first attempt through an unrendered field proved nothing, which is why it was repeated through one that reaches a page.
 - 2026-08-19 20:55 — `bun run check` green: 88 tests across 6 files, biome and `tsc --noEmit` clean.
 
+- 2026-08-20 09:10 — Both remaining reviewer points closed rather than left for the human. The pace question resolved in favour of the observed pace: a warranty or plan window is reached by real kilometres, so `observedAnnualKm` annualises the odometer against time in service, 15,871 km a year here against the 18,000 the lease permits, and the service page states the pace rather than implying it. The O. Reg. 383/24 claim is now split into the part the certificates show and the part that came from the owner's brief, which carries an `unsourced` badge on the page.
+- 2026-08-20 09:15 — `hot.md` now carries the endeavor. Without it the work would not surface on `/obsidian-resume`, which was a real gap rather than a cosmetic one.
+- 2026-08-20 09:20 — `bun run check` green: 91 tests across 6 files, biome and `tsc --noEmit` clean.
+
 ## Still open for the human reviewer
 
-Two of the reviewer's points are not defects I could close alone:
+Nothing blocking. What remains is judgement the owner has to exercise, not defects:
 
-1. The `expiresBy` pace now defaults to the lease's 18,000 km a year. That is the contracted pace, not the observed one, which is running near 16,000. Worth a second opinion on which belongs in a warranty projection.
-2. The O. Reg. 383/24 explanation for the $253 has no source in `docs/`. It came from the owner's brief, not from a document in this vault. It reads as established fact on the insurance page and should either be sourced or attributed.
+1. Whether page 7 of the lease should be read as binding on declared use, which drives the recommendation to change the insurance rating.
+2. Whether masking the policy number to `****XTW6` while committing the source PDFs unmasked satisfies the vault's sensitive information policy.
+3. Whether the compliance page's tax positions are framed acceptably as questions for an accountant.
