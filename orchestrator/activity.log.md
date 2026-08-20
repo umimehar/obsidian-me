@@ -22,3 +22,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-08-19 15:47 · mac-studio · start · TCK-0002 · extraction and scaffold begin
 - 2026-08-19 16:09 · mac-studio · progress · TCK-0002 · six pages rendered, 81 tests green, review dispatched
 - 2026-08-19 16:14 · mac-studio · review · TCK-0002 · agent reviewer never reported; verified independently and escalated to human review
+- 2026-08-19 20:32 · mac-studio · review · TCK-0001 · phase 3 built, 1158 tests; whole-branch review outstanding on a session limit

@@ -2,10 +2,10 @@
 title: "TCK-0001 — Investments phase 3: goal tracking and room runway"
 tags: [ticket, project/system, type/feature, personal/investments]
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-08-19
 type: ticket
 id: TCK-0001
-status: in-progress
+status: review
 project: system
 ticket_type: feature
 assigned_device: any
@@ -31,18 +31,18 @@ This is the endeavor's phase 3. Phases 1, 2a, 2b and 2c are complete at 037fe60 
 
 ## Acceptance criteria
 
-- [ ] A design spec committed at `personal/investments/docs/superpowers/specs/`, owner-reviewed.
-- [ ] An implementation plan committed at `personal/investments/docs/superpowers/plans/`, executed with `superpowers:subagent-driven-development` — one implementer per task, then a reviewer.
-- [ ] Goals config supports all three scopes: whole portfolio, registration groups, and purpose. Owner-reviewed table, not derived from any statement.
-- [ ] Each goal card states the projected value in its target year, the gap against target, and the additional monthly contribution that closes a gap, solved on the engine's own year-end convention so the card and the chart cannot disagree.
-- [ ] A goal whose scope names accounts the projection does not cover discloses the covered subset against the scope's real total. A goal resolving to zero projected accounts renders unprojectable, never $0.
-- [ ] Room runway table derived structurally from `ProjectionYear[]` (never by parsing the engine's `notes` strings): FHSA $40,000 cap and its separate 2039 closure, RESP $50,000 cap, CESG $7,200 and its last claimable year, RRSP last accrual year 2068, TFSA stated as having no lifetime cap.
-- [ ] Every rendered figure and every drawn mark reddened by some test. Any bar or line anchored to its own axis tick via `chartTestSupport.ts`'s `tickY`, never to a sibling mark.
-- [ ] Tooltip, `aria-label` and any live announcement come from one formatting call. Six precision defects of this shape have shipped.
-- [ ] Assertions run against the committed `data/analytics.json` with real numbers reported, except where the corpus provably cannot reach a case, which must be stated.
-- [ ] `bun run build` before `bun run check`, both clean. `bun run contrast` clean on all six tabs in both themes.
-- [ ] Browser pass with Playwright over the new view, both themes, keyboard and pointer.
-- [ ] Log entry written in `personal/investments/log/`, and the endeavor README and `hot.md` updated.
+- [x] A design spec committed at `personal/investments/docs/superpowers/specs/`, owner-reviewed.
+- [x] An implementation plan committed at `personal/investments/docs/superpowers/plans/`, executed with `superpowers:subagent-driven-development` — one implementer per task, then a reviewer.
+- [x] Goals config supports all three scopes: whole portfolio, registration groups, and purpose. Owner-reviewed table, not derived from any statement.
+- [x] Each goal card states the projected value in its target year, the gap against target, and the additional monthly contribution that closes a gap, solved on the engine's own year-end convention so the card and the chart cannot disagree.
+- [x] A goal whose scope names accounts the projection does not cover discloses the covered subset against the scope's real total. A goal resolving to zero projected accounts renders unprojectable, never $0.
+- [x] Room runway table derived structurally from `ProjectionYear[]` (never by parsing the engine's `notes` strings): FHSA $40,000 cap and its separate 2039 closure, RESP $50,000 cap, CESG $7,200 and its last claimable year, RRSP last accrual year 2068, TFSA stated as having no lifetime cap.
+- [x] Every rendered figure and every drawn mark reddened by some test. Any bar or line anchored to its own axis tick via `chartTestSupport.ts`'s `tickY`, never to a sibling mark.
+- [x] Tooltip, `aria-label` and any live announcement come from one formatting call. Six precision defects of this shape have shipped.
+- [x] Assertions run against the committed `data/analytics.json` with real numbers reported, except where the corpus provably cannot reach a case, which must be stated.
+- [x] `bun run build` before `bun run check`, both clean. `bun run contrast` clean on all six tabs in both themes.
+- [x] Browser pass with Playwright over the new view, both themes, keyboard and pointer.
+- [x] Log entry written in `personal/investments/log/`, and the endeavor README and `hot.md` updated.
 
 ## Context
 
@@ -72,3 +72,6 @@ Do not delete `scripts/` — `scripts/src/client/projection.ts` is the byte-iden
 ## Worklog
 
 - 2026-08-10 — Ticket created at the owner's request in an interactive session, after a phase 3 brainstorm settled goal scope, the rate basis and placement. Written by agent:mac-studio; origin is the owner, which is what `created_by` records. Placed straight into Ready because the owner's explicit in-session instruction is the human triage gate the kanban contract describes.
+- 2026-08-19 — Phase 3 built and moved to Review. Eight tasks, 28 commits (037fe60..HEAD scoped to `personal/investments`), 1054 tests to 1158. Every task passed its own review, each after one or two fix rounds. `bun run check` exit 0; `bun run contrast` AA pass in both themes, worst light 4.67, worst dark 7.50; `engine.ts` still byte-identical to `scripts/src/client/projection.ts`; exactly one `groupOf`, one `latestMarketValue`, one `formatWholeDollars`; leak scan clean over all 3,235 added lines. Every corpus figure re-verified unmoved: $241,739.67 across all three lenses, RRSP 2025 15,000 of 60,191 leaving 45,191, RRSP 2026 33,000 of 70,752 leaving 37,752, TFSA 2025 25,000, FHSA 24,000 of 40,000, RESP 3,000 of 50,000 with CESG 550 of 7,200.
+- 2026-08-19 — NOT moved to Done, deliberately. The whole-branch review across all 28 commits hit a session limit before it could report, so the last gate has not run. Per-task review is not a substitute for it: this phase's per-task reviewers found five, seven and ten green mutations behind audits their own implementers had reported as complete, and the whole-branch pass is the only one that sees the seams between tasks. Re-dispatch it when limits reset, then close.
+- 2026-08-19 — Outstanding owner input, blocking nothing: the assessed TFSA contribution room for `ASSESSED_ROOM` in `app/src/analytics/rooms.ts`. Without it the TFSA line falls back to the generic annual maximum with a correctly null `remaining`, and 2025 renders $25,000 used against a $7,000 maximum with no signal.
