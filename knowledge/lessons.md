@@ -148,3 +148,14 @@ Why:
 ALWAYS commit real work before starting a mutation audit, and verify each restore against a KNOWN COMMIT SHA (`git diff <sha> -- <file>`), not against a shasum captured earlier in the same session and not against a bare `git checkout` exit code. A shasum baseline is only trustworthy if it was taken before any edit and never re-taken concurrently.
 
 NEVER assume the working tree is yours alone. On a shared branch, `git status` showing your file dirty means any other session's `git add` can capture it. Scope every review range to your own paths (`git diff A B -- <path>`) so a foreign commit cannot silently enter your diff either.
+
+### a visual gate only proves what it actually visits (2026-08-20)
+
+Why:
+- A browser-based WCAG contrast gate reported "AA pass, worst light 4.67" across a whole build phase while never once measuring a tooltip. Its sampler reads text present in the DOM at sweep time and the gate never hovers a chart, so every tooltip in the app was outside the measurement, before and after any change to it. The gate returned pass for changes it structurally could not see.
+- The same gate visits only the default lens of a three-lens view, so an entire class of figures (the two accounts actually rendering a loss, at -$3.16 and -$45.04) was never swept in the colour that only losses paint.
+- Both gaps are silent by construction: an unvisited state produces no sample, no sample produces no failure, and no failure reads exactly like a pass.
+
+ALWAYS ask what STATES a visual gate reaches, not just what pages. Hover-only, focus-only, error-only and empty-state renderings need the gate to drive them, and a multi-view control needs the gate to switch views. Enumerate the states a component can paint, then check the sampler's own count against that list.
+
+NEVER report a gate's number as evidence for a change the gate cannot see. When a state is out of the sweep, measure it by reusing the gate's OWN sampling and maths against a driven page rather than reimplementing the arithmetic, and say in the report that it was measured out-of-band and why.
