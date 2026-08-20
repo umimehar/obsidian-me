@@ -2,7 +2,7 @@
 title: Hot — Active Context
 tags: [meta/system]
 created: 2026-07-13
-updated: 2026-08-10
+updated: 2026-08-19
 status: active
 type: reference
 ---
@@ -13,11 +13,13 @@ Scannable cache of active endeavors and recent session context. Read this first.
 
 ## Active endeavors
 
-- **[[personal/investments/README|investments]]** — being rebuilt on the monthly **PDF** statements, replacing the CSV pipeline that could not produce market value at all. Phase 1 (ingest and reconciliation) is complete in `app/`: 220 statements, 14 accounts, 8,653 activity rows, 3,770 holdings, zero unacknowledged reconciliation errors, 215 tests. Account value reconciles to $241,739.67 against the $242,019.61 the app showed on 2026-06-30, the $279.94 gap being one private-markets holding whose statement says its valuation is not final. Next: phase 2, the React app. See `personal/investments/log/2026-08-06.md`.
+- **[[personal/investments/README|investments]]** — rebuilt on the monthly **PDF** statements, replacing the CSV pipeline that could not produce market value at all. Phases 1 through 3 are complete in `app/`, 1158 tests. Six hash-synced tabs, six charts, a projections view over a byte-identical port of the old engine, and now goal tracking and room runway. Account value $241,739.67 across all three lenses, the $279.94 gap to the app's own figure being one private-markets holding whose statement says its valuation is not final. The runway's finding: **CESG stops at $6,650 of a $7,200 cap**, forfeiting $550, because the beneficiary ages out in 2042 first. Goals re-judge live with the rate slider; the runway does not move at all, since a contribution cap is consumed by contributions rather than by growth. Outstanding owner input: the assessed **TFSA** room for `ASSESSED_ROOM`. Outstanding gate: the phase 3 whole-branch review, which hit a session limit before reporting. See `personal/investments/log/2026-08-19.md`.
 
 - **[[personal/govt-tenders/README|govt-tenders]]** — bidding on Canadian public sector website work. Market scanned 2026-08-10: the CanadaBuys search for "website" returns 242 open notices of which **10 are about a website**, all municipal, academic or provincial, none federal. Ottawa runs 893 open notices with three touching the web and routes the rest through the TBIPS and SBIPS supply arrangements (qualification open until 2028-07-04). The `tender-digest` skill now emails a title-filtered digest Mon/Wed/Fri at 08:12. Next: register on BC Bid, APC, MERX, bids&tenders and Biddingo, then clear the qualification gates in `personal/govt-tenders/tracking.md`. See `personal/govt-tenders/log/2026-08-10.md`.
 
 ## Recent sessions
+
+- **2026-08-19** — Investments phase 3: goal tracking and room runway, eight tasks, 1054 tests to 1158. Three findings worth keeping. A survived mutation proved the design spec wrong: runway years do not move with the return rate, because a contribution cap is consumed by contributions and not by growth, verified structurally (no contribution step in the engine reads a balance). An absence assertion keyed to a truncated figure cannot fire when rounding goes up, so the test guarding this project's most-repeated defect could not catch it, and the founding instance of that defect was itself a round-up. And per-task reviewers found five, seven and ten green mutations behind audits reported as complete, every one by constructing mutations nobody asked for. See `personal/investments/log/2026-08-19.md`.
 
 - **2026-08-10** — Government tender endeavor created and the digest shipped. The headline finding is that the obvious channel does not work: CanadaBuys full text search scores 4% precision on "website", and matching on the **title** instead scores 100% on the same sample. Also learned that CanadaBuys 403s a burst of requests but passes paced ones, that going direct to the provinces is a dead end (Alberta's opportunity API 500s on every filter shape, BC Bid publishes no dataset) because CanadaBuys already mirrors them, and that you can never submit a non federal bid through CanadaBuys — every notice links out to its source portal.
 
