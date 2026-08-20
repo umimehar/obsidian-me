@@ -50,12 +50,33 @@ export function tooltipLines(
  * edge at either end, so a readout over the first or last month stays inside
  * the card instead of hanging off it. Shared by both charts, since the rule
  * is about the chart's edges rather than about either chart.
+ *
+ * `reserveSpace` extends the same "stay inside the card" rule to the
+ * vertical axis. A Radix `Card` sets `contain: paint`, which clips a
+ * descendant to the card's own box; a tooltip absolutely positioned below a
+ * short chart (the group sparklines on Overview) can be taller than the
+ * space left under it, so the tail is clipped away rather than pushed onto a
+ * new line. Reserving space makes the tooltip part of the card's normal
+ * flow instead of an overlay escaping it: `position: relative` keeps its
+ * static position (right after the chart) but still lets `left` and
+ * `transform` track the cursor exactly as the absolute case does, and the
+ * card grows to fit it the same way it grows to fit any other row. The
+ * `display: inline-block` alongside it is required for that: a plain
+ * `position: relative` block `div` stretches to the full width of its
+ * container, which would make `translateX(-50%)` centre on half of that
+ * width instead of half of the tooltip's own, breaking the tracking this
+ * function exists to get right.
  */
-export function tooltipAnchorStyle(x: number, viewBoxWidth: number): CSSProperties {
+export function tooltipAnchorStyle(
+  x: number,
+  viewBoxWidth: number,
+  reserveSpace = false,
+): CSSProperties {
   const fraction = viewBoxWidth > 0 ? Math.min(1, Math.max(0, x / viewBoxWidth)) : 0;
   const anchor = fraction < 0.2 ? "0" : fraction > 0.8 ? "-100%" : "-50%";
   return {
-    position: "absolute",
+    position: reserveSpace ? "relative" : "absolute",
+    display: reserveSpace ? "inline-block" : undefined,
     left: `${fraction * 100}%`,
     transform: `translateX(${anchor})`,
     pointerEvents: "none",

@@ -79,6 +79,36 @@ describe("tooltipAnchorStyle", () => {
     expect(tooltipAnchorStyle(-90, 800).left).toBe("0%");
     expect(tooltipAnchorStyle(9000, 800).left).toBe("100%");
   });
+
+  test("defaults to an absolute overlay that does not reserve layout space", () => {
+    const style = tooltipAnchorStyle(400, 800);
+    expect(style.position).toBe("absolute");
+    expect(style.display).toBeUndefined();
+  });
+
+  test("reserveSpace switches to a relative, shrink-to-fit box instead", () => {
+    // This is what stops a Radix Card's `contain: paint` from clipping the
+    // tooltip: relative positioning keeps the box in normal flow, so the
+    // card grows to fit it instead of the tooltip escaping the card's own
+    // box. `display: inline-block` alongside it is not decorative -- a
+    // plain `position: relative` div stretches to the full container width,
+    // which would break the centre/edge math below (it centres on half of
+    // that instead of half of the tooltip's own width).
+    const style = tooltipAnchorStyle(400, 800, true);
+    expect(style.position).toBe("relative");
+    expect(style.display).toBe("inline-block");
+  });
+
+  test("reserveSpace does not change the horizontal tracking math", () => {
+    // The whole point of sharing this function is that the two modes agree
+    // on where the cursor is; only how the box is laid out should differ.
+    for (const x of [0, 200, 400, 800, 9000]) {
+      const overlay = tooltipAnchorStyle(x, 800);
+      const reserved = tooltipAnchorStyle(x, 800, true);
+      expect(reserved.left).toBe(overlay.left);
+      expect(reserved.transform).toBe(overlay.transform);
+    }
+  });
 });
 
 describe("ChartTooltip", () => {

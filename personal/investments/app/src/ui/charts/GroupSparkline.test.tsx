@@ -209,6 +209,22 @@ describe("GroupSparkline cursor over the shared domain", () => {
     expect(tooltipText()).toContain("1 of 1 account reported this month");
   });
 
+  // A proxy, not a geometry check: happy-dom lays out nothing, so it cannot
+  // prove the tooltip stays inside the surrounding card the way a real
+  // browser measurement can (see the browser-verified numbers in the fix
+  // report). What this DOES prove is that the wrapper is wired to
+  // `tooltipAnchorStyle`'s `reserveSpace` mode rather than the plain
+  // absolute overlay the other charts use, which is the one line a future
+  // edit could silently drop.
+  test("the tooltip wrapper is wired to reserve layout space, not float over it", () => {
+    renderGroup("Education");
+    fireEvent.pointerMove(sparkline(), { clientX: 719 });
+    const tooltip = document.querySelector("[data-chart-tooltip]");
+    const wrapper = tooltip?.parentElement;
+    expect(wrapper?.style.position).toBe("relative");
+    expect(wrapper?.style.display).toBe("inline-block");
+  });
+
   test("arrowing from a gap lands on a stated month rather than the next empty one", () => {
     renderGroup("Education");
     const svg = sparkline();
