@@ -229,7 +229,7 @@ export interface InsuranceShopping {
   objective: string;
   benchmark: { insurer: string; annualPremium: number; monthly: number; note: string };
   yearOverYear: { line: string; prior: number; renewal: number }[];
-  whyItRose: { driver: string; detail: string; delta: number }[];
+  whyItRose: { driver: string; detail: string; delta: number; unsourced?: boolean }[];
   unchangedRatingFactors: string[];
   coverageToMatch: { note: string; musts: string[] };
   brokers: Broker[];

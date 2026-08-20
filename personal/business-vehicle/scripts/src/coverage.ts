@@ -105,6 +105,23 @@ export function windowStatus(
   return { active: dateOk && kmOk, kmRemaining, monthsRemaining, expiresBy };
 }
 
+/** The pace the vehicle is actually driven, annualised from time in service. A warranty or
+    plan window is reached by real kilometres, not by the ones the lease permits, so this is
+    the pace to project with. Null when there is nothing to measure, which leaves the choice
+    of fallback to the caller rather than quietly inventing one. */
+export function observedAnnualKm(
+  inServiceDate: string,
+  asOf: string,
+  odometer: number | null,
+): number | null {
+  if (odometer === null) return null;
+  const start = new Date(`${inServiceDate}T00:00:00Z`).getTime();
+  const end = new Date(`${asOf}T00:00:00Z`).getTime();
+  const days = (end - start) / 86_400_000;
+  if (days <= 0) return null;
+  return (odometer / days) * 365.25;
+}
+
 export function nextServiceDue(
   interval: { intervalKm: number | null; intervalMonths: number | null },
   last: ServiceEvent | undefined,

@@ -1,4 +1,4 @@
-import { nextServiceDue, planDrawdown, windowStatus } from "../coverage";
+import { nextServiceDue, observedAnnualKm, planDrawdown, windowStatus } from "../coverage";
 import { escapeHtml, money, plainDate } from "../format";
 import { callout, kv, layout, section, table } from "../layout";
 import type { Protection, ServiceVisit, VehicleData } from "../types";
@@ -13,11 +13,17 @@ function tyreRow(visit: ServiceVisit): string {
     .join(", ")}${flag}`;
 }
 
-function protectionCard(p: Protection, asOf: string, odometer: number | null): string {
+function protectionCard(
+  p: Protection,
+  asOf: string,
+  odometer: number | null,
+  pace: number | null,
+): string {
   const status = windowStatus(
     { expiryDate: p.expiryDate ?? null, expiryKm: p.expiryKm ?? null },
     asOf,
     odometer,
+    pace ?? undefined,
   );
   const badge = status.active
     ? `<span class="badge">active</span>`
@@ -48,6 +54,7 @@ export function servicePage(data: VehicleData): string {
   const latest = visits[0];
   const odometer = latest?.odometerOut ?? null;
 
+  const pace = observedAnnualKm(vehicle.identity.inServiceDate, data.meta.asOf, odometer);
   const plan = vehicle.protection.find((p) => p.kind === "maintenance");
   const drawdown = plan
     ? planDrawdown(
@@ -95,7 +102,7 @@ export function servicePage(data: VehicleData): string {
     .join("\n");
 
   const protection = vehicle.protection.length
-    ? vehicle.protection.map((p) => protectionCard(p, data.meta.asOf, odometer)).join("\n")
+    ? vehicle.protection.map((p) => protectionCard(p, data.meta.asOf, odometer, pace)).join("\n")
     : '        <p class="section-note">No protection product recorded yet.</p>';
 
   const body = `${section("Where the car stands", latest ? `Last seen at ${escapeHtml(latest.dealer)} on ${plainDate(latest.date)}.` : undefined)}
@@ -116,6 +123,12 @@ ${kv([
     due
       ? `${plainDate(due.date)} or ${due.odometer?.toLocaleString("en-CA") ?? "—"} km, whichever comes first`
       : "—",
+  ],
+  [
+    "Driven at",
+    pace === null
+      ? "—"
+      : `<span class="num">${Math.round(pace).toLocaleString("en-CA")}</span> km a year, against the ${vehicle.lease?.kmPerYear?.toLocaleString("en-CA") ?? "—"} the lease allows`,
   ],
   [
     "Paid out of pocket to date",
@@ -175,6 +188,6 @@ ${protection}
     asOf: data.meta.asOf,
     body,
     footnote:
-      "Every service so far has been covered by the prepaid maintenance plan. The figure that matters at lease end is not what was spent but whether the maintenance record is complete: incomplete maintenance to manufacturer specification voids the First Class Lease Protection wear and tear waiver.",
+      "Warranty and plan windows below are projected at the pace the car is actually driven, not the pace the lease permits. Every service so far has been covered by the prepaid maintenance plan. The figure that matters at lease end is not what was spent but whether the maintenance record is complete: incomplete maintenance to manufacturer specification voids the First Class Lease Protection wear and tear waiver.",
   });
 }

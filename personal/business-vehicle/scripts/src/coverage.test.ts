@@ -1,5 +1,11 @@
 import { describe, expect, test } from "bun:test";
-import { leaseProgress, nextServiceDue, planDrawdown, windowStatus } from "./coverage";
+import {
+  leaseProgress,
+  nextServiceDue,
+  observedAnnualKm,
+  planDrawdown,
+  windowStatus,
+} from "./coverage";
 
 describe("leaseProgress", () => {
   const lease = { startDate: "2025-09-30", termMonths: 39, kmPerYear: 18000 };
@@ -125,6 +131,23 @@ describe("windowStatus", () => {
     const s = windowStatus({ expiryDate: "2030-01-01", expiryKm: null }, "2026-08-19", 500000);
     expect(s.active).toBe(true);
     expect(s.kmRemaining).toBe(null);
+  });
+});
+
+describe("observedAnnualKm", () => {
+  test("annualises the odometer against time in service", () => {
+    // 14,035 km over the 323 days from 2025-09-30 to 2026-08-19.
+    const pace = observedAnnualKm("2025-09-30", "2026-08-19", 14035);
+    expect(pace).not.toBe(null);
+    expect(Math.round(pace ?? 0)).toBe(15871);
+  });
+
+  test("returns null without an odometer, so a caller must fall back deliberately", () => {
+    expect(observedAnnualKm("2025-09-30", "2026-08-19", null)).toBe(null);
+  });
+
+  test("returns null on the day of delivery rather than dividing by zero", () => {
+    expect(observedAnnualKm("2025-09-30", "2025-09-30", 90)).toBe(null);
   });
 });
 

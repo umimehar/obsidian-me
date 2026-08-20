@@ -37,7 +37,9 @@ export function insurancePage(data: VehicleData): string {
     .map(
       (w) => `        <div class="card">
           <p class="card-title">${escapeHtml(w.driver)}</p>
-          <p class="card-meta">${deltaHtml(0, w.delta)} on the year</p>
+          <p class="card-meta">${deltaHtml(0, w.delta)} on the year${
+            w.unsourced ? ' · <span class="badge">unsourced</span>' : ""
+          }</p>
           <p>${escapeHtml(w.detail)}</p>
         </div>`,
     )
