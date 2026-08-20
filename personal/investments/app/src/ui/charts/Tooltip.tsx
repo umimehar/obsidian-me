@@ -146,30 +146,37 @@ function resolveContent(props: TooltipInput): TooltipContent {
 }
 
 /**
- * The market-value/book-cost column's bounds, measured in a real browser
- * against the running app rather than guessed. `box-sizing: border-box` on
- * the tooltip makes these the true rendered footprint, border and padding
- * included, not just the content box -- confirmed directly: the box renders
- * at exactly 300px for a short-figured point and exactly 340px for a
- * long-figured one, never in between or beyond.
+ * The market-value/book-cost column's fixed width, measured in a real
+ * browser against the running app rather than guessed. `box-sizing:
+ * border-box` on the tooltip makes this the true rendered footprint, border
+ * and padding included, not just the content box.
  *
- * In practice the book-cost caveat footnote ("Book cost is approximate for
- * USD holdings and not a filing figure", 68 characters) is the widest single
- * piece of content in every stated month's tooltip, wider than either row,
- * so it is what pushes the box toward 340px. `minWidth: 300` is the floor
- * that stops the row column crowding when the footnote alone would not hold
- * the box open -- both the smallest real row figure and the largest this
- * app ever states, the portfolio total ($241,739.67), render their row on
- * one line at 17.4px tall with no wrap at this width, confirmed directly for
- * both. `maxWidth: 340` keeps the footnote wrapping at a comfortable measure
- * instead of running the width of the card -- at this font size it wraps
- * that sentence across two lines, each within the 45-60 character
- * comfortable-reading range. Only applied when there is a column to protect
- * -- see `linesToTooltipContent`'s comment for why every other chart's
- * flat-line tooltip keeps its own unconstrained width.
+ * A single number, not a min/max range: `tooltipAnchorStyle`'s absolute
+ * positioning (`left: 95%`, `transform: translateX(-100%)`) constrains a
+ * shrink-to-fit box's width to whatever space happens to be left before the
+ * containing block's edge, which is what made the old unconstrained tooltip
+ * render 92px wide and four lines tall at either end of a chart and ~300px
+ * wide in the middle -- two different-looking components depending on where
+ * the cursor happened to be. A fixed width is the same box everywhere,
+ * edge or centre, which was confirmed directly: hovering a chart at the
+ * fraction 0.05, 0.5 and 0.95 (near-left, centre, near-right) all render
+ * this exact width, and all stay fully inside both their card and the
+ * viewport at every position tested.
+ *
+ * 320 was chosen from the two things that have to fit in it. The book-cost
+ * caveat footnote ("Book cost is approximate for USD holdings and not a
+ * filing figure", 68 characters) is the widest single piece of content in
+ * every stated month's tooltip, wider than either row; at 320px it wraps
+ * across two lines of roughly 50-55 characters each, inside the 45-60
+ * character comfortable-reading range. The market-value/book-cost row has
+ * to fit the largest figure this app ever states, the portfolio total
+ * ($241,739.67), beside its label without wrapping -- confirmed directly,
+ * that row renders on one line at 17.4px tall at 320px, with room either
+ * side, and so does the smallest real row figure. Only applied when there
+ * is a column to protect -- see `linesToTooltipContent`'s comment for why
+ * every other chart's flat-line tooltip keeps its own unconstrained width.
  */
-const ROWS_MIN_WIDTH = 300;
-const ROWS_MAX_WIDTH = 340;
+const ROWS_WIDTH = 320;
 
 const SEPARATOR: CSSProperties = {
   border: "none",
@@ -206,8 +213,8 @@ export function ChartTooltip(props: TooltipInput) {
         borderRadius: "var(--radius-3)",
         boxShadow: "var(--shadow-3)",
         padding: "8px 10px",
-        maxWidth: hasRows ? ROWS_MAX_WIDTH : 280,
-        minWidth: hasRows ? ROWS_MIN_WIDTH : undefined,
+        width: hasRows ? ROWS_WIDTH : undefined,
+        maxWidth: hasRows ? undefined : 280,
       }}
     >
       <div style={{ color: "var(--gray-12)", fontSize: 13, fontWeight: 600, lineHeight: 1.45 }}>

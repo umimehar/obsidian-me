@@ -192,15 +192,18 @@ describe("ChartTooltip, given the new structured content", () => {
     expect(marketValue.style.fontVariantNumeric).toBe("tabular-nums");
   });
 
-  test("the row-bearing tooltip has a minimum and maximum width; the flat-line tooltip keeps neither", () => {
+  test("the row-bearing tooltip has one fixed width; the flat-line tooltip keeps its own unconstrained width", () => {
     render(<ChartTooltip content={tooltipContent("2026-06", LAST, 11)} />);
     const withRows = document.querySelector("[data-chart-tooltip]");
     if (!(withRows instanceof HTMLElement)) throw new Error("expected the tooltip to render");
-    expect(withRows.style.minWidth).toBe("300px");
-    expect(withRows.style.maxWidth).toBe("340px");
-    // border-box, so 300/340 are the true rendered footprint (border and
-    // padding included), not just the content box -- see the fix report for
-    // the browser measurement that depends on this.
+    // A single width, not a min/max range: see the fix report for why a
+    // shrink-to-fit range let the box render two different sizes depending
+    // on where the cursor happened to be along the chart.
+    expect(withRows.style.width).toBe("320px");
+    expect(withRows.style.maxWidth).toBe("");
+    // border-box, so 320 is the true rendered footprint (border and padding
+    // included), not just the content box -- see the fix report for the
+    // browser measurement that depends on this.
     expect(withRows.style.boxSizing).toBe("border-box");
   });
 
