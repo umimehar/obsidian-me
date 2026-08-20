@@ -105,6 +105,31 @@ export function windowStatus(
   return { active: dateOk && kmOk, kmRemaining, monthsRemaining, expiresBy };
 }
 
+/** What it would cost to end the lease today: the payments still to come plus the residual,
+    each discounted back at the lease's own rate. This is the figure to compare against the
+    car's market value, and the reason an early exit on a depreciating car is punitive. */
+export function leasePayoff(
+  lease: {
+    monthlyPaymentBeforeTax?: number | null;
+    residualValue?: number | null;
+    interestRate?: number | null;
+  },
+  paymentsRemaining: number,
+): number | null {
+  const pmt = lease.monthlyPaymentBeforeTax;
+  const residual = lease.residualValue;
+  if (pmt === null || pmt === undefined || residual === null || residual === undefined) {
+    return null;
+  }
+  const monthly = (lease.interestRate ?? 0) / 12;
+  if (monthly === 0) return residual + pmt * paymentsRemaining;
+  let pv = residual / (1 + monthly) ** paymentsRemaining;
+  for (let k = 1; k <= paymentsRemaining; k += 1) {
+    pv += pmt / (1 + monthly) ** k;
+  }
+  return pv;
+}
+
 /** The pace the vehicle is actually driven, annualised from time in service. A warranty or
     plan window is reached by real kilometres, not by the ones the lease permits, so this is
     the pace to project with. Null when there is nothing to measure, which leaves the choice

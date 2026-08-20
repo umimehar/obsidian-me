@@ -92,7 +92,7 @@ ${table(
 )}
 
       <hr class="hr mt-rule" />
-${section("The five pages behind this one")}
+${section("The six pages behind this one")}
       <div class="card-grid">
         <div class="card">
           <p class="card-title"><a href="lease.html">Lease</a></p>
@@ -109,6 +109,10 @@ ${section("The five pages behind this one")}
         <div class="card">
           <p class="card-title"><a href="compliance.html">Compliance</a></p>
           <p>Business against personal use, the mileage position, and the tax questions for the accountant.</p>
+        </div>
+        <div class="card">
+          <p class="card-title"><a href="deal.html">Was it a good deal</a></p>
+          <p>The lease measured against what comparable cars actually sell for, what to do at maturity, and what to negotiate differently next time.</p>
         </div>
         <div class="card">
           <p class="card-title"><a href="fleet-history.html">Fleet history</a></p>

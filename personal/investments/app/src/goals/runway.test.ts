@@ -218,7 +218,7 @@ describe("buildRunway, row completeness", () => {
     expect(ids).toEqual(["fhsa-cap", "fhsa-close", "resp-cap", "cesg", "rrsp-last", "tfsa"]);
   });
 
-  test("each row's wrapper and note are the real pinned strings, not a mismatched label", () => {
+  test("each row's wrapper, bound and note are the real pinned strings, not a mismatched label -- all six rows, not a subset", () => {
     const runway = buildRunway(rows6, inputs6);
     const byId = new Map(runway.map((r) => [r.id, r]));
     expect(byId.get("fhsa-cap")?.wrapper).toBe("FHSA");
@@ -235,9 +235,19 @@ describe("buildRunway, row completeness", () => {
     expect(byId.get("resp-cap")?.bound).toBe("$50,000 lifetime contribution cap");
     expect(byId.get("cesg")?.bound).toBe("$7,200 lifetime CESG cap");
     expect(byId.get("rrsp-last")?.bound).toBe("last calendar year RRSP room accrues");
+    expect(byId.get("tfsa")?.bound).toBe("no lifetime cap");
 
+    expect(byId.get("fhsa-cap")?.note).toBe(
+      "The FHSA lifetime contribution cap, reached by the money going in.",
+    );
     expect(byId.get("fhsa-close")?.note).toBe(
       "A statutory deadline set by the account's first activity, not by the return rate.",
+    );
+    expect(byId.get("resp-cap")?.note).toBe(
+      "The RESP lifetime contribution cap, reached by the money going in.",
+    );
+    expect(byId.get("cesg")?.note).toBe(
+      "The beneficiary ages out before the CESG lifetime cap is reached, forfeiting the rest.",
     );
     expect(byId.get("rrsp-last")?.note).toBe(
       "The owner turns 71 in this year, a statutory cutoff that outruns the projection itself.",

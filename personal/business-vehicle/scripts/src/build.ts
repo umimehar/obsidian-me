@@ -4,6 +4,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { compliancePage } from "./pages/compliance";
+import { dealPage } from "./pages/deal";
 import { fleetHistoryPage } from "./pages/fleet-history";
 import { indexPage } from "./pages/index";
 import { insurancePage } from "./pages/insurance";
@@ -19,6 +20,7 @@ const RENDERERS: Record<string, (d: VehicleData) => string> = {
   "insurance.html": insurancePage,
   "service.html": servicePage,
   "compliance.html": compliancePage,
+  "deal.html": dealPage,
   "fleet-history.html": fleetHistoryPage,
 };
 

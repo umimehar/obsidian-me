@@ -19,6 +19,7 @@ Everything about the 2026 Mercedes-Benz GLC 43 AMG leased in 15248132 Canada Inc
 - [Insurance](notes/insurance.html). Both terms line by line, the brokers, the open questions.
 - [Service](notes/service.html). Every visit, the prepaid plan, what the dealer flagged.
 - [Compliance](notes/compliance.html). Business against personal use, mileage, tax questions.
+- [Was it a good deal](notes/deal.html). The lease measured against what comparable cars actually sell for, what to do at maturity, and what to negotiate differently next time.
 - [Fleet history](notes/fleet-history.html). Every leased vehicle.
 - [[tracking]]. Deadlines and the running odometer.
 
@@ -31,6 +32,8 @@ One of those is wrong. An insurer that decides the declared use was misstated ca
 The second thing: the Desjardins renewal is $9,657, up $1,247. Nearly half of that is one endorsement, the 5 Year New Vehicle Protection going from $303 to $794. It replaces the car with a new current year equivalent on a total loss, for 60 months from delivery. Brokers quote OPCF 43R instead, a depreciation waiver usually capped at 24 to 30 months. A cheaper quote carrying plain 43R is a downgrade. Gap coverage is not the reason to keep it, because section 13 of the lease already provides gap protection.
 
 Do not cancel Desjardins until a replacement is bound in writing.
+
+On the deal itself: sound lease structure, thin discount. The 58% residual is generous enough that the guaranteed $58,580 buyout will sit above what the car is worth in September 2028, so walk away at maturity rather than buying it. Three year old GLC 43s ask $54,495 to $59,995 today.
 
 ## How the data works
 

@@ -7,7 +7,14 @@ export interface PageDef {
   readonly label: string;
 }
 
-export type PageId = "index" | "lease" | "insurance" | "service" | "compliance" | "fleet-history";
+export type PageId =
+  | "index"
+  | "lease"
+  | "insurance"
+  | "service"
+  | "compliance"
+  | "deal"
+  | "fleet-history";
 
 export const PAGES: readonly PageDef[] = [
   { id: "index", file: "index.html", label: "Overview" },
@@ -15,6 +22,7 @@ export const PAGES: readonly PageDef[] = [
   { id: "insurance", file: "insurance.html", label: "Insurance" },
   { id: "service", file: "service.html", label: "Service" },
   { id: "compliance", file: "compliance.html", label: "Compliance" },
+  { id: "deal", file: "deal.html", label: "Was it a good deal" },
   { id: "fleet-history", file: "fleet-history.html", label: "Fleet history" },
 ];
 

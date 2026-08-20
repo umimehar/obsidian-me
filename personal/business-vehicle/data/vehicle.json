@@ -1610,5 +1610,127 @@
         "docs/lease/lease-agreement-detailed.pdf, section 12"
       ]
     }
-  ]
+  ],
+  "marketAssessment": {
+    "asOf": "2026-08-20",
+    "verdict": "Sound lease structure, thin discount on the car.",
+    "summary": "The residual protects you and the rate is market consistent for an AMG. What was left on the table was left at the negotiating table: a 1.89% discount, $5,107 of soft products and dealer fees, and a kilometre tier above what the car is driven.",
+    "estimatedLeft": "Roughly $4,000 to $6,000",
+    "comparables": [
+      {
+        "year": 2026,
+        "description": "GLC43 AMG 4MATIC+ SUV, Pinnacle trim",
+        "askingPrice": 83998,
+        "odometerKm": 12423,
+        "location": "Montreal QC"
+      },
+      {
+        "year": 2026,
+        "description": "GLC 4MATIC AMG, Dynamic Plus",
+        "askingPrice": 86900,
+        "odometerKm": 7548,
+        "location": "Vaughan ON"
+      },
+      {
+        "year": 2026,
+        "description": "GLC AMG 43 4MATIC+ SUV",
+        "askingPrice": 79888,
+        "odometerKm": 15400,
+        "location": "Kingston ON"
+      },
+      {
+        "year": 2023,
+        "description": "GLC43 AMG 4MATIC, three years old",
+        "askingPrice": 59995,
+        "odometerKm": 33754,
+        "location": "various"
+      },
+      {
+        "year": 2023,
+        "description": "GLC43 AMG Coupe, three years old",
+        "askingPrice": 54495,
+        "odometerKm": 55000,
+        "location": "Brossard QC"
+      },
+      {
+        "year": 2022,
+        "description": "GLC43 AMG, four years old",
+        "askingPrice": 49748,
+        "odometerKm": 40000,
+        "location": "various"
+      }
+    ],
+    "comparablesNote": "Dealer asking prices from AutoTrader.ca on 20 August 2026, not transaction prices. Real values sit below these.",
+    "strengths": [
+      {
+        "point": "The 58% residual is generous, and the market now says so",
+        "detail": "Three year old GLC 43s ask $54,495 to $59,995 today. The guaranteed buyout is $58,580, at the top of that range. Mercedes-Benz Financial carries that depreciation risk, not the lessee."
+      },
+      {
+        "point": "4.49% is consistent for an AMG variant",
+        "detail": "A base 2026 GLC leases in Canada at 3.99% as of August 2026, and AMG models carry a premium with less subvention. No published Canadian residual and rate sheet for the AMG GLC 43 as of September 2025 could be found, so this is reasonable rather than verified."
+      },
+      {
+        "point": "Gap protection came free inside the lease",
+        "detail": "Section 13 provides it as standard. Many buyers pay a dealer separately for the same thing."
+      }
+    ],
+    "weaknesses": [
+      {
+        "point": "A 1.89% discount",
+        "detail": "$2,076 off a $109,929.95 list. This is the weakest number in the file.",
+        "cost": null
+      },
+      {
+        "point": "$5,107 of soft products and dealer fees",
+        "detail": "A $695 administration fee, a $499 window tint, $170 wheel locks, and a prepaid maintenance plan at $1,779 which is exactly $480 plus $801 plus $498, the sum of its three retail services. No discount at all. It bought a fixed price, not a saving.",
+        "cost": 5107
+      },
+      {
+        "point": "A kilometre tier above the car's actual use",
+        "detail": "18,000 a year bought against 15,871 driven. About 6,473 kilometres will go unused, and unused kilometres are never credited back.",
+        "cost": null
+      }
+    ],
+    "maturity": {
+      "buyout": 58580,
+      "projectedRetail": 57250,
+      "projectedWholesale": 50000,
+      "recommendation": "Walk away. Do not exercise the buyout.",
+      "why": "The guaranteed price sits at the top of what three year old examples ask retail and roughly $8,500 above likely wholesale. A generous residual is worth having as protection, not as a purchase."
+    },
+    "earlyExit": {
+      "recommendation": "Do not terminate early.",
+      "why": "Section 16 charges the residual plus the balance of remaining payments on a constant yield discount, plus one further monthly payment, with any shortfall bearing 20% interest. Eleven months into a loaded German performance SUV the gap to trade value is at its widest."
+    },
+    "nextTime": [
+      "Negotiate the discount before anything else. It is the only number here worth thousands.",
+      "Take the 15,000 kilometre tier, not 18,000.",
+      "Decline the finance and insurance table, or price each product against buying it later.",
+      "Ask what the rate would be on the outgoing model year, which carries more subvention."
+    ],
+    "limits": [
+      "Used listings are dealer asking prices, not transaction prices.",
+      "Today's three year old cars are a proxy for where a 2026 lands in 2028.",
+      "No published Canadian residual or subvented rate sheet for the AMG GLC 43 in September 2025 was found."
+    ],
+    "sources": [
+      {
+        "title": "AutoTrader.ca, AMG GLC 43 listings",
+        "url": "https://www.autotrader.ca/cars/mercedes-benz/glc/tn_amg-glc-43"
+      },
+      {
+        "title": "Mercedes-Benz Canada, 2026 AMG GLC 43 4MATIC SUV",
+        "url": "https://www.mercedes-benz.ca/en/vehicles/model/glc/suv/glc43w4"
+      },
+      {
+        "title": "Mercedes-Benz Moncton, 2026 AMG GLC 43 pricing",
+        "url": "https://www.mercedes-benz-moncton.ca/new/2026-Mercedes_Benz-AMG_GLC_43-id475039.html"
+      },
+      {
+        "title": "Mercedes-Benz Durham, current lease and finance offers",
+        "url": "https://www.mercedes-benz-durham.ca/new-vehicles/new-vehicle-offers/"
+      }
+    ]
+  }
 }

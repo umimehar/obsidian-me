@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import {
+  leasePayoff,
   leaseProgress,
   nextServiceDue,
   observedAnnualKm,
@@ -131,6 +132,34 @@ describe("windowStatus", () => {
     const s = windowStatus({ expiryDate: "2030-01-01", expiryKm: null }, "2026-08-19", 500000);
     expect(s.active).toBe(true);
     expect(s.kmRemaining).toBe(null);
+  });
+});
+
+describe("leasePayoff", () => {
+  const lease = { monthlyPaymentBeforeTax: 1548.68, residualValue: 58580, interestRate: 0.0449 };
+
+  test("is the remaining payments plus the residual, both discounted at the lease rate", () => {
+    // 26 payments left. Discounting matters: undiscounted the same stream is $98,846.
+    const payoff = leasePayoff(lease, 26);
+    expect(Math.round(payoff ?? 0)).toBe(91460);
+  });
+
+  test("equals the residual alone when no payments remain", () => {
+    expect(leasePayoff(lease, 0)).toBe(58580);
+  });
+
+  test("rises as more payments remain", () => {
+    expect(leasePayoff(lease, 30) ?? 0).toBeGreaterThan(leasePayoff(lease, 26) ?? 0);
+  });
+
+  test("returns null rather than a wrong number when a term is missing", () => {
+    expect(leasePayoff({ ...lease, residualValue: null }, 26)).toBe(null);
+    expect(leasePayoff({ ...lease, monthlyPaymentBeforeTax: null }, 26)).toBe(null);
+  });
+
+  test("handles a zero interest lease without dividing by zero", () => {
+    const free = leasePayoff({ ...lease, interestRate: 0 }, 26);
+    expect(free).toBeCloseTo(58580 + 26 * 1548.68, 2);
   });
 });
 

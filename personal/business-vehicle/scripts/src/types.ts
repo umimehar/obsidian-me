@@ -8,6 +8,7 @@ export interface VehicleData {
   insuranceShopping: InsuranceShopping;
   compliance: Compliance;
   findings: Finding[];
+  marketAssessment: MarketAssessment;
   openQuestions: OpenQuestion[];
   nextActions: NextAction[];
 }
@@ -273,6 +274,34 @@ export interface Compliance {
   mileageLog: { kept: boolean; note: string };
   taxTreatment: { topic: string; detail: string; status: string }[];
   note: string;
+}
+
+export interface MarketAssessment {
+  asOf: string;
+  verdict: string;
+  summary: string;
+  estimatedLeft: string;
+  comparables: {
+    year: number;
+    description: string;
+    askingPrice: number;
+    odometerKm: number;
+    location: string;
+  }[];
+  comparablesNote: string;
+  strengths: { point: string; detail: string }[];
+  weaknesses: { point: string; detail: string; cost: number | null }[];
+  maturity: {
+    buyout: number;
+    projectedRetail: number;
+    projectedWholesale: number;
+    recommendation: string;
+    why: string;
+  };
+  earlyExit: { recommendation: string; why: string };
+  nextTime: string[];
+  limits: string[];
+  sources: { title: string; url: string }[];
 }
 
 export type Severity = "high" | "medium" | "low";

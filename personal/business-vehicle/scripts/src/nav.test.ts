@@ -9,6 +9,7 @@ describe("PAGES", () => {
       "insurance",
       "service",
       "compliance",
+      "deal",
       "fleet-history",
     ]);
   });

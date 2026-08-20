@@ -19,6 +19,14 @@ import { GoalsPanel } from "./GoalsPanel";
  * `expectNoCoarseForm(text, x)` for the coarse-absence check. A stale or
  * mistyped literal reddens the precise assertion first, so the coarse guard
  * can never end up silently checking the wrong number.
+ *
+ * Coverage is not uniform across every rendered figure, and it cannot be.
+ * `projected`, `monthly`, `uncoveredValue` and `gap` each go through this
+ * guard, because each is rendered nowhere but its own `formatCurrency` call.
+ * `target` does not, and never can: `goal.source` legitimately spells out
+ * the bare "$40,000" and "$50,000" as prose (see `goals/config.ts`), so a
+ * coarse form of `target` is expected to appear in the card's own text, not
+ * a defect the guard could flag.
  */
 const analytics: AnalyticsOutput = loadAnalytics();
 const rows6 = projectYears(projectionInputs(analytics, { returnRate: 0.06 }));
@@ -125,6 +133,7 @@ describe("the house card, against the real corpus", () => {
     // its leading digits with the precise one here ($50,180 rounds down from
     // $50,180.10) -- checked against the real rounded value, not assumed.
     expectNoCoarseForm(text, projected);
+    expectNoCoarseForm(text, gap);
   });
 
   test("the card's aria-label carries the same figures the card prints, never a drifted one", () => {
@@ -134,6 +143,7 @@ describe("the house card, against the real corpus", () => {
     expect(label).toContain(formatCurrency(target));
     expect(label).toContain(formatCurrency(gap));
     expectNoCoarseForm(label, projected);
+    expectNoCoarseForm(label, gap);
   });
 
   test("prints its source, rendered rather than decorative", () => {
@@ -150,6 +160,7 @@ describe("the house card, against the real corpus", () => {
 describe("the education card, against the real corpus", () => {
   const projected = 92547.67;
   const target = 50000;
+  const gap = 42547.67;
 
   test("prints its projected figure at full precision, never the coarse form", () => {
     renderPanel();
@@ -161,13 +172,22 @@ describe("the education card, against the real corpus", () => {
     // form, not a prefix of it, so this is where a truncation-based guard
     // would have missed the defect entirely.
     expectNoCoarseForm(text, projected);
+    // The gap here is $42,547.67, whose coarse form rounds UP to $42,548 --
+    // the same additive failure mode as the projected-figure check above,
+    // and the one `gap` had no guard against at all before this line: a
+    // coarse figure appended to the label rather than substituted for the
+    // precise one left `toContain(formatCurrency(gap))` satisfied and every
+    // test in this file green.
+    expectNoCoarseForm(text, gap);
   });
 
   test("its aria-label carries the same full-precision figure, and never the rounded-up coarse form", () => {
     renderPanel();
     const label = cardLabel("education");
     expect(label).toContain(formatCurrency(projected));
+    expect(label).toContain(formatCurrency(gap));
     expectNoCoarseForm(label, projected);
+    expectNoCoarseForm(label, gap);
   });
 
   test("raising the rate raises the projected figure, and the history stays the same page", () => {

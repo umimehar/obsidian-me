@@ -424,6 +424,42 @@ describe("the goals panel and the room runway table are mounted below the chart"
   });
 
   /**
+   * `GoalsPanel` is handed `inputs.fhsaCloseYear` at the call site
+   * (`ProjectionsView.tsx`), and nothing before this test pinned it.
+   * `fhsaCloseYear={"2028"}` was 1158 pass / 0 fail without this: 2028 is
+   * also the house goal's own target year, so `engine.ts`'s
+   * `allocateByAccount` zeroes the FHSA account's value on that exact row
+   * (`if (a.group === "FHSA" && row.year === fhsaCloseYear) value = 0;`),
+   * and the house card would render $0.00 projected, "$40,000.00 short of
+   * target" and the room-blocked line under a fully green suite. The real
+   * corpus's own close year, 2039, is used here rather than an empty string
+   * or a far-future year -- both are genuinely inert against every shipped
+   * goal, since `""` never equals a row's `year` and 2039 already sits well
+   * past the house goal's 2028 target -- so only the true value, read
+   * straight from the engine, can catch the close year landing on a goal's
+   * own target year.
+   */
+  test("the goals panel renders the engine's own FHSA close year, not a value that happens to leave the suite green", () => {
+    renderView();
+    const engineInputs = projectionInputs(analytics, { returnRate: 0.06 });
+    const rows6 = projectYears(engineInputs);
+    const houseGoal = GOALS.find((g) => g.id === "house");
+    if (houseGoal === undefined) throw new Error("expected the house goal");
+    const verdict = evaluateGoal(
+      houseGoal,
+      analytics,
+      rows6,
+      0.06,
+      engineInputs.fhsaCloseYear,
+    );
+    if (verdict.projected === null) throw new Error("expected a projectable house goal");
+    expect(screen.getByTestId("goal-house").textContent).toContain(
+      formatCurrency(verdict.projected),
+    );
+    expect(screen.getByTestId("goal-house").textContent).toMatch(/ahead of target/i);
+  });
+
+  /**
    * `buildRunway`'s own doc comment (`runway.ts`) states that no row it
    * produces moves with the return rate, contribution-driven or statutory --
    * `roomRemaining` (`engine.ts:320-324`) is computed from
