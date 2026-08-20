@@ -46,6 +46,22 @@ function chart(): SVGSVGElement {
   return node;
 }
 
+/**
+ * A tooltip row's value, read the way the DOM actually carries it: label and
+ * value are sibling spans in a flex row, not one text node, so their
+ * `textContent` concatenates with no space between them
+ * (`"Market value$0.00"`). Reading the value span directly, keyed off the
+ * label span next to it, is the precise DOM-structure-aware check that
+ * replaces the old "contains the phrase with a space" assumption, which the
+ * row layout broke on purpose.
+ */
+function rowValue(tooltip: Element, rowLabel: string): string | null {
+  const labelSpan = [...tooltip.querySelectorAll("span")].find(
+    (span) => span.textContent === rowLabel,
+  );
+  return labelSpan?.nextElementSibling?.textContent ?? null;
+}
+
 function label(): string {
   return chart().getAttribute("aria-label") ?? "";
 }
@@ -77,11 +93,12 @@ describe("ValueOverTime cursor", () => {
     render(<ValueOverTime series={loadAnalytics().series} />);
     fireEvent.keyDown(chart(), { key: "Home" });
     const tooltip = document.querySelector("[data-chart-tooltip]");
-    expect(tooltip?.textContent).toContain("Jun 2023");
+    if (tooltip === null) throw new Error("expected a tooltip on the focused point");
+    expect(tooltip.textContent).toContain("Jun 2023");
     // Two accounts open and unfunded. A stated zero, so it prints as one.
-    expect(tooltip?.textContent).toContain("Market value $0.00");
-    expect(tooltip?.textContent).toContain("2 of 11 accounts reported this month");
-    expect(tooltip?.textContent).not.toMatch(/no statement/i);
+    expect(rowValue(tooltip, "Market value")).toBe("$0.00");
+    expect(tooltip.textContent).toContain("2 of 11 accounts reported this month");
+    expect(tooltip.textContent).not.toMatch(/no statement/i);
   });
 
   test("arrows move one point at a time from where the cursor is", () => {
@@ -124,18 +141,36 @@ describe("ValueOverTime cursor", () => {
     expect(region.textContent).toContain("11 of 11 accounts reported this month");
   });
 
-  test("the spoken copy and the printed copy are the same words", () => {
+  test("the spoken copy and the printed copy state the same figures for the focused point", () => {
+    // Not a flattened-textContent comparison any more: the row column's
+    // label and value are sibling spans with no space between them in the
+    // DOM (see `rowValue`'s comment), so "the same words" is no longer a
+    // literal substring relationship between the two copies. What still has
+    // to hold, and what this pins directly against the real Jun 2023 point,
+    // is that neither copy states a figure or phrase the other omits.
     render(<ValueOverTime series={loadAnalytics().series} />);
     fireEvent.keyDown(chart(), { key: "Home" });
     const spoken = screen.getByRole("status").textContent ?? "";
-    const printed = document.querySelector("[data-chart-tooltip]")?.textContent ?? "";
-    expect(printed).not.toBe("");
-    // The tooltip renders one div per line, so its textContent is the lines
-    // concatenated. Every line spoken must appear in it, and vice versa.
-    for (const line of spoken.replace(/\.$/, "").split(". ")) {
-      expect(printed).toContain(line);
-    }
+    const tooltip = document.querySelector("[data-chart-tooltip]");
+    if (tooltip === null) throw new Error("expected a tooltip on the focused point");
+    expect(spoken).not.toBe("");
+    expect(tooltip.textContent).not.toBe("");
+
+    expect(spoken).toContain("Jun 2023");
+    expect(tooltip.textContent).toContain("Jun 2023");
+
+    // Two accounts open and unfunded -- the real zero for this point.
     expect(spoken).toContain("Market value $0.00");
+    expect(rowValue(tooltip, "Market value")).toBe("$0.00");
+    expect(spoken).toContain("Book cost $0.00");
+    expect(rowValue(tooltip, "Book cost")).toBe("$0.00");
+
+    expect(spoken).toContain("2 of 11 accounts reported this month");
+    expect(tooltip.textContent).toContain("2 of 11 accounts reported this month");
+
+    const caveat = "Book cost is approximate for USD holdings and not a filing figure";
+    expect(spoken).toContain(caveat);
+    expect(tooltip.textContent).toContain(caveat);
   });
 
   test("the summary keeps its base sentence, so the chart is still named when focused", () => {

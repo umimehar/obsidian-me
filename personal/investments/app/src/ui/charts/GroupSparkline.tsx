@@ -3,7 +3,13 @@ import { useMemo } from "react";
 import { type PortfolioPoint, buildPortfolioSeries } from "../../analytics/portfolioSeries";
 import type { AccountSeries } from "../../analytics/types";
 import { formatCurrency } from "../format";
-import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
+import {
+  ChartTooltip,
+  CursorAnnouncement,
+  tooltipAnchorStyle,
+  tooltipAnnouncement,
+  tooltipContent,
+} from "./Tooltip";
 import { type PlotPoint, areaPath, formatPeriodLabel, linePath } from "./plot";
 import { useRevealMotion } from "./reveal";
 import { type ChartPoint, buildScales, periodToDate } from "./scales";
@@ -151,9 +157,9 @@ export function GroupSparkline({ label, series, xDomain }: GroupSparklineProps) 
     `${formatPeriodLabel(last.period)}, ending at ${formatCurrency(last.marketValue)}.`;
   // One call, three consumers: the accessible name, the spoken announcement
   // and the visible tooltip. See the same note in ValueOverTime.
-  const lines =
-    cursor.period === null ? [] : tooltipLines(cursor.period, cursor.point, countedAccounts);
-  const readout = lines.length === 0 ? "" : ` ${lines.join(". ")}.`;
+  const content =
+    cursor.period === null ? null : tooltipContent(cursor.period, cursor.point, countedAccounts);
+  const readout = content === null ? "" : ` ${tooltipAnnouncement(content)}`;
 
   return (
     <div style={{ position: "relative" }}>
@@ -197,10 +203,10 @@ export function GroupSparkline({ label, series, xDomain }: GroupSparklineProps) 
         </g>
       </svg>
       {points.length === 1 ? <SingleStatementNote period={last.period} /> : null}
-      <CursorAnnouncement lines={lines} />
-      {lines.length === 0 ? null : (
+      <CursorAnnouncement content={content} />
+      {content === null ? null : (
         <div style={{ ...tooltipAnchorStyle(PAD + (cursor.x ?? 0), WIDTH), top: "100%" }}>
-          <ChartTooltip lines={lines} />
+          <ChartTooltip content={content} />
         </div>
       )}
     </div>

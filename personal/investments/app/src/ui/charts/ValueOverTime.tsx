@@ -7,7 +7,13 @@ import {
 } from "../../analytics/portfolioSeries";
 import type { AccountSeries } from "../../analytics/types";
 import { formatCurrency } from "../format";
-import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle, tooltipLines } from "./Tooltip";
+import {
+  ChartTooltip,
+  CursorAnnouncement,
+  tooltipAnchorStyle,
+  tooltipAnnouncement,
+  tooltipContent,
+} from "./Tooltip";
 import { type PlotPoint, areaPath, formatAxisCurrency, formatPeriodLabel, linePath } from "./plot";
 import { useRevealMotion } from "./reveal";
 import { type ChartPoint, type ChartScales, buildScales, periodToDate } from "./scales";
@@ -94,9 +100,9 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
   // One call, three consumers: the accessible name, the spoken announcement
   // and the visible tooltip. Formatting the figures a second time anywhere
   // is how an announced figure drifts from a printed one.
-  const lines =
-    cursor.period === null ? [] : tooltipLines(cursor.period, cursor.point, countedAccounts);
-  const readout = lines.length === 0 ? "" : ` ${lines.join(". ")}.`;
+  const content =
+    cursor.period === null ? null : tooltipContent(cursor.period, cursor.point, countedAccounts);
+  const readout = content === null ? "" : ` ${tooltipAnnouncement(content)}`;
 
   return (
     <div style={{ position: "relative" }}>
@@ -160,10 +166,10 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
           </text>
         </g>
       </svg>
-      <CursorAnnouncement lines={lines} />
-      {lines.length === 0 ? null : (
+      <CursorAnnouncement content={content} />
+      {content === null ? null : (
         <div style={{ ...tooltipAnchorStyle(MARGIN.left + (cursor.x ?? 0), WIDTH), top: 0 }}>
-          <ChartTooltip lines={lines} />
+          <ChartTooltip content={content} />
         </div>
       )}
     </div>
