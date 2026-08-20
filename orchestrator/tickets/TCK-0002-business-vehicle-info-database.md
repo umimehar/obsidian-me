@@ -78,3 +78,17 @@ The agent review did not happen, so these are unverified by a second pair of eye
 1. The two high severity findings both rest on reading page 7 of `docs/lease/lease-agreement-detailed.pdf` as a binding declaration of business use. That reading drives the recommendation to change the insurance rating, which is a consequential call.
 2. Whether the vault's masking policy is satisfied by masking the insurance policy number to `****XTW6` while committing the source PDFs unmasked.
 3. Whether the tax positions on the compliance page are framed correctly as questions for an accountant rather than as advice.
+- 2026-08-19 20:20 — The agent review arrived after the ticket had already moved to Review. Verdict FAIL on four defects. It confirmed findings f1 through f6 and f8 hold against the sources, including both high severity ones, and independently read Platinum section 3.4 and lease page 7.
+- 2026-08-19 20:25 — Defect 1, the worst, was mine and real. I recorded the 2025-26 term as monthly preauthorized debit at $700.84. The certificate as issued says method of payment Invoice, $8,410 payable in full, due 1 November 2025; the $700.84 appears only in the renewal's billing table, so the term converted partway through. Finding f7 asserted the reverse of its own sources. Verified against the 2025 policy text before changing anything, then corrected the policy entry and rewrote f7.
+- 2026-08-19 20:35 — Defect 4 confirmed by reading certificate page 1 as an image rather than trusting the text layer. The Lienholders box, headed to whom loss may be jointly payable, is genuinely blank on both terms. MBFS appears only in the Lessor field and in the liability slips' named insured block, while section 12 of the lease requires it as loss payee for the physical damage coverages. Added as finding f9 at medium, framed as something to confirm with Desjardins rather than as an established default.
+- 2026-08-19 20:40 — Defects 2 and 3 fixed: the disputed warranty date no longer appears as settled fact in `tracking.md` twice or in the overview's dates table, and the duplicated business use action is removed.
+- 2026-08-19 20:45 — Minors fixed: the overview heading counted four pages and listed five, `current-year` broke the hyphen rule, the dates table was unsorted, and the log said 72 tests. `windowStatus` now takes its annual pace as a parameter instead of hardcoding 20,000 km behind a comment claiming otherwise, with tests for both boundaries and for which limit bites first. The leak test now strips allowlisted identifiers on word boundaries rather than by substring, and also catches grouped card formats.
+- 2026-08-19 20:50 — The leak test was mutation checked: injecting a card number and a long account number into a rendered field reddens it, and the first attempt through an unrendered field proved nothing, which is why it was repeated through one that reaches a page.
+- 2026-08-19 20:55 — `bun run check` green: 88 tests across 6 files, biome and `tsc --noEmit` clean.
+
+## Still open for the human reviewer
+
+Two of the reviewer's points are not defects I could close alone:
+
+1. The `expiresBy` pace now defaults to the lease's 18,000 km a year. That is the contracted pace, not the observed one, which is running near 16,000. Worth a second opinion on which belongs in a warranty projection.
+2. The O. Reg. 383/24 explanation for the $253 has no source in `docs/`. It came from the owner's brief, not from a document in this vault. It reads as established fact on the insurance page and should either be sourced or attributed.
