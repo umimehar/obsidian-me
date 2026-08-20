@@ -48,8 +48,13 @@ export function indexPage(data: VehicleData): string {
     ["2026-09-30", "Last day to bind a replacement policy without a gap"],
     ["2026-10-01", "Insurance renewal takes effect, first debit of $804.75"],
     progress ? [progress.maturityDate, "Lease matures"] : null,
-    ["2028-09-29", "Manufacturer warranty expires"],
-  ].filter((d): d is string[] => d !== null);
+    [
+      "2028-09-29",
+      "Manufacturer warranty expires on the dealer invoice's date. The pricing worksheet implies 29 September 2029, see the findings above",
+    ],
+  ]
+    .filter((d): d is string[] => d !== null)
+    .sort((a, b) => (a[0] ?? "").localeCompare(b[0] ?? ""));
 
   const body = `      <div class="hero-row">
 ${hero(
@@ -87,7 +92,7 @@ ${table(
 )}
 
       <hr class="hr mt-rule" />
-${section("The four pages behind this one")}
+${section("The five pages behind this one")}
       <div class="card-grid">
         <div class="card">
           <p class="card-title"><a href="lease.html">Lease</a></p>

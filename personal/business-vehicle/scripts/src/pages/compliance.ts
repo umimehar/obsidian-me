@@ -75,7 +75,10 @@ ${table(
     [plainDate("2026-09-01"), "Last debit of the expiring insurance term, $700.84."],
     [plainDate("2026-09-30"), "Last day to bind a replacement policy without a gap."],
     [plainDate("2026-10-01"), "Renewal takes effect. First debit of $804.75."],
-    [plainDate("2028-09-29"), "Manufacturer warranty expiry shown on the dealer invoice."],
+    [
+      plainDate("2028-09-29"),
+      "Manufacturer warranty expires on the dealer invoice date. The pricing worksheet implies a year later, see the overview.",
+    ],
   ],
 )}`;
 

@@ -85,6 +85,42 @@ describe("windowStatus", () => {
     ).toBe(false);
   });
 
+  test("treats the odometer limit as reached at exactly the limit, matching the date boundary", () => {
+    // Both limits are inclusive of the last usable value and exclusive beyond it. At exactly
+    // the expiry km the window is spent, the same way it is spent the day after the expiry date.
+    const at = windowStatus({ expiryDate: "2030-01-01", expiryKm: 90000 }, "2026-08-19", 90000);
+    expect(at.active).toBe(false);
+    expect(at.kmRemaining).toBe(0);
+    const just = windowStatus({ expiryDate: "2030-01-01", expiryKm: 90000 }, "2026-08-19", 89999);
+    expect(just.active).toBe(true);
+  });
+
+  test("is active on the expiry date itself and spent the day after", () => {
+    const on = windowStatus({ expiryDate: "2028-09-30", expiryKm: null }, "2028-09-30", 100);
+    expect(on.active).toBe(true);
+    const after = windowStatus({ expiryDate: "2028-09-30", expiryKm: null }, "2028-10-01", 100);
+    expect(after.active).toBe(false);
+  });
+
+  test("uses the pace it was given to decide which limit bites first", () => {
+    // 30,000 km left with 12 months to run. At 18,000 km a year the date arrives first.
+    const slow = windowStatus(
+      { expiryDate: "2027-08-19", expiryKm: 50000 },
+      "2026-08-19",
+      20000,
+      18000,
+    );
+    expect(slow.expiresBy).toBe("date");
+    // Same window at 40,000 km a year and the odometer arrives first.
+    const fast = windowStatus(
+      { expiryDate: "2027-08-19", expiryKm: 50000 },
+      "2026-08-19",
+      20000,
+      40000,
+    );
+    expect(fast.expiresBy).toBe("kilometres");
+  });
+
   test("handles a window with no odometer limit", () => {
     const s = windowStatus({ expiryDate: "2030-01-01", expiryKm: null }, "2026-08-19", 500000);
     expect(s.active).toBe(true);

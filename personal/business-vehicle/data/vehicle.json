@@ -145,7 +145,6 @@
             "Umar Farooq Aslam",
             "15248132 Canada Inc"
           ],
-          "lossPayee": "Mercedes-Benz Financial Services, 500-2680 Matheson Blvd E, Mississauga ON L4W 0A5",
           "totalPremium": 8410,
           "paymentFrequency": "In full on invoice, as issued",
           "paymentAmount": 8410.0,
@@ -303,7 +302,10 @@
             "chargeableClaims": []
           },
           "invoiceDueDate": "2025-11-01",
-          "convertedDuringTerm": "The renewal's billing table shows this term running at $700.84 monthly by August 2026, so it moved to preauthorized debit partway through. The certificate as issued says Invoice."
+          "convertedDuringTerm": "The renewal's billing table shows this term running at $700.84 monthly by August 2026, so it moved to preauthorized debit partway through. The certificate as issued says Invoice.",
+          "lessorOnCertificate": "Mercedes-Benz Financial Services, 500-2680 Matheson Boulevard East, Mississauga ON L4W 0A5",
+          "lienholderBox": "Blank. Confirmed visually on page 1 of the certificate, not only in the text layer.",
+          "mbfsNamedOn": "The Lessor field of the certificate, and the named insured block of the liability slips."
         },
         {
           "term": "2026-10-01 to 2027-10-01",
@@ -318,7 +320,6 @@
             "Umar Farooq Aslam",
             "15248132 Canada Inc"
           ],
-          "lossPayee": "Mercedes-Benz Financial Services, 500-2680 Matheson Blvd E, Mississauga ON L4W 0A5",
           "totalPremium": 9657,
           "paymentFrequency": "Monthly",
           "paymentAmount": 804.75,
@@ -544,7 +545,10 @@
               "serious": 0
             },
             "chargeableClaims": []
-          }
+          },
+          "lessorOnCertificate": "Mercedes-Benz Financial Services, 500-2680 Matheson Boulevard East, Mississauga ON L4W 0A5",
+          "lienholderBox": "Blank. Confirmed visually on page 1 of the certificate, not only in the text layer.",
+          "mbfsNamedOn": "The Lessor field of the certificate, and the named insured block of the liability slips."
         }
       ],
       "service": [
@@ -865,7 +869,9 @@
           "expiryDate": "2029-09-29",
           "expiryKm": 80000,
           "detail": "The lease pricing worksheet states MB 4 years or 80,000 km. The dealer invoice of 12 August 2026 prints a warranty expiry of 29 September 2028, which is three years. Confirm which governs before relying on either.",
-          "discrepancy": true
+          "discrepancy": true,
+          "expiryDateDisputed": true,
+          "expiryDateAlternative": "2028-09-29"
         }
       ],
       "lease": {
@@ -1269,7 +1275,7 @@
       "Underground parking"
     ],
     "coverageToMatch": {
-      "note": "The 5 Year New Vehicle Protection runs 60 months from delivery and replaces the car with a new current-year equivalent on a total loss. Most brokers quote OPCF 43R instead, a limited depreciation waiver usually capped at 24 to 30 months. A cheaper quote carrying plain 43R is a downgrade, not a saving.",
+      "note": "The 5 Year New Vehicle Protection runs 60 months from delivery and replaces the car with a new equivalent of the current model year on a total loss. Most brokers quote OPCF 43R instead, a limited depreciation waiver usually capped at 24 to 30 months. A cheaper quote carrying plain 43R is a downgrade, not a saving.",
       "musts": [
         "$2M third party liability",
         "DCPD at $0 deductible, or a priced comparison at $500 and $1,000",
@@ -1477,14 +1483,6 @@
       "why": "Longest lead time of anything on this list, and it is worth years of rated experience."
     },
     {
-      "action": "Confirm the business use percentage and correct the rating if it is not genuinely personal",
-      "owner": "Umar",
-      "due": null,
-      "status": "todo",
-      "priority": 2,
-      "why": "Misrating voids claims."
-    },
-    {
       "action": "Follow up isure, KASE and Benson Kearley",
       "owner": "Umar",
       "due": null,
@@ -1595,6 +1593,19 @@
       "sources": [
         "docs/lease/lease-pricing-worksheet.pdf",
         "docs/service/invoice-1137630-2026-08-12-page1.png"
+      ]
+    },
+    {
+      "id": "f9",
+      "severity": "medium",
+      "title": "No certificate names MBFS as loss payee, which the lease requires",
+      "detail": "Section 12 of the lease requires MBFS listed as Additional Named Insured and Loss Payee for comprehensive, fire, theft and collision, and as Additional Named Insured for liability. On both certificates the Lienholders box, headed to whom loss may be jointly payable, is blank. MBFS appears in the Lessor field and in the named insured block of the liability slips. OPCF 5 is on the policy, which extends coverage to the specified lessee.",
+      "why": "Whether the Lessor field plus OPCF 5 satisfies a loss payee requirement is an insurer practice question, not something the certificate settles. If it does not, a physical damage cheque could be issued without MBFS on it, and section 12 makes a failure to maintain the required insurance an immediate default under the lease.",
+      "action": "Ask Desjardins to confirm in writing that MBFS is recorded as loss payee for the physical damage coverages, and have it added if it is not. Put the same requirement to every broker as a condition of any replacement quote.",
+      "sources": [
+        "docs/insurance/policy-2026-10-01-renewal.pdf, certificate page 1",
+        "docs/insurance/policy-2025-10-01-current.pdf, certificate page 1",
+        "docs/lease/lease-agreement-detailed.pdf, section 12"
       ]
     }
   ]

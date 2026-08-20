@@ -70,9 +70,16 @@ describe("every rendered page", () => {
       // file rather than hardcoded, so a new record cannot silently widen the allowance.
       // Anything else with seven or more consecutive digits is an account number that
       // escaped masking.
+      // Strip allowlisted identifiers only where they stand as a whole number, so a longer
+      // account number that merely CONTAINS an allowlisted run is still caught.
       let stripped = html.replace(/&#\d+;/g, "");
-      for (const id of publicIdentifiers) stripped = stripped.split(id).join("");
+      for (const id of publicIdentifiers) {
+        stripped = stripped.replace(new RegExp(`\\b${id}\\b`, "g"), "");
+      }
       expect(stripped).not.toMatch(/\b\d{7,}\b/);
+      // Card and account numbers are as often written in groups as in one run.
+      expect(stripped).not.toMatch(/\b(?:\d{4}[ -]){3}\d{4}\b/);
+      expect(stripped).not.toMatch(/\b\d{5}[ -]\d{3}[ -]\d{3}\b/);
     });
 
     test(`${page.file} right-aligns only columns that hold numbers`, () => {

@@ -19,7 +19,7 @@ Deadlines, readings and running costs. The detail lives in [[README|the pages]].
 | 2026-09-01 | Last debit of the expiring insurance term, $700.84 | pending |
 | 2026-09-30 | Last day to bind a replacement policy without a gap | open |
 | 2026-10-01 | Renewal takes effect, first debit $804.75 | pending |
-| 2028-09-29 | Manufacturer warranty expires | future |
+| 2028-09-29 | Manufacturer warranty expires, per the dealer invoice. The pricing worksheet implies 2029-09-29 | disputed |
 
 ## Odometer
 
@@ -46,7 +46,7 @@ Front tyres read 4 mm on 12 August 2026, the shallowest measurement on the car. 
 
 ## Watch list
 
-The steering clock spring makes a faint noise on full lock. Road tested 12 August 2026, no repair, customer monitoring. It sits inside the warranty window until 29 September 2028, so raise it again at the next service rather than after.
+The steering clock spring makes a faint noise on full lock. Road tested 12 August 2026, no repair, customer monitoring. The warranty end date is disputed between two documents, 29 September 2028 on the dealer invoice against 29 September 2029 implied by the pricing worksheet, so raise this at the next service rather than banking on the later date.
 
 Coolant read slightly low on the same visit. Topped up, pressure test found no leak. Recheck the level.
 

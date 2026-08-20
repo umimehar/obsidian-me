@@ -76,10 +76,13 @@ export function planDrawdown(plan: PlanShape, services: readonly ServiceEvent[])
   };
 }
 
+/** @param annualKm the pace to judge which limit bites first. Defaults to the lease's own
+    18,000 km a year, which is the only pace this vehicle is contracted to. */
 export function windowStatus(
   window: CoverageWindow,
   asOf: string,
   odometer: number | null,
+  annualKm = 18000,
 ): WindowStatus {
   const dateOk = window.expiryDate === null || asOf <= window.expiryDate;
   const kmRemaining =
@@ -93,9 +96,9 @@ export function windowStatus(
     if (kmRemaining === null || monthsRemaining === null) {
       expiresBy = window.expiryDate === null ? "kilometres" : "date";
     } else {
-      // Whichever limit the current pace reaches first. Compared on the km the remaining
-      // months would consume at the plan's own allowance, not on raw units.
-      expiresBy = kmRemaining <= (monthsRemaining / 12) * 20000 ? "kilometres" : "date";
+      // Whichever limit the given pace reaches first: the kilometres left, against the
+      // kilometres the remaining months would consume at that pace.
+      expiresBy = kmRemaining <= (monthsRemaining / 12) * annualKm ? "kilometres" : "date";
     }
   }
 
