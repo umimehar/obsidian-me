@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { App } from "./App";
+import { formatCurrency } from "./format";
+import { coarseForm, expectNoCoarseForm } from "./testSupport/coarseForm";
 
 function roomCard(group: string) {
   const node = document.querySelector(`[data-room-line="${group}"]`);
@@ -147,5 +149,73 @@ describe("App", () => {
 
     fireEvent.click(screen.getByRole("radio", { name: /registration/i }));
     expect(total()).toBe("$241,739.67");
+  });
+});
+
+/**
+ * The headline's book value and gain, from the real committed corpus:
+ * market $241,739.67, book $223,675.08, gain +$18,064.59 -- the same
+ * figures pinned in `groupGain.test.ts`'s "the registration lens's
+ * per-group gains sum to the portfolio-level gap" test, now the third leg
+ * of that same cross-check (portfolio-level, group-summed, and rendered
+ * DOM all agreeing) rather than a second test asserting the same sum a
+ * different way.
+ *
+ * Scoped with `headlineBlock()` rather than a page-wide query: `Overview`
+ * (the default tab) renders its own `GroupGainLine` per card using the same
+ * `data-group-book-value`/`data-group-gain` hooks, so an unscoped query
+ * would see up to eight of them at once.
+ */
+function headlineBlock(): HTMLElement {
+  const total = document.querySelector("[data-portfolio-total]");
+  const block = total?.parentElement;
+  if (!(block instanceof HTMLElement)) throw new Error("expected the headline block to render");
+  return block;
+}
+
+describe("the headline book value and gain", () => {
+  test("prints book value $223,675.08 and gain +$18,064.59, from the same GroupGainLine the cards use", () => {
+    render(<App />);
+    const block = within(headlineBlock());
+    expect(block.getByText(/Book value \$223,675\.08/)).toBeDefined();
+    const gain = block.getByText("+$18,064.59");
+    expect(gain).toBeDefined();
+    expect(gain.getAttribute("data-accent-color")).toBe("jade");
+    // The same wording the group cards render, not a second phrase for the
+    // same concept -- and never "profit": nothing has been sold.
+    expect(block.getByText(/An estimate: book cost for USD holdings/)).toBeDefined();
+  });
+
+  test("no figure here announces coarser than what it prints", () => {
+    render(<App />);
+    const text = headlineBlock().textContent ?? "";
+    expect(text).toContain(formatCurrency(223675.08));
+    expect(text).toContain(formatCurrency(18064.59));
+    expectNoCoarseForm(text, 223675.08);
+    // 18,064.59 coarsens to 18,065 -- different trailing digits than the
+    // precise figure, not a truncation, so a guard keyed on "18,064" would
+    // never fire against it. Asserted explicitly so this test cannot pass
+    // by accident against the wrong coarse form.
+    expect(coarseForm(18064.59)).toBe("$18,065");
+    expectNoCoarseForm(text, 18064.59);
+  });
+
+  test("stays visible, at the same figures, on every tab", () => {
+    // The whole point of hoisting this block above the tabs: it must not
+    // regress into disappearing or drifting when another panel is active.
+    render(<App />);
+    for (const label of ["Growth", "Wrappers", "Tax", "Projections", "Reconciliation"]) {
+      fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${label}\\b`) }), {
+        button: 0,
+      });
+      const block = within(headlineBlock());
+      expect(block.getByText(/Book value \$223,675\.08/)).toBeDefined();
+      expect(block.getByText("+$18,064.59")).toBeDefined();
+    }
+  });
+
+  test("introduces no heading, per the headline-figures-are-not-a-section-name rule", () => {
+    render(<App />);
+    expect(within(headlineBlock()).queryByRole("heading")).toBeNull();
   });
 });

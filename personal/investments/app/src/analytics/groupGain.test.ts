@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { AccountKind, ManagementStyle } from "../store/mask";
 import type { Purpose } from "../store/registry";
-import { loadAnalytics } from "../ui/data";
+import { grandTotal, loadAnalytics } from "../ui/data";
 import { latestGroupGain } from "./groupGain";
 import { buildPortfolioSeries, seriesForAccounts } from "./portfolioSeries";
 import type { AccountSeries, MonthPoint } from "./types";
@@ -153,23 +153,44 @@ describe("latestGroupGain against the real committed analytics.json", () => {
   });
 
   test("the registration lens's per-group gains sum to the portfolio-level gap", () => {
-    // Free cross-check: 18,064.59 = 241,739.67 (portfolio market) minus
-    // 223,675.08 (portfolio book cost). If any one group's gain were taken
-    // from a mixed basis, this sum would drift from the portfolio gap even
-    // though each group's own figure might still look plausible in
-    // isolation.
+    // Three legs of the same cross-check, not three separate assertions of
+    // convenience: (1) the portfolio-level figure straight from
+    // `latestGroupGain(analytics.series)` -- the call `App.tsx`'s headline
+    // actually makes; (2) the same figure re-derived from
+    // `buildPortfolioSeries` directly, one layer lower; (3) the sum of
+    // every registration-lens group's own gain. If any one group's gain
+    // were taken from a mixed basis, leg 3 would drift from legs 1 and 2
+    // even though that one group's own figure might still look plausible
+    // in isolation.
+    const portfolioFigures = latestGroupGain(analytics.series);
+    if (portfolioFigures === null) throw new Error("expected a portfolio-level gain");
+
     const portfolioPoints = buildPortfolioSeries(analytics.series);
     const portfolioLast = portfolioPoints[portfolioPoints.length - 1];
     if (portfolioLast === undefined) throw new Error("expected a portfolio-level point");
     const portfolioGap = portfolioLast.marketValue - portfolioLast.bookCost;
+    expect(portfolioFigures.gain).toBeCloseTo(portfolioGap, 2);
 
     let summed = 0;
     for (const group of analytics.rollups.registration) {
       const result = groupGainFor(group.accounts.map((a) => a.maskedId));
       if (result !== null) summed += result.gain;
     }
-    expect(summed).toBeCloseTo(portfolioGap, 2);
+    expect(summed).toBeCloseTo(portfolioFigures.gain, 2);
     expect(summed).toBeCloseTo(18064.59, 2);
+
+    // Today's data has zero basis drift (every counted account's latest
+    // statement is 2026-06), so the series-basis market value the headline
+    // now renders from and `grandTotal` (each account's own latest stated
+    // value, a different basis -- see `latestGroupGain`'s docstring) still
+    // agree to the cent. This is the proof that switching App.tsx's
+    // headline total onto `latestGroupGain` changed nothing observable
+    // today; it is not a substitute for sourcing the total, book value and
+    // gain from one call, which is what actually removes the risk of them
+    // silently diverging once an account's statement lags.
+    expect(portfolioFigures.marketValue).toBeCloseTo(grandTotal(analytics), 2);
+    expect(portfolioFigures.marketValue).toBeCloseTo(241739.67, 2);
+    expect(portfolioFigures.bookCost).toBeCloseTo(223675.08, 2);
   });
 
   test("a real per-account loss exists in the corpus (account lens), not only fixture-fabricated", () => {

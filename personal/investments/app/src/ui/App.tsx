@@ -2,7 +2,8 @@ import { Button, Flex, Heading, Text, Theme } from "@radix-ui/themes";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
-import { Overview } from "./Overview";
+import { latestGroupGain } from "../analytics/groupGain";
+import { GroupGainLine, Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
 import { Tabs } from "./Tabs";
 import { CashflowChart } from "./charts/CashflowChart";
@@ -76,7 +77,25 @@ function Dashboard() {
   const years = yearsCovered(analytics);
   const latestYear = years[years.length - 1] ?? new Date().getUTCFullYear();
   const [year, setYear] = useState(latestYear);
-  const total = grandTotal(analytics);
+  /**
+   * The headline total, its book value and its gain all read from one
+   * `latestGroupGain(analytics.series)` call -- the same series-basis
+   * `PortfolioPoint` the group cards use, not `grandTotal` (which sums each
+   * account's own latest stated market value, a different basis: see
+   * `latestGroupGain`'s own docstring). The two agree today, to the cent,
+   * because every counted account's latest statement is the same period
+   * (`groupGain.test.ts` pins that agreement). They stop agreeing the day
+   * one account's statement lags another's -- `grandTotal` would still
+   * count that account's stale figure, the series point would not until it
+   * reports again -- and a total sourced from one while its own gain is
+   * sourced from the other would then be subtracting numbers that were
+   * never on the same basis. Falling back to `grandTotal` only covers the
+   * pathological case `latestGroupGain` returns null for: a corpus with no
+   * period at all carrying both a market value and a book cost, which the
+   * real committed data never is.
+   */
+  const portfolioGain = latestGroupGain(analytics.series);
+  const total = portfolioGain?.marketValue ?? grandTotal(analytics);
   const period = latestPeriod(analytics);
 
   const panels: Record<TabId, ReactNode> = {
@@ -114,6 +133,11 @@ function Dashboard() {
         <Text size="8" weight="bold" data-portfolio-total="">
           {formatCurrency(total)}
         </Text>
+        {/* The same `GroupGainLine` every group card renders, not a second
+            copy: the headline book value/gain and a card's cannot drift
+            apart in format, sign convention or colour if there is only one
+            component printing either. */}
+        <GroupGainLine figures={portfolioGain} />
       </Flex>
       <ValueOverTime series={analytics.series} />
       <Tabs panels={panels} />
