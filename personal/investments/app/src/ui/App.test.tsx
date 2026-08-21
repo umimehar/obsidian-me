@@ -215,7 +215,17 @@ describe("the headline book value and gain", () => {
   });
 
   test("introduces no heading, per the headline-figures-are-not-a-section-name rule", () => {
+    // `queryByRole("heading")` over the whole block was wrong: the block's own
+    // `<h2>` label ("Portfolio total as of ...") is legitimately inside it, so
+    // that query always found a heading and could never pass -- it also hung
+    // the whole suite at the 5000ms per-test budget. A direct, scoped
+    // `querySelectorAll` is both bounded and more literal about the intent:
+    // exactly one heading in the block, and it is the existing section label,
+    // not one contributed by the new book value/gain figures.
     render(<App />);
-    expect(within(headlineBlock()).queryByRole("heading")).toBeNull();
+    const headings = headlineBlock().querySelectorAll("h1, h2, h3, h4, h5, h6");
+    expect(headings.length).toBe(1);
+    expect(headings[0]?.tagName).toBe("H2");
+    expect(headings[0]?.textContent).toMatch(/^Portfolio total/);
   });
 });
