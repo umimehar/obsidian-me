@@ -10,35 +10,45 @@ personal: investments
 
 # Investments
 
-> **Being rebuilt on PDF statements (started 2026-08-05).** The page described below is built from the transaction **CSVs** and states everything at cost, because those exports carry no market price. A replacement reading the monthly **PDF** statements is under construction in `app/`: it recovers market value, book cost, the month-end FX rate, the RRSP first-60-days split, and Wealthsimple's own money-weighted returns.
->
-> Reconciled so far: summing the eleven investment accounts from their June 2026 PDFs gives $241,739.67 against the app's $242,019.61 — a 0.12% gap, explained as one private-markets holding whose valuation was not yet final that month.
->
-> Design: [spec](docs/superpowers/specs/2026-08-04-investments-rebuild-design.md) · [phase 1 plan](docs/superpowers/plans/2026-08-04-investments-ingest.md)
+Personal finance second brain built from Wealthsimple's monthly PDF statements. A bun/TypeScript pipeline reads 220 statements into a masked datastore and an analytics payload, and a local React dashboard renders it.
 
-Personal finance second brain built from Wealthsimple monthly statements. A bun/TypeScript pipeline turns the raw exports into a normalized datastore and renders one filter driven "Ledger" page.
+The CSV pipeline that came before this was deleted on 2026-08-24, along with the single rendered `notes/index.html` page it built. It stated every figure at cost, because the transaction exports carry no market price. Keeping both meant two parsers answering the same question differently, which is the failure this rebuild exists to fix.
 
-## Page
+## What the statements give that the CSVs did not
 
-- [The Ledger](notes/index.html) — a three pillar dashboard (Contributions and Room, Growth, Tax this year) plus a Detail section, scoped by a progressive account and date filter.
-- [[rrsp-room]] — the RRSP deduction limit and available contribution room from the latest notice of assessment, which is what the room bar measures against.
+Market value and market price per holding, with the exchange already resolved. Book cost, stated rather than derived. The month-end conversion rate, printed as `$1 USD = $1.421000 CAD`. Contributions split into first 60 days and rest of year, which is the split an RRSP deduction claim needs. The account type in plain text, rather than guessed from a filename.
 
-The Ledger's fourth section projects thirty years forward: registered contributions, government grants, room remaining, and value at cost, with editable return and indexation rates. It is a scenario, not a forecast, and it says so on the page. The projection knows the statutory endings — the FHSA stops at its $40,000 lifetime cap and closes in 2039, the RESP stops at $50,000, the CESG at $7,200 — so the lines terminate for a stated reason rather than running flat for three decades.
+Summing the eleven investment accounts from their June 2026 statements gives $241,739.67 against the app's $242,019.61. The $279.94 residual is one private-markets holding whose valuation was not final that month, not a missing account.
 
-The statements record what was paid, not what holdings are worth today, so every figure is stated at cost, never at market value. Growth shows net deposits, the true money put in including transfers, not just contributions coded to a registered account. It also shows portfolio at cost, the adjusted cost base plus cash, and the gain beyond deposits, which is portfolio at cost minus net deposits: a cost basis figure, not a market value gain. The Contributions and Room section still uses registered contributions on their own, since CRA contribution room is tracked against coded contributions, not net deposits. Inflow and outflow on the cash flow chart mean external money only, deposits and transfers in versus transfers and withdrawals out, not trading activity. The tax figures are a rough estimate for planning only, not for filing. The page is fully self contained: Chart.js and flatpickr are bundled into the HTML at build time, so it opens offline with no CDN calls.
+## Pages
+
+- [[rrsp-room]], the RRSP deduction limit and available room from the latest notice of assessment, which is what the room bars measure against.
+
+## The dashboard
+
+`app/` is a Vite + React + TypeScript app, run locally, read only. Six hash-synced tabs: overview, growth, wrappers, tax, projections, reconciliation. Charts are hand-built SVG on `d3-scale` rather than a chart library.
+
+Every figure is stated at market value and at book cost, both from the statements. Gain or loss is the difference, and it appears on every group card in all three lenses and on the portfolio headline: $241,739.67 against a book cost of $223,675.08, a gain of $18,064.59.
+
+The projections tab runs thirty years forward over a ported copy of the old engine, with goal cards and a room runway table beside it. It is a scenario, not a forecast, and it says so on the page. The statutory endings are known, so the lines terminate for a stated reason: the FHSA stops at its $40,000 lifetime cap in 2028 and the account closes in 2039, the RESP fills $50,000 in 2044, and the CESG tops out at $6,650 of its $7,200 cap because the beneficiary ages out before the contributions that would claim the rest.
+
+Reconciliation is a tab rather than a build failure. A wrong number that is visible beats a clean dashboard that is off with no way to find out why.
 
 ## Rebuild
 
-Drop new statement CSVs into the source directory, then from `scripts/`:
+Drop new PDF statements into the gitignored source directory, then from `app/`:
 
     bun run build
 
-Regenerates `data/datastore.json`, `data/analytics.json`, and `notes/index.html`. Real account numbers are never stored; accounts show as kind, name, and a short id.
+Regenerates `data/datastore.json`, `data/analytics.json`, and `data/reconciliation.json`. Source PDFs stay outside the vault; only masked derived data is committed, so account numbers and the owner's address never enter git history.
 
 ## Develop
 
     bun install        # once
     bun run check      # biome + tsc + bun test
-    bun test           # tests only
+    bun run contrast   # WCAG AA sweep in Chromium, both themes
+    bun run dev        # the dashboard, locally
 
-The pipeline lives in `scripts/src/` and runs `parse` → `classify` → `mask` → `datastore` → `analytics` → `render`, driven by `build.ts`. `src/client/` is the browser code embedded in the page (filter, charts, sections); it is bundled at build time, not loaded from a CDN. Styling is `personal/_assets/personal.css` (hand maintained, self hosted fonts). The real name list is `scripts/redactions.json` (gitignored; copy from `redactions.example.json`).
+`bun run check` is the per-commit gate and runs in about ten seconds. `bun run contrast` needs a browser (`bunx playwright install chromium` once) and takes about fifteen; it renders the real app, drives every tab, both themes, all three overview lenses and a hover on every chart, then measures what is actually painted. Run it before shipping anything that changes a colour, a size or a weight.
+
+Styling is Radix Themes. The real name list is `app/redactions.json`, gitignored; copy `redactions.example.json` and fill it in.

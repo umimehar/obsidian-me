@@ -27,8 +27,10 @@
  * indistinguishable from a pass.
  *
  * Deliberately outside `bun run check`: it needs Chromium and a dev server and
- * takes about half a minute, where the rest of that gate is milliseconds. Run
- * it before shipping anything that changes a colour, a weight or a size.
+ * takes about fourteen seconds, where the rest of that gate is milliseconds.
+ * Driving the states above cost two of those, measured, not estimated: 11s
+ * before, 13.5s after, for 2876 runs of text swept rising to 3606. Run it
+ * before shipping anything that changes a colour, a weight or a size.
  */
 
 import { fileURLToPath } from "node:url";

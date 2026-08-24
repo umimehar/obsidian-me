@@ -1,21 +1,17 @@
 # Investments project — instructions for Claude Code
 
-> **Being rebuilt (from 2026-08-05).** Everything below describes the **CSV pipeline** in `scripts/`, which still runs and is still the source of `notes/index.html`. A replacement built on **PDF statements** is under construction in `app/` — see `docs/superpowers/specs/2026-08-04-investments-rebuild-design.md`.
->
-> Several findings below are **true of the CSVs and false of the PDFs**. Do not apply them to `app/`:
->
-> - *"There is no market value in this data"* — the PDFs state market price, market value and book cost per holding, with the exchange already resolved (`PSA` prices at $50.01 CAD, the Purpose HISA, not the $315 US namesake). The ticker-disambiguation problem does not exist there.
-> - *"The currency field is dirty"* — the PDFs print a month-end conversion rate and split cash into CAD and USD columns.
-> - *Filename-derived account kind* — the PDFs state the account type in plain text. Note it has been **renamed twice**: the same TFSA reads `Tax-Free Savings Account` in 2023, `Self-directed TFSA Account` in 2026-01, and `Order Execution Only TFSA Account` in 2026-06.
->
-> When the rebuild replaces the page, delete `scripts/` and everything below this banner.
+Personal finance dashboard built from Wealthsimple's monthly **PDF statements**. A bun/TypeScript pipeline in `app/` turns 220 statements into a masked datastore, an analytics payload and a reconciliation report; a local React app renders them. Read this before changing analytics, parsing, or any number shown on screen.
+
+The CSV pipeline that preceded this lived in `scripts/` and rendered `notes/index.html`. **Both were deleted on 2026-08-24**, after the rebuild shipped every feature the spec's Predictions section called for. Its findings are gone with it and most were true only of the CSVs: no market value in the data, a currency field contaminated with ticker symbols, account kind inferred from a filename. None of those is true here. If you find a note repeating one, it is describing a pipeline that no longer exists.
+
+`app/src/projection/engine.ts` was a byte-identical port of the old `scripts/src/client/projection.ts`. That was verified for the last time immediately before the deletion, both files at `bf1d3342afd4f8a44f6a60c219058e94df5fbd5e`, and the reference is now gone, so the check cannot be run again. The engine's own inline comments carry the five traps that cost real debugging, indexation compounding an unrounded base above all. Read them before touching it.
 
 ## The dashboard app's gates (`app/`)
 
 Two commands, and they are deliberately not one.
 
 - `bun run check` — biome, `tsc --noEmit`, `bun test`. The per-commit gate. It must stay clean and it runs in about ten seconds.
-- `bun run contrast` — renders the dashboard in Chromium on all six tabs in both themes and **measures** the WCAG AA contrast of every rendered run of text against the opaque colour actually painted behind it. About fifteen seconds, and it needs a browser: `bunx playwright install chromium` once, then `bun run contrast`. Run it before shipping anything that changes a colour, a font size, a font weight, or adds a badge, a callout or a chart label.
+- `bun run contrast` — renders the dashboard in Chromium on all six tabs in both themes and **measures** the WCAG AA contrast of every rendered run of text against the opaque colour actually painted behind it. About fourteen seconds, and it needs a browser: `bunx playwright install chromium` once, then `bun run contrast`. Run it before shipping anything that changes a colour, a font size, a font weight, or adds a badge, a callout or a chart label.
 
 It is out of `bun run check` on purpose. Folding a browser launch and a dev server into the gate that runs on every commit trades ten seconds for twenty-five, on every commit, to catch a class of regression that only a colour change can cause. The cost is that a colour change with no `bun run contrast` behind it can land green; that is what the line above exists to prevent.
 
@@ -23,126 +19,67 @@ It is out of `bun run check` on purpose. Folding a browser launch and a dev serv
 
 The colour arithmetic lives in `src/tools/contrast/color.ts` and `audit.ts` and is unit tested; only `collect.ts` runs in the page, and it measures nothing — it reports computed strings so the maths stays testable without a browser. Radix paints most surfaces in alpha steps (`--gray-a2`, `--jade-a3`) and every SVG chart label in `--gray-a11`, so reading one parent's `background-color` gives a translucent colour and a wrong answer; the ancestor chain is composited instead. Large text is 24px, or 18.66px at weight 700 — not 18.66px at any weight, which would drop the requirement from 4.5 to 3.0 and pass real failures.
 
-Personal finance dashboard built from Wealthsimple monthly statement CSVs. A bun/TypeScript pipeline turns the raw exports into a masked datastore, analytics, and one self-contained offline HTML page (`notes/index.html`). These instructions capture hard-won findings about the data and the reporting semantics. Read them before changing analytics, prices, or the numbers shown on the page.
+### A gate only proves what it visits
 
-## Pipeline and commands
+For a whole build phase `bun run contrast` reported "AA pass, worst light 4.67" while structurally unable to see two things. It sampled the text present at sweep time and never hovered, so **no chart readout was measured once**. And it opened only the default lens of a three-lens view, so the loss colour, which only the account lens paints, was never swept.
 
-Stages: `parse -> classify -> mask -> datastore -> analytics -> render`, driven by `scripts/src/build.ts`.
+Both holes were silent by construction: an unvisited state yields no sample, no sample yields no failure, and no failure is distinguishable from a pass. Corrected 2026-08-24. It now hovers every chart on every tab and visits all three lenses, samples carry the state they were taken in, and the run fails outright if the hover path reaches nothing or a lens goes unswept. 3606 runs of text, up from 2876.
 
-- `cd scripts && bun run build` regenerates `data/datastore.json`, `data/analytics.json`, and `notes/index.html`. It reads `~/Downloads/monthly-statements-2022-01-to-2026-07` (`DEFAULT_SOURCE` in `src/build.ts`).
-- Filenames carry the account identity, so new statements must be renamed into the stored convention before they land in the source directory: `<Label>-YYYY-MM-01-monthly-statement-transactions-<CODE>.csv`. Fresh Wealthsimple exports put the date last instead (`<Label>-monthly-statement-transactions-<CODE>-YYYY-MM-01.csv`), and `accountCodeFromFilename` matches the trailing `-([A-Za-z0-9]+)\.csv`, so an unrenamed file silently registers a new account keyed on `01` rather than merging into the real one. Credit card exports arrive as a bare `credit-card-statement-transactions-YYYY-MM-01.csv` and belong under the `Wealthsimple-credit-card-YYYY-MM-01-credit-card-statement-transactions-ca-credit-card-<CODE>.csv` name.
-- Statement periods do not overlap and must not be made to. Account statements are calendar months; credit card statements run on a billing cycle (roughly the 23rd to the 23rd), so a July card export legitimately contains late-June rows that are absent from the June export. Check the closing and opening balances line up before adding a month.
-- `bun run check` runs biome + `tsc --noEmit` + `bun test`. It must stay clean, zero warnings.
-- The page is a single offline file. Chart.js and flatpickr are bundled into the inline client script at build time. Never add a CDN reference.
-- The browser client lives in `scripts/src/client/` (`main`, `filter`, `series`, `charts`, `sections`, `format`). It is browser only, so never import `node:` modules there. It defines its own local ledger types rather than importing the node analytics types.
+Ask what **states** a gate reaches, not what pages. A chart below the fold is one such state: the pointer only moves within the viewport, so charts must be scrolled into view or they are silently never hovered.
 
-## Money in is external money, not coded contributions
+## The precision rule, and the defect class this project has fought hardest
 
-This is the single most important reporting rule.
+Eight instances have shipped of one defect: a figure announced coarser than the figure rendered beside it. $241,740 for $241,739.67. 20% for 20.4%. 2% for 1.6%. 47% for 46.641% and 25% for 24.921%, the last two on the room bars, fixed 2026-08-24.
 
-- `series[].contrib` counts only transactions Wealthsimple tagged `CONTRIB`. Most money actually enters as `TRANSFER_IN`, so `contrib` badly undercounts money the owner put in. Do not present `contrib` as total money in. It is kept only as a reference figure.
-- `series[].external_in` and `series[].external_out` are the classified external money movements, computed by `externalFlow` in `src/analytics.ts` (see "External versus internal transfers" below). `external_in` is GROSS external money into an account (CONTRIB plus external deposits coded TRANSFER_IN). It double counts through a hub account that routes deposits onward, so it drives ONLY the cashflow chart and drill-down, never contributions/room or total money in. It was tried as the room basis and reverted because a routing RRSP inflated 2026 RRSP from the real $33,000 to $52,666.
-- `series[].deposits` is the money-in figure and is NOT `external_in + external_out`. It is the net of every transfer: CONTRIB plus all TRANSFER_IN plus all TRANSFER_OUT (`DEPOSIT_TYPES` in `src/analytics.ts`), so internal transfers between the owner's own accounts appear as a matching out and in that cancel across accounts. Summed across all accounts this is the true net external money in, about $214,991, without the hub double counting.
-- The Growth section reports **net deposits** (`deposits`, summed across the scope) as money in, **portfolio at cost** = adjusted cost base plus cash at the window end, and **gain beyond deposits** = portfolio at cost minus net deposits. That gain is a cost basis figure (reinvested income and securities transferred in), not a market value.
-- Room / contribution figures in the Contributions and Room section use `contrib` (the CONTRIB-tagged contributions), summed for the scoped accounts of each registered group in the tax year (`taxSummary` in `src/client/series.ts`). Reference figure: RRSP `contrib` for 2026 is $33,000 against a $33,810 limit, for 2025 $15,000 ($48,000 total). This deliberately excludes routing-hub deposits, so it stays under the annual limit and matches what actually landed as contributions.
+The visible text, the `aria-label`, any live announcement and any tooltip come from **one** formatting call. `formatCurrency`, `formatShare` and `formatRate` in `src/ui/format.ts` are the only formatters allowed near a rendered figure; the axis formatters in `charts/plot.ts` are for gridlines and nothing else.
 
-## There is no market value in this data (CSV pipeline only)
+Two rules that follow from how the guards themselves failed:
 
-**Scope: this section is about the CSV exports read by `scripts/`. The PDF statements read by `app/` do carry market prices — see the banner at the top.**
+- **Mutate each rendering path independently, never a shared variable.** A shared-variable mutation proves the variable is used. It never proves the visible text and the `aria-label` agree, and the second path is the only place this defect has ever actually lived.
+- **Derive a coarse-form absence assertion by computing it, never by chopping digits.** `$92,547.67` coarsens to `$92,548`, different digits, so a guard keyed on truncation cannot fire when rounding goes up. Use `expectNoCoarseForm`. A lookahead of `(?!\.)` is additionally defeated by a figure at the end of a sentence; it must be `(?!\.\d)`.
 
-The CSV exports are transaction level only. Holdings carry `symbol`, `qty`, and `acb` (adjusted cost base), never a market price.
+A bar that carries a value is a second copy of a figure. Radix's `Progress` derives `aria-valuetext` from its value and rounds to whole percent, which is where two of the eight came from. `ShareBar` is hidden decoration for that reason, and the figure lives in the text beside it.
 
-- A live price fetch (Yahoo chart endpoint) was built and then removed on purpose. It was unreliable: bare tickers resolve to the wrong exchange (for example `PSA` returns Public Storage US at about $315 instead of the Purpose HISA `PSA.TO` at about $50, and `L` returns Loews instead of Loblaw), which inflated market value and growth by multiples. Do not reintroduce live prices without first solving symbol to exchange disambiguation and the USD cost basis gap below.
-- Growth is cost basis only by design. If asked for market value or true unrealized gain, explain that the statement data cannot support it and point to the Wealthsimple app.
+## Corpus figures, verified against the committed artifact
 
-## The currency field is dirty (CSV pipeline only)
+Total $241,739.67 at 2026-06, identical across all three lenses. Book cost $223,675.08, gain $18,064.59, which is 8.1% and equals the sum of the registration-lens group gains.
 
-- `transactions[].currency` is contaminated with ticker symbols and other junk, not clean ISO codes. Only about 1 of 1325 non CAD transactions carries an `fx_rate`, so per transaction FX conversion is not possible.
-- Because of this, ACB and flows are computed from CAD tagged transactions only. Cost basis for USD denominated holdings (for example US stocks in the Direct Indexing or USD non registered accounts) is therefore partial and can be wrong. Do not trust per holding average cost for USD positions.
-- Do not try to include non CAD transactions in flows without a real fix, or you will sum unconvertible USD amounts into CAD totals.
+RRSP 2025 $15,000 used of an assessed $60,191. RRSP 2026 $33,000 of $70,752. TFSA 2025 $25,000, TFSA 2026 $7,000. FHSA $24,000 of a $40,000 lifetime cap. RESP $3,000 of $50,000 with CESG $550 of $7,200.
 
-## Internal versus external transfers
+Runway, and every year of it is rate-**invariant**, verified at 0, 6, 12 and 25 percent and structurally, since no contribution step in `engine.ts` reads a balance: FHSA cap 2028, FHSA closes 2039, RESP cap 2044, CESG ends 2042, RRSP last accrual year 2068. CESG tops out at $6,650 of its $7,200 cap, forfeiting $550, because the beneficiary ages out before the contributions that would claim the rest.
 
-The coded `type` alone cannot distinguish an internal transfer between the owner's own accounts from an external bank deposit or withdrawal. Both are just `TRANSFER_IN` or `TRANSFER_OUT`. The original statement code, `raw_type`, can, and `externalFlow` in `src/analytics.ts` is the single place this classification happens.
+Two real losses exist, both in the account lens: RRSP (managed) at -$3.16 and Crypto at -$45.04. They are the only text in the app painted in the loss colour.
 
-A `CONTRIB` transaction is always external in.
+The projection defaults to 6% by owner decision. The rate fitted from 37 months is 24.84% and compounds to roughly $431M over thirty years, so it renders beside the default with its window as the caveat.
 
-A `TRANSFER_IN` is external in only when its `raw_type` is `EFT`, `AFT_IN`, `E_TRFIN`, `DEP`, or `TRFIN`: a bank EFT, a direct deposit, an e-transfer received, a generic deposit, or a code for a money transfer into the account.
+## The TFSA assessed room is still outstanding
 
-A `TRANSFER_OUT` is external out only when its `raw_type` is `E_TRFOUT` or `P2P_SENT`, or its redacted description matches "money transfer out" or "e-transfer".
+`ASSESSED_ROOM` in `src/analytics/rooms.ts` carries RRSP 2025 and 2026 only. The TFSA has no assessed figure, so its line falls back to the generic annual maximum and `remaining` is correctly null. That is why 2025 reads $25,000 against a $7,000 annual maximum with no over flag: the owner maxed out accumulated room that year. **That is the reason, not the figure.**
 
-Every other `TRANSFER_IN`/`TRANSFER_OUT` is internal and excluded from all external/contribution figures. In practice this is `TRFINTF`, `TRFOUTTF`, and a generic `TRFOUT` ("Transfer out" or "Transfer out to <account>").
+When the owner supplies it, add it to `ASSESSED_ROOM` the way RRSP 2025 and 2026 are, with a comment recording its source and date, and regenerate `analytics.json`. Never derive it from the contribution total. Fitting a room figure to arithmetic is what left the RRSP quietly wrong by $1,000 for three weeks.
 
-`inflow`, `outflow`, and `flows` are external-only: inflow = `external_in`, outflow = `external_out`, and `flows` (the cashflow drill-down data) contains only the external transactions. They exclude buys, sells, dividends, interest, fees, and internal transfers between the owner's own accounts. `deposits` is the exception: it nets all transfers (see the money-in rule above), so it is not external-only and is not `inflow + outflow`.
+## USD book cost is approximate, and always will be
 
-There is a hub-account caveat worth keeping in mind. Per-account `external_in` counts money that entered that account externally even if it was later moved internally to fund another account. A routing or hub account can therefore look artificially high, because the money it forwarded on internally is not subtracted back out (that onward leg is coded as an internal `TRFOUT` and excluded). The aggregate total for the scoped accounts is still the right figure to read; a single hub account's number in isolation is not.
+Holdings plus cash reconcile to the stated portfolio **market value** everywhere except three statements, off by one to three cents from rounding the six-decimal rate. Book cost does not reconcile on 19 statements, by up to $218.92, and every one of those holds USD securities while no CAD-only statement diverges at all.
 
-## Some accounts are visible but not selectable
+This is a property of the source, not a parser defect. Each statement discloses one month-end rate and its own footnote scopes that rate to market value; book cost is an accumulated basis recorded at each purchase's own historical rate, so no single current rate can reconstruct it. `Holding.bookCostConverted` marks every converted figure, and the reconciliation report separates the two cases: a book-cost divergence with no converted holding is an error, because that is a real indexing bug; a divergence with converted holdings is a warning naming the fx limitation. Treat a converted book cost as an estimate, never a filing figure.
 
-`isDisabledAccount` in `src/client/filter.ts` marks accounts that stay in the filter list but cannot be selected: the `DISABLED_KINDS` (Chequing, Savings, CreditCard, USD) plus `DISABLED_SHORT_IDS` (375f). Day-to-day banking is not investing, and including it distorts portfolio-at-cost and money-in without saying anything about the portfolio.
+## Reconciliation is data, not a build failure
 
-- They are **disabled, not hidden**, on purpose. A hidden account reads as missing data; a greyed one shows the ledger is complete and the omission is a choice.
-- `allIds` in `createFilter` excludes them, so "All accounts" resolves to the selectable set and every section's scope excludes them by default. The scope summary counts only selectable accounts.
-- A group whose every member is disabled has its own header checkbox disabled, and `toggleGroup` skips disabled members.
-- A restored URL naming a disabled account is stripped in `withoutDisabled`, not in `url.ts` — the URL module has no business knowing which accounts are selectable.
+A wrong number that is visible beats a clean dashboard that is off with no way to find out why. Discrepancies surface in the Reconciliation tab with account, period, check, expected, actual, delta and source filename. Only a parse-level failure, a required field absent from a document that should carry it, fails the build, because that means the parser is wrong rather than the data.
 
-## Account labels
+Genuine Wealthsimple data errors go in `corrections.ts`: explicit, dated, individually justified. Never a silent adjustment inside the parser.
 
-- Named accounts render their name; everything else falls back to `kind` plus `short_id` (for example `NonRegistered 375f`). `accountLabel` in `src/client/format.ts` is the single place that composes a label, so the filter chips, charts, and detail table cannot drift apart.
-- The names live in `ACCOUNT_LABELS` in `src/datastore.ts`, keyed by **`short_id`** — the 4-char hash prefix the page already shows. Never key them by the real account number, which must never reach source control.
-- The owner asked for real names (2026-08-04) to tell four RRSPs apart, superseding the earlier blanket ban on person-derived names. Those names now render and are committed with the built page. The ban existed because names were once derived automatically from statement filenames; the point stands that nothing should be **derived** from a filename, but a deliberate, reviewed label is fine. `redactions.json` still scrubs names out of transaction descriptions, which is a separate concern.
-- `ACCOUNT_KINDS` in `src/datastore.ts` overrides the filename-derived kind, also keyed by `short_id`. Only one entry today: **91b8 is `Corporate`**, a corporate investing account. It arrived as `Other` because its filename is a company name, and `Other` sits in `TAXABLE_KINDS` — so its investment income was feeding the **personal** tax estimate. Investment income inside a corporation is taxed in the corporation and only reaches the owner when dividended out, so `Corporate` is deliberately absent from `TAXABLE_KINDS` in `analytics.ts` and from the client copies in `sections.ts`/`filter.ts`. It keeps its own filter group rather than falling through to Cash. Correcting this dropped 2026 eligible dividends from $645 to $202.
-- The statements whose filenames start with `PE-` are an RRSP, not a taxable account. `detectKind` in `src/mask.ts` maps them to `RRSP` and they are excluded from `TAXABLE_KINDS`. The evidence: the hub account labels its funding transfers to them "Transfer out to RRSP" (the $8,000 on 2026-05-06), and their deposits arrive tagged `CONT`. Without that mapping the 2026 RRSP room bar undercounts by $8,000 and 2025 by $12,000.
+The $279.94 residual against the app's $242,019.61 is one unpriced holding, `WSE401`, a private-markets fund carried at its purchase price under a pending-valuation disclaimer. If the entire residual is that stale price the finalised NAV is $10.2254, which is testable when the amended statement arrives.
 
+## Masking
 
-## Masking guard
+Never commit an unmasked account number, name, address or statement filename. A statement filename **is** an account number, and so is a fixture list, a test input, and an error message that echoes its input. Source PDFs stay outside the vault in a gitignored directory; only masked derived data is committed.
 
-- Never commit unmasked account numbers or other sensitive data. There is **no** pre-commit guard in this vault any more, so the check is manual: inspect the staged diff before every commit.
-- The guard scans `.html`, and the generated `notes/index.html` inlines minified flatpickr JS, so it false positives on the `sin` substring inside minified code (for example `getDaysInMonth`, `single`) plus long float mantissas. Check the strong signal directly: the formatted SIN or card pattern check (`grep -E '\b[0-9]{3}[ -][0-9]{3}[ -][0-9]{3}\b|\b[0-9]{4}[ -][0-9]{4}[ -][0-9]{4}[ -][0-9]{4}\b'`) must return zero, and no name from `redactions.json` may appear in the built page. Deliberate account labels (see Account labels above) are expected and are not a leak.
+Account labels are keyed by the 4-char `shortId` in `src/store/registry.ts`, never by the real account number, and never derived from a filename.
 
-## Tax and Room sections are filter-aware
-
-- The Tax and Room sections respect the top scope selector, the same as every other section. The tax year they report is derived from the scope, not fixed to the current calendar year: it is the year of the last month in the resolved time window (`scopeYear` in `src/client/series.ts`), so an "All time" scope reports the latest data year and a custom range reports the range's end year.
-- Income is split by currency and type: interest, Canadian eligible dividends (CAD dividends), foreign income (USD dividends). Realized gains come from sell proceeds minus average cost in taxable accounts. All four are summed only over the selected accounts, for the scope's tax year (`taxSummary` in `src/client/series.ts`).
-- Room bars work the same way: `used` is `contrib` summed for the selected accounts of each registered group (TFSA, FHSA, RRSP, RESP; ManagedTFSA shares the TFSA group) within the scope's tax year. `contrib` (not gross `external_in`) is used because a routing hub account inflates `external_in` with pass-through deposits.
-- There are two kinds of limit and the page distinguishes them. `CONTRIBUTION_LIMITS` in `src/analytics.ts` is the generic CRA annual maximum. `ASSESSED_ROOM` in the same file is this person's actual room transcribed from a notice of assessment, carry-forward already included; where a group/year figure exists there it wins, and `taxSummary` marks the row `assessed: true` so the bar is labelled "assessed" and the footnote changes. Currently the only entry is RRSP 2026 = $70,752, from the 2025 NOA (45,191 unused at the end of 2025 plus 25,561 earned in 2025). Add the new figure after each year's NOA arrives rather than letting the bar fall back to the annual maximum.
-- There is no OVER flag. Against the annual maximum a full bar is not necessarily an over-contribution, because unused room carries forward. Against assessed room the comparison is real, but it is still not a filing figure.
-- The estimated tax added subtracts RRSP actually contributed this year (registered room used, for the selected accounts), not unused room. It is a rough estimate with a visible not for filing disclaimer. Never present it as a filing figure. Editing the tax rate input recomputes only the estimate figure from the last-rendered tax summary — it never triggers a full section or chart rerender.
-
-## Cashflow flows and the transaction drill-down
-
-- `ledger.flows` is the transaction-level backing data for the cashflow chart: every external `CONTRIB` / `TRANSFER_IN` / `TRANSFER_OUT` row (see "External versus internal transfers" above; internal transfers between the owner's own accounts are excluded), each carrying `account_id`, `month`, `date`, `type`, a signed `amount` (`TRANSFER_OUT` negative), and the already-redacted `description`. It is separate from `series[].deposits`, which nets all transfers per account-month for the money-in figure, not just the external ones.
-- Clicking a bar on the cashflow chart drills into that period: `flowsForPeriod` (`src/client/series.ts`) filters `ledger.flows` to the clicked period and the selected accounts, split into inflow (positive amount) and outflow (negative amount). The clicked bar's label is the period key already — a full month ("YYYY-MM") in month grain, or a bare year ("YYYY") in year grain (the default "All time" view, once the window exceeds 24 months) — and matching is by `flow.month.startsWith(period)`, so a year period matches every month in it. `sections.ts` renders the result into a `<details id="cashflow-drill">` below the chart and opens it. Changing the filter resets the drill-down to collapsed and empty rather than showing a stale period.
-
-## The scope lives in the query string
-
-`src/client/url.ts` owns the URL contract, and it is the only place that reads or writes `location`. Params, each omitted at its default so a default view has a bare URL: `accts` (comma-separated account `short_id`s), `t` (`ytd`/`1y`/`3y`), `from`+`to` (`YYYY-MM`, both required, and they beat `t`), `period` (the expanded cashflow drill-down, `YYYY` or `YYYY-MM`).
-
-- Writes go through `replaceState`, never `pushState`: a filter toggle must not cost a Back press to leave the page. It is wrapped in a try/catch so a browser that refuses the call degrades to an unlinkable filter rather than a broken page. `history.replaceState` with a query string does work on the `file://` document this page is opened as, verified in Chrome.
-- The URL carries `short_id`s, not the masked `acct_*` hashes, so it stays readable. They are unique across the 16 accounts; a collision would select both, widening the scope rather than picking the wrong account.
-- `decodeScope` is total. Unknown presets, half-specified or inverted ranges, unknown `short_id`s, and malformed periods all fall back to the default instead of throwing, because a hand-edited or truncated URL still has to open. An `accts` list where every id is unknown decodes to "all accounts", not "none".
-- A restored `period` is only reopened when it still exists in the current scope's cashflow labels; a stale one is dropped and scrubbed from the URL. Changing the filter clears it, matching `resetCashflowDrilldown`.
-- Unticking one of 16 accounts writes the other 15 into the URL. That is verbose but correct; there is deliberately no "exclude" form, since two ways to express one selection is not worth the readability.
-
-## The thirty year projection
-
-`src/client/projection.ts` is a pure engine: `projectYears(inputs)` returns one row per year. `src/client/series.ts`'s `projectionInputs()` derives its inputs from the ledger and the current scope. Rendering is a fourth pillar in `sections.ts`. The spec is `docs/superpowers/specs/2026-08-04-registered-projection-design.md`, and `src/client/__fixtures__/projection-reference.json` is the 31-row regression baseline.
-
-Five traps, each of which has bitten once:
-
-- **Indexation compounds an UNROUNDED base.** Rounding is a CRA publication rule applied to the figure handed back, never carried into the next year. Compounding the rounded value silently pins the TFSA at $7,000 forever, because $7,000 × 1.02 rounds back to $7,000. `roomBase` on `ProjectionInputs` carries the seed; it is not derivable from any other field, since `contributedThisYear` is money already put in.
-- **FHSA is statutory, not indexed**, and has two separate endings: contributions stop at the $40,000 lifetime cap (2028), and the account itself closes 15 years after opening (2039, from `first_activity`), at which point the whole balance leaves the projection as a home purchase.
-- **RESP contributions counted against the $50,000 lifetime cap are `deposits`, not `contrib`.** Money arriving as a `TRANSFER_IN`/`DEP` is still a contribution to CRA. Using `contrib` undercounts by $450 in the real data.
-- **CESG received is derived from `series[].grant`, not assumed.** `GRANT` transactions are real but were unreachable client-side until `grant` was added to the series row: `ledger.flows` filters on `externalFlow()`, which never classifies `GRANT`. `accounts[].first_activity` was added for the same reason. The `7200 − received` bound must use TOTAL lifetime received (pre-projection plus in-projection), which is what makes 2039's grant $200 rather than $500.
-- **The projection covers one more group than the room bars do.** `PROJECTION_GROUP_ORDER` in `src/client/series.ts` is `ROOM_GROUP_ORDER` plus `Corporate`. The corporate account has no CRA room, so it must stay out of `ROOM_GROUP_ORDER` and `REGISTERED_GROUPS` or it would appear as a room bar; it contributes a flat `CORPORATE_ANNUAL` ($1,000 biweekly = $26,000/yr, an owner plan, deliberately not indexed) and its `roomRemaining` is always 0.
-- **The categorical palette has exactly 8 slots and the drawable account count must not exceed it.** Slots are assigned over drawable accounts computed against the full ledger. Twice now, adding an account silently pushed the largest TFSA past the end of the palette and dropped it from the chart with no error. If a ninth account ever becomes drawable, add a validated hue — do not let the guard quietly discard a line.
-- **The RESP contribution target is derived, never a hardcoded rate.** It contributes exactly what claims the grant available that year, floored at $2,500 and ceilinged at $5,000. A flat $5,000/yr exhausts the $50,000 room by 2035 and forfeits about $1,700 of grant; the real catch-up available was only $450.
-
-The fixture declares integer opening balances ($139,462) while live derivation carries cents ($139,461.37), so the live projection ends about $3 below the fixture. That is expected. Do not "fix" the engine to close it and do not regenerate the fixture from live data — its value is being a fixed baseline.
-
-`RESP_BENEFICIARY_BIRTH_YEAR` in `analytics.ts` is the one owner-supplied figure in a file otherwise made of published CRA numbers. It reaches the client as an explicit parameter, never an import.
+There is no pre-commit guard in this vault, so the check is manual: inspect the staged diff before every commit. The leak gate at `.superpowers/sdd/2026-08-04-investments-ingest/leak-gate.sh <range>` has two known false-positive classes, log-decade axis constants (`1000000`) and hex colours with alpha (`#00000080`), and it will flag other endeavors' files if the range is not scoped. Note that `git grep` silently ignores `\b`, so it can never be used to prove an absence.
 
 ## Design and docs
 
-- The spec and implementation plan live in `docs/superpowers/`.
-- The shared stylesheet is `../_assets/personal.css`. New investment styles are namespaced (`fbx-` for the filter, `pillar-` and section classes). Do not modify selectors used by other personal pages.
+The spec and implementation plans live in `docs/superpowers/`, and the phase ledgers in `.superpowers/sdd/`. Both record corrections made mid-execution, several of which found the spec wrong rather than the code. Styling is Radix Themes; charts are hand-built SVG on `d3-scale`.
