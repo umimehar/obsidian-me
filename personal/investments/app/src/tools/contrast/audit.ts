@@ -12,10 +12,22 @@ import {
 
 export type Theme = "light" | "dark";
 
-/** Which tab and theme a sample was taken on. Half of what makes a failure actionable. */
+/**
+ * Where a sample was taken: which tab, which theme, and which STATE of that
+ * tab. All three are what makes a failure actionable.
+ *
+ * `state` exists because a page is not one rendering. The sweep used to visit
+ * the default lens of a three-lens view and never hover anything, so a tooltip
+ * was never measured once and the colour only a loss paints was never reached.
+ * An unvisited state yields no sample, no sample yields no failure, and no
+ * failure reads exactly like a pass -- so the states have to be both driven
+ * and counted separately, or the count hides which ones were skipped.
+ */
 export interface Placement {
   tab: string;
   theme: Theme;
+  /** `"default"`, `"lens by account"`, `"hover chart 3"`. Never empty. */
+  state: string;
 }
 
 export interface Measurement extends Placement {
@@ -148,11 +160,18 @@ export function worstRatio(samples: readonly Sample[], theme: Theme): number | n
   return worst;
 }
 
-/** How many runs of text were swept on each tab, per theme. Keyed `"<theme>/<tab>"`. */
+/**
+ * How many runs of text were swept in each state, per tab, per theme. Keyed
+ * `"<theme>/<tab>/<state>"`.
+ *
+ * Keyed by state rather than by tab alone so a state that was never opened
+ * reads as an absent row instead of being folded into a healthy-looking tab
+ * total. Reading this list is how you check what the gate actually reached.
+ */
 export function countsByPlacement(samples: readonly Sample[]): Map<string, number> {
   const counts = new Map<string, number>();
   for (const sample of samples) {
-    const key = `${sample.theme}/${sample.tab}`;
+    const key = `${sample.theme}/${sample.tab}/${sample.state}`;
     counts.set(key, (counts.get(key) ?? 0) + 1);
   }
   return counts;
@@ -181,7 +200,7 @@ function round(value: number): string {
  * the page: what, where, what it measured, and what it needed.
  */
 export function formatFailure(sample: Sample): string {
-  const where = `${sample.theme} theme, ${sample.tab} tab`;
+  const where = `${sample.theme} theme, ${sample.tab} tab, ${sample.state}`;
   if (sample.kind === "unresolved") {
     return [
       `  UNRESOLVED  ${sample.selector}`,
@@ -217,7 +236,7 @@ export function formatSummary(samples: readonly Sample[]): string {
   const lines: string[] = [];
   const counts = countsByPlacement(samples);
   for (const [key, count] of [...counts].sort()) {
-    lines.push(`  ${key.padEnd(24)} ${count} text runs`);
+    lines.push(`  ${key.padEnd(44)} ${count} text runs`);
   }
   for (const theme of ["light", "dark"] as const) {
     const worst = worstRatio(samples, theme);

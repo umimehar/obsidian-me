@@ -42,8 +42,17 @@ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
  *
  * "Owns directly" is what stops a figure being counted once for its `<span>`
  * and again for each of the six wrappers above it, all with the same colour.
+ *
+ * `rootSelector` narrows the sweep to one subtree and its own text. It exists
+ * for the hover states: a tooltip is the only thing that changed, so sweeping
+ * the whole page again for each of thirty-odd charts would re-measure the same
+ * static text thirty times and say nothing new. The ancestor walk still runs
+ * to `<html>` from inside the subtree, so a scoped sample resolves its
+ * backdrop exactly as an unscoped one does. A selector that matches nothing
+ * returns no samples, which the caller must treat as a hole in the sweep
+ * rather than as a clean result.
  */
-export function collectSamples(): RawSample[] {
+export function collectSamples(rootSelector?: string): RawSample[] {
   function ownText(element: Element): string {
     let text = "";
     for (const node of element.childNodes) {
@@ -109,7 +118,16 @@ export function collectSamples(): RawSample[] {
   }
 
   const samples: RawSample[] = [];
-  for (const element of Array.from(document.querySelectorAll("*"))) {
+  const roots =
+    rootSelector === undefined
+      ? [document.documentElement]
+      : Array.from(document.querySelectorAll(rootSelector));
+  const scope: Element[] = [];
+  for (const root of roots) {
+    // The root itself can own text, so it is swept alongside its descendants.
+    scope.push(root, ...Array.from(root.querySelectorAll("*")));
+  }
+  for (const element of scope) {
     if (!isDrawnText(element)) continue;
     const text = ownText(element);
     if (text === "") continue;

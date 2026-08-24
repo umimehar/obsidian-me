@@ -12,7 +12,7 @@ import {
 } from "./audit";
 import type { RawSample } from "./collect";
 
-const AT = { tab: "overview", theme: "light" } as const;
+const AT = { tab: "overview", theme: "light", state: "default" } as const;
 
 /** A run of text on an opaque white page, with whatever paint the test cares about. */
 function sample(overrides: Partial<RawSample> = {}): RawSample {
@@ -138,6 +138,7 @@ describe("failures", () => {
     kind: "measured",
     tab: "growth",
     theme: "light",
+    state: "default",
     selector: "span",
     text: "x",
     fontSizePx: 12,
@@ -155,6 +156,7 @@ describe("failures", () => {
       kind: "unresolved",
       tab: "tax",
       theme: "dark",
+      state: "default",
       selector: "span",
       text: "y",
       reason: "nope",
@@ -174,6 +176,7 @@ describe("worstRatio and countsByPlacement", () => {
     kind: "measured",
     tab,
     theme,
+    state: "default",
     selector: "span",
     text: "x",
     fontSizePx: 12,
@@ -202,8 +205,25 @@ describe("worstRatio and countsByPlacement", () => {
       at("light", "overview", 8),
       at("dark", "tax", 9),
     ]);
-    expect(counts.get("light/overview")).toBe(2);
-    expect(counts.get("dark/tax")).toBe(1);
+    expect(counts.get("light/overview/default")).toBe(2);
+    expect(counts.get("dark/tax/default")).toBe(1);
+  });
+
+  test("counts separate one tab's states, so an unvisited state reads as absent", () => {
+    // The gap this whole field exists for: a lens or a hover that produced no
+    // sample yields no failure, and no failure reads exactly like a pass. A
+    // count keyed only by tab would fold all three lenses into one number and
+    // hide that two of them were never opened.
+    const counts = countsByPlacement([
+      { ...at("light", "overview", 9), state: "lens by registration" },
+      { ...at("light", "overview", 8), state: "lens by account" },
+      { ...at("light", "overview", 7), state: "lens by account" },
+      { ...at("light", "overview", 6), state: "hover chart 1" },
+    ]);
+    expect(counts.get("light/overview/lens by registration")).toBe(1);
+    expect(counts.get("light/overview/lens by account")).toBe(2);
+    expect(counts.get("light/overview/hover chart 1")).toBe(1);
+    expect(counts.get("light/overview/lens by purpose")).toBeUndefined();
   });
 
   test("tightest reports the narrowest margins first, within one theme", () => {
@@ -237,6 +257,7 @@ describe("formatting", () => {
       kind: "measured",
       tab: "projections",
       theme: "light",
+      state: "default",
       selector: "div.rt-CalloutText",
       text: "Projections are not advice",
       fontSizePx: 14,
@@ -256,11 +277,48 @@ describe("formatting", () => {
     expect(text).toContain("14.00px/400");
   });
 
+  test("a failure names the state it was found in, not just the tab", () => {
+    // A tooltip and a lens are reachable only by driving the page, so a
+    // reader who cannot reproduce the state cannot act on the failure.
+    const text = formatFailure({
+      kind: "measured",
+      tab: "overview",
+      theme: "dark",
+      state: "hover chart 3",
+      selector: "div[data-chart-tooltip] > div",
+      text: "Book cost is approximate for USD holdings",
+      fontSizePx: 11,
+      fontWeight: 400,
+      foreground: "rgb(139, 139, 139)",
+      background: "rgb(25, 25, 25)",
+      ratio: 4.12,
+      required: 4.5,
+      large: false,
+      pass: false,
+    });
+    expect(text).toContain("dark theme, overview tab");
+    expect(text).toContain("hover chart 3");
+  });
+
+  test("an unresolved sample names its state too", () => {
+    const text = formatFailure({
+      kind: "unresolved",
+      tab: "overview",
+      theme: "light",
+      state: "lens by account",
+      selector: "span",
+      text: "-$45.04",
+      reason: "no opaque background anywhere above it",
+    });
+    expect(text).toContain("lens by account");
+  });
+
   test("an unresolved sample says why, not just that it failed", () => {
     const text = formatFailure({
       kind: "unresolved",
       tab: "growth",
       theme: "dark",
+      state: "default",
       selector: "text[data-year-label]",
       text: "2025",
       reason: 'fill "none" did not parse',
@@ -276,6 +334,7 @@ describe("formatting", () => {
         kind: "measured",
         tab: "overview",
         theme: "light",
+        state: "default",
         selector: "span",
         text: "x",
         fontSizePx: 12,
