@@ -25,6 +25,29 @@ function card(group: string) {
   return node as HTMLElement;
 }
 
+/**
+ * The fill bars inside one group's card. Keyed on `data-share-bar`, not on
+ * `role="progressbar"`: the bar no longer claims a role, so a count keyed on
+ * the role reads zero whether the bar is there or not and can never fail.
+ */
+function fillBars(group: string): HTMLElement[] {
+  return [...card(group).querySelectorAll("[data-share-bar]")].filter(
+    (node): node is HTMLElement => node instanceof HTMLElement,
+  );
+}
+
+/** The width of a group's one fill, as a number of percent. */
+function fillPercent(group: string): number {
+  const bars = fillBars(group);
+  const bar = bars[0];
+  if (bars.length !== 1 || bar === undefined) {
+    throw new Error(`expected exactly one fill in the ${group} card, found ${bars.length}`);
+  }
+  const fill = bar.querySelector("[data-share-bar-fill]");
+  if (!(fill instanceof HTMLElement)) throw new Error(`expected a fill inside the ${group} bar`);
+  return Number.parseFloat(fill.style.width);
+}
+
 describe("RegisteredView", () => {
   test("a year the corpus does not cover says so rather than rendering nothing", () => {
     renderYear(1999);
@@ -46,7 +69,7 @@ describe("RegisteredView", () => {
     expect(within(tfsa).getByText("$7,000.00")).toBeDefined();
     expect(within(tfsa).getByText(/Against the \$7,000\.00 annual maximum/)).toBeDefined();
     expect(within(tfsa).getByText(/carry-forward not visible/i)).toBeDefined();
-    expect(tfsa.querySelectorAll('[role="progressbar"]').length).toBe(0);
+    expect(fillBars("TFSA").length).toBe(0);
     expect(within(tfsa).queryByText(/%/)).toBeNull();
     expect(within(tfsa).queryByText(/\bremaining\b/i)).toBeNull();
   });
@@ -57,7 +80,7 @@ describe("RegisteredView", () => {
     expect(within(fhsa).getByText("$8,000.00")).toBeDefined();
     expect(within(fhsa).getByText(/Against the \$8,000\.00 annual maximum/)).toBeDefined();
     expect(within(fhsa).getByText(/carry-forward not visible/i)).toBeDefined();
-    expect(fhsa.querySelectorAll('[role="progressbar"]').length).toBe(0);
+    expect(fillBars("FHSA").length).toBe(0);
     expect(within(fhsa).getByText(/\$24,000\.00 of \$40,000\.00/)).toBeDefined();
     expect(within(fhsa).getByText(/\$16,000\.00 remaining/)).toBeDefined();
   });
@@ -68,7 +91,7 @@ describe("RegisteredView", () => {
     expect(within(tfsa).getByText("$25,000.00")).toBeDefined();
     expect(within(tfsa).getByText(/carry-forward not visible/i)).toBeDefined();
     expect(within(tfsa).queryByText(/-\$/)).toBeNull();
-    expect(tfsa.querySelectorAll('[role="progressbar"]').length).toBe(0);
+    expect(fillBars("TFSA").length).toBe(0);
   });
 
   test("the real 2026 RRSP shows its assessed remaining and says where the figure came from", () => {
@@ -82,12 +105,57 @@ describe("RegisteredView", () => {
 
   test("the one fill the corpus permits reads the true share, not its inverse", () => {
     renderYear(2026);
-    // 33,000 of 70,752 assessed room is 47%, and 53% is what an inverted fill
-    // would show. This is the only percentage in the whole view.
-    const fill = card("RRSP").querySelector('[role="progressbar"]');
-    if (fill === null) throw new Error("expected the assessed RRSP line to render a fill");
-    expect(fill.getAttribute("aria-valuetext")).toBe("47%");
-    expect(fill.getAttribute("aria-label")).toBe("RRSP room used");
+    // 33,000 of 70,752 assessed room is 46.641% used, and 53.359% is what an
+    // inverted fill would draw. The width is the only place this magnitude is
+    // observable, since the bar announces nothing.
+    expect(fillPercent("RRSP")).toBeCloseTo(46.642, 2);
+  });
+
+  test("neither assessed year announces a whole-percent figure of its own", () => {
+    // Both real instances. Radix's Progress derived aria-valuetext from the
+    // value and rounded it: "47%" against a true 46.641% in 2026, "25%"
+    // against 24.921% in 2025. Neither percentage is printed anywhere on
+    // either card, so no reader could catch the drift. The money is the
+    // figure and the bar is decoration, the ruling ShareBar already made.
+    for (const year of [2026, 2025]) {
+      renderYear(year);
+      const bars = fillBars("RRSP");
+      const bar = bars[0];
+      if (bars.length !== 1 || bar === undefined) {
+        throw new Error(`expected one fill in the ${year} RRSP card, found ${bars.length}`);
+      }
+      expect(bar.getAttribute("aria-hidden")).toBe("true");
+      expect(bar.getAttribute("role")).toBeNull();
+      for (const attribute of ["aria-valuetext", "aria-valuenow", "aria-valuemax"]) {
+        expect(bar.getAttribute(attribute)).toBeNull();
+      }
+      cleanup();
+    }
+  });
+
+  test("no element in the whole view states a percentage on any attribute", () => {
+    // The sweep that survives the bar returning with a role, or the figure
+    // reappearing on a title or a label elsewhere in the view.
+    for (const year of [2026, 2025]) {
+      renderYear(year);
+      const nodes = [...document.querySelectorAll("[data-room-line], [data-room-line] *")];
+      expect(nodes.length).toBeGreaterThan(20);
+      for (const node of nodes) {
+        for (const attribute of ["aria-valuetext", "aria-label", "title"]) {
+          expect(node.getAttribute(attribute) ?? "").not.toMatch(/\d+(\.\d+)?%/);
+        }
+      }
+      cleanup();
+    }
+  });
+
+  test("the 2025 assessed fill draws its real share, the one announced as 25%", () => {
+    renderYear(2025);
+    // 15,000 of 60,191 is 24.921%, and the announcement rounded it to a
+    // figure a whole 0.079 points away that appeared nowhere on the card.
+    expect(fillPercent("RRSP")).toBeCloseTo(24.921, 2);
+    expect(fillPercent("RRSP")).not.toBe(25);
+    expect(within(card("RRSP")).getByText(/\$45,191\.00 remaining of \$60,191\.00/)).toBeDefined();
   });
 
   test("the real 2026 RESP has no annual limit, a lifetime position and a CESG line", () => {

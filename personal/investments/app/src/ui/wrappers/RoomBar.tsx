@@ -1,10 +1,11 @@
-import { Badge, Card, Flex, Heading, Progress, Text } from "@radix-ui/themes";
+import { Badge, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import type {
   LifetimePosition,
   RegisteredGroup,
   RespGrantPosition,
   RoomLine,
 } from "../../analytics/rooms";
+import { ShareBar } from "../ShareBar";
 import { formatCurrency } from "../format";
 import type { ContributionsSource } from "./roomSource";
 
@@ -72,13 +73,35 @@ interface AssessedLimitProps {
  * is stated as an excess rather than printed with a minus sign, so no line
  * ever renders a negative remaining. The fill is clamped for the same
  * reason -- a bar past its own end says nothing the excess line does not.
+ *
+ * The bar is `ShareBar`, which announces nothing, and it is the same
+ * component the Overview draws for the same reason. It replaced a Radix
+ * `Progress`, which derives `aria-valuetext` from the value and rounds to
+ * whole percent: this line announced "47%" against a true 46.641% used, and
+ * "25%" against 24.921%, the seventh and eighth instances of a figure
+ * announced coarser than the one rendered.
+ *
+ * What makes it the clear case rather than the arguable one: no percentage
+ * is printed anywhere on this card. The money is, in full -- `$33,000.00`
+ * contributed and `$37,752.00 remaining of $70,752.00` -- so a sighted
+ * reader never had the percentage either, and the announcement was the only
+ * place it existed. Hiding the bar puts both readers on the same figures
+ * instead of handing one an extra number that is wrong. An explicit
+ * `aria-valuetext` was rejected for the reason `ShareBar` records: it only
+ * helps where the assistive technology honours it over `aria-valuenow` and
+ * `aria-valuemax`, and where it does not the same share is recomputed back
+ * to a whole percent.
+ *
+ * The clamp stays here rather than moving into `ShareBar`, because it is
+ * this line's rule: only an assessed limit can be exceeded at all, and the
+ * excess is already stated in words directly below the bar.
  */
 function AssessedLimit({ group, limit, used, remaining }: AssessedLimitProps) {
-  const fill = limit > 0 ? Math.min(100, Math.max(0, (used / limit) * 100)) : 0;
+  const share = limit > 0 ? Math.min(1, Math.max(0, used / limit)) : 0;
 
   return (
     <Flex direction="column" gap="1">
-      <Progress value={fill} aria-label={`${group} room used`} />
+      <ShareBar label={`${group} room used`} share={share} />
       {remaining === null ? null : <AssessedRemaining limit={limit} remaining={remaining} />}
     </Flex>
   );

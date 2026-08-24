@@ -133,14 +133,48 @@ describe("App accessibility", () => {
     // is how a set of unnamed bars once went unnoticed. A bar is either
     // decorative and hidden, or exposed and named. Never exposed and anonymous.
     // Room bars live on the wrappers tab, which is not the default panel.
+    //
+    // No bar in this app claims the role today: both the Overview's share bars
+    // and the Wrappers room bars are hidden decoration, because a bar carrying
+    // a value announces a whole-percent aria-valuetext beside a figure printed
+    // at full precision. The rule is kept for whatever brings the role back,
+    // and the sweep below is what holds the current shape.
     render(<App />);
     clickTab("Wrappers");
-    const bars = [...document.querySelectorAll('[role="progressbar"]')];
-    expect(bars.length).toBeGreaterThan(0);
-    const exposed = bars.filter((bar) => bar.getAttribute("aria-hidden") !== "true");
-    expect(exposed.length).toBeGreaterThan(0);
-    for (const bar of exposed) {
+    for (const bar of document.querySelectorAll('[role="progressbar"]')) {
+      if (bar.getAttribute("aria-hidden") === "true") continue;
       expect(accessibleName(bar)).not.toBe("");
+    }
+  });
+
+  test("every fill bar on the wrappers tab is hidden decoration, announcing no percentage", () => {
+    // Non-vacuous where the role sweep above no longer is: this counts the
+    // bars that actually render. The room fill is the second instance of the
+    // defect ShareBar was rebuilt for -- Radix's Progress announced "47%"
+    // for a true 46.641% and "25%" for 24.921%, neither figure printed
+    // anywhere on the card that carried it.
+    render(<App />);
+    clickTab("Wrappers");
+    const bars = [...document.querySelectorAll("[data-room-line] [data-share-bar]")];
+    expect(bars.length).toBeGreaterThan(0);
+    for (const bar of bars) {
+      expect(bar.getAttribute("aria-hidden")).toBe("true");
+      expect(bar.getAttribute("role")).toBeNull();
+      expect(accessibleName(bar)).toBe("");
+    }
+  });
+
+  test("nothing on the wrappers tab announces a percentage on any attribute", () => {
+    // The check that survives the bar coming back wearing a role, or the
+    // figure reappearing on a title or a label somewhere else on the tab.
+    render(<App />);
+    clickTab("Wrappers");
+    const nodes = [...document.querySelectorAll("[data-room-line], [data-room-line] *")];
+    expect(nodes.length).toBeGreaterThan(20);
+    for (const node of nodes) {
+      for (const attribute of ["aria-valuetext", "aria-label", "title"]) {
+        expect(node.getAttribute(attribute) ?? "").not.toMatch(/\d+(\.\d+)?%/);
+      }
     }
   });
 
