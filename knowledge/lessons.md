@@ -2,7 +2,7 @@
 title: Lessons
 tags: [knowledge, lessons]
 created: 2026-07-13
-updated: 2026-08-20
+updated: 2026-08-24
 status: active
 type: permanent
 ---
@@ -28,6 +28,17 @@ Why:
 - The `config/claude/` and `config/git-hooks/` folders this vault's docs described never existed on disk, so `core.hooksPath` pointed at nothing and the "pre-commit masking guard" was a phantom safety net for three weeks.
 
 NEVER create a `config/` folder in `obsidian-me`. Claude Code config — `CLAUDE.md`, skills, MCP definitions in `mcp/mcp.json`, hooks, statusline — is owned solely by `~/obsidian/obsidian-dev/config/claude/` and symlinked into `~/.claude/` by `bootstrap.sh`. Add a skill or an MCP server there and re-run `python3 mcp/register-mcp.py`; never drop one into `~/.claude/skills/` directly, or the next device will not have it.
+
+### the obsidian git plugin has two independent commit triggers (2026-08-24)
+
+Why:
+- `autoBackupAfterFileChange: false` was set to stop the plugin sweeping unstaged work, the mitigation for nine captures across one project. Ninety minutes later commit `385003c "vault backup"` swept a 37-file irreversible deletion into a generic backup commit and **pushed it to origin/main**.
+- `autoSaveInterval` is a separate trigger from `autoBackupAfterFileChange`, and it fires on a timer regardless of the other's value. Turning off the file-change trigger addresses one of two paths, and the remaining one both commits and pushes.
+- The plugin's "backup" means commit **and** push, so `autoPushInterval: 0` does not mean nothing is pushed. By the time the capture is noticed the commit is on the shared remote and rewriting it is off the table.
+
+ALWAYS treat both `autoBackupAfterFileChange` **and** `autoSaveInterval` in `.obsidian/plugins/obsidian-git/data.json` as live commit triggers, and check both before assuming work is safe from capture. The file is gitignored, so a change to it is local to one device and Obsidian may rewrite it from memory on quit: verify by grep after restarting Obsidian, never by the edit alone.
+
+NEVER rely on a settings change as the mitigation. Commit real work early and often under a real message, because a commit that already exists cannot be swept into a nameless one. When a capture does happen, check whether it is pushed (`git rev-list --left-right --count origin/main...HEAD`) BEFORE considering an amend, and if it is pushed on a branch other sessions share, leave history alone and record what the commit really contained in the endeavor's log.
 
 ### pin mcp<2 for stdio servers that import McpError (2026-08-04)
 
