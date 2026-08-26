@@ -196,12 +196,13 @@ async function sweepTheme(
   browser: Browser,
   url: string,
   theme: Theme,
-): Promise<{ samples: Sample[]; problems: string[]; hovered: number }> {
+): Promise<{ samples: Sample[]; problems: string[]; hovered: number; lensesSwept: Set<string> }> {
   // Always a light OS preference, so `inherit` and the toggle behave the same
   // way in both passes and `applyTheme` needs at most one click.
   const context = await browser.newContext({ colorScheme: "light", reducedMotion: "reduce" });
   const samples: Sample[] = [];
   const problems: string[] = [];
+  const lensesSwept = new Set<string>();
   let hovered = 0;
   try {
     const page = await context.newPage();
@@ -218,11 +219,34 @@ async function sweepTheme(
         for (const lens of EXTRA_LENSES) {
           const control = page.getByRole("radio", { name: lens, exact: true });
           await control.click();
+          // Prove the lens took, the same way `applyTheme` proves the theme
+          // did by reading the page's own background back. Without this the
+          // guard below only shows that SOME text was swept under a lens
+          // label: a click that silently failed would sweep the default lens
+          // a second time, count as covered, and hide the loss colour again.
+          await page
+            .waitForFunction(
+              (name) =>
+                document
+                  .querySelector(`[role="radio"][aria-checked="true"]`)
+                  ?.textContent?.includes(name) === true,
+              lens,
+              { timeout: 2000 },
+            )
+            .catch(() => {
+              problems.push(`${theme}/${tab} the ${lens} lens never became the selected one`);
+            });
           await page.waitForTimeout(150);
           const state = `lens ${lens.toLowerCase()}`;
           const inLens = await sweepState(page, { tab, theme, state }, samples);
           if (inLens < MIN_RUNS_PER_TAB) {
             problems.push(`${theme}/${tab} ${state} swept only ${inLens} runs; the lens is empty`);
+          } else {
+            // Recorded by the lens itself, never by parsing `state` back out of
+            // the samples. A guard that reads a label it also writes is
+            // measuring its own formatting, and renaming the label would then
+            // either break the guard or quietly satisfy it.
+            lensesSwept.add(lens);
           }
         }
       }
@@ -232,7 +256,7 @@ async function sweepTheme(
   } finally {
     await context.close();
   }
-  return { samples, problems, hovered };
+  return { samples, problems, hovered, lensesSwept };
 }
 
 async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
@@ -242,6 +266,7 @@ async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
   const browser = await chromium.launch();
   const samples: Sample[] = [];
   const problems: string[] = [];
+  const lensesSwept = new Set<string>();
   let hovered = 0;
   try {
     const url = server.resolvedUrls?.local[0];
@@ -251,6 +276,7 @@ async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
       samples.push(...swept.samples);
       problems.push(...swept.problems);
       hovered += swept.hovered;
+      for (const lens of swept.lensesSwept) lensesSwept.add(lens);
     }
   } finally {
     await browser.close();
@@ -268,13 +294,9 @@ async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
       "no chart readout was measured anywhere in the run; the hover sweep reached nothing",
     );
   }
-  const lensStates = new Set(
-    samples.filter((sample) => sample.state.startsWith("lens ")).map((sample) => sample.state),
-  );
-  if (lensStates.size < EXTRA_LENSES.length) {
-    problems.push(
-      `only ${lensStates.size} of ${EXTRA_LENSES.length} non-default overview lenses were swept`,
-    );
+  const missed = EXTRA_LENSES.filter((lens) => !lensesSwept.has(lens));
+  if (missed.length > 0) {
+    problems.push(`overview lenses never swept: ${missed.join(", ")}`);
   }
   return { samples, problems };
 }
