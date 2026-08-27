@@ -2,7 +2,7 @@
 title: Hot — Active Context
 tags: [meta/system]
 created: 2026-07-13
-updated: 2026-08-24
+updated: 2026-08-27
 status: active
 type: reference
 ---
@@ -20,6 +20,8 @@ Scannable cache of active endeavors and recent session context. Read this first.
 - **[[personal/govt-tenders/README|govt-tenders]]** — bidding on Canadian public sector website work. Market scanned 2026-08-10: the CanadaBuys search for "website" returns 242 open notices of which **10 are about a website**, all municipal, academic or provincial, none federal. Ottawa runs 893 open notices with three touching the web and routes the rest through the TBIPS and SBIPS supply arrangements (qualification open until 2028-07-04). The `tender-digest` skill now emails a title-filtered digest Mon/Wed/Fri at 08:12. Next: register on BC Bid, APC, MERX, bids&tenders and Biddingo, then clear the qualification gates in `personal/govt-tenders/tracking.md`. See `personal/govt-tenders/log/2026-08-10.md`.
 
 ## Recent sessions
+
+- **2026-08-27** — Investments follow-up to the cleanup session. Reviewed my own guards from 2026-08-24 and found a real defect in one: the missed-lens guard recovered its list by string-matching the state label it had itself written, and underneath that it proved a lens sweep found *text* rather than that the lens ever *changed*, so a silently failed click would have swept the default lens twice and hidden the loss colour exactly as before. The lens now asserts `aria-checked` the way `applyTheme` already read the page background back. All four guards demonstrated to exit 1. `autoSaveInterval` set to 0, closing the second independent auto-backup trigger. Corrected the stale claim that the phase 3 whole-branch review never ran; it did, verdict SHIPS. 1221 tests, contrast 3606 runs AA pass. See `personal/investments/log/2026-08-24.md`.
 
 - **2026-08-24** — Investments cleanup, 1207 tests to 1221. Fixed the seventh and eighth instances of the announced-figure defect: the room bars announced 47% for a true 46.641% and 25% for 24.921%, from Radix `Progress` rounding its own `aria-valuetext`, with no percentage printed anywhere on either card so no reader could catch it. `ShareBar` had already ruled on this exact shape and the ruling had never propagated. Taught `bun run contrast` to hover and to switch lenses: it had never measured a single tooltip or the loss colour, and an unvisited state reads exactly like a pass. My first version repeated the bug one level down, measuring only the chart above the fold on every tab. Deleted `scripts/` and `notes/index.html`, 61MB, after a final byte-identity check that can never be run again. **The auto-backup captured and pushed the deletion anyway: `autoBackupAfterFileChange` and `autoSaveInterval` are independent triggers and turning off the first leaves the second.** See `personal/investments/log/2026-08-24.md`.
 

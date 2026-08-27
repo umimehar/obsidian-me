@@ -170,3 +170,16 @@ Why:
 ALWAYS ask what STATES a visual gate reaches, not just what pages. Hover-only, focus-only, error-only and empty-state renderings need the gate to drive them, and a multi-view control needs the gate to switch views. Enumerate the states a component can paint, then check the sampler's own count against that list.
 
 NEVER report a gate's number as evidence for a change the gate cannot see. When a state is out of the sweep, measure it by reusing the gate's OWN sampling and maths against a driven page rather than reimplementing the arithmetic, and say in the report that it was measured out-of-band and why.
+
+### a guard that reads a label it wrote proves only its own formatting (2026-08-26)
+
+Why:
+- A coverage guard added to the contrast gate recovered its list of visited states by string-matching the label the same function had just written (`state.startsWith("lens ")`). It was measuring its own formatting, not the app, and it is the same load-bearing-string pattern this project had already rejected once for `ProjectionYear.notes`.
+- The deeper hole was underneath: the guard proved a state sweep found TEXT, not that the state ever CHANGED. A click that silently failed would have swept the default view a second time under the other view's label, counted as covered, and hidden the exact defect the guard was added for. The guard would have become the bug's disguise.
+- Both were found only by mutating the guard itself. Neither had ever been demonstrated to fire, which is this project's own definition of not a check. See [[#a check you have not seen fail is not a check]] and [[#a visual gate only proves what it actually visits]].
+
+ALWAYS carry state through a real value (a `Set` the sweep writes to, a returned list), never by parsing a label the same code emitted. The failure message should name the missing item, not count to an expected total.
+
+ALWAYS make a state change prove itself by reading the application's OWN state back -- the selected control's `aria-checked`, the painted background, the rendered figure -- the way the theme switch in the same file already did. Asserting that content appeared after a click proves neither that the click landed nor that anything changed.
+
+NEVER ship a guard you have not seen exit non-zero. Mutate each guard independently and check the message names the real cause.
