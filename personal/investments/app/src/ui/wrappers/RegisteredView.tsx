@@ -21,7 +21,7 @@ export function RegisteredView({ analytics, year }: RegisteredViewProps) {
   return (
     <Flex direction="column" gap="2">
       <Heading size="5" as="h2">
-        Registered wrappers, {year}
+        Registered contributions, {year}
       </Heading>
       {lines.length === 0 ? (
         <Text size="2" color="gray">

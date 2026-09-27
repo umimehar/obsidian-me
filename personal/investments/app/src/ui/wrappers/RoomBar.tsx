@@ -1,4 +1,5 @@
 import { Badge, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { nextAction } from "../../analytics/contributionPlan";
 import type {
   LifetimePosition,
   RegisteredGroup,
@@ -210,7 +211,19 @@ export function RoomBar({ line, contributionsSource }: RoomBarProps) {
         ) : null}
 
         {line.lifetimeGrant !== null ? <GrantLine grant={line.lifetimeGrant} /> : null}
+
+        <NextActionLine line={line} />
       </Flex>
     </Card>
+  );
+}
+
+/** What to do next about this wrapper, and by when -- see `nextAction`. */
+function NextActionLine({ line }: { line: RoomLine }) {
+  const action = nextAction(line);
+  return (
+    <Text size="2" color="jade" data-next-action="">
+      {action.text}
+    </Text>
   );
 }

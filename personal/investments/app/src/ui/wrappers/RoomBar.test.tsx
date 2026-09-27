@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { cleanup, render, screen, within } from "@testing-library/react";
+import { nextAction } from "../../analytics/contributionPlan";
 import type { RoomLine } from "../../analytics/rooms";
 import { RoomBar } from "./RoomBar";
 
@@ -272,5 +273,30 @@ describe("RoomBar", () => {
       "derived",
     );
     expect(screen.getByText(/\$2,500\.00 a year attracts the maximum basic grant/)).toBeDefined();
+  });
+
+  test("the next action line states the same text nextAction computes for the line", () => {
+    const roomLine = line({
+      group: "RRSP",
+      used: 33000,
+      limit: 70752,
+      assessed: true,
+      remaining: 37752,
+    });
+    const bar = renderBar(roomLine);
+    expect(bar.getByText(nextAction(roomLine).text)).toBeDefined();
+  });
+
+  test("the deadline names the wrapper's own cutoff, RRSP's the first 60 days of the next year", () => {
+    const roomLine = line({
+      group: "RRSP",
+      year: 2026,
+      used: 33000,
+      limit: 70752,
+      assessed: true,
+      remaining: 37752,
+    });
+    const bar = renderBar(roomLine);
+    expect(bar.getByText(/2027-03-01/)).toBeDefined();
   });
 });

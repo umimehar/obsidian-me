@@ -133,7 +133,7 @@ describe("the year filter reaches every tab that can honour it", () => {
     // "2024" appears somewhere on the panel -- the year filter itself now
     // renders inside every panel and its own "2024" radio label would match
     // a substring check regardless of whether the views underneath it moved.
-    expect(screen.getByRole("heading", { name: "Registered wrappers, 2024" })).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Registered contributions, 2024" })).toBeDefined();
     expect(screen.queryByRole("radiogroup", { name: "Tax year" })).toBeNull();
 
     openTab("Portfolio");

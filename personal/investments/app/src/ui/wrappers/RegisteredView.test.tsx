@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { cleanup, render, screen, within } from "@testing-library/react";
+import { nextAction } from "../../analytics/contributionPlan";
 import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
 import { formatCurrency } from "../format";
@@ -56,6 +57,19 @@ function money(amount: number): string {
 }
 
 describe("RegisteredView", () => {
+  test("the heading names the view for what it is", () => {
+    renderYear(2026);
+    expect(screen.getByRole("heading", { name: "Registered contributions, 2026" })).toBeDefined();
+  });
+
+  test("every card states its own next action, matching nextAction's own text", () => {
+    renderYear(2026);
+    const lines = loadAnalytics().rooms["2026"] ?? [];
+    for (const roomLine of lines) {
+      expect(within(card(roomLine.group)).getByText(nextAction(roomLine).text)).toBeDefined();
+    }
+  });
+
   test("a year the corpus does not cover says so rather than rendering nothing", () => {
     renderYear(1999);
     expect(screen.getByText(/no registered wrapper has a statement for 1999/i)).toBeDefined();
