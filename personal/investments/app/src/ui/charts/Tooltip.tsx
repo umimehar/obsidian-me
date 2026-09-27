@@ -230,11 +230,16 @@ function resolveContent(props: TooltipInput): TooltipContent {
  * to fit the largest figure this app ever states, the portfolio total
  * ($241,739.67), beside its label without wrapping -- confirmed directly,
  * that row renders on one line at 17.4px tall at 320px, with room either
- * side, and so does the smallest real row figure. Only applied when there
- * is a column to protect -- see `linesToTooltipContent`'s comment for why
- * every other chart's flat-line tooltip keeps its own unconstrained width.
+ * side, and so does the smallest real row figure. The flat-line tooltip gets
+ * its own fixed width, `LINES_WIDTH`, below.
  */
 const ROWS_WIDTH = 320;
+
+/**
+ * The flat-line tooltip's fixed width, for the same reason as `ROWS_WIDTH`:
+ * shrink-to-fit near a chart's edge wrapped "This month 3.22%" onto two lines.
+ */
+const LINES_WIDTH = 260;
 
 const SEPARATOR: CSSProperties = {
   border: "none",
@@ -271,8 +276,7 @@ export function ChartTooltip(props: TooltipInput) {
         borderRadius: "var(--radius-3)",
         boxShadow: "var(--shadow-3)",
         padding: "8px 10px",
-        width: hasRows ? ROWS_WIDTH : undefined,
-        maxWidth: hasRows ? undefined : 280,
+        width: hasRows ? ROWS_WIDTH : LINES_WIDTH,
       }}
     >
       <div style={{ color: "var(--gray-12)", fontSize: 13, fontWeight: 600, lineHeight: 1.45 }}>

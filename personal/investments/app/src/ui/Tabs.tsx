@@ -1,4 +1,4 @@
-import { Tabs as RadixTabs } from "@radix-ui/themes";
+import { Box, Tabs as RadixTabs } from "@radix-ui/themes";
 import type { ReactNode } from "react";
 import { TABS, type TabId } from "./useHashTab";
 
@@ -40,7 +40,10 @@ export function Tabs({ panels, tab, onTabChange }: TabsProps) {
       </RadixTabs.List>
       {TABS.map((id) => (
         <RadixTabs.Content key={id} value={id}>
-          {panels[id]}
+          {/* Breathing room between the tab bar and the panel's first row. */}
+          <Box pt="5" data-tab-panel-body="">
+            {panels[id]}
+          </Box>
         </RadixTabs.Content>
       ))}
     </RadixTabs.Root>

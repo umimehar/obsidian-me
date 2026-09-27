@@ -389,7 +389,7 @@ function WrapperCard({ wrapper }: { wrapper: WrapperContributions }) {
 
   return (
     <div data-contributions-card={wrapper.group}>
-      <Card>
+      <Card className="ivt-chart-card">
         <Flex justify="between" align="center" gap="2" mb="2" wrap="wrap">
           <Heading size="3" as="h3">
             {wrapper.group}

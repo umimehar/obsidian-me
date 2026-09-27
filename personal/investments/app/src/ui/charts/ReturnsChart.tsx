@@ -283,7 +283,7 @@ function AccountReturnsCard({
 
   return (
     <div data-returns-card={account.shortId}>
-      <Card>
+      <Card className="ivt-chart-card">
         <Flex justify="between" align="center" gap="2" mb="2" wrap="wrap">
           <Heading size="3" as="h3">
             {account.label}

@@ -87,4 +87,10 @@ describe("Tabs", () => {
     expect(screen.getByText(PANELS.data)).toBeDefined();
     expect(screen.queryByText(PANELS.portfolio)).toBeNull();
   });
+
+  test("every panel starts below a gap under the tab bar, never flush against it", () => {
+    renderTabs();
+    const body = document.querySelector("[data-tab-panel-body]");
+    expect(body?.className).toContain("rt-r-pt-5");
+  });
 });

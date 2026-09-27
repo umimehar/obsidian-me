@@ -239,7 +239,7 @@ describe("ChartTooltip, given the new structured content", () => {
     expect(marketValue.style.fontVariantNumeric).toBe("tabular-nums");
   });
 
-  test("the row-bearing tooltip has one fixed width; the flat-line tooltip keeps its own unconstrained width", () => {
+  test("the row-bearing tooltip has one fixed width", () => {
     render(<ChartTooltip content={tooltipContent("2026-06", LAST, 11)} />);
     const withRows = document.querySelector("[data-chart-tooltip]");
     if (!(withRows instanceof HTMLElement)) throw new Error("expected the tooltip to render");
@@ -252,6 +252,14 @@ describe("ChartTooltip, given the new structured content", () => {
     // included), not just the content box -- see the fix report for the
     // browser measurement that depends on this.
     expect(withRows.style.boxSizing).toBe("border-box");
+  });
+
+  test("the flat-line tooltip has a fixed width too, so it never collapses at a chart's edge", () => {
+    render(<ChartTooltip lines={["Feb 2026", "Stated on the statement", "This month 3.22%"]} />);
+    const flat = document.querySelector("[data-chart-tooltip]");
+    if (!(flat instanceof HTMLElement)) throw new Error("expected the tooltip to render");
+    expect(flat.style.width).toBe("260px");
+    expect(flat.style.maxWidth).toBe("");
   });
 
   test("is hidden from assistive tech, because the announcement speaks the same words", () => {
