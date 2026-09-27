@@ -20,6 +20,13 @@ function chart(): SVGSVGElement {
 }
 
 describe("BenchmarkChart, over the real corpus", () => {
+  test("the note says which way the uncounted USD deposits skew the comparison", () => {
+    render(<BenchmarkChart points={POINTS} skipped={[]} symbol={BENCHMARK.symbol} />);
+    expect(document.body.textContent).toContain(
+      "Deposits made in USD cash are not yet counted here, which also favours the portfolio",
+    );
+  });
+
   test("the accessible summary states both end values and the difference", () => {
     render(<BenchmarkChart points={POINTS} skipped={[]} symbol={BENCHMARK.symbol} />);
     const last = POINTS[POINTS.length - 1];

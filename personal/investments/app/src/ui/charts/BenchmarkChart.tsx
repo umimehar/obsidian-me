@@ -160,8 +160,8 @@ function Provenance({ symbol, skipped }: { symbol: string; skipped: readonly str
         Each month's net deposits buy {symbol} at that month's own closing price, using adjusted
         closes so {symbol}'s own distributions are treated as reinvested. Buying at the closing
         price rather than an average through the month favours the portfolio somewhat in a rising
-        market. Deposits made in USD cash are not yet counted here, a known limitation of the
-        underlying deposit figures, tracked separately.
+        market. Deposits made in USD cash are not yet counted here, which also favours the
+        portfolio, since that money never buys {symbol}; a known limitation, tracked separately.
         {skipped.length === 0
           ? ""
           : ` ${skipped.length === 1 ? "One month" : `${skipped.length} months`} had no ${symbol} close to price and ${skipped.length === 1 ? "is" : "are"} left out: ${skipped.join(", ")}.`}
