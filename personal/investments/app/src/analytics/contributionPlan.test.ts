@@ -224,6 +224,22 @@ describe("nextAction with context", () => {
     expect(action.text).not.toContain("2024-12-31");
   });
 
+  test("a past year without an assessed limit never reads as over the generic maximum", () => {
+    // TFSA carry forward room is not in the statements, so $25,000 against the
+    // $7,000 annual maximum is not an over contribution and must not read as one.
+    const line = roomLine({
+      group: "TFSA",
+      year: 2025,
+      used: 25000,
+      limit: 7000,
+      assessed: false,
+      remaining: null,
+    });
+    const action = nextAction(line, { firstYear: 2023, latestPeriod: "2026-08" });
+    expect(action.text).toBe(`Contributed ${formatCurrency(25000)}.`);
+    expect(action.text).not.toContain(formatCurrency(7000));
+  });
+
   test("a RESP past year with no unused room states only what was contributed", () => {
     const line = roomLine({ group: "RESP", year: 2024, used: 2500, limit: null, remaining: null });
     const action = nextAction(line, { firstYear: 2023, latestPeriod: "2026-08" });

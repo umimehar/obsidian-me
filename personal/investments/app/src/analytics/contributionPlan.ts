@@ -217,7 +217,8 @@ function deadlineHasPassed(deadline: string, latestPeriod: string | null): boole
  * one.
  */
 function pastAction(line: RoomLine, deadline: string): NextAction {
-  const ofLimit = line.limit !== null ? ` of ${formatCurrency(line.limit)}` : "";
+  // Only an assessed limit is a ceiling; a generic one would misread carry forward as excess.
+  const ofLimit = line.assessed && line.limit !== null ? ` of ${formatCurrency(line.limit)}` : "";
   const unused =
     line.assessed && line.remaining !== null && line.remaining > 0
       ? ` Room left unused: ${formatCurrency(line.remaining)}.`
