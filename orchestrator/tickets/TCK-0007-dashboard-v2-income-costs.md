@@ -27,11 +27,11 @@ Show what the portfolio pays and what it costs: dividends, interest, securities 
 
 ## Acceptance criteria
 
-- [ ] Income by month and year from DIV, INT, FPLINT rows, per account and total
-- [ ] Foreign withholding tax (NRT) per account per year, with a note on which account types can recover it
-- [ ] Fees (FEE) and FX conversion counts and amounts per year
-- [ ] All figures from the datastore through analytics.json; tests over fixtures and the real corpus; bun run check clean
-- [ ] Income and costs plus the investment income tax view live on a new Income tab (id `income`); `#tax` resolves to it
+- [x] Income by month and year from DIV, INT, FPLINT rows, per account and total
+- [x] Foreign withholding tax (NRT) per account per year, with a note on which account types can recover it
+- [x] Fees (FEE) and FX conversion counts and amounts per year
+- [x] All figures from the datastore through analytics.json; tests over fixtures and the real corpus; bun run check clean
+- [x] Income and costs plus the investment income tax view live on a new Income tab (id `income`); `#tax` resolves to it
 
 ## Context
 
@@ -42,3 +42,6 @@ Owner request in session on 2026-09-26, after reviewing a proposal for the inves
 - 2026-09-27 06:00 — Implementation delegated to a Sonnet subagent.
 - 2026-09-27 06:15 — Four commits d0c0594 to 47857a9: income and costs model on the shared activity totals, monthly dividends chart, year and withholding tables, Income tab with TaxView moved off Portfolio and #tax mapped. 2025: dividends $3,017.06, withholding $298.82, fees $29.65; 2026: dividends $1,657.22, withholding $97.87, fees $212.55. `bun run check`: 1528 pass, 0 fail; contrast AA pass.
 - 2026-09-27 06:16 — Agent review dispatched at Opus, asked to explain zero interest and the 2026 fee jump from the raw rows.
+- 2026-09-27 06:40 — Review round 1 FAIL: figures matched the statements, but the chequing note gave a false reason, fees ignored refunds, per account income, monthly interest and FX amounts were missing, the RRSP recovery wording was wrong, the selected year was not highlighted. Also closed a latent double count: statement versions now collapse inside the activity totals (dependency free `statementVersion.ts`, since importing the ingest pipeline broke the browser bundle).
+- 2026-09-27 07:30 — Round 2 FAIL on one: FX conversions counted both sides of each trade. Fixed in 33ebe69.
+- 2026-09-27 07:45 — Round 3 PASS. Final: 2025 dividends $3,017.06, withholding $298.82, fees $28.95, 7 FX conversions worth $982.84; 2026 dividends $1,657.22, withholding $97.87, fees $201.78 (the only gap to the statements, $23.87, is trading cost inside 2c62 buy prices and is stated on the page), 21 conversions worth $24,089.24. Chequing interest shown on its own line: $176.15 and $65.64. `bun run check`: 1569 pass, 14 skip, 0 fail; contrast AA pass.
