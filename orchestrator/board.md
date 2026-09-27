@@ -11,12 +11,12 @@ kanban-plugin: board
 
 ## Ready
 
-- [ ] [[TCK-0008-dashboard-v2-holdings-benchmark]] #project/system #type/feature #p1
 
 
 
 ## Claimed
 
+- [ ] [[TCK-0008-dashboard-v2-holdings-benchmark]] #project/system #type/feature #p1
 
 
 

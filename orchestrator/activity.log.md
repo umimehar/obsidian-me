@@ -48,3 +48,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-27 02:10 · mac-studio · claim · TCK-0007 · Income tab
 - 2026-09-27 02:10 · mac-studio · start · TCK-0007 · starting Income tab
 - 2026-09-27 03:12 · mac-studio · done · TCK-0007 · Income tab shipped, agent review PASS in round 3
+- 2026-09-27 03:12 · mac-studio · claim · TCK-0008 · Holdings tab and benchmark
