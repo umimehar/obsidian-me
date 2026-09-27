@@ -125,12 +125,19 @@ function IncomeAndCosts({ activity }: { activity: MonthReview["activity"] }) {
   );
 }
 
-/** Which accounts have no statement yet, and which opened this period -- never a $0 account, per Review Focus. */
+/**
+ * Which accounts have no statement yet, and which opened this period -- never
+ * a $0 account, per Review Focus. A missing account's own last known value is
+ * stated too: without it, its whole balance reads as an unexplained gap
+ * between the headline change and the deposits/growth line above it.
+ */
 function CoverageLine({ review }: { review: MonthReview }) {
   if (review.missing.length === 0 && review.opened.length === 0) return null;
   return (
     <Text size="2" color="gray" data-month-coverage="">
-      {review.missing.length === 0 ? null : `Missing a statement: ${review.missing.join(", ")}. `}
+      {review.missing.length === 0
+        ? null
+        : `Not yet reported: ${review.missing.join(", ")}, last value ${formatCurrency(review.missingValue)}. `}
       {review.opened.length === 0 ? null : `Newly opened: ${review.opened.join(", ")}. `}
       See <a href="#data">Data</a> for the full coverage.
     </Text>

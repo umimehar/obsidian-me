@@ -2,10 +2,45 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { monthReview, reviewPeriods } from "../analytics/monthReview";
+import type { AccountSeries, MonthPoint } from "../analytics/types";
 import { GOLDENS } from "../goldens";
+import type { AccountKind, ManagementStyle } from "../store/mask";
+import type { Purpose } from "../store/registry";
 import { ThisMonth } from "./ThisMonth";
 import { loadAnalytics, loadCheckpoints } from "./data";
 import { formatCurrency, formatRate, formatSignedCurrency } from "./format";
+
+function month(overrides: Partial<MonthPoint> & { period: string }): MonthPoint {
+  return {
+    marketValue: null,
+    bookCost: null,
+    cashBalance: null,
+    deposits: 0,
+    withdrawals: 0,
+    contributions: null,
+    contributionMonthsSpanned: 1,
+    contributionFirst60Days: null,
+    contributionRestOfYear: null,
+    contributionsSource: null,
+    grants: 0,
+    ...overrides,
+  };
+}
+
+function account(overrides: Partial<AccountSeries> = {}): AccountSeries {
+  return {
+    maskedId: "acct_0001",
+    shortId: "0001",
+    label: "TFSA 0001",
+    kind: "TFSA" as AccountKind,
+    style: "self-directed" as ManagementStyle,
+    purpose: "unassigned" as Purpose,
+    inTotals: true,
+    months: [],
+    contributionsByYear: {},
+    ...overrides,
+  };
+}
 
 afterEach(() => {
   cleanup();
@@ -126,6 +161,42 @@ describe("ThisMonth", () => {
     expect(line.textContent).toContain("Corporate (self)");
   });
 
+  test("the coverage line states a missing account's own last value, so the headline gap is explained", () => {
+    const present = account({
+      maskedId: "acct_present",
+      label: "Present",
+      months: [
+        month({ period: "2026-06", marketValue: 1000, bookCost: 900 }),
+        month({ period: "2026-07", marketValue: 1100, bookCost: 900, deposits: 50 }),
+      ],
+    });
+    const behind = account({
+      maskedId: "acct_behind",
+      label: "Managed (TFSA)",
+      months: [month({ period: "2026-06", marketValue: 7670.2, bookCost: 7000 })],
+    });
+    const analytics = {
+      meta: { generated: "", datastoreGenerated: "", accountCount: 2 },
+      series: [present, behind],
+      rooms: {},
+      income: {},
+      returns: [],
+      rollups: { registration: [], account: [], purpose: [] },
+      activity: {},
+    };
+
+    render(
+      <Theme>
+        <ThisMonth analytics={analytics} checkpoints={[]} scope="all" />
+      </Theme>,
+    );
+    const line = document.querySelector("[data-month-coverage]");
+    if (line === null) throw new Error("expected the coverage line to render");
+    expect(line.textContent).toContain(
+      `Not yet reported: Managed (TFSA), last value ${formatCurrency(7670.2)}`,
+    );
+  });
+
   test("the checkpoint line states the exact app, statement and gap figures", async () => {
     const checkpoint = loadCheckpoints().find(
       (c) => c.coversPeriod === "2026-08" && c.reconciliation !== null,
@@ -185,5 +256,30 @@ describe("ThisMonth", () => {
     for (const option of options) {
       expect(option).toContain("2024");
     }
+  });
+
+  test("switching the year scope live moves the picker's default month, and moves it back", () => {
+    const analytics = loadAnalytics();
+    const checkpoints = loadCheckpoints();
+    const { rerender } = render(
+      <Theme>
+        <ThisMonth analytics={analytics} checkpoints={checkpoints} scope="all" />
+      </Theme>,
+    );
+    expect(screen.getByRole("heading", { level: 2 }).textContent).toContain("August 2026");
+
+    rerender(
+      <Theme>
+        <ThisMonth analytics={analytics} checkpoints={checkpoints} scope={2024} />
+      </Theme>,
+    );
+    expect(screen.getByRole("heading", { level: 2 }).textContent).toContain("December 2024");
+
+    rerender(
+      <Theme>
+        <ThisMonth analytics={analytics} checkpoints={checkpoints} scope="all" />
+      </Theme>,
+    );
+    expect(screen.getByRole("heading", { level: 2 }).textContent).toContain("August 2026");
   });
 });
