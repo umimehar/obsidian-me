@@ -4,7 +4,9 @@ import {
   grandTotal,
   latestPeriod,
   loadAnalytics,
+  loadCheckpoints,
   loadReconciliation,
+  parseCheckpoints,
   parseReconciliation,
   totalsByLens,
 } from "./data";
@@ -174,5 +176,39 @@ describe("data.ts against the real committed analytics.json", () => {
         activity: {},
       }),
     ).toBeNull();
+  });
+});
+
+describe("parseCheckpoints", () => {
+  test("accepts an explicit reconciliation: null, distinct from the field being absent", () => {
+    const checkpoints = parseCheckpoints({
+      checkpoints: [{ observed: "2026-09-01", coversPeriod: "2026-09", reconciliation: null }],
+    });
+    expect(checkpoints).toEqual([{ coversPeriod: "2026-09", reconciliation: null }]);
+  });
+
+  test("a checkpoint missing coversPeriod throws naming its index and observed date", () => {
+    expect(() => parseCheckpoints({ checkpoints: [{ observed: "2026-08-31" }] })).toThrow(
+      /checkpoint 0 \(2026-08-31\).*coversPeriod/,
+    );
+  });
+
+  test("a reconciliation with a non-numeric field throws naming the field", () => {
+    expect(() =>
+      parseCheckpoints({
+        checkpoints: [
+          {
+            observed: "2026-08-31",
+            coversPeriod: "2026-08",
+            reconciliation: { ourTotal: "not a number", appVisibleTotal: 1, difference: 1 },
+          },
+        ],
+      }),
+    ).toThrow(/reconciliation\.ourTotal/);
+  });
+
+  test("the real committed checkpoints.json parses without throwing", () => {
+    expect(() => loadCheckpoints()).not.toThrow();
+    expect(loadCheckpoints().length).toBeGreaterThan(0);
   });
 });

@@ -205,35 +205,70 @@ export interface Checkpoint {
   reconciliation: { ourTotal: number; appVisibleTotal: number; difference: number } | null;
 }
 
-function isReconciliation(
-  value: unknown,
-): value is { ourTotal: number; appVisibleTotal: number; difference: number } {
-  if (typeof value !== "object" || value === null) return false;
-  const c = value as Record<string, unknown>;
-  return (
-    typeof c.ourTotal === "number" &&
-    typeof c.appVisibleTotal === "number" &&
-    typeof c.difference === "number"
-  );
+/** Names one checkpoint for an error: its index, plus its own `observed` date when it has one. */
+function checkpointLabel(raw: unknown, index: number): string {
+  const observed =
+    typeof raw === "object" && raw !== null ? (raw as Record<string, unknown>).observed : undefined;
+  return typeof observed === "string" ? `checkpoint ${index} (${observed})` : `checkpoint ${index}`;
 }
 
-function isCheckpoint(value: unknown): value is Checkpoint {
-  if (typeof value !== "object" || value === null) return false;
-  const c = value as Record<string, unknown>;
-  if (typeof c.coversPeriod !== "string") return false;
-  return c.reconciliation === undefined || isReconciliation(c.reconciliation);
+/**
+ * `null` (not yet reconciled against a statement) and the field absent
+ * entirely both mean the same thing and are both accepted; anything else
+ * shaped wrong throws naming the field, so a typo in the owner's own
+ * hand-edited file is caught here rather than read back as a wrong figure.
+ */
+function parseCheckpointReconciliation(raw: unknown, label: string): Checkpoint["reconciliation"] {
+  if (raw === undefined || raw === null) return null;
+  if (typeof raw !== "object") {
+    throw new Error(`${label}: reconciliation is not an object`);
+  }
+  const c = raw as Record<string, unknown>;
+  for (const field of ["ourTotal", "appVisibleTotal", "difference"] as const) {
+    if (typeof c[field] !== "number") {
+      throw new Error(`${label}: reconciliation.${field} is not a number`);
+    }
+  }
+  return {
+    ourTotal: c.ourTotal as number,
+    appVisibleTotal: c.appVisibleTotal as number,
+    difference: c.difference as number,
+  };
+}
+
+function parseCheckpoint(raw: unknown, index: number): Checkpoint {
+  const label = checkpointLabel(raw, index);
+  if (typeof raw !== "object" || raw === null) {
+    throw new Error(`${label}: is not an object`);
+  }
+  const c = raw as Record<string, unknown>;
+  if (typeof c.coversPeriod !== "string") {
+    throw new Error(`${label}: coversPeriod is not a string`);
+  }
+  return {
+    coversPeriod: c.coversPeriod,
+    reconciliation: parseCheckpointReconciliation(c.reconciliation, label),
+  };
 }
 
 /**
  * The owner-recorded checkpoints, for This month's "app against statements"
- * line. A malformed entry is dropped rather than thrown on -- a checkpoint is
- * a bonus reading, not something the rest of the dashboard depends on.
+ * line. A malformed checkpoint throws naming its index (and `observed` date,
+ * when the entry carries one) and the bad field, rather than being dropped
+ * silently: a hand-edited file with a typo should fail loudly, the same as
+ * every other committed artifact this file loads.
  */
+export function parseCheckpoints(raw: unknown): Checkpoint[] {
+  if (typeof raw !== "object" || raw === null) {
+    throw new Error("checkpoints.json is not an object");
+  }
+  const { checkpoints } = raw as { checkpoints?: unknown };
+  if (!Array.isArray(checkpoints)) {
+    throw new Error("checkpoints.json is missing its checkpoints array");
+  }
+  return checkpoints.map((c, index) => parseCheckpoint(c, index));
+}
+
 export function loadCheckpoints(): Checkpoint[] {
-  if (typeof rawCheckpoints !== "object" || rawCheckpoints === null) return [];
-  const { checkpoints } = rawCheckpoints as { checkpoints?: unknown };
-  if (!Array.isArray(checkpoints)) return [];
-  return checkpoints
-    .filter(isCheckpoint)
-    .map((c) => ({ coversPeriod: c.coversPeriod, reconciliation: c.reconciliation ?? null }));
+  return parseCheckpoints(rawCheckpoints);
 }
