@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-09-27T07:02:56.465Z",
+    "generated": "2026-09-27T07:17:15.040Z",
     "datastoreGenerated": "2026-09-27T02:23:09.416Z",
     "accountCount": 15
   },
@@ -7572,5 +7572,4002 @@
       "acct_d77c33c7": 0,
       "acct_e2ec057d": 0
     }
+  },
+  "holdings": {
+    "period": "2026-08",
+    "total": 250450.58852199995,
+    "holdings": [
+      {
+        "symbol": "VFV",
+        "name": "Vanguard Investments Canada Inc. - S&P",
+        "value": 32306.57,
+        "share": 0.12899378751973722,
+        "accounts": [
+          "FHSA",
+          "Non-registered 2c62",
+          "RESP",
+          "RRSP (self-directed)",
+          "TFSA (self-directed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "XEQT",
+        "name": "iShares Core Equity ETF Portfolio",
+        "value": 29751.22,
+        "share": 0.11879077695753393,
+        "accounts": [
+          "Corporate (self)",
+          "FHSA",
+          "Non-registered 2c62",
+          "RESP",
+          "RRSP (self-directed)",
+          "TFSA (self-directed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "WSE401",
+        "name": "WS PVT MKT I F",
+        "value": 20786.33,
+        "share": 0.08299573230259788,
+        "accounts": [
+          "Private Market Fund"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "VOO",
+        "name": "Vanguard S&P 500 ETF",
+        "value": 19595.45,
+        "share": 0.07824078240598228,
+        "accounts": [
+          "Corporate"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "QCN",
+        "name": "MacKenzie Financial Corp. - Canadian",
+        "value": 15320.380000000001,
+        "share": 0.06117126771556473,
+        "accounts": [
+          "Corporate",
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "QQC",
+        "name": "CI Invesco NASDAQ 100 Index ETF",
+        "value": 13521.84,
+        "share": 0.053990050811209105,
+        "accounts": [
+          "FHSA",
+          "Non-registered 2c62",
+          "RESP",
+          "TFSA (self-directed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "PSA",
+        "name": "Purpose High Interest Savings ETF",
+        "value": 11128.17,
+        "share": 0.04443259672764748,
+        "accounts": [
+          "RRSP (self-directed)",
+          "TFSA (self-directed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "L",
+        "name": "Loews Corp.",
+        "value": 9514.36,
+        "share": 0.03798897042385766,
+        "accounts": [
+          "FHSA",
+          "Non-registered 1f9a",
+          "Non-registered 2c62"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "IEFA",
+        "name": "iShares Core MSCI EAFE ETF",
+        "value": 9296.31,
+        "share": 0.037118339608866194,
+        "accounts": [
+          "Corporate"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ACWV",
+        "name": "iShares Inc. - MSCI Global Min Vol",
+        "value": 6629.11,
+        "share": 0.026468733969126565,
+        "accounts": [
+          "Corporate"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CHPS",
+        "name": "Global X Artificial Intelligence",
+        "value": 6278.610000000001,
+        "share": 0.02506925632338244,
+        "accounts": [
+          "Non-registered 2c62",
+          "TFSA (self-directed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "EEMV",
+        "name": "iShares Inc. - MSCI Emerging Markets Min",
+        "value": 5973.98,
+        "share": 0.023852928576669073,
+        "accounts": [
+          "Corporate",
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "META",
+        "name": "Meta Platforms Inc.",
+        "value": 4791.883656,
+        "share": 0.019133050092949067,
+        "accounts": [
+          "Non-registered 1f9a",
+          "Non-registered 2c62"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GOLD",
+        "name": "Physically backed gold",
+        "value": 4166.17,
+        "share": 0.016634698383366096,
+        "accounts": [
+          "Non-registered 2c62"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "ZGLD",
+        "name": "BMO Gold Bullion ETF -",
+        "value": 3838.5,
+        "share": 0.01532637644276416,
+        "accounts": [
+          "TFSA (managed)",
+          "TFSA (self-directed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "HXQ.U",
+        "name": "Global X Nasdaq-100 Index Corporate",
+        "value": 3169.1436300000005,
+        "share": 0.012653767949607425,
+        "accounts": [
+          "Non-registered 2c62"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "Cash:CAD",
+        "name": "Cash (CAD)",
+        "value": 2955.8999999999996,
+        "share": 0.01180232802583472,
+        "accounts": [
+          "Corporate",
+          "Corporate (self)",
+          "Non-registered 1f9a",
+          "Non-registered 2c62",
+          "Private Market Fund",
+          "RESP",
+          "RRSP (self-directed)",
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Cash"
+      },
+      {
+        "symbol": "CHPX",
+        "name": "Global X Funds - A.I. Semiconductor &",
+        "value": 2779.7863500000003,
+        "share": 0.011099140818173082,
+        "accounts": [
+          "Non-registered 2c62",
+          "RRSP (self-directed)"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HXQ",
+        "name": "Global X Nasdaq-100 Index Corporate",
+        "value": 2698.59,
+        "share": 0.010774939743305702,
+        "accounts": [
+          "Corporate (self)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA Corp",
+        "value": 2616.33,
+        "share": 0.010446491722937906,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AAPL",
+        "name": "Apple Inc",
+        "value": 2389.06,
+        "share": 0.0095390472591768,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "VOOG",
+        "name": "Vanguard Admiral Funds Inc. - 500 Grth",
+        "value": 2386.366332,
+        "share": 0.009528291972012588,
+        "accounts": [
+          "RRSP (self-directed)"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "QUU",
+        "name": "Mackenzie Financial Corp. - U.S. Large",
+        "value": 2299.81,
+        "share": 0.009182689541965206,
+        "accounts": [
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "VGT",
+        "name": "Vanguard Group, Inc. - Vanguard",
+        "value": 2061.818736,
+        "share": 0.008232437177199474,
+        "accounts": [
+          "RRSP (self-directed)"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MSFT",
+        "name": "Microsoft Corp.",
+        "value": 1791.33,
+        "share": 0.0071524287907299006,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "Cash:USD",
+        "name": "Cash (USD)",
+        "value": 1784.1798180000003,
+        "share": 0.007123879518627185,
+        "accounts": [
+          "FHSA",
+          "Non-registered 2c62",
+          "RRSP (self-directed)",
+          "TFSA (self-directed)"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "Cash"
+      },
+      {
+        "symbol": "GOOGL",
+        "name": "Alphabet Inc (Class A)",
+        "value": 1759.55,
+        "share": 0.007025537493777694,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AMZN",
+        "name": "Amazon.com Inc.",
+        "value": 1265.89,
+        "share": 0.005054450091215508,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ZEA",
+        "name": "BMO MSCI EAFE Index ETF",
+        "value": 1174.43,
+        "share": 0.00468926827814915,
+        "accounts": [
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "BTC",
+        "name": "Bitcoin",
+        "value": 1017.09,
+        "share": 0.004061040566932656,
+        "accounts": [
+          "Crypto"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "Crypto Assets"
+      },
+      {
+        "symbol": "AVGO",
+        "name": "Broadcom Inc.",
+        "value": 885.8,
+        "share": 0.0035368253883028508,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GSWO",
+        "name": "Goldman Sachs ActiveBeta World Low Vol",
+        "value": 761.43,
+        "share": 0.003040240410268051,
+        "accounts": [
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ETH",
+        "name": "Ethereum",
+        "value": 690.43,
+        "share": 0.002756751357920453,
+        "accounts": [
+          "Crypto"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Crypto Assets"
+      },
+      {
+        "symbol": "ZCB",
+        "name": "BMO Corporate Bond Index ETF",
+        "value": 567.72,
+        "share": 0.0022667944337856115,
+        "accounts": [
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "MU",
+        "name": "Micron Technology Inc.",
+        "value": 540.5,
+        "share": 0.002158110321040518,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BRK.B",
+        "name": "Berkshire Hathaway Inc. (Class B)",
+        "value": 535.62,
+        "share": 0.0021386254396960633,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TSLA",
+        "name": "Tesla Inc",
+        "value": 483.83,
+        "share": 0.0019318381436244844,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LLY",
+        "name": "Eli Lilly & Company",
+        "value": 433.39,
+        "share": 0.001730441132351064,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "JPM",
+        "name": "JPMorgan Chase & Co.",
+        "value": 423.45,
+        "share": 0.0016907526650224002,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AMD",
+        "name": "Advanced Micro Devices Inc.",
+        "value": 386.32,
+        "share": 0.001542499869055269,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ZAG",
+        "name": "BMO Aggregate Bond Index ETF",
+        "value": 383.61,
+        "share": 0.00153167937142341,
+        "accounts": [
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "V",
+        "name": "Visa Inc (Class A)",
+        "value": 362.66,
+        "share": 0.0014480301369630979,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "JNJ",
+        "name": "Johnson & Johnson",
+        "value": 357.87,
+        "share": 0.0014289046079385202,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BAC",
+        "name": "Bank Of America Corp.",
+        "value": 333.56,
+        "share": 0.0013318395535361243,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "XOM",
+        "name": "Exxonmobil Holdings Corp.",
+        "value": 304.09,
+        "share": 0.0012141716327941,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ZUAG.F",
+        "name": "BMO US Aggregate Bond Index ETF",
+        "value": 253.39,
+        "share": 0.0010117364925965899,
+        "accounts": [
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "DELL",
+        "name": "Dell Technologies Inc (Class C)",
+        "value": 235.68,
+        "share": 0.0009410239416518581,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PLTR",
+        "name": "Palantir Technologies Inc (Class A)",
+        "value": 231.23,
+        "share": 0.0009232559658357058,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ABBV",
+        "name": "AbbVie Inc.",
+        "value": 228.17,
+        "share": 0.0009110379869598797,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BLK",
+        "name": "Blackrock Inc.",
+        "value": 223.66,
+        "share": 0.000893030442930476,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CSCO",
+        "name": "Cisco Systems Inc.",
+        "value": 217.04,
+        "share": 0.0008665980834017281,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WMT",
+        "name": "Walmart Inc",
+        "value": 217.02,
+        "share": 0.0008665182273306444,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KO",
+        "name": "Coca-Cola Co",
+        "value": 214.76,
+        "share": 0.0008574944912981714,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "INTC",
+        "name": "Intel Corporation",
+        "value": 210.17,
+        "share": 0.0008391675229844323,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WFC",
+        "name": "Wells Fargo & Company",
+        "value": 208.71,
+        "share": 0.0008333380297953128,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PG",
+        "name": "The Procter & Gamble Company",
+        "value": 206.19,
+        "share": 0.00082327616483875,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "COST",
+        "name": "Costco Wholesale Corp",
+        "value": 198.36,
+        "share": 0.0007920125130094305,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CVX",
+        "name": "Chevron Corp.",
+        "value": 198.23,
+        "share": 0.0007914934485473855,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LRCX",
+        "name": "Lam Research Corp.",
+        "value": 195.41,
+        "share": 0.0007802337425245655,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CAT",
+        "name": "Caterpillar Inc.",
+        "value": 189.07,
+        "share": 0.0007549193679909911,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MRK",
+        "name": "Merck & Company Inc.",
+        "value": 188.57,
+        "share": 0.0007529229662138954,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AMAT",
+        "name": "Applied Materials Inc.",
+        "value": 175.43,
+        "share": 0.0007004575275118189,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TMO",
+        "name": "Thermo Fisher Scientific Inc.",
+        "value": 171.69,
+        "share": 0.0006855244422191426,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "UNH",
+        "name": "UnitedHealth Group Inc.",
+        "value": 163.67,
+        "share": 0.0006535021577145265,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CDNS",
+        "name": "Cadence Design Systems Inc.",
+        "value": 161.64,
+        "share": 0.0006453967664995177,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MA",
+        "name": "Mastercard Incorporated (Class A)",
+        "value": 158.11,
+        "share": 0.0006313021699532218,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "QCOM",
+        "name": "QUALCOMM Inc.",
+        "value": 149.5,
+        "share": 0.0005969241313516327,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BX",
+        "name": "Blackstone Inc.",
+        "value": 145.91,
+        "share": 0.0005825899665920851,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "COF",
+        "name": "Capital One Financial Corp.",
+        "value": 145.08,
+        "share": 0.0005792759396421062,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WDAY",
+        "name": "Workday Inc.",
+        "value": 144.2,
+        "share": 0.0005757622725144176,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NFLX",
+        "name": "Netflix Inc",
+        "value": 141.78,
+        "share": 0.0005660996879132741,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GE",
+        "name": "GE Aerospace",
+        "value": 138.86,
+        "share": 0.0005544407015350349,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HD",
+        "name": "Home Depot, Inc.",
+        "value": 138.24,
+        "share": 0.0005519651633314361,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GS",
+        "name": "Goldman Sachs Group, Inc.",
+        "value": 137.29,
+        "share": 0.0005481719999549541,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TDG",
+        "name": "Transdigm Group Inc.",
+        "value": 136.37,
+        "share": 0.000544498620685098,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ADSK",
+        "name": "Autodesk Inc.",
+        "value": 134.91,
+        "share": 0.0005386691274959784,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ABT",
+        "name": "Abbott Laboratories",
+        "value": 134.44,
+        "share": 0.0005367925098255083,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TJX",
+        "name": "The TJX Companies Inc.",
+        "value": 133.32,
+        "share": 0.0005323205698448138,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PTC",
+        "name": "PTC Inc.",
+        "value": 128.87,
+        "share": 0.0005145525940286616,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ITW",
+        "name": "Illinois Tool Works Inc.",
+        "value": 128.54,
+        "share": 0.0005132349688557783,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SPGI",
+        "name": "S&P Global Inc.",
+        "value": 128.1,
+        "share": 0.000511478135291934,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FTNT",
+        "name": "Fortinet Inc",
+        "value": 121.27,
+        "share": 0.00048420728701680595,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SNDK",
+        "name": "Sandisk Corporation",
+        "value": 120.45,
+        "share": 0.0004809331881023689,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AMGN",
+        "name": "Amgen Inc.",
+        "value": 119.52,
+        "share": 0.0004772198807969708,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PM",
+        "name": "Philip Morris International Inc",
+        "value": 119.43,
+        "share": 0.0004768605284770936,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HEI.A",
+        "name": "Heico Corp. (Class A)",
+        "value": 118.1,
+        "share": 0.00047155009975001884,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TRV",
+        "name": "Travelers Companies Inc.",
+        "value": 118.04,
+        "share": 0.00047131053153676736,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MCD",
+        "name": "McDonald`s Corp",
+        "value": 116.01,
+        "share": 0.00046320514032175856,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "RTX",
+        "name": "RTX Corp.",
+        "value": 115.84,
+        "share": 0.00046252636371754604,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KKR",
+        "name": "KKR & Co. Inc.",
+        "value": 115.6,
+        "share": 0.00046156809086454,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PFE",
+        "name": "Pfizer Inc.",
+        "value": 115.35,
+        "share": 0.00046056988997599213,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GPN",
+        "name": "Global Payments, Inc.",
+        "value": 114.29,
+        "share": 0.00045633751820854917,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ADP",
+        "name": "Automatic Data Processing Inc.",
+        "value": 114.26,
+        "share": 0.00045621773410192343,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LIN",
+        "name": "Linde PLC",
+        "value": 113.52,
+        "share": 0.00045326305947182165,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BNY",
+        "name": "The Bank of New York Mellon Corp.",
+        "value": 113.29,
+        "share": 0.00045234471465435764,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BKNG",
+        "name": "Booking Holdings Inc.",
+        "value": 111.76,
+        "share": 0.00044623572521644464,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KLAC",
+        "name": "KLA Corp.",
+        "value": 110.49,
+        "share": 0.0004411648647026213,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GEV",
+        "name": "GE Vernova Inc.",
+        "value": 108.33,
+        "share": 0.0004325404090255677,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PANW",
+        "name": "Palo Alto Networks Inc",
+        "value": 107.16,
+        "share": 0.0004278688288671636,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PEP",
+        "name": "Pepsico Inc.",
+        "value": 105.85,
+        "share": 0.0004226382562111727,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "VZ",
+        "name": "Verizon Communications Inc.",
+        "value": 104.2,
+        "share": 0.00041605013034675667,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "VRSN",
+        "name": "Verisign Inc.",
+        "value": 102.77,
+        "share": 0.00041034042126426276,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "C",
+        "name": "Citigroup Inc",
+        "value": 101.72,
+        "share": 0.0004061479775323617,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "UNP",
+        "name": "Union Pacific Corporation",
+        "value": 100.7,
+        "share": 0.00040207531790708635,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TXN",
+        "name": "Texas Instruments Inc.",
+        "value": 99.96,
+        "share": 0.0003991206432769846,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ZHY",
+        "name": "BMO High Yield US Corporate Bond",
+        "value": 99.15,
+        "share": 0.00039588647239808953,
+        "accounts": [
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "TRMB",
+        "name": "Trimble Inc",
+        "value": 95.21,
+        "share": 0.00038015482639457485,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GILD",
+        "name": "Gilead Sciences Inc.",
+        "value": 93.11,
+        "share": 0.0003717699389307727,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KILO.B",
+        "name": "Purpose Gold Bullion Fund Non-Currency",
+        "value": 92.67,
+        "share": 0.00037001310536692844,
+        "accounts": [
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives"
+      },
+      {
+        "symbol": "ETR",
+        "name": "Entergy Corp.",
+        "value": 90.66,
+        "share": 0.00036198757022300345,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CB",
+        "name": "Chubb Limited",
+        "value": 90.32,
+        "share": 0.0003606300170145783,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MRVL",
+        "name": "Marvell Technology Inc.",
+        "value": 88.02,
+        "share": 0.0003514465688399378,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CEG",
+        "name": "Constellation Energy Corp.",
+        "value": 87.93,
+        "share": 0.00035108721652006065,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NDAQ",
+        "name": "Nasdaq Inc",
+        "value": 85.88,
+        "share": 0.00034290196923396793,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MDT",
+        "name": "Medtronic PLC",
+        "value": 85.6,
+        "share": 0.0003417839842387943,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NEE",
+        "name": "NextEra Energy Inc.",
+        "value": 83.09,
+        "share": 0.00033176204731777365,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "APH",
+        "name": "Amphenol Corporation",
+        "value": 82.56,
+        "share": 0.0003296458614340521,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "STX",
+        "name": "Seagate Technology Holdings Plc",
+        "value": 81.09,
+        "share": 0.0003237764402093906,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DE",
+        "name": "Deere & Company",
+        "value": 80.54,
+        "share": 0.00032158039825458526,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ADI",
+        "name": "Analog Devices Inc.",
+        "value": 80.21,
+        "share": 0.00032026277308170204,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ANET",
+        "name": "Arista Networks Inc.",
+        "value": 79.35,
+        "share": 0.0003168289620250973,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HOOD",
+        "name": "Robinhood Markets Inc (Class A)",
+        "value": 77.51,
+        "share": 0.00030948220348538493,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "T",
+        "name": "AT&T Inc.",
+        "value": 75.85,
+        "share": 0.00030285414958542697,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SO",
+        "name": "Southern Company",
+        "value": 75.5,
+        "share": 0.00030145666834146,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DDOG",
+        "name": "Datadog Inc (Class A)",
+        "value": 75.26,
+        "share": 0.000300498395488454,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ECL",
+        "name": "Ecolab Inc.",
+        "value": 75.19,
+        "share": 0.0003002188992396606,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ETN",
+        "name": "Eaton Corporation PLC",
+        "value": 74.42,
+        "share": 0.0002971444405029331,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DUK",
+        "name": "Duke Energy Corp",
+        "value": 73.96,
+        "share": 0.000295307750868005,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WELL",
+        "name": "Welltower Inc.",
+        "value": 73.88,
+        "share": 0.0002949883265836697,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GLDM",
+        "name": "SPDR Gold MiniShares Trust",
+        "value": 71.73,
+        "share": 0.00028640379894215794,
+        "accounts": [
+          "TFSA (managed)"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BMY",
+        "name": "Bristol-Myers Squibb Company",
+        "value": 70.48,
+        "share": 0.00028141279449941855,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "UBER",
+        "name": "Uber Technologies Inc",
+        "value": 70.35,
+        "share": 0.0002808937300373736,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WDC",
+        "name": "Western Digital Corp.",
+        "value": 66.66,
+        "share": 0.0002661602849224069,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PLD",
+        "name": "Prologis Inc.",
+        "value": 66,
+        "share": 0.0002635250345766405,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CVS",
+        "name": "CVS Health Corp",
+        "value": 65.78,
+        "share": 0.0002626466177947184,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GLW",
+        "name": "Corning, Inc.",
+        "value": 65.71,
+        "share": 0.0002623671215459249,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PWR",
+        "name": "Quanta Services, Inc.",
+        "value": 65.19,
+        "share": 0.00026029086369774537,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WM",
+        "name": "Waste Management Inc.",
+        "value": 64.38,
+        "share": 0.0002570566928188502,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EQIX",
+        "name": "Equinix Inc",
+        "value": 64.11,
+        "share": 0.00025597863585921854,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NEM",
+        "name": "Newmont Corporation",
+        "value": 64.04,
+        "share": 0.00025569913961042513,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SBUX",
+        "name": "Starbucks Corp.",
+        "value": 62.93,
+        "share": 0.0002512671276652725,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EBAY",
+        "name": "eBay Inc.",
+        "value": 61.81,
+        "share": 0.000246795187684578,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MO",
+        "name": "Altria Group Inc.",
+        "value": 61.21,
+        "share": 0.0002443995055520631,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "COP",
+        "name": "ConocoPhillips",
+        "value": 60.93,
+        "share": 0.00024328152055688948,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HWM",
+        "name": "Howmet Aerospace Inc",
+        "value": 60.23,
+        "share": 0.0002404865580689554,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EOG",
+        "name": "EOG Resources, Inc.",
+        "value": 59.72,
+        "share": 0.00023845022825631773,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "IBM",
+        "name": "International Business Machines Corp.",
+        "value": 59.41,
+        "share": 0.00023721245915451835,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ISRG",
+        "name": "Intuitive Surgical Inc.",
+        "value": 58.8,
+        "share": 0.00023477684898646153,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SLB",
+        "name": "SLB Limited",
+        "value": 57.62,
+        "share": 0.00023006534079251555,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DHR",
+        "name": "Danaher Corporation",
+        "value": 56.4,
+        "share": 0.0002251941204564019,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WEC",
+        "name": "WEC Energy Group Inc",
+        "value": 56.37,
+        "share": 0.00022507433634977612,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LMT",
+        "name": "Lockheed Martin Corporation",
+        "value": 56.01,
+        "share": 0.0002236369270702672,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "USB",
+        "name": "U.S. Bancorp.",
+        "value": 55.95,
+        "share": 0.0002233973588570157,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EXC",
+        "name": "Exelon Corporation",
+        "value": 54.4,
+        "share": 0.00021720851334801884,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ODFL",
+        "name": "Old Dominion Freight Line, Inc.",
+        "value": 52.61,
+        "share": 0.000210061394986016,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PH",
+        "name": "Parker-Hannifin Corp.",
+        "value": 52.4,
+        "share": 0.00020922290623963578,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "VRT",
+        "name": "Vertiv Holdings Co (Class A)",
+        "value": 52.4,
+        "share": 0.00020922290623963578,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "VRTX",
+        "name": "Vertex Pharmaceuticals Incorporated",
+        "value": 52.06,
+        "share": 0.00020786535303121069,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CRWD",
+        "name": "Crowdstrike Holdings Inc (Class A)",
+        "value": 51.34,
+        "share": 0.0002049905344721928,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GD",
+        "name": "General Dynamics Corp.",
+        "value": 51.24,
+        "share": 0.00020459125411677364,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ROST",
+        "name": "Ross Stores Inc.",
+        "value": 50.68,
+        "share": 0.00020235528412642636,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PGR",
+        "name": "The Progressive Corporation",
+        "value": 50.55,
+        "share": 0.00020183621966438146,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NET",
+        "name": "Cloudflare Inc (Class A)",
+        "value": 50.53,
+        "share": 0.00020175636359329765,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FCX",
+        "name": "Freeport-McMoRan Inc.",
+        "value": 50.35,
+        "share": 0.00020103765895354317,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TFC",
+        "name": "Truist Financial Corporation",
+        "value": 50.11,
+        "share": 0.0002000793861005372,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KMI",
+        "name": "Kinder Morgan Inc (Class P)",
+        "value": 49.8,
+        "share": 0.00019884161699873783,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TMUS",
+        "name": "T-Mobile U.S. Inc.",
+        "value": 49.61,
+        "share": 0.00019808298432344145,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WST",
+        "name": "West Pharmaceutical Services, Inc.",
+        "value": 48.8,
+        "share": 0.0001948488134445463,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EMR",
+        "name": "Emerson Electric Co.",
+        "value": 48.37,
+        "share": 0.00019313190791624395,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "APD",
+        "name": "Air Products & Chemicals Inc.",
+        "value": 48.31,
+        "share": 0.00019289233970299247,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KR",
+        "name": "The Kroger Company",
+        "value": 47.74,
+        "share": 0.00019061644167710332,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BA",
+        "name": "Boeing Co.",
+        "value": 47.71,
+        "share": 0.00019049665757047755,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BSX",
+        "name": "Boston Scientific Corp.",
+        "value": 47.38,
+        "share": 0.00018917903239759436,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FWONA",
+        "name": "Liberty Media Corp Del",
+        "value": 47.03,
+        "share": 0.00018778155115362733,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "APP",
+        "name": "Applovin Corp (Class A)",
+        "value": 46.09,
+        "share": 0.0001840283158126873,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MPC",
+        "name": "Marathon Petroleum Corp",
+        "value": 45.49,
+        "share": 0.0001816326336801724,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TT",
+        "name": "Trane Technologies plc (Class A)",
+        "value": 45.48,
+        "share": 0.00018159270564463043,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NOW",
+        "name": "Servicenow Inc.",
+        "value": 45.04,
+        "share": 0.00017983587208078618,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SYK",
+        "name": "Stryker Corp.",
+        "value": 44.75,
+        "share": 0.00017867795905007064,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MSI",
+        "name": "Motorola Solutions Inc",
+        "value": 44.6,
+        "share": 0.00017807903851694193,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SPG",
+        "name": "Simon Property Group Inc.",
+        "value": 44.28,
+        "share": 0.00017680134137960064,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FOX",
+        "name": "Fox Corporation (Class B)",
+        "value": 44.19,
+        "share": 0.0001764419890597234,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MSCI",
+        "name": "MSCI Inc.",
+        "value": 44.18,
+        "share": 0.00017640206102418149,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MCK",
+        "name": "Mckesson Corporation",
+        "value": 44.06,
+        "share": 0.00017592292459767852,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GIS",
+        "name": "General Mills Inc.",
+        "value": 44.01,
+        "share": 0.0001757232844199689,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ABNB",
+        "name": "Airbnb Inc (Class A)",
+        "value": 43.79,
+        "share": 0.00017484486763804679,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ICE",
+        "name": "Intercontinental Exchange Inc",
+        "value": 43.33,
+        "share": 0.00017300817800311867,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AEP",
+        "name": "American Electric Power Company Inc.",
+        "value": 43.04,
+        "share": 0.00017185026497240313,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "JCI",
+        "name": "Johnson Controls International plc",
+        "value": 42.99,
+        "share": 0.00017165062479469357,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "VLO",
+        "name": "Valero Energy Corp.",
+        "value": 42.89,
+        "share": 0.00017125134443927442,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HIG",
+        "name": "Hartford Financial Services Group Inc.",
+        "value": 42.5,
+        "share": 0.00016969415105313971,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CL",
+        "name": "Colgate-Palmolive Company",
+        "value": 42.41,
+        "share": 0.00016933479873326246,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NOC",
+        "name": "Northrop Grumman Corporation",
+        "value": 42.05,
+        "share": 0.00016789738945375353,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CME",
+        "name": "CME Group Inc.",
+        "value": 41.98,
+        "share": 0.00016761789320496011,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CSX",
+        "name": "CSX Corp.",
+        "value": 41.69,
+        "share": 0.00016645998017424457,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "RCL",
+        "name": "Royal Caribbean Group",
+        "value": 39.89,
+        "share": 0.00015927293377669986,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "RSG",
+        "name": "Republic Services, Inc.",
+        "value": 39.45,
+        "share": 0.00015751610021285558,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CARR",
+        "name": "Carrier Global Corporation",
+        "value": 39.42,
+        "share": 0.00015739631610622984,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LITE",
+        "name": "Lumentum Holdings Inc.",
+        "value": 39.39,
+        "share": 0.0001572765319996041,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ROP",
+        "name": "Roper Technologies Inc",
+        "value": 39.15,
+        "share": 0.0001563182591465981,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "UPS",
+        "name": "United Parcel Service, Inc. (Class B)",
+        "value": 39.14,
+        "share": 0.0001562783311110562,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LEN.B",
+        "name": "Lennar Corp. (Class B)",
+        "value": 39.09,
+        "share": 0.00015607869093334665,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ORLY",
+        "name": "O'Reilly Automotive Inc.",
+        "value": 39.04,
+        "share": 0.00015587905075563704,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "IR",
+        "name": "Ingersoll-Rand Inc",
+        "value": 37.93,
+        "share": 0.00015144703881048445,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LNG",
+        "name": "Cheniere Energy Inc.",
+        "value": 37.91,
+        "share": 0.0001513671827394006,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FDX",
+        "name": "FedEx Corporation",
+        "value": 37.58,
+        "share": 0.00015004955756651742,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WMB",
+        "name": "Williams Cos Inc",
+        "value": 37.12,
+        "share": 0.0001482128679315893,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CMI",
+        "name": "Cummins Inc.",
+        "value": 37.07,
+        "share": 0.00014801322775387976,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AMT",
+        "name": "American Tower Corporation",
+        "value": 36.8,
+        "share": 0.00014693517079424802,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ALL",
+        "name": "The Allstate Corporation",
+        "value": 36.8,
+        "share": 0.00014693517079424802,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FANG",
+        "name": "Diamondback Energy Inc.",
+        "value": 35.34,
+        "share": 0.00014110567760512843,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "COIN",
+        "name": "Coinbase Global Inc (Class A)",
+        "value": 35.08,
+        "share": 0.0001400675486810386,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "OXY",
+        "name": "Occidental Petroleum Corporation",
+        "value": 35.06,
+        "share": 0.0001399876926099548,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CMCSA",
+        "name": "Comcast Corporation",
+        "value": 34.81,
+        "share": 0.00013898949172140693,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DLR",
+        "name": "Digital Realty Trust Inc",
+        "value": 34.74,
+        "share": 0.0001387099954726135,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "REGN",
+        "name": "Regeneron Pharmaceuticals Inc.",
+        "value": 34.34,
+        "share": 0.0001371128740509369,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CPNG",
+        "name": "Coupang Inc (Class A)",
+        "value": 34.33,
+        "share": 0.00013707294601539497,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KHC",
+        "name": "The Kraft Heinz Company",
+        "value": 34.23,
+        "share": 0.00013667366565997581,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AWK",
+        "name": "American Water Works Co. Inc.",
+        "value": 34.11,
+        "share": 0.00013619452923347285,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PSX",
+        "name": "Phillips 66",
+        "value": 34.01,
+        "share": 0.0001357952488780537,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ZTS",
+        "name": "Zoetis Inc.",
+        "value": 34.01,
+        "share": 0.0001357952488780537,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NWS",
+        "name": "News Corporation",
+        "value": 33.84,
+        "share": 0.00013511647227384114,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TGT",
+        "name": "Target Corp.",
+        "value": 33.64,
+        "share": 0.00013431791156300282,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HLT",
+        "name": "Hilton Worldwide Holdings Inc.",
+        "value": 33.11,
+        "share": 0.00013220172567928132,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GWW",
+        "name": "W.w. Grainger Inc.",
+        "value": 32.86,
+        "share": 0.00013120352479073345,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DOV",
+        "name": "Dover Corp.",
+        "value": 32.68,
+        "share": 0.00013048482015097897,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BDX",
+        "name": "Becton Dickinson and Company",
+        "value": 32.44,
+        "share": 0.00012952654729797298,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CRDO",
+        "name": "Credo Technology Group Holding Ltd",
+        "value": 32.14,
+        "share": 0.00012832870623171553,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "VICI",
+        "name": "VICI Properties Inc",
+        "value": 32.01,
+        "share": 0.00012780964176967063,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ELV",
+        "name": "Elevance Health Inc.",
+        "value": 31.83,
+        "share": 0.00012709093712991615,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PCAR",
+        "name": "Paccar Inc.",
+        "value": 31.69,
+        "share": 0.00012653194463232937,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CI",
+        "name": "Cigna Corp.",
+        "value": 31.34,
+        "share": 0.00012513446338836232,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "YUM",
+        "name": "Yum! Brands Inc.",
+        "value": 31.34,
+        "share": 0.00012513446338836232,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TRGP",
+        "name": "Targa Resources Corp",
+        "value": 30.94,
+        "share": 0.00012353734196668572,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CVNA",
+        "name": "Carvana Co. (Class A)",
+        "value": 30.75,
+        "share": 0.00012277870929138933,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MAR",
+        "name": "Marriott International Inc.",
+        "value": 30.69,
+        "share": 0.00012253914107813785,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BE",
+        "name": "Bloom Energy Corp (Class A)",
+        "value": 30.64,
+        "share": 0.00012233950090042827,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DOW",
+        "name": "Dow Inc.",
+        "value": 30.62,
+        "share": 0.00012225964482934443,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AZO",
+        "name": "Autozone Inc.",
+        "value": 30.25,
+        "share": 0.00012078230751429357,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ALAB",
+        "name": "Astera Labs Inc.",
+        "value": 29.9,
+        "share": 0.00011938482627032653,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MDLZ",
+        "name": "Mondelez International Inc.",
+        "value": 29.75,
+        "share": 0.0001187859057371978,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "URI",
+        "name": "United Rentals, Inc.",
+        "value": 29.51,
+        "share": 0.00011782763288419184,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FLEX",
+        "name": "Flex Ltd",
+        "value": 29.38,
+        "share": 0.00011730856842214694,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MPWR",
+        "name": "Monolithic Power System Inc",
+        "value": 29.18,
+        "share": 0.00011651000771130864,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GM",
+        "name": "General Motors Company",
+        "value": 29.05,
+        "share": 0.00011599094324926374,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DIS",
+        "name": "Walt Disney Co (The)",
+        "value": 28.89,
+        "share": 0.0001153520946805931,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MSTR",
+        "name": "Strategy Inc.",
+        "value": 28.31,
+        "share": 0.00011303626861916201,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BKR",
+        "name": "Baker Hughes Company",
+        "value": 27.88,
+        "share": 0.00011131936309085965,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KEYS",
+        "name": "Keysight Technologies Inc",
+        "value": 27.69,
+        "share": 0.00011056073041556328,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NTRS",
+        "name": "Northern Trust Corp.",
+        "value": 27.55,
+        "share": 0.00011000173791797646,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "Southern Copper Corporation",
+        "name": "Southern Copper Corporation",
+        "value": 27.37,
+        "share": 0.00010928303327822198,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "COR",
+        "name": "Cencora Inc.",
+        "value": 27.23,
+        "share": 0.00010872404078063517,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WBD",
+        "name": "Warner Bros.Discovery Inc (Class A)",
+        "value": 27.14,
+        "share": 0.00010836468846075793,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TER",
+        "name": "Teradyne Inc.",
+        "value": 26.88,
+        "share": 0.00010732655953666813,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HCA",
+        "name": "HCA Healthcare Inc",
+        "value": 26.82,
+        "share": 0.00010708699132341665,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TWLO",
+        "name": "Twilio Inc (Class A)",
+        "value": 26.7,
+        "share": 0.00010660785489691365,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AFL",
+        "name": "Aflac Inc.",
+        "value": 26.49,
+        "share": 0.00010576936615053343,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FERG",
+        "name": "Ferguson Enterprises Inc.",
+        "value": 26.32,
+        "share": 0.00010509058954632089,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ACGL",
+        "name": "Arch Capital Group Ltd.",
+        "value": 25.76,
+        "share": 0.00010285461955597364,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AIG",
+        "name": "American International Group Inc.",
+        "value": 25.3,
+        "share": 0.00010101792992104553,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AME",
+        "name": "Ametek Inc",
+        "value": 24.84,
+        "share": 0.00009918124028611743,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ROK",
+        "name": "Rockwell Automation Inc.",
+        "value": 24.46,
+        "share": 0.00009766397493552465,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CAH",
+        "name": "Cardinal Health Inc.",
+        "value": 24.3,
+        "share": 0.000097025126366854,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FIX",
+        "name": "Comfort Systems USA Inc.",
+        "value": 24,
+        "share": 0.00009582728530059655,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KVUE",
+        "name": "Kenvue Inc.",
+        "value": 23.38,
+        "share": 0.0000933517470969978,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DAL",
+        "name": "Delta Air Lines Inc.",
+        "value": 23.13,
+        "share": 0.00009235354620844992,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "COHR",
+        "name": "Coherent Corp.",
+        "value": 22.86,
+        "share": 0.00009127548924881821,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NUE",
+        "name": "Nucor Corp.",
+        "value": 22.52,
+        "share": 0.00008991793604039309,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MELI",
+        "name": "Mercadolibre Inc.",
+        "value": 22,
+        "share": 0.0000878416781922135,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HUM",
+        "name": "Humana Inc.",
+        "value": 21.25,
+        "share": 0.00008484707552656986,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CIEN",
+        "name": "CIENA Corp.",
+        "value": 21.22,
+        "share": 0.00008472729141994412,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SYY",
+        "name": "Sysco Corp.",
+        "value": 21.02,
+        "share": 0.00008392873070910581,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CRWV",
+        "name": "CoreWeave Inc.",
+        "value": 20.99,
+        "share": 0.00008380894660248006,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MRSH",
+        "name": "Marsh",
+        "value": 20.77,
+        "share": 0.00008293052982055793,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "VST",
+        "name": "Vistra Energy Corporation",
+        "value": 20.51,
+        "share": 0.00008189240089646814,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CRH",
+        "name": "CRH Plc",
+        "value": 20.26,
+        "share": 0.00008089420000792026,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DRI",
+        "name": "Darden Restaurants Inc.",
+        "value": 20.05,
+        "share": 0.00008005571126154004,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SHW",
+        "name": "Sherwin-Williams Co.",
+        "value": 19.91,
+        "share": 0.00007949671876395322,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WAB",
+        "name": "Westinghouse Air Brake Technologies",
+        "value": 19.82,
+        "share": 0.00007913736644407598,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LYV",
+        "name": "Live Nation Entertainment Inc.",
+        "value": 19.81,
+        "share": 0.00007909743840853406,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PCG",
+        "name": "PG&E Corp.",
+        "value": 19.71,
+        "share": 0.00007869815805311492,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DHI",
+        "name": "D.R. Horton Inc.",
+        "value": 19.65,
+        "share": 0.00007845858983986342,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "PHM",
+        "name": "PulteGroup Inc",
+        "value": 19.3,
+        "share": 0.0000770611085958964,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DXCM",
+        "name": "Dexcom Inc",
+        "value": 19.24,
+        "share": 0.0000768215403826449,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EXE",
+        "name": "Expand Energy Corporation",
+        "value": 19.09,
+        "share": 0.00007622261984951617,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EQT",
+        "name": "Equity Corporation",
+        "value": 18.69,
+        "share": 0.00007462549842783957,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "STE",
+        "name": "Steris PLC",
+        "value": 18.48,
+        "share": 0.00007378700968145935,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EW",
+        "name": "Edwards Lifesciences Corporation",
+        "value": 18.28,
+        "share": 0.00007298844897062104,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TEL",
+        "name": "TE Connectivity PLC",
+        "value": 17.85,
+        "share": 0.00007127154344231868,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NVR",
+        "name": "NVR Inc.",
+        "value": 17.51,
+        "share": 0.00006991399023389357,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DGX",
+        "name": "Quest Diagnostics Incorporated",
+        "value": 17.36,
+        "share": 0.00006931506970076484,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AON",
+        "name": "Aon plc. - Ordinary Shares - Class A",
+        "value": 17.24,
+        "share": 0.00006883593327426184,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DASH",
+        "name": "DoorDash Inc (Class A)",
+        "value": 17.02,
+        "share": 0.00006795751649233971,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "RPRX",
+        "name": "Royalty Pharma plc (Class A)",
+        "value": 16.73,
+        "share": 0.00006679960346162417,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MMM",
+        "name": "3M Company",
+        "value": 16.63,
+        "share": 0.00006640032310620501,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ULTA",
+        "name": "Ultra Beauty Inc.",
+        "value": 16.59,
+        "share": 0.00006624061096403737,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "F",
+        "name": "Ford Motor Co.",
+        "value": 16.4,
+        "share": 0.00006548197828874097,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AMCR",
+        "name": "Amcor PLC",
+        "value": 16.16,
+        "share": 0.000064523705435735,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "DG",
+        "name": "Dollar General Corp.",
+        "value": 16.15,
+        "share": 0.00006448377740019309,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NXPI",
+        "name": "NXP Semiconductors NV",
+        "value": 16.03,
+        "share": 0.00006400464097369012,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LOW",
+        "name": "Lowes Companies Inc.",
+        "value": 15.9,
+        "share": 0.00006348557651164522,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "O",
+        "name": "Realty Income Corp.",
+        "value": 15.34,
+        "share": 0.00006124960652129796,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NSC",
+        "name": "Norfolk Southern Corporation",
+        "value": 15.3,
+        "share": 0.0000610898943791303,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GRMN",
+        "name": "Garmin Limited",
+        "value": 14.77,
+        "share": 0.00005897370849540879,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HAL",
+        "name": "Halliburton Co.",
+        "value": 14.77,
+        "share": 0.00005897370849540879,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FICO",
+        "name": "Fair, Isaac Corp.",
+        "value": 14.62,
+        "share": 0.00005837478796228006,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LH",
+        "name": "Labcorp Holdings Inc.",
+        "value": 14.3,
+        "share": 0.00005709709082493878,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AXP",
+        "name": "American Express Company",
+        "value": 14.23,
+        "share": 0.00005681759457614537,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NRG",
+        "name": "NRG Energy Inc.",
+        "value": 14.11,
+        "share": 0.000056338458149642385,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SMCI",
+        "name": "Super Micro Computer Inc",
+        "value": 14.04,
+        "share": 0.000056058961900848975,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ZBH",
+        "name": "Zimmer Biomet Holdings Inc",
+        "value": 13.67,
+        "share": 0.00005458162458579812,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MNST",
+        "name": "Monster Beverage Corp",
+        "value": 13.61,
+        "share": 0.00005434205637254662,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BR",
+        "name": "Broadridge Financial Solutions Inc.",
+        "value": 12.92,
+        "share": 0.00005158702192015447,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WPC",
+        "name": "W. P. Carey Inc",
+        "value": 12.82,
+        "share": 0.00005118774156473532,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "NKE",
+        "name": "Nike, Inc. (Class B)",
+        "value": 12.63,
+        "share": 0.00005042910888943894,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CRCL",
+        "name": "Circle Internet Group Inc.",
+        "value": 12.39,
+        "share": 0.00004947083603643297,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KDP",
+        "name": "Keurig Dr Pepper Inc.",
+        "value": 12.39,
+        "share": 0.00004947083603643297,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SUNB",
+        "name": "Sunbelt Rentals Holdings Inc.",
+        "value": 12.39,
+        "share": 0.00004947083603643297,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EQR",
+        "name": "Equity Residential Properties Trust",
+        "value": 12.34,
+        "share": 0.000049271195858723394,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "RMD",
+        "name": "ResMed Inc.",
+        "value": 12.18,
+        "share": 0.000048632347290052745,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "FAST",
+        "name": "Fastenal Company",
+        "value": 11.94,
+        "share": 0.00004767407443704678,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CTVA",
+        "name": "Corteva Inc.",
+        "value": 11.93,
+        "share": 0.00004763414640150486,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "OKE",
+        "name": "Oneok Inc.",
+        "value": 11.91,
+        "share": 0.00004755429033042104,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ENTG",
+        "name": "Entegris Inc",
+        "value": 11.72,
+        "share": 0.00004679565765512465,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KEY",
+        "name": "Keycorp",
+        "value": 11.46,
+        "share": 0.000045757528731034855,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "RKLB",
+        "name": "Rocket Lab Corp.",
+        "value": 11.46,
+        "share": 0.000045757528731034855,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "XEL",
+        "name": "Xcel Energy, Inc.",
+        "value": 11.44,
+        "share": 0.00004567767265995102,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LYB",
+        "name": "LyondellBasell Industries NV (Class A)",
+        "value": 11.36,
+        "share": 0.0000453582483756157,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ON",
+        "name": "ON Semiconductor Corp.",
+        "value": 11.36,
+        "share": 0.0000453582483756157,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WSO",
+        "name": "Watsco Inc.",
+        "value": 11.21,
+        "share": 0.00004475932784248697,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SNOW",
+        "name": "Snowflake Inc (Class A)",
+        "value": 10.93,
+        "share": 0.00004364134284731334,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "WRB",
+        "name": "W.R. Berkley Corp.",
+        "value": 10.84,
+        "share": 0.00004328199052743611,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HPE",
+        "name": "Hewlett Packard Enterprise Company",
+        "value": 10.8,
+        "share": 0.00004312227838526845,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "BIIB",
+        "name": "Biogen Inc",
+        "value": 10.78,
+        "share": 0.00004304242231418461,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MDLN",
+        "name": "Medline Inc.",
+        "value": 10.64,
+        "share": 0.000042483429816597806,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "KMB",
+        "name": "Kimberly-Clark Corp.",
+        "value": 10.63,
+        "share": 0.00004244350178105589,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "VTR",
+        "name": "Ventas Inc",
+        "value": 10.2,
+        "share": 0.00004072659625275353,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "ALNY",
+        "name": "Alnylam Pharmaceuticals Inc",
+        "value": 9.83,
+        "share": 0.00003924925893770267,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "UAL",
+        "name": "United Airlines Holdings Inc",
+        "value": 8.9,
+        "share": 0.00003553595163230455,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MCHP",
+        "name": "Microchip Technology, Inc.",
+        "value": 8.71,
+        "share": 0.00003477731895700817,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "SW",
+        "name": "Smurfit WestRock plc",
+        "value": 8.66,
+        "share": 0.00003457767877929859,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CCI",
+        "name": "Crown Castle Inc",
+        "value": 8.54,
+        "share": 0.0000340985423527956,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LVS",
+        "name": "Las Vegas Sands Corp",
+        "value": 8.25,
+        "share": 0.000032940629322080064,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EXR",
+        "name": "Extra Space Storage Inc.",
+        "value": 8.09,
+        "share": 0.00003230178075340942,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TPL",
+        "name": "Texas Pacific Land Corporation",
+        "value": 7.73,
+        "share": 0.000030864371473900476,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "AXON",
+        "name": "Axon Enterprise Inc",
+        "value": 7.3,
+        "share": 0.000029147465945598115,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HSY",
+        "name": "Hershey Company (The)",
+        "value": 7.27,
+        "share": 0.00002902768183897237,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "IP",
+        "name": "International Paper Company",
+        "value": 6.7,
+        "share": 0.000026751783813083203,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "INSM",
+        "name": "Insmed Inc.",
+        "value": 6.21,
+        "share": 0.000024795310071529358,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "TSCO",
+        "name": "Tractor Supply Co.",
+        "value": 5.4,
+        "share": 0.000021561139192634224,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "GPC",
+        "name": "Genuine Parts Co.",
+        "value": 3.99,
+        "share": 0.000015931286181224176,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "HUBB",
+        "name": "Hubbell Incorporated",
+        "value": 3.58,
+        "share": 0.000014294236724005652,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MAS",
+        "name": "Masco Corporation",
+        "value": 2.39,
+        "share": 0.00000954280049451774,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "LII",
+        "name": "Lennox International Inc",
+        "value": 0.79,
+        "share": 0.000003154314807811303,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "MTD",
+        "name": "Mettler-Toledo International Inc.",
+        "value": 0.58,
+        "share": 0.000002315826061431083,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "CCL",
+        "name": "Carnival Corp Limited",
+        "value": 0.21,
+        "share": 8.384887463802198e-7,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      },
+      {
+        "symbol": "EL",
+        "name": "The Estee Lauder Companies Inc.",
+        "value": 0.17,
+        "share": 6.787766042125589e-7,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives"
+      }
+    ],
+    "groups": [
+      {
+        "label": "S&P 500",
+        "symbols": [
+          "VFV",
+          "VOO"
+        ],
+        "value": 51902.020000000004,
+        "share": 0.2072345699257195
+      }
+    ],
+    "currency": {
+      "CAD": 157819.12,
+      "USD": 92631.46852199995
+    },
+    "assetClasses": [
+      {
+        "name": "Canadian Equities and Alternatives",
+        "value": 154172.78999999998
+      },
+      {
+        "name": "US Equities and Alternatives",
+        "value": 89830.19870399995
+      },
+      {
+        "name": "Cash",
+        "value": 4740.079818
+      },
+      {
+        "name": "Crypto Assets",
+        "value": 1707.52
+      }
+    ]
   }
 }

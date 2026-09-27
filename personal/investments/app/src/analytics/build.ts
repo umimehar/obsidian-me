@@ -2,6 +2,7 @@ import { join } from "node:path";
 import type { Datastore } from "../store/datastore";
 import type { Statement } from "../types";
 import { type ActivityByPeriod, buildActivity } from "./activity";
+import { type HoldingsOutput, buildHoldings } from "./holdings";
 import { type IncomeScope, type IncomeSummary, buildIncome } from "./income";
 import { type ReturnSeries, buildReturns } from "./returns";
 import { type Lens, type Rollup, rollup } from "./rollup";
@@ -42,6 +43,8 @@ export interface AnalyticsOutput {
   activity: ActivityByPeriod;
   /** Fees as each statement's own cash summary states them, per period per account -- see `feeReconciliation.ts`. */
   statedFees: StatedFeesByPeriod;
+  /** What is actually owned, combined across accounts, at the latest period -- see `holdings.ts`. */
+  holdings: HoldingsOutput;
 }
 
 /**
@@ -68,6 +71,7 @@ export function buildAnalytics(datastore: Datastore, generated: string): Analyti
   >;
   const activity = buildActivity(datastore.statements);
   const statedFees = buildStatedFees(datastore.statements);
+  const holdings = buildHoldings(datastore.statements, datastore.accounts);
 
   return {
     meta: {
@@ -82,6 +86,7 @@ export function buildAnalytics(datastore: Datastore, generated: string): Analyti
     rollups,
     activity,
     statedFees,
+    holdings,
   };
 }
 

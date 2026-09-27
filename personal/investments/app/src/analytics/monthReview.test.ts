@@ -141,6 +141,14 @@ describe("monthReview, over a fixture", () => {
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
       statedFees: {},
+      holdings: {
+        period: "",
+        total: 0,
+        holdings: [],
+        groups: [],
+        currency: { CAD: 0, USD: 0 },
+        assetClasses: [],
+      },
     };
 
     const review = monthReview(analytics, "2026-07");
@@ -176,6 +184,14 @@ describe("monthReview, over a fixture", () => {
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
       statedFees: {},
+      holdings: {
+        period: "",
+        total: 0,
+        holdings: [],
+        groups: [],
+        currency: { CAD: 0, USD: 0 },
+        assetClasses: [],
+      },
     };
 
     const review = monthReview(analytics, "2026-07");
@@ -219,6 +235,14 @@ describe("monthReview, over a fixture", () => {
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
       statedFees: {},
+      holdings: {
+        period: "",
+        total: 0,
+        holdings: [],
+        groups: [],
+        currency: { CAD: 0, USD: 0 },
+        assetClasses: [],
+      },
     };
 
     const review = monthReview(analytics, "2026-07");
@@ -263,6 +287,14 @@ describe("monthReview, over a fixture", () => {
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
       statedFees: {},
+      holdings: {
+        period: "",
+        total: 0,
+        holdings: [],
+        groups: [],
+        currency: { CAD: 0, USD: 0 },
+        assetClasses: [],
+      },
     };
 
     const review = monthReview(analytics, "2026-07");
@@ -286,6 +318,14 @@ describe("monthReview, over a fixture", () => {
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
       statedFees: {},
+      holdings: {
+        period: "",
+        total: 0,
+        holdings: [],
+        groups: [],
+        currency: { CAD: 0, USD: 0 },
+        assetClasses: [],
+      },
     };
     expect(reviewPeriods(analytics)).toEqual(["2026-07", "2026-06"]);
   });

@@ -354,6 +354,14 @@ function feeGapFixture(statedFee: number, derivedFee: number): AnalyticsOutput {
     rollups: { registration: [], account: [], purpose: [] },
     activity: { "2026-01": { acct_gap: { ...ZERO_ACTIVITY, fees: derivedFee } } },
     statedFees: { "2026-01": { acct_gap: statedFee } },
+    holdings: {
+      period: "",
+      total: 0,
+      holdings: [],
+      groups: [],
+      currency: { CAD: 0, USD: 0 },
+      assetClasses: [],
+    },
   };
 }
 

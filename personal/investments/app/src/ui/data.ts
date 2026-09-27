@@ -29,7 +29,8 @@ function isAnalyticsOutput(value: unknown): value is AnalyticsOutput {
     Array.isArray(candidate.returns) &&
     typeof candidate.rollups === "object" &&
     typeof candidate.activity === "object" &&
-    typeof candidate.statedFees === "object"
+    typeof candidate.statedFees === "object" &&
+    typeof candidate.holdings === "object"
   );
 }
 
@@ -37,7 +38,7 @@ export function parseAnalytics(raw: unknown): AnalyticsOutput {
   if (!isAnalyticsOutput(raw)) {
     throw new Error(
       "analytics.json is missing one of meta, series, rooms, income, returns, rollups, " +
-        "activity, statedFees",
+        "activity, statedFees, holdings",
     );
   }
   return raw;

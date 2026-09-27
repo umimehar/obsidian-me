@@ -40,6 +40,14 @@ function analyticsFixture(overrides: Partial<AnalyticsOutput> = {}): AnalyticsOu
     rollups: { registration: [], account: [], purpose: [] },
     activity: {},
     statedFees: {},
+    holdings: {
+      period: "",
+      total: 0,
+      holdings: [],
+      groups: [],
+      currency: { CAD: 0, USD: 0 },
+      assetClasses: [],
+    },
     ...overrides,
   };
 }
