@@ -239,6 +239,25 @@ export interface Goldens {
       costUnknownSales: number;
     }
   >;
+  /**
+   * `incomeByYear`'s totals for 2025 and 2026, computed by that same
+   * function over the committed `analytics.json` -- dividends, interest,
+   * securities lending, foreign withholding tax, fees and FX conversion
+   * counts, over the `inTotals` accounts only.
+   */
+  incomeCosts: {
+    byYear: Record<
+      "2025" | "2026",
+      {
+        dividends: number;
+        interest: number;
+        lendingIncome: number;
+        withholdingTax: number;
+        fees: number;
+        fxConversions: number;
+      }
+    >;
+  };
   /** `monthReview` at the latest reviewable period, computed by that same function. */
   month: {
     period: string;
@@ -274,6 +293,7 @@ function isGoldens(value: unknown): value is Goldens {
     typeof c.zeroRateStretchAnnualToClose === "number" &&
     typeof c.income === "object" &&
     typeof c.incomeByYear === "object" &&
+    typeof c.incomeCosts === "object" &&
     typeof c.month === "object"
   );
 }

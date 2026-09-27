@@ -487,6 +487,26 @@
       "costUnknownSales": 7
     }
   },
+  "incomeCosts": {
+    "byYear": {
+      "2025": {
+        "dividends": 3017.059824,
+        "interest": 0,
+        "lendingIncome": 2.2979420000000004,
+        "withholdingTax": 298.820626,
+        "fees": 29.65,
+        "fxConversions": 14
+      },
+      "2026": {
+        "dividends": 1657.220042,
+        "interest": 0,
+        "lendingIncome": 1.7252009999999998,
+        "withholdingTax": 97.86595399999999,
+        "fees": 212.55,
+        "fxConversions": 42
+      }
+    }
+  },
   "month": {
     "period": "2026-08",
     "change": 15870.75,

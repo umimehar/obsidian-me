@@ -4,6 +4,7 @@ import type { AnalyticsOutput } from "../analytics/build";
 import { buildCashflowSeries } from "../analytics/cashflowSeries";
 import { latestGroupGain } from "../analytics/groupGain";
 import { buildIncome } from "../analytics/income";
+import { incomeByYear } from "../analytics/incomeCosts";
 import { monthReview, reviewPeriods } from "../analytics/monthReview";
 import { buildPortfolioSeries } from "../analytics/portfolioSeries";
 import { latestMarketValue, rollup } from "../analytics/rollup";
@@ -412,6 +413,18 @@ function buildGoldens(): Goldens {
         foreignTaxWithheld: income2026.foreignTaxWithheld,
         realizedGains: income2026.realizedGains,
         costUnknownSales: income2026.costUnknownSales,
+      },
+    },
+    incomeCosts: {
+      byYear: {
+        "2025": required(
+          incomeByYear(analytics).find((y) => y.year === 2025),
+          "2025 activity totals",
+        ).totals,
+        "2026": required(
+          incomeByYear(analytics).find((y) => y.year === 2026),
+          "2026 activity totals",
+        ).totals,
       },
     },
     month: {
