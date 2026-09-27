@@ -1,8 +1,13 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { cleanup, fireEvent, render, within } from "@testing-library/react";
+import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
+import { formatCurrency } from "../format";
 import { ContributionsChart, GENERIC_LIMIT_DASH } from "./ContributionsChart";
 import { DERIVED_DASH } from "./source";
+
+/** The corpus's latest year -- the only one an import moves. */
+const YEAR = GOLDENS.income.year;
 
 /**
  * Against the real committed corpus. The figures pinned here -- 2026's
@@ -63,12 +68,13 @@ describe("one card per wrapper, four years each", () => {
 });
 
 describe("the figures the bars state", () => {
-  test("2026: RRSP 33,000, FHSA 8,000, TFSA 7,000, RESP 3,000", () => {
+  test("the latest year states every wrapper's own contribution", () => {
     renderChart();
-    expect(card("RRSP").querySelector('[data-year-figure="2026"]')?.textContent).toBe("$33,000.00");
-    expect(card("FHSA").querySelector('[data-year-figure="2026"]')?.textContent).toBe("$8,000.00");
-    expect(card("TFSA").querySelector('[data-year-figure="2026"]')?.textContent).toBe("$7,000.00");
-    expect(card("RESP").querySelector('[data-year-figure="2026"]')?.textContent).toBe("$3,000.00");
+    for (const group of ["RRSP", "FHSA", "TFSA", "RESP"] as const) {
+      expect(card(group).querySelector(`[data-year-figure="${YEAR}"]`)?.textContent).toBe(
+        formatCurrency(GOLDENS.rooms.contributed[group] ?? 0),
+      );
+    }
   });
 
   test("2025's TFSA is 25,000 and its RRSP 15,000", () => {
@@ -202,14 +208,16 @@ describe("the limit line, and the trap it is built around", () => {
    * value. The ratio is taken against the bar's own baseline, so it pins the
    * figure without pinning the niced domain the axis happens to land on.
    */
-  test("the assessed line is drawn at 70,752 against a 33,000 bar, not at some fraction of it", () => {
+  test("the assessed line is drawn at the assessed limit, not at some fraction of the bar", () => {
     renderChart();
-    const rrsp = bar("RRSP", 2026);
+    const rrsp = bar("RRSP", YEAR);
     const baseline = Number(rrsp.getAttribute("y")) + Number(rrsp.getAttribute("height"));
-    const line = limitLines("RRSP").find((node) => node.getAttribute("data-year") === "2026");
+    const line = limitLines("RRSP").find((node) => node.getAttribute("data-year") === String(YEAR));
     const limitHeight = baseline - Number(line?.getAttribute("y1"));
     const barHeight = baseline - Number(rrsp.getAttribute("y"));
-    expect(limitHeight / barHeight).toBeCloseTo(70752 / 33000, 6);
+    const limit = GOLDENS.rooms.rrspAssessedLimit;
+    const contributed = GOLDENS.rooms.contributed.RRSP ?? 0;
+    expect(limitHeight / barHeight).toBeCloseTo(limit / contributed, 6);
   });
 
   test("the 2025 TFSA sits above its generic maximum and is never called an over-contribution", () => {
@@ -375,17 +383,21 @@ describe("the readout carries full precision, in one copy", () => {
 
   test("the accessible name, the announcement and the tooltip state one identical figure", () => {
     renderChart();
+    const contributed = `Contributed ${formatCurrency(GOLDENS.rooms.contributed.RESP ?? 0)}`;
     const label = focusAndStep("RESP");
-    expect(label).toContain("Contributed $3,000.00");
+    expect(label).toContain(contributed);
     const announced = card("RESP").querySelector("[data-cursor-announcement]")?.textContent ?? "";
-    expect(announced).toContain("Contributed $3,000.00");
+    expect(announced).toContain(contributed);
     const tooltip = card("RESP").querySelector("[data-chart-tooltip]")?.textContent ?? "";
-    expect(tooltip).toContain("Contributed $3,000.00");
+    expect(tooltip).toContain(contributed);
   });
 
-  test("the RRSP's assessed 2026 states its real remaining", () => {
+  test("the RRSP's assessed latest year states its real remaining", () => {
     renderChart();
-    expect(focusAndStep("RRSP")).toContain("$37,752.00 remaining of the $70,752.00 assessed limit");
+    expect(focusAndStep("RRSP")).toContain(
+      `${formatCurrency(GOLDENS.rooms.rrspAssessedRemaining)} remaining of the ` +
+        `${formatCurrency(GOLDENS.rooms.rrspAssessedLimit)} assessed limit`,
+    );
   });
 
   test("a generic maximum announces the carry-forward caveat instead of a remaining", () => {

@@ -1,7 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { cleanup, render, screen, within } from "@testing-library/react";
+import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
+import { formatCurrency } from "../format";
 import { RegisteredView } from "./RegisteredView";
 
 /**
@@ -46,6 +48,11 @@ function fillPercent(group: string): number {
   const fill = bar.querySelector("[data-share-bar-fill]");
   if (!(fill instanceof HTMLElement)) throw new Error(`expected a fill inside the ${group} bar`);
   return Number.parseFloat(fill.style.width);
+}
+
+/** A currency figure escaped for use inside a regex matcher. */
+function money(amount: number): string {
+  return formatCurrency(amount).replace(/[$.]/g, "\\$&");
 }
 
 describe("RegisteredView", () => {
@@ -97,18 +104,24 @@ describe("RegisteredView", () => {
   test("the real 2026 RRSP shows its assessed remaining and says where the figure came from", () => {
     renderYear(2026);
     const rrsp = card("RRSP");
-    expect(within(rrsp).getByText(/\$37,752\.00 remaining of \$70,752\.00/)).toBeDefined();
+    const remaining = money(GOLDENS.rooms.rrspAssessedRemaining);
+    const limit = money(GOLDENS.rooms.rrspAssessedLimit);
+    expect(within(rrsp).getByText(new RegExp(`${remaining} remaining of ${limit}`))).toBeDefined();
     expect(within(rrsp).getByText(/notice of assessment/i)).toBeDefined();
-    expect(within(rrsp).getByText(/\$13,600\.00.*spousal/i)).toBeDefined();
+    expect(
+      within(rrsp).getByText(new RegExp(`${money(GOLDENS.rooms.rrspSpousalUsed)}.*spousal`, "i")),
+    ).toBeDefined();
     expect(within(rrsp).getByText(/counts against your own room/i)).toBeDefined();
   });
 
   test("the one fill the corpus permits reads the true share, not its inverse", () => {
     renderYear(2026);
-    // 33,000 of 70,752 assessed room is 46.641% used, and 53.359% is what an
-    // inverted fill would draw. The width is the only place this magnitude is
-    // observable, since the bar announces nothing.
-    expect(fillPercent("RRSP")).toBeCloseTo(46.642, 2);
+    // The used share of the assessed room. Its inverse is what a flipped
+    // fill would draw, and the width is the only place this magnitude is
+    // observable at all, since the bar announces nothing.
+    const used = ((GOLDENS.rooms.contributed.RRSP ?? 0) / GOLDENS.rooms.rrspAssessedLimit) * 100;
+    expect(fillPercent("RRSP")).toBeCloseTo(used, 2);
+    expect(fillPercent("RRSP")).not.toBeCloseTo(100 - used, 2);
   });
 
   test("neither assessed year announces a whole-percent figure of its own", () => {
@@ -162,11 +175,19 @@ describe("RegisteredView", () => {
     renderYear(2026);
     const resp = card("RESP");
     expect(within(resp).getByText(/no annual contribution limit/i)).toBeDefined();
-    expect(within(resp).getByText(/\$3,000\.00 of \$50,000\.00/)).toBeDefined();
-    expect(within(resp).getByText(/\$47,000\.00 remaining/)).toBeDefined();
+    const contributed = GOLDENS.rooms.respLifetimeContributed;
+    const cap = 50000;
+    expect(
+      within(resp).getByText(new RegExp(`${money(contributed)} of ${money(cap)}`)),
+    ).toBeDefined();
+    expect(
+      within(resp).getByText(new RegExp(`${money(cap - contributed)} remaining`)),
+    ).toBeDefined();
     const cesg = within(resp).getByText(/CESG/i).closest("[data-cesg-line]");
     if (cesg === null) throw new Error("expected a CESG line to render");
-    expect(within(cesg as HTMLElement).getByText(/\$550\.00/)).toBeDefined();
+    expect(
+      within(cesg as HTMLElement).getByText(new RegExp(money(GOLDENS.rooms.cesgReceived))),
+    ).toBeDefined();
     expect(within(cesg as HTMLElement).getByText(/\$7,200\.00/)).toBeDefined();
   });
 

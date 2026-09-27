@@ -3,7 +3,7 @@ import { type ScaleLogarithmic, type ScaleTime, scaleLog, scaleTime } from "d3-s
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { formatCurrency, formatRate } from "../format";
-import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
+import { ChartTooltip, CursorAnnouncement, readoutSuffix, tooltipAnchorStyle } from "./Tooltip";
 import { type PlotPoint, areaPath, formatAxisCurrency, formatPeriodLabel, linePath } from "./plot";
 import {
   type ProjectionPoint,
@@ -330,7 +330,7 @@ export function ProjectionChart({ series, domain, rate }: ProjectionChartProps) 
 
   const lines =
     cursor.period === null ? [] : projectionTooltipLines(cursor.period, cursor.point, rate);
-  const readout = lines.length === 0 ? "" : ` ${lines.join(". ")}.`;
+  const readout = readoutSuffix(lines);
   const cursorValue = cursor.point === null || cursor.point.value <= 0 ? null : cursor.point.value;
   const drawn = drawable(points);
   const firstDrawn = drawn[0];

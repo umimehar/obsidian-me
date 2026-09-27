@@ -1,12 +1,16 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { AccountSeries, MonthPoint } from "../../analytics/types";
+import { GOLDENS } from "../../goldens";
 import type { AccountKind, ManagementStyle } from "../../store/mask";
 import type { Purpose } from "../../store/registry";
 import { loadAnalytics, loadReconciliation } from "../data";
-import { formatCurrency } from "../format";
+import { formatCurrency, formatGainWithShare } from "../format";
+import { expectNoCoarseForm } from "../testSupport/coarseForm";
 import { CostGapChart } from "./CostGapChart";
+import { bookCostDivergence } from "./bookCostDivergence";
 import { tickY } from "./chartTestSupport";
+import { formatPeriodLabel } from "./plot";
 
 /**
  * Against the real committed corpus. The series ends 2026-06 at market
@@ -40,15 +44,8 @@ function bars(sign: "above" | "below"): Element[] {
  * the reconciliation data reddens this test rather than leaving the callout
  * to quietly state a stale number.
  */
-function bookCostDivergence(): { statementCount: number; maxDelta: number } {
-  const matches = loadReconciliation().findings.filter((finding) =>
-    finding.message.includes("book cost differs by"),
-  );
-  const statements = new Set(
-    matches.map((finding) => `${finding.accountShortId}:${finding.period}`),
-  );
-  const maxDelta = Math.max(...matches.map((finding) => Math.abs(finding.delta ?? 0)));
-  return { statementCount: statements.size, maxDelta };
+function divergence(): { statementCount: number; maxDelta: number } {
+  return bookCostDivergence(loadReconciliation().findings);
 }
 
 afterEach(cleanup);
@@ -120,7 +117,7 @@ describe("the heading and the caveat", () => {
   });
 
   test("the callout's statement count and largest divergence are the reconciliation report's own figures", () => {
-    const { statementCount, maxDelta } = bookCostDivergence();
+    const { statementCount, maxDelta } = divergence();
     renderChart();
     const note = document.querySelector("[data-cost-gap-provenance]")?.textContent ?? "";
     expect(note).toContain(
@@ -321,9 +318,9 @@ describe("the cursor distinguishes a real zero gap from a missing month", () => 
     ];
     render(<CostGapChart series={series} />);
     fireEvent.keyDown(chart(), { key: "Home" });
-    expect(announced()).toContain("Gap $100.00, approximate");
+    expect(announced()).toContain(`Gap ${formatGainWithShare(100, 1000)}, approximate`);
     fireEvent.keyDown(chart(), { key: "End" });
-    expect(announced()).toContain("Gap $200.00, approximate");
+    expect(announced()).toContain(`Gap ${formatGainWithShare(200, 1000)}, approximate`);
   });
 
   test("a real stated zero gap announces the figure, not an absence", () => {
@@ -331,29 +328,39 @@ describe("the cursor distinguishes a real zero gap from a missing month", () => 
     render(<CostGapChart series={series} />);
     fireEvent.keyDown(chart(), { key: "Home" });
     const spoken = announced();
-    expect(spoken).toContain("Gap $0.00, approximate");
+    expect(spoken).toContain(`Gap ${formatGainWithShare(0, 1000)}, approximate`);
     expect(spoken).toContain("Market value equal to book cost");
     expect(spoken).not.toContain("No statement");
   });
 });
 
+const TOTAL = formatCurrency(GOLDENS.portfolio.total);
+const BOOK = formatCurrency(GOLDENS.portfolio.bookCost);
+const GAP = formatCurrency(GOLDENS.portfolio.gain);
+
 describe("against the real committed analytics.json", () => {
-  test("2023-06, the first month, announces a real zero gap across two accounts", () => {
+  test("the first month announces a real zero gap across two accounts", () => {
     renderChart();
     fireEvent.keyDown(chart(), { key: "Home" });
     const spoken = announced();
-    expect(spoken).toContain("Jun 2023");
-    expect(spoken).toContain("Gap $0.00, approximate");
+    expect(spoken).toContain(formatPeriodLabel(GOLDENS.corpus.firstPeriod));
+    // The corpus's first month is two open, unfunded accounts: $0.00 of book
+    // cost as well as $0.00 of market value. The gap states its dollars with
+    // NO percentage, because a percentage of zero cost is a division by zero.
+    expect(spoken).toContain("Gap +$0.00, approximate");
+    expect(spoken).not.toMatch(/Gap [^.]*(Infinity|NaN)/);
     expect(spoken).toContain("2 accounts reported this month");
   });
 
-  test("2026-06, the last month, announces the $18,064.59 gap at full precision", () => {
+  test("the last month announces the corpus's gap at full precision", () => {
     renderChart();
     fireEvent.keyDown(chart(), { key: "End" });
     const spoken = announced();
-    expect(spoken).toContain("Gap $18,064.59, approximate");
-    expect(spoken).not.toContain("Gap $18,065");
-    expect(spoken).toContain("11 accounts reported this month");
+    expect(spoken).toContain(
+      `Gap ${formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost)}, approximate`,
+    );
+    expectNoCoarseForm(spoken, GOLDENS.portfolio.gain);
+    expect(spoken).toContain(`${GOLDENS.cashflow.accountCount} accounts reported this month`);
   });
 
   /**
@@ -364,27 +371,31 @@ describe("against the real committed analytics.json", () => {
    * this codebase has shipped an announced `$241,740` beside a rendered
    * `$241,739.67` before.
    */
-  test("2026-06 also announces the market value and book cost at full precision", () => {
+  test("the last month also announces the market value and book cost at full precision", () => {
     renderChart();
     fireEvent.keyDown(chart(), { key: "End" });
     const spoken = announced();
-    expect(spoken).toContain("Market value $241,739.67, book cost $223,675.08");
-    expect(spoken).not.toContain("$241,740");
-    expect(spoken).not.toContain("$223,675 ");
+    expect(spoken).toContain(`Market value ${TOTAL}, book cost ${BOOK}`);
+    expectNoCoarseForm(spoken, GOLDENS.portfolio.total);
+    expectNoCoarseForm(spoken, GOLDENS.portfolio.bookCost);
   });
 
   test("the visible tooltip and the accessible name carry the same words", () => {
     renderChart();
     fireEvent.keyDown(chart(), { key: "End" });
     const tooltip = document.querySelector("[data-chart-tooltip]")?.textContent ?? "";
-    expect(tooltip).toContain("Gap $18,064.59, approximate");
-    expect(chart().getAttribute("aria-label")).toContain("Gap $18,064.59, approximate");
+    expect(tooltip).toContain(
+      `Gap ${formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost)}, approximate`,
+    );
+    expect(chart().getAttribute("aria-label")).toContain(
+      `Gap ${formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost)}, approximate`,
+    );
   });
 
   test("the accessible summary states the ending gap and that it is not a filing figure", () => {
     renderChart();
     const label = chart().getAttribute("aria-label") ?? "";
-    expect(label).toContain("$18,064.59");
+    expect(label).toContain(GAP);
     expect(label).toContain("Not a realized gain and not a filing figure");
   });
 

@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { GOLDENS } from "../goldens";
 import { App } from "./App";
+import { formatCurrency } from "./format";
 import { restoreReducedMotion } from "./motionPreference";
 
 /**
@@ -88,8 +90,14 @@ describe("App accessibility", () => {
 
   test("the headline figure is not itself a heading", () => {
     render(<App />);
-    expect(screen.queryByRole("heading", { name: "$241,739.67" })).toBeNull();
-    expect(screen.getByRole("heading", { name: /portfolio total as of 2026-06/i })).toBeDefined();
+    expect(
+      screen.queryByRole("heading", { name: formatCurrency(GOLDENS.portfolio.total) }),
+    ).toBeNull();
+    expect(
+      screen.getByRole("heading", {
+        name: new RegExp(`portfolio total as of ${GOLDENS.corpus.latestPeriod}`, "i"),
+      }),
+    ).toBeDefined();
   });
 
   test("every interactive control has an accessible name", () => {
@@ -192,14 +200,19 @@ describe("App accessibility", () => {
     }
   });
 
-  test("both segmented controls say what they group by", () => {
-    // The lens toggle is on the default overview tab; the tax year control
-    // moved to the wrappers and tax tabs.
+  test("every segmented control says what it selects", () => {
+    // The year and chart controls sit above the tabs, so they are named on
+    // every tab rather than only on the one that happens to be open. The lens
+    // toggle is on the default overview tab. The tax-year control is gone: one
+    // year control now scopes the whole dashboard.
     render(<App />);
-    expect(screen.getByRole("radiogroup", { name: "Group accounts by" })).toBeDefined();
+    for (const name of ["Year", "Chart", "Group accounts by"]) {
+      expect(screen.getByRole("radiogroup", { name })).toBeDefined();
+    }
 
     clickTab("Wrappers");
-    expect(screen.getByRole("radiogroup", { name: "Tax year" })).toBeDefined();
+    expect(screen.getByRole("radiogroup", { name: "Year" })).toBeDefined();
+    expect(screen.queryByRole("radiogroup", { name: "Tax year" })).toBeNull();
   });
 
   test("the theme toggle is a real button that says which way it switches", () => {

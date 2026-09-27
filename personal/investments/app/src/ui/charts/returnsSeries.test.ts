@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import type { ReturnSeries } from "../../analytics/returns";
+import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
+import { type TooltipFootnote, noteOf } from "./Tooltip";
 import {
   type AccountReturns,
   type ReturnValuePoint,
@@ -174,15 +176,27 @@ describe("a null derived return keeps its reason and is never plotted as zero", 
 });
 
 describe("plottedCount", () => {
-  test("counts only the months that actually have a figure", () => {
-    expect(plottedCount(byShortId("9710").points)).toBe(15);
-    expect(plottedCount(byShortId("d6d9").points)).toBe(3);
-    expect(plottedCount(byShortId("d77c").points)).toBe(34);
+  test("counts only the months that actually have a figure, on every account", () => {
+    // Every account, not a chosen three: a count taken from `points.length`
+    // rather than from the months that carry a rate would pass on an account
+    // with no gaps and fail here.
+    for (const [shortId, golden] of Object.entries(GOLDENS.returns)) {
+      expect(byShortId(shortId).points).toHaveLength(golden.points);
+      expect(plottedCount(byShortId(shortId).points)).toBe(golden.plotted);
+      expect(golden.plotted).toBeLessThanOrEqual(golden.points);
+    }
   });
 
-  test("is zero for the single-statement Crypto account", () => {
-    expect(byShortId("e2d6").points).toHaveLength(1);
-    expect(plottedCount(byShortId("e2d6").points)).toBe(0);
+  test("is zero for an account with a single statement, which has nothing to compare against", () => {
+    // Built by cutting a real account back to its first month rather than
+    // fabricated. Crypto WAS this account until 2026-07 gave it a second
+    // statement; the state is real but not guaranteed to exist in whatever
+    // month was imported last.
+    const account = byShortId("e2d6");
+    const first = account.points[0];
+    if (first === undefined) throw new Error("expected the Crypto account to report a month");
+    expect(plottedCount([first])).toBe(0);
+    expect(first.rate).toBeNull();
   });
 });
 
@@ -326,13 +340,17 @@ describe("latestStatedLines, the audited figures a card prints in the open", () 
 
 describe("accountRateExtent", () => {
   test("spans one account's own rates, not the corpus's", () => {
-    const extent = accountRateExtent(byShortId("d6d9").points);
-    expect(extent?.[0]).toBe(-0.07);
-    expect(extent?.[1]).toBe(0.17);
+    // Checked on every account: an extent taken from the shared axis rather
+    // than the account's own would agree with one account by coincidence.
+    for (const [shortId, golden] of Object.entries(GOLDENS.returns)) {
+      expect(accountRateExtent(byShortId(shortId).points)).toEqual(golden.extent);
+    }
   });
 
   test("is null for an account with no figure at all", () => {
-    expect(accountRateExtent(byShortId("e2d6").points)).toBeNull();
+    const first = byShortId("e2d6").points[0];
+    if (first === undefined) throw new Error("expected the Crypto account to report a month");
+    expect(accountRateExtent([first])).toBeNull();
   });
 });
 
@@ -375,6 +393,11 @@ describe("a derived point with no reason recorded", () => {
   });
 });
 
+/** Every tooltip line's text, joined, whichever form each line was written in. */
+function text(lines: readonly TooltipFootnote[]): string {
+  return lines.map((line) => noteOf(line).text).join(" ");
+}
+
 describe("returnsTooltipLines", () => {
   test("a month with no statement states that, and prints no figure", () => {
     expect(returnsTooltipLines("2026-07", null, "derived")).toEqual([
@@ -387,7 +410,9 @@ describe("returnsTooltipLines", () => {
     expect(returnsTooltipLines("2026-06", pointAt("d77c", "2026-06"), "derived")).toEqual([
       "Jun 2026",
       "Derived here, not stated on a statement",
-      "This month 0.91%",
+      // A rate is a gain or a loss, so it carries the tone the dollar figures
+      // do. The prose lines around it carry none.
+      { text: "This month 0.91%", tone: "gain" },
     ]);
   });
 
@@ -398,7 +423,7 @@ describe("returnsTooltipLines", () => {
       "Derived here, not stated on a statement",
       "No figure: no earlier statement to compare against",
     ]);
-    expect(lines.join(" ")).not.toContain("0.00%");
+    expect(text(lines)).not.toContain("0.00%");
   });
 
   test("an unreconciled-flow month prints the reason it is missing", () => {
@@ -414,9 +439,9 @@ describe("returnsTooltipLines", () => {
     expect(returnsTooltipLines("2025-01", pointAt("9710", "2025-01"), "stated")).toEqual([
       "Jan 2025",
       "Stated on the statement",
-      "This month 47.31%",
-      "One year 16.69%",
-      "Since inception 13.41%",
+      { text: "This month 47.31%", tone: "gain" },
+      { text: "One year 16.69%", tone: "gain" },
+      { text: "Since inception 13.41%", tone: "gain" },
       "Not applicable at this account's age: three years, five years, ten years",
     ]);
   });
@@ -427,22 +452,23 @@ describe("returnsTooltipLines", () => {
       "Nov 2025",
       "Stated on the statement",
       "No rate stated for this month",
-      "Since inception -4.68%",
+      // The one negative horizon in this month, and the only red line in it.
+      { text: "Since inception -4.68%", tone: "loss" },
       "Not applicable at this account's age: one year, three years, five years, ten years",
     ]);
-    expect(lines.join(" ")).not.toContain("0.00%");
+    expect(text(lines)).not.toContain("0.00%");
   });
 
   test("a negative stated rate keeps its sign", () => {
     const lines = returnsTooltipLines("2026-03", pointAt("9710", "2026-03"), "stated");
-    expect(lines).toContain("This month -4.01%");
+    expect(lines).toContainEqual({ text: "This month -4.01%", tone: "loss" });
   });
 
   test("no tooltip line anywhere in the corpus prints a rate the point does not have", () => {
     for (const account of accounts) {
       for (const point of account.points) {
         const lines = returnsTooltipLines(point.period, point, account.source);
-        if (point.rate === null) expect(lines.join(" ")).not.toContain("This month ");
+        if (point.rate === null) expect(text(lines)).not.toContain("This month ");
       }
     }
   });

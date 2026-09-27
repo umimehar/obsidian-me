@@ -19,8 +19,31 @@ export interface MaskedId {
   shortId: string;
 }
 
-/** Deterministic and one-way. The account number never reaches the datastore. */
+/**
+ * A value that has already been through `maskAccountNo`: `acct_` and the
+ * first eight hex digits of the digest. `shortId` is the first FOUR of those
+ * same eight, so a masked id carries its own short id and neither has to be
+ * stored twice or recomputed from a raw account number that is no longer
+ * around.
+ */
+const ALREADY_MASKED = /^acct_([0-9a-f]{4})[0-9a-f]{4}$/;
+
+/**
+ * Deterministic and one-way. The account number never reaches the datastore.
+ *
+ * IDEMPOTENT: masking an already-masked id returns it unchanged rather than
+ * hashing the hash. That is what lets the incremental build (see
+ * `loadArchive` in `build.ts`) run the registry, the checks and the datastore
+ * writer over a mix of freshly parsed statements and archived ones whose raw
+ * account numbers are long gone -- without it, every archived statement would
+ * silently land under a second, different masked id and the same account
+ * would appear twice in the registry.
+ */
 export function maskAccountNo(accountNo: string): MaskedId {
+  const already = ALREADY_MASKED.exec(accountNo);
+  if (already?.[1] !== undefined) {
+    return { maskedId: accountNo, shortId: already[1] };
+  }
   const digest = createHash("sha256").update(accountNo).digest("hex");
   return { maskedId: `acct_${digest.slice(0, 8)}`, shortId: digest.slice(0, 4) };
 }

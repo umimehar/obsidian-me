@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import type { ReturnSeries } from "../../analytics/returns";
 import type { AccountSeries } from "../../analytics/types";
 import { formatRate } from "../format";
-import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
+import { ChartTooltip, CursorAnnouncement, readoutSuffix, tooltipAnchorStyle } from "./Tooltip";
 import { type PlotPoint, formatAxisRate, formatPeriodLabel, linePath } from "./plot";
 import {
   type AccountReturns,
@@ -291,7 +291,7 @@ function AccountReturnsCard({
   const drawable = scales !== null && plottedCount(account.points) > 0;
   const lines =
     cursor.period === null ? [] : returnsTooltipLines(cursor.period, cursor.point, account.source);
-  const readout = lines.length === 0 ? "" : ` ${lines.join(". ")}.`;
+  const readout = readoutSuffix(lines);
   const cursorRate = cursor.point?.rate ?? null;
 
   return (

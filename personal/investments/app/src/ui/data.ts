@@ -1,7 +1,9 @@
 import rawAnalytics from "@data/analytics.json";
+import rawCards from "@data/cards.json";
 import rawReconciliation from "@data/reconciliation.json";
 import type { AnalyticsOutput } from "../analytics/build";
 import type { Lens } from "../analytics/rollup";
+import type { CardStatement } from "../ingest/card";
 import type { ReconciliationReport, ReportedFinding } from "../validate/report";
 
 const LENSES: readonly Lens[] = ["registration", "account", "purpose"];
@@ -138,4 +140,27 @@ export function totalsByLens(analytics: AnalyticsOutput): Record<Lens, number> {
 /** The portfolio total shown as the headline figure, from the registration lens. */
 export function grandTotal(analytics: AnalyticsOutput): number {
   return lensTotal(analytics, "registration");
+}
+
+/**
+ * The committed credit card statements.
+ *
+ * Deliberately its own loader with its own shape check: a card statement is
+ * not an `AccountSeries` and must never reach anything that treats it as one.
+ * A malformed file yields an empty list rather than throwing -- unlike
+ * analytics.json, a missing card import leaves the rest of the dashboard
+ * entirely correct, so it degrades to "no cards imported yet" instead of
+ * taking the page down.
+ */
+export function loadCards(): CardStatement[] {
+  if (typeof rawCards !== "object" || rawCards === null) return [];
+  const { statements } = rawCards as { statements?: unknown };
+  if (!Array.isArray(statements)) return [];
+  return statements.filter(
+    (s): s is CardStatement =>
+      typeof s === "object" &&
+      s !== null &&
+      typeof (s as CardStatement).cardId === "string" &&
+      typeof (s as CardStatement).newBalance === "number",
+  );
 }

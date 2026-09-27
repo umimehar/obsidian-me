@@ -14,7 +14,7 @@ import { LensToggle } from "./LensToggle";
 import { ShareBar } from "./ShareBar";
 import { GroupSparkline } from "./charts/GroupSparkline";
 import { grandTotal } from "./data";
-import { formatCurrency, formatShare, formatSignedCurrency } from "./format";
+import { formatCurrency, formatGainWithShare, formatShare } from "./format";
 
 export interface OverviewProps {
   analytics: AnalyticsOutput;
@@ -61,10 +61,16 @@ function AccountRow({ account }: { account: RollupAccount }) {
  * The colour is `jade` for a gain, `red` for a loss, matching this app's
  * existing `jade`/`amber` split in `GoalsPanel`; a loss here is a shortfall
  * against cost rather than a goal warning, so `red` reads more accurately
- * than reusing `amber`. The leading "+"/"-" from `formatSignedCurrency`
+ * than reusing `amber`. The leading "+"/"-" from `formatGainWithShare`
  * carries the sign on its own, so the colour only reinforces what the
  * character already says -- a colour-blind or greyscale reading still gets
- * it right. The caveat sentence sits on its own line directly below the
+ * it right.
+ *
+ * The figure carries its own percentage of book cost in brackets, from the
+ * SAME call that formats the dollars: $995.74 on the RRSP and $3,911.35 on
+ * the TFSA are four times apart in dollars and less than two apart as
+ * returns (1.93% against 8.96%), which is the comparison the dollar figure
+ * alone cannot support. The caveat sentence sits on its own line directly below the
  * figure it qualifies, the same "adjacent, not a footnote" placement
  * `ValueOverTime`'s accessible summary and `CostGapChart`'s callout use for
  * the same USD book-cost caveat.
@@ -85,7 +91,7 @@ export function GroupGainLine({ figures }: { figures: ReturnType<typeof latestGr
         {" · "}
         Gain against book cost{" "}
         <Text color={gain >= 0 ? "jade" : "red"} data-group-gain="">
-          {formatSignedCurrency(gain)}
+          {formatGainWithShare(gain, bookCost)}
         </Text>
       </Text>
       <Text size="1" color="gray">
@@ -145,6 +151,21 @@ interface GroupCardProps {
  */
 function GroupCard({ group, grandTotalValue, motionSpec, series, xDomain }: GroupCardProps) {
   const share = grandTotalValue > 0 ? group.total / grandTotalValue : 0;
+  // A group whose every account is excluded contributes nothing to the total,
+  // and `Rollup.total` is therefore 0 for it. Printing that as "$0.00" is a
+  // claim, and it was a contradiction: the spousal RRSP card read $0.00 above
+  // an account line reading $15,818.27, which is real money the owner simply
+  // does not own. Such a group states its own excluded value instead, or
+  // "No figure" when its accounts state none (the chequing accounts, whose
+  // last statement carries no market value), and it takes no share of a total
+  // it is not part of.
+  const counted = group.accounts.filter((account) => account.inTotals);
+  const allExcluded = group.accounts.length > 0 && counted.length === 0;
+  const excludedValue = group.accounts.reduce(
+    (sum, account) => sum + (account.marketValue ?? 0),
+    0,
+  );
+  const statesExcludedValue = allExcluded && excludedValue > 0;
   const groupSeries = useMemo(
     () =>
       seriesForAccounts(
@@ -175,16 +196,26 @@ function GroupCard({ group, grandTotalValue, motionSpec, series, xDomain }: Grou
         </Flex>
         <Flex justify="between" align="center" mb="1">
           <Text size="5" weight="bold" data-group-total="">
-            {formatCurrency(group.total)}
+            {statesExcludedValue ? formatCurrency(excludedValue) : null}
+            {!statesExcludedValue && allExcluded ? "No figure" : null}
+            {allExcluded ? null : formatCurrency(group.total)}
           </Text>
-          <Text size="2" color="gray" data-group-share="">
-            {formatShare(share)} of total
-          </Text>
+          {allExcluded ? (
+            <Text size="2" color="gray" data-group-excluded="">
+              Not counted in the total
+            </Text>
+          ) : (
+            <Text size="2" color="gray" data-group-share="">
+              {formatShare(share)} of total
+            </Text>
+          )}
         </Flex>
         <GroupGainLine figures={gainFigures} />
-        <Box mb="3">
-          <ShareBar label={group.label} share={share} />
-        </Box>
+        {allExcluded ? null : (
+          <Box mb="3">
+            <ShareBar label={group.label} share={share} />
+          </Box>
+        )}
         <Box mb="3">
           <GroupSparkline label={group.label} series={groupSeries} xDomain={xDomain} />
         </Box>

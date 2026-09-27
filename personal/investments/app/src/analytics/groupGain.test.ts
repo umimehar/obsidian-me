@@ -1,9 +1,11 @@
 import { describe, expect, test } from "bun:test";
+import { GOLDENS, groupGolden } from "../goldens";
 import type { AccountKind, ManagementStyle } from "../store/mask";
 import type { Purpose } from "../store/registry";
 import { grandTotal, loadAnalytics } from "../ui/data";
 import { latestGroupGain } from "./groupGain";
 import { buildPortfolioSeries, seriesForAccounts } from "./portfolioSeries";
+import type { Lens } from "./rollup";
 import type { AccountSeries, MonthPoint } from "./types";
 
 function month(
@@ -111,33 +113,30 @@ describe("latestGroupGain against the real committed analytics.json", () => {
     return latestGroupGain(seriesForAccounts(analytics.series, maskedIds));
   }
 
-  // Real corpus, registration lens (task instructions pinned these against
-  // the committed artifact; reproduced here rather than trusted blind).
-  test("TFSA: market $48,155.28, book $43,369.06, gain +$4,786.22", () => {
-    const tfsa = analytics.rollups.registration.find((g) => g.key === "TFSA");
-    if (tfsa === undefined) throw new Error("expected a TFSA registration group");
-    const result = groupGainFor(tfsa.accounts.map((a) => a.maskedId));
-    expect(result?.marketValue).toBeCloseTo(48155.28, 2);
-    expect(result?.bookCost).toBeCloseTo(43369.06, 2);
-    expect(result?.gain).toBeCloseTo(4786.22, 2);
+  // Real corpus, against the committed goldens. Each of the three is a
+  // different lens and a different arithmetic path into the same figures.
+  function expectGroupMatchesGolden(lens: Lens, key: string, label: string) {
+    const group = analytics.rollups[lens].find((g) => g.key === key);
+    if (group === undefined) throw new Error(`expected a ${key} ${lens} group`);
+    const result = groupGainFor(group.accounts.map((a) => a.maskedId));
+    const golden = groupGolden(lens, label);
+    expect(result?.marketValue).toBeCloseTo(golden.market, 2);
+    expect(result?.bookCost).toBeCloseTo(golden.book, 2);
+    expect(result?.gain).toBeCloseTo(golden.gain, 2);
+    // The gain is the gap, not an independently stored third figure.
+    expect(result?.gain).toBeCloseTo((result?.marketValue ?? 0) - (result?.bookCost ?? 0), 6);
+  }
+
+  test("TFSA (registration lens) matches its golden market, book and gain", () => {
+    expectGroupMatchesGolden("registration", "TFSA", "TFSA");
   });
 
-  test("Non-registered: market $60,798.32, book $55,759.88, gain +$5,038.44", () => {
-    const nonReg = analytics.rollups.registration.find((g) => g.key === "NonRegistered");
-    if (nonReg === undefined) throw new Error("expected a Non-registered registration group");
-    const result = groupGainFor(nonReg.accounts.map((a) => a.maskedId));
-    expect(result?.marketValue).toBeCloseTo(60798.32, 2);
-    expect(result?.bookCost).toBeCloseTo(55759.88, 2);
-    expect(result?.gain).toBeCloseTo(5038.44, 2);
+  test("Non-registered (registration lens) matches its golden market, book and gain", () => {
+    expectGroupMatchesGolden("registration", "NonRegistered", "Non-registered");
   });
 
-  test("Growth (purpose lens): market $108,953.60, book $99,128.94, gain +$9,824.66", () => {
-    const growth = analytics.rollups.purpose.find((g) => g.key === "growth");
-    if (growth === undefined) throw new Error("expected a Growth purpose group");
-    const result = groupGainFor(growth.accounts.map((a) => a.maskedId));
-    expect(result?.marketValue).toBeCloseTo(108953.6, 2);
-    expect(result?.bookCost).toBeCloseTo(99128.94, 2);
-    expect(result?.gain).toBeCloseTo(9824.66, 2);
+  test("Growth (purpose lens) matches its golden market, book and gain", () => {
+    expectGroupMatchesGolden("purpose", "growth", "Growth");
   });
 
   test("Cash (registration lens) has no gain to state", () => {
@@ -177,10 +176,10 @@ describe("latestGroupGain against the real committed analytics.json", () => {
       if (result !== null) summed += result.gain;
     }
     expect(summed).toBeCloseTo(portfolioFigures.gain, 2);
-    expect(summed).toBeCloseTo(18064.59, 2);
+    expect(summed).toBeCloseTo(GOLDENS.portfolio.gain, 2);
 
     // Today's data has zero basis drift (every counted account's latest
-    // statement is 2026-06), so the series-basis market value the headline
+    // statement is the same period), so the series-basis market value the headline
     // now renders from and `grandTotal` (each account's own latest stated
     // value, a different basis -- see `latestGroupGain`'s docstring) still
     // agree to the cent. This is the proof that switching App.tsx's
@@ -189,18 +188,25 @@ describe("latestGroupGain against the real committed analytics.json", () => {
     // gain from one call, which is what actually removes the risk of them
     // silently diverging once an account's statement lags.
     expect(portfolioFigures.marketValue).toBeCloseTo(grandTotal(analytics), 2);
-    expect(portfolioFigures.marketValue).toBeCloseTo(241739.67, 2);
-    expect(portfolioFigures.bookCost).toBeCloseTo(223675.08, 2);
+    expect(portfolioFigures.marketValue).toBeCloseTo(GOLDENS.portfolio.total, 2);
+    expect(portfolioFigures.bookCost).toBeCloseTo(GOLDENS.portfolio.bookCost, 2);
   });
 
-  test("a real per-account loss exists in the corpus (account lens), not only fixture-fabricated", () => {
-    // RRSP (managed): market $20,498.54 against book $20,501.70, a real
-    // -$3.16. The corresponding group card verifies this renders and passes
-    // contrast; this pins the number itself so that test cannot be pinned
-    // to a wrong figure.
-    const managed = analytics.rollups.account.find((g) => g.label === "RRSP (managed)");
-    if (managed === undefined) throw new Error("expected an RRSP (managed) account group");
-    const result = groupGainFor(managed.accounts.map((a) => a.maskedId));
-    expect(result?.gain).toBeCloseTo(-3.16, 2);
+  test("every account-lens loss the corpus holds is exactly the set the goldens record", () => {
+    // Whether the corpus holds a loss AT ALL is a property of this month's
+    // market, not of the code: RRSP (managed) at -$3.16 and Crypto at
+    // -$45.04 were the only two at 2026-06 and both turned positive at
+    // 2026-07. Pinning either figure made this test unsatisfiable the month
+    // the market moved, so what is asserted is the agreement between the
+    // corpus and the goldens, in BOTH directions -- a loss appearing or
+    // disappearing shows up as a goldens diff to read, not as a red test.
+    //
+    // The loss RENDERING is proven on a fixture in Overview.test.tsx, so it
+    // stays covered in a month like this one where the corpus holds none.
+    const losses = analytics.rollups.account
+      .filter((g) => (groupGainFor(g.accounts.map((a) => a.maskedId))?.gain ?? 0) < 0)
+      .map((g) => g.label)
+      .sort();
+    expect(losses).toEqual(GOLDENS.lossGroups);
   });
 });

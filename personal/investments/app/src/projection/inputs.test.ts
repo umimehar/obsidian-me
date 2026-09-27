@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { AnalyticsOutput } from "../analytics/build";
 import type { AccountSeries, MonthPoint } from "../analytics/types";
+import { GOLDENS, accountGolden } from "../goldens";
 import { loadAnalytics } from "../ui/data";
 import { projectionInputs } from "./inputs";
 
@@ -29,49 +30,71 @@ function countedAccount(analyticsCopy: AnalyticsOutput): AccountSeries {
 
 describe("projectionInputs, opening balances from the real corpus", () => {
   test("each group opens at its accounts' latest stated market value", () => {
-    expect(inputs.opening.TFSA).toBeCloseTo(48155.28, 2);
-    expect(inputs.opening.RRSP).toBeCloseTo(49314.45, 2);
-    expect(inputs.opening.FHSA).toBeCloseTo(28295.25, 2);
-    expect(inputs.opening.RESP).toBeCloseTo(3943.98, 2);
-    expect(inputs.opening.Corporate).toBeCloseTo(51232.39, 2);
+    for (const [group, opening] of Object.entries(GOLDENS.rooms.opening)) {
+      expect(inputs.opening[group]).toBeCloseTo(opening, 2);
+    }
+    expect(Object.keys(inputs.opening).sort()).toEqual(Object.keys(GOLDENS.rooms.opening).sort());
   });
 
-  test("RRSP opens at the self-directed, managed and spousal accounts combined", () => {
-    // 14,509.70 + 20,498.54 + 14,306.21. A spousal RRSP shares the
-    // contributor's own room, so it shares the group.
-    expect(inputs.opening.RRSP).toBeCloseTo(14509.7 + 20498.54 + 14306.21, 2);
+  test("RRSP opens at the owner's own two accounts, with the spousal asset out", () => {
+    // A spousal RRSP shares the contributor's ROOM but not the ownership of
+    // the asset, so it shares the room group and not the opening balance.
+    // Summed from the accounts' own latest values rather than restated, so
+    // the group total and its parts can never disagree.
+    expect(inputs.opening.RRSP).toBeCloseTo(accountGolden("2318") + accountGolden("d6d9"), 2);
+    // The spousal account exists and states a real value; it is simply not
+    // the owner's to project.
+    expect(accountGolden("97ab")).toBeGreaterThan(0);
+    expect(inputs.opening.RRSP).toBeLessThan(
+      accountGolden("2318") + accountGolden("d6d9") + accountGolden("97ab"),
+    );
+  });
+
+  test("the room the projection starts from still counts the spousal contributions", () => {
+    // The other half of the same rule, and the half that is easy to break by
+    // accident: the asset is the spouse's, the ROOM it consumed is the
+    // owner's. Excluding the account from the total must not quietly hand him
+    // back room he has already used.
+    expect(inputs.contributedThisYear.RRSP).toBe(GOLDENS.rooms.contributed.RRSP);
+    expect(GOLDENS.rooms.rrspSpousalUsed).toBeGreaterThan(0);
+    expect(inputs.contributedThisYear.RRSP ?? 0).toBeGreaterThanOrEqual(
+      GOLDENS.rooms.rrspSpousalUsed,
+    );
   });
 
   test("the excluded Chequing accounts open nothing anywhere", () => {
     const total = Object.values(inputs.opening).reduce((sum, v) => sum + v, 0);
-    // The five projected groups only: the corpus's non-registered
-    // $60,798.32 is real money but carries no CRA room and no funding plan,
-    // so the projection does not cover it.
-    expect(total).toBeCloseTo(48155.28 + 49314.45 + 28295.25 + 3943.98 + 51232.39, 2);
+    // The projected groups only. The corpus's non-registered money is real
+    // but carries no CRA room and no funding plan, so the projection does
+    // not cover it -- and neither do these openings.
+    const projectedTotal = Object.values(GOLDENS.rooms.opening).reduce((sum, v) => sum + v, 0);
+    expect(total).toBeCloseTo(projectedTotal, 2);
+    expect(total).toBeCloseTo(GOLDENS.portfolio.total - GOLDENS.projection.uncoveredValue, 2);
   });
 });
 
 describe("projectionInputs, contributions from the real corpus", () => {
   test("this year's contributions come from the start year's room lines", () => {
-    expect(inputs.contributedThisYear.TFSA).toBe(7000);
-    expect(inputs.contributedThisYear.RRSP).toBe(33000);
-    expect(inputs.contributedThisYear.FHSA).toBe(8000);
+    expect(inputs.contributedThisYear.TFSA).toBe(GOLDENS.rooms.contributed.TFSA);
+    expect(inputs.contributedThisYear.RRSP).toBe(GOLDENS.rooms.contributed.RRSP);
+    expect(inputs.contributedThisYear.FHSA).toBe(GOLDENS.rooms.contributed.FHSA);
   });
 
   test("a corporation has no room, so nothing is already used against it", () => {
     expect(inputs.contributedThisYear.Corporate).toBe(0);
   });
 
-  test("lifetime FHSA contributed is 24,000 against the 40,000 cap", () => {
-    expect(inputs.lifetimeContributed.FHSA).toBe(24000);
+  test("lifetime FHSA contributed sits under the 40,000 cap", () => {
+    expect(inputs.lifetimeContributed.FHSA).toBe(GOLDENS.rooms.lifetimeContributed.FHSA);
+    expect(inputs.lifetimeContributed.FHSA ?? 0).toBeLessThanOrEqual(inputs.rules.fhsaLifetime);
   });
 
-  test("CESG already received is 550", () => {
-    expect(inputs.cesgReceived).toBe(550);
+  test("CESG already received is the corpus's own figure", () => {
+    expect(inputs.cesgReceived).toBe(GOLDENS.rooms.cesgReceived);
   });
 
-  test("basic CESG room accrued is 1,000, two years at $500 from the 2025 birth year", () => {
-    expect(inputs.cesgRoomAccrued).toBe(1000);
+  test("basic CESG room accrued is $500 a year from the beneficiary's birth year", () => {
+    expect(inputs.cesgRoomAccrued).toBe(GOLDENS.rooms.cesgRoomAccrued);
   });
 });
 
@@ -84,22 +107,25 @@ describe("projectionInputs, contributions from the real corpus", () => {
  * alone stops at $2,550.
  */
 describe("projectionInputs, the RESP deposits-not-contributions trap", () => {
-  test("lifetime RESP contributed is 3,000, the deposits figure", () => {
-    expect(inputs.lifetimeContributed.RESP).toBe(3000);
+  test("lifetime RESP contributed is the deposits figure", () => {
+    expect(inputs.lifetimeContributed.RESP).toBe(GOLDENS.rooms.lifetimeContributed.RESP);
   });
 
-  test("this year's RESP contributions are 3,000, the deposits figure", () => {
-    expect(inputs.contributedThisYear.RESP).toBe(3000);
+  test("this year's RESP contributions are the deposits figure", () => {
+    expect(inputs.contributedThisYear.RESP).toBe(GOLDENS.rooms.contributed.RESP);
   });
 
-  test("the derived figure sits $450 above the corpus's $2,550 of CONT rows", () => {
-    // $2,550 is what the three CONT rows sum to; the two DEP rows carry the
-    // remaining $450. This records the size of the gap, and nothing more --
-    // it passes whichever source the code reads, because `series.ts` already
-    // folds DEP into `contributionsByYear`, so both reconcile to 3,000 here.
-    // The guarantee that deposits are what is read lives in the next test,
-    // on a payload where the two sources disagree.
-    expect((inputs.lifetimeContributed.RESP ?? 0) - 2550).toBe(450);
+  test("the derived figure sits strictly above the corpus's tagged CONT rows", () => {
+    // The gap is the DEP rows the CONT code does not tag. This records that
+    // the gap is real and nonzero, and nothing more -- it passes whichever
+    // source the code reads, because `series.ts` already folds DEP into
+    // `contributionsByYear`, so both reconcile here. The guarantee that
+    // deposits are what is read lives in the next test, on a payload where
+    // the two sources disagree.
+    expect(GOLDENS.rooms.respFromContRowsOnly).toBeGreaterThan(0);
+    expect(inputs.lifetimeContributed.RESP ?? 0).toBeGreaterThan(
+      GOLDENS.rooms.respFromContRowsOnly,
+    );
   });
 
   test("deposits are read, not tagged contributions, when the two differ", () => {
@@ -107,18 +133,21 @@ describe("projectionInputs, the RESP deposits-not-contributions trap", () => {
     const resp = copy.series.find((a) => a.kind === "RESP");
     if (resp === undefined) throw new Error("no RESP account in the corpus");
     // Mirrors the real CONT/DEP split the corpus reconstructs into one
-    // figure: tagged contributions say 2,550, deposits say 3,000. Only a
-    // deposits-sourced figure survives this.
-    resp.contributionsByYear = { "2026": 2550 };
-    for (const line of copy.rooms["2026"] ?? []) {
+    // figure: the tagged contributions are made to say the CONT-rows-only
+    // total, while the deposits still say the full figure. Only a
+    // deposits-sourced reading survives this.
+    const tagged = GOLDENS.rooms.respFromContRowsOnly;
+    const year = String(GOLDENS.income.year);
+    resp.contributionsByYear = { [year]: tagged };
+    for (const line of copy.rooms[year] ?? []) {
       if (line.group === "RESP") {
-        line.used = 2550;
-        if (line.lifetimeContributions !== null) line.lifetimeContributions.contributed = 2550;
+        line.used = tagged;
+        if (line.lifetimeContributions !== null) line.lifetimeContributions.contributed = tagged;
       }
     }
     const derived = projectionInputs(copy);
-    expect(derived.lifetimeContributed.RESP).toBe(3000);
-    expect(derived.contributedThisYear.RESP).toBe(3000);
+    expect(derived.lifetimeContributed.RESP).toBe(GOLDENS.rooms.lifetimeContributed.RESP);
+    expect(derived.contributedThisYear.RESP).toBe(GOLDENS.rooms.contributed.RESP);
   });
 
   test("a GRANT credit is government money and never counts as a contribution", () => {
@@ -130,17 +159,19 @@ describe("projectionInputs, the RESP deposits-not-contributions trap", () => {
 });
 
 describe("projectionInputs, RRSP room from the assessed line", () => {
-  test("rrspAssessedRemaining is 37,752", () => {
-    expect(inputs.rrspAssessedRemaining).toBe(37752);
+  test("rrspAssessedRemaining is the corpus's own figure", () => {
+    expect(inputs.rrspAssessedRemaining).toBe(GOLDENS.rooms.rrspAssessedRemaining);
   });
 
   test("it is the assessed figure less what is used, not the generic annual maximum", () => {
-    // 70,752 assessed (2025 NOA: 45,191 carried forward plus 25,561 earned)
-    // less 33,000 contributed. The generic 2026 maximum is 33,810, which
-    // less the same 33,000 would report 810 -- and 33,810 taken raw would
-    // report 33,810. Neither is 37,752.
-    expect(inputs.rrspAssessedRemaining).toBe(70752 - 33000);
-    expect(inputs.rrspAssessedRemaining).not.toBe(33810 - 33000);
+    // The assessed 2026 line (2025 NOA: 45,191 carried forward plus 25,561
+    // earned) less what has been contributed. The generic 2026 maximum is
+    // 33,810, which less the same contributions would report far less -- and
+    // 33,810 taken raw would report 33,810. The point is that neither of the
+    // two generic readings can produce this figure.
+    const used = GOLDENS.rooms.contributed.RRSP ?? 0;
+    expect(inputs.rrspAssessedRemaining).toBe(GOLDENS.rooms.rrspAssessedLimit - used);
+    expect(inputs.rrspAssessedRemaining).not.toBe(33810 - used);
     expect(inputs.rrspAssessedRemaining).not.toBe(33810);
   });
 
@@ -233,7 +264,7 @@ describe("projectionInputs, groups covered", () => {
 
 describe("projectionInputs, rates and dials", () => {
   test("returnRate defaults to the rate fitted from the market-value history", () => {
-    expect(inputs.returnRate).toBeCloseTo(0.2483925, 6);
+    expect(inputs.returnRate).toBeCloseTo(GOLDENS.fittedRate.rate, 6);
   });
 
   test("an explicit returnRate wins over the fitted one", () => {

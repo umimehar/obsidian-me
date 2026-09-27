@@ -20,15 +20,35 @@ describe.if(existsSync(DATASTORE_PATH))("analytics over the real datastore", () 
     expect(output.series).toHaveLength(14);
   });
 
-  test("2026-06 inTotals market value totals $241,739.67 within a cent", async () => {
+  test("2026-06 counts every account except the excluded kinds, to the cent", async () => {
+    // Summed two ways over the same month: once over `inTotals` accounts, and
+    // once over ALL of them less the excluded kinds. The two agreeing is what
+    // pins which accounts the total is built from -- a spousal account
+    // silently returning to the total would break the second sum, not the
+    // first, because the first would simply follow it.
     const output = await build();
-    let total = 0;
-    for (const account of output.series) {
-      if (!account.inTotals) continue;
-      const month = account.months.find((m) => m.period === "2026-06");
-      total += month?.marketValue ?? 0;
-    }
-    expect(Math.abs(total - 241739.67)).toBeLessThan(0.01);
+    const at = (account: (typeof output.series)[number]) =>
+      account.months.find((m) => m.period === "2026-06")?.marketValue ?? 0;
+
+    const counted = output.series.filter((a) => a.inTotals).reduce((sum, a) => sum + at(a), 0);
+    const excluded = output.series.filter((a) => !a.inTotals).reduce((sum, a) => sum + at(a), 0);
+    const everything = output.series.reduce((sum, a) => sum + at(a), 0);
+
+    expect(counted + excluded).toBeCloseTo(everything, 2);
+
+    // Exactly two kinds are held out, and for different reasons: Chequing is
+    // money held rather than invested, SpousalRRSP is invested money the
+    // owner contributed but does not own. A chequing account does carry a
+    // month figure, so the excluded half is not the spousal asset alone.
+    const excludedKinds = [...new Set(output.series.filter((a) => !a.inTotals).map((a) => a.kind))];
+    expect(excludedKinds.sort()).toEqual(["Chequing", "SpousalRRSP"]);
+
+    const spousal = output.series.filter((a) => a.kind === "SpousalRRSP");
+    expect(spousal).toHaveLength(1);
+    expect(spousal.every((a) => !a.inTotals)).toBe(true);
+    // The one figure the exclusion is actually about, and the amount by which
+    // the total moved when it landed.
+    expect(spousal.reduce((sum, a) => sum + at(a), 0)).toBeCloseTo(14306.21, 2);
   });
 
   test("all three lenses agree on the grand total", async () => {

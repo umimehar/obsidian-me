@@ -6,8 +6,11 @@ import {
   seriesForAccounts,
 } from "../../analytics/portfolioSeries";
 import type { AccountSeries } from "../../analytics/types";
+import { GOLDENS, groupGolden } from "../../goldens";
 import { loadAnalytics } from "../data";
+import { formatCurrency } from "../format";
 import { GroupSparkline, INNER_HEIGHT, INNER_WIDTH } from "./GroupSparkline";
+import { formatPeriodLabel } from "./plot";
 
 /**
  * Every case here runs against the real committed corpus
@@ -40,33 +43,45 @@ function firstPlotPoint(): { x: number; y: number } {
   return { x: Number(match[1]), y: Number(match[2]) };
 }
 
+/** The `from X to Y, ending at $Z.` clause one purpose group's summary must carry. */
+function summaryClauses(label: string): { range: string; ending: string } {
+  const golden = groupGolden("purpose", label);
+  return {
+    range: `from ${formatPeriodLabel(golden.firstPeriod)} to ${formatPeriodLabel(golden.lastPeriod)}`,
+    ending: `ending at ${formatCurrency(golden.market)}.`,
+  };
+}
+
 describe("GroupSparkline accessible summary", () => {
   test("states the ending value with cents, the precision the card's own total prints", () => {
     renderGroup("Retirement");
     const chart = screen.getByRole("img", { name: /retirement market value/i });
-    // Not "$49,314" and not "$49,314.5": the card beside it says $49,314.45.
-    expect(chart.getAttribute("aria-label")).toContain("ending at $49,314.45.");
+    // To the cent, the same precision the card beside it prints.
+    expect(chart.getAttribute("aria-label")).toContain(summaryClauses("Retirement").ending);
   });
 
   test("names the group, so a screen reader can tell one card's chart from another's", () => {
     renderGroup("Education");
     const chart = screen.getByRole("img", { name: /education market value/i });
-    expect(chart.getAttribute("aria-label")).toContain("ending at $3,943.98.");
+    expect(chart.getAttribute("aria-label")).toContain(summaryClauses("Education").ending);
   });
 
   test("states the group's own period range, not the portfolio's", () => {
     renderGroup("Education");
     const label = screen.getByRole("img").getAttribute("aria-label") ?? "";
-    // Education is the RESP: six statements, Jan 2026 through Jun 2026.
-    expect(label).toContain("from Jan 2026 to Jun 2026");
-    expect(label).not.toContain("Jun 2023");
+    // Education is the RESP, which opened long after the corpus did, so its
+    // own range must not start at the portfolio's first month.
+    expect(label).toContain(summaryClauses("Education").range);
+    expect(groupGolden("purpose", "Education").firstPeriod).not.toBe(GOLDENS.corpus.firstPeriod);
+    expect(label).not.toContain(formatPeriodLabel(GOLDENS.corpus.firstPeriod));
   });
 
   test("a long-running group states the full range it actually covers", () => {
     renderGroup("Growth");
     const label = screen.getByRole("img").getAttribute("aria-label") ?? "";
-    expect(label).toContain("from Jun 2023 to Jun 2026");
-    expect(label).toContain("ending at $108,953.60.");
+    expect(groupGolden("purpose", "Growth").firstPeriod).toBe(GOLDENS.corpus.firstPeriod);
+    expect(label).toContain(summaryClauses("Growth").range);
+    expect(label).toContain(summaryClauses("Growth").ending);
   });
 });
 
@@ -79,13 +94,13 @@ describe("GroupSparkline shared x domain", () => {
   test("a late-starting group visibly begins partway across, never rescaled to fill the card", () => {
     renderGroup("Education");
     const { x } = firstPlotPoint();
-    // Jan 2026 is 31 of the 36 months from Jun 2023, so the area must start
-    // in the last sixth of the card. Rescaled to its own range it would be 0.
+    // The RESP opens in the last sixth of the corpus's span, so its area must
+    // start well across the card. Rescaled to its own range it would be 0.
     expect(x).toBeGreaterThan(0);
     expect(x / INNER_WIDTH).toBeGreaterThan(0.8);
   });
 
-  test("every group ends at the same right edge, since every one ends at Jun 2026", () => {
+  test("every group ends at the same right edge, since every one ends at the corpus's last month", () => {
     render(
       <>
         <GroupSparkline label="Growth" series={purposeGroup("Growth")} xDomain={PORTFOLIO_DOMAIN} />
@@ -106,9 +121,9 @@ describe("GroupSparkline y domain", () => {
   test("scales to the group's own maximum, so a small group is not flattened onto the baseline", () => {
     renderGroup("Education");
     const { y } = firstPlotPoint();
-    // Education's whole range is $3,943.98 against a portfolio of $241,739.67.
-    // On a shared y domain its line would sit within 2% of the baseline; on
-    // its own domain it uses the card's height.
+    // Education's whole range is a small fraction of the portfolio. On a
+    // shared y domain its line would sit within a couple of percent of the
+    // baseline; on its own domain it uses the card's height.
     expect(y).toBeLessThan(INNER_HEIGHT * 0.6);
   });
 });
@@ -144,26 +159,51 @@ function accountGroup(label: string): readonly AccountSeries[] {
   );
 }
 
+/**
+ * The Crypto account cut back to its own first month. Crypto WAS a genuine
+ * single-statement group in the corpus until 2026-07 gave it a second, and
+ * an account can hold exactly one statement again at any time -- the state is
+ * real, it just is not guaranteed to exist in whatever month was imported
+ * last. Built from the real account rather than fabricated, so the shape,
+ * the kind and the label are all still the corpus's own.
+ */
+function singlePointGroup(): readonly AccountSeries[] {
+  const [account] = accountGroup("Crypto");
+  if (account === undefined) throw new Error("expected a Crypto account in the corpus");
+  const first = account.months[0];
+  if (first === undefined) throw new Error("expected the Crypto account to report a month");
+  return [{ ...account, months: [first] }];
+}
+
+const SINGLE_POINT = singlePointGroup();
+
 function renderCrypto() {
-  render(
-    <GroupSparkline label="Crypto" series={accountGroup("Crypto")} xDomain={PORTFOLIO_DOMAIN} />,
-  );
+  render(<GroupSparkline label="Crypto" series={SINGLE_POINT} xDomain={PORTFOLIO_DOMAIN} />);
+}
+
+/** The one month `SINGLE_POINT` reports, and its value. */
+function singlePoint(): { period: string; marketValue: number } {
+  const month = SINGLE_POINT[0]?.months[0];
+  if (month === undefined) throw new Error("expected one month");
+  return { period: month.period, marketValue: month.marketValue ?? 0 };
 }
 
 describe("GroupSparkline single-point group", () => {
   test("draws a visible marker rather than a zero-width area", () => {
-    // The account lens's Crypto group holds exactly one statement (2026-06).
     renderCrypto();
 
     const dot = document.querySelector("circle");
     expect(dot).not.toBeNull();
     expect(Number(dot?.getAttribute("r"))).toBeGreaterThan(0);
-    expect(screen.getByRole("img").getAttribute("aria-label")).toContain("ending at $1,014.96.");
+    expect(screen.getByRole("img").getAttribute("aria-label")).toContain(
+      `ending at ${formatCurrency(singlePoint().marketValue)}.`,
+    );
   });
 
   test("says in words that it is one statement, so a lone dot does not read as a broken chart", () => {
     renderCrypto();
-    expect(screen.getByText(/one statement, Jun 2026/i)).toBeDefined();
+    const period = formatPeriodLabel(singlePoint().period);
+    expect(screen.getByText(new RegExp(`one statement, ${period}`, "i"))).toBeDefined();
   });
 
   test("a group with a real line says nothing of the sort", () => {
@@ -186,10 +226,9 @@ function tooltipText(): string {
 
 describe("GroupSparkline cursor over the shared domain", () => {
   test("a month this group never reported says so, and states no figure", () => {
-    // Education is the RESP: six statements, Jan 2026 to Jun 2026, drawn on
-    // the portfolio's own Jun 2023 to Jun 2026 axis. Halfway across is 2024,
-    // where this group has nothing at all. A nearest-point lookup would
-    // answer with January 2026's figure for a month two years earlier.
+    // Education is the RESP, drawn on the portfolio's own much longer axis.
+    // Halfway across, this group has nothing at all. A nearest-point lookup
+    // would answer with its first month's figure for a month years earlier.
     renderGroup("Education");
     fireEvent.pointerMove(sparkline(), { clientX: 360 });
     expect(tooltipText()).toMatch(/No statement for this month/);
@@ -204,8 +243,9 @@ describe("GroupSparkline cursor over the shared domain", () => {
   test("a month it did report states that month's own value to the cent", () => {
     renderGroup("Education");
     fireEvent.pointerMove(sparkline(), { clientX: 719 });
-    expect(tooltipText()).toContain("Jun 2026");
-    expect(tooltipText()).toContain("$3,943.98");
+    const education = groupGolden("purpose", "Education");
+    expect(tooltipText()).toContain(formatPeriodLabel(education.lastPeriod));
+    expect(tooltipText()).toContain(formatCurrency(education.market));
     expect(tooltipText()).toContain("1 of 1 account reported this month");
   });
 
@@ -215,7 +255,9 @@ describe("GroupSparkline cursor over the shared domain", () => {
     fireEvent.pointerMove(svg, { clientX: 360 });
     expect(tooltipText()).toMatch(/No statement/);
     fireEvent.keyDown(svg, { key: "ArrowRight" });
-    expect(tooltipText()).toContain("Jan 2026");
+    expect(tooltipText()).toContain(
+      formatPeriodLabel(groupGolden("purpose", "Education").firstPeriod),
+    );
     expect(tooltipText()).toContain("$");
   });
 
@@ -223,8 +265,10 @@ describe("GroupSparkline cursor over the shared domain", () => {
     renderGroup("Education");
     fireEvent.keyDown(sparkline(), { key: "End" });
     const summary = screen.getByRole("img").getAttribute("aria-label") ?? "";
-    expect(summary).toContain("Education market value from Jan 2026 to Jun 2026");
-    expect(summary).toContain("Market value $3,943.98");
+    expect(summary).toContain(`Education market value ${summaryClauses("Education").range}`);
+    expect(summary).toContain(
+      `Market value ${formatCurrency(groupGolden("purpose", "Education").market)}`,
+    );
   });
 
   test("the gap is spoken as well as printed, so an arrow onto it is not silence", () => {

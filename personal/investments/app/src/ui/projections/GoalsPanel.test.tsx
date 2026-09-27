@@ -2,7 +2,15 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { cleanup, render, screen } from "@testing-library/react";
 import type { AnalyticsOutput } from "../../analytics/build";
-import { GOALS, type Goal } from "../../goals/config";
+import {
+  CORPORATE_GOAL,
+  EDUCATION_GOAL,
+  HOUSE_GOAL,
+  STRETCH_GOAL,
+} from "../../goals/__fixtures__/goals";
+import type { Goal } from "../../goals/config";
+import { GOALS } from "../../goals/config";
+import { GOLDENS } from "../../goldens";
 import { projectYears } from "../../projection/engine";
 import { projectionInputs } from "../../projection/inputs";
 import { loadAnalytics } from "../data";
@@ -11,15 +19,13 @@ import { expectNoCoarseForm } from "../testSupport/coarseForm";
 import { GoalsPanel } from "./GoalsPanel";
 
 /**
- * Against the real committed corpus, same as `evaluate.test.ts` (task 3):
- * the house goal projects to $50,180.10 by 2028 and the education goal to
- * $92,547.67 by 2042, both at 6%. The figures below are numeric literals,
- * not recomputed at run time, but a wrong literal cannot go unnoticed: every
- * one is first asserted with `toContain(formatCurrency(x))`, the exact
- * string the card renders, before that same `x` is ever handed to
- * `expectNoCoarseForm(text, x)` for the coarse-absence check. A stale or
- * mistyped literal reddens the precise assertion first, so the coarse guard
- * can never end up silently checking the wrong number.
+ * Against the real committed corpus, same as `evaluate.test.ts`. The figures
+ * come from `data/goldens.json` rather than being recomputed here, and a
+ * wrong one cannot go unnoticed: every figure is first asserted with
+ * `toContain(formatCurrency(x))`, the exact string the card renders, before
+ * that same `x` is ever handed to `expectNoCoarseForm(text, x)` for the
+ * coarse-absence check. A stale golden reddens the precise assertion first,
+ * so the coarse guard can never end up silently checking the wrong number.
  *
  * Coverage is not uniform across every rendered figure, and it cannot be.
  * `projected`, `monthly`, `uncoveredValue` and `gap` each go through this
@@ -33,10 +39,15 @@ const analytics: AnalyticsOutput = loadAnalytics();
 const rows6 = projectYears(projectionInputs(analytics, { returnRate: 0.06 }));
 const rows12 = projectYears(projectionInputs(analytics, { returnRate: 0.12 }));
 
-const houseGoal = GOALS[0];
-if (houseGoal === undefined) throw new Error("GOALS is missing the house entry");
-const educationGoal = GOALS[1];
-if (educationGoal === undefined) throw new Error("GOALS is missing the education entry");
+const houseGoal = HOUSE_GOAL;
+const educationGoal = EDUCATION_GOAL;
+
+/** One goal's recorded verdict, or a throw naming the missing entry. */
+function goalGolden(id: string) {
+  const found = GOLDENS.goals[id];
+  if (!found) throw new Error(`no goal golden for ${id}; run bun run goldens`);
+  return found;
+}
 
 function renderPanel(rows = rows6, rate = 0.06, goals?: readonly Goal[]) {
   render(
@@ -83,9 +94,10 @@ describe("every card carries role=group, so its aria-label lands on a nameable n
 });
 
 describe("the house card, against the real corpus", () => {
-  const projected = 50180.1;
-  const target = 40000;
-  const gap = 10180.1;
+  const houseGolden = goalGolden("house");
+  const projected = houseGolden.projected ?? Number.NaN;
+  const target = HOUSE_GOAL.target;
+  const gap = houseGolden.gap ?? Number.NaN;
 
   test("prints its projected figure at full precision, never the coarse form", () => {
     renderPanel();
@@ -122,9 +134,10 @@ describe("the house card, against the real corpus", () => {
 });
 
 describe("the education card, against the real corpus", () => {
-  const projected = 92547.67;
-  const target = 50000;
-  const gap = 42547.67;
+  const educationGolden = goalGolden("education");
+  const projected = educationGolden.projected ?? Number.NaN;
+  const target = EDUCATION_GOAL.target;
+  const gap = educationGolden.gap ?? Number.NaN;
 
   test("prints its projected figure at full precision, never the coarse form", () => {
     renderPanel();
@@ -174,7 +187,7 @@ describe("the education card, against the real corpus", () => {
 });
 
 describe("a card whose scope outruns the projection", () => {
-  const uncoveredValue = 60798.32;
+  const uncoveredValue = GOLDENS.projection.uncoveredValue;
 
   test("names exactly how many accounts it covers, not any count containing those digits", () => {
     const growthGoal: Goal = {
@@ -191,7 +204,8 @@ describe("a card whose scope outruns the projection", () => {
     // word boundary before the count) rules that out.
     expect(text).toContain("Covers 2 of 5 accounts in scope.");
     expect(text).toContain(
-      `does not forecast 3 accounts holding ${formatCurrency(uncoveredValue)}.`,
+      `does not forecast ${GOLDENS.projection.uncoveredAccountCount} accounts holding ` +
+        `${formatCurrency(uncoveredValue)}.`,
     );
     expectNoCoarseForm(text, uncoveredValue);
   });
@@ -207,7 +221,8 @@ describe("a card whose scope outruns the projection", () => {
     const label = cardLabel("growth");
     expect(label).toContain("Covers 2 of 5 accounts in scope.");
     expect(label).toContain(
-      `does not forecast 3 accounts holding ${formatCurrency(uncoveredValue)}.`,
+      `does not forecast ${GOLDENS.projection.uncoveredAccountCount} accounts holding ` +
+        `${formatCurrency(uncoveredValue)}.`,
     );
   });
 });
@@ -290,12 +305,13 @@ describe("the gap line's colour follows the direction, not the other way around"
 });
 
 describe("a shortfall the wrapper has no room to close", () => {
-  const target = 90000;
-  const projected = 50180.095474;
-  const gap = 39819.904526;
+  const stretchGolden = goalGolden("stretch");
+  const target = STRETCH_GOAL.target;
+  const projected = stretchGolden.projected ?? Number.NaN;
+  const gap = Math.abs(stretchGolden.gap ?? Number.NaN);
 
   test("renders the blocked reason legibly, not as an error, at full precision", () => {
-    const stretchGoal: Goal = { ...houseGoal, id: "stretch", target };
+    const stretchGoal = STRETCH_GOAL;
     renderPanel(rows6, 0.06, [stretchGoal]);
     const text = cardText("stretch");
     expect(text).toMatch(/short of target/i);
@@ -306,8 +322,7 @@ describe("a shortfall the wrapper has no room to close", () => {
   });
 
   test("the aria-label carries the same figures and the same blocked reason", () => {
-    const stretchGoal: Goal = { ...houseGoal, id: "stretch", target };
-    renderPanel(rows6, 0.06, [stretchGoal]);
+    renderPanel(rows6, 0.06, [STRETCH_GOAL]);
     const label = cardLabel("stretch");
     expect(label).toContain(formatCurrency(target));
     expect(label).toContain(formatCurrency(projected));
@@ -323,20 +338,14 @@ describe("a shortfall the wrapper has no room to close", () => {
 // real corpus can force (the FHSA-scoped house goal, stretched) is always
 // room-blocked. Fixture only, the same way task 3 declared this goal.
 describe("a shortfall that solves to a monthly contribution", () => {
-  const target = 1_000_000;
-  const projected = 215124.91165957847;
-  const gap = 784875.0883404216;
-  const monthly = 11602.83462164188;
+  const corporateGolden = goalGolden("corp-stretch");
+  const target = CORPORATE_GOAL.target;
+  const projected = corporateGolden.projected ?? Number.NaN;
+  const gap = Math.abs(corporateGolden.gap ?? Number.NaN);
+  const monthly = corporateGolden.monthlyToClose ?? Number.NaN;
 
   function corporateGoal(): Goal {
-    return {
-      id: "corp-stretch",
-      label: "Corporate stretch",
-      scope: { kind: "groups", groups: ["Corporate"] },
-      target,
-      by: "2030",
-      source: "fixture",
-    };
+    return CORPORATE_GOAL;
   }
 
   test("prints every figure at full precision, never the coarse form", () => {
@@ -348,8 +357,10 @@ describe("a shortfall that solves to a monthly contribution", () => {
     expect(text).toContain(formatCurrency(gap));
     expect(text).toContain(formatCurrency(monthly));
     expect(text).toMatch(/a month closes the gap/i);
-    // $11,602.83 rounds UP to $11,603 -- again a different digit, not a
-    // prefix, and the direction the review's mutation actually exploited.
+    // The coarse guard runs on the monthly figure whichever way it rounds:
+    // a form that rounds UP has a different final digit than the precise one
+    // rather than being a prefix of it, and that is the direction the
+    // review's mutation actually exploited.
     expectNoCoarseForm(text, monthly);
   });
 

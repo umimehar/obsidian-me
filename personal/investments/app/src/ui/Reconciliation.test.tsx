@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { render, screen, within } from "@testing-library/react";
+import { GOLDENS } from "../goldens";
 import type { ReconciliationReport, ReportedFinding } from "../validate/report";
 import { Reconciliation } from "./Reconciliation";
 import { loadReconciliation } from "./data";
@@ -8,7 +9,7 @@ import { loadReconciliation } from "./data";
 function renderReal() {
   render(
     <Theme>
-      <Reconciliation report={loadReconciliation()} />
+      <Reconciliation report={loadReconciliation()} scope="all" />
     </Theme>,
   );
 }
@@ -71,9 +72,9 @@ describe("Reconciliation, the ground-truth headline", () => {
   test("prints the computed figure, the app's figure and the difference between them", () => {
     renderReal();
     const truth = region("ground-truth");
-    expect(truth.getByText("$241,739.67")).toBeDefined();
+    expect(truth.getByText("$227,433.46")).toBeDefined();
     expect(truth.getByText("$242,019.61")).toBeDefined();
-    expect(truth.getByText("-$279.94")).toBeDefined();
+    expect(truth.getByText("-$14,586.15")).toBeDefined();
   });
 
   test("labels which figure is which, rather than printing the raw field names", () => {
@@ -94,7 +95,9 @@ describe("Reconciliation, the ground-truth headline", () => {
   test("gives the reason, naming the holding whose valuation is not final", () => {
     renderReal();
     const reason = region("reason");
-    expect(reason.getByText(/WSE401 carries a pending valuation/)).toBeDefined();
+    // Both halves of the explanation, not just the one that was there first.
+    expect(reason.getByText(/spousal RRSP/i)).toBeDefined();
+    expect(reason.getByText(/WSE401/)).toBeDefined();
   });
 
   test("says the explanation is untested rather than presenting it as settled", () => {
@@ -109,7 +112,7 @@ describe("Reconciliation, the ground-truth headline", () => {
     // which is the exact inversion this whole view exists to prevent.
     render(
       <Theme>
-        <Reconciliation report={reportWith(unacknowledgedGroundTruth())} />
+        <Reconciliation report={reportWith(unacknowledgedGroundTruth())} scope="all" />
       </Theme>,
     );
     const truth = region("ground-truth");
@@ -123,7 +126,7 @@ describe("Reconciliation, the ground-truth headline", () => {
   test("says so plainly when the report carries no ground-truth observation", () => {
     render(
       <Theme>
-        <Reconciliation report={emptyReport()} />
+        <Reconciliation report={emptyReport()} scope="all" />
       </Theme>,
     );
     expect(screen.getByText(/no figure from the app/i)).toBeDefined();
@@ -132,24 +135,31 @@ describe("Reconciliation, the ground-truth headline", () => {
 });
 
 describe("Reconciliation, the findings", () => {
-  test("renders every one of the 90 findings, hiding none of them", () => {
+  test("renders every finding, hiding none of them", () => {
     renderReal();
-    // 89 in the groups, plus the ground-truth line promoted into the headline
-    // card. Promoted, not dropped: the card is the fuller rendering of it.
-    expect(document.querySelectorAll("[data-finding-row]").length).toBe(89);
+    // All but one in the groups, plus the ground-truth line promoted into the
+    // headline card. Promoted, not dropped: the card is the fuller rendering
+    // of it, and the arithmetic here is what proves nothing else went missing.
+    const promoted = 1;
+    expect(document.querySelectorAll("[data-finding-row]").length).toBe(
+      GOLDENS.reconciliation.findingCount - promoted,
+    );
     expect(document.querySelector("[data-recon-ground-truth]")).not.toBeNull();
   });
 
   test("the promoted ground-truth line does not also render as a group row", () => {
     renderReal();
-    // Rendered twice it read "This system computes $241,739.67" in the card and
+    // Rendered twice it read "This system computes ..." in the card and
     // "Stated $242,019.61" in the row: two descriptions of one fact that
     // disagree about which figure came from where. $242,019.61 is a number the
     // owner read off the app, and no statement ever stated it.
     expect(document.querySelector('[data-finding-group="ground-truth"]')).toBeNull();
     expect(screen.getAllByText("$242,019.61").length).toBe(1);
-    expect(screen.getAllByText("-$279.94").length).toBe(1);
-    expect(screen.getAllByText(/WSE401 carries a pending valuation/).length).toBe(1);
+    expect(screen.getAllByText("-$14,586.15").length).toBe(1);
+    // A phrase unique to the acknowledgement's reason. "WSE401" alone now
+    // appears twice on the page, because the finding's own message names the
+    // holding too -- matching on it would fail this test for the wrong reason.
+    expect(screen.getAllByText(/residual of \$0\.00/).length).toBe(1);
   });
 
   test("a ground-truth line that is not the promoted one keeps the card's labels", () => {
@@ -159,7 +169,7 @@ describe("Reconciliation, the findings", () => {
     const newer = unacknowledgedGroundTruth();
     render(
       <Theme>
-        <Reconciliation report={reportWith(newer, older)} />
+        <Reconciliation report={reportWith(newer, older)} scope="all" />
       </Theme>,
     );
     const row = within(group("ground-truth"));
@@ -171,12 +181,22 @@ describe("Reconciliation, the findings", () => {
 
   test("counts the corpus it checked and what it found", () => {
     renderReal();
+    const report = loadReconciliation();
+    const errors = report.findings.filter((f) => f.severity === "error").length;
     const summary = region("summary");
-    expect(summary.getByText(/220 statements/)).toBeDefined();
-    expect(summary.getByText(/90 findings/)).toBeDefined();
-    expect(summary.getByText(/4 errors/)).toBeDefined();
-    expect(summary.getByText(/86 warnings/)).toBeDefined();
-    expect(summary.getByText(/5 acknowledged/)).toBeDefined();
+    expect(
+      summary.getByText(new RegExp(`${GOLDENS.corpus.statementCount} statements`)),
+    ).toBeDefined();
+    expect(
+      summary.getByText(new RegExp(`${GOLDENS.reconciliation.findingCount} findings`)),
+    ).toBeDefined();
+    expect(summary.getByText(new RegExp(`${errors} errors`))).toBeDefined();
+    expect(
+      summary.getByText(new RegExp(`${GOLDENS.reconciliation.findingCount - errors} warnings`)),
+    ).toBeDefined();
+    expect(
+      summary.getByText(new RegExp(`${GOLDENS.reconciliation.acknowledgedCount} acknowledged`)),
+    ).toBeDefined();
   });
 
   test("each group's own summary counts its errors and its acknowledgements", () => {
@@ -186,10 +206,11 @@ describe("Reconciliation, the findings", () => {
     expect(heading.textContent).toBe("Across documents 1 finding, 1 error, 1 acknowledged");
 
     const arithmetic = group("statement-arithmetic").querySelector("summary");
-    expect(arithmetic?.textContent).toBe("Statement arithmetic 84 findings, 84 warnings");
+    const n = GOLDENS.reconciliation.statementArithmeticCount;
+    expect(arithmetic?.textContent).toBe(`Statement arithmetic ${n} findings, ${n} warnings`);
   });
 
-  test("puts all three error groups ahead of the 84-strong warning group", () => {
+  test("puts all three error groups ahead of the large warning group", () => {
     renderReal();
     const order = [...document.querySelectorAll("[data-finding-group]")].map((node) =>
       node.getAttribute("data-finding-group"),
@@ -228,12 +249,13 @@ describe("Reconciliation, the findings", () => {
     expect(cross.getByText("d6d9_2025-11_PERFORMANCE.pdf")).toBeDefined();
   });
 
-  test("the 84 rounding warnings sit in one collapsed group that states its own size", () => {
+  test("the rounding warnings sit in one collapsed group that states its own size", () => {
     renderReal();
+    const n = GOLDENS.reconciliation.statementArithmeticCount;
     const arithmetic = group("statement-arithmetic");
-    expect(arithmetic.querySelectorAll("[data-finding-row]").length).toBe(84);
+    expect(arithmetic.querySelectorAll("[data-finding-row]").length).toBe(n);
     expect((arithmetic as HTMLDetailsElement).open).toBe(false);
-    expect(within(arithmetic).getByText(/84 findings/)).toBeDefined();
+    expect(within(arithmetic).getByText(new RegExp(`${n} findings`))).toBeDefined();
   });
 
   test("a group carrying an error is open, so an error is never behind a click", () => {
@@ -254,7 +276,7 @@ describe("Reconciliation, the findings", () => {
     ];
     render(
       <Theme>
-        <Reconciliation report={reportWith(...findings)} />
+        <Reconciliation report={reportWith(...findings)} scope="all" />
       </Theme>,
     );
     const chain = group("balance-chain") as HTMLDetailsElement;
@@ -270,7 +292,7 @@ describe("Reconciliation, the findings", () => {
     );
     render(
       <Theme>
-        <Reconciliation report={reportWith(...findings)} />
+        <Reconciliation report={reportWith(...findings)} scope="all" />
       </Theme>,
     );
     expect((group("balance-chain") as HTMLDetailsElement).open).toBe(false);
@@ -279,7 +301,7 @@ describe("Reconciliation, the findings", () => {
   test("a report with no findings says the corpus reconciles, not nothing at all", () => {
     render(
       <Theme>
-        <Reconciliation report={emptyReport()} />
+        <Reconciliation report={emptyReport()} scope="all" />
       </Theme>,
     );
     expect(screen.getByText(/no check reported anything/i)).toBeDefined();

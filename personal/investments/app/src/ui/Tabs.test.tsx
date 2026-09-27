@@ -2,6 +2,7 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { Tabs } from "./Tabs";
+import { useHashTab } from "./useHashTab";
 import type { TabId } from "./useHashTab";
 
 const PANELS: Record<TabId, string> = {
@@ -9,23 +10,41 @@ const PANELS: Record<TabId, string> = {
   growth: "Growth panel content",
   wrappers: "Wrappers panel content",
   tax: "Tax panel content",
+  cards: "Cards panel content",
   projections: "Projections panel content",
   reconciliation: "Reconciliation panel content",
 };
 
+/**
+ * `Tabs` is controlled now: `App` owns the hash, because the hash also
+ * carries the year scope and two components decoding it independently would
+ * be two states that only agree by way of an event. This harness is the same
+ * wiring `App` does, so the hash-driven tests below still exercise the real
+ * path rather than a prop set by hand.
+ */
+function Harness() {
+  const [{ tab }, setHash] = useHashTab();
+  return (
+    <Tabs
+      tab={tab}
+      onTabChange={(next) => setHash({ tab: next })}
+      panels={{
+        overview: <div>{PANELS.overview}</div>,
+        growth: <div>{PANELS.growth}</div>,
+        wrappers: <div>{PANELS.wrappers}</div>,
+        tax: <div>{PANELS.tax}</div>,
+        cards: <div>{PANELS.cards}</div>,
+        projections: <div>{PANELS.projections}</div>,
+        reconciliation: <div>{PANELS.reconciliation}</div>,
+      }}
+    />
+  );
+}
+
 function renderTabs() {
   render(
     <Theme>
-      <Tabs
-        panels={{
-          overview: <div>{PANELS.overview}</div>,
-          growth: <div>{PANELS.growth}</div>,
-          wrappers: <div>{PANELS.wrappers}</div>,
-          tax: <div>{PANELS.tax}</div>,
-          projections: <div>{PANELS.projections}</div>,
-          reconciliation: <div>{PANELS.reconciliation}</div>,
-        }}
-      />
+      <Harness />
     </Theme>,
   );
 }
@@ -35,7 +54,7 @@ afterEach(() => {
 });
 
 describe("Tabs", () => {
-  test("all six tabs render as triggers", () => {
+  test("every tab renders as a trigger", () => {
     renderTabs();
     // Radix's TabsTrigger renders its label twice -- once visible, once
     // hidden at bold weight, so the visible width never shifts on select --

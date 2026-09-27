@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { AccountSeries } from "../analytics/types";
+import { GOLDENS, accountGolden } from "../goldens";
 import { projectYears } from "../projection/engine";
 import { projectionInputs } from "../projection/inputs";
 import { loadAnalytics } from "../ui/data";
@@ -8,57 +9,53 @@ import { accountValues, buildAllocations } from "./allocation";
 const analytics = loadAnalytics();
 
 describe("buildAllocations, shares against the real corpus", () => {
-  test("shares are the group's recent contribution split", () => {
+  test("a group's shares are its contribution split and sum to exactly one", () => {
+    // The sum is the invariant and holds whatever the corpus is; the goldens
+    // pin what the split actually IS, so a change to the split shows up as a
+    // goldens diff rather than as a silently reweighted projection.
     const allocs = buildAllocations(analytics.series);
     const rrsp = allocs.filter((a) => a.group === "RRSP");
-    expect(rrsp.map((a) => a.accountId).sort()).toEqual(["2318", "97ab", "d6d9"]);
-    const d6d9 = rrsp.find((a) => a.accountId === "d6d9");
-    expect(d6d9?.share).toBeCloseTo(0.4167, 4);
+    // The spousal RRSP is deliberately absent: `projectedAccounts` filters on
+    // `inTotals`, and the spousal asset is the spouse's. Its CONTRIBUTIONS
+    // still consume the owner's room, which is a separate fact the rooms
+    // module keeps -- see `EXCLUDED_KINDS` in registry.ts.
+    expect(rrsp.map((a) => a.accountId).sort()).toEqual(["2318", "d6d9"]);
+    expect(analytics.series.some((a) => a.kind === "SpousalRRSP")).toBe(true);
+    expect(allocs.some((a) => a.accountId === "97ab")).toBe(false);
+    for (const a of rrsp) {
+      expect(a.share).toBeCloseTo(GOLDENS.allocations[a.accountId]?.share ?? -1, 10);
+    }
     expect(rrsp.reduce((t, a) => t + a.share, 0)).toBeCloseTo(1, 10);
   });
 
   test("a sole account in its group takes the whole group", () => {
     const allocs = buildAllocations(analytics.series);
     expect(allocs.find((a) => a.accountId === "e2ec")?.share).toBe(1);
-    expect(allocs.find((a) => a.accountId === "e2ec")?.opening).toBeCloseTo(28295.25, 2);
+    expect(allocs.find((a) => a.accountId === "e2ec")?.opening).toBeCloseTo(
+      accountGolden("e2ec"),
+      2,
+    );
   });
 
-  test("every account's share and opening, pinned against the corpus", () => {
+  test("every account's group, share and opening, against the goldens", () => {
     const allocs = buildAllocations(analytics.series);
     const byId = new Map(allocs.map((a) => [a.accountId, a]));
 
-    expect(byId.get("2318")?.group).toBe("RRSP");
-    expect(byId.get("2318")?.share).toBeCloseTo(0.3, 4);
-    expect(byId.get("2318")?.opening).toBeCloseTo(14509.7, 2);
+    for (const [accountId, golden] of Object.entries(GOLDENS.allocations)) {
+      const alloc = byId.get(accountId);
+      expect(alloc?.group).toBe(golden.group);
+      expect(alloc?.share).toBeCloseTo(golden.share, 10);
+      expect(alloc?.opening).toBeCloseTo(golden.opening, 2);
+      // An allocation's opening is not a third stored figure: it is the
+      // account's own latest stated market value, the one the overview
+      // prints. Cross-checked here so the two can never drift apart.
+      expect(alloc?.opening).toBeCloseTo(accountGolden(accountId), 2);
+    }
 
-    expect(byId.get("97ab")?.group).toBe("RRSP");
-    expect(byId.get("97ab")?.share).toBeCloseTo(0.2833, 4);
-    expect(byId.get("97ab")?.opening).toBeCloseTo(14306.21, 2);
-
-    expect(byId.get("d6d9")?.opening).toBeCloseTo(20498.54, 2);
-
-    expect(byId.get("9710")?.group).toBe("TFSA");
-    expect(byId.get("9710")?.share).toBeCloseTo(0.1383, 4);
-    expect(byId.get("9710")?.opening).toBeCloseTo(7580.33, 2);
-
-    expect(byId.get("d77c")?.group).toBe("TFSA");
-    expect(byId.get("d77c")?.share).toBeCloseTo(0.8617, 4);
-    expect(byId.get("d77c")?.opening).toBeCloseTo(40574.95, 2);
-
-    expect(byId.get("c2e9")?.group).toBe("RESP");
-    expect(byId.get("c2e9")?.share).toBe(1);
-    expect(byId.get("c2e9")?.opening).toBeCloseTo(3943.98, 2);
-
-    expect(byId.get("91b8")?.group).toBe("Corporate");
-    expect(byId.get("91b8")?.share).toBe(1);
-    expect(byId.get("91b8")?.opening).toBeCloseTo(51232.39, 2);
-
-    // Only the eight projected accounts get an allocation: the three
-    // uncovered non-registered/crypto accounts (1f9a, 2c62, e2d6) hold real
-    // money but no group the engine has a rule for.
-    expect(allocs.map((a) => a.accountId).sort()).toEqual(
-      ["2318", "91b8", "97ab", "9710", "c2e9", "d6d9", "d77c", "e2ec"].sort(),
-    );
+    // Only the projected accounts get an allocation: the uncovered
+    // non-registered and crypto accounts hold real money but no group the
+    // engine has a rule for.
+    expect(allocs.map((a) => a.accountId).sort()).toEqual(Object.keys(GOLDENS.allocations).sort());
   });
 
   // The engine's own opening for a group comes from `openingByGroup` in
@@ -96,7 +93,7 @@ describe("accountValues, the per-account projection against the real engine", ()
       const summed = values.reduce((t, s) => t + (s.values[i] ?? 0), 0);
       expect(summed).toBeCloseTo(row.value, 6);
     });
-    expect(rows[rows.length - 1]?.value).toBeCloseTo(7636455.38, 2);
+    expect(rows[rows.length - 1]?.value).toBeCloseTo(GOLDENS.projection.defaultRateEndValue, 2);
   });
 
   test("the FHSA is emptied in its closure year, not merely stopped", () => {
@@ -105,9 +102,12 @@ describe("accountValues, the per-account projection against the real engine", ()
     const values = accountValues(rows, analytics.series, 0.06, inputs.fhsaCloseYear);
     const fhsa = values.find((s) => s.accountId === "e2ec");
     const at = (year: string) => fhsa?.values[rows.findIndex((r) => r.year === year)];
-    expect(inputs.fhsaCloseYear).toBe("2039");
-    expect(at("2028")).toBeCloseTo(50180.1, 2);
-    expect(at("2039")).toBe(0);
+    expect(inputs.fhsaCloseYear).toBe(GOLDENS.projection.fhsaCloseYear);
+    expect(at(GOLDENS.projection.fhsaCapYear)).toBeCloseTo(
+      GOLDENS.projection.fhsaValueAtCapYear,
+      2,
+    );
+    expect(at(GOLDENS.projection.fhsaCloseYear)).toBe(0);
   });
 
   test("a non-FHSA account keeps compounding past 2039, unaffected by the closure year", () => {

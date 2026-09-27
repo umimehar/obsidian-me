@@ -1,5 +1,6 @@
 import { type PortfolioPoint, periodExtent } from "../../analytics/portfolioSeries";
-import { formatCurrency } from "../format";
+import { formatCurrency, formatGainWithShare } from "../format";
+import type { TooltipFootnote } from "./Tooltip";
 import { formatPeriodLabel } from "./plot";
 
 export { periodExtent as costGapPeriodExtent };
@@ -46,7 +47,7 @@ export function buildGapPoints(points: readonly PortfolioPoint[]): GapPoint[] {
  * with market value equal to book cost is a different `point`, a real stated
  * zero gap, like the two open and unfunded accounts of 2023-06.
  */
-export function costGapTooltipLines(period: string, point: GapPoint | null): string[] {
+export function costGapTooltipLines(period: string, point: GapPoint | null): TooltipFootnote[] {
   const label = formatPeriodLabel(period);
   if (point === null) return [label, "No statement for this month"];
   const noun = point.accountCount === 1 ? "account" : "accounts";
@@ -58,7 +59,17 @@ export function costGapTooltipLines(period: string, point: GapPoint | null): str
         : "Book cost ahead of market value";
   return [
     label,
-    `Gap ${formatCurrency(point.gap)}, approximate`,
+    // The gap with its own percentage of book cost, from one call. The same
+    // gap is worth very different things at different points in the series:
+    // $18,064.59 on $223,675.08 of cost is 8.08%, and the same dollars
+    // against a tenth of that cost would be a different result entirely.
+    //
+    // Toned from `point.gap` rather than from the string it was formatted
+    // into, so the colour and the sign cannot disagree.
+    {
+      text: `Gap ${formatGainWithShare(point.gap, point.bookCost)}, approximate`,
+      tone: point.gap >= 0 ? "gain" : "loss",
+    },
     direction,
     `Market value ${formatCurrency(point.marketValue)}, book cost ${formatCurrency(point.bookCost)}, ` +
       "converted and approximate for USD holdings",

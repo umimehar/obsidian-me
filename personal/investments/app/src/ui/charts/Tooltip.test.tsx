@@ -6,6 +6,8 @@ import {
   ChartTooltip,
   CursorAnnouncement,
   linesToTooltipContent,
+  noteOf,
+  readoutSuffix,
   tooltipAnchorStyle,
   tooltipAnnouncement,
   tooltipContent,
@@ -35,9 +37,50 @@ describe("tooltipContent for a stated month", () => {
     expect(bookRow?.value).not.toMatch(/approximate/i);
   });
 
+  test("does the market-minus-book subtraction for the reader, with its percentage", () => {
+    // Cumulative to this month, not the change over it: how far ahead of cost
+    // the portfolio stood then. $241,739.67 less $223,675.08 is $18,064.59,
+    // which is 8.08% of book cost.
+    const content = tooltipContent("2026-06", LAST, 11);
+    expect(content.rows).toContainEqual({
+      label: "Gain against book cost",
+      value: "+$18,064.59 (+8.08%)",
+      tone: "gain",
+    });
+    // Derived, never a fourth stored figure: it is exactly the two rows above.
+    expect(LAST.marketValue - LAST.bookCost).toBeCloseTo(18064.59, 2);
+  });
+
+  test("a month whose book cost exceeds market value states a loss, signed both ways", () => {
+    const content = tooltipContent(
+      "2026-02",
+      { marketValue: 900, bookCost: 1000, accountCount: 3 },
+      11,
+    );
+    expect(content.rows).toContainEqual({
+      label: "Gain against book cost",
+      value: "-$100.00 (-10.00%)",
+      tone: "loss",
+    });
+  });
+
+  test("a real zero book cost states the dollars alone, never a division by zero", () => {
+    // 2023-06 is two open, unfunded accounts: $0.00 of book cost. A
+    // percentage there is Infinity, which is not a figure the data supports.
+    const content = tooltipContent("2023-06", { marketValue: 0, bookCost: 0, accountCount: 2 }, 11);
+    const gain = content.rows.find((row) => row.label === "Gain against book cost");
+    expect(gain?.value).toBe("+$0.00");
+    expect(gain?.value).not.toMatch(/Infinity|NaN|%/);
+    // A flat month is a gain of zero, which is green: there is no loss, and
+    // grey would suggest the figure is not a gain-or-loss at all.
+    expect(gain?.tone).toBe("gain");
+  });
+
   test("states the book-cost caveat as its own footnote, not deleted, only relocated", () => {
     const content = tooltipContent("2026-06", LAST, 11);
-    const caveat = content.footnotes.find((line) => /approximate/i.test(line));
+    const caveat = content.footnotes
+      .map(noteOf)
+      .find((note) => /approximate/i.test(note.text))?.text;
     expect(caveat).toBeDefined();
     expect(caveat).toMatch(/USD holdings/i);
     expect(caveat).toMatch(/not a filing figure/i);
@@ -90,6 +133,7 @@ describe("tooltipAnnouncement, the single sentence spoken for a tooltipContent v
     const content = tooltipContent("2026-06", LAST, 11);
     expect(tooltipAnnouncement(content)).toBe(
       "Jun 2026. Market value $241,739.67. Book cost $223,675.08. " +
+        "Gain against book cost +$18,064.59 (+8.08%). " +
         "11 of 11 accounts reported this month. " +
         "Book cost is approximate for USD holdings and not a filing figure.",
     );
@@ -115,6 +159,9 @@ describe("tooltipAnnouncement, the single sentence spoken for a tooltipContent v
     expect(announced).toContain(formatCurrency(LAST.bookCost));
     expectNoCoarseForm(announced, LAST.marketValue);
     expectNoCoarseForm(announced, LAST.bookCost);
+    // The derived gain is under the same rule as the two figures it comes
+    // from: announced at the cent, never at the dollar.
+    expectNoCoarseForm(announced, LAST.marketValue - LAST.bookCost);
   });
 });
 
@@ -289,5 +336,69 @@ describe("CursorAnnouncement, given the new structured content", () => {
   test("an empty flat line list still announces nothing, through the lines prop", () => {
     render(<CursorAnnouncement lines={[]} />);
     expect(screen.getByRole("status").textContent).toBe("");
+  });
+});
+
+describe("a toned line never reaches the reader as [object Object]", () => {
+  const TONED = [
+    "Jul 2026",
+    { text: "Gap +$16,638.34 (+7.12%), approximate", tone: "gain" as const },
+    "11 accounts reported this month",
+  ];
+
+  // Every chart built its own `lines.join(". ")` for the accessible name.
+  // That was harmless while a line was always a string and produced
+  // "[object Object]" the moment one carried a tone -- in the accessible
+  // name and the live region, the two copies no sighted reader ever sees.
+  test("readoutSuffix speaks each line's text, with its leading space and stop", () => {
+    expect(readoutSuffix(TONED)).toBe(
+      " Jul 2026. Gap +$16,638.34 (+7.12%), approximate. 11 accounts reported this month.",
+    );
+    expect(readoutSuffix(TONED)).not.toContain("[object Object]");
+  });
+
+  test("an empty line list contributes nothing at all, not a stray stop", () => {
+    expect(readoutSuffix([])).toBe("");
+  });
+
+  test("the live region speaks the same text, minus the leading space", () => {
+    render(<CursorAnnouncement lines={TONED} />);
+    const spoken = document.querySelector("[data-cursor-announcement]")?.textContent ?? "";
+    expect(spoken).toBe(readoutSuffix(TONED).trimStart());
+    expect(spoken).not.toContain("[object Object]");
+  });
+
+  test("tone is colour only: the spoken sentence never says gain or loss", () => {
+    // The sign in the text already says it. A spoken "gain" would be a
+    // second, unspoken-by-anything-else copy of the same fact.
+    const spoken = tooltipAnnouncement(tooltipContent("2026-06", LAST, 11));
+    expect(spoken).not.toMatch(/\btone\b|"gain"|"loss"/);
+    expect(spoken).toContain("+$18,064.59 (+8.08%)");
+  });
+
+  test("the rendered tooltip paints the tone and leaves every other figure alone", () => {
+    render(<ChartTooltip content={tooltipContent("2026-06", LAST, 11)} />);
+    const toned = [...document.querySelectorAll("[data-tooltip-tone]")];
+    expect(toned).toHaveLength(1);
+    expect(toned[0]?.getAttribute("data-tooltip-tone")).toBe("gain");
+    expect(toned[0]?.textContent).toBe("+$18,064.59 (+8.08%)");
+    // The market value and book cost above it are not gains, so they stay
+    // in the default colour rather than being painted green by association.
+    expect(screen.getByText("$241,739.67").getAttribute("data-tooltip-tone")).toBeNull();
+  });
+
+  test("a loss is painted red, from the figure rather than from its text", () => {
+    const loss = { marketValue: 900, bookCost: 1000, accountCount: 3 };
+    render(<ChartTooltip content={tooltipContent("2026-02", loss, 11)} />);
+    const toned = document.querySelector("[data-tooltip-tone]");
+    expect(toned?.getAttribute("data-tooltip-tone")).toBe("loss");
+    expect(toned?.textContent).toBe("-$100.00 (-10.00%)");
+  });
+
+  test("a toned footnote is painted too, so a flat-line chart is not left grey", () => {
+    render(<ChartTooltip lines={TONED} />);
+    const toned = document.querySelector("[data-tooltip-tone]");
+    expect(toned?.getAttribute("data-tooltip-tone")).toBe("gain");
+    expect(toned?.textContent).toContain("Gap +$16,638.34 (+7.12%)");
   });
 });

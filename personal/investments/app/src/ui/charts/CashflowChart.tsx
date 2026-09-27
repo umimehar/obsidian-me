@@ -7,7 +7,7 @@ import {
   cashflowPeriodExtent,
 } from "../../analytics/cashflowSeries";
 import type { AccountSeries } from "../../analytics/types";
-import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
+import { ChartTooltip, CursorAnnouncement, readoutSuffix, tooltipAnchorStyle } from "./Tooltip";
 import { cashflowTooltipLines } from "./cashflowTooltip";
 import { formatAxisCurrency, formatPeriodLabel } from "./plot";
 import { useRevealMotion } from "./reveal";
@@ -217,7 +217,7 @@ export function CashflowChart({ series }: CashflowChartProps) {
   }
 
   const lines = cursor.period === null ? [] : cashflowTooltipLines(cursor.period, cursor.point);
-  const readout = lines.length === 0 ? "" : ` ${lines.join(". ")}.`;
+  const readout = readoutSuffix(lines);
 
   return (
     <Flex direction="column" gap="4">

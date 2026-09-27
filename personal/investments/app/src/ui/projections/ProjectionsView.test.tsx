@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { AnalyticsOutput } from "../../analytics/build";
 import { GOALS } from "../../goals/config";
 import { evaluateGoal } from "../../goals/evaluate";
+import { GOLDENS } from "../../goldens";
 import { projectYears } from "../../projection/engine";
 import { fittedReturnRate } from "../../projection/fittedRate";
 import { projectedAccounts, projectionInputs } from "../../projection/inputs";
@@ -69,9 +70,19 @@ describe("the default rate is 6%, and it is not the fitted rate", () => {
     expect(text("projection-end-value")).not.toBe(formatCurrency(endValueAt(fitted.rate)));
   });
 
-  test("the 6% figure is $7,636,455.38 and the fitted figure is $431,418,851.44, two orders apart", () => {
-    expect(formatCurrency(endValueAt(0.06))).toBe("$7,636,455.38");
-    expect(formatCurrency(endValueAt(fitted.rate))).toBe("$431,418,851.44");
+  test("the 6% figure and the fitted figure are orders of magnitude apart", () => {
+    expect(formatCurrency(endValueAt(0.06))).toBe(
+      formatCurrency(GOLDENS.projection.defaultRateEndValue),
+    );
+    expect(formatCurrency(endValueAt(fitted.rate))).toBe(
+      formatCurrency(GOLDENS.projection.fittedRateEndValue),
+    );
+    // The gap is the point: a projection that quietly used the fitted rate
+    // where it says 6% would be wrong by more than an order of magnitude, not
+    // by a rounding step.
+    expect(GOLDENS.projection.fittedRateEndValue).toBeGreaterThan(
+      GOLDENS.projection.defaultRateEndValue * 10,
+    );
   });
 
   test("the default is labelled a convention and disclaimed as not from the data", () => {
@@ -86,7 +97,9 @@ describe("the default rate is 6%, and it is not the fitted rate", () => {
     expect(
       screen.getByRole("heading", { name: "Projected value at the end of 2056" }),
     ).toBeDefined();
-    expect(text("projection-end-value")).toBe("$7,636,455.38");
+    expect(text("projection-end-value")).toBe(
+      formatCurrency(GOLDENS.projection.defaultRateEndValue),
+    );
   });
 });
 
@@ -101,11 +114,16 @@ describe("the fitted rate renders beside the default, with its provenance", () =
     expect(provenance).toContain(`over ${fitted.monthsFitted} month to month steps`);
   });
 
-  test("the corpus's own figures reach the page: 37 months, 24.84%, 11 accounts, 35 steps", () => {
+  test("the corpus's own figures reach the page: months, rate, accounts and steps", () => {
     renderView();
+    const g = GOLDENS.fittedRate;
     const provenance = text("projection-provenance");
-    expect(provenance).toContain("Your last 37 months ran at 24.84% a year");
-    expect(provenance).toContain("fitted across 11 counted accounts over 35 month to month steps");
+    expect(provenance).toContain(
+      `Your last ${g.months} months ran at ${formatRate(g.rate * 100)} a year`,
+    );
+    expect(provenance).toContain(
+      `fitted across ${g.countedAccounts} counted accounts over ${g.steps} month to month steps`,
+    );
   });
 
   test("the three-year window is stated as the caveat, so it never reads as an expectation", () => {
@@ -132,7 +150,9 @@ describe("the fitted rate renders beside the default, with its provenance", () =
   test("a control applies it, labelled with the figure it applies", () => {
     renderView();
     const button = document.querySelector("[data-apply-fitted]");
-    expect(button?.textContent).toBe("Apply your fitted 24.84%");
+    expect(button?.textContent).toBe(
+      `Apply your fitted ${formatRate(GOLDENS.fittedRate.rate * 100)}`,
+    );
   });
 });
 
@@ -221,14 +241,17 @@ describe("the seam is real, not cosmetic: the stated half does not move", () => 
     renderView();
     const seamPeriod = () =>
       document.querySelector("[data-seam]")?.getAttribute("data-seam-period");
-    expect(seamPeriod()).toBe("2026-06");
+    expect(seamPeriod()).toBe(GOLDENS.projection.seamPeriod);
     setRate(20);
-    expect(seamPeriod()).toBe("2026-06");
+    expect(seamPeriod()).toBe(GOLDENS.projection.seamPeriod);
   });
 
   test("the stated half ends at the covered accounts' own total, so the seam joins without a step", () => {
     renderView();
-    expect(text("projection-coverage")).toContain("the history line ends at $180,941.35");
+    const covered = GOLDENS.portfolio.total - GOLDENS.projection.uncoveredValue;
+    expect(text("projection-coverage")).toContain(
+      `the history line ends at ${formatCurrency(covered)}`,
+    );
   });
 });
 
@@ -256,9 +279,16 @@ describe("what the projection covers", () => {
   test("names the accounts left out and the money in them, rather than leaving a silent gap", () => {
     renderView();
     const coverage = text("projection-coverage");
-    expect(coverage).toContain("covers 8 counted accounts");
-    expect(coverage).toContain("3 counted accounts holding $60,798.32 are left out");
-    expect(coverage).toContain("rather than at the portfolio total of $241,739.67");
+    expect(coverage).toContain(
+      `covers ${GOLDENS.corpus.countedAccountCount - GOLDENS.projection.uncoveredAccountCount} counted accounts`,
+    );
+    expect(coverage).toContain(
+      `${GOLDENS.projection.uncoveredAccountCount} counted accounts holding ` +
+        `${formatCurrency(GOLDENS.projection.uncoveredValue)} are left out`,
+    );
+    expect(coverage).toContain(
+      `rather than at the portfolio total of ${formatCurrency(GOLDENS.portfolio.total)}`,
+    );
   });
 });
 
@@ -499,7 +529,7 @@ describe("the slider announces the rate it shows", () => {
     fireEvent.click(screen.getByRole("button", { name: /apply your fitted/i }));
     const announced = slider().getAttribute("aria-valuetext");
     expect(announced).toBe(formatRate(fitted.rate * 100));
-    expect(announced).toBe("24.84%");
+    expect(announced).toBe(formatRate(GOLDENS.fittedRate.rate * 100));
     // The raw value stays on the control, since that is what the input needs
     // to position its thumb. It is the announcement that must not be it.
     expect(announced).not.toBe(slider().value);

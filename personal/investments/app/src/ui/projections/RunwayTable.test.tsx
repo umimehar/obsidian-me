@@ -2,6 +2,7 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { buildRunway } from "../../goals/runway";
+import { GOLDENS } from "../../goldens";
 import { projectYears } from "../../projection/engine";
 import { projectionInputs } from "../../projection/inputs";
 import { loadAnalytics } from "../data";
@@ -140,16 +141,18 @@ describe("RunwayTable, the FHSA's two rows", () => {
 });
 
 describe("RunwayTable, the forfeited CESG", () => {
-  test("prints the 550 that is never claimed, at full precision", () => {
+  test("prints the forfeited CESG that is never claimed, at full precision", () => {
     renderTable();
     const row = screen.getByTestId("runway-cesg");
-    expect(row.textContent ?? "").toContain(formatCurrency(550));
-    expect(row.textContent ?? "").toContain("$550.00");
+    expect(row.textContent ?? "").toContain(formatCurrency(GOLDENS.runway.cesgForfeited));
+    // Not the claimed half, and not the statutory cap: the row states the
+    // remainder, which is a third figure from either of those.
+    expect(row.textContent ?? "").not.toContain(formatCurrency(GOLDENS.runway.cesgClaimed));
   });
 
   test("the Unclaimed cell specifically carries the figure, not some other cell", () => {
     renderTable();
-    expect(cellAt("runway-cesg", 2).textContent).toBe(formatCurrency(550));
+    expect(cellAt("runway-cesg", 2).textContent).toBe(formatCurrency(GOLDENS.runway.cesgForfeited));
   });
 });
 

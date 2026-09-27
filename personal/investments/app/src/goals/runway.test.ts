@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { GOLDENS } from "../goldens";
 import { projectYears } from "../projection/engine";
 import { projectionInputs } from "../projection/inputs";
 import { loadAnalytics } from "../ui/data";
@@ -33,20 +34,23 @@ describe("buildRunway, the cap and deadline years against the real corpus", () =
 });
 
 describe("buildRunway, the CESG finding", () => {
-  test("the CESG stops 550 short of its 7,200 cap because the beneficiary ages out in 2042", () => {
+  test("the CESG stops short of its 7,200 cap because the beneficiary ages out in 2042", () => {
     const row = buildRunway(rows6, inputs6).find((r) => r.id === "cesg");
     expect(row?.year).toBe("2042");
-    expect(row?.unclaimed).toBeCloseTo(550, 2);
+    expect(row?.unclaimed).toBeCloseTo(GOLDENS.runway.cesgForfeited, 2);
     // The prose must not contradict the number: a note claiming the cap was
     // reached, paired with a nonzero unclaimed figure, is a row that denies
     // its own finding to whoever reads the sentence instead of the number.
     expect(row?.note).toMatch(/ages out|forfeit/i);
   });
 
-  test("the final row's cumulativeGrant is 6,650, which is where the 550 comes from", () => {
+  test("the final row's cumulativeGrant is where the forfeited figure comes from", () => {
+    // The pair is the point: claimed plus forfeited is the statutory cap
+    // exactly, so neither figure can drift on its own.
     const last = rows6.at(-1);
-    expect(last?.cumulativeGrant).toBeCloseTo(6650, 2);
+    expect(last?.cumulativeGrant).toBeCloseTo(GOLDENS.runway.cesgClaimed, 2);
     expect(inputs6.rules.cesgLifetime).toBe(7200);
+    expect(GOLDENS.runway.cesgClaimed + GOLDENS.runway.cesgForfeited).toBeCloseTo(7200, 2);
   });
 });
 
@@ -137,9 +141,9 @@ describe("buildRunway, the never-reached branch of a lifetime cap", () => {
     const fhsaCap = runway.find((r) => r.id === "fhsa-cap");
     const respCap = runway.find((r) => r.id === "resp-cap");
     expect(fhsaCap?.year).toBeNull();
-    expect(fhsaCap?.unclaimed).toBeCloseTo(8000, 2);
+    expect(fhsaCap?.unclaimed).toBeCloseTo(GOLDENS.runway.leftoverAfterOneYear.FHSA ?? -1, 2);
     expect(respCap?.year).toBeNull();
-    expect(respCap?.unclaimed).toBeCloseTo(42250, 2);
+    expect(respCap?.unclaimed).toBeCloseTo(GOLDENS.runway.leftoverAfterOneYear.RESP ?? -1, 2);
   });
 });
 

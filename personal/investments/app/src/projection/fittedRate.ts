@@ -59,11 +59,16 @@ function countedAccounts(series: readonly AccountSeries[]): number {
  * its flow subtracted from a portfolio total that money never entered --
  * understating growth and depressing the rate, silently.
  *
- * The corpus has no such month today: all 37 periods agree between the two
+ * The corpus has no such month today: all periods agree between the two
  * aggregations. This matches the membership rules so they keep agreeing if
  * one ever appears, which a test alone would only have recorded.
+ *
+ * Exported so `analytics/portfolioReturns.ts` chains the SAME flows this
+ * rate is fitted from. A second netting rule with its own membership would
+ * put a cumulative-return line on screen that disagrees with the fitted rate
+ * printed beside it, and neither figure would look wrong on its own.
  */
-function netFlowsByPeriod(series: readonly AccountSeries[]): Map<string, number> {
+export function netFlowsByPeriod(series: readonly AccountSeries[]): Map<string, number> {
   const byPeriod = new Map<string, number>();
   for (const account of series) {
     if (!account.inTotals) continue;

@@ -2,9 +2,11 @@ import { Badge, Box, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import type { ReconciliationReport, ReportedFinding } from "../validate/report";
 import { type FindingGroup, groundTruthFinding, groupFindings } from "./findings";
 import { formatCurrency } from "./format";
+import { type YearScope, inScope } from "./scope";
 
 export interface ReconciliationProps {
   report: ReconciliationReport;
+  scope: YearScope;
 }
 
 /** Human wording for a check's machine name, so the page never prints an identifier at a reader. */
@@ -215,7 +217,14 @@ function GroupSection({ group }: { group: FindingGroup }) {
  * and the 84 rounding warnings are collapsed behind a summary that states
  * their own count rather than dropped.
  */
-export function Reconciliation({ report }: ReconciliationProps) {
+export function Reconciliation({ report: full, scope }: ReconciliationProps) {
+  // Scoped by each finding's own period. A data-quality tab that quietly
+  // drops problems is worse than one that shows too many, so the count of
+  // what the filter is hiding is stated in the summary below rather than
+  // left for the reader to notice.
+  const findings = full.findings.filter((finding) => inScope(finding.period, scope));
+  const hidden = full.findings.length - findings.length;
+  const report: ReconciliationReport = { ...full, findings };
   const truth = groundTruthFinding(report.findings);
   // The promoted finding is excluded from the groups rather than rendered
   // twice. The card is a fuller rendering of it, not a lesser one, and two
@@ -238,6 +247,12 @@ export function Reconciliation({ report }: ReconciliationProps) {
           {plural(report.statementCount, "statement")} checked.{" "}
           {plural(report.findings.length, "finding")}: {plural(errors, "error")},{" "}
           {plural(report.findings.length - errors, "warning")}, {acknowledged} acknowledged.
+          {hidden > 0 ? (
+            <Text data-recon-hidden="">
+              {" "}
+              {plural(hidden, "finding")} outside {String(scope)} hidden by the year filter.
+            </Text>
+          ) : null}
         </Text>
       </Card>
 

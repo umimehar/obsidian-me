@@ -1,7 +1,16 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
 import { ReturnsChart } from "./ReturnsChart";
+import { formatPeriodLabel } from "./plot";
+
+/** The Crypto account's masked id, for the single-statement fixture below. */
+function cryptoMaskedId(): string {
+  const account = loadAnalytics().series.find((a) => a.shortId === "e2d6");
+  if (account === undefined) throw new Error("expected a Crypto account in the corpus");
+  return account.maskedId;
+}
 
 /**
  * Against the real committed corpus. The figures pinned here -- 2 of 14
@@ -123,9 +132,11 @@ describe("a gap breaks the line and is never drawn at zero", () => {
       document.querySelector("[data-zero-line]")?.parentElement?.getAttribute("transform") ?? "";
     const zeroY = Number(/translate\(0,([\d.]+)\)/.exec(transform)?.[1]);
     expect(Number.isNaN(zeroY)).toBe(false);
-    // 129 dots for 127 plotted months would mean two nulls got drawn.
+    // One dot per plotted month and not one more: a dot beyond this count
+    // would mean a null month got drawn, which on this chart means drawn at
+    // zero -- a real rate of nothing rather than a gap.
     const dots = document.querySelectorAll("[data-returns-dot]");
-    expect(dots).toHaveLength(127);
+    expect(dots).toHaveLength(GOLDENS.returnsPlottedTotal);
     const onZero = [...dots].filter((dot) => Number(dot.getAttribute("cy")) === zeroY);
     // The six genuine 0.00% months on the two Chequing accounts, and no others.
     expect(onZero).toHaveLength(6);
@@ -144,8 +155,16 @@ describe("a gap breaks the line and is never drawn at zero", () => {
   });
 
   test("an account with no computable month draws no line and says why", () => {
-    renderChart();
-    // Crypto has one statement, so there is nothing earlier to compare against.
+    // Built by cutting a real account back to its first month: with nothing
+    // earlier to compare against there is no rate to draw. Crypto WAS this
+    // account until 2026-07 gave it a second statement, so the corpus does
+    // not currently hold one -- `GOLDENS.returnsWithNoRate` records that, and
+    // the state stays covered either way.
+    expect(GOLDENS.returns.e2d6?.points).toBeGreaterThan(0);
+    const returns = loadAnalytics().returns.map((entry) =>
+      entry.maskedId === cryptoMaskedId() ? { ...entry, points: entry.points.slice(0, 1) } : entry,
+    );
+    render(<ReturnsChart returns={returns} series={loadAnalytics().series} />);
     expect(lines("e2d6")).toHaveLength(0);
     expect(card("e2d6").textContent).toContain("no earlier statement to compare against");
   });
@@ -203,7 +222,7 @@ describe("a near-flat card says its range in words", () => {
 
   test("an account with a real spread gets no note, so the note stays meaningful", () => {
     renderChart();
-    // The self-directed TFSA spans 20.6 points and the managed TFSA 51.3.
+    // Both TFSA accounts span a real spread of rates, so neither is flat.
     expect(card("d77c").querySelector("[data-flat-range]")).toBeNull();
     expect(card("9710").querySelector("[data-flat-range]")).toBeNull();
   });
@@ -213,7 +232,19 @@ describe("a near-flat card says its range in words", () => {
     const flat = [...document.querySelectorAll("[data-flat-range]")].map((node) =>
       node.closest("[data-returns-card]")?.getAttribute("data-returns-card"),
     );
-    expect(flat.sort()).toEqual(["18a3", "2b74", "8cd3", "d6d9"]);
+    // The cards whose own rate span is a sliver of the shared axis. Derived
+    // from each account's own extent rather than listed, so an account whose
+    // rates spread out after an import leaves this list on its own.
+    const shared = Object.values(GOLDENS.returns)
+      .map((r) => r.extent)
+      .filter((e): e is [number, number] => e !== null);
+    const axisSpan = Math.max(...shared.map((e) => e[1])) - Math.min(...shared.map((e) => e[0]));
+    const nearlyFlat = Object.entries(GOLDENS.returns)
+      .filter(([, r]) => r.extent !== null && r.extent[1] - r.extent[0] < axisSpan * 0.02)
+      .map(([shortId]) => shortId)
+      .sort();
+    expect(nearlyFlat.length).toBeGreaterThan(0);
+    expect(flat.sort()).toEqual(nearlyFlat);
   });
 });
 
@@ -227,7 +258,7 @@ describe("the rate axis", () => {
     for (const tick of ticks) expect(tick).not.toMatch(/\.\d/);
   });
 
-  test("the domain holds every month, so -20.83% is not clipped below the box", () => {
+  test("the domain holds every month, so the most negative one is not clipped below the box", () => {
     renderChart();
     // 200 tall less the 12 top and 24 bottom margins. A zero-floored y domain
     // would put every negative month below this floor, off the chart.
@@ -235,7 +266,7 @@ describe("the rate axis", () => {
     const ys = [...document.querySelectorAll("[data-returns-dot]")].map((dot) =>
       Number(dot.getAttribute("cy")),
     );
-    expect(ys).toHaveLength(127);
+    expect(ys).toHaveLength(GOLDENS.returnsPlottedTotal);
     expect(Math.min(...ys)).toBeGreaterThanOrEqual(0);
     expect(Math.max(...ys)).toBeLessThanOrEqual(innerHeight);
     // And the negatives really do sit below the zero line, not clamped onto it.
@@ -258,10 +289,15 @@ describe("the accessible summary", () => {
 
   test("a derived account's summary says the rates are computed here", () => {
     renderChart();
+    const golden = GOLDENS.returns.d77c;
+    if (golden === undefined) throw new Error("no d77c returns golden");
     const label = chart("d77c").getAttribute("aria-label") ?? "";
     expect(label).toContain("derived here rather than stated on a statement");
-    expect(label).toContain("from Jun 2023 to Jun 2026");
-    expect(label).toContain("34 of 37 months have a figure");
+    expect(label).toContain(
+      `from ${formatPeriodLabel(GOLDENS.corpus.firstPeriod)} to ` +
+        formatPeriodLabel(GOLDENS.corpus.latestPeriod),
+    );
+    expect(label).toContain(`${golden.plotted} of ${golden.points} months have a figure`);
     expect(label).toContain("left blank rather than drawn as zero");
   });
 
@@ -324,8 +360,14 @@ describe("the cursor announces the rate at the printed precision", () => {
     const svg = chart("d77c");
     fireEvent.keyDown(svg, { key: "End" });
     const tooltip = card("d77c").querySelector("[data-chart-tooltip]")?.textContent ?? "";
-    expect(tooltip).toContain("This month 0.91%");
-    expect(svg.getAttribute("aria-label")).toContain("This month 0.91%");
+    // The figure is read off the tooltip and then required of the label,
+    // rather than both being compared to a constant: what this guards is the
+    // two paths agreeing, and a constant only ever proved one of them was
+    // right on the day it was written. The precision is pinned separately --
+    // two decimals, never a whole percent.
+    const stated = /This month (-?\d+\.\d\d%)/.exec(tooltip)?.[1];
+    expect(stated).toBeDefined();
+    expect(svg.getAttribute("aria-label")).toContain(`This month ${stated}`);
   });
 });
 

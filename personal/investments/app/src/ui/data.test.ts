@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { GOLDENS } from "../goldens";
 import {
   grandTotal,
   latestPeriod,
@@ -8,62 +9,75 @@ import {
   totalsByLens,
 } from "./data";
 
+/**
+ * The 2026-06-30 app reading, and the two things that separate it from this
+ * project's total for the same month. They sum to it exactly, to the cent --
+ * see `corrections.ts`, and `notes/checkpoints.md` for how it was found.
+ */
+const APP_READING_2026_06 = 242019.61;
+/** The spousal RRSP at 2026-06: the owner contributed it, the spouse owns it. */
+const SPOUSAL_2026_06 = 14306.21;
+/** WSE401, carried at its purchase price under a pending-valuation disclaimer. */
+const WSE401_PENDING = 279.94;
+
 describe("data.ts against the real committed analytics.json", () => {
   const analytics = loadAnalytics();
 
-  test("carries 14 accounts", () => {
-    expect(analytics.series.length).toBe(14);
-    expect(analytics.meta.accountCount).toBe(14);
+  test("carries the corpus's accounts, in the payload and in its own meta", () => {
+    expect(analytics.series.length).toBe(GOLDENS.corpus.accountCount);
+    expect(analytics.meta.accountCount).toBe(GOLDENS.corpus.accountCount);
   });
 
-  test("latest period is 2026-06", () => {
-    expect(latestPeriod(analytics)).toBe("2026-06");
+  test("latest period is the corpus's own", () => {
+    expect(latestPeriod(analytics)).toBe(GOLDENS.corpus.latestPeriod);
   });
 
-  test("grand total is 241739.67", () => {
-    expect(grandTotal(analytics)).toBeCloseTo(241739.67, 2);
+  test("grand total is the corpus's own", () => {
+    expect(grandTotal(analytics)).toBeCloseTo(GOLDENS.portfolio.total, 2);
   });
 
   test("all three lenses agree on the grand total", () => {
+    // The strongest invariant here is the three-way agreement, which holds
+    // whatever the corpus is; the golden pins which figure they agree ON.
     const totals = totalsByLens(analytics);
-    expect(totals.registration).toBeCloseTo(241739.67, 2);
+    expect(totals.registration).toBeCloseTo(GOLDENS.portfolio.total, 2);
     expect(totals.account).toBeCloseTo(totals.registration, 6);
     expect(totals.purpose).toBeCloseTo(totals.registration, 6);
   });
 
-  test("reconciliation.json carries the real 90 findings over 220 statements", () => {
+  test("reconciliation.json carries the corpus's findings over its statements", () => {
     const report = loadReconciliation();
-    expect(report.statementCount).toBe(220);
-    expect(report.findings.length).toBe(90);
+    expect(report.statementCount).toBe(GOLDENS.corpus.statementCount);
+    expect(report.findings.length).toBe(GOLDENS.reconciliation.findingCount);
   });
 
-  test("exactly five findings are acknowledged, and each carries a non-empty reason", () => {
+  test("every acknowledged finding carries a non-empty reason, and the roster is the expected one", () => {
     const acknowledged = loadReconciliation().findings.filter((f) => f.acknowledged);
-    expect(acknowledged.length).toBe(5);
+    expect(acknowledged.length).toBe(GOLDENS.reconciliation.acknowledgedCount);
     for (const finding of acknowledged) {
       expect(finding.reason).not.toBeNull();
       expect((finding.reason ?? "").length).toBeGreaterThan(20);
     }
-    expect(acknowledged.map((f) => f.check).sort()).toEqual([
-      "cross-document",
-      "ground-truth",
-      "return-direction",
-      "return-direction",
-      "style-drift",
-    ]);
+    expect(acknowledged.map((f) => String(f.check)).sort()).toEqual(
+      GOLDENS.reconciliation.acknowledgedChecks,
+    );
   });
 
   test("an unacknowledged finding carries a null reason, so nothing renders an empty one", () => {
     const unacknowledged = loadReconciliation().findings.filter((f) => !f.acknowledged);
-    expect(unacknowledged.length).toBe(85);
+    expect(unacknowledged.length).toBe(GOLDENS.reconciliation.unacknowledgedCount);
     expect(unacknowledged.every((f) => f.reason === null)).toBe(true);
   });
 
-  test("the ground-truth finding still carries both real figures and their delta", () => {
+  test("the ground-truth finding carries both real figures and a delta that decomposes exactly", () => {
+    // The observation in truth.ts is dated and does not move with an import.
+    // Its delta is large because the app reading counted the spousal RRSP,
+    // which this project excludes: the owner is the contributor, the asset is
+    // the spouse's. The residual is what makes that explanation testable.
     const truth = loadReconciliation().findings.find((f) => f.check === "ground-truth");
-    expect(truth?.expected).toBeCloseTo(242019.61, 2);
-    expect(truth?.actual).toBeCloseTo(241739.67, 2);
-    expect(truth?.delta).toBeCloseTo(-279.94, 2);
+    expect(truth?.expected).toBeCloseTo(APP_READING_2026_06, 2);
+    expect(truth?.actual).toBeCloseTo(APP_READING_2026_06 - SPOUSAL_2026_06 - WSE401_PENDING, 2);
+    expect(truth?.delta).toBeCloseTo(-(SPOUSAL_2026_06 + WSE401_PENDING), 2);
   });
 
   test("parseReconciliation rejects a payload whose findings are missing", () => {

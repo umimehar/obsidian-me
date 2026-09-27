@@ -53,6 +53,20 @@ describe("parseSourceFilename", () => {
     expect(p?.templateStated).toBe(false);
   });
 
+  test("reads the non-person owner segments a fresh download also uses", () => {
+    // Real July 2026 forms: `identity-` on the chequing statements,
+    // `corporation-` on the corporate one. Both failed to parse until
+    // 2026-08-31, which failed the whole import rather than one file.
+    const identity = parseSourceFilename("ACCT0001CAD_identity-l1u6Q528uBVN_2026-07_v_0.pdf");
+    expect(identity?.accountNo).toBe("ACCT0001CAD");
+    expect(identity?.period).toBe("2026-07");
+    const corporation = parseSourceFilename("ACCT0002CAD_corporation-008VZOJjZdSG_2026-07_v_0.pdf");
+    expect(corporation?.accountNo).toBe("ACCT0002CAD");
+    expect(corporation?.period).toBe("2026-07");
+    // An owner kind nobody has seen yet must import, not block the build.
+    expect(parseSourceFilename("ACCT0003CAD_trust-abc123_2026-07_v_0.pdf")?.period).toBe("2026-07");
+  });
+
   test("rejects a malformed fresh-download period or a missing version", () => {
     expect(parseSourceFilename("ACCT0001CAD_person-000000000000_2026-13_v_0.pdf")).toBeNull();
     expect(parseSourceFilename("ACCT0001CAD_person-000000000000_2026-06.pdf")).toBeNull();

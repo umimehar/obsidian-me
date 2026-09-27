@@ -26,8 +26,20 @@ export interface ParsedFilename extends SourceRef {
 
 const TEMPLATES: readonly Template[] = ["BROKERAGE", "CASH", "PERFORMANCE"];
 const CONVENTIONAL = /^([A-Z0-9]+)_(\d{4})-(\d{2})_([A-Z]+)(?:_v_(\d+))?\.pdf$/;
-/** A fresh Wealthsimple download: no template segment, but always a version. */
-const FRESH_DOWNLOAD = /^([A-Z0-9]+)_person-[A-Za-z0-9]+_(\d{4})-(\d{2})_v_(\d+)\.pdf$/;
+/**
+ * A fresh Wealthsimple download: no template segment, but always a version.
+ *
+ * The owner segment is a lowercase kind and an opaque id, and the kind is NOT
+ * always `person`. The July 2026 batch alone carried `identity-` on the four
+ * chequing statements and `corporation-` on the corporate one. It is matched
+ * as a generic `[a-z]+-<id>` rather than an enumeration of the three kinds
+ * seen so far, because an unmatched filename fails the whole build (see
+ * `ingestRaw`) and a fourth kind would then block an import over a segment
+ * nothing downstream reads. It cannot collide with the conventional form:
+ * that requires `\d{4}-\d{2}` where this requires lowercase letters, and it
+ * is tried first regardless.
+ */
+const FRESH_DOWNLOAD = /^([A-Z0-9]+)_[a-z]+-[A-Za-z0-9]+_(\d{4})-(\d{2})_v_(\d+)\.pdf$/;
 
 function parseConventional(file: string): ParsedFilename | null {
   const m = CONVENTIONAL.exec(file);

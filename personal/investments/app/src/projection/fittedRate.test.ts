@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { AccountSeries, MonthPoint } from "../analytics/types";
+import { GOLDENS } from "../goldens";
 import { loadAnalytics } from "../ui/data";
 import { fittedReturnRate } from "./fittedRate";
 
@@ -149,18 +150,22 @@ describe("fittedReturnRate, guards", () => {
 describe("fittedReturnRate against the real committed analytics.json", () => {
   const fitted = fittedReturnRate(loadAnalytics().series);
 
-  test("reports its provenance: 37 months, 11 counted accounts, derived", () => {
-    expect(fitted.months).toBe(37);
-    expect(fitted.accounts).toBe(11);
+  test("reports its provenance: months, counted accounts, derived", () => {
+    expect(fitted.months).toBe(GOLDENS.fittedRate.months);
+    expect(fitted.accounts).toBe(GOLDENS.fittedRate.countedAccounts);
     expect(fitted.source).toBe("derived");
   });
 
-  test("fits 35 of the 36 links, the 36th being 2023-06's real $0 base", () => {
-    expect(fitted.monthsFitted).toBe(35);
+  test("fits fewer links than the series has, the shortfall being a non-positive base", () => {
+    // The corpus opens at a genuine $0 across two accounts in its first
+    // month, so at least one link cannot be fitted -- reported rather than
+    // silently absorbed, which is what this asserts.
+    expect(fitted.monthsFitted).toBe(GOLDENS.fittedRate.steps);
+    expect(fitted.monthsFitted).toBeLessThan(fitted.months - 1);
   });
 
-  test("the netted rate is 24.84%/yr", () => {
-    expect(fitted.rate).toBeCloseTo(0.2483925, 6);
+  test("the netted rate is the corpus's own", () => {
+    expect(fitted.rate).toBeCloseTo(GOLDENS.fittedRate.rate, 6);
   });
 
   test("it is not the un-netted reading, which is 486.85%/yr on this corpus", () => {

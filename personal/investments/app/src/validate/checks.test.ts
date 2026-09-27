@@ -1116,6 +1116,28 @@ describe("checkStyleConsistency", () => {
     expect(f[0]?.check).toBe("style-drift");
     expect(f[0]?.message).toMatch(/managed, self-directed|self-directed, managed/);
   });
+
+  test("anchors the finding at the transition period, not at the latest statement", () => {
+    // The acknowledgement in corrections.ts is keyed on period. Anchoring at
+    // the latest statement moved that period every month, expiring a reviewed
+    // acknowledgement on every import; 2026-07's import is where that first
+    // bit. Adding a later statement must not move the period.
+    const history = [
+      statement({ source: src("2023-06", "BROKERAGE"), accountType: "Tax-Free Savings Account" }),
+      statement({
+        source: src("2024-07", "BROKERAGE"),
+        accountType: "Tax-Free Savings Managed Cash Account",
+      }),
+      statement({ source: src("2026-06", "BROKERAGE"), accountType: "Managed TFSA Account" }),
+    ];
+    expect(checkStyleConsistency(history)[0]?.period).toBe("2024-07");
+
+    const withNextMonth = [
+      ...history,
+      statement({ source: src("2026-07", "BROKERAGE"), accountType: "Managed TFSA Account" }),
+    ];
+    expect(checkStyleConsistency(withNextMonth)[0]?.period).toBe("2024-07");
+  });
 });
 
 describe("checkGroundTruth", () => {

@@ -1,16 +1,18 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { AccountSeries, MonthPoint } from "../../analytics/types";
+import { GOLDENS } from "../../goldens";
 import type { AccountKind, ManagementStyle } from "../../store/mask";
 import type { Purpose } from "../../store/registry";
 import { loadAnalytics } from "../data";
+import { formatCurrency } from "../format";
 import { CashflowChart } from "./CashflowChart";
 import { tickY } from "./chartTestSupport";
 
 /**
  * Against the real committed corpus. The figures pinned here -- 2023-06's
  * real stated zero across two accounts, 2023-07's $3,445 deposit and
- * $1,280.75 withdrawal, and 2026-06's $9,500 across eleven accounts -- are
+ * $1,280.75 withdrawal, and the corpus's last month -- are
  * the ones the chart prints, so a corpus change reddens these rather than
  * quietly changing what the page claims.
  */
@@ -266,21 +268,23 @@ describe("against the real committed analytics.json", () => {
     expect(spoken).not.toContain("$3,445 ");
   });
 
-  test("2026-06, the last month, announces $9,500 deposited and nothing withdrawn", () => {
+  test("the last month announces the corpus's own deposits and withdrawals", () => {
     renderChart();
     fireEvent.keyDown(chart(), { key: "End" });
     const spoken = announced();
-    expect(spoken).toContain("Deposits $9,500.00");
+    expect(spoken).toContain(`Deposits ${formatCurrency(GOLDENS.cashflow.deposits)}`);
     expect(spoken).toContain("Withdrawals $0.00");
-    expect(spoken).toContain("11 accounts reported this month");
+    expect(spoken).toContain(`${GOLDENS.cashflow.accountCount} accounts reported this month`);
   });
 
   test("the visible tooltip and the accessible name carry the same words", () => {
     renderChart();
     fireEvent.keyDown(chart(), { key: "End" });
     const tooltip = document.querySelector("[data-chart-tooltip]")?.textContent ?? "";
-    expect(tooltip).toContain("Deposits $9,500.00");
-    expect(chart().getAttribute("aria-label")).toContain("Deposits $9,500.00");
+    expect(tooltip).toContain(`Deposits ${formatCurrency(GOLDENS.cashflow.deposits)}`);
+    expect(chart().getAttribute("aria-label")).toContain(
+      `Deposits ${formatCurrency(GOLDENS.cashflow.deposits)}`,
+    );
   });
 
   test("the corpus's every month has a statement, so the summary omits the blank-months clause", () => {

@@ -94,3 +94,33 @@ export function formatRate(rate: number): string {
   }).format(rate);
   return `${digits}%`;
 }
+
+/**
+ * A gain or loss against a base, with its own percentage in brackets:
+ * `+$16,638.34 (+7.12%)`.
+ *
+ * One call produces both halves, for the same reason `formatSignedCurrency`
+ * exists: the dollar figure and the percentage are two statements of one
+ * fact, and this project has shipped an announced figure disagreeing with a
+ * rendered one eight times. A caller that formatted the percentage itself
+ * would be the ninth.
+ *
+ * The percentage is a RETURN on the base, so it goes through `formatRate`
+ * at two decimals rather than `formatShare` at one: it is the same kind of
+ * figure as the fitted rate beside it in the projections, not a share of a
+ * whole. Both signs are explicit, so the pair reads correctly in greyscale
+ * and in forced-colours mode with no green or red applied.
+ *
+ * A zero or negative base yields the dollar figure ALONE, with no bracket.
+ * That is not a formatting nicety: this corpus opens at 2023-06 with two
+ * accounts holding a real $0.00 of book cost, and a percentage there is a
+ * division by zero. `Infinity%` and `NaN%` are both figures the data does
+ * not support, and an omitted bracket says so honestly.
+ */
+export function formatGainWithShare(gain: number, base: number): string {
+  const amount = formatSignedCurrency(gain);
+  if (base <= 0) return amount;
+  const percent = (gain / base) * 100;
+  const sign = percent >= 0 ? "+" : "";
+  return `${amount} (${sign}${formatRate(percent)})`;
+}

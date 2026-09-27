@@ -87,7 +87,21 @@ const PURPOSES: Record<string, Purpose> = {
  */
 const KIND_OVERRIDES: Record<string, AccountKind> = { "91b8": "Corporate" };
 
-const EXCLUDED_KINDS: readonly AccountKind[] = ["Chequing"];
+/**
+ * Kinds that are real money on the page but not part of the portfolio total.
+ *
+ * Chequing is money held rather than invested. `SpousalRRSP` is a different
+ * exclusion for a different reason and the more important one: the owner is
+ * the CONTRIBUTOR, and the asset belongs to the spouse. Counting it here
+ * would add someone else's assets to the owner's net worth.
+ *
+ * The contribution ROOM is unaffected and must stay that way: a spousal
+ * contribution is made against the contributor's own RRSP room, so
+ * `rooms.ts` groups `SpousalRRSP` under RRSP by KIND and never filters on
+ * `inTotals`. The two facts are genuinely separate -- his room, her asset --
+ * and this is the line between them.
+ */
+const EXCLUDED_KINDS: readonly AccountKind[] = ["Chequing", "SpousalRRSP"];
 
 /**
  * Kind comes from the account's MOST RECENT statement, because the wording has

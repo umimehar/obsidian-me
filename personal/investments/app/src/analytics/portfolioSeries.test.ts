@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { GOLDENS } from "../goldens";
 import type { AccountKind, ManagementStyle } from "../store/mask";
 import type { Purpose } from "../store/registry";
 import { loadAnalytics } from "../ui/data";
@@ -107,19 +108,19 @@ describe("buildPortfolioSeries against the real committed analytics.json", () =>
   const analytics = loadAnalytics();
   const points = buildPortfolioSeries(analytics.series);
 
-  test("ends at 2026-06 with $241,739.67", () => {
+  test("ends at the corpus's latest counted period, at its own total", () => {
     const last = points[points.length - 1];
-    expect(last?.period).toBe("2026-06");
-    expect(last?.marketValue).toBeCloseTo(241739.67, 2);
+    expect(last?.period).toBe(GOLDENS.corpus.latestPeriod);
+    expect(last?.marketValue).toBeCloseTo(GOLDENS.portfolio.total, 2);
   });
 
   test("has the observed point count for the real corpus", () => {
-    // 2023-06 through 2026-06, the range the inTotals accounts actually
-    // cover -- not the 2023-06..2026-07 range of the raw statements, since
-    // the three Chequing accounts (inTotals: false) are the only ones that
-    // reach 2026-07.
-    expect(points.length).toBe(37);
-    expect(points[0]?.period).toBe("2023-06");
+    // The range the inTotals accounts actually cover, which is not
+    // necessarily the raw statements' range: the three Chequing accounts
+    // (inTotals: false) can report a month ahead of the invested ones, and
+    // at 2026-06 they did.
+    expect(points.length).toBe(GOLDENS.portfolio.seriesPointCount);
+    expect(points[0]?.period).toBe(GOLDENS.corpus.firstPeriod);
   });
 
   test("the earliest period reflects fewer accounts than the latest", () => {

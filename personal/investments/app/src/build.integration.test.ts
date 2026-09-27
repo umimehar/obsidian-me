@@ -1,9 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import { existsSync } from "node:fs";
+import { readdir } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { countedAccountNumbers, ingestAll, ingestRaw } from "./build";
+import { countedAccountNumbers, dedupeToLatestVersion, ingestAll, ingestRaw } from "./build";
 import { isAcknowledged } from "./corrections";
+import { GOLDENS } from "./goldens";
+import { mergeIntoArchive, toArchived } from "./store/archive";
 import { buildRegistry } from "./store/registry";
 import {
   checkArithmetic,
@@ -23,10 +26,14 @@ const CACHE = join(import.meta.dir, "..", ".cache");
 // Skipped without the source PDFs. Never commit them to make this run in CI --
 // they carry the owner's address and account numbers.
 describe.if(existsSync(SOURCE))("full corpus", () => {
-  test("parses every statement, deduplicating the fresh-download twin", async () => {
-    // The source folder holds 221 files: 220 conventionally named, plus one
-    // fresh Wealthsimple download that is byte-identical to one of the 220.
-    expect((await ingestAll(SOURCE, CACHE)).length).toBe(220);
+  test("parses every statement, deduplicating the fresh-download twins", async () => {
+    // The source folder holds one file per statement plus any fresh
+    // Wealthsimple download that is byte-identical to a conventionally named
+    // one; those twins deduplicate away, so the parsed count is the
+    // statement count and the difference is the twins.
+    expect((await ingestAll(SOURCE, CACHE)).length).toBe(GOLDENS.corpus.statementCount);
+    const files = (await readdir(SOURCE)).filter((f) => f.endsWith(".pdf"));
+    expect(files.length).toBe(GOLDENS.corpus.sourceFileCount);
   });
 
   test("every statement passes its own arithmetic, with no unexplained mismatch", async () => {
@@ -86,7 +93,11 @@ describe.if(existsSync(SOURCE))("full corpus", () => {
     expect(accounts.some((a) => a.style === "managed")).toBe(true);
   });
 
-  test("June 2026 account value lands within 0.5% of the observed app figure", async () => {
+  test("the June 2026 app reading decomposes into the spousal asset and WSE401, to the cent", async () => {
+    // The app reading counted a WIDER scope than this project's total: it
+    // included the spousal RRSP, whose asset belongs to the spouse and which
+    // is excluded here from 2026-08-31. So the delta is large and fully
+    // explained rather than small, and the residual is what proves it.
     const statements = await ingestAll(SOURCE, CACHE);
     const accounts = buildRegistry(statements);
     const [finding] = checkGroundTruth(
@@ -95,7 +106,15 @@ describe.if(existsSync(SOURCE))("full corpus", () => {
       countedAccountNumbers(statements, accounts),
     );
     if (!finding?.actual) throw new Error("expected a ground-truth finding");
-    expect(Math.abs(finding.actual - 242019.61) / 242019.61).toBeLessThan(0.005);
+
+    const spousal = statements
+      .filter((s) => s.source.period === "2026-06" && /Spousal/i.test(s.accountType))
+      .reduce((sum, s) => sum + (s.portfolio?.totalMarketValue ?? 0), 0);
+    const WSE401_PENDING = 279.94;
+    expect(spousal).toBeGreaterThan(0);
+    // Zero to the cent. A residual this exact is what makes both halves of
+    // the explanation testable rather than merely plausible.
+    expect(finding.actual + spousal + WSE401_PENDING).toBeCloseTo(242019.61, 2);
     expect(finding.message).toMatch(/pending valuation/i);
   });
 
@@ -147,5 +166,56 @@ describe.if(existsSync(SOURCE))("full corpus", () => {
     for (const s of statements) {
       expect(["BROKERAGE", "CASH", "PERFORMANCE"]).toContain(s.source.template);
     }
+  });
+});
+
+/**
+ * The property the whole archive exists for: importing ONE month's PDFs over
+ * the committed archive has to produce the same statements as parsing every
+ * PDF that has ever existed. Run against the real source folder and the real
+ * committed datastore, because a fixture proving this proves nothing -- the
+ * failure mode is a mismatch between two real code paths over real data.
+ */
+describe.if(existsSync(SOURCE))("the incremental import reproduces the full build", () => {
+  test("one month's PDFs plus the archive equal the whole corpus, statement for statement", async () => {
+    const everything = dedupeToLatestVersion(
+      (await ingestRaw(SOURCE, CACHE)).statements.map((s) => toArchived(s, [])),
+    );
+
+    // The archive stands in for every month whose PDF is no longer on disk.
+    const latest = GOLDENS.corpus.latestPeriod;
+    const archive = everything.filter((s) => s.source.period !== latest);
+    const thisMonth = everything.filter((s) => s.source.period === latest);
+    expect(archive.length).toBeGreaterThan(0);
+    expect(thisMonth.length).toBeGreaterThan(0);
+
+    const incremental = dedupeToLatestVersion(mergeIntoArchive(archive, thisMonth));
+    const sort = (
+      list: readonly { source: { accountNo: string; period: string; template: string } }[],
+    ) =>
+      [...list].sort((a, b) =>
+        `${a.source.accountNo}|${a.source.period}|${a.source.template}`.localeCompare(
+          `${b.source.accountNo}|${b.source.period}|${b.source.template}`,
+        ),
+      );
+    expect(sort(incremental)).toEqual(sort(everything));
+  });
+
+  test("the registry it derives is identical too, so no account splits in two", async () => {
+    // The registry masks account numbers, and an archived statement's number
+    // is ALREADY masked. Without `maskAccountNo` being idempotent this is
+    // where every carried account would appear a second time.
+    const everything = dedupeToLatestVersion(
+      (await ingestRaw(SOURCE, CACHE)).statements.map((s) => toArchived(s, [])),
+    );
+    const latest = GOLDENS.corpus.latestPeriod;
+    const incremental = dedupeToLatestVersion(
+      mergeIntoArchive(
+        everything.filter((s) => s.source.period !== latest),
+        everything.filter((s) => s.source.period === latest),
+      ),
+    );
+    expect(buildRegistry(incremental)).toEqual(buildRegistry(everything));
+    expect(buildRegistry(everything)).toHaveLength(GOLDENS.corpus.accountCount);
   });
 });

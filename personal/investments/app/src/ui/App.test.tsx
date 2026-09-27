@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import { GOLDENS } from "../goldens";
 import { App } from "./App";
-import { formatCurrency } from "./format";
+import { formatCurrency, formatGainWithShare } from "./format";
 import { coarseForm, expectNoCoarseForm } from "./testSupport/coarseForm";
 
 function roomCard(group: string) {
@@ -70,20 +71,24 @@ describe("App", () => {
     render(<App />);
     clickTab("Projections");
     expect(document.querySelector("[data-projection-chart]")).not.toBeNull();
-    expect(document.querySelector("[data-seam]")?.getAttribute("data-seam-period")).toBe("2026-06");
+    expect(document.querySelector("[data-seam]")?.getAttribute("data-seam-period")).toBe(
+      GOLDENS.projection.seamPeriod,
+    );
     expect(document.querySelector("[data-history-line]")).not.toBeNull();
     expect(document.querySelector("[data-projection-line]")).not.toBeNull();
     expect(document.querySelector("[data-projection-rate]")?.textContent).toBe(
       "Rate in use: 6.00% a year.",
     );
     expect(document.querySelector("[data-projection-end-value]")?.textContent).toBe(
-      "$7,636,455.38",
+      formatCurrency(GOLDENS.projection.defaultRateEndValue),
     );
   });
 
   test("renders the overview, the registered wrappers and the tax view together", () => {
     render(<App />);
-    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");
+    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe(
+      formatCurrency(GOLDENS.portfolio.total),
+    );
 
     clickTab("Wrappers");
     expect(document.querySelectorAll("[data-room-line]").length).toBe(4);
@@ -96,8 +101,11 @@ describe("App", () => {
     render(<App />);
     clickTab("Reconciliation");
     expect(document.querySelector("[data-recon-ground-truth]")).not.toBeNull();
-    // 89 group rows plus the ground-truth line promoted into the headline card.
-    expect(document.querySelectorAll("[data-finding-row]").length).toBe(89);
+    // Every finding but the ground-truth line, which is promoted into the
+    // headline card rather than dropped.
+    expect(document.querySelectorAll("[data-finding-row]").length).toBe(
+      GOLDENS.reconciliation.findingCount - 1,
+    );
   });
 
   test("the year control drives both the room lines and the tax figures", () => {
@@ -125,11 +133,15 @@ describe("App", () => {
     render(<App />);
 
     clickTab("Wrappers");
-    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");
+    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe(
+      formatCurrency(GOLDENS.portfolio.total),
+    );
     expect(document.querySelector('[role="img"]')).not.toBeNull();
 
     clickTab("Reconciliation");
-    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe("$241,739.67");
+    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe(
+      formatCurrency(GOLDENS.portfolio.total),
+    );
     expect(document.querySelector('[role="img"]')).not.toBeNull();
   });
 
@@ -139,23 +151,22 @@ describe("App", () => {
     // never move when the account-grouping lens does.
     render(<App />);
     const total = () => document.querySelector("[data-portfolio-total]")?.textContent;
-    expect(total()).toBe("$241,739.67");
+    expect(total()).toBe(formatCurrency(GOLDENS.portfolio.total));
 
     fireEvent.click(screen.getByRole("radio", { name: /account/i }));
-    expect(total()).toBe("$241,739.67");
+    expect(total()).toBe(formatCurrency(GOLDENS.portfolio.total));
 
     fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
-    expect(total()).toBe("$241,739.67");
+    expect(total()).toBe(formatCurrency(GOLDENS.portfolio.total));
 
     fireEvent.click(screen.getByRole("radio", { name: /registration/i }));
-    expect(total()).toBe("$241,739.67");
+    expect(total()).toBe(formatCurrency(GOLDENS.portfolio.total));
   });
 });
 
 /**
- * The headline's book value and gain, from the real committed corpus:
- * market $241,739.67, book $223,675.08, gain +$18,064.59 -- the same
- * figures pinned in `groupGain.test.ts`'s "the registration lens's
+ * The headline's book value and gain, from the real committed corpus -- the
+ * same figures pinned in `groupGain.test.ts`'s "the registration lens's
  * per-group gains sum to the portfolio-level gap" test, now the third leg
  * of that same cross-check (portfolio-level, group-summed, and rendered
  * DOM all agreeing) rather than a second test asserting the same sum a
@@ -166,6 +177,16 @@ describe("App", () => {
  * `data-group-book-value`/`data-group-gain` hooks, so an unscoped query
  * would see up to eight of them at once.
  */
+/**
+ * The headline's "Book value $X" run, as a regex: the label and the figure
+ * are separate elements, so a plain string matcher never sees them together.
+ */
+function bookValueText(): RegExp {
+  return new RegExp(
+    `Book value ${formatCurrency(GOLDENS.portfolio.bookCost).replace(/[$.]/g, "\\$&")}`,
+  );
+}
+
 function headlineBlock(): HTMLElement {
   const total = document.querySelector("[data-portfolio-total]");
   const block = total?.parentElement;
@@ -174,11 +195,13 @@ function headlineBlock(): HTMLElement {
 }
 
 describe("the headline book value and gain", () => {
-  test("prints book value $223,675.08 and gain +$18,064.59, from the same GroupGainLine the cards use", () => {
+  test("prints the corpus's book value and gain, from the same GroupGainLine the cards use", () => {
     render(<App />);
     const block = within(headlineBlock());
-    expect(block.getByText(/Book value \$223,675\.08/)).toBeDefined();
-    const gain = block.getByText("+$18,064.59");
+    expect(block.getByText(bookValueText())).toBeDefined();
+    const gain = block.getByText(
+      formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost),
+    );
     expect(gain).toBeDefined();
     expect(gain.getAttribute("data-accent-color")).toBe("jade");
     // The same wording the group cards render, not a second phrase for the
@@ -189,15 +212,20 @@ describe("the headline book value and gain", () => {
   test("no figure here announces coarser than what it prints", () => {
     render(<App />);
     const text = headlineBlock().textContent ?? "";
-    expect(text).toContain(formatCurrency(223675.08));
-    expect(text).toContain(formatCurrency(18064.59));
-    expectNoCoarseForm(text, 223675.08);
-    // 18,064.59 coarsens to 18,065 -- different trailing digits than the
-    // precise figure, not a truncation, so a guard keyed on "18,064" would
-    // never fire against it. Asserted explicitly so this test cannot pass
-    // by accident against the wrong coarse form.
-    expect(coarseForm(18064.59)).toBe("$18,065");
-    expectNoCoarseForm(text, 18064.59);
+    for (const figure of [
+      GOLDENS.portfolio.total,
+      GOLDENS.portfolio.bookCost,
+      GOLDENS.portfolio.gain,
+    ]) {
+      expect(text).toContain(formatCurrency(figure));
+      expectNoCoarseForm(text, figure);
+    }
+    // The coarse form of the gain is asserted explicitly, because when
+    // rounding goes UP its digits differ from the precise figure's -- a
+    // guard keyed on truncating the precise form could never fire against
+    // it. See the precision rule in the investments CLAUDE.md.
+    const gain = GOLDENS.portfolio.gain;
+    expect(coarseForm(gain)).toBe(`$${Math.round(gain).toLocaleString("en-CA")}`);
   });
 
   test("stays visible, at the same figures, on every tab", () => {
@@ -209,8 +237,10 @@ describe("the headline book value and gain", () => {
         button: 0,
       });
       const block = within(headlineBlock());
-      expect(block.getByText(/Book value \$223,675\.08/)).toBeDefined();
-      expect(block.getByText("+$18,064.59")).toBeDefined();
+      expect(block.getByText(bookValueText())).toBeDefined();
+      expect(
+        block.getByText(formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost)),
+      ).toBeDefined();
     }
   });
 

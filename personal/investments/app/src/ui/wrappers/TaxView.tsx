@@ -38,7 +38,10 @@ function RealizedRow({ realizedGains }: { realizedGains: number }) {
       <Text size="2" color="gray">
         {realizedGains < 0 ? "Realized loss" : "Realized gains"}
       </Text>
-      <Text size="2" color={realizedGains < 0 ? "red" : undefined}>
+      {/* Jade for a gain rather than the default grey: a realized gain and a
+          realized loss are the same kind of figure, and colouring only one of
+          them made the loss look like the exception rather than the sign. */}
+      <Text size="2" color={realizedGains < 0 ? "red" : "jade"}>
         {formatCurrency(realizedGains)}
       </Text>
     </Flex>

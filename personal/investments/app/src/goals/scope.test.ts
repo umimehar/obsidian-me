@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { groupGolden } from "../goldens";
 import { projectYears } from "../projection/engine";
 import { projectionInputs } from "../projection/inputs";
 import { loadAnalytics } from "../ui/data";
@@ -12,23 +13,26 @@ describe("resolveScope, the three scope kinds against the real corpus", () => {
     const c = resolveScope(analytics.series, { kind: "purpose", purpose: "house" });
     expect(c.covered.map((a) => a.shortId)).toEqual(["e2ec"]);
     expect(c.uncovered).toHaveLength(0);
-    expect(c.coveredValue).toBe(28295.25);
-    expect(c.scopeValue).toBe(28295.25);
+    // A purpose with no uncovered account covers its whole scope, so both
+    // figures are the House group's own market value.
+    expect(c.coveredValue).toBeCloseTo(groupGolden("purpose", "House").market, 2);
+    expect(c.scopeValue).toBeCloseTo(groupGolden("purpose", "House").market, 2);
   });
 
   test("a groups scope rolls up every kind in the group", () => {
     const c = resolveScope(analytics.series, { kind: "groups", groups: ["RRSP"] });
-    expect(c.covered.map((a) => a.shortId).sort()).toEqual(["2318", "97ab", "d6d9"]);
+    // The spousal account is out: the projection forecasts the owner's assets,
+    // and that one is the spouse's.
+    expect(c.covered.map((a) => a.shortId).sort()).toEqual(["2318", "d6d9"]);
     expect(c.uncovered).toHaveLength(0);
   });
 
-  test("a portfolio scope covers the eight projected accounts and names the rest", () => {
+  test("a portfolio scope covers every projected account and names the rest", () => {
     const c = resolveScope(analytics.series, { kind: "portfolio" });
     expect(c.covered.map((a) => a.shortId).sort()).toEqual([
       "2318",
       "91b8",
       "9710",
-      "97ab",
       "c2e9",
       "d6d9",
       "d77c",
@@ -50,8 +54,10 @@ describe("resolveScope, the coverage split is the honest part", () => {
     const c = resolveScope(analytics.series, { kind: "purpose", purpose: "growth" });
     expect(c.covered.map((a) => a.shortId).sort()).toEqual(["9710", "d77c"]);
     expect(c.uncovered.map((a) => a.shortId).sort()).toEqual(["1f9a", "2c62", "e2d6"]);
-    expect(c.coveredValue).toBe(48155.28);
-    expect(c.scopeValue).toBe(108953.6);
+    // Growth's covered half is exactly the two TFSA accounts, which is the
+    // registration lens's TFSA group; its scope is the whole Growth group.
+    expect(c.coveredValue).toBeCloseTo(groupGolden("registration", "TFSA").market, 2);
+    expect(c.scopeValue).toBeCloseTo(groupGolden("purpose", "Growth").market, 2);
     expect(c.coveredValue).toBeLessThan(c.scopeValue);
   });
 

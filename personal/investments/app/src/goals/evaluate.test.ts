@@ -1,34 +1,62 @@
 import { describe, expect, test } from "bun:test";
+import { GOLDENS } from "../goldens";
 import { projectYears } from "../projection/engine";
 import { projectionInputs } from "../projection/inputs";
 import { loadAnalytics } from "../ui/data";
-import { GOALS } from "./config";
+import {
+  CORPORATE_GOAL,
+  EDUCATION_GOAL,
+  GOLDEN_GOALS,
+  HOUSE_GOAL,
+  STRETCH_GOAL,
+} from "./__fixtures__/goals";
 import type { Goal } from "./config";
 import { contributionToClose, evaluateGoal } from "./evaluate";
 
 const analytics = loadAnalytics();
 const rows6 = projectYears(projectionInputs(analytics, { returnRate: 0.06 }));
+const CLOSE_YEAR = GOLDENS.projection.fhsaCloseYear;
 
-const houseGoal = GOALS[0];
-if (houseGoal === undefined) throw new Error("GOALS is missing the house entry");
-const educationGoal = GOALS[1];
-if (educationGoal === undefined) throw new Error("GOALS is missing the education entry");
+const houseGoal = HOUSE_GOAL;
+const educationGoal = EDUCATION_GOAL;
 
-describe("evaluateGoal, the two shipped goals against the real corpus", () => {
-  test("the house goal clears its 40,000 target in 2028", () => {
-    const v = evaluateGoal(houseGoal, analytics, rows6, 0.06, "2039");
-    expect(v.projected).toBeCloseTo(50180.1, 2);
-    expect(v.gap).toBeCloseTo(10180.1, 2);
-    expect(v.monthlyToClose).toBeNull();
-    expect(v.blocked).toBeNull();
-  });
+/** The recorded verdict for one goal, or a throw naming the missing entry. */
+function golden(id: string) {
+  const found = GOLDENS.goals[id];
+  if (!found) throw new Error(`no goal golden for ${id}; run bun run goldens`);
+  return found;
+}
 
-  test("the education goal clears its 50,000 target in 2042", () => {
-    const v = evaluateGoal(educationGoal, analytics, rows6, 0.06, "2039");
-    expect(v.projected).toBeCloseTo(92547.67, 2);
-    expect(v.gap).toBeCloseTo(42547.67, 2);
-    expect(v.monthlyToClose).toBeNull();
-    expect(v.blocked).toBeNull();
+describe("evaluateGoal, every golden goal against the real corpus", () => {
+  // Parameterised over the whole set rather than written out per goal: a
+  // goal added to GOLDEN_GOALS is then covered by construction, and cannot
+  // reach the goldens file without also being asserted here.
+  for (const goal of GOLDEN_GOALS) {
+    test(`${goal.id} matches its recorded verdict`, () => {
+      const v = evaluateGoal(goal, analytics, rows6, 0.06, CLOSE_YEAR);
+      const g = golden(goal.id);
+      expect(v.projected).toBeCloseTo(g.projected ?? Number.NaN, 2);
+      expect(v.gap).toBeCloseTo(g.gap ?? Number.NaN, 2);
+      expect(v.blocked).toBe(g.blocked);
+      expect(v.coverage.covered.length).toBe(g.coveredCount);
+      expect(v.coverage.uncovered.length).toBe(g.uncoveredCount);
+      if (g.monthlyToClose === null) {
+        expect(v.monthlyToClose).toBeNull();
+      } else {
+        expect(v.monthlyToClose).toBeCloseTo(g.monthlyToClose, 2);
+      }
+      // The gap is the projection less the target, never a third figure.
+      expect(v.gap).toBeCloseTo((v.projected ?? 0) - goal.target, 6);
+    });
+  }
+
+  test("both shipped goals clear their targets, with no shortfall to solve", () => {
+    for (const goal of [houseGoal, educationGoal]) {
+      const v = evaluateGoal(goal, analytics, rows6, 0.06, CLOSE_YEAR);
+      expect(v.gap).toBeGreaterThan(0);
+      expect(v.monthlyToClose).toBeNull();
+      expect(v.blocked).toBeNull();
+    }
   });
 });
 
@@ -42,7 +70,7 @@ describe("evaluateGoal, the two shipped goals against the real corpus", () => {
 describe("evaluateGoal, the shortfall solve -- fixture only, the corpus cannot reach it", () => {
   test("a shortfall solves to a contribution that, fed back, lands on the target", () => {
     const stretch: Goal = { ...houseGoal, id: "stretch", target: 90000 };
-    const v = evaluateGoal(stretch, analytics, rows6, 0.06, "2039");
+    const v = evaluateGoal(stretch, analytics, rows6, 0.06, CLOSE_YEAR);
     expect(v.gap).toBeLessThan(0);
 
     // The house goal's account is the FHSA, and its lifetime room is fully
@@ -65,17 +93,18 @@ describe("evaluateGoal, the shortfall solve -- fixture only, the corpus cannot r
   // finite at `rate` of exactly 0, where the textbook growth-factor formula
   // would divide by zero.
   test("a zero return rate solves without dividing by zero", () => {
-    const stretch: Goal = { ...houseGoal, id: "stretch", target: 90000 };
     const rows0 = projectYears(projectionInputs(analytics, { returnRate: 0 }));
-    const v = evaluateGoal(stretch, analytics, rows0, 0, "2039");
+    const v = evaluateGoal(STRETCH_GOAL, analytics, rows0, 0, CLOSE_YEAR);
     expect(v.gap).toBeLessThan(0);
-    const years = 2028 - 2026 + 1;
-    expect(contributionToClose(v.gap ?? 0, years, 0)).toBeCloseTo(15234.92, 2);
+    const years = Number(STRETCH_GOAL.by) - GOLDENS.income.year + 1;
+    expect(contributionToClose(v.gap ?? 0, years, 0)).toBeCloseTo(
+      GOLDENS.zeroRateStretchAnnualToClose,
+      2,
+    );
   });
 
   test("a shortfall the wrapper has no room to close is blocked with a reason", () => {
-    const stretch: Goal = { ...houseGoal, id: "stretch", target: 90000 };
-    const v = evaluateGoal(stretch, analytics, rows6, 0.06, "2039");
+    const v = evaluateGoal(STRETCH_GOAL, analytics, rows6, 0.06, CLOSE_YEAR);
     expect(v.blocked).toContain("room");
     expect(v.monthlyToClose).toBeNull();
   });
@@ -84,7 +113,7 @@ describe("evaluateGoal, the shortfall solve -- fixture only, the corpus cannot r
 describe("evaluateGoal, the null cases -- never a rendered zero", () => {
   test("a scope covering no projected account is unprojectable, not zero", () => {
     const g: Goal = { ...houseGoal, id: "x", scope: { kind: "purpose", purpose: "spending" } };
-    const v = evaluateGoal(g, analytics, rows6, 0.06, "2039");
+    const v = evaluateGoal(g, analytics, rows6, 0.06, CLOSE_YEAR);
     expect(v.projected).toBeNull();
     expect(v.gap).toBeNull();
     expect(v.monthlyToClose).toBeNull();
@@ -92,7 +121,7 @@ describe("evaluateGoal, the null cases -- never a rendered zero", () => {
 
   test("a target year past the projection's last row is unprojectable, not clamped", () => {
     const g: Goal = { ...houseGoal, id: "x", by: "2099" };
-    const v = evaluateGoal(g, analytics, rows6, 0.06, "2039");
+    const v = evaluateGoal(g, analytics, rows6, 0.06, CLOSE_YEAR);
     expect(v.projected).toBeNull();
   });
 });
@@ -107,17 +136,9 @@ describe("evaluateGoal, Corporate has no CRA room to exhaust", () => {
     if (analytics.series.every((a) => a.shortId !== "91b8")) {
       throw new Error("fixture base account 91b8 missing from corpus");
     }
-    const goal: Goal = {
-      id: "corp-stretch",
-      label: "Corporate stretch",
-      scope: { kind: "groups", groups: ["Corporate"] },
-      target: 1_000_000,
-      by: "2030",
-      source: "fixture",
-    };
-    const v = evaluateGoal(goal, analytics, rows6, 0.06, "2039");
-    expect(v.gap).toBeCloseTo(-784875.09, 2);
+    const v = evaluateGoal(CORPORATE_GOAL, analytics, rows6, 0.06, CLOSE_YEAR);
+    expect(v.gap).toBeCloseTo(golden("corp-stretch").gap ?? Number.NaN, 2);
     expect(v.blocked).toBeNull();
-    expect(v.monthlyToClose).toBeCloseTo(11602.83, 2);
+    expect(v.monthlyToClose).toBeCloseTo(golden("corp-stretch").monthlyToClose ?? Number.NaN, 2);
   });
 });

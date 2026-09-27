@@ -14,6 +14,8 @@ import { RunwayTable } from "./RunwayTable";
 
 export interface ProjectionsViewProps {
   analytics: AnalyticsOutput;
+  /** True when a year is selected elsewhere, which this view deliberately ignores. */
+  scopeNote?: boolean;
 }
 
 /**
@@ -226,7 +228,7 @@ function EmptyState() {
  * starting balance with no change here. What this view owns is the rate a
  * reader chooses, the words around it, and the seam.
  */
-export function ProjectionsView({ analytics }: ProjectionsViewProps) {
+export function ProjectionsView({ analytics, scopeNote = false }: ProjectionsViewProps) {
   const fitted = useMemo(() => fittedReturnRate(analytics.series), [analytics]);
   const [rate, setRate] = useState(DEFAULT_RATE);
 
@@ -262,6 +264,18 @@ export function ProjectionsView({ analytics }: ProjectionsViewProps) {
       <Heading size="5" as="h2">
         Thirty year projection
       </Heading>
+      {scopeNote ? (
+        // Said in the open rather than left for the reader to infer from
+        // figures that did not move. The alternative -- re-basing the
+        // forecast to the selected year's close -- would silently produce a
+        // different projection with nothing on screen saying the start moved.
+        <Callout.Root color="gray" variant="surface" data-projection-scope-note="">
+          <Callout.Text>
+            The year filter does not apply here. A forecast runs forward from the latest statement,
+            so this always projects from the whole corpus.
+          </Callout.Text>
+        </Callout.Root>
+      ) : null}
       <EndValue value={end.value} year={end.year} rate={rate} />
       <Disclaimer />
       <RateControl rate={rate} fitted={fitted.rate} onRateChange={setRate} />

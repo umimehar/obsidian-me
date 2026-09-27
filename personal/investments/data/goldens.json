@@ -1,0 +1,446 @@
+{
+  "corpus": {
+    "statementCount": 231,
+    "sourceFileCount": 235,
+    "accountCount": 14,
+    "countedAccountCount": 10,
+    "latestPeriod": "2026-07",
+    "firstPeriod": "2023-06"
+  },
+  "portfolio": {
+    "total": 234579.83000000002,
+    "bookCost": 218486.61,
+    "gain": 16093.220000000001,
+    "gainShare": 0.0736576946294329,
+    "seriesPointCount": 38
+  },
+  "reconciliation": {
+    "findingCount": 97,
+    "acknowledgedCount": 5,
+    "unacknowledgedCount": 92,
+    "acknowledgedChecks": [
+      "cross-document",
+      "ground-truth",
+      "return-direction",
+      "return-direction",
+      "style-drift"
+    ],
+    "statementArithmeticCount": 88
+  },
+  "groups": {
+    "registration:TFSA": {
+      "market": 47582.03,
+      "book": 43670.68,
+      "gain": 3911.3499999999985,
+      "firstPeriod": "2023-06",
+      "lastPeriod": "2026-07"
+    },
+    "registration:RRSP": {
+      "market": 36816.2,
+      "book": 36365.58,
+      "gain": 450.61999999999534,
+      "firstPeriod": "2025-08",
+      "lastPeriod": "2026-07"
+    },
+    "registration:FHSA": {
+      "market": 28031.87,
+      "book": 25006.5,
+      "gain": 3025.369999999999,
+      "firstPeriod": "2024-12",
+      "lastPeriod": "2026-07"
+    },
+    "registration:RESP": {
+      "market": 4923.3,
+      "book": 4622.51,
+      "gain": 300.78999999999996,
+      "firstPeriod": "2026-01",
+      "lastPeriod": "2026-07"
+    },
+    "registration:Non-registered": {
+      "market": 64260.670000000006,
+      "book": 59418.09,
+      "gain": 4842.580000000009,
+      "firstPeriod": "2025-10",
+      "lastPeriod": "2026-07"
+    },
+    "registration:Corporate": {
+      "market": 52965.76,
+      "book": 49403.25,
+      "gain": 3562.510000000002,
+      "firstPeriod": "2026-01",
+      "lastPeriod": "2026-07"
+    },
+    "account:Non-registered 1f9a": {
+      "market": 31249.15,
+      "book": 27196.97,
+      "gain": 4052.1800000000003,
+      "firstPeriod": "2025-10",
+      "lastPeriod": "2026-07"
+    },
+    "account:RRSP (self-directed)": {
+      "market": 16016.7,
+      "book": 15839.25,
+      "gain": 177.45000000000073,
+      "firstPeriod": "2025-08",
+      "lastPeriod": "2026-07"
+    },
+    "account:Non-registered 2c62": {
+      "market": 31792.33,
+      "book": 31061.12,
+      "gain": 731.2100000000028,
+      "firstPeriod": "2025-11",
+      "lastPeriod": "2026-07"
+    },
+    "account:Corporate": {
+      "market": 52965.76,
+      "book": 49403.25,
+      "gain": 3562.510000000002,
+      "firstPeriod": "2026-01",
+      "lastPeriod": "2026-07"
+    },
+    "account:TFSA (managed)": {
+      "market": 7536.44,
+      "book": 6289.38,
+      "gain": 1247.0599999999995,
+      "firstPeriod": "2023-06",
+      "lastPeriod": "2026-07"
+    },
+    "account:RESP": {
+      "market": 4923.3,
+      "book": 4622.51,
+      "gain": 300.78999999999996,
+      "firstPeriod": "2026-01",
+      "lastPeriod": "2026-07"
+    },
+    "account:RRSP (managed)": {
+      "market": 20799.5,
+      "book": 20526.33,
+      "gain": 273.16999999999825,
+      "firstPeriod": "2025-11",
+      "lastPeriod": "2026-07"
+    },
+    "account:TFSA (self-directed)": {
+      "market": 40045.59,
+      "book": 37381.3,
+      "gain": 2664.2899999999936,
+      "firstPeriod": "2023-06",
+      "lastPeriod": "2026-07"
+    },
+    "account:Crypto": {
+      "market": 1219.19,
+      "book": 1160,
+      "gain": 59.190000000000055,
+      "firstPeriod": "2026-06",
+      "lastPeriod": "2026-07"
+    },
+    "account:FHSA": {
+      "market": 28031.87,
+      "book": 25006.5,
+      "gain": 3025.369999999999,
+      "firstPeriod": "2024-12",
+      "lastPeriod": "2026-07"
+    },
+    "purpose:Retirement": {
+      "market": 36816.2,
+      "book": 36365.58,
+      "gain": 450.61999999999534,
+      "firstPeriod": "2025-08",
+      "lastPeriod": "2026-07"
+    },
+    "purpose:House": {
+      "market": 28031.87,
+      "book": 25006.5,
+      "gain": 3025.369999999999,
+      "firstPeriod": "2024-12",
+      "lastPeriod": "2026-07"
+    },
+    "purpose:Education": {
+      "market": 4923.3,
+      "book": 4622.51,
+      "gain": 300.78999999999996,
+      "firstPeriod": "2026-01",
+      "lastPeriod": "2026-07"
+    },
+    "purpose:Business": {
+      "market": 52965.76,
+      "book": 49403.25,
+      "gain": 3562.510000000002,
+      "firstPeriod": "2026-01",
+      "lastPeriod": "2026-07"
+    },
+    "purpose:Growth": {
+      "market": 111842.7,
+      "book": 103088.76999999999,
+      "gain": 8753.930000000008,
+      "firstPeriod": "2023-06",
+      "lastPeriod": "2026-07"
+    }
+  },
+  "lossGroups": [],
+  "accounts": {
+    "2318": 16016.7,
+    "9710": 7536.44,
+    "1f9a": 31249.15,
+    "2c62": 31792.33,
+    "91b8": 52965.76,
+    "97ab": 15818.27,
+    "c2e9": 4923.3,
+    "d6d9": 20799.5,
+    "d77c": 40045.59,
+    "e2d6": 1219.19,
+    "e2ec": 28031.87
+  },
+  "allocations": {
+    "2318": {
+      "group": "RRSP",
+      "share": 0.441340782122905,
+      "opening": 16016.7
+    },
+    "9710": {
+      "group": "TFSA",
+      "share": 0.13828125,
+      "opening": 7536.44
+    },
+    "d6d9": {
+      "group": "RRSP",
+      "share": 0.5586592178770949,
+      "opening": 20799.5
+    },
+    "91b8": {
+      "group": "Corporate",
+      "share": 1,
+      "opening": 52965.76
+    },
+    "d77c": {
+      "group": "TFSA",
+      "share": 0.86171875,
+      "opening": 40045.59
+    },
+    "c2e9": {
+      "group": "RESP",
+      "share": 1,
+      "opening": 4923.3
+    },
+    "e2ec": {
+      "group": "FHSA",
+      "share": 1,
+      "opening": 28031.87
+    }
+  },
+  "returns": {
+    "2318": {
+      "points": 12,
+      "plotted": 10,
+      "extent": [
+        -10.002457786598097,
+        7.246038581576047
+      ]
+    },
+    "9710": {
+      "points": 15,
+      "plotted": 15,
+      "extent": [
+        -4.01,
+        47.31
+      ]
+    },
+    "d6d9": {
+      "points": 6,
+      "plotted": 3,
+      "extent": [
+        -0.07,
+        0.17
+      ]
+    },
+    "18a3": {
+      "points": 4,
+      "plotted": 2,
+      "extent": [
+        0,
+        0
+      ]
+    },
+    "1f9a": {
+      "points": 10,
+      "plotted": 9,
+      "extent": [
+        -20.831744591570732,
+        39.038523714566395
+      ]
+    },
+    "2b74": {
+      "points": 13,
+      "plotted": 10,
+      "extent": [
+        -7.435371989641335e-14,
+        1.0696249669360942
+      ]
+    },
+    "2c62": {
+      "points": 9,
+      "plotted": 8,
+      "extent": [
+        -3.5378130646940917,
+        10.660075198440328
+      ]
+    },
+    "8cd3": {
+      "points": 11,
+      "plotted": 9,
+      "extent": [
+        0,
+        0.22895083981273193
+      ]
+    },
+    "91b8": {
+      "points": 7,
+      "plotted": 6,
+      "extent": [
+        -5.102173305296377,
+        4.846807640809845
+      ]
+    },
+    "97ab": {
+      "points": 5,
+      "plotted": 4,
+      "extent": [
+        -0.6146980926464709,
+        9.602628153994686
+      ]
+    },
+    "c2e9": {
+      "points": 7,
+      "plotted": 5,
+      "extent": [
+        -3.5952876230098525,
+        7.891131951691252
+      ]
+    },
+    "d77c": {
+      "points": 38,
+      "plotted": 35,
+      "extent": [
+        -6.998452183106354,
+        13.598880035190215
+      ]
+    },
+    "e2d6": {
+      "points": 2,
+      "plotted": 1,
+      "extent": [
+        10.269370221486563,
+        10.269370221486563
+      ]
+    },
+    "e2ec": {
+      "points": 20,
+      "plotted": 19,
+      "extent": [
+        -4.301873734752298,
+        6.917944401751633
+      ]
+    }
+  },
+  "returnsWithNoRate": [],
+  "returnsPlottedTotal": 136,
+  "cashflow": {
+    "period": "2026-07",
+    "deposits": 7400,
+    "withdrawals": 0,
+    "accountCount": 10
+  },
+  "fittedRate": {
+    "rate": 0.2074045205865409,
+    "months": 38,
+    "countedAccounts": 10,
+    "steps": 36
+  },
+  "projection": {
+    "defaultRateEndValue": 7552927.238607155,
+    "fittedRateEndValue": 169664382.12290213,
+    "seamPeriod": "2026-07",
+    "uncoveredAccountCount": 3,
+    "uncoveredValue": 64260.670000000006,
+    "fhsaCloseYear": "2039",
+    "fhsaCapYear": "2028",
+    "fhsaValueAtCapYear": 49866.40567992
+  },
+  "rooms": {
+    "opening": {
+      "TFSA": 47582.03,
+      "RRSP": 36816.2,
+      "FHSA": 28031.87,
+      "RESP": 4923.3,
+      "Corporate": 52965.76
+    },
+    "lifetimeContributed": {
+      "FHSA": 24000,
+      "RESP": 4000
+    },
+    "cesgRoomAccrued": 1000,
+    "respFromContRowsOnly": 2550,
+    "rrspAssessedRemaining": 34752,
+    "contributed": {
+      "TFSA": 7000,
+      "RRSP": 36000,
+      "FHSA": 8000,
+      "RESP": 4000,
+      "Corporate": 0
+    },
+    "rrspAssessedLimit": 70752,
+    "respLifetimeContributed": 4000,
+    "cesgReceived": 600,
+    "rrspSpousalUsed": 15200
+  },
+  "runway": {
+    "leftoverAfterOneYear": {
+      "FHSA": 8000,
+      "RESP": 41500
+    },
+    "cesgClaimed": 6600,
+    "cesgForfeited": 600
+  },
+  "goals": {
+    "house": {
+      "projected": 49866.40567992,
+      "gap": 9866.405679919997,
+      "monthlyToClose": null,
+      "blocked": null,
+      "coveredCount": 1,
+      "uncoveredCount": 0
+    },
+    "education": {
+      "projected": 94422.65173369495,
+      "gap": 44422.65173369495,
+      "monthlyToClose": null,
+      "blocked": null,
+      "coveredCount": 1,
+      "uncoveredCount": 0
+    },
+    "stretch": {
+      "projected": 49866.40567992,
+      "gap": -40133.59432008,
+      "monthlyToClose": null,
+      "blocked": "House down payment's account has no CRA room left by 2028, so an extra contribution cannot close this shortfall.",
+      "coveredCount": 1,
+      "uncoveredCount": 0
+    },
+    "corp-stretch": {
+      "projected": 217444.55172902305,
+      "gap": -782555.448270977,
+      "monthlyToClose": 11568.543305090594,
+      "blocked": null,
+      "coveredCount": 1,
+      "uncoveredCount": 0
+    }
+  },
+  "zeroRateStretchAnnualToClose": 15322.710000000001,
+  "income": {
+    "year": 2026,
+    "eligibleDividends": 237.73999999999992,
+    "foreignIncome": 18.640000000000004,
+    "interest": 0,
+    "realizedGain": -3030.6753741320663,
+    "rrspDeduction": 36000
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "$comment": "Figures read off the Wealthsimple app's own screen, recorded to be reconciled against the statements for the same period once they arrive. NOT derived from any statement, and never an input to the pipeline: this is the external anchor the pipeline is measured against. Owner-recorded; add an entry whenever you take a reading. Labels are the APP's own grouping, which does not match this project's registration lens (see notes/checkpoints.md).",
+  "checkpoints": [
+    {
+      "observed": "2026-08-31T16:57:00-04:00",
+      "source": "Wealthsimple app, accounts screen, screenshots",
+      "coversPeriod": "2026-08",
+      "reconciledAgainst": null,
+      "note": "Live balances part-way through August 2026. The corpus ends at 2026-07, so this is one month ahead of it and cannot be compared to 2026-07 figures as though it were the same date. Reconcile when the 2026-08 statements are imported.",
+      "portfolioTotal": 250543.54,
+      "totalIsDerived": true,
+      "totalNote": "Summed from the seven groups VISIBLE in the screenshots; the app's own screen does not print a single portfolio total in them. The two screenshots do not provably cover the whole account list, so treat this as a sum of what was captured rather than as the app's portfolio total.",
+      "groups": [
+        {
+          "label": "TFSA",
+          "statedTotal": 48415.96,
+          "accountCount": 2,
+          "accounts": [
+            {
+              "label": "TFSA",
+              "value": 40733.59,
+              "allTimeReturnPercent": 21.75
+            },
+            {
+              "label": "Managed (TFSA)",
+              "value": 7682.38,
+              "allTimeReturnPercent": 28.04
+            }
+          ],
+          "partsSumTo": 48415.97,
+          "partsNote": "The two accounts sum to $48,415.97 against a stated $48,415.96. One cent, and the app's own rounding, not a reading error. Recorded rather than silently corrected."
+        },
+        {
+          "label": "FHSA",
+          "statedTotal": 28075.57,
+          "accountCount": 1,
+          "accounts": [
+            {
+              "label": "FHSA",
+              "value": 28075.57,
+              "allTimeReturnPercent": 16.98
+            }
+          ]
+        },
+        {
+          "label": "RRSP",
+          "statedTotal": 38339.64,
+          "accountCount": 3,
+          "accounts": [],
+          "accountsNote": "The RRSP group was collapsed in the screenshot, so its three accounts have no individual figures here. Note it reads 3 accounts while this project counts two RRSP accounts toward the total and holds the spousal RRSP outside it."
+        },
+        {
+          "label": "Joint RESP",
+          "statedTotal": 6217.09,
+          "accountCount": 1,
+          "accounts": [
+            {
+              "label": "Family RESP",
+              "value": 6217.09,
+              "allTimeReturnPercent": 7.19
+            }
+          ]
+        },
+        {
+          "label": "Non-registered",
+          "statedTotal": 67677.05,
+          "accountCount": 2,
+          "accounts": [
+            {
+              "label": "Direct Indexing (USD)",
+              "value": 33396.54,
+              "allTimeReturnPercent": 9.86
+            },
+            {
+              "label": "Non-registered",
+              "value": 34280.51,
+              "allTimeReturnPercent": 13.7
+            }
+          ]
+        },
+        {
+          "label": "Crypto",
+          "statedTotal": 1712.47,
+          "accountCount": 1,
+          "accounts": [
+            {
+              "label": "Crypto",
+              "value": 1712.47,
+              "allTimeReturnPercent": 30.73
+            }
+          ]
+        },
+        {
+          "label": "Business investing",
+          "statedTotal": 60105.76,
+          "accountCount": 2,
+          "accounts": [
+            {
+              "label": "[redacted]",
+              "value": 55067.47,
+              "allTimeReturnPercent": 10.12
+            },
+            {
+              "label": "[redacted] (self)",
+              "value": 5038.29,
+              "allTimeReturnPercent": 0.77
+            }
+          ],
+          "accountsNote": "The two accounts carry the business's name on screen. Masked here the way every other name in this project is; the \"(self)\" qualifier is kept because it is what tells the two apart."
+        }
+      ],
+      "openQuestions": [
+        {
+          "id": "rrsp-gap",
+          "severity": "resolved",
+          "summary": "RESOLVED 2026-08-31. The app's RRSP group reads $38,339.64 against this project's then-$52,634.47. The difference was the spousal RRSP: the owner is the contributor but the asset is the spouse's, so the app counts it under her name. This project now does the same.",
+          "leads": "This project's RRSP group is $36,816.20 at 2026-07 with the spousal account excluded, against the app's $38,339.64 a month later: +$1,523.44, or +4.1% over August, which market movement covers. The spousal account is still visible and still counted toward the owner's contribution ROOM, which is his. Confirmed by the 2026-06 ground-truth decomposition below, which lands on a residual of exactly $0.00."
+        },
+        {
+          "id": "business-account-count",
+          "severity": "waiting",
+          "summary": "The app shows Business investing as 2 accounts totalling $60,105.76. This project tracks ONE corporate account, $52,965.76 at 2026-07. Confirmed by the owner: the second account was opened in August 2026.",
+          "leads": "Nothing to do until its first statement is issued. It should appear as a new account in the 2026-08 import, and the registry will need a label and a purpose for it."
+        },
+        {
+          "id": "visible-total-vs-ours",
+          "severity": "open",
+          "summary": "The seven visible groups sum to $250,543.54. This project's portfolio total at 2026-07, with the spousal RRSP excluded, is $234,579.83. The gap is $15,963.71.",
+          "leads": "$15,818.27 of that is the spousal RRSP at 2026-07, leaving $145.44 unaccounted -- so the app screen these groups were read from appears to still be counting the spousal asset somewhere, even though its RRSP group is not. Either a group was cut off between the two screenshots, or the screen totals a household rather than an individual. Resolve by noting exactly which accounts the screen counts before taking the next reading."
+        },
+        {
+          "id": "grouping-mismatch",
+          "severity": "informational",
+          "summary": "The app's grouping is not this project's registration lens. The app splits Crypto into its own group; the registration lens folds it into Non-registered. A group-by-group comparison has to map the two first, and a naive one double counts Crypto.",
+          "leads": "This project's account lens is the closer match for a per-account comparison."
+        }
+      ],
+      "groundTruthDecomposition": {
+        "note": "Not from this checkpoint, but the finding that resolved it. The owner's 2026-06-30 app reading of $242,019.61 exceeds this project's spousal-excluded 2026-06 total of $227,433.46 by $14,586.15, which decomposes exactly: $14,306.21 spousal RRSP plus $279.94 WSE401 pending valuation, residual $0.00. That the residual is zero to the cent is what makes both explanations testable rather than merely plausible -- and it confirms the 2026-06 app reading DID include the spousal asset.",
+        "appReading": 242019.61,
+        "ourTotalExcludingSpousal": 227433.46,
+        "spousal": 14306.21,
+        "wse401": 279.94,
+        "residual": 0.0
+      }
+    }
+  ]
+}

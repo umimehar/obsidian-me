@@ -71,6 +71,22 @@ const TOOLTIP = "[data-chart-tooltip]";
  * app drawn in the loss colour. Before this, no run of this gate had ever
  * measured that colour.
  */
+/** The overview's lens toggle, by its own accessible name. */
+const LENS_GROUP = '[role="radiogroup"][aria-label="Group accounts by"]';
+
+/**
+ * The portfolio chart's other mode.
+ *
+ * It is behind a toggle, so it is a state this gate reaches only by asking
+ * for it -- the same shape as the lenses above, and the same failure if it
+ * does not: an unvisited chart yields no sample, no sample yields no failure,
+ * and a return line painted in an unreadable colour would pass. It draws its
+ * own axis labels, its own readout and a line coloured by sign, none of which
+ * the value chart has.
+ */
+const RETURN_MODE = "Return";
+const CHART_GROUP = '[role="radiogroup"][aria-label="Chart"]';
+
 const EXTRA_LENSES: readonly string[] = ["By account", "By purpose"];
 
 /** Somewhere no chart can be, so a pointer parked here leaves every cursor cleared. */
@@ -149,11 +165,61 @@ async function sweepState(
  * caller decides. The portfolio chart sits above the tab strip and is present
  * on every tab, so it is legitimately hovered once per tab.
  */
+/**
+ * Where along each chart the pointer stops.
+ *
+ * The centre alone is one x position per chart, and one position samples one
+ * month. A readout's gain/loss colour is a property of WHICH month is
+ * hovered, so a single position measures whichever tone that month happens to
+ * carry: the portfolio chart's centre lands on a gaining month, and its seven
+ * loss months (at roughly 0.03, 0.08, 0.11, 0.57, 0.59, 0.62 and 0.89 of the
+ * series) were never hovered at all. The near ends reach them.
+ *
+ * This is coverage, not proof. `TONES` below is the proof, and it is what
+ * fails the run if a colour goes unrendered rather than leaving these three
+ * numbers trusted to keep landing well.
+ */
+const HOVER_FRACTIONS = [0.1, 0.5, 0.9] as const;
+
+/** Both tones a readout can paint. A run that never renders one has not measured it. */
+const TONES = ["gain", "loss"] as const;
+
+/**
+ * One chart, hovered at each of `HOVER_FRACTIONS`, recording which tones the
+ * readout actually painted. True when at least one position opened a readout.
+ */
+async function sweepChartHovers(
+  page: Page,
+  at: { tab: string; theme: Theme },
+  index: number,
+  box: { x: number; y: number; width: number; height: number },
+  samples: Sample[],
+  tonesSwept: Set<string>,
+): Promise<boolean> {
+  let opened = 0;
+  for (const fraction of HOVER_FRACTIONS) {
+    await page.mouse.move(box.x + box.width * fraction, box.y + box.height / 2);
+    await page.waitForTimeout(50);
+    const state = `hover chart ${index + 1} at ${fraction}`;
+    if ((await sweepState(page, { ...at, state }, samples, TOOLTIP)) > 0) opened += 1;
+    // Read off the rendered attribute, never parsed back out of a sample's
+    // text: a tone is a colour decision the component made, and inferring it
+    // from a minus sign would be a second, independent reading of the very
+    // thing being checked.
+    for (const tone of TONES) {
+      const painted = await page.locator(`${TOOLTIP} [data-tooltip-tone="${tone}"]`).count();
+      if (painted > 0) tonesSwept.add(tone);
+    }
+  }
+  return opened > 0;
+}
+
 async function sweepHovers(
   page: Page,
   at: { tab: string; theme: Theme },
   samples: Sample[],
   problems: string[],
+  tonesSwept: Set<string>,
 ): Promise<number> {
   const charts = await page.locator('svg[role="img"]').all();
   let opened = 0;
@@ -178,31 +244,130 @@ async function sweepHovers(
       );
     }
 
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    await page.waitForTimeout(50);
-    const found = await sweepState(
-      page,
-      { ...at, state: `hover chart ${index + 1}` },
-      samples,
-      TOOLTIP,
-    );
-    if (found > 0) opened += 1;
+    if (await sweepChartHovers(page, at, index, box, samples, tonesSwept)) opened += 1;
   }
   await page.mouse.move(AWAY.x, AWAY.y);
   return opened;
+}
+
+/**
+ * Switches the portfolio chart to its return mode, sweeps it, and switches
+ * back. Returns false when the toggle did not take, so a silently failed
+ * click cannot pass as coverage.
+ */
+async function sweepReturnChart(
+  page: Page,
+  at: { tab: string; theme: Theme },
+  samples: Sample[],
+  tonesSwept: Set<string>,
+): Promise<boolean> {
+  const toggle = page.getByRole("radio", { name: RETURN_MODE, exact: true });
+  if ((await toggle.count()) === 0) return false;
+  await toggle.click();
+  const took = await page
+    .waitForFunction(
+      ({ name, group }) =>
+        document
+          .querySelector(`${group} [role="radio"][aria-checked="true"]`)
+          ?.textContent?.includes(name) === true,
+      { name: RETURN_MODE, group: CHART_GROUP },
+      { timeout: 2000 },
+    )
+    .then(() => true)
+    .catch(() => false);
+  if (!took) return false;
+
+  await page.waitForTimeout(150);
+  await sweepState(page, { ...at, state: "chart return" }, samples);
+  const chart = page.locator("[data-return-chart]");
+  const box = (await chart.count()) > 0 ? await chart.boundingBox() : null;
+  if (box !== null) {
+    await sweepChartHovers(page, { ...at, tab: `${at.tab} return` }, 0, box, samples, tonesSwept);
+  }
+  await page.getByRole("radio", { name: "Value", exact: true }).click();
+  await page.waitForTimeout(100);
+  return true;
+}
+
+/**
+ * Each non-default overview lens, selected and swept. The account lens is
+ * the only one that can paint a per-account loss, so a run that never
+ * reaches it has not measured that colour.
+ */
+async function sweepLenses(
+  page: Page,
+  { tab, theme }: { tab: string; theme: Theme },
+  samples: Sample[],
+  problems: string[],
+  lensesSwept: Set<string>,
+): Promise<void> {
+  for (const lens of EXTRA_LENSES) {
+    const control = page.getByRole("radio", { name: lens, exact: true });
+    await control.click();
+    // Prove the lens took, the same way `applyTheme` proves the theme
+    // did by reading the page's own background back. Without this the
+    // guard below only shows that SOME text was swept under a lens
+    // label: a click that silently failed would sweep the default lens
+    // a second time, count as covered, and hide the loss colour again.
+    //
+    // Scoped to the lens toggle's OWN radiogroup. It used to read the
+    // document's first checked radio, which worked only while the lens
+    // was the only such control on the page; the year and chart
+    // controls now render above it, so the unscoped query returned
+    // "All time" and this guard failed a lens that had switched
+    // perfectly well.
+    // Both the name AND the selector are passed in. A `waitForFunction`
+    // body runs in the BROWSER, so a module constant referenced inside
+    // it is an undefined identifier there: the function throws, the
+    // wait times out, and the failure reads as "the lens never
+    // switched" for a lens that switched perfectly well.
+    await page
+      .waitForFunction(
+        ({ name, group }) =>
+          document
+            .querySelector(`${group} [role="radio"][aria-checked="true"]`)
+            ?.textContent?.includes(name) === true,
+        { name: lens, group: LENS_GROUP },
+        { timeout: 2000 },
+      )
+      .catch(() => {
+        problems.push(`${theme}/${tab} the ${lens} lens never became the selected one`);
+      });
+    await page.waitForTimeout(150);
+    const state = `lens ${lens.toLowerCase()}`;
+    const inLens = await sweepState(page, { tab, theme, state }, samples);
+    if (inLens < MIN_RUNS_PER_TAB) {
+      problems.push(`${theme}/${tab} ${state} swept only ${inLens} runs; the lens is empty`);
+    } else {
+      // Recorded by the lens itself, never by parsing `state` back out of
+      // the samples. A guard that reads a label it also writes is
+      // measuring its own formatting, and renaming the label would then
+      // either break the guard or quietly satisfy it.
+      lensesSwept.add(lens);
+    }
+  }
 }
 
 async function sweepTheme(
   browser: Browser,
   url: string,
   theme: Theme,
-): Promise<{ samples: Sample[]; problems: string[]; hovered: number; lensesSwept: Set<string> }> {
+): Promise<{
+  samples: Sample[];
+  problems: string[];
+  hovered: number;
+  lensesSwept: Set<string>;
+  tonesSwept: Set<string>;
+  chartModesSwept: Set<string>;
+}> {
   // Always a light OS preference, so `inherit` and the toggle behave the same
   // way in both passes and `applyTheme` needs at most one click.
   const context = await browser.newContext({ colorScheme: "light", reducedMotion: "reduce" });
   const samples: Sample[] = [];
   const problems: string[] = [];
   const lensesSwept = new Set<string>();
+  const tonesSwept = new Set<string>();
+  const chartModesSwept = new Set<string>();
   let hovered = 0;
   try {
     const page = await context.newPage();
@@ -216,47 +381,23 @@ async function sweepTheme(
       }
 
       if (tab === "overview") {
-        for (const lens of EXTRA_LENSES) {
-          const control = page.getByRole("radio", { name: lens, exact: true });
-          await control.click();
-          // Prove the lens took, the same way `applyTheme` proves the theme
-          // did by reading the page's own background back. Without this the
-          // guard below only shows that SOME text was swept under a lens
-          // label: a click that silently failed would sweep the default lens
-          // a second time, count as covered, and hide the loss colour again.
-          await page
-            .waitForFunction(
-              (name) =>
-                document
-                  .querySelector(`[role="radio"][aria-checked="true"]`)
-                  ?.textContent?.includes(name) === true,
-              lens,
-              { timeout: 2000 },
-            )
-            .catch(() => {
-              problems.push(`${theme}/${tab} the ${lens} lens never became the selected one`);
-            });
-          await page.waitForTimeout(150);
-          const state = `lens ${lens.toLowerCase()}`;
-          const inLens = await sweepState(page, { tab, theme, state }, samples);
-          if (inLens < MIN_RUNS_PER_TAB) {
-            problems.push(`${theme}/${tab} ${state} swept only ${inLens} runs; the lens is empty`);
-          } else {
-            // Recorded by the lens itself, never by parsing `state` back out of
-            // the samples. A guard that reads a label it also writes is
-            // measuring its own formatting, and renaming the label would then
-            // either break the guard or quietly satisfy it.
-            lensesSwept.add(lens);
-          }
-        }
+        await sweepLenses(page, { tab, theme }, samples, problems, lensesSwept);
       }
 
-      hovered += await sweepHovers(page, { tab, theme }, samples, problems);
+      hovered += await sweepHovers(page, { tab, theme }, samples, problems, tonesSwept);
+
+      if (tab === "overview") {
+        const swept = await sweepReturnChart(page, { tab, theme }, samples, tonesSwept);
+        if (swept) chartModesSwept.add(RETURN_MODE);
+        else
+          problems.push(`${theme}/${tab} the ${RETURN_MODE} chart never became the selected one`);
+        hovered += swept ? 1 : 0;
+      }
     }
   } finally {
     await context.close();
   }
-  return { samples, problems, hovered, lensesSwept };
+  return { samples, problems, hovered, lensesSwept, tonesSwept, chartModesSwept };
 }
 
 async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
@@ -267,6 +408,8 @@ async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
   const samples: Sample[] = [];
   const problems: string[] = [];
   const lensesSwept = new Set<string>();
+  const tonesSwept = new Set<string>();
+  const chartModesSwept = new Set<string>();
   let hovered = 0;
   try {
     const url = server.resolvedUrls?.local[0];
@@ -277,6 +420,8 @@ async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
       problems.push(...swept.problems);
       hovered += swept.hovered;
       for (const lens of swept.lensesSwept) lensesSwept.add(lens);
+      for (const tone of swept.tonesSwept) tonesSwept.add(tone);
+      for (const mode of swept.chartModesSwept) chartModesSwept.add(mode);
     }
   } finally {
     await browser.close();
@@ -297,6 +442,22 @@ async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
   const missed = EXTRA_LENSES.filter((lens) => !lensesSwept.has(lens));
   if (missed.length > 0) {
     problems.push(`overview lenses never swept: ${missed.join(", ")}`);
+  }
+  // The same failure the lens guard catches, one level down. A readout paints
+  // a gain green and a loss red, and a run that hovered only gaining months
+  // measured one of those two colours and called the sweep clean. The corpus
+  // holds both, so both must appear; if a future corpus genuinely holds no
+  // loss, this fails loudly and says so rather than going quietly unmeasured.
+  if (!chartModesSwept.has(RETURN_MODE)) {
+    problems.push(
+      `the ${RETURN_MODE} chart was never swept, so its axis, line and readout are unmeasured`,
+    );
+  }
+  const untoned = TONES.filter((tone) => !tonesSwept.has(tone));
+  if (untoned.length > 0) {
+    problems.push(
+      `readout tones never rendered, so their contrast is unmeasured: ${untoned.join(", ")}`,
+    );
   }
   return { samples, problems };
 }

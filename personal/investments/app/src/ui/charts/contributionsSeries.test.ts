@@ -1,5 +1,7 @@
 import { describe, expect, test } from "bun:test";
+import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
+import { formatCurrency } from "../format";
 import {
   type ContributionYear,
   type WrapperContributions,
@@ -16,6 +18,8 @@ import {
  */
 const analytics = loadAnalytics();
 const wrappers = buildContributionsSeries(analytics);
+/** The corpus's latest year -- the only one an import moves. */
+const YEAR = GOLDENS.income.year;
 
 function wrapper(group: string): WrapperContributions {
   const found = wrappers.find((w) => w.group === group);
@@ -41,12 +45,14 @@ describe("the years and wrappers the corpus covers", () => {
   });
 });
 
-describe("2026 contributed, the figures the bars state", () => {
-  test("RRSP 33,000, FHSA 8,000, TFSA 7,000, RESP 3,000", () => {
-    expect(entry("RRSP", 2026).contributed).toBe(33000);
-    expect(entry("FHSA", 2026).contributed).toBe(8000);
-    expect(entry("TFSA", 2026).contributed).toBe(7000);
-    expect(entry("RESP", 2026).contributed).toBe(3000);
+describe("the latest year's contributed figures, the ones the bars state", () => {
+  test("every wrapper's bar states the contribution the projection reads", () => {
+    // The same `contributedThisYear` figures `projectionInputs` builds on, so
+    // the bar a reader sees and the number the projection compounds can never
+    // be two different readings of the same year.
+    for (const group of ["RRSP", "FHSA", "TFSA", "RESP"] as const) {
+      expect(entry(group, YEAR).contributed).toBe(GOLDENS.rooms.contributed[group] ?? null);
+    }
   });
 
   test("the earlier years the corpus does cover", () => {
@@ -67,7 +73,13 @@ describe("2026 contributed, the figures the bars state", () => {
  */
 describe("a year with no statement is an absence, never a zero", () => {
   test("RESP has a figure only for 2026, the one year it has statements", () => {
-    expect(wrapper("RESP").years.map((y) => y.contributed)).toEqual([null, null, null, 3000]);
+    // Every year but the latest is a null, never a zero: the RESP has no
+    // statement for those years and a zero would be a claim.
+    const years = wrapper("RESP").years;
+    expect(years.map((y) => y.contributed)).toEqual([
+      ...years.slice(0, -1).map(() => null),
+      GOLDENS.rooms.contributed.RESP ?? null,
+    ]);
   });
 
   test("RRSP's first statement is 2025-08, so 2023 and 2024 are null", () => {
@@ -99,8 +111,8 @@ describe("a year with no statement is an absence, never a zero", () => {
 
 describe("the limit, and the trap it is built around", () => {
   test("RESP has no annual limit in the one year it does have a figure", () => {
-    const resp = entry("RESP", 2026);
-    expect(resp.contributed).toBe(3000);
+    const resp = entry("RESP", YEAR);
+    expect(resp.contributed).toBe(GOLDENS.rooms.contributed.RESP ?? null);
     expect(resp.limit).toBeNull();
     expect(resp.assessed).toBe(false);
     expect(resp.remaining).toBeNull();
@@ -114,11 +126,12 @@ describe("the limit, and the trap it is built around", () => {
     const assessed = wrappers.flatMap((w) =>
       w.years.filter((y) => y.assessed).map((y) => `${w.group} ${y.year}`),
     );
-    expect(assessed).toEqual(["RRSP 2025", "RRSP 2026"]);
+    expect(assessed).toEqual(["RRSP 2025", `RRSP ${YEAR}`]);
+    // 2025 is closed and its notice of assessment will not move again.
     expect(entry("RRSP", 2025).limit).toBe(60191);
     expect(entry("RRSP", 2025).remaining).toBe(45191);
-    expect(entry("RRSP", 2026).limit).toBe(70752);
-    expect(entry("RRSP", 2026).remaining).toBe(37752);
+    expect(entry("RRSP", YEAR).limit).toBe(GOLDENS.rooms.rrspAssessedLimit);
+    expect(entry("RRSP", YEAR).remaining).toBe(GOLDENS.rooms.rrspAssessedRemaining);
   });
 
   test("no assessed remaining is negative, on any wrapper or year", () => {
@@ -210,12 +223,12 @@ describe("contributionsMax, the top of one card's own axis", () => {
     expect(contributionsMax(wrapper("TFSA"))).toBe(25000);
   });
 
-  test("RRSP is topped by its assessed 2026 limit, not by anything contributed", () => {
-    expect(contributionsMax(wrapper("RRSP"))).toBe(70752);
+  test("RRSP is topped by its assessed limit, not by anything contributed", () => {
+    expect(contributionsMax(wrapper("RRSP"))).toBe(GOLDENS.rooms.rrspAssessedLimit);
   });
 
-  test("RESP is topped by its own 3,000, since it has no limit to be topped by", () => {
-    expect(contributionsMax(wrapper("RESP"))).toBe(3000);
+  test("RESP is topped by its own contribution, since it has no limit to be topped by", () => {
+    expect(contributionsMax(wrapper("RESP"))).toBe(GOLDENS.rooms.contributed.RESP ?? null);
   });
 
   test("a wrapper with nothing drawable has no axis at all", () => {
@@ -247,19 +260,22 @@ describe("contributionsTooltipLines, the one source of every announced figure", 
   });
 
   test("the RESP's derived 2026 states its source and its lack of a limit", () => {
-    const lines = contributionsTooltipLines("RESP", entry("RESP", 2026));
-    expect(lines).toContain("2026");
-    expect(lines).toContain("Contributed $3,000.00");
+    const lines = contributionsTooltipLines("RESP", entry("RESP", YEAR));
+    expect(lines).toContain(String(YEAR));
+    expect(lines).toContain(`Contributed ${formatCurrency(GOLDENS.rooms.contributed.RESP ?? 0)}`);
     expect(lines).toContain("Derived here, not stated on a statement");
     expect(lines).toContain("No annual contribution limit");
     expect(lines.join(" ")).not.toContain("maximum");
   });
 
   test("an assessed year states the limit and the real remaining", () => {
-    const lines = contributionsTooltipLines("RRSP", entry("RRSP", 2026));
-    expect(lines).toContain("Contributed $33,000.00");
+    const lines = contributionsTooltipLines("RRSP", entry("RRSP", YEAR));
+    expect(lines).toContain(`Contributed ${formatCurrency(GOLDENS.rooms.contributed.RRSP ?? 0)}`);
     expect(lines).toContain("Stated on the statements");
-    expect(lines).toContain("$37,752.00 remaining of the $70,752.00 assessed limit");
+    expect(lines).toContain(
+      `${formatCurrency(GOLDENS.rooms.rrspAssessedRemaining)} remaining of the ` +
+        `${formatCurrency(GOLDENS.rooms.rrspAssessedLimit)} assessed limit`,
+    );
   });
 
   test("a generic maximum states the carry-forward caveat and never an over-contribution", () => {

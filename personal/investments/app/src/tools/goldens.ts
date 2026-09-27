@@ -1,0 +1,345 @@
+import { join } from "node:path";
+import rawDatastore from "@data/datastore.json";
+import type { AnalyticsOutput } from "../analytics/build";
+import { buildCashflowSeries } from "../analytics/cashflowSeries";
+import { latestGroupGain } from "../analytics/groupGain";
+import { buildPortfolioSeries } from "../analytics/portfolioSeries";
+import { latestMarketValue, rollup } from "../analytics/rollup";
+import type { Lens } from "../analytics/rollup";
+import type { AccountSeries } from "../analytics/types";
+import { GOLDEN_GOALS, STRETCH_GOAL } from "../goals/__fixtures__/goals";
+import { accountValues, buildAllocations } from "../goals/allocation";
+import { contributionToClose, evaluateGoal } from "../goals/evaluate";
+import { buildRunway } from "../goals/runway";
+import type { Goldens } from "../goldens";
+import { type ProjectionYear, projectYears } from "../projection/engine";
+import { fittedReturnRate } from "../projection/fittedRate";
+import { projectedAccounts, projectionInputs } from "../projection/inputs";
+import type { Datastore } from "../store/datastore";
+import type { ReturnValuePoint } from "../ui/charts/returnsSeries";
+import { accountRateExtent, buildReturnsSeries, plottedCount } from "../ui/charts/returnsSeries";
+import { latestPeriod, lensTotal, loadAnalytics, loadReconciliation } from "../ui/data";
+
+const DATA = join(import.meta.dir, "..", "..", "..", "data");
+const LENSES: readonly Lens[] = ["registration", "account", "purpose"];
+
+/**
+ * Every figure in this file is computed by calling the SAME production
+ * function the test that reads it calls. Nothing here restates a number by
+ * hand, so a golden cannot encode a figure the pipeline does not actually
+ * produce -- the failure mode of a hand-maintained golden file, and the
+ * reason the 145 inline literals this replaces were worth removing rather
+ * than re-typing.
+ */
+
+/**
+ * Sums the RESP accounts' tagged `CONT` credits straight off the datastore.
+ * Deliberately NOT read from `contributionsByYear`, which already folds `DEP`
+ * rows in -- the whole point of the figure is to be the undercount that
+ * folding avoids.
+ */
+function respContRowTotal(datastore: Datastore, series: readonly AccountSeries[]): number {
+  const respIds = new Set(series.filter((a) => a.kind === "RESP").map((a) => a.maskedId));
+  let total = 0;
+  for (const statement of datastore.statements) {
+    if (!respIds.has(statement.source.accountNo)) continue;
+    for (const row of statement.activity) {
+      if (row.code === "CONT") total += row.credit;
+    }
+  }
+  return total;
+}
+
+/**
+ * Unwraps a value the corpus must have produced, or throws naming what was
+ * missing. Every one of these is a corrupt-artifact case rather than an
+ * expected absence: a corpus with no portfolio points, no counted period or
+ * no CESG row means `bun run build` did not finish, and writing a goldens
+ * file full of zeroes from it would hand every test a plausible wrong number.
+ */
+function required<T>(value: T | null | undefined, what: string): T {
+  if (value === null || value === undefined) throw new Error(`the corpus produced no ${what}`);
+  return value;
+}
+
+/** Latest market, book and gain per lens-and-label, with the group's own period range. */
+function buildGroups(series: readonly AccountSeries[]): Goldens["groups"] {
+  const groups: Goldens["groups"] = {};
+  for (const lens of LENSES) {
+    for (const group of rollup(series, lens)) {
+      const ids = new Set(group.accounts.map((a) => a.maskedId));
+      const groupSeries = series.filter((s) => ids.has(s.maskedId) && s.inTotals);
+      const gain = latestGroupGain(groupSeries);
+      if (!gain) continue;
+      const points = buildPortfolioSeries(groupSeries);
+      groups[`${lens}:${group.label}`] = {
+        market: gain.marketValue,
+        book: gain.bookCost,
+        gain: gain.gain,
+        firstPeriod: points[0]?.period ?? "",
+        lastPeriod: points[points.length - 1]?.period ?? "",
+      };
+    }
+  }
+  return groups;
+}
+
+/**
+ * Account-lens groups whose latest gain is negative. Recorded rather than
+ * asserted as a constant, because whether the corpus contains a loss at all is
+ * a property of this month's market: RRSP (managed) and Crypto were the
+ * corpus's only two losses at 2026-06 and both turned positive at 2026-07,
+ * which silently made a test that pinned -$3.16 unsatisfiable.
+ */
+function accountLossGroups(groups: Goldens["groups"]): string[] {
+  return Object.entries(groups)
+    .filter(([key, g]) => key.startsWith("account:") && g.gain < 0)
+    .map(([key]) => key.slice("account:".length))
+    .sort();
+}
+
+/** Latest stated market value per account. An account stating none is omitted, never zeroed. */
+function buildAccounts(series: readonly AccountSeries[]): Goldens["accounts"] {
+  const accounts: Goldens["accounts"] = {};
+  for (const account of series) {
+    const value = latestMarketValue(account);
+    if (value !== null) accounts[account.shortId] = value;
+  }
+  return accounts;
+}
+
+function buildAllocationGoldens(series: readonly AccountSeries[]): Goldens["allocations"] {
+  const allocations: Goldens["allocations"] = {};
+  for (const a of buildAllocations(series)) {
+    allocations[a.accountId] = { group: a.group, share: a.share, opening: a.opening };
+  }
+  return allocations;
+}
+
+function toPair(extent: readonly [number, number] | null): [number, number] | null {
+  return extent === null ? null : [extent[0], extent[1]];
+}
+
+function buildReturnGoldens(
+  returnsSeries: readonly { shortId: string; points: readonly ReturnValuePoint[] }[],
+): Goldens["returns"] {
+  const returns: Goldens["returns"] = {};
+  for (const account of returnsSeries) {
+    returns[account.shortId] = {
+      points: account.points.length,
+      plotted: plottedCount(account.points),
+      // Copied into a mutable pair: `accountRateExtent` returns a readonly
+      // tuple, and the goldens are a plain JSON document.
+      extent: toPair(accountRateExtent(account.points)),
+    };
+  }
+  return returns;
+}
+
+function buildGoalGoldens(
+  analytics: AnalyticsOutput,
+  rows: readonly ProjectionYear[],
+  fhsaCloseYear: string,
+): Goldens["goals"] {
+  const goals: Goldens["goals"] = {};
+  for (const goal of GOLDEN_GOALS) {
+    const v = evaluateGoal(goal, analytics, rows, 0.06, fhsaCloseYear);
+    goals[goal.id] = {
+      projected: v.projected,
+      gap: v.gap,
+      monthlyToClose: v.monthlyToClose,
+      blocked: v.blocked,
+      coveredCount: v.coverage.covered.length,
+      uncoveredCount: v.coverage.uncovered.length,
+    };
+  }
+  return goals;
+}
+
+function buildGoldens(): Goldens {
+  const analytics = loadAnalytics();
+  const reconciliation = loadReconciliation();
+  const series = analytics.series;
+  const counted = series.filter((s) => s.inTotals);
+
+  const portfolio = buildPortfolioSeries(series);
+  const lastPortfolio = required(portfolio[portfolio.length - 1], "portfolio points");
+  const cashflow = buildCashflowSeries(series);
+  const lastCashflow = required(cashflow[cashflow.length - 1], "cashflow points");
+  const period = required(latestPeriod(analytics), "counted period");
+  const firstCounted = required(
+    counted
+      .flatMap((a) => a.months.map((m) => m.period))
+      .sort()
+      .at(0),
+    "counted months",
+  );
+
+  const fitted = fittedReturnRate(series);
+  const projected = new Set(projectedAccounts(series).map((a) => a.maskedId));
+  const uncovered = counted.filter((a) => !projected.has(a.maskedId));
+
+  // Both projections read the SAME inputs but for the rate, so the two
+  // terminal values differ only by the rate -- which is the whole point of
+  // the pair, and would stop being true if either were built from its own
+  // freshly derived inputs.
+  const baseInputs = projectionInputs(analytics);
+  const atDefault = projectYears({ ...baseInputs, returnRate: 0.06 });
+  const atFitted = projectYears({ ...baseInputs, returnRate: fitted.rate });
+  const runwayRows = buildRunway(atDefault, { ...baseInputs, returnRate: 0.06 });
+  const lastDefault = required(atDefault[atDefault.length - 1], "projected years at 6%");
+  const lastFitted = required(atFitted[atFitted.length - 1], "projected years at the fitted rate");
+
+  const groups = buildGroups(series);
+  const lossGroups = accountLossGroups(groups);
+  const accounts = buildAccounts(series);
+  const allocations = buildAllocationGoldens(series);
+
+  // The FHSA's own projected balance in the year its lifetime cap fills, and
+  // the year it must close. Both read from the engine at the default rate,
+  // the same pair `allocation.test.ts` asserts against.
+  const fhsaValues = accountValues(atDefault, series, 0.06, baseInputs.fhsaCloseYear);
+  const fhsaSeries = fhsaValues.find((s) => allocations[s.accountId]?.group === "FHSA");
+  const fhsaCapRow = runwayRows.find((r) => r.id === "fhsa-cap");
+  const fhsaCapYear = fhsaCapRow?.year ?? "";
+  const fhsaCapIndex = atDefault.findIndex((r) => r.year === fhsaCapYear);
+
+  // A one-year window, so neither lifetime cap fills -- the state
+  // `runway.test.ts` needs to exercise `capBound`'s never-reached branch.
+  const shortInputs = projectionInputs(analytics, { returnRate: 0.06, years: 1 });
+  const shortRunway = buildRunway(projectYears(shortInputs), shortInputs);
+
+  const goals = buildGoalGoldens(analytics, atDefault, baseInputs.fhsaCloseYear);
+
+  // The 0% projection, the one case `contributionToClose` cannot solve with
+  // the growth-factor formula. The window is the goal's own, start year
+  // through target year inclusive, the same span the card states.
+  const atZero = projectYears({ ...baseInputs, returnRate: 0 });
+  const zeroStretch = evaluateGoal(STRETCH_GOAL, analytics, atZero, 0, baseInputs.fhsaCloseYear);
+  const stretchYears = Number(STRETCH_GOAL.by) - Number(baseInputs.startYear) + 1;
+
+  const returnsSeries = buildReturnsSeries(analytics.returns, series);
+  const returns = buildReturnGoldens(returnsSeries);
+
+  const acknowledged = reconciliation.findings.filter((f) => f.acknowledged);
+
+  const startYear = baseInputs.startYear;
+  const lines = analytics.rooms[startYear] ?? [];
+  const respLine = lines.find((l) => l.group === "RESP");
+  const rrspLine = lines.find((l) => l.group === "RRSP");
+  const income = required(analytics.income[startYear], `income summary for ${startYear}`);
+  const cesgRow = required(
+    runwayRows.find((r) => r.id === "cesg"),
+    "CESG runway row",
+  );
+
+  return {
+    corpus: {
+      statementCount: reconciliation.statementCount,
+      // The source folder holds one file per statement plus any
+      // fresh-download twin that deduplicates away, so this is the statement
+      // count plus the `ingest` skip findings -- derived, never counted by
+      // hand, and it stays correct as twins come and go.
+      sourceFileCount:
+        reconciliation.statementCount +
+        reconciliation.findings.filter((f) => f.check === "ingest").length,
+      accountCount: analytics.meta.accountCount,
+      countedAccountCount: counted.length,
+      latestPeriod: period,
+      firstPeriod: firstCounted,
+    },
+    portfolio: {
+      total: lensTotal(analytics, "registration"),
+      bookCost: lastPortfolio.bookCost,
+      gain: lastPortfolio.marketValue - lastPortfolio.bookCost,
+      gainShare: (lastPortfolio.marketValue - lastPortfolio.bookCost) / lastPortfolio.bookCost,
+      seriesPointCount: portfolio.length,
+    },
+    reconciliation: {
+      findingCount: reconciliation.findings.length,
+      acknowledgedCount: acknowledged.length,
+      unacknowledgedCount: reconciliation.findings.length - acknowledged.length,
+      acknowledgedChecks: acknowledged.map((f) => f.check).sort(),
+      statementArithmeticCount: reconciliation.findings.filter(
+        (f) => f.check === "statement-arithmetic",
+      ).length,
+    },
+    groups,
+    lossGroups,
+    accounts,
+    allocations,
+    returns,
+    returnsWithNoRate: returnsSeries
+      .filter((a) => plottedCount(a.points) === 0)
+      .map((a) => a.shortId)
+      .sort(),
+    returnsPlottedTotal: returnsSeries.reduce((sum, a) => sum + plottedCount(a.points), 0),
+    cashflow: {
+      period: lastCashflow.period,
+      deposits: lastCashflow.deposits,
+      withdrawals: lastCashflow.withdrawals,
+      accountCount: lastCashflow.accountCount,
+    },
+    fittedRate: {
+      rate: fitted.rate,
+      months: fitted.months,
+      countedAccounts: fitted.accounts,
+      steps: fitted.monthsFitted,
+    },
+    projection: {
+      defaultRateEndValue: lastDefault.value,
+      fittedRateEndValue: lastFitted.value,
+      seamPeriod: period,
+      // "Uncovered" is `projectedAccounts`'s own complement, read from that
+      // function rather than recomputed from kinds here: it is the single
+      // place projection membership is decided, and a second copy of the
+      // rule is exactly what `groupOf`'s comment records going wrong before.
+      uncoveredAccountCount: uncovered.length,
+      uncoveredValue: uncovered.reduce((sum, a) => sum + (latestMarketValue(a) ?? 0), 0),
+      fhsaCloseYear: baseInputs.fhsaCloseYear,
+      fhsaCapYear,
+      fhsaValueAtCapYear: fhsaCapIndex < 0 ? 0 : (fhsaSeries?.values[fhsaCapIndex] ?? 0),
+    },
+    rooms: {
+      opening: baseInputs.opening,
+      lifetimeContributed: baseInputs.lifetimeContributed,
+      cesgRoomAccrued: baseInputs.cesgRoomAccrued,
+      respFromContRowsOnly: respContRowTotal(rawDatastore as Datastore, series),
+      rrspAssessedRemaining: baseInputs.rrspAssessedRemaining,
+      contributed: baseInputs.contributedThisYear,
+      rrspAssessedLimit: rrspLine?.limit ?? 0,
+      respLifetimeContributed: respLine?.lifetimeContributions?.contributed ?? 0,
+      cesgReceived: baseInputs.cesgReceived,
+      rrspSpousalUsed: rrspLine?.spousalUsed ?? 0,
+    },
+    runway: {
+      leftoverAfterOneYear: Object.fromEntries(
+        shortRunway
+          .filter((r) => r.id === "fhsa-cap" || r.id === "resp-cap")
+          .map((r) => [r.wrapper, r.unclaimed ?? 0]),
+      ),
+      cesgClaimed: baseInputs.rules.cesgLifetime - (cesgRow.unclaimed ?? 0),
+      cesgForfeited: cesgRow.unclaimed ?? 0,
+    },
+    goals,
+    zeroRateStretchAnnualToClose: contributionToClose(zeroStretch.gap ?? 0, stretchYears, 0),
+    income: {
+      year: Number(startYear),
+      eligibleDividends: income.eligibleDividends,
+      foreignIncome: income.foreignIncome,
+      interest: income.interest,
+      realizedGain: income.realizedGains,
+      rrspDeduction: baseInputs.contributedThisYear.RRSP ?? 0,
+    },
+  };
+}
+
+if (import.meta.main) {
+  const goldens = buildGoldens();
+  await Bun.write(join(DATA, "goldens.json"), `${JSON.stringify(goldens, null, 2)}\n`);
+  console.log(
+    `wrote goldens.json: ${goldens.corpus.statementCount} statements at ${goldens.corpus.latestPeriod}, ` +
+      `total ${goldens.portfolio.total.toFixed(2)}, ` +
+      `${Object.keys(goldens.groups).length} groups, ${Object.keys(goldens.accounts).length} accounts`,
+  );
+}

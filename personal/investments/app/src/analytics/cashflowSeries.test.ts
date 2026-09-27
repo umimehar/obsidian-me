@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { GOLDENS } from "../goldens";
 import type { AccountKind, ManagementStyle } from "../store/mask";
 import type { Purpose } from "../store/registry";
 import { loadAnalytics } from "../ui/data";
@@ -151,13 +152,13 @@ describe("against the real committed analytics.json", () => {
     });
   });
 
-  test("ends at 2026-06 with $9,500 deposited and nothing withdrawn", () => {
+  test("ends at the corpus's own last month, deposits and withdrawals both from the goldens", () => {
     const last = points[points.length - 1];
     expect(last).toEqual({
-      period: "2026-06",
-      deposits: 9500,
-      withdrawals: 0,
-      accountCount: 11,
+      period: GOLDENS.cashflow.period,
+      deposits: GOLDENS.cashflow.deposits,
+      withdrawals: GOLDENS.cashflow.withdrawals,
+      accountCount: GOLDENS.cashflow.accountCount,
     });
   });
 });

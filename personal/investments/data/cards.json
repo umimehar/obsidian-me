@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "generated": "2026-08-31T19:57:34.738Z",
+    "statementCount": 1,
+    "cardCount": 1
+  },
+  "statements": [
+    {
+      "file": "card_2377_2026-07.pdf",
+      "cardId": "card_2377",
+      "period": "2026-07",
+      "periodStart": "2026-06-25",
+      "periodEnd": "2026-07-24",
+      "statementDate": "2026-07-25",
+      "paymentDueDate": "2026-08-18",
+      "statementBalance": 0,
+      "creditLimit": 15000,
+      "previousBalance": 59.75,
+      "newBalance": 0,
+      "minimumPayment": 0,
+      "purchases": 651.27,
+      "payments": 711.02,
+      "otherCredits": 0,
+      "fees": 0,
+      "interest": 0,
+      "cashAdvances": 0,
+      "purchaseRate": 0.20989999999999998,
+      "cashAdvanceRate": 0.2299,
+      "activity": [
+        {
+          "transactionDate": "2026-06-23",
+          "postedDate": "2026-06-25",
+          "type": "Purchase",
+          "description": "SHOPPERS DRUG MART #07",
+          "amount": 200
+        },
+        {
+          "transactionDate": "2026-06-25",
+          "postedDate": "2026-06-25",
+          "type": "Payment",
+          "description": "From chequing account",
+          "amount": -200
+        },
+        {
+          "transactionDate": "2026-06-23",
+          "postedDate": "2026-06-25",
+          "type": "Purchase",
+          "description": "SHOPPERS DRUG MART #07",
+          "amount": 91.5
+        },
+        {
+          "transactionDate": "2026-06-26",
+          "postedDate": "2026-06-27",
+          "type": "Purchase",
+          "description": "AMZN MKTP CA*8F3BV3773",
+          "amount": 24.68
+        },
+        {
+          "transactionDate": "2026-06-29",
+          "postedDate": "2026-06-29",
+          "type": "Payment",
+          "description": "From chequing account",
+          "amount": -64
+        },
+        {
+          "transactionDate": "2026-06-29",
+          "postedDate": "2026-06-29",
+          "type": "Payment",
+          "description": "From chequing account",
+          "amount": -66
+        },
+        {
+          "transactionDate": "2026-06-29",
+          "postedDate": "2026-06-29",
+          "type": "Payment",
+          "description": "From chequing account",
+          "amount": -45.93
+        },
+        {
+          "transactionDate": "2026-07-05",
+          "postedDate": "2026-07-05",
+          "type": "Purchase",
+          "description": "AXIS THERAPY (MSG)",
+          "amount": 14.5
+        },
+        {
+          "transactionDate": "2026-07-07",
+          "postedDate": "2026-07-08",
+          "type": "Purchase",
+          "description": "AMZN MKTP CA*PS5D013G3",
+          "amount": 59.38
+        },
+        {
+          "transactionDate": "2026-07-09",
+          "postedDate": "2026-07-09",
+          "type": "Payment",
+          "description": "From chequing account",
+          "amount": -73.88
+        },
+        {
+          "transactionDate": "2026-07-12",
+          "postedDate": "2026-07-12",
+          "type": "Purchase",
+          "description": "AXIS THERAPY (MSG)",
+          "amount": 9.5
+        },
+        {
+          "transactionDate": "2026-07-15",
+          "postedDate": "2026-07-16",
+          "type": "Purchase",
+          "description": "AMAZON.CA*2V1J869O3",
+          "amount": 144.64
+        },
+        {
+          "transactionDate": "2026-07-19",
+          "postedDate": "2026-07-19",
+          "type": "Payment",
+          "description": "From chequing account",
+          "amount": -261.21
+        },
+        {
+          "transactionDate": "2026-07-17",
+          "postedDate": "2026-07-19",
+          "type": "Purchase",
+          "description": "SHOPPERS DRUG MART #07",
+          "amount": 107.07
+        }
+      ]
+    }
+  ]
+}

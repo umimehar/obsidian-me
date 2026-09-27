@@ -8,6 +8,7 @@ import { parseGeometry } from "./ingest/geometry";
 import { parseStatement } from "./ingest/parse";
 import { detectTemplate, parseSourceFilename } from "./ingest/source";
 import type { ParsedFilename, SourceRef, Template } from "./ingest/source";
+import { archivedStatements, mergeIntoArchive, toArchived } from "./store/archive";
 import { buildDatastore } from "./store/datastore";
 import { maskAccountNo } from "./store/mask";
 import { buildRegistry } from "./store/registry";
@@ -196,10 +197,17 @@ export async function ingestAll(sourceDir: string, cacheDir: string): Promise<St
  */
 function maskFilenamesInText(text: string): string {
   return text.replace(/\S*\.pdf\b/g, (filename) => {
-    const m = /^([A-Z0-9]+)_(.*)$/.exec(filename);
+    const m = /^([A-Za-z0-9]+)_(.*)$/.exec(filename);
     if (!m) return filename;
     const [, accountNo, rest] = m;
     if (!accountNo || rest === undefined) return filename;
+    // An already-masked filename carries a 4-char lowercase-hex short id
+    // where a raw one carries a 12-character uppercase account code, so the
+    // two can never be confused. Left alone rather than re-masked: a finding
+    // raised against an ARCHIVED statement (see `loadArchive`) already has a
+    // masked filename, and hashing "9710" as though it were an account
+    // number would rename it to something that matches no statement at all.
+    if (/^[0-9a-f]{4}$/.test(accountNo)) return filename;
     return `${maskAccountNo(accountNo).shortId}_${rest}`;
   });
 }
@@ -255,13 +263,35 @@ export function countedAccountNumbers(
   );
 }
 
+/**
+ * The committed datastore's own statements, or an empty archive when there is
+ * none. `--rebuild` discards it deliberately, for the one case the merge
+ * cannot serve: re-parsing the whole corpus after a parser change, which
+ * needs every PDF present and must not carry stale parses forward.
+ */
+async function loadArchive(rebuild: boolean): Promise<Statement[]> {
+  if (rebuild) return [];
+  const file = Bun.file(join(DATA, "datastore.json"));
+  if (!(await file.exists())) return [];
+  return archivedStatements(await file.json());
+}
+
 if (import.meta.main) {
   const generated = new Date().toISOString();
+  const rebuild = process.argv.includes("--rebuild");
+  const names = await loadRedactions(REDACTIONS_PATH);
+
   const raw = await ingestRaw(SOURCE, CACHE);
-  const allVersions = raw.statements;
+  const archive = await loadArchive(rebuild);
+  // Masked BEFORE the merge, so an archived statement and a freshly parsed
+  // one are the same shape and the registry, the checks and the datastore
+  // writer downstream cannot tell them apart -- which is what makes importing
+  // one month's PDFs equivalent to having had them all along.
+  const parsed = raw.statements.map((s) => toArchived(s, names));
+  const allVersions = mergeIntoArchive(archive, parsed);
   const statements = dedupeToLatestVersion(allVersions);
   const accounts = buildRegistry(statements);
-  const names = await loadRedactions(REDACTIONS_PATH);
+  const carried = statements.length - parsed.length;
 
   const findings = [
     ...runChecks(
@@ -293,7 +323,11 @@ if (import.meta.main) {
   );
   const errors = unacknowledged.filter((f) => f.severity === "error");
   const acknowledged = findings.length - unacknowledged.length;
-  console.log(`${statements.length} statements, ${accounts.length} accounts`);
+  console.log(
+    `${statements.length} statements, ${accounts.length} accounts ` +
+      `(${parsed.length} parsed from PDFs, ${carried} carried from the archive` +
+      `${rebuild ? ", archive discarded by --rebuild" : ""})`,
+  );
   console.log(
     `${errors.length} unacknowledged error(s), ` +
       `${unacknowledged.length - errors.length} warning(s), ${acknowledged} acknowledged`,

@@ -2,6 +2,7 @@ import type { DerivedReturnReason, ReturnPoint, ReturnSeries } from "../../analy
 import type { AccountSeries } from "../../analytics/types";
 import type { Returns } from "../../types";
 import { formatRate } from "../format";
+import type { Tone, TooltipFootnote } from "./Tooltip";
 import { formatPeriodLabel } from "./plot";
 
 /**
@@ -258,18 +259,21 @@ const HORIZON_LABELS: readonly (readonly [keyof Returns, string])[] = [
  * whether the rate was zero or absent; printing them as `0.00%` would answer
  * that question wrongly.
  */
-function statedLines(point: ReturnValuePoint): string[] {
+function statedLines(point: ReturnValuePoint): TooltipFootnote[] {
   const stated = point.statedMwr;
   if (stated === null) return ["No rate stated for this month"];
 
-  const lines: string[] = [];
+  const lines: TooltipFootnote[] = [];
   const missing: string[] = [];
   for (const [key, label] of HORIZON_LABELS) {
     const value = stated[key];
     // The current period gets its own line when it is absent, below, rather
     // than joining the not-applicable list: a month with no rate is not the
     // same fact as a ten-year horizon on a one-year-old account.
-    if (value !== null) lines.push(`${label} ${formatRate(value)}`);
+    // A rate IS a gain or a loss, so it carries the same jade/red split the
+    // dollar figures do. Toned from the number, never from its formatted
+    // string, so a "-0.00%" that rounds to zero from below still reads red.
+    if (value !== null) lines.push({ text: `${label} ${formatRate(value)}`, tone: toneOf(value) });
     else if (key !== "currentPeriod") missing.push(label.toLowerCase());
   }
   if (point.rate === null) lines.unshift("No rate stated for this month");
@@ -279,12 +283,17 @@ function statedLines(point: ReturnValuePoint): string[] {
   return lines;
 }
 
+/** Green for a rate of zero or better, red below it. */
+function toneOf(rate: number): Tone {
+  return rate >= 0 ? "gain" : "loss";
+}
+
 /** A derived month: its figure, or the reason it has none. */
-function derivedLines(point: ReturnValuePoint): string[] {
+function derivedLines(point: ReturnValuePoint): TooltipFootnote[] {
   if (point.rate === null) {
     return [`No figure: ${gapPhrase(point.gap ?? "reason-not-recorded")}`];
   }
-  return [`This month ${formatRate(point.rate)}`];
+  return [{ text: `This month ${formatRate(point.rate)}`, tone: toneOf(point.rate) }];
 }
 
 /**
@@ -346,7 +355,7 @@ export function returnsTooltipLines(
   period: string,
   point: ReturnValuePoint | null,
   source: "stated" | "derived",
-): string[] {
+): TooltipFootnote[] {
   const label = formatPeriodLabel(period);
   if (point === null) return [label, "No statement for this month"];
   if (source === "stated") {

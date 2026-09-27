@@ -21,8 +21,8 @@ export const ACKNOWLEDGED: readonly Acknowledgement[] = [
     shortId: "*",
     period: "2026-06",
     reason:
-      "WSE401 carries a pending valuation at its $10.00 purchase price; the app shows the finalised NAV. Accounts for the whole $279.94 delta if the NAV is $10.2254.",
-    reviewed: "2026-08-05",
+      "Two components, and together they account for the delta exactly, to the cent. $14,306.21 is the spousal RRSP, which the 2026-06-30 app reading included and this project's portfolio total excludes from 2026-08-31 (the owner is the contributor; the asset is the spouse's). $279.94 is WSE401, a private-markets holding carried at its $10.00 purchase price under a pending-valuation disclaimer while the app shows the finalised NAV; if the entire $279.94 is that stale price the finalised NAV is $10.2254. $14,306.21 + $279.94 = $14,586.15, leaving a residual of $0.00 -- which is what makes both explanations testable rather than merely plausible.",
+    reviewed: "2026-08-31",
   },
   {
     check: "cross-document",
@@ -51,10 +51,15 @@ export const ACKNOWLEDGED: readonly Acknowledgement[] = [
   {
     check: "style-drift",
     shortId: "9710",
-    period: "2026-06",
+    // The period the style actually changed, which is stable. It read 2026-06
+    // until 2026-08-31, because the check anchored the finding at the
+    // account's latest statement -- so importing 2026-07 moved the finding to
+    // 2026-07, missed this entry, and re-raised a reviewed finding as an
+    // unacknowledged error. The check now anchors at the transition.
+    period: "2024-07",
     reason:
-      "A real, owner-initiated product change, not a parser defect: this TFSA moved from self-directed to a Wealthsimple Managed portfolio. Its history reads Tax-Free Savings Account (self-directed), then Tax-Free Savings Managed Cash Account, then Managed TFSA Account.",
-    reviewed: "2026-08-06",
+      "A real, owner-initiated product change, not a parser defect: this TFSA moved from self-directed to a Wealthsimple Managed portfolio at 2024-07. Its history reads Tax-Free Savings Account (self-directed) through 2024-06, then Tax-Free Savings Managed Cash Account, then Managed TFSA Account from 2025-07.",
+    reviewed: "2026-08-31",
   },
 ];
 

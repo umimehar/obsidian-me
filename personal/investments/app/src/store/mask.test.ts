@@ -22,6 +22,33 @@ describe("maskAccountNo", () => {
   });
 });
 
+describe("maskAccountNo is idempotent", () => {
+  test("masking an already-masked id returns it unchanged, never a hash of the hash", () => {
+    const once = maskAccountNo("ACCT0001CAD");
+    const twice = maskAccountNo(once.maskedId);
+    expect(twice.maskedId).toBe(once.maskedId);
+    expect(twice.shortId).toBe(once.shortId);
+  });
+
+  test("the short id is recovered from the masked id, not recomputed", () => {
+    // The incremental build re-masks archived statements whose raw account
+    // number is long gone. If the short id could not be read back out of the
+    // masked id, every archived account would land under a different label.
+    const once = maskAccountNo("ACCT0002CAD");
+    expect(once.maskedId).toBe(`acct_${once.shortId}${once.maskedId.slice(9)}`);
+    expect(maskAccountNo(once.maskedId).shortId).toBe(once.shortId);
+  });
+
+  test("a raw account number that merely looks maskish is still hashed", () => {
+    // Only the exact `acct_` + 8 hex shape is treated as already masked. A
+    // real account number is uppercase and longer, so it can never collide,
+    // but the guard is the shape rather than a prefix check.
+    for (const raw of ["acct_ABCDEF12", "acct_0123456", "acct_0123456789", "ACCT_01234567"]) {
+      expect(maskAccountNo(raw).maskedId).not.toBe(raw);
+    }
+  });
+});
+
 describe("redactText", () => {
   test("removes configured names case-insensitively", () => {
     expect(redactText("e-Transfer Received from Jane Doe", ["Jane Doe"])).toBe(

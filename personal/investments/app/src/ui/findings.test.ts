@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { GOLDENS } from "../goldens";
 import type { ReportedFinding } from "../validate/report";
 import { loadReconciliation } from "./data";
 import { groundTruthFinding, groupFindings } from "./findings";
@@ -77,10 +78,10 @@ describe("groupFindings", () => {
     expect(groupFindings([])).toEqual([]);
   });
 
-  test("keeps every one of the real 90 findings across its groups", () => {
+  test("keeps every one of the real findings across its groups", () => {
     const groups = groupFindings(loadReconciliation().findings);
     const total = groups.reduce((sum, group) => sum + group.findings.length, 0);
-    expect(total).toBe(90);
+    expect(total).toBe(GOLDENS.reconciliation.findingCount);
     // Error groups lead, largest first, so the 2-finding return-direction
     // group now sorts ahead of the 1-finding cross-document group.
     expect(groups[0]?.check).toBe("return-direction");
@@ -92,7 +93,9 @@ describe("groundTruthFinding", () => {
     const truth = groundTruthFinding(loadReconciliation().findings);
     expect(truth?.accountShortId).toBe("*");
     expect(truth?.period).toBe("2026-06");
-    expect(truth?.actual).toBeCloseTo(241739.67, 2);
+    // The spousal-excluded total for that month; see data.test.ts for the
+    // decomposition that separates it from the app's own reading.
+    expect(truth?.actual).toBeCloseTo(227433.46, 2);
   });
 
   test("returns null when the report carries no ground-truth line", () => {

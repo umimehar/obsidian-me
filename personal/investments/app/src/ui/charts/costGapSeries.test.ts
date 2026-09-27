@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { buildPortfolioSeries } from "../../analytics/portfolioSeries";
+import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
+import { noteOf } from "./Tooltip";
 import { buildGapPoints, costGapPeriodExtent, costGapTooltipLines } from "./costGapSeries";
 
 describe("buildGapPoints", () => {
@@ -47,8 +49,14 @@ describe("costGapTooltipLines", () => {
       accountCount: 2,
       gap: 100,
     });
-    const gapLine = lines.find((line) => line.startsWith("Gap"));
-    expect(gapLine).toBe("Gap $100.00, approximate");
+    const gapLine = lines.map(noteOf).find((note) => note.text.startsWith("Gap"));
+    // The dollars AND the percentage, from one call: $100 on $900 of book
+    // cost is 11.11%, and the same $100 against a different base is a
+    // different result.
+    expect(gapLine?.text).toBe("Gap +$100.00 (+11.11%), approximate");
+    // Green, and stated from the gap itself rather than read back off the
+    // formatted string.
+    expect(gapLine?.tone).toBe("gain");
   });
 
   test("never presents the gap as a realized or filing figure", () => {
@@ -99,7 +107,7 @@ describe("costGapTooltipLines", () => {
       accountCount: 11,
       gap: 241739.67 - 223675.08,
     });
-    const gapLine = lines.find((line) => line.startsWith("Gap")) ?? "";
+    const gapLine = lines.map(noteOf).find((note) => note.text.startsWith("Gap"))?.text ?? "";
     expect(gapLine).toContain("18,064.59");
   });
 
@@ -119,7 +127,8 @@ describe("costGapTooltipLines", () => {
       accountCount: 11,
       gap: 241739.67 - 223675.08,
     });
-    const detailLine = lines.find((line) => line.includes("converted and approximate")) ?? "";
+    const detailLine =
+      lines.map(noteOf).find((note) => note.text.includes("converted and approximate"))?.text ?? "";
     expect(detailLine).toContain("$241,739.67");
     expect(detailLine).toContain("$223,675.08");
     expect(detailLine).not.toContain("$241,740");
@@ -131,17 +140,19 @@ describe("against the real committed analytics.json", () => {
   const analytics = loadAnalytics();
   const gapPoints = buildGapPoints(buildPortfolioSeries(analytics.series));
 
-  test("ends 2026-06 at the market-minus-book gap the corpus states", () => {
+  test("ends at the corpus's own market-minus-book gap", () => {
     const last = gapPoints[gapPoints.length - 1];
-    expect(last?.period).toBe("2026-06");
-    expect(last?.marketValue).toBeCloseTo(241739.67, 2);
-    expect(last?.bookCost).toBeCloseTo(223675.08, 2);
-    expect(last?.gap).toBeCloseTo(241739.67 - 223675.08, 2);
+    expect(last?.period).toBe(GOLDENS.corpus.latestPeriod);
+    expect(last?.marketValue).toBeCloseTo(GOLDENS.portfolio.total, 2);
+    expect(last?.bookCost).toBeCloseTo(GOLDENS.portfolio.bookCost, 2);
+    expect(last?.gap).toBeCloseTo(GOLDENS.portfolio.gain, 2);
+    // The gap is the subtraction, never a third stored figure.
+    expect(last?.gap).toBeCloseTo(GOLDENS.portfolio.total - GOLDENS.portfolio.bookCost, 2);
   });
 
-  test("2023-06, the first point, is a real zero gap across two accounts", () => {
+  test("the first point is a real zero gap across two accounts", () => {
     const first = gapPoints[0];
-    expect(first?.period).toBe("2023-06");
+    expect(first?.period).toBe(GOLDENS.corpus.firstPeriod);
     expect(first?.marketValue).toBe(0);
     expect(first?.bookCost).toBe(0);
     expect(first?.gap).toBe(0);
@@ -149,6 +160,9 @@ describe("against the real committed analytics.json", () => {
   });
 
   test("costGapPeriodExtent is the same [first, last] buildPortfolioSeries reports", () => {
-    expect(costGapPeriodExtent(gapPoints)).toEqual(["2023-06", "2026-06"]);
+    expect(costGapPeriodExtent(gapPoints)).toEqual([
+      GOLDENS.corpus.firstPeriod,
+      GOLDENS.corpus.latestPeriod,
+    ]);
   });
 });

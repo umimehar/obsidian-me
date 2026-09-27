@@ -682,12 +682,25 @@ function checkClassificationConsistency(
   for (const list of byAccount.values()) {
     const values = new Set(list.map(select));
     if (values.size <= 1) continue;
-    const latest = [...list].sort((a, b) => a.source.period.localeCompare(b.source.period)).pop();
-    if (!latest) continue;
+    const chronological = [...list].sort((a, b) => a.source.period.localeCompare(b.source.period));
+    // Anchored at the statement where the classification FIRST changed, not
+    // at the account's latest statement. Drift is a property of a history, so
+    // it re-reports every month forever; anchoring it to the latest period
+    // moved its period each time a new statement landed, which silently
+    // expired the acknowledgement in `corrections.ts` (keyed on check +
+    // shortId + period) and turned a reviewed, explained finding back into an
+    // unacknowledged error every single import. The transition period is
+    // stable, and it is also the period a reader actually wants: when it
+    // happened, not when it was last still true.
+    const first = chronological[0];
+    if (!first) continue;
+    const initial = select(first);
+    const transition = chronological.find((s) => select(s) !== initial);
+    if (!transition) continue;
     out.push(
       finding(
         check,
-        latest,
+        transition,
         `account maps to more than one ${label} across its history: ${[...values].join(", ")}`,
         null,
         null,

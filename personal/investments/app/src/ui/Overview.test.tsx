@@ -1,9 +1,11 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { fireEvent, render, renderHook, screen, within } from "@testing-library/react";
+import { GOLDENS, accountGolden, groupGolden } from "../goldens";
 import { GroupGainLine, Overview, cardMotion, useCardMotion } from "./Overview";
+import { formatPeriodLabel } from "./charts/plot";
 import { loadAnalytics } from "./data";
-import { formatCurrency } from "./format";
+import { formatCurrency, formatGainWithShare, formatShare, formatSignedCurrency } from "./format";
 import { restoreReducedMotion, stubReducedMotion } from "./motionPreference";
 import { coarseForm, expectNoCoarseForm } from "./testSupport/coarseForm";
 
@@ -83,12 +85,15 @@ describe("Overview", () => {
 
   test("registration lens defaults on and shows the real Cash group at zero with an excluded marker", () => {
     renderOverview();
-    // Real corpus: registration lens has a Cash group of 3 Chequing accounts, total $0.
+    // Real corpus: registration lens has a Cash group of 3 Chequing accounts.
+    // Its accounts state no market value, so the card states none either --
+    // "$0.00" would be a claim that they hold nothing.
     const cashHeading = screen.getByRole("heading", { name: "Cash" });
     const cashCard = cashHeading.closest("[data-overview-group]");
     if (cashCard === null) throw new Error("expected the Cash group card to render");
     const group = within(cashCard as HTMLElement);
-    expect(group.getByText("$0.00")).toBeDefined();
+    expect(group.queryByText("$0.00")).toBeNull();
+    expect(group.getByText("Not counted in the total")).toBeDefined();
     expect(group.getAllByText(/excluded from totals/i).length).toBe(3);
   });
 
@@ -114,7 +119,8 @@ describe("Overview", () => {
     const spendingCard = spendingHeading.closest("[data-overview-group]");
     if (spendingCard === null) throw new Error("expected the Spending group card to render");
     const group = within(spendingCard as HTMLElement);
-    expect(group.getByText("$0.00")).toBeDefined();
+    expect(group.queryByText("$0.00")).toBeNull();
+    expect(group.getByText("Not counted in the total")).toBeDefined();
     expect(group.getAllByText(/excluded from totals/i).length).toBe(3);
   });
 
@@ -130,34 +136,37 @@ describe("Overview", () => {
 
   test("a group prints its own total, not a share of one", () => {
     renderOverview();
-    // Real corpus, registration lens: TFSA $48,155.28, RRSP $49,314.45,
-    // Non-registered $60,798.32. Three groups pinned rather than one, so a
-    // card that renders a constant cannot pass by matching a single figure.
-    // Each is a multi-account group, so the total is never also an account
-    // line and the assertion cannot pass off one for the other.
-    expect(within(groupCard("TFSA")).getByText("$48,155.28")).toBeDefined();
-    expect(within(groupCard("RRSP")).getByText("$49,314.45")).toBeDefined();
-    expect(within(groupCard("Non-registered")).getByText("$60,798.32")).toBeDefined();
+    // Three groups checked rather than one, so a card that renders a constant
+    // cannot pass by matching a single figure. Each is a multi-account group,
+    // so the total is never also an account line and the assertion cannot
+    // pass one off for the other.
+    for (const label of ["TFSA", "RRSP", "Non-registered"]) {
+      const total = formatCurrency(groupGolden("registration", label).market);
+      expect(within(groupCard(label)).getByText(total)).toBeDefined();
+    }
   });
 
   test("each account line prints its own market value", () => {
     renderOverview();
     const tfsa = within(groupCard("TFSA"));
-    expect(tfsa.getByText("$7,580.33")).toBeDefined();
-    expect(tfsa.getByText("$40,574.95")).toBeDefined();
+    for (const shortId of ["9710", "d77c"]) {
+      expect(tfsa.getByText(formatCurrency(accountGolden(shortId)))).toBeDefined();
+    }
 
     const rrsp = within(groupCard("RRSP"));
-    expect(rrsp.getByText("$14,509.70")).toBeDefined();
-    expect(rrsp.getByText("$14,306.21")).toBeDefined();
-    expect(rrsp.getByText("$20,498.54")).toBeDefined();
+    for (const shortId of ["2318", "97ab", "d6d9"]) {
+      expect(rrsp.getByText(formatCurrency(accountGolden(shortId)))).toBeDefined();
+    }
   });
 
   test("an account with no stated figure says so rather than printing zero", () => {
     renderOverview();
     // The three Chequing accounts carry a null market value: cash is outside
     // the totals, so there is no figure to print, and $0.00 would be a claim.
+    // Three account lines plus the card's own total, which has no figure to
+    // state either now that the group is wholly excluded.
     const cash = within(groupCard("Cash"));
-    expect(cash.getAllByText("No figure").length).toBe(3);
+    expect(cash.getAllByText("No figure").length).toBe(4);
   });
 
   test("a group states how many accounts are in it", () => {
@@ -192,7 +201,10 @@ describe("Overview", () => {
     // The card's text is the only copy of the figure. Every bar in every
     // card is checked, not just the first in each, so a second bar added
     // later cannot hide behind the first.
-    expect(within(groupCard("RESP")).getByText(/1\.6% of total/)).toBeDefined();
+    const respShare = formatShare(
+      groupGolden("registration", "RESP").market / GOLDENS.portfolio.total,
+    );
+    expect(within(groupCard("RESP")).getByText(`${respShare} of total`)).toBeDefined();
     let barred = 0;
     for (const card of document.querySelectorAll("[data-overview-group]")) {
       for (const bar of card.querySelectorAll("[data-share-bar]")) {
@@ -203,7 +215,9 @@ describe("Overview", () => {
         expect(bar.textContent).toBe("");
       }
     }
-    expect(barred).toBe(7);
+    // Six of the seven registration groups draw a bar. The Cash group is
+    // wholly excluded from the total, so it has no share to draw one for.
+    expect(barred).toBe(6);
   });
 
   test("nothing inside a group card announces a percentage at all", () => {
@@ -222,12 +236,14 @@ describe("Overview", () => {
   test("the two shares a whole percent would distort are printed, not announced", () => {
     renderOverview();
     fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
-    // Rounded to whole percent these read 2% and 21%, which is both an
-    // overstatement of the small group and the loss of the decimal that
-    // exists to tell two small groups apart. They are visible text at one
-    // decimal, and the bar beside them stays silent.
-    expect(within(groupCard("Education")).getByText("1.6% of total")).toBeDefined();
-    expect(within(groupCard("Business")).getByText("21.2% of total")).toBeDefined();
+    // Rounded to whole percent the small one reads 2%, which is both an
+    // overstatement and the loss of the decimal that exists to tell two small
+    // groups apart. They are visible text at one decimal, and the bar beside
+    // them stays silent.
+    for (const label of ["Education", "Business"]) {
+      const share = formatShare(groupGolden("purpose", label).market / GOLDENS.portfolio.total);
+      expect(within(groupCard(label)).getByText(`${share} of total`)).toBeDefined();
+    }
     for (const label of ["Education", "Business"]) {
       const bar = groupCard(label).querySelector("[data-share-bar]");
       expect(bar?.getAttribute("aria-hidden")).toBe("true");
@@ -243,24 +259,33 @@ describe("Overview", () => {
       if (!(fill instanceof HTMLElement)) throw new Error(`expected a fill in the ${label} card`);
       return Number.parseFloat(fill.style.width);
     };
-    // Real corpus: Education $3,943.98 and Business $51,232.39 of $241,739.67.
-    expect(width("Education")).toBeCloseTo(1.631, 2);
-    expect(width("Business")).toBeCloseTo(21.192, 2);
-    // Growth is the largest group at $108,953.60 and still fills under half,
-    // which is what "against the whole portfolio" means.
-    expect(width("Growth")).toBeCloseTo(45.071, 2);
+    const share = (label: string) =>
+      (groupGolden("purpose", label).market / GOLDENS.portfolio.total) * 100;
+    expect(width("Education")).toBeCloseTo(share("Education"), 2);
+    expect(width("Business")).toBeCloseTo(share("Business"), 2);
+    // Growth is the largest group and still fills well under the whole bar,
+    // which is what "against the whole portfolio" means -- a width taken
+    // against the largest group would put this one at exactly 100.
+    expect(width("Growth")).toBeCloseTo(share("Growth"), 2);
+    expect(width("Growth")).toBeLessThan(100);
   });
 
   test("each group card charts its own history, ending at its own total", () => {
     renderOverview();
-    const rrsp = within(groupCard("RRSP")).getByRole("img");
-    expect(rrsp.getAttribute("aria-label")).toContain("RRSP market value");
-    expect(rrsp.getAttribute("aria-label")).toContain("from Aug 2025 to Jun 2026");
-    expect(rrsp.getAttribute("aria-label")).toContain("ending at $49,314.45.");
-
-    const tfsa = within(groupCard("TFSA")).getByRole("img");
-    expect(tfsa.getAttribute("aria-label")).toContain("from Jun 2023 to Jun 2026");
-    expect(tfsa.getAttribute("aria-label")).toContain("ending at $48,155.28.");
+    // Two groups with different start months, so a label built from the
+    // portfolio's range rather than the group's own would fail on one of them.
+    for (const label of ["RRSP", "TFSA"]) {
+      const golden = groupGolden("registration", label);
+      const summary = within(groupCard(label)).getByRole("img").getAttribute("aria-label") ?? "";
+      expect(summary).toContain(`${label} market value`);
+      expect(summary).toContain(
+        `from ${formatPeriodLabel(golden.firstPeriod)} to ${formatPeriodLabel(golden.lastPeriod)}`,
+      );
+      expect(summary).toContain(`ending at ${formatCurrency(golden.market)}.`);
+    }
+    expect(groupGolden("registration", "RRSP").firstPeriod).not.toBe(
+      groupGolden("registration", "TFSA").firstPeriod,
+    );
   });
 
   test("a group with no value history says so rather than charting a flat zero", () => {
@@ -303,39 +328,47 @@ describe("Overview", () => {
 
   test("group share of total is computed against the same headline total", () => {
     renderOverview();
-    // Real corpus: registration Corporate group is $51,232.39 of $241,739.67 = 21.2%.
+    // The share a card prints must be against the headline total, not against
+    // the largest group or against a total of its own.
     const corporateHeading = screen.getByRole("heading", { name: "Corporate" });
     const corporateCard = corporateHeading.closest("[data-overview-group]");
     if (corporateCard === null) throw new Error("expected the Corporate group card to render");
-    const group = within(corporateCard as HTMLElement);
-    expect(group.getByText(/21\.2%/)).toBeDefined();
+    const share = formatShare(
+      groupGolden("registration", "Corporate").market / GOLDENS.portfolio.total,
+    );
+    expect(within(corporateCard as HTMLElement).getByText(`${share} of total`)).toBeDefined();
   });
 
-  // Real corpus, registration lens (verified independently in
-  // groupGain.test.ts against the same committed analytics.json, and
-  // reproduced here at the rendered-DOM level). All of these are gains, so
-  // the loss path below is covered separately.
+  // Real corpus, against the committed goldens -- verified independently in
+  // groupGain.test.ts and reproduced here at the rendered-DOM level.
   describe("book value and gain against book cost", () => {
-    test("TFSA prints book value $43,369.06 and gain +$4,786.22", () => {
+    /** Asserts one card prints its golden book value and its golden gain. */
+    function expectCardFigures(label: string, lens: "registration" | "purpose") {
+      const golden = groupGolden(lens, label);
+      const card = within(groupCard(label));
+      // A regex, because the label and the figure are separate elements and
+      // getByText's string form matches a single node's own text.
+      const book = formatCurrency(golden.book).replace(/[$.]/g, "\\$&");
+      expect(card.getByText(new RegExp(`Book value ${book}`))).toBeDefined();
+      // The gain carries its own percentage of book cost in brackets, from
+      // the one call that formats the dollars.
+      expect(card.getByText(formatGainWithShare(golden.gain, golden.book))).toBeDefined();
+    }
+
+    test("TFSA prints its golden book value and gain", () => {
       renderOverview();
-      const card = within(groupCard("TFSA"));
-      expect(card.getByText(/Book value \$43,369\.06/)).toBeDefined();
-      expect(card.getByText("+$4,786.22")).toBeDefined();
+      expectCardFigures("TFSA", "registration");
     });
 
-    test("Non-registered prints book value $55,759.88 and gain +$5,038.44", () => {
+    test("Non-registered prints its golden book value and gain", () => {
       renderOverview();
-      const card = within(groupCard("Non-registered"));
-      expect(card.getByText(/Book value \$55,759\.88/)).toBeDefined();
-      expect(card.getByText("+$5,038.44")).toBeDefined();
+      expectCardFigures("Non-registered", "registration");
     });
 
-    test("Growth (purpose lens) prints book value $99,128.94 and gain +$9,824.66", () => {
+    test("Growth (purpose lens) prints its golden book value and gain", () => {
       renderOverview();
       fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
-      const card = within(groupCard("Growth"));
-      expect(card.getByText(/Book value \$99,128\.94/)).toBeDefined();
-      expect(card.getByText("+$9,824.66")).toBeDefined();
+      expectCardFigures("Growth", "purpose");
     });
 
     // Cash (registration) and Spending (purpose) have no counted account, so
@@ -355,47 +388,65 @@ describe("Overview", () => {
       expect(card.queryByText(/gain against book cost/i)).toBeNull();
     });
 
-    test("a real per-account loss (account lens, RRSP (managed)) prints an explicit minus sign", () => {
-      // This group is a real loss in the committed corpus, not a fabricated
-      // fixture: market $20,498.54 against book $20,501.70, gain -$3.16
-      // (pinned independently in groupGain.test.ts). The dedicated fixture
-      // test below still exists per the loss-path requirement, but this one
-      // shows the red/negative path is not actually unreachable from the
-      // real data the way every group in the registration and purpose
-      // lenses happens to be.
+    test("every real per-account loss the corpus holds prints an explicit minus sign in red", () => {
+      // Whether the corpus holds a loss at all is a property of this month's
+      // market: RRSP (managed) at -$3.16 and Crypto at -$45.04 were the only
+      // two at 2026-06, and both turned positive at 2026-07. So this runs
+      // over whatever losses the goldens record -- none, today.
+      //
+      // That leaves the red path with NO real-data coverage in a month like
+      // this one, which is why the fixture test below is not redundant: it is
+      // the only thing standing between a broken loss colour and a green
+      // suite. `bun run contrast` has the same blind spot for the same
+      // reason, and the investments CLAUDE.md records it.
       renderOverview();
       fireEvent.click(screen.getByRole("radio", { name: /account/i }));
-      const card = within(groupCard("RRSP (managed)"));
-      const gain = card.getByText("-$3.16");
-      expect(gain).toBeDefined();
-      expect(gain.getAttribute("data-accent-color")).toBe("red");
+      for (const label of GOLDENS.lossGroups) {
+        const golden = groupGolden("account", label);
+        const gain = within(groupCard(label)).getByText(formatSignedCurrency(golden.gain));
+        expect(gain.getAttribute("data-accent-color")).toBe("red");
+      }
     });
 
     test("no figure here announces coarser than what it prints (TFSA and Growth)", () => {
       renderOverview();
+      const tfsa = groupGolden("registration", "TFSA");
       const tfsaText = groupCard("TFSA").textContent ?? "";
-      expect(tfsaText).toContain(formatCurrency(43369.06));
-      expect(tfsaText).toContain(formatCurrency(4786.22));
-      expectNoCoarseForm(tfsaText, 43369.06);
-      expectNoCoarseForm(tfsaText, 4786.22);
+      for (const figure of [tfsa.book, tfsa.gain]) {
+        expect(tfsaText).toContain(formatCurrency(figure));
+        expectNoCoarseForm(tfsaText, figure);
+      }
 
       fireEvent.click(screen.getByRole("radio", { name: /purpose/i }));
+      const growth = groupGolden("purpose", "Growth");
       const growthText = groupCard("Growth").textContent ?? "";
-      expect(growthText).toContain(formatCurrency(99128.94));
-      expect(growthText).toContain(formatCurrency(9824.66));
-      expectNoCoarseForm(growthText, 99128.94);
-      // $9,824.66 rounds DOWN to $9,825 as a coarse form -- the direction
-      // expectNoCoarseForm's own docstring says a plain not.toContain would
-      // miss, since the coarse form is then a literal prefix of the precise
-      // one. Asserted here so this suite exercises both rounding directions,
-      // not just the "rounds up" case TFSA's $4,786.22 already covers.
-      expect(coarseForm(9824.66)).toBe("$9,825");
-      expectNoCoarseForm(growthText, 9824.66);
+      for (const figure of [growth.book, growth.gain]) {
+        expect(growthText).toContain(formatCurrency(figure));
+        expectNoCoarseForm(growthText, figure);
+      }
+
+      // Both rounding directions must be exercised, not just one: a coarse
+      // form that rounds DOWN is a literal prefix of the precise figure, the
+      // case a plain not.toContain misses (see expectNoCoarseForm's
+      // docstring). Asserted over every figure on both cards so the pair
+      // cannot quietly become two same-direction cases after an import.
+      const figures = [tfsa.book, tfsa.gain, growth.book, growth.gain];
+      const roundsUp = figures.filter((f) => Math.round(f) > f);
+      const roundsDown = figures.filter((f) => Math.round(f) < f);
+      expect(roundsUp.length).toBeGreaterThan(0);
+      expect(roundsDown.length).toBeGreaterThan(0);
+      expect(coarseForm(roundsDown[0] ?? 0)).toBe(
+        `$${Math.round(roundsDown[0] ?? 0).toLocaleString("en-CA")}`,
+      );
     });
 
     test("the gain carries an explicit sign in colour and in Radix's own accent token", () => {
       renderOverview();
-      const gain = within(groupCard("TFSA")).getByText("+$4,786.22");
+      const golden = groupGolden("registration", "TFSA");
+      expect(golden.gain).toBeGreaterThan(0);
+      const gain = within(groupCard("TFSA")).getByText(
+        formatGainWithShare(golden.gain, golden.book),
+      );
       expect(gain.getAttribute("data-accent-color")).toBe("jade");
     });
 
@@ -431,15 +482,18 @@ describe("GroupGainLine, forced loss fixture", () => {
     );
   }
 
-  test("prints the loss with an explicit minus sign, not just a colour", () => {
+  test("prints the loss with an explicit minus sign on both figures, not just a colour", () => {
     renderLoss();
-    expect(screen.getByText("-$100.00")).toBeDefined();
-    expect(screen.queryByText("+$100.00")).toBeNull();
+    // Both halves signed: in greyscale or forced-colours mode the characters
+    // are the only channel left, and "(10.00%)" beside "-$100.00" would read
+    // as a gain of ten percent.
+    expect(screen.getByText("-$100.00 (-10.00%)")).toBeDefined();
+    expect(screen.queryByText("+$100.00 (+10.00%)")).toBeNull();
   });
 
   test("colours the loss red, not the gain colour", () => {
     renderLoss();
-    const gain = screen.getByText("-$100.00");
+    const gain = screen.getByText("-$100.00 (-10.00%)");
     expect(gain.getAttribute("data-accent-color")).toBe("red");
   });
 

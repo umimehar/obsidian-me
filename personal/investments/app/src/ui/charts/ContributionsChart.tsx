@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { type ReactNode, useMemo } from "react";
 import type { AnalyticsOutput } from "../../analytics/build";
 import { formatCurrency } from "../format";
-import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
+import { ChartTooltip, CursorAnnouncement, readoutSuffix, tooltipAnchorStyle } from "./Tooltip";
 import {
   type ContributionYear,
   type PlacedYear,
@@ -384,7 +384,7 @@ function WrapperCard({ wrapper }: { wrapper: WrapperContributions }) {
 
   const lines =
     cursor.period === null ? [] : contributionsTooltipLines(wrapper.group, cursor.point);
-  const readout = lines.length === 0 ? "" : ` ${lines.join(". ")}.`;
+  const readout = readoutSuffix(lines);
   const noLimit = hasNoAnnualLimit(wrapper);
 
   return (

@@ -5,6 +5,8 @@
   "scripts": {
     "build": "bun run src/build.ts",
     "analytics": "bun run src/analytics/build.ts",
+    "cards": "bun run src/cards/build.ts",
+    "goldens": "bun run src/tools/goldens.ts",
     "fixtures": "bun run src/tools/make-fixtures.ts",
     "test": "bun test",
     "typecheck": "tsc --noEmit",

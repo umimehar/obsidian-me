@@ -1,34 +1,78 @@
 import { describe, expect, test } from "bun:test";
 import { fireEvent, render, screen } from "@testing-library/react";
+import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
+import { formatCurrency } from "../format";
 import { ValueOverTime } from "./ValueOverTime";
 import { tickY } from "./chartTestSupport";
+import { formatPeriodLabel } from "./plot";
+
+/**
+ * The highest dollar gridline the chart actually drew. Read from the rendered
+ * axis rather than pinned: `scales.yTicks` nices the domain, so the top tick
+ * jumps a whole step ($250,000 to $300,000) the moment an import pushes the
+ * total past the old ceiling -- a pinned constant then silently rescales
+ * every position this file asserts.
+ */
+function dollarTicks(): number[] {
+  return [...document.querySelectorAll("text")]
+    .map((t) => t.textContent ?? "")
+    .filter((text) => /^\$[\d,]+$/.test(text))
+    .map((text) => Number(text.replace(/[$,]/g, "")));
+}
+
+function topTick(): number {
+  const top = Math.max(...dollarTicks());
+  if (!Number.isFinite(top) || top <= 0) throw new Error("no dollar gridline rendered");
+  return top;
+}
 
 /**
  * These render against the real committed corpus (`data/analytics.json`), the
- * same data `portfolioSeries.test.ts` verifies ends 2023-06..2026-06 at
- * $241,739.67 -- not a hand-made fixture, so they catch a real regression
- * rather than fixture drift.
+ * same data `portfolioSeries.test.ts` verifies -- not a hand-made fixture, so
+ * they catch a real regression rather than fixture drift. Every figure comes
+ * from `data/goldens.json`, so a legitimate import moves them in one place.
  */
+const FIRST_LABEL = formatPeriodLabel(GOLDENS.corpus.firstPeriod);
+const LAST_LABEL = formatPeriodLabel(GOLDENS.corpus.latestPeriod);
+const TOTAL = formatCurrency(GOLDENS.portfolio.total);
+const BOOK = formatCurrency(GOLDENS.portfolio.bookCost);
+/** Accounts that count toward the portfolio total, which is what "of M" means. */
+const COUNTED = GOLDENS.corpus.countedAccountCount;
+/** The month before the corpus's last, for the one-step-back arrow assertion. */
+const PREVIOUS_LABEL = formatPeriodLabel(previousPeriod(GOLDENS.corpus.latestPeriod));
+
+function previousPeriod(period: string): string {
+  const [year, month] = period.split("-").map(Number);
+  if (year === undefined || month === undefined) throw new Error(`bad period ${period}`);
+  return month === 1 ? `${year - 1}-12` : `${year}-${String(month - 1).padStart(2, "0")}`;
+}
+
 describe("ValueOverTime", () => {
   test("the chart's accessible name states the real ending value and period range", () => {
     const analytics = loadAnalytics();
     render(<ValueOverTime series={analytics.series} />);
 
     const chart = screen.getByRole("img", { name: /portfolio market value/i });
-    expect(chart.getAttribute("aria-label")).toContain("$241,739.67");
-    expect(chart.getAttribute("aria-label")).toContain("Jun 2023");
-    expect(chart.getAttribute("aria-label")).toContain("Jun 2026");
+    expect(chart.getAttribute("aria-label")).toContain(TOTAL);
+    expect(chart.getAttribute("aria-label")).toContain(FIRST_LABEL);
+    expect(chart.getAttribute("aria-label")).toContain(LAST_LABEL);
   });
 
   test("the visible axis labels are the real domain, not a placeholder scale", () => {
     render(<ValueOverTime series={loadAnalytics().series} />);
     const ticks = [...document.querySelectorAll("text")].map((t) => t.textContent);
-    // The corpus tops out at $241,739.67, so the scale runs to $250,000.
-    expect(ticks).toContain("$250,000");
+    // A real domain, not a placeholder: the axis starts at zero, ends above
+    // the corpus's own total, and is labelled with the corpus's own months.
     expect(ticks).toContain("$0");
-    expect(ticks).toContain("Jun 2023");
-    expect(ticks).toContain("Jun 2026");
+    expect(ticks).toContain(FIRST_LABEL);
+    expect(ticks).toContain(LAST_LABEL);
+    // A real, niced dollar axis: several labelled gridlines rising from zero,
+    // and a top tick in the corpus's own order of magnitude. Not >= the
+    // total: `scales.yTicks` nices the domain, so the top LABELLED tick can
+    // sit just under a total the line still reaches.
+    expect(dollarTicks().length).toBeGreaterThan(2);
+    expect(topTick()).toBeGreaterThan(GOLDENS.portfolio.total / 2);
   });
 
   test("an empty series says so instead of drawing an axis with no line", () => {
@@ -82,22 +126,22 @@ describe("ValueOverTime cursor", () => {
     fireEvent.keyDown(chart(), { key: "End" });
     const tooltip = document.querySelector("[data-chart-tooltip]");
     if (tooltip === null) throw new Error("expected a tooltip on the focused point");
-    expect(tooltip.textContent).toContain("Jun 2026");
+    expect(tooltip.textContent).toContain(LAST_LABEL);
     // Not $241,740, which is what the axis formatter says for this point.
-    expect(tooltip.textContent).toContain("$241,739.67");
-    expect(tooltip.textContent).toContain("$223,675.08");
-    expect(tooltip.textContent).toContain("11 of 11 accounts reported this month");
+    expect(tooltip.textContent).toContain(TOTAL);
+    expect(tooltip.textContent).toContain(BOOK);
+    expect(tooltip.textContent).toContain(`${COUNTED} of ${COUNTED} accounts reported this month`);
   });
 
-  test("Home jumps to the first point, a real zero across two of the eleven accounts", () => {
+  test("Home jumps to the first point, a real zero across two of the counted accounts", () => {
     render(<ValueOverTime series={loadAnalytics().series} />);
     fireEvent.keyDown(chart(), { key: "Home" });
     const tooltip = document.querySelector("[data-chart-tooltip]");
     if (tooltip === null) throw new Error("expected a tooltip on the focused point");
-    expect(tooltip.textContent).toContain("Jun 2023");
+    expect(tooltip.textContent).toContain(FIRST_LABEL);
     // Two accounts open and unfunded. A stated zero, so it prints as one.
     expect(rowValue(tooltip, "Market value")).toBe("$0.00");
-    expect(tooltip.textContent).toContain("2 of 11 accounts reported this month");
+    expect(tooltip.textContent).toContain(`2 of ${COUNTED} accounts reported this month`);
     expect(tooltip.textContent).not.toMatch(/no statement/i);
   });
 
@@ -106,9 +150,9 @@ describe("ValueOverTime cursor", () => {
     const svg = chart();
     fireEvent.keyDown(svg, { key: "End" });
     fireEvent.keyDown(svg, { key: "ArrowLeft" });
-    expect(document.querySelector("[data-chart-tooltip]")?.textContent).toContain("May 2026");
+    expect(document.querySelector("[data-chart-tooltip]")?.textContent).toContain(PREVIOUS_LABEL);
     fireEvent.keyDown(svg, { key: "ArrowRight" });
-    expect(document.querySelector("[data-chart-tooltip]")?.textContent).toContain("Jun 2026");
+    expect(document.querySelector("[data-chart-tooltip]")?.textContent).toContain(LAST_LABEL);
   });
 
   test("the accessible summary follows the focused point, at the cent", () => {
@@ -117,14 +161,14 @@ describe("ValueOverTime cursor", () => {
     expect(label()).not.toContain("Market value");
 
     fireEvent.keyDown(svg, { key: "Home" });
-    expect(label()).toContain("Jun 2023");
+    expect(label()).toContain(FIRST_LABEL);
     expect(label()).toContain("Market value $0.00");
-    expect(label()).toContain("2 of 11 accounts reported this month");
+    expect(label()).toContain(`2 of ${COUNTED} accounts reported this month`);
 
     fireEvent.keyDown(svg, { key: "End" });
-    expect(label()).toContain("Market value $241,739.67");
+    expect(label()).toContain(`Market value ${TOTAL}`);
     expect(label()).not.toContain("$241,740");
-    expect(label()).toContain("11 of 11 accounts reported this month");
+    expect(label()).toContain(`${COUNTED} of ${COUNTED} accounts reported this month`);
   });
 
   test("a live region speaks the focused point, since a name change may not be", () => {
@@ -136,9 +180,9 @@ describe("ValueOverTime cursor", () => {
 
     fireEvent.keyDown(chart(), { key: "End" });
     expect(region.getAttribute("aria-live")).toBe("polite");
-    expect(region.textContent).toContain("Jun 2026");
-    expect(region.textContent).toContain("$241,739.67");
-    expect(region.textContent).toContain("11 of 11 accounts reported this month");
+    expect(region.textContent).toContain(LAST_LABEL);
+    expect(region.textContent).toContain(TOTAL);
+    expect(region.textContent).toContain(`${COUNTED} of ${COUNTED} accounts reported this month`);
   });
 
   test("the spoken copy and the printed copy state the same figures for the focused point", () => {
@@ -156,8 +200,8 @@ describe("ValueOverTime cursor", () => {
     expect(spoken).not.toBe("");
     expect(tooltip.textContent).not.toBe("");
 
-    expect(spoken).toContain("Jun 2023");
-    expect(tooltip.textContent).toContain("Jun 2023");
+    expect(spoken).toContain(FIRST_LABEL);
+    expect(tooltip.textContent).toContain(FIRST_LABEL);
 
     // Two accounts open and unfunded -- the real zero for this point.
     expect(spoken).toContain("Market value $0.00");
@@ -165,8 +209,8 @@ describe("ValueOverTime cursor", () => {
     expect(spoken).toContain("Book cost $0.00");
     expect(rowValue(tooltip, "Book cost")).toBe("$0.00");
 
-    expect(spoken).toContain("2 of 11 accounts reported this month");
-    expect(tooltip.textContent).toContain("2 of 11 accounts reported this month");
+    expect(spoken).toContain(`2 of ${COUNTED} accounts reported this month`);
+    expect(tooltip.textContent).toContain(`2 of ${COUNTED} accounts reported this month`);
 
     const caveat = "Book cost is approximate for USD holdings and not a filing figure";
     expect(spoken).toContain(caveat);
@@ -176,7 +220,7 @@ describe("ValueOverTime cursor", () => {
   test("the summary keeps its base sentence, so the chart is still named when focused", () => {
     render(<ValueOverTime series={loadAnalytics().series} />);
     fireEvent.keyDown(chart(), { key: "End" });
-    expect(label()).toContain("Portfolio market value from Jun 2023 to Jun 2026");
+    expect(label()).toContain(`Portfolio market value from ${FIRST_LABEL} to ${LAST_LABEL}`);
   });
 
   test("Escape puts the cursor away again", () => {
@@ -191,7 +235,7 @@ describe("ValueOverTime cursor", () => {
   test("a pointer at the right edge reads the last month, not an interpolated one", () => {
     render(<ValueOverTime series={loadAnalytics().series} />);
     fireEvent.pointerMove(chart(), { clientX: 799 });
-    expect(document.querySelector("[data-chart-tooltip]")?.textContent).toContain("$241,739.67");
+    expect(document.querySelector("[data-chart-tooltip]")?.textContent).toContain(TOTAL);
   });
 
   test("the pointer leaving clears the readout rather than freezing a month on it", () => {
@@ -249,16 +293,14 @@ describe("ValueOverTime cursor", () => {
  * cannot move.
  */
 describe("a mark's position is a figure", () => {
-  /** The last stated month, Jun 2026, as `portfolioSeries.test.ts` pins it. */
-  const LAST_MARKET = 241739.67;
-  const LAST_BOOK = 223675.08;
-  /** The axis the corpus produces: it tops out at $241,739.67, so the scale nices to $250,000. */
-  const TOP_TICK = 250000;
+  const LAST_MARKET = GOLDENS.portfolio.total;
+  const LAST_BOOK = GOLDENS.portfolio.bookCost;
 
   /** Where the chart's own labelled gridlines put a dollar figure. The scale is linear, so two ticks fix it. */
   function axisY(value: number): number {
+    const top = topTick();
     const zero = tickY("$0");
-    return zero + (tickY(`$${TOP_TICK.toLocaleString("en-CA")}`) - zero) * (value / TOP_TICK);
+    return zero + (tickY(`$${top.toLocaleString("en-CA")}`) - zero) * (value / top);
   }
 
   function vertices(node: Element | undefined): number[] {
@@ -279,14 +321,14 @@ describe("a mark's position is a figure", () => {
     );
   }
 
-  test("the market line's last vertex sits where the axis puts $241,739.67", () => {
+  test("the market line's last vertex sits where the axis puts the corpus total", () => {
     render(<ValueOverTime series={loadAnalytics().series} />);
     // The area closes down to the baseline and back, so its last real vertex
     // is three from the end.
     expect(vertices(marketPath()).at(-3)).toBeCloseTo(axisY(LAST_MARKET), 6);
   });
 
-  test("the book cost line's last vertex sits where the axis puts $223,675.08", () => {
+  test("the book cost line's last vertex sits where the axis puts the corpus book cost", () => {
     render(<ValueOverTime series={loadAnalytics().series} />);
     expect(vertices(bookPath()).at(-1)).toBeCloseTo(axisY(LAST_BOOK), 6);
   });
@@ -299,7 +341,7 @@ describe("a mark's position is a figure", () => {
     fireEvent.keyDown(chart(), { key: "End" });
     const cy = Number(document.querySelector("[data-cursor-marker]")?.getAttribute("cy"));
     expect(cy).toBeCloseTo(axisY(LAST_MARKET), 6);
-    expect(label()).toContain("$241,739.67");
+    expect(label()).toContain(TOTAL);
   });
 
   test("the first month, a real $0.00, sits on the axis's own $0 tick", () => {

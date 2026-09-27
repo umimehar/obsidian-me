@@ -1,7 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { render, screen, within } from "@testing-library/react";
+import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
+import { formatCurrency } from "../format";
 import { TaxView } from "./TaxView";
 
 /**
@@ -31,15 +33,15 @@ function row(name: string) {
 }
 
 describe("TaxView", () => {
-  test("shows the real 2026 income split by type", () => {
-    renderYear(2026);
+  test("shows the latest year's income split by type", () => {
+    renderYear(GOLDENS.income.year);
     const income = within(section("income"));
     expect(income.getByText(/interest/i)).toBeDefined();
-    expect(income.getByText("$0.00")).toBeDefined();
+    expect(income.getByText(formatCurrency(GOLDENS.income.interest))).toBeDefined();
     expect(income.getByText(/canadian eligible dividends/i)).toBeDefined();
-    expect(income.getByText("$201.86")).toBeDefined();
+    expect(income.getByText(formatCurrency(GOLDENS.income.eligibleDividends))).toBeDefined();
     expect(income.getByText(/foreign income/i)).toBeDefined();
-    expect(income.getByText("$16.84")).toBeDefined();
+    expect(income.getByText(formatCurrency(GOLDENS.income.foreignIncome))).toBeDefined();
   });
 
   test("the interest row prints the interest figure, not a constant zero", () => {
@@ -60,12 +62,16 @@ describe("TaxView", () => {
     expect(row("interest").getByText("$412.75")).toBeDefined();
   });
 
-  test("the real 2026 realized figure is a loss and is shown as one", () => {
-    renderYear(2026);
+  test("the latest year's realized figure is a loss and is shown as one", () => {
+    expect(GOLDENS.income.realizedGain).toBeLessThan(0);
+    renderYear(GOLDENS.income.year);
     const income = within(section("income"));
     expect(income.getByText(/realized loss/i)).toBeDefined();
-    expect(income.getByText("-$1,335.86")).toBeDefined();
-    expect(income.queryByText("$1,335.86")).toBeNull();
+    const loss = formatCurrency(GOLDENS.income.realizedGain);
+    expect(income.getByText(loss)).toBeDefined();
+    // The unsigned form must not appear: a loss rendered without its sign
+    // reads as a gain of the same size.
+    expect(income.queryByText(loss.replace("-", ""))).toBeNull();
   });
 
   test("the real 2025 realized figure is a loss too", () => {
@@ -109,11 +115,15 @@ describe("TaxView", () => {
   });
 
   test("the RRSP deduction echoes what was contributed, never unused room", () => {
-    renderYear(2026);
+    renderYear(GOLDENS.income.year);
     const estimate = within(section("estimate"));
-    expect(estimate.getByText("$33,000.00")).toBeDefined();
-    // 37,752 is 2026's unused assessed RRSP room. It is not a deduction.
-    expect(screen.queryByText(/37,752/)).toBeNull();
+    expect(estimate.getByText(formatCurrency(GOLDENS.income.rrspDeduction))).toBeDefined();
+    // The year's unused assessed RRSP room is not a deduction, and the two
+    // are different figures, so finding the room figure anywhere on the page
+    // means the deduction was sourced from the wrong line.
+    const room = GOLDENS.rooms.rrspAssessedRemaining;
+    expect(room).not.toBe(GOLDENS.income.rrspDeduction);
+    expect(screen.queryByText(new RegExp(room.toLocaleString("en-CA")))).toBeNull();
   });
 
   test("the corporate account is visibly absent, with the reason", () => {

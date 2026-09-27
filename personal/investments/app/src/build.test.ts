@@ -248,7 +248,10 @@ describe("maskFinding", () => {
 describe("annotateFinding", () => {
   test("marks an acknowledged finding and carries its reason onto the report", () => {
     const annotated = annotateFinding(
-      makeFinding({ check: "style-drift", accountShortId: "9710", period: "2026-06" }),
+      // 2024-07 is where the style actually changed, and the acknowledgement
+      // is keyed there. It used to be keyed at the account's latest period,
+      // which moved with every import and expired the acknowledgement.
+      makeFinding({ check: "style-drift", accountShortId: "9710", period: "2024-07" }),
     );
     expect(annotated.acknowledged).toBe(true);
     expect(annotated.reason).toContain("self-directed to a Wealthsimple Managed portfolio");

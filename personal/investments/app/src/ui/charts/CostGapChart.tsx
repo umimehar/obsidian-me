@@ -3,8 +3,10 @@ import { motion } from "motion/react";
 import { useMemo } from "react";
 import { buildPortfolioSeries } from "../../analytics/portfolioSeries";
 import type { AccountSeries } from "../../analytics/types";
+import { loadReconciliation } from "../data";
 import { formatCurrency } from "../format";
-import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
+import { ChartTooltip, CursorAnnouncement, readoutSuffix, tooltipAnchorStyle } from "./Tooltip";
+import { bookCostDivergence } from "./bookCostDivergence";
 import {
   type GapPoint,
   buildGapPoints,
@@ -39,7 +41,10 @@ const CURSOR_GEOMETRY = { viewBoxWidth: WIDTH, marginLeft: MARGIN.left };
 const BAR_WIDTH_FRACTION = 0.6;
 
 const ABOVE_FILL = "var(--jade-a6)";
-const BELOW_FILL = "var(--amber-a6)";
+// Red, not amber: a bar below the line is book cost ahead of market value,
+// which is a loss against cost rather than a warning about a goal. The same
+// jade/red split `GroupGainLine` and the tooltips use for the same quantity.
+const BELOW_FILL = "var(--red-a6)";
 const DERIVED_STROKE = "var(--gray-a11)";
 
 function EmptyState() {
@@ -57,26 +62,33 @@ function EmptyState() {
 
 /**
  * The caveat, stated once in the open above the chart, because it governs
- * every bar drawn below it: the reconciliation report behind this page found
- * that book cost does not reconcile on 19 statements, by up to $218.92, and
- * every one of those 19 holds a USD security while no CAD-only statement
- * diverges at all. Each statement discloses one month-end conversion rate
- * and its own footnote scopes that rate to market value, not to book cost --
- * book cost is an accumulated basis recorded at each purchase's own
- * historical rate, so no single current rate can reconstruct it. The gap
- * this chart draws is therefore an approximate figure, never a realized gain
- * and never one to file with. Each bar repeats the word "approximate" next
- * to its own number too, in `costGapTooltipLines`, so the caveat is not only
- * here once but adjacent to every figure it qualifies.
+ * every bar drawn below it: the reconciliation report behind this page finds
+ * book cost failing to reconcile on a handful of statements, and every one of
+ * those holds a USD security while no CAD-only statement diverges at all.
+ * Each statement discloses one month-end conversion rate and its own footnote
+ * scopes that rate to market value, not to book cost -- book cost is an
+ * accumulated basis recorded at each purchase's own historical rate, so no
+ * single current rate can reconstruct it. The gap this chart draws is
+ * therefore an approximate figure, never a realized gain and never one to
+ * file with. Each bar repeats the word "approximate" next to its own number
+ * too, in `costGapTooltipLines`, so the caveat is not only here once but
+ * adjacent to every figure it qualifies.
+ *
+ * Both figures are COMPUTED from the report, never written into the prose.
+ * They were two literals until 2026-08-31 and both went stale the first time
+ * a month was imported, leaving a caveat about approximation stating a wrong
+ * number of its own.
  */
 function ApproximationNote() {
+  const { statementCount, maxDelta } = bookCostDivergence(loadReconciliation().findings);
   return (
     <Callout.Root color="gray" variant="surface" data-cost-gap-provenance="">
       <Callout.Text>
-        Book cost does not reconcile on 19 of the underlying statements, by up to $218.92, because
-        each one prints a single month-end conversion rate scoped to market value while book cost is
-        an accumulated basis recorded at each purchase's own historical rate. The gap drawn here is
-        an approximate figure, not a realized gain and not a number to file with.
+        Book cost does not reconcile on {statementCount} of the underlying statements, by up to{" "}
+        {formatCurrency(maxDelta)}, because each one prints a single month-end conversion rate
+        scoped to market value while book cost is an accumulated basis recorded at each purchase's
+        own historical rate. The gap drawn here is an approximate figure, not a realized gain and
+        not a number to file with.
       </Callout.Text>
     </Callout.Root>
   );
@@ -269,7 +281,7 @@ export function CostGapChart({ series }: CostGapChartProps) {
   }
 
   const lines = cursor.period === null ? [] : costGapTooltipLines(cursor.period, cursor.point);
-  const readout = lines.length === 0 ? "" : ` ${lines.join(". ")}.`;
+  const readout = readoutSuffix(lines);
 
   return (
     <Flex direction="column" gap="4">
