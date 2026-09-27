@@ -183,6 +183,7 @@ describe("ThisMonth", () => {
       returns: [],
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
+      statedFees: {},
     };
 
     render(

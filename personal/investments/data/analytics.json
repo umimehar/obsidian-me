@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-09-27T04:52:10.257Z",
+    "generated": "2026-09-27T06:44:46.262Z",
     "datastoreGenerated": "2026-09-27T02:23:09.416Z",
     "accountCount": 15
   },
@@ -5421,7 +5421,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_1f9a1df3": {
         "dividends": 12.139999999999999,
@@ -5429,7 +5430,8 @@
         "lendingIncome": 0,
         "withholdingTax": 1.5700000000000005,
         "fees": 3.36,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 5.74,
@@ -5437,7 +5439,8 @@
         "lendingIncome": 0.03,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -5445,7 +5448,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2c620d2b": {
         "dividends": 30.819312000000004,
@@ -5453,7 +5457,8 @@
         "lendingIncome": 0,
         "withholdingTax": 1.920984,
         "fees": 0,
-        "fxConversions": 2
+        "fxConversions": 2,
+        "fxConversionAmount": 66.67
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -5461,7 +5466,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_91b82482": {
         "dividends": 0,
@@ -5469,15 +5475,17 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 16.17,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 12.719999999999999,
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 2.63,
-        "fxConversions": 0
+        "fees": 2.1599999999999997,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97ab4cb2": {
         "dividends": 0,
@@ -5485,7 +5493,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0.98,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_c2e9345e": {
         "dividends": 3.42,
@@ -5493,7 +5502,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d6d9fb4a": {
         "dividends": 40.9,
@@ -5501,7 +5511,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 4.43,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 29.450000000000003,
@@ -5509,7 +5520,8 @@
         "lendingIncome": 0.161744,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 2
+        "fxConversions": 2,
+        "fxConversionAmount": 4173.99
       },
       "acct_e2ec057d": {
         "dividends": 35.08,
@@ -5517,7 +5529,8 @@
         "lendingIncome": 0.03,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2026-05": {
@@ -5527,7 +5540,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_1f9a1df3": {
         "dividends": 16.529999999999998,
@@ -5535,7 +5549,8 @@
         "lendingIncome": 0,
         "withholdingTax": 2.559999999999999,
         "fees": 3.88,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 11.41,
@@ -5543,7 +5558,8 @@
         "lendingIncome": 0.02,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -5551,7 +5567,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2c620d2b": {
         "dividends": 0,
@@ -5559,7 +5576,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -5567,7 +5585,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_91b82482": {
         "dividends": 0,
@@ -5575,15 +5594,17 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 17.75,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 2.06,
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 2.81,
-        "fxConversions": 0
+        "fees": 0.7800000000000002,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97ab4cb2": {
         "dividends": 0,
@@ -5591,7 +5612,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 3.65,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_c2e9345e": {
         "dividends": 0,
@@ -5599,7 +5621,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d6d9fb4a": {
         "dividends": 0,
@@ -5607,7 +5630,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 7.26,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 0,
@@ -5615,7 +5639,8 @@
         "lendingIncome": 0.12278799999999998,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 0,
@@ -5623,7 +5648,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2026-06": {
@@ -5633,7 +5659,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_1f9a1df3": {
         "dividends": 43.87999999999999,
@@ -5641,7 +5668,8 @@
         "lendingIncome": 0,
         "withholdingTax": 6.429999999999998,
         "fees": 4.02,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 29.75261,
@@ -5649,7 +5677,8 @@
         "lendingIncome": 0.02,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 2
+        "fxConversions": 2,
+        "fxConversionAmount": 5737
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -5657,7 +5686,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2c620d2b": {
         "dividends": 43.56286,
@@ -5665,7 +5695,8 @@
         "lendingIncome": 0,
         "withholdingTax": 1.20785,
         "fees": 0,
-        "fxConversions": 2
+        "fxConversions": 2,
+        "fxConversionAmount": 428
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -5673,7 +5704,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_91b82482": {
         "dividends": 343.91,
@@ -5681,7 +5713,8 @@
         "lendingIncome": 0,
         "withholdingTax": 41.290000000000006,
         "fees": 18.12,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 21.560000000000002,
@@ -5689,7 +5722,8 @@
         "lendingIncome": 0,
         "withholdingTax": 1.06,
         "fees": 2.78,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97ab4cb2": {
         "dividends": 84.64000000000001,
@@ -5697,7 +5731,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 4.8,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_c2e9345e": {
         "dividends": 12.5,
@@ -5705,7 +5740,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d6d9fb4a": {
         "dividends": 13.8,
@@ -5713,7 +5749,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 7.52,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 65.31,
@@ -5721,7 +5758,8 @@
         "lendingIncome": 0.06,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2d627ff": {
         "dividends": 0,
@@ -5729,7 +5767,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 9.370000000000001,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 60.88,
@@ -5737,7 +5776,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2026-07": {
@@ -5747,7 +5787,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_1f9a1df3": {
         "dividends": 15.1,
@@ -5755,7 +5796,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 1.9800000000000009,
         "fees": 4.38,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 19.082765000000002,
@@ -5763,7 +5805,8 @@
         "lendingIncome": 0.034029000000000004,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -5771,7 +5814,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2c620d2b": {
         "dividends": 23.305220000000002,
@@ -5779,7 +5823,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.37878300000000004,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -5787,7 +5832,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_91b82482": {
         "dividends": 0,
@@ -5795,7 +5841,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 0,
         "fees": 19.83,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 13.41,
@@ -5803,7 +5850,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 0,
         "fees": 2.9,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97ab4cb2": {
         "dividends": 0,
@@ -5811,7 +5859,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 5.63,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_c2e9345e": {
         "dividends": 3.36,
@@ -5819,7 +5868,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d6d9fb4a": {
         "dividends": 14.29,
@@ -5827,7 +5877,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0.59,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 56.37,
@@ -5835,7 +5886,8 @@
         "lendingIncome": 0.02,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2d627ff": {
         "dividends": 0,
@@ -5843,7 +5895,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 33.53,
@@ -5851,7 +5904,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2026-08": {
@@ -5861,7 +5915,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_1f9a1df3": {
         "dividends": 18.900000000000013,
@@ -5869,7 +5924,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 2.869999999999999,
         "fees": 7.8,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 28.097128,
@@ -5877,7 +5933,8 @@
         "lendingIncome": 0.043866,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -5885,7 +5942,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2c620d2b": {
         "dividends": 0,
@@ -5893,7 +5951,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_8297de15": {
         "dividends": 0,
@@ -5901,7 +5960,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -5909,7 +5969,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_91b82482": {
         "dividends": 0,
@@ -5917,15 +5978,17 @@
         "lendingIncome": 0.01,
         "withholdingTax": 0,
         "fees": 20.99,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 2.1799999999999997,
         "interest": 0,
         "lendingIncome": 0.01,
         "withholdingTax": 0,
-        "fees": 2.95,
-        "fxConversions": 0
+        "fees": 2.87,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97ab4cb2": {
         "dividends": 0,
@@ -5933,7 +5996,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 6.38,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_c2e9345e": {
         "dividends": 0,
@@ -5941,15 +6005,17 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d6d9fb4a": {
         "dividends": 0,
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0,
-        "fxConversions": 0
+        "fees": -8.19,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 24.75,
@@ -5957,7 +6023,8 @@
         "lendingIncome": 0.02,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2d627ff": {
         "dividends": 0,
@@ -5965,7 +6032,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0.24,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 0,
@@ -5973,7 +6041,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-10": {
@@ -5983,7 +6052,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0.22,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 9.2,
@@ -5991,7 +6061,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -5999,7 +6070,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -6007,15 +6079,17 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 9.14,
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 2.32,
-        "fxConversions": 0
+        "fees": 2.02,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 451.73912599999994,
@@ -6023,7 +6097,8 @@
         "lendingIncome": 0.35036,
         "withholdingTax": 56.372650000000014,
         "fees": 0,
-        "fxConversions": 6
+        "fxConversions": 6,
+        "fxConversionAmount": 572.39
       },
       "acct_e2ec057d": {
         "dividends": 140.25605,
@@ -6031,7 +6106,8 @@
         "lendingIncome": 0.06607199999999999,
         "withholdingTax": 12.253394,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-11": {
@@ -6041,7 +6117,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.3500000000000001,
         "fees": 1.45,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 20.22,
@@ -6049,7 +6126,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -6057,7 +6135,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2c620d2b": {
         "dividends": 0,
@@ -6065,7 +6144,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -6073,7 +6153,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 2.54,
@@ -6081,7 +6162,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 2.2,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d6d9fb4a": {
         "dividends": 0,
@@ -6089,7 +6171,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 1.48,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 241.93423399999995,
@@ -6097,7 +6180,8 @@
         "lendingIncome": 0.46141200000000004,
         "withholdingTax": 26.951512000000005,
         "fees": 0,
-        "fxConversions": 8
+        "fxConversions": 8,
+        "fxConversionAmount": 410.45
       },
       "acct_e2ec057d": {
         "dividends": 56.111706000000005,
@@ -6105,7 +6189,8 @@
         "lendingIncome": 0.065916,
         "withholdingTax": 8.415358,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-12": {
@@ -6115,7 +6200,8 @@
         "lendingIncome": 0,
         "withholdingTax": 2.3799999999999986,
         "fees": 1.86,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 9.3,
@@ -6123,7 +6209,8 @@
         "lendingIncome": 0.013706000000000001,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -6131,7 +6218,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2c620d2b": {
         "dividends": 1.617308,
@@ -6139,7 +6227,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.246708,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -6147,7 +6236,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 20.74,
@@ -6155,7 +6245,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.95,
         "fees": 2.3,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d6d9fb4a": {
         "dividends": 20.17,
@@ -6163,7 +6254,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 3.85,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 291.94286600000004,
@@ -6171,7 +6263,8 @@
         "lendingIncome": 0.614534,
         "withholdingTax": 30.01516800000001,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 57.218534,
@@ -6179,7 +6272,8 @@
         "lendingIncome": 0.10594200000000001,
         "withholdingTax": 8.585836,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2026-01": {
@@ -6189,7 +6283,8 @@
         "lendingIncome": 0,
         "withholdingTax": 1.3900000000000008,
         "fees": 2.8,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 13.739999999999998,
@@ -6197,7 +6292,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -6205,7 +6301,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2c620d2b": {
         "dividends": 2.29,
@@ -6213,7 +6310,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 2
+        "fxConversions": 2,
+        "fxConversionAmount": 811
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -6221,7 +6319,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_91b82482": {
         "dividends": 0,
@@ -6229,7 +6328,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0.49,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 11.190000000000001,
@@ -6237,7 +6337,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 2.67,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_c2e9345e": {
         "dividends": 0,
@@ -6245,7 +6346,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d6d9fb4a": {
         "dividends": 0,
@@ -6253,7 +6355,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 4.59,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 150.036128,
@@ -6261,7 +6364,8 @@
         "lendingIncome": 0.45973600000000003,
         "withholdingTax": 7.608282,
         "fees": 0,
-        "fxConversions": 4
+        "fxConversions": 4,
+        "fxConversionAmount": 2802.9300000000003
       },
       "acct_e2ec057d": {
         "dividends": 97.75025000000001,
@@ -6269,7 +6373,8 @@
         "lendingIncome": 0.132058,
         "withholdingTax": 5.329866,
         "fees": 0,
-        "fxConversions": 8
+        "fxConversions": 8,
+        "fxConversionAmount": 4389.08
       }
     },
     "2026-02": {
@@ -6279,7 +6384,8 @@
         "lendingIncome": 0,
         "withholdingTax": 2.020000000000001,
         "fees": 2.79,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 12.56,
@@ -6287,7 +6393,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -6295,7 +6402,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2c620d2b": {
         "dividends": 0,
@@ -6303,7 +6411,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 14
+        "fxConversions": 14,
+        "fxConversionAmount": 4284.39
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -6311,7 +6420,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_91b82482": {
         "dividends": 0,
@@ -6319,7 +6429,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 8.44,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 2.0700000000000003,
@@ -6327,7 +6438,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 2.45,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_c2e9345e": {
         "dividends": 0,
@@ -6335,7 +6447,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d6d9fb4a": {
         "dividends": 0,
@@ -6343,7 +6456,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 4.14,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 9.886928000000001,
@@ -6351,7 +6465,8 @@
         "lendingIncome": 0.18913600000000003,
         "withholdingTax": 1.200496,
         "fees": 0,
-        "fxConversions": 2
+        "fxConversions": 2,
+        "fxConversionAmount": 732.41
       },
       "acct_e2ec057d": {
         "dividends": 5.361306000000001,
@@ -6359,7 +6474,8 @@
         "lendingIncome": 0.07821,
         "withholdingTax": 0.8048780000000001,
         "fees": 0,
-        "fxConversions": 4
+        "fxConversions": 4,
+        "fxConversionAmount": 663.77
       }
     },
     "2026-03": {
@@ -6369,7 +6485,8 @@
         "lendingIncome": 0,
         "withholdingTax": 5.249999999999995,
         "fees": 3.17,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_231879ac": {
         "dividends": 6.880000000000001,
@@ -6377,7 +6494,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -6385,7 +6503,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2c620d2b": {
         "dividends": 16.69902,
@@ -6393,7 +6512,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.376353,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -6401,7 +6521,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_91b82482": {
         "dividends": 99.47999999999999,
@@ -6409,7 +6530,8 @@
         "lendingIncome": 0,
         "withholdingTax": 6.71,
         "fees": 14.05,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 16.54,
@@ -6417,7 +6539,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.35,
         "fees": 2.63,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97ab4cb2": {
         "dividends": 3.83,
@@ -6425,7 +6548,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0.26,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_c2e9345e": {
         "dividends": 3.23,
@@ -6433,7 +6557,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d6d9fb4a": {
         "dividends": 0,
@@ -6441,7 +6566,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 4.55,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 46.576515,
@@ -6449,7 +6575,8 @@
         "lendingIncome": 0.16969499999999998,
         "withholdingTax": 5.558462,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 15.86,
@@ -6457,7 +6584,8 @@
         "lendingIncome": 0.033939,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-08": {
@@ -6467,7 +6595,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -6475,7 +6604,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 3.41,
@@ -6483,7 +6613,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 2.17,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 285.83000000000004,
@@ -6491,7 +6622,8 @@
         "lendingIncome": 0.08,
         "withholdingTax": 38.07,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 135.32999999999998,
@@ -6499,7 +6631,8 @@
         "lendingIncome": 0.02,
         "withholdingTax": 19.91,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-09": {
@@ -6509,7 +6642,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_2b743dc7": {
         "dividends": 0,
@@ -6517,7 +6651,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_8cd3372e": {
         "dividends": 0,
@@ -6525,7 +6660,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 13.05,
@@ -6533,7 +6669,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.38,
         "fees": 2.53,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 317.86,
@@ -6541,7 +6678,8 @@
         "lendingIncome": 0.28,
         "withholdingTax": 38.50000000000001,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 90.53999999999999,
@@ -6549,7 +6687,8 @@
         "lendingIncome": 0.08,
         "withholdingTax": 13.179999999999998,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-07": {
@@ -6559,15 +6698,17 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_97100dd9": {
         "dividends": 6.3999999999999995,
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 1.83,
-        "fxConversions": 0
+        "fees": 1.82,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 80.96,
@@ -6575,7 +6716,8 @@
         "lendingIncome": 0,
         "withholdingTax": 3.92,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 81.95,
@@ -6583,7 +6725,8 @@
         "lendingIncome": 0,
         "withholdingTax": 2.8200000000000003,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2023-06": {
@@ -6593,7 +6736,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 0,
@@ -6601,7 +6745,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2023-07": {
@@ -6611,7 +6756,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0.2,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 0,
@@ -6619,7 +6765,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2023-08": {
@@ -6629,7 +6776,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0.59,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 0,
@@ -6637,7 +6785,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2023-09": {
@@ -6647,7 +6796,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.07,
         "fees": 0.57,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 13.96,
@@ -6655,7 +6805,8 @@
         "lendingIncome": 0,
         "withholdingTax": 1.42,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2023-10": {
@@ -6665,7 +6816,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0.58,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 7.57,
@@ -6673,7 +6825,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.94,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2023-11": {
@@ -6682,8 +6835,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0.58,
-        "fxConversions": 0
+        "fees": 0.5599999999999999,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 6.39,
@@ -6691,7 +6845,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.95,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2023-12": {
@@ -6700,8 +6855,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0.62,
-        "fxConversions": 0
+        "fees": 0.56,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 17.68,
@@ -6709,7 +6865,8 @@
         "lendingIncome": 0,
         "withholdingTax": 1.43,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-01": {
@@ -6719,7 +6876,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.44,
         "fees": 0.62,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 10.23,
@@ -6727,7 +6885,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.88,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-02": {
@@ -6736,8 +6895,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0.59,
-        "fxConversions": 0
+        "fees": 0.57,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 5.21,
@@ -6745,7 +6905,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0.78,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-03": {
@@ -6754,8 +6915,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0.07,
-        "fees": 0.64,
-        "fxConversions": 0
+        "fees": 0.54,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 19.29,
@@ -6763,7 +6925,8 @@
         "lendingIncome": 0.02,
         "withholdingTax": 1.29,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-04": {
@@ -6772,8 +6935,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0.61,
-        "fxConversions": 0
+        "fees": 0.6,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 9.51,
@@ -6781,7 +6945,8 @@
         "lendingIncome": 0.02,
         "withholdingTax": 0.99,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-05": {
@@ -6791,7 +6956,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0.65,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 6.83,
@@ -6799,7 +6965,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 1.03,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-06": {
@@ -6808,8 +6975,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0.33999999999999997,
-        "fees": 0.63,
-        "fxConversions": 0
+        "fees": 0.51,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 18.130000000000003,
@@ -6817,7 +6985,8 @@
         "lendingIncome": 0.02,
         "withholdingTax": 1.07,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-07": {
@@ -6826,8 +6995,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0.67,
-        "fxConversions": 0
+        "fees": 0.43000000000000005,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 18.000000000000004,
@@ -6835,7 +7005,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 1.56,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-08": {
@@ -6844,8 +7015,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0.68,
-        "fxConversions": 0
+        "fees": 0.65,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 7.12,
@@ -6853,7 +7025,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 1.04,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-09": {
@@ -6862,8 +7035,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0.08,
-        "fees": 0.67,
-        "fxConversions": 0
+        "fees": 0.55,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 26.659999999999997,
@@ -6871,7 +7045,8 @@
         "lendingIncome": 0.01,
         "withholdingTax": 2.85,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-10": {
@@ -6880,8 +7055,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0.72,
-        "fxConversions": 0
+        "fees": 0.71,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 22.220000000000006,
@@ -6889,7 +7065,8 @@
         "lendingIncome": 0,
         "withholdingTax": 2.35,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-11": {
@@ -6898,8 +7075,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0.78,
-        "fxConversions": 0
+        "fees": 0.76,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 32.06,
@@ -6907,7 +7085,8 @@
         "lendingIncome": 0,
         "withholdingTax": 3.64,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2024-12": {
@@ -6916,8 +7095,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0.71,
-        "fees": 0.84,
-        "fxConversions": 0
+        "fees": 0.72,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 35.79,
@@ -6925,7 +7105,8 @@
         "lendingIncome": 0.02,
         "withholdingTax": 3.2399999999999998,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 0,
@@ -6933,7 +7114,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-01": {
@@ -6942,8 +7124,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0.88,
-        "fxConversions": 0
+        "fees": 0.87,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 67.97,
@@ -6951,7 +7134,8 @@
         "lendingIncome": 0.03,
         "withholdingTax": 2.12,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 76.16,
@@ -6959,7 +7143,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-02": {
@@ -6968,8 +7153,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 0.83,
-        "fxConversions": 0
+        "fees": 0.8099999999999999,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 24.06,
@@ -6977,7 +7163,8 @@
         "lendingIncome": 0.03,
         "withholdingTax": 2.1,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 2.51,
@@ -6985,7 +7172,8 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-03": {
@@ -6994,8 +7182,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0.1,
-        "fees": 0.94,
-        "fxConversions": 0
+        "fees": 0.7899999999999999,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 39.17,
@@ -7003,7 +7192,8 @@
         "lendingIncome": 0.02,
         "withholdingTax": 3,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 13.27,
@@ -7011,7 +7201,8 @@
         "lendingIncome": 0,
         "withholdingTax": 1.6,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-04": {
@@ -7020,8 +7211,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 1.4,
-        "fxConversions": 0
+        "fees": 1.39,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 83.03,
@@ -7029,7 +7221,8 @@
         "lendingIncome": 0.060000000000000005,
         "withholdingTax": 4.1,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 116.44999999999999,
@@ -7037,7 +7230,8 @@
         "lendingIncome": 0,
         "withholdingTax": 2.97,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-05": {
@@ -7046,8 +7240,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
-        "fees": 1.69,
-        "fxConversions": 0
+        "fees": 1.66,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 54.730000000000004,
@@ -7055,7 +7250,8 @@
         "lendingIncome": 0,
         "withholdingTax": 4.63,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 25.900000000000002,
@@ -7063,7 +7259,8 @@
         "lendingIncome": 0,
         "withholdingTax": 3.23,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
     },
     "2025-06": {
@@ -7072,8 +7269,9 @@
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 1.1099999999999999,
-        "fees": 1.7,
-        "fxConversions": 0
+        "fees": 1.53,
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_d77c33c7": {
         "dividends": 77.53,
@@ -7081,7 +7279,8 @@
         "lendingIncome": 0,
         "withholdingTax": 5.59,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       },
       "acct_e2ec057d": {
         "dividends": 37.08,
@@ -7089,8 +7288,289 @@
         "lendingIncome": 0,
         "withholdingTax": 4.97,
         "fees": 0,
-        "fxConversions": 0
+        "fxConversions": 0,
+        "fxConversionAmount": 0
       }
+    }
+  },
+  "statedFees": {
+    "2026-04": {
+      "acct_18a334f1": 0,
+      "acct_1f9a1df3": 3.36,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_2c620d2b": 2.54,
+      "acct_8cd3372e": 0,
+      "acct_91b82482": 16.17,
+      "acct_97100dd9": 2.16,
+      "acct_97ab4cb2": 0.98,
+      "acct_c2e9345e": 0,
+      "acct_d6d9fb4a": 4.43,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2026-05": {
+      "acct_18a334f1": 0,
+      "acct_1f9a1df3": 3.88,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_2c620d2b": 2.45,
+      "acct_8cd3372e": 0,
+      "acct_91b82482": 17.75,
+      "acct_97100dd9": 0.78,
+      "acct_97ab4cb2": 3.65,
+      "acct_c2e9345e": 0,
+      "acct_d6d9fb4a": 7.26,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2026-06": {
+      "acct_18a334f1": 0,
+      "acct_1f9a1df3": 4.02,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_2c620d2b": 2.96,
+      "acct_8cd3372e": 0,
+      "acct_91b82482": 18.12,
+      "acct_97100dd9": 2.78,
+      "acct_97ab4cb2": 4.8,
+      "acct_c2e9345e": 0,
+      "acct_d6d9fb4a": 7.52,
+      "acct_d77c33c7": 0,
+      "acct_e2d627ff": 9.37,
+      "acct_e2ec057d": 0
+    },
+    "2026-07": {
+      "acct_18a334f1": 0,
+      "acct_1f9a1df3": 4.38,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_2c620d2b": 1.36,
+      "acct_8cd3372e": 0,
+      "acct_91b82482": 19.83,
+      "acct_97100dd9": 2.9,
+      "acct_97ab4cb2": 5.63,
+      "acct_c2e9345e": 0,
+      "acct_d6d9fb4a": 0.59,
+      "acct_d77c33c7": 0,
+      "acct_e2d627ff": 0,
+      "acct_e2ec057d": 0
+    },
+    "2026-08": {
+      "acct_18a334f1": 0,
+      "acct_1f9a1df3": 7.8,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_2c620d2b": 0.97,
+      "acct_8297de15": 0,
+      "acct_8cd3372e": 0,
+      "acct_91b82482": 20.99,
+      "acct_97100dd9": 2.87,
+      "acct_97ab4cb2": 6.38,
+      "acct_c2e9345e": 0,
+      "acct_d6d9fb4a": -8.19,
+      "acct_d77c33c7": 0,
+      "acct_e2d627ff": 0.24,
+      "acct_e2ec057d": 0
+    },
+    "2025-10": {
+      "acct_1f9a1df3": 0.22,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_8cd3372e": 0,
+      "acct_97100dd9": 2.02,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-11": {
+      "acct_1f9a1df3": 1.45,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_2c620d2b": 0,
+      "acct_8cd3372e": 0,
+      "acct_97100dd9": 2.2,
+      "acct_d6d9fb4a": 1.48,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-12": {
+      "acct_1f9a1df3": 1.86,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_2c620d2b": 0,
+      "acct_8cd3372e": 0,
+      "acct_97100dd9": 2.3,
+      "acct_d6d9fb4a": 3.85,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2026-01": {
+      "acct_1f9a1df3": 2.8,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_2c620d2b": 0,
+      "acct_8cd3372e": 0,
+      "acct_91b82482": 0.49,
+      "acct_97100dd9": 2.67,
+      "acct_c2e9345e": 0,
+      "acct_d6d9fb4a": 4.59,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2026-02": {
+      "acct_1f9a1df3": 2.79,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_2c620d2b": 0,
+      "acct_8cd3372e": 0,
+      "acct_91b82482": 8.44,
+      "acct_97100dd9": 2.45,
+      "acct_c2e9345e": 0,
+      "acct_d6d9fb4a": 4.14,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2026-03": {
+      "acct_1f9a1df3": 3.17,
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_2c620d2b": 13.59,
+      "acct_8cd3372e": 0,
+      "acct_91b82482": 14.05,
+      "acct_97100dd9": 2.63,
+      "acct_97ab4cb2": 0.26,
+      "acct_c2e9345e": 0,
+      "acct_d6d9fb4a": 4.55,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-08": {
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_97100dd9": 2.17,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-09": {
+      "acct_231879ac": 0,
+      "acct_2b743dc7": 0,
+      "acct_8cd3372e": 0,
+      "acct_97100dd9": 2.53,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-07": {
+      "acct_2b743dc7": 0,
+      "acct_97100dd9": 1.82,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2023-06": {
+      "acct_97100dd9": 0,
+      "acct_d77c33c7": 0
+    },
+    "2023-07": {
+      "acct_97100dd9": 0.2,
+      "acct_d77c33c7": 0
+    },
+    "2023-08": {
+      "acct_97100dd9": 0.59,
+      "acct_d77c33c7": 0
+    },
+    "2023-09": {
+      "acct_97100dd9": 0.57,
+      "acct_d77c33c7": 0
+    },
+    "2023-10": {
+      "acct_97100dd9": 0.58,
+      "acct_d77c33c7": 0
+    },
+    "2023-11": {
+      "acct_97100dd9": 0.58,
+      "acct_d77c33c7": 0
+    },
+    "2023-12": {
+      "acct_97100dd9": 0.62,
+      "acct_d77c33c7": 0
+    },
+    "2024-01": {
+      "acct_97100dd9": 0.62,
+      "acct_d77c33c7": 0
+    },
+    "2024-02": {
+      "acct_97100dd9": 0.59,
+      "acct_d77c33c7": 0
+    },
+    "2024-03": {
+      "acct_97100dd9": 0.64,
+      "acct_d77c33c7": 0
+    },
+    "2024-04": {
+      "acct_97100dd9": 0.6,
+      "acct_d77c33c7": 0
+    },
+    "2024-05": {
+      "acct_97100dd9": 0.65,
+      "acct_d77c33c7": 0
+    },
+    "2024-06": {
+      "acct_97100dd9": 0.51,
+      "acct_d77c33c7": 0
+    },
+    "2024-07": {
+      "acct_97100dd9": 0.43,
+      "acct_d77c33c7": 0
+    },
+    "2024-08": {
+      "acct_97100dd9": 0.65,
+      "acct_d77c33c7": 0
+    },
+    "2024-09": {
+      "acct_97100dd9": 0.55,
+      "acct_d77c33c7": 0
+    },
+    "2024-10": {
+      "acct_97100dd9": 0.71,
+      "acct_d77c33c7": 0
+    },
+    "2024-11": {
+      "acct_97100dd9": 0.76,
+      "acct_d77c33c7": 0
+    },
+    "2024-12": {
+      "acct_97100dd9": 0.72,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-01": {
+      "acct_97100dd9": 0.87,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-02": {
+      "acct_97100dd9": 0.81,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-03": {
+      "acct_97100dd9": 0.79,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-04": {
+      "acct_97100dd9": 1.39,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-05": {
+      "acct_97100dd9": 1.66,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
+    },
+    "2025-06": {
+      "acct_97100dd9": 1.53,
+      "acct_d77c33c7": 0,
+      "acct_e2ec057d": 0
     }
   }
 }

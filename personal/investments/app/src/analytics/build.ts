@@ -7,6 +7,7 @@ import { type ReturnSeries, buildReturns } from "./returns";
 import { type Lens, type Rollup, rollup } from "./rollup";
 import { type RoomLine, buildRoomLines } from "./rooms";
 import { buildSeries } from "./series";
+import { type StatedFeesByPeriod, buildStatedFees } from "./statedFees";
 import type { AccountSeries } from "./types";
 
 const LENSES: readonly Lens[] = ["registration", "account", "purpose"];
@@ -39,6 +40,8 @@ export interface AnalyticsOutput {
   rollups: Record<Lens, Rollup[]>;
   /** Dividends, interest, lending income, withholding tax and fees, per period per account. */
   activity: ActivityByPeriod;
+  /** Fees as each statement's own cash summary states them, per period per account -- see `feeReconciliation.ts`. */
+  statedFees: StatedFeesByPeriod;
 }
 
 /**
@@ -64,6 +67,7 @@ export function buildAnalytics(datastore: Datastore, generated: string): Analyti
     Rollup[]
   >;
   const activity = buildActivity(datastore.statements);
+  const statedFees = buildStatedFees(datastore.statements);
 
   return {
     meta: {
@@ -77,6 +81,7 @@ export function buildAnalytics(datastore: Datastore, generated: string): Analyti
     returns,
     rollups,
     activity,
+    statedFees,
   };
 }
 

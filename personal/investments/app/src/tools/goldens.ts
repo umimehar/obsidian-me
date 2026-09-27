@@ -2,9 +2,10 @@ import { join } from "node:path";
 import rawDatastore from "@data/datastore.json";
 import type { AnalyticsOutput } from "../analytics/build";
 import { buildCashflowSeries } from "../analytics/cashflowSeries";
+import { feeReconciliationGaps } from "../analytics/feeReconciliation";
 import { latestGroupGain } from "../analytics/groupGain";
 import { buildIncome } from "../analytics/income";
-import { incomeByYear } from "../analytics/incomeCosts";
+import { chequingInterestByAccount, incomeByYear } from "../analytics/incomeCosts";
 import { monthReview, reviewPeriods } from "../analytics/monthReview";
 import { buildPortfolioSeries } from "../analytics/portfolioSeries";
 import { latestMarketValue, rollup } from "../analytics/rollup";
@@ -425,6 +426,14 @@ function buildGoldens(): Goldens {
           incomeByYear(analytics).find((y) => y.year === 2026),
           "2026 activity totals",
         ).totals,
+      },
+      chequingInterestByYear: {
+        "2025": chequingInterestByAccount(analytics, 2025).reduce((sum, a) => sum + a.interest, 0),
+        "2026": chequingInterestByAccount(analytics, 2026).reduce((sum, a) => sum + a.interest, 0),
+      },
+      feeReconciliationGapsByYear: {
+        "2025": feeReconciliationGaps(analytics, 2025).map(({ label, gap }) => ({ label, gap })),
+        "2026": feeReconciliationGaps(analytics, 2026).map(({ label, gap }) => ({ label, gap })),
       },
     },
     month: {

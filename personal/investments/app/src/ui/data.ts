@@ -28,14 +28,16 @@ function isAnalyticsOutput(value: unknown): value is AnalyticsOutput {
     typeof candidate.income === "object" &&
     Array.isArray(candidate.returns) &&
     typeof candidate.rollups === "object" &&
-    typeof candidate.activity === "object"
+    typeof candidate.activity === "object" &&
+    typeof candidate.statedFees === "object"
   );
 }
 
 export function parseAnalytics(raw: unknown): AnalyticsOutput {
   if (!isAnalyticsOutput(raw)) {
     throw new Error(
-      "analytics.json is missing one of meta, series, rooms, income, returns, rollups, activity",
+      "analytics.json is missing one of meta, series, rooms, income, returns, rollups, " +
+        "activity, statedFees",
     );
   }
   return raw;

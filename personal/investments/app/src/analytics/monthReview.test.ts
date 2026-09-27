@@ -140,6 +140,7 @@ describe("monthReview, over a fixture", () => {
       returns: [],
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
+      statedFees: {},
     };
 
     const review = monthReview(analytics, "2026-07");
@@ -174,6 +175,7 @@ describe("monthReview, over a fixture", () => {
       returns: [],
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
+      statedFees: {},
     };
 
     const review = monthReview(analytics, "2026-07");
@@ -216,6 +218,7 @@ describe("monthReview, over a fixture", () => {
       returns: [],
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
+      statedFees: {},
     };
 
     const review = monthReview(analytics, "2026-07");
@@ -259,6 +262,7 @@ describe("monthReview, over a fixture", () => {
       returns: [],
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
+      statedFees: {},
     };
 
     const review = monthReview(analytics, "2026-07");
@@ -281,6 +285,7 @@ describe("monthReview, over a fixture", () => {
       returns: [],
       rollups: { registration: [], account: [], purpose: [] },
       activity: {},
+      statedFees: {},
     };
     expect(reviewPeriods(analytics)).toEqual(["2026-07", "2026-06"]);
   });

@@ -22,15 +22,21 @@ function statement(overrides: {
   template?: "BROKERAGE" | "CASH" | "PERFORMANCE";
   fxRate?: number | null;
   activity?: ActivityRow[];
+  version?: number;
 }): Statement {
-  const { accountNo = "acct_0001", period = "2026-08", template = "BROKERAGE" } = overrides;
+  const {
+    accountNo = "acct_0001",
+    period = "2026-08",
+    template = "BROKERAGE",
+    version = 0,
+  } = overrides;
   return {
     source: {
       file: `${accountNo}_${period}_${template}.pdf`,
       accountNo,
       period,
       template,
-      version: 0,
+      version,
     },
     accountType: "",
     periodStart: `${period}-01`,
@@ -124,20 +130,69 @@ describe("buildActivity", () => {
     expect(activity["2026-08"]).toBeUndefined();
   });
 
-  test("FEE reads the debit charge only, leaving an ETF rebate credit out", () => {
+  test("FEE nets a same-code ETF rebate credit against the debit, matching the statement's own printed fee", () => {
+    // Real corpus, 9710 2025: the statement's own cash paidOut.fees reconciles
+    // only when the credit side is netted in, not read separately.
     const s = statement({
       activity: [row("FEE", { debit: 3.5 }), row("FEE", { credit: 1.2 })],
     });
     const activity = buildActivity([s]);
-    expect(activity["2026-08"]?.acct_0001?.fees).toBe(3.5);
+    expect(activity["2026-08"]?.acct_0001?.fees).toBeCloseTo(2.3, 6);
   });
 
-  test("FXCONVERSION counts rows regardless of side", () => {
+  test("REIMB recognized as a fee refund (ETF Rebate, ACCOUNTING_REIMBURSEMENT) reduces fees", () => {
+    // Real corpus, d6d9 2026-08: an ACCOUNTING_REIMBURSEMENT credit of 7.52
+    // refunding a fee charged in 2026-06.
     const s = statement({
-      activity: [row("FXCONVERSION", { debit: 300 }), row("FXCONVERSION", { credit: 4049.59 })],
+      activity: [
+        row("FEE", { debit: 10 }),
+        row("REIMB", { credit: 7.52, description: "ACCOUNTING_REIMBURSEMENT (executed at X)" }),
+      ],
+    });
+    const activity = buildActivity([s]);
+    expect(activity["2026-08"]?.acct_0001?.fees).toBeCloseTo(2.48, 6);
+  });
+
+  test("a REIMB row not recognizable as a fee refund is excluded, not netted in", () => {
+    const s = statement({
+      activity: [row("REIMB", { credit: 50, description: "Something else entirely" })],
+    });
+    const activity = buildActivity([s]);
+    expect(activity["2026-08"]?.acct_0001?.fees).toBe(0);
+  });
+
+  test("FXCONVERSION counts every row but values only the CAD side, once per conversion", () => {
+    const s = statement({
+      activity: [
+        row("FXCONVERSION", { debit: 300, currency: "CAD" }),
+        row("FXCONVERSION", { credit: 4049.59, currency: "USD" as Currency }),
+      ],
     });
     const activity = buildActivity([s]);
     expect(activity["2026-08"]?.acct_0001?.fxConversions).toBe(2);
+    expect(activity["2026-08"]?.acct_0001?.fxConversionAmount).toBe(300);
+  });
+
+  test("a CAD-to-CAD FXCONVERSION pair values both sides but the two cancel to the CAD side's own amount", () => {
+    const s = statement({
+      activity: [row("FXCONVERSION", { debit: 811, currency: "CAD" })],
+    });
+    const activity = buildActivity([s]);
+    expect(activity["2026-08"]?.acct_0001?.fxConversionAmount).toBe(811);
+  });
+
+  test("an amended version is collapsed to the latest, never double counted", () => {
+    const original = statement({
+      version: 0,
+      activity: [row("DIV", { credit: 40.9 })],
+    });
+    const amended = statement({
+      version: 1,
+      activity: [row("DIV", { credit: 40.9 }), row("FEE", { debit: 5 })],
+    });
+    const activity = buildActivity([original, amended]);
+    expect(activity["2026-08"]?.acct_0001?.dividends).toBeCloseTo(40.9, 6);
+    expect(activity["2026-08"]?.acct_0001?.fees).toBe(5);
   });
 
   test("sumActivity of an empty list is all zeros", () => {
@@ -148,6 +203,7 @@ describe("buildActivity", () => {
       withholdingTax: 0,
       fees: 0,
       fxConversions: 0,
+      fxConversionAmount: 0,
     });
   });
 });

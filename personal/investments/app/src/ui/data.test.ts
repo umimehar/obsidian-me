@@ -174,6 +174,7 @@ describe("data.ts against the real committed analytics.json", () => {
         returns: [],
         rollups: { registration: [], account: [], purpose: [] },
         activity: {},
+        statedFees: {},
       }),
     ).toBeNull();
   });

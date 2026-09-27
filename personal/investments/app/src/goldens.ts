@@ -242,8 +242,12 @@ export interface Goldens {
   /**
    * `incomeByYear`'s totals for 2025 and 2026, computed by that same
    * function over the committed `analytics.json` -- dividends, interest,
-   * securities lending, foreign withholding tax, fees and FX conversion
-   * counts, over the `inTotals` accounts only.
+   * securities lending, foreign withholding tax, fees, FX conversion counts
+   * and the CAD side amount converted, over the `inTotals` accounts only.
+   * `chequingInterestByYear` and `feeReconciliationGapsByYear` are separate
+   * facts the Income tab states apart from these totals: chequing interest
+   * never counts toward the portfolio, and a fee reconciliation gap is a
+   * data limitation, not an income or cost figure.
    */
   incomeCosts: {
     byYear: Record<
@@ -255,8 +259,13 @@ export interface Goldens {
         withholdingTax: number;
         fees: number;
         fxConversions: number;
+        fxConversionAmount: number;
       }
     >;
+    /** Total chequing interest (kind `Chequing`, never `inTotals`), summed across every chequing account. */
+    chequingInterestByYear: Record<"2025" | "2026", number>;
+    /** `feeReconciliationGaps`, by year -- expected empty for 2025 and one account for 2026 (the trading cost gap). */
+    feeReconciliationGapsByYear: Record<"2025" | "2026", { label: string; gap: number }[]>;
   };
   /** `monthReview` at the latest reviewable period, computed by that same function. */
   month: {

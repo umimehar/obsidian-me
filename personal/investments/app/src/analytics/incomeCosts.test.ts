@@ -6,6 +6,8 @@ import { loadAnalytics } from "../ui/data";
 import { sumActivity } from "./activity";
 import type { AnalyticsOutput } from "./build";
 import {
+  chequingInterestByAccount,
+  incomeByAccountForYear,
   incomeByMonth,
   incomeByYear,
   withholdingByAccount,
@@ -37,6 +39,7 @@ function analyticsFixture(overrides: Partial<AnalyticsOutput> = {}): AnalyticsOu
     returns: [],
     rollups: { registration: [], account: [], purpose: [] },
     activity: {},
+    statedFees: {},
     ...overrides,
   };
 }
@@ -48,6 +51,7 @@ const ZERO = {
   withholdingTax: 0,
   fees: 0,
   fxConversions: 0,
+  fxConversionAmount: 0,
 };
 
 describe("withholdingRecovery", () => {
@@ -144,6 +148,127 @@ describe("incomeByMonth", () => {
   test("a year with no activity returns an empty list", () => {
     const analytics = analyticsFixture({ series: [account()] });
     expect(incomeByMonth(analytics, 2026)).toEqual([]);
+  });
+
+  test("a period no inTotals account reported that month is left out, not drawn as a zero", () => {
+    // Only a chequing account (inTotals: false) reported in 2026-02, so the
+    // month must be absent from the chart's own points -- see DividendsChart's
+    // absence-versus-zero rule.
+    const counted = account({ maskedId: "acct_counted", inTotals: true });
+    const chequing = account({ maskedId: "acct_chequing", inTotals: false, kind: "Chequing" });
+    const analytics = analyticsFixture({
+      series: [counted, chequing],
+      activity: {
+        "2026-01": { acct_counted: { ...ZERO, dividends: 5 } },
+        "2026-02": { acct_chequing: { ...ZERO, interest: 12 } },
+        "2026-03": { acct_counted: { ...ZERO, dividends: 3 } },
+      },
+    });
+    const months = incomeByMonth(analytics, 2026);
+    expect(months.map((m) => m.period)).toEqual(["2026-01", "2026-03"]);
+  });
+
+  test("a missing month in the middle of the year is absent, not a stated zero", () => {
+    const a = account();
+    const analytics = analyticsFixture({
+      series: [a],
+      activity: {
+        "2026-01": { acct_0001: { ...ZERO, dividends: 5 } },
+        // No 2026-02 entry at all: no statement covers it.
+        "2026-03": { acct_0001: { ...ZERO, dividends: 3 } },
+      },
+    });
+    const months = incomeByMonth(analytics, 2026);
+    expect(months.map((m) => m.period)).toEqual(["2026-01", "2026-03"]);
+    expect(months.some((m) => m.period === "2026-02")).toBe(false);
+  });
+});
+
+describe("incomeByAccountForYear", () => {
+  test("sorted by dividends + interest + lending, largest first", () => {
+    const small = account({ maskedId: "acct_small", label: "Small" });
+    const big = account({ maskedId: "acct_big", label: "Big" });
+    const analytics = analyticsFixture({
+      series: [small, big],
+      activity: {
+        "2026-01": {
+          acct_small: { ...ZERO, dividends: 1 },
+          acct_big: { ...ZERO, dividends: 5, interest: 5 },
+        },
+      },
+    });
+    expect(incomeByAccountForYear(analytics, 2026).map((a) => a.label)).toEqual(["Big", "Small"]);
+  });
+
+  test("withholding and fees do not count toward the sort, only income does", () => {
+    const costly = account({ maskedId: "acct_costly", label: "Costly" });
+    const earning = account({ maskedId: "acct_earning", label: "Earning" });
+    const analytics = analyticsFixture({
+      series: [costly, earning],
+      activity: {
+        "2026-01": {
+          acct_costly: { ...ZERO, withholdingTax: 100, fees: 100 },
+          acct_earning: { ...ZERO, dividends: 1 },
+        },
+      },
+    });
+    expect(incomeByAccountForYear(analytics, 2026).map((a) => a.label)).toEqual([
+      "Earning",
+      "Costly",
+    ]);
+  });
+
+  test("an account with no activity that year is left out entirely", () => {
+    const a = account();
+    const analytics = analyticsFixture({ series: [a], activity: {} });
+    expect(incomeByAccountForYear(analytics, 2026)).toEqual([]);
+  });
+
+  test("an account not in totals is left out", () => {
+    const chequing = account({ kind: "Chequing", inTotals: false });
+    const analytics = analyticsFixture({
+      series: [chequing],
+      activity: { "2026-01": { acct_0001: { ...ZERO, interest: 5 } } },
+    });
+    expect(incomeByAccountForYear(analytics, 2026)).toEqual([]);
+  });
+});
+
+describe("chequingInterestByAccount", () => {
+  test("only chequing accounts with a nonzero interest figure appear", () => {
+    const chequing = account({ maskedId: "acct_chequing", kind: "Chequing", inTotals: false });
+    const nonRegistered = account({ maskedId: "acct_nonreg" });
+    const analytics = analyticsFixture({
+      series: [chequing, nonRegistered],
+      activity: {
+        "2026-01": {
+          acct_chequing: { ...ZERO, interest: 57.38 },
+          acct_nonreg: { ...ZERO, interest: 5 },
+        },
+      },
+    });
+    const rows = chequingInterestByAccount(analytics, 2026);
+    expect(rows).toEqual([{ maskedId: "acct_chequing", label: "Account 0001", interest: 57.38 }]);
+  });
+
+  test("a chequing account with no interest that year is left out", () => {
+    const chequing = account({ kind: "Chequing", inTotals: false });
+    const analytics = analyticsFixture({ series: [chequing], activity: {} });
+    expect(chequingInterestByAccount(analytics, 2026)).toEqual([]);
+  });
+
+  test("2025 and 2026 totals match the goldens", () => {
+    const analytics = loadAnalytics();
+    const total2025 = chequingInterestByAccount(analytics, 2025).reduce(
+      (sum, a) => sum + a.interest,
+      0,
+    );
+    const total2026 = chequingInterestByAccount(analytics, 2026).reduce(
+      (sum, a) => sum + a.interest,
+      0,
+    );
+    expect(total2025).toBeCloseTo(GOLDENS.incomeCosts.chequingInterestByYear["2025"], 6);
+    expect(total2026).toBeCloseTo(GOLDENS.incomeCosts.chequingInterestByYear["2026"], 6);
   });
 });
 

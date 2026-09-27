@@ -10,7 +10,7 @@ export interface YearIncome {
   byAccount: Record<string, ActivityTotals>;
 }
 
-/** One period's activity totals, over the `inTotals` accounts -- what `incomeByMonth` returns one of. */
+/** One period's activity totals, over the `inTotals` accounts -- one of `incomeByMonth`'s rows. */
 export interface MonthlyActivity {
   period: string;
   totals: ActivityTotals;
@@ -47,7 +47,7 @@ export function withholdingRecovery(kind: AccountKind): WithholdingRecovery {
   return "lost";
 }
 
-/** `inTotals` accounts, keyed by masked id -- the membership `incomeByYear` and `incomeByMonth` both restrict to. */
+/** `inTotals` accounts, keyed by masked id -- the membership this module restricts to. */
 function inTotalsIds(analytics: AnalyticsOutput): ReadonlySet<string> {
   return new Set(analytics.series.filter((account) => account.inTotals).map((a) => a.maskedId));
 }
@@ -82,7 +82,18 @@ export function incomeByYear(analytics: AnalyticsOutput): YearIncome[] {
     }));
 }
 
-/** Income and costs by month, within one calendar year, over the `inTotals` accounts only, oldest first. */
+/**
+ * Income and costs by month, within one calendar year, over the `inTotals`
+ * accounts only, oldest first.
+ *
+ * A month is only included when at least one `inTotals` account actually
+ * has an entry that period -- never when the only statement that period
+ * belongs to an excluded account (chequing, most often). Including it
+ * anyway would push a real, stated zero into the dividends chart for a
+ * month no counted account said anything about at all, which is the same
+ * absence-versus-zero mistake `CashflowChart` and `CostGapChart` both guard
+ * against.
+ */
 export function incomeByMonth(analytics: AnalyticsOutput, year: number): MonthlyActivity[] {
   const counted = inTotalsIds(analytics);
   const rows: MonthlyActivity[] = [];
@@ -92,10 +103,85 @@ export function incomeByMonth(analytics: AnalyticsOutput, year: number): Monthly
     const accountTotals = Object.entries(byAccount)
       .filter(([accountId]) => counted.has(accountId))
       .map(([, totals]) => totals);
+    if (accountTotals.length === 0) continue;
     rows.push({ period, totals: sumActivity(accountTotals) });
   }
 
   return rows.sort((a, b) => a.period.localeCompare(b.period));
+}
+
+/** One account's income and costs for a year, sorted by dividends + interest + lending. */
+export interface AccountIncome {
+  maskedId: string;
+  label: string;
+  totals: ActivityTotals;
+}
+
+/**
+ * Income and costs per `inTotals` account, for one calendar year, sorted by
+ * (dividends + interest + lending income) descending -- the accounts that
+ * actually pay something first, withholding and fees being costs rather
+ * than income are left out of that ordering key.
+ */
+export function incomeByAccountForYear(analytics: AnalyticsOutput, year: number): AccountIncome[] {
+  const counted = inTotalsIds(analytics);
+  const byAccount = new Map<string, ActivityTotals[]>();
+  for (const [period, accounts] of Object.entries(analytics.activity)) {
+    if (periodYear(period) !== year) continue;
+    for (const [accountId, totals] of Object.entries(accounts)) {
+      if (!counted.has(accountId)) continue;
+      const rows = byAccount.get(accountId) ?? [];
+      rows.push(totals);
+      byAccount.set(accountId, rows);
+    }
+  }
+
+  const rows: AccountIncome[] = [];
+  for (const account of analytics.series) {
+    const activity = byAccount.get(account.maskedId);
+    if (activity === undefined) continue;
+    rows.push({ maskedId: account.maskedId, label: account.label, totals: sumActivity(activity) });
+  }
+  return rows.sort((a, b) => {
+    const income = (t: ActivityTotals) => t.dividends + t.interest + t.lendingIncome;
+    return income(b.totals) - income(a.totals);
+  });
+}
+
+/** One chequing account's interest for a year -- never `inTotals`, so never in `incomeByYear`. */
+export interface ChequingInterest {
+  maskedId: string;
+  label: string;
+  interest: number;
+}
+
+/**
+ * Chequing interest by account, for one calendar year -- every chequing
+ * account with a nonzero figure. Chequing carried coded `INT` rows on its
+ * BROKERAGE statements through 2026-06; from 2026-07 it sends only a CASH
+ * statement, which carries no activity code at all, so a later year can
+ * state nothing here even though earlier ones do.
+ */
+export function chequingInterestByAccount(
+  analytics: AnalyticsOutput,
+  year: number,
+): ChequingInterest[] {
+  const byAccount = new Map<string, number>();
+  for (const [period, accounts] of Object.entries(analytics.activity)) {
+    if (periodYear(period) !== year) continue;
+    for (const [accountId, totals] of Object.entries(accounts)) {
+      byAccount.set(accountId, (byAccount.get(accountId) ?? 0) + totals.interest);
+    }
+  }
+
+  const rows: ChequingInterest[] = [];
+  for (const account of analytics.series) {
+    if (account.kind !== "Chequing") continue;
+    const interest = byAccount.get(account.maskedId);
+    if (!interest) continue;
+    rows.push({ maskedId: account.maskedId, label: account.label, interest });
+  }
+  return rows.sort((a, b) => b.interest - a.interest);
 }
 
 /**

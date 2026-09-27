@@ -115,6 +115,7 @@ const ZERO = {
   withholdingTax: 0,
   fees: 0,
   fxConversions: 0,
+  fxConversionAmount: 0,
 };
 
 function fixture(overrides: Partial<AnalyticsOutput> = {}): AnalyticsOutput {
@@ -126,6 +127,7 @@ function fixture(overrides: Partial<AnalyticsOutput> = {}): AnalyticsOutput {
     returns: [],
     rollups: { registration: [], account: [], purpose: [] },
     activity: {},
+    statedFees: {},
     ...overrides,
   };
 }

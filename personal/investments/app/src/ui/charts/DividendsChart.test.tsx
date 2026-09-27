@@ -13,6 +13,7 @@ const ZERO = {
   withholdingTax: 0,
   fees: 0,
   fxConversions: 0,
+  fxConversionAmount: 0,
 };
 
 function months(entries: { period: string; dividends: number }[]): MonthlyActivity[] {
