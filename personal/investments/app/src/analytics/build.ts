@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import type { Datastore } from "../store/datastore";
 import type { Statement } from "../types";
+import { type ActivityByPeriod, buildActivity } from "./activity";
 import { type IncomeScope, type IncomeSummary, buildIncome } from "./income";
 import { type ReturnSeries, buildReturns } from "./returns";
 import { type Lens, type Rollup, rollup } from "./rollup";
@@ -36,6 +37,8 @@ export interface AnalyticsOutput {
   income: Record<string, IncomeSummary>;
   returns: ReturnSeries[];
   rollups: Record<Lens, Rollup[]>;
+  /** Dividends, interest, lending income, withholding tax and fees, per period per account. */
+  activity: ActivityByPeriod;
 }
 
 /**
@@ -60,6 +63,7 @@ export function buildAnalytics(datastore: Datastore, generated: string): Analyti
     Lens,
     Rollup[]
   >;
+  const activity = buildActivity(datastore.statements);
 
   return {
     meta: {
@@ -72,6 +76,7 @@ export function buildAnalytics(datastore: Datastore, generated: string): Analyti
     income,
     returns,
     rollups,
+    activity,
   };
 }
 
