@@ -96,6 +96,17 @@ describe("App", () => {
     expect(document.querySelectorAll("[data-room-line]").length).toBe(4);
   });
 
+  test("the income tab's about these numbers note states the chequing and fund withholding gaps", () => {
+    render(<App />);
+    clickTab("Income");
+    const notes = document.querySelector("[data-about-numbers]")?.textContent ?? "";
+    expect(notes).toContain("From 2026-07, chequing statements carry no activity codes");
+    expect(notes).toContain("deducted inside the fund itself");
+    // The 2026 trading-cost gap this account's statements carry, computed
+    // live rather than typed as a literal that would go stale.
+    expect(notes).toContain(formatCurrency(23.87));
+  });
+
   test("the reconciliation view renders beneath the figures it reconciles", () => {
     render(<App />);
     clickTab("Data");

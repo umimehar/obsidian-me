@@ -53,3 +53,13 @@ summary {
   overflow: visible;
   contain: none;
 }
+
+/*
+ * The Income tab's year table marks its selected row with a subtle accent
+ * tint, the same signal `aria-current="true"` carries for a screen reader,
+ * so a sighted reader can find the row at a glance among the corpus's other
+ * years.
+ */
+.ivt-selected-row {
+  background-color: var(--accent-a3);
+}

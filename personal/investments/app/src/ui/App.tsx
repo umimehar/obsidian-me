@@ -2,6 +2,7 @@ import { Button, Flex, Heading, SegmentedControl, Text, Theme } from "@radix-ui/
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
+import { feeReconciliationGaps } from "../analytics/feeReconciliation";
 import { latestGroupGain } from "../analytics/groupGain";
 import type { AccountSeries } from "../analytics/types";
 import { AboutNumbers } from "./AboutNumbers";
@@ -130,7 +131,7 @@ function YearChangeLine({ change }: { change: YearChange }) {
   );
 }
 
-/** The USD book cost caveat, stated once per tab; one constant so every tab says the same sentence. */
+/** The USD book cost caveat, once per tab -- one constant, so every tab reads one sentence. */
 const USD_BOOK_COST_NOTE =
   "An estimate: book cost for USD holdings is a converted approximation, not a filing figure.";
 
@@ -142,7 +143,7 @@ interface WithSummaryProps {
   scope: YearScope;
   onScopeChange: (scope: YearScope) => void;
   children: ReactNode;
-  /** Notes beyond the USD book-cost caveat every tab carries -- a tab-specific data limit, appended after it. */
+  /** Notes beyond the shared USD book cost caveat -- a tab's own data limit, appended after it. */
   extraNotes?: readonly string[];
 }
 
@@ -272,12 +273,39 @@ function GrowthPanel({ analytics }: { analytics: AnalyticsOutput }) {
 }
 
 /**
- * The one gap this tab has to disclose: a chequing account's CASH-template
- * statements carry no activity code at all, so any interest it pays never
- * reaches `activity.ts` and never appears here.
+ * A chequing account carried coded `INT` rows on its BROKERAGE statements
+ * through 2026-06. From 2026-07 it sends only a CASH statement, and a CASH
+ * statement carries no activity code at all, so interest earned from that
+ * point on does not appear here -- a real, recent gap, not the whole of
+ * chequing's history, which the Income tab's own chequing line still states.
  */
 const CHEQUING_INTEREST_NOTE =
-  "Chequing statements carry no activity codes, so interest earned in a chequing account does not appear here.";
+  "From 2026-07, chequing statements carry no activity codes at all, so interest earned after that point does not appear here.";
+
+/**
+ * A Canadian listed fund holding US stocks can have US withholding tax
+ * deducted inside the fund itself, before it ever reaches the account --
+ * that withholding never posts as its own row on a statement, so it cannot
+ * appear in the withholding table or its totals at all.
+ */
+const FUND_WITHHOLDING_NOTE =
+  "A Canadian listed fund holding US stocks can have withholding tax deducted inside the fund itself, which never appears as a row on your statements.";
+
+/**
+ * One line per account whose statements state more (or less) in fees than
+ * any FEE/REIMB activity row accounts for -- an account that bundles a
+ * trading cost into a trade's own price rather than itemising it, computed
+ * live so the figure can never go stale the way a typed one would.
+ */
+function feeGapNotes(analytics: AnalyticsOutput, year: number): string[] {
+  const gaps = feeReconciliationGaps(analytics, year);
+  return gaps.map(
+    (gap) =>
+      "Some accounts bundle a trading cost into the price of what they buy rather than " +
+      `stating it as a fee, so it is not itemised here. In ${year}, ${gap.label} carried ` +
+      `about ${formatCurrency(gap.gap)} of this kind of unstated cost.`,
+  );
+}
 
 /**
  * What the portfolio pays and what it costs, plus -- underneath, in
@@ -462,7 +490,10 @@ function Dashboard() {
       </WithSummary>
     ),
     income: (
-      <WithSummary {...summary} extraNotes={[CHEQUING_INTEREST_NOTE]}>
+      <WithSummary
+        {...summary}
+        extraNotes={[CHEQUING_INTEREST_NOTE, FUND_WITHHOLDING_NOTE, ...feeGapNotes(all, year)]}
+      >
         <IncomePanel all={all} year={year} scope={scope} />
       </WithSummary>
     ),
