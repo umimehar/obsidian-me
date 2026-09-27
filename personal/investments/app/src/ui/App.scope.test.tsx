@@ -122,11 +122,15 @@ describe("the year filter reaches every tab that can honour it", () => {
     render(<App />);
     selectYear("2024");
     openTab("Plan");
-    expect(panelText()).toContain("2024");
+    // Specific to the content each view renders for 2024, not merely that
+    // "2024" appears somewhere on the panel -- the year filter itself now
+    // renders inside every panel and its own "2024" radio label would match
+    // a substring check regardless of whether the views underneath it moved.
+    expect(screen.getByRole("heading", { name: "Registered wrappers, 2024" })).toBeDefined();
     expect(screen.queryByRole("radiogroup", { name: "Tax year" })).toBeNull();
 
     openTab("Portfolio");
-    expect(panelText()).toContain("2024");
+    expect(screen.getByRole("heading", { name: "Personal taxable income, 2024" })).toBeDefined();
   });
 
   test("the reconciliation view filters its findings and says how many it hid", () => {
