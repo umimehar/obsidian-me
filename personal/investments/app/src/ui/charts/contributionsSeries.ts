@@ -297,7 +297,7 @@ function unstatedLine(entry: ContributionYear): string[] {
   const count = entry.unstatedMonths.length;
   if (count === 0) return [];
   const noun = count === 1 ? "month states" : "months state";
-  const named = entry.unstatedMonths.map(formatPeriodLabel).join(", ");
+  const named = entry.unstatedMonths.map((period) => formatPeriodLabel(period)).join(", ");
   return [`${count} ${noun} no contributions figure: ${named}`];
 }
 

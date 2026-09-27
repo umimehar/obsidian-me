@@ -7,19 +7,15 @@ export interface PlotPoint {
   y: number;
 }
 
-/** A `YYYY-MM` period as a short month-and-year label, formatted in UTC so it never drifts a month with the viewer's timezone. */
-export function formatPeriodLabel(period: string): string {
+/**
+ * A `YYYY-MM` period as a month-and-year label, formatted in UTC so it never
+ * drifts a month with the viewer's timezone. Short ("Aug 2026") by default,
+ * for a chart; pass `{ month: "long" }` for prose ("August 2026"), where the
+ * short form reads as an abbreviation.
+ */
+export function formatPeriodLabel(period: string, options?: { month?: "short" | "long" }): string {
   return new Intl.DateTimeFormat("en-CA", {
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(periodToDate(period));
-}
-
-/** A `YYYY-MM` period with the month spelled out, "August 2026" -- for prose, where the chart's short form reads as an abbreviation. */
-export function formatMonthLabel(period: string): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    month: "long",
+    month: options?.month ?? "short",
     year: "numeric",
     timeZone: "UTC",
   }).format(periodToDate(period));

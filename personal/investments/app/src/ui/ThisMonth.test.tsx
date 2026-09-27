@@ -1,27 +1,33 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { monthReview, reviewPeriods } from "../analytics/monthReview";
+import { GOLDENS } from "../goldens";
 import { ThisMonth } from "./ThisMonth";
 import { loadAnalytics, loadCheckpoints } from "./data";
-import { formatSignedCurrency } from "./format";
+import { formatCurrency, formatRate, formatSignedCurrency } from "./format";
 
 afterEach(() => {
   cleanup();
 });
 
-function renderThisMonth() {
+function renderThisMonth(scope: "all" | number = "all") {
   render(
     <Theme>
-      <ThisMonth analytics={loadAnalytics()} checkpoints={loadCheckpoints()} />
+      <ThisMonth analytics={loadAnalytics()} checkpoints={loadCheckpoints()} scope={scope} />
     </Theme>,
   );
 }
 
-/** Awaited inside act: Radix positions the listbox after an async measurement, same as the account filter's own menu. */
+/**
+ * Awaited inside act: Radix's Select positions its listbox on a short timer
+ * after the click, later than a single microtask flush -- the small settle
+ * delay is what keeps this from occasionally leaking an unwrapped update.
+ */
 async function openMonthPicker() {
   await act(async () => {
     fireEvent.click(screen.getByRole("combobox", { name: "Month" }));
+    await new Promise((resolve) => setTimeout(resolve, 50));
   });
 }
 
@@ -31,17 +37,18 @@ async function pickMonth(label: string) {
   });
 }
 
+function moversRows(): HTMLElement[] {
+  return [...document.querySelectorAll("[data-mover-row]")].filter(
+    (node): node is HTMLElement => node instanceof HTMLElement,
+  );
+}
+
 describe("ThisMonth", () => {
-  test("the default route's headline change equals end minus start of the model", () => {
+  test("the default route's headline change matches the month golden", () => {
     renderThisMonth();
-    const analytics = loadAnalytics();
-    const [latest] = reviewPeriods(analytics);
-    if (latest === undefined) throw new Error("expected a reviewable period");
-    const review = monthReview(analytics, latest);
-    const change = review.start === null ? review.end : review.end - review.start;
-    expect(screen.getByRole("heading", { level: 2 }).textContent).toContain(
-      formatSignedCurrency(change),
-    );
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading.textContent).toContain(GOLDENS.month.period.slice(0, 4));
+    expect(heading.textContent).toContain(formatSignedCurrency(GOLDENS.month.change));
   });
 
   test("the movers table has one row per model move", () => {
@@ -50,14 +57,95 @@ describe("ThisMonth", () => {
     const [latest] = reviewPeriods(analytics);
     if (latest === undefined) throw new Error("expected a reviewable period");
     const review = monthReview(analytics, latest);
-    expect(document.querySelectorAll("[data-mover-row]").length).toBe(review.moves.length);
+    expect(moversRows().length).toBe(review.moves.length);
   });
 
-  test("the checkpoint line appears for 2026-08 and not for 2026-07", async () => {
+  test("a mover's Change and Growth cells are toned jade for a gain, red for a loss", () => {
+    renderThisMonth();
+    const analytics = loadAnalytics();
+    const [latest] = reviewPeriods(analytics);
+    if (latest === undefined) throw new Error("expected a reviewable period");
+    const review = monthReview(analytics, latest);
+    const withGrowth = review.moves.find((m) => m.growth !== null && m.growth !== 0);
+    if (withGrowth === undefined) throw new Error("expected at least one toned mover");
+
+    const row = moversRows().find((r) => r.textContent?.includes(withGrowth.label));
+    if (row === undefined) throw new Error(`expected a row for ${withGrowth.label}`);
+    const growthCell = within(row).getByText(formatSignedCurrency(withGrowth.growth ?? 0));
+    expect(growthCell.getAttribute("data-accent-color")).toBe(
+      (withGrowth.growth ?? 0) >= 0 ? "jade" : "red",
+    );
+  });
+
+  test("the income and costs row renders every activity figure", () => {
+    renderThisMonth();
+    const analytics = loadAnalytics();
+    const [latest] = reviewPeriods(analytics);
+    if (latest === undefined) throw new Error("expected a reviewable period");
+    const review = monthReview(analytics, latest);
+    const block = document.querySelector("[data-month-activity]");
+    if (block === null) throw new Error("expected the income and costs block to render");
+    expect(block.textContent).toContain(formatCurrency(review.activity.dividends));
+    expect(block.textContent).toContain(formatCurrency(review.activity.interest));
+    expect(block.textContent).toContain(formatCurrency(review.activity.lendingIncome));
+    expect(block.textContent).toContain(formatCurrency(review.activity.withholdingTax));
+    expect(block.textContent).toContain(formatCurrency(review.activity.fees));
+  });
+
+  test("review.activity counts inTotals accounts only", () => {
+    // A structural check on the model this page renders from, not a second
+    // formula: Chequing (never inTotals) must not be able to move this
+    // figure, so nothing on screen can be inflated by a excluded account.
+    const analytics = loadAnalytics();
+    const [latest] = reviewPeriods(analytics);
+    if (latest === undefined) throw new Error("expected a reviewable period");
+    const review = monthReview(analytics, latest);
+    const byAccount = analytics.activity[latest] ?? {};
+    const excludedIds = analytics.series.filter((a) => !a.inTotals).map((a) => a.maskedId);
+    const excludedDividends = excludedIds.reduce(
+      (sum, id) => sum + (byAccount[id]?.dividends ?? 0),
+      0,
+    );
+    // At least one excluded account has to exist in the real corpus (Chequing
+    // always does) for this to be a non-vacuous check.
+    expect(excludedIds.length).toBeGreaterThan(0);
+    const includedDividends = analytics.series
+      .filter((a) => a.inTotals)
+      .reduce((sum, a) => sum + (byAccount[a.maskedId]?.dividends ?? 0), 0);
+    expect(review.activity.dividends).toBeCloseTo(includedDividends, 6);
+    if (excludedDividends !== 0) {
+      expect(review.activity.dividends).not.toBeCloseTo(includedDividends + excludedDividends, 6);
+    }
+  });
+
+  test("the coverage line names a newly opened account", () => {
+    renderThisMonth();
+    const line = document.querySelector("[data-month-coverage]");
+    if (line === null) throw new Error("expected the coverage line to render at the latest month");
+    expect(line.textContent).toContain("Newly opened");
+    expect(line.textContent).toContain("Corporate (self)");
+  });
+
+  test("the checkpoint line states the exact app, statement and gap figures", async () => {
+    const checkpoint = loadCheckpoints().find(
+      (c) => c.coversPeriod === "2026-08" && c.reconciliation !== null,
+    );
+    if (checkpoint?.reconciliation == null) {
+      throw new Error("expected a reconciled 2026-08 checkpoint");
+    }
+    const { appVisibleTotal, ourTotal, difference } = checkpoint.reconciliation;
+    const apart = Math.abs(difference);
+    const percent = (apart / ourTotal) * 100;
+
     renderThisMonth();
     await openMonthPicker();
     await pickMonth("August 2026");
-    expect(document.querySelector("[data-checkpoint-line]")).not.toBeNull();
+    const line = document.querySelector("[data-checkpoint-line]");
+    if (line === null) throw new Error("expected the checkpoint line to render for 2026-08");
+    expect(line.textContent).toBe(
+      `Wealthsimple app ${formatCurrency(appVisibleTotal)} against statements ` +
+        `${formatCurrency(ourTotal)}, ${formatCurrency(apart)} apart (${formatRate(percent)})`,
+    );
 
     await openMonthPicker();
     await pickMonth("July 2026");
@@ -77,5 +165,25 @@ describe("ThisMonth", () => {
     expect(screen.getByRole("heading", { level: 2 }).textContent).toContain(
       formatSignedCurrency(julyChange),
     );
+  });
+
+  test("a year scope limits the picker to that year's months, defaulting to the latest one", async () => {
+    renderThisMonth(2024);
+    const analytics = loadAnalytics();
+    const periods2024 = reviewPeriods(analytics).filter((p) => p.startsWith("2024-"));
+    const latest2024 = periods2024[0];
+    if (latest2024 === undefined) throw new Error("expected at least one 2024 period");
+    const review = monthReview(analytics, latest2024);
+    const change = review.start === null ? review.end : review.end - review.start;
+    expect(screen.getByRole("heading", { level: 2 }).textContent).toContain(
+      formatSignedCurrency(change),
+    );
+
+    await openMonthPicker();
+    const options = screen.getAllByRole("option").map((o) => o.textContent);
+    expect(options).toHaveLength(periods2024.length);
+    for (const option of options) {
+      expect(option).toContain("2024");
+    }
   });
 });

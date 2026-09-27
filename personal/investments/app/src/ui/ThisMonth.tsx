@@ -2,13 +2,21 @@ import { Flex, Heading, Select, Table, Text } from "@radix-ui/themes";
 import { useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
 import { type MonthReview, monthReview, reviewPeriods } from "../analytics/monthReview";
-import { formatMonthLabel } from "./charts/plot";
+import { formatPeriodLabel } from "./charts/plot";
 import type { Checkpoint } from "./data";
 import { formatCurrency, formatRate, formatSignedCurrency } from "./format";
+import { type YearScope, inScope } from "./scope";
 
 export interface ThisMonthProps {
   analytics: AnalyticsOutput;
   checkpoints: readonly Checkpoint[];
+  /** Limits which months the picker offers; the review itself always reads the unscoped `analytics`. */
+  scope: YearScope;
+}
+
+/** "August 2026", the month spelled out -- the chart's short form reads as an abbreviation in prose. */
+function monthLabel(period: string): string {
+  return formatPeriodLabel(period, { month: "long" });
 }
 
 /** The month picker, over every period `reviewPeriods` returns, newest first. */
@@ -27,7 +35,7 @@ function MonthPicker({
       <Select.Content>
         {periods.map((p) => (
           <Select.Item key={p} value={p}>
-            {formatMonthLabel(p)}
+            {monthLabel(p)}
           </Select.Item>
         ))}
       </Select.Content>
@@ -40,7 +48,7 @@ function Headline({ review }: { review: MonthReview }) {
   const change = review.start === null ? review.end : review.end - review.start;
   return (
     <Heading size="6" as="h2">
-      {formatMonthLabel(review.period)}: {formatSignedCurrency(change)}
+      {monthLabel(review.period)}: {formatSignedCurrency(change)}
     </Heading>
   );
 }
@@ -81,13 +89,21 @@ function MoversTable({ moves }: { moves: MonthReview["moves"] }) {
         {moves.map((m) => (
           <Table.Row key={m.maskedId} data-mover-row="">
             <Table.RowHeaderCell>{m.label}</Table.RowHeaderCell>
-            <Table.Cell align="right">{m.end === null ? "" : formatCurrency(m.end)}</Table.Cell>
+            <Table.Cell align="right">{formatCurrency(m.end ?? 0)}</Table.Cell>
             <Table.Cell align="right">
-              {m.change === null ? "new" : formatSignedCurrency(m.change)}
+              {m.change === null ? (
+                "new"
+              ) : (
+                <Text color={m.change >= 0 ? "jade" : "red"}>{formatSignedCurrency(m.change)}</Text>
+              )}
             </Table.Cell>
             <Table.Cell align="right">{formatSignedCurrency(m.netDeposits)}</Table.Cell>
             <Table.Cell align="right">
-              {m.growth === null ? "" : formatSignedCurrency(m.growth)}
+              {m.growth === null ? (
+                ""
+              ) : (
+                <Text color={m.growth >= 0 ? "jade" : "red"}>{formatSignedCurrency(m.growth)}</Text>
+              )}
             </Table.Cell>
           </Table.Row>
         ))}
@@ -147,10 +163,24 @@ function CheckpointLine({
  * market growth, the accounts that moved most, income and costs, and
  * coverage -- what is missing or newly opened, never silently a $0 account.
  */
-export function ThisMonth({ analytics, checkpoints }: ThisMonthProps) {
-  const periods = reviewPeriods(analytics);
+export function ThisMonth({ analytics, checkpoints, scope }: ThisMonthProps) {
+  // The picker only ever offers periods inside the year scope; the review
+  // itself always reads the unscoped `analytics` it was handed, so a missing
+  // or newly opened account is judged against its own real history, not a
+  // history the scope has clipped away.
+  const periods = reviewPeriods(analytics).filter((p) => inScope(p, scope));
   const [period, setPeriod] = useState<string>(() => periods[0] ?? "");
-  if (period === "") {
+
+  // A prop-driven reset, not an effect: when the scope itself changes, the
+  // previous period may no longer be offered, so this picks the newest one
+  // the new scope does offer, in the same render rather than one frame late.
+  const [scopeAtLastRender, setScopeAtLastRender] = useState(scope);
+  if (scope !== scopeAtLastRender) {
+    setScopeAtLastRender(scope);
+    setPeriod(periods[0] ?? "");
+  }
+
+  if (period === "" || !periods.includes(period)) {
     return <Text size="3">No statement month to review yet.</Text>;
   }
   const review = monthReview(analytics, period);

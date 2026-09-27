@@ -161,7 +161,7 @@ function WithSummary({
   children,
 }: WithSummaryProps) {
   return (
-    <Flex direction="column" gap="4">
+    <Flex direction="column" gap="6">
       <Flex justify="between" align="center" gap="3" wrap="wrap">
         <SummaryStrip total={total} period={period} figures={figures} />
         <YearFilter years={years} scope={scope} onScopeChange={onScopeChange} />
@@ -261,8 +261,8 @@ function PortfolioPanel({
   );
 }
 
-function MonthPanel({ analytics }: { analytics: AnalyticsOutput }) {
-  return <ThisMonth analytics={analytics} checkpoints={loadCheckpoints()} />;
+function MonthPanel({ analytics, scope }: { analytics: AnalyticsOutput; scope: YearScope }) {
+  return <ThisMonth analytics={analytics} checkpoints={loadCheckpoints()} scope={scope} />;
 }
 
 function GrowthPanel({ analytics }: { analytics: AnalyticsOutput }) {
@@ -369,7 +369,7 @@ function Dashboard() {
     // clip away.
     month: (
       <WithSummary {...summary}>
-        <MonthPanel analytics={all} />
+        <MonthPanel analytics={all} scope={scope} />
       </WithSummary>
     ),
     portfolio: (
