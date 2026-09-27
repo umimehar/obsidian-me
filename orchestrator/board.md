@@ -16,13 +16,13 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0008-dashboard-v2-holdings-benchmark]] #project/system #type/feature #p1
 
 
 
 
 ## In Progress
 
+- [ ] [[TCK-0008-dashboard-v2-holdings-benchmark]] #project/system #type/feature #p1
 
 
 
