@@ -18,15 +18,17 @@ function rollPastWeekend(iso: string): string {
 }
 
 /**
- * The CRA deadline for a contribution to count against `year`, rolled past
- * a weekend. RRSP gets the first 60 days of the following year (2027-03-01
- * for 2026, 2028-02-29 for 2027 -- a leap year, and 2026-03-02 for 2025,
- * since 2026-03-01 falls on a Sunday); TFSA, FHSA and RESP all close on
- * December 31 of the year itself.
+ * The CRA deadline for a contribution to count against `year`. RRSP gets
+ * the first 60 days of the following year (2027-03-01 for 2026, 2028-02-29
+ * for 2027 -- a leap year, and 2026-03-02 for 2025, since 2026-03-01 falls
+ * on a Sunday), rolled past a weekend since the CRA states that rule for
+ * it. TFSA, FHSA and RESP all close on December 31 of the year itself, a
+ * fixed calendar cutoff that is never rolled: a contribution counts against
+ * the year it lands in regardless of what day of the week December 31 is.
  */
 export function contributionDeadline(group: RegisteredGroup, year: number): string {
-  const raw = group === "RRSP" ? nthDayOfYear(year + 1, 60) : `${year}-12-31`;
-  return rollPastWeekend(raw);
+  if (group === "RRSP") return rollPastWeekend(nthDayOfYear(year + 1, 60));
+  return `${year}-12-31`;
 }
 
 export interface NextAction {

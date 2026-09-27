@@ -47,6 +47,16 @@ describe("contributionDeadline", () => {
     expect(contributionDeadline("FHSA", 2026)).toBe("2026-12-31");
     expect(contributionDeadline("RESP", 2026)).toBe("2026-12-31");
   });
+
+  test("TFSA, FHSA and RESP never roll December 31 into January, even on a weekend", () => {
+    // 2023-12-31 and 2028-12-31 both fall on a Sunday. Only the RRSP's
+    // 60th-day rule is a CRA business-day deadline; the calendar year
+    // cutoff for the other three wrappers is fixed and never moves.
+    for (const group of ["TFSA", "FHSA", "RESP"] as const) {
+      expect(contributionDeadline(group, 2023)).toBe("2023-12-31");
+      expect(contributionDeadline(group, 2028)).toBe("2028-12-31");
+    }
+  });
 });
 
 describe("nextAction", () => {
