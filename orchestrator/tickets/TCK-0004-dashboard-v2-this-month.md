@@ -40,4 +40,6 @@ Add a This month landing tab that answers what changed since the previous statem
 Owner request in session on 2026-09-26, after reviewing a proposal for the investments dashboard (`personal/investments/app`). Owner decisions: retirement age 60 (owner born 1997, from the RRSP last accrual year 2068 at 71), inflation adjustable on the page, net worth and the household switch deferred until the spouse's accounts arrive, goal targets move to a committed `data/plan.json` and the code defined targets are deleted. Gates: `bun run check` clean, `bun run contrast` pass, owner's CLAUDE.md voice and no hyphen rules for any prose on the page.
 
 ## Worklog
-
+- 2026-09-27 00:50 — Implementation delegated to a Sonnet subagent with the plan's TCK-0004 section.
+- 2026-09-27 01:05 — Three commits: 9b32a22 (activity totals per account and month in analytics.json), b189b67 (month review model), 182006b (This month tab, now the default). `bun run check`: 1388 pass, 14 skip, 0 fail. `bun run contrast`: AA pass, the month tab swept with 87 runs of text. Mutation checked: null fxRate throw, FEE debit reading, missing account filter.
+- 2026-09-27 01:06 — Agent review dispatched at Opus, high effort.
