@@ -231,14 +231,17 @@ describe("the headline book value and gain", () => {
     expect(gain.getAttribute("data-accent-color")).toBe("jade");
   });
 
-  test("the USD book cost caveat appears exactly once, inside the portfolio tab's about-these-numbers note", () => {
+  test("the USD book cost caveat appears exactly once on every tab, inside its about these numbers note", () => {
     // GroupGainLine used to print this sentence on the headline AND on
     // every group card -- eight or nine repeats of the same caveat on one
     // tab. It now lives once, in the tab's own AboutNumbers disclosure.
     render(<App />);
-    const matches = screen.getAllByText(/An estimate: book cost for USD holdings/);
-    expect(matches).toHaveLength(1);
-    expect(matches[0]?.closest("[data-about-numbers]")).not.toBeNull();
+    for (const tab of ["Portfolio", "Growth", "Plan", "Data"]) {
+      clickTab(tab);
+      const matches = screen.getAllByText(/An estimate: book cost for USD holdings/);
+      expect(matches).toHaveLength(1);
+      expect(matches[0]?.closest("[data-about-numbers]")).not.toBeNull();
+    }
   });
 
   test("no figure here announces coarser than what it prints", () => {

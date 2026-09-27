@@ -1,4 +1,4 @@
-import { Button, Flex, Grid, Heading, SegmentedControl, Text, Theme } from "@radix-ui/themes";
+import { Button, Flex, Heading, SegmentedControl, Text, Theme } from "@radix-ui/themes";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
@@ -127,12 +127,7 @@ function YearChangeLine({ change }: { change: YearChange }) {
   );
 }
 
-/**
- * The one repeating caveat every tab but Portfolio needs stated once: book
- * cost for a USD holding is a converted approximation. Portfolio states it
- * itself, alongside the fuller headline; the constant is shared so the two
- * can never drift into two different sentences for the same fact.
- */
+/** The USD book cost caveat, stated once per tab; one constant so every tab says the same sentence. */
 const USD_BOOK_COST_NOTE =
   "An estimate: book cost for USD holdings is a converted approximation, not a filing figure.";
 
@@ -341,12 +336,7 @@ function Dashboard() {
   const accountOptions = useMemo(() => chartableAccounts(all.series), [all]);
   const subject = chartSubject(all.series, accounts);
 
-  /**
-   * The whole dashboard reads a SCOPED analytics payload, clipped once here
-   * rather than filtered in each of the eight places that consume it. Every
-   * chart, rollup and gain below derives from `series` and needs no idea that
-   * a filter exists; eight separate filters would be eight that can disagree.
-   */
+  // Clipped once here, never per chart: separate filters could disagree.
   const analytics = useMemo(
     () => ({
       ...all,
@@ -356,33 +346,16 @@ function Dashboard() {
     [all, scope],
   );
 
-  // The registered-room and tax views are inherently per-year, so the global
-  // scope drives them: one year control, not two that look alike. On "All
-  // time" they fall back to the corpus's latest year, which is what they
-  // showed before this filter existed.
+  // Per year views follow the global scope; "All time" means the latest year.
   const year = scope === "all" ? latestYear : scope;
   const change = scope === "all" ? null : yearChange(all.series, scope);
-  /**
-   * The headline total, its book value and its gain all read from one
-   * `latestGroupGain(analytics.series)` call -- the same series-basis
-   * `PortfolioPoint` the group cards use, not `grandTotal` (which sums each
-   * account's own latest stated market value, a different basis: see
-   * `latestGroupGain`'s own docstring). The two agree today, to the cent,
-   * because every counted account's latest statement is the same period
-   * (`groupGain.test.ts` pins that agreement). They stop agreeing the day
-   * one account's statement lags another's -- `grandTotal` would still
-   * count that account's stale figure, the series point would not until it
-   * reports again -- and a total sourced from one while its own gain is
-   * sourced from the other would then be subtracting numbers that were
-   * never on the same basis. Falling back to `grandTotal` only covers the
-   * pathological case `latestGroupGain` returns null for: a corpus with no
-   * period at all carrying both a market value and a book cost, which the
-   * real committed data never is.
-   */
+  // Total, book value and gain share one series basis (see latestGroupGain);
+  // grandTotal covers only a corpus with no priced period at all.
   const portfolioGain = latestGroupGain(analytics.series);
   const total = portfolioGain?.marketValue ?? grandTotal(analytics);
   const period = latestPeriod(analytics);
   const onScopeChange = (next: YearScope) => setHash({ scope: next });
+  const summary = { total, period, figures: portfolioGain, years, scope, onScopeChange };
 
   const panels: Record<TabId, ReactNode> = {
     // TCK-0004 fills this in and adds "month" to TABS; it is unreachable
@@ -409,38 +382,17 @@ function Dashboard() {
       />
     ),
     growth: (
-      <WithSummary
-        total={total}
-        period={period}
-        figures={portfolioGain}
-        years={years}
-        scope={scope}
-        onScopeChange={onScopeChange}
-      >
+      <WithSummary {...summary}>
         <GrowthPanel analytics={analytics} />
       </WithSummary>
     ),
     plan: (
-      <WithSummary
-        total={total}
-        period={period}
-        figures={portfolioGain}
-        years={years}
-        scope={scope}
-        onScopeChange={onScopeChange}
-      >
+      <WithSummary {...summary}>
         <PlanPanel all={all} year={year} scope={scope} />
       </WithSummary>
     ),
     data: (
-      <WithSummary
-        total={total}
-        period={period}
-        figures={portfolioGain}
-        years={years}
-        scope={scope}
-        onScopeChange={onScopeChange}
-      >
+      <WithSummary {...summary}>
         <DataPanel report={report} scope={scope} />
       </WithSummary>
     ),
