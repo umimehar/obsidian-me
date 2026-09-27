@@ -12,9 +12,9 @@ describe("AboutNumbers", () => {
     expect(paragraphs.map((p) => p.textContent)).toEqual(["First note.", "Second note."]);
   });
 
-  test("renders no paragraph when there are no notes", () => {
-    render(<AboutNumbers notes={[]} />);
-    const details = document.querySelector("details[data-about-numbers]");
-    expect(details?.querySelectorAll("p").length).toBe(0);
+  test("renders nothing at all when there are no notes", () => {
+    const { container } = render(<AboutNumbers notes={[]} />);
+    expect(container.querySelector("details[data-about-numbers]")).toBeNull();
+    expect(container.innerHTML).toBe("");
   });
 });

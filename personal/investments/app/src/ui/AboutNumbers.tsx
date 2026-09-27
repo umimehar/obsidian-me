@@ -14,6 +14,7 @@ export interface AboutNumbersProps {
  * once; a caveat that appears only once on its own card stays there.
  */
 export function AboutNumbers({ notes }: AboutNumbersProps) {
+  if (notes.length === 0) return null;
   return (
     <details data-about-numbers="">
       <summary>About these numbers</summary>

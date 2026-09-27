@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
 import { latestGroupGain } from "../analytics/groupGain";
+import type { AccountSeries } from "../analytics/types";
 import { AboutNumbers } from "./AboutNumbers";
 import { AccountFilter } from "./AccountFilter";
 import { Cards } from "./Cards";
@@ -35,7 +36,14 @@ import {
 } from "./data";
 import { formatCurrency, formatRate, formatSignedCurrency } from "./format";
 import { ProjectionsView } from "./projections/ProjectionsView";
-import { type YearChange, clipReturns, clipSeries, scopeYears, yearChange } from "./scope";
+import {
+  type YearChange,
+  type YearScope,
+  clipReturns,
+  clipSeries,
+  scopeYears,
+  yearChange,
+} from "./scope";
 import { ErrorBoundary } from "./states/ErrorBoundary";
 import { type TabId, useHashTab } from "./useHashTab";
 import { RegisteredView } from "./wrappers/RegisteredView";
@@ -120,6 +128,203 @@ function YearChangeLine({ change }: { change: YearChange }) {
 }
 
 /**
+ * The one repeating caveat every tab but Portfolio needs stated once: book
+ * cost for a USD holding is a converted approximation. Portfolio states it
+ * itself, alongside the fuller headline; the constant is shared so the two
+ * can never drift into two different sentences for the same fact.
+ */
+const USD_BOOK_COST_NOTE =
+  "An estimate: book cost for USD holdings is a converted approximation, not a filing figure.";
+
+interface WithSummaryProps {
+  total: number;
+  period: string | null;
+  figures: ReturnType<typeof latestGroupGain>;
+  years: readonly number[];
+  scope: YearScope;
+  onScopeChange: (scope: YearScope) => void;
+  children: ReactNode;
+}
+
+/**
+ * Every tab but Portfolio carries this strip rather than the full hero: the
+ * year scope has to stay reachable everywhere, but the hero chart repeating
+ * above every panel was one of the things the owner asked fixed. It also
+ * carries the USD book-cost caveat once, the same way Portfolio's own
+ * `AboutNumbers` does, so a reader on Growth or Plan is not left to wonder
+ * whether the strip's gain is an exact figure.
+ */
+function WithSummary({
+  total,
+  period,
+  figures,
+  years,
+  scope,
+  onScopeChange,
+  children,
+}: WithSummaryProps) {
+  return (
+    <Flex direction="column" gap="4">
+      <Flex justify="between" align="center" gap="3" wrap="wrap">
+        <SummaryStrip total={total} period={period} figures={figures} />
+        <YearFilter years={years} scope={scope} onScopeChange={onScopeChange} />
+      </Flex>
+      {children}
+      <AboutNumbers notes={[USD_BOOK_COST_NOTE]} />
+    </Flex>
+  );
+}
+
+interface PortfolioPanelProps {
+  analytics: AnalyticsOutput;
+  all: AnalyticsOutput;
+  year: number;
+  change: YearChange | null;
+  portfolioGain: ReturnType<typeof latestGroupGain>;
+  total: number;
+  period: string | null;
+  years: readonly number[];
+  scope: YearScope;
+  onScopeChange: (scope: YearScope) => void;
+  accountOptions: readonly AccountSeries[];
+  accounts: Set<string>;
+  onAccountsChange: (accounts: Set<string>) => void;
+  subject: string;
+  chart: ChartMode;
+  onChartChange: (chart: ChartMode) => void;
+}
+
+function PortfolioPanel({
+  analytics,
+  all,
+  year,
+  change,
+  portfolioGain,
+  total,
+  period,
+  years,
+  scope,
+  onScopeChange,
+  accountOptions,
+  accounts,
+  onAccountsChange,
+  subject,
+  chart,
+  onChartChange,
+}: PortfolioPanelProps) {
+  return (
+    <Flex direction="column" gap="6">
+      <Flex direction="column" gap="1">
+        {/* The heading is the label, not the figure. A screen reader's heading
+            list is a table of contents, and "$241,739.67" is not a section name. */}
+        <Heading size="2" as="h2" color="gray" weight="regular">
+          Portfolio total{period !== null ? ` as of ${period}` : ""}
+        </Heading>
+        <Text size="8" weight="bold" data-portfolio-total="">
+          {formatCurrency(total)}
+        </Text>
+        {/* The same `GroupGainLine` every group card renders, not a second
+            copy: the headline book value/gain and a card's cannot drift
+            apart in format, sign convention or colour if there is only one
+            component printing either. */}
+        <GroupGainLine figures={portfolioGain} />
+        {change === null ? null : <YearChangeLine change={change} />}
+      </Flex>
+      <Flex justify="between" align="center" gap="3" wrap="wrap">
+        <YearFilter years={years} scope={scope} onScopeChange={onScopeChange} />
+        <Flex align="center" gap="3">
+          <AccountFilter
+            accounts={accountOptions}
+            selected={accounts}
+            subject={subject}
+            isDefault={isDefaultSelection(all.series, accounts)}
+            onSelectedChange={onAccountsChange}
+            onReset={() => onAccountsChange(defaultSelection(all.series))}
+          />
+          <ChartModeToggle mode={chart} onModeChange={onChartChange} />
+        </Flex>
+      </Flex>
+      {chart === "value" ? (
+        <ValueOverTime series={seriesForChart(analytics.series, accounts)} subject={subject} />
+      ) : (
+        <ReturnOverTime
+          series={seriesForChart(all.series, accounts)}
+          scope={scope}
+          subject={subject}
+        />
+      )}
+      <Overview analytics={analytics} />
+      {/* No section heading of its own: TaxView already opens with "Personal
+          taxable income, {year}", its own h2, and a wrapper heading above it
+          said nothing that heading did not, while sitting one level above it
+          in the outline. */}
+      <TaxView analytics={all} year={year} />
+      <AboutNumbers notes={[USD_BOOK_COST_NOTE]} />
+    </Flex>
+  );
+}
+
+function GrowthPanel({ analytics }: { analytics: AnalyticsOutput }) {
+  return (
+    <Flex direction="column" gap="6">
+      <ReturnsChart returns={analytics.returns} series={analytics.series} />
+      <ContributionsChart analytics={analytics} />
+      <CashflowChart series={analytics.series} />
+      <CostGapChart series={analytics.series} />
+    </Flex>
+  );
+}
+
+function PlanPanel({
+  all,
+  year,
+  scope,
+}: {
+  all: AnalyticsOutput;
+  year: number;
+  scope: YearScope;
+}) {
+  return (
+    <Flex direction="column" gap="6">
+      <RegisteredView analytics={all} year={year} />
+      {/* The projection is a thirty-year forecast: a past year does not
+          scope it, and re-basing it to that year's close would quietly
+          produce a different forecast that looks just as authoritative.
+          It reads the UNSCOPED payload and says so on the tab. */}
+      <ProjectionsView analytics={all} scopeNote={scope !== "all"} />
+    </Flex>
+  );
+}
+
+function DataPanel({
+  report,
+  scope,
+}: {
+  report: ReturnType<typeof loadReconciliation>;
+  scope: YearScope;
+}) {
+  return (
+    <Flex direction="column" gap="6">
+      <Flex direction="column" gap="3">
+        <Heading size="5" as="h2">
+          Coverage
+        </Heading>
+        {/* Coverage describes the archive, not a year of it, so the scope
+            does not apply. */}
+        <DataStatus coverage={loadCoverage()} />
+      </Flex>
+      <Reconciliation report={report} scope={scope} />
+      <Flex direction="column" gap="3">
+        <Heading size="5" as="h2">
+          Credit cards
+        </Heading>
+        <Cards statements={loadCards()} scope={scope} />
+      </Flex>
+    </Flex>
+  );
+}
+
+/**
  * Everything that reads a committed artifact. It is a separate component
  * from `App` so that `ErrorBoundary` sits above the code that parses, and a
  * malformed `analytics.json` renders the rebuild instructions rather than
@@ -177,123 +382,67 @@ function Dashboard() {
   const portfolioGain = latestGroupGain(analytics.series);
   const total = portfolioGain?.marketValue ?? grandTotal(analytics);
   const period = latestPeriod(analytics);
-
-  const yearFilter = (
-    <YearFilter years={years} scope={scope} onScopeChange={(next) => setHash({ scope: next })} />
-  );
-
-  /**
-   * Every tab but Portfolio carries this strip rather than the full hero:
-   * the year scope has to stay reachable everywhere, but the hero chart
-   * repeating above every panel was one of the things the owner asked fixed.
-   */
-  function withSummary(children: ReactNode): ReactNode {
-    return (
-      <Flex direction="column" gap="4">
-        <Flex justify="between" align="center" gap="3" wrap="wrap">
-          <SummaryStrip total={total} period={period} figures={portfolioGain} />
-          {yearFilter}
-        </Flex>
-        {children}
-      </Flex>
-    );
-  }
+  const onScopeChange = (next: YearScope) => setHash({ scope: next });
 
   const panels: Record<TabId, ReactNode> = {
     // TCK-0004 fills this in and adds "month" to TABS; it is unreachable
     // until then.
     month: null,
     portfolio: (
-      <Flex direction="column" gap="6">
-        <Flex direction="column" gap="1">
-          {/* The heading is the label, not the figure. A screen reader's heading
-              list is a table of contents, and "$241,739.67" is not a section name. */}
-          <Heading size="2" as="h2" color="gray" weight="regular">
-            Portfolio total{period !== null ? ` as of ${period}` : ""}
-          </Heading>
-          <Text size="8" weight="bold" data-portfolio-total="">
-            {formatCurrency(total)}
-          </Text>
-          {/* The same `GroupGainLine` every group card renders, not a second
-              copy: the headline book value/gain and a card's cannot drift
-              apart in format, sign convention or colour if there is only one
-              component printing either. */}
-          <GroupGainLine figures={portfolioGain} />
-          {change === null ? null : <YearChangeLine change={change} />}
-        </Flex>
-        <Flex justify="between" align="center" gap="3" wrap="wrap">
-          {yearFilter}
-          <Flex align="center" gap="3">
-            <AccountFilter
-              accounts={accountOptions}
-              selected={accounts}
-              subject={subject}
-              isDefault={isDefaultSelection(all.series, accounts)}
-              onSelectedChange={setAccounts}
-              onReset={() => setAccounts(defaultSelection(all.series))}
-            />
-            <ChartModeToggle mode={chart} onModeChange={setChart} />
-          </Flex>
-        </Flex>
-        {chart === "value" ? (
-          <ValueOverTime series={seriesForChart(analytics.series, accounts)} subject={subject} />
-        ) : (
-          <ReturnOverTime
-            series={seriesForChart(all.series, accounts)}
-            scope={scope}
-            subject={subject}
-          />
-        )}
-        <Overview analytics={analytics} />
-        <Flex direction="column" gap="3">
-          <Heading size="5" as="h2">
-            Income and tax
-          </Heading>
-          <TaxView analytics={all} year={year} />
-        </Flex>
-        <AboutNumbers
-          notes={[
-            "An estimate: book cost for USD holdings is a converted approximation, not a filing figure.",
-          ]}
-        />
-      </Flex>
+      <PortfolioPanel
+        analytics={analytics}
+        all={all}
+        year={year}
+        change={change}
+        portfolioGain={portfolioGain}
+        total={total}
+        period={period}
+        years={years}
+        scope={scope}
+        onScopeChange={onScopeChange}
+        accountOptions={accountOptions}
+        accounts={accounts}
+        onAccountsChange={setAccounts}
+        subject={subject}
+        chart={chart}
+        onChartChange={setChart}
+      />
     ),
-    growth: withSummary(
-      <Flex direction="column" gap="6">
-        <ReturnsChart returns={analytics.returns} series={analytics.series} />
-        <ContributionsChart analytics={analytics} />
-        <CashflowChart series={analytics.series} />
-        <CostGapChart series={analytics.series} />
-      </Flex>,
+    growth: (
+      <WithSummary
+        total={total}
+        period={period}
+        figures={portfolioGain}
+        years={years}
+        scope={scope}
+        onScopeChange={onScopeChange}
+      >
+        <GrowthPanel analytics={analytics} />
+      </WithSummary>
     ),
-    plan: withSummary(
-      <Flex direction="column" gap="6">
-        <RegisteredView analytics={all} year={year} />
-        {/* The projection is a thirty-year forecast: a past year does not
-            scope it, and re-basing it to that year's close would quietly
-            produce a different forecast that looks just as authoritative.
-            It reads the UNSCOPED payload and says so on the tab. */}
-        <ProjectionsView analytics={all} scopeNote={scope !== "all"} />
-      </Flex>,
+    plan: (
+      <WithSummary
+        total={total}
+        period={period}
+        figures={portfolioGain}
+        years={years}
+        scope={scope}
+        onScopeChange={onScopeChange}
+      >
+        <PlanPanel all={all} year={year} scope={scope} />
+      </WithSummary>
     ),
-    data: withSummary(
-      <Flex direction="column" gap="6">
-        <Flex direction="column" gap="3">
-          <Heading size="5" as="h2">
-            Coverage
-          </Heading>
-          {/* Coverage describes the archive, not a year of it, so the scope
-              does not apply. */}
-          <DataStatus coverage={loadCoverage()} />
-        </Flex>
-        <Reconciliation report={report} scope={scope} />
-        <Flex direction="column" gap="3">
-          <Heading size="5" as="h2">
-            Credit cards
-          </Heading>
-          <Cards statements={loadCards()} scope={scope} />
-        </Flex>
-      </Flex>,
+    data: (
+      <WithSummary
+        total={total}
+        period={period}
+        figures={portfolioGain}
+        years={years}
+        scope={scope}
+        onScopeChange={onScopeChange}
+      >
+        <DataPanel report={report} scope={scope} />
+      </WithSummary>
     ),
   };
 
