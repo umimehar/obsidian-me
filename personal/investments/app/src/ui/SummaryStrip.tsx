@@ -20,9 +20,15 @@ export function SummaryStrip({ total, period, figures }: SummaryStripProps) {
     <Text size="2" color="gray" data-summary-strip="">
       Portfolio {formatCurrency(total)}
       {period === null ? "" : ` as of ${period}`}
-      {figures === null
-        ? ""
-        : ` · ${formatGainWithShare(figures.gain, figures.bookCost)} against book cost`}
+      {figures === null ? null : (
+        <>
+          {" · "}
+          <Text color={figures.gain >= 0 ? "jade" : "red"}>
+            {formatGainWithShare(figures.gain, figures.bookCost)}
+          </Text>
+          {" against book cost"}
+        </>
+      )}
     </Text>
   );
 }

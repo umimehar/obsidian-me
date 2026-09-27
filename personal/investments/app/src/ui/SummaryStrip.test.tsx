@@ -48,4 +48,36 @@ describe("SummaryStrip", () => {
     expect(text).toContain(formatCurrency(GOLDENS.portfolio.total));
     expect(text).not.toContain("against book cost");
   });
+
+  test("colours a gain jade, matching GroupGainLine everywhere else", () => {
+    render(
+      <Theme>
+        <SummaryStrip total={GOLDENS.portfolio.total} period="2026-08" figures={FIGURES} />
+      </Theme>,
+    );
+    const strip = document.querySelector("[data-summary-strip]");
+    const gain = strip?.querySelector(`[data-accent-color="jade"]`) as HTMLElement | null;
+    expect(gain).not.toBeNull();
+    expect(gain?.textContent).toBe(
+      formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost),
+    );
+  });
+
+  test("colours a loss red, never the same tone as a gain", () => {
+    const loss = {
+      marketValue: 900,
+      bookCost: 1000,
+      gain: -100,
+    };
+    render(
+      <Theme>
+        <SummaryStrip total={900} period="2026-08" figures={loss} />
+      </Theme>,
+    );
+    const strip = document.querySelector("[data-summary-strip]");
+    const gain = strip?.querySelector(`[data-accent-color="red"]`) as HTMLElement | null;
+    expect(gain).not.toBeNull();
+    expect(gain?.textContent).toBe(formatGainWithShare(loss.gain, loss.bookCost));
+    expect(strip?.querySelector(`[data-accent-color="jade"]`)).toBeNull();
+  });
 });
