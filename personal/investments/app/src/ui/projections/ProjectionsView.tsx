@@ -293,17 +293,27 @@ function Controls({
   );
 }
 
+/** The month name of a `YYYY-MM` period, for a sentence rather than an axis label. */
+function monthName(period: string): string {
+  const [year, month] = period.split("-").map(Number);
+  return new Intl.DateTimeFormat("en-CA", { month: "long", timeZone: "UTC" }).format(
+    new Date(Date.UTC(year ?? 1970, (month ?? 1) - 1, 1)),
+  );
+}
+
 /** Which accounts CRA rules let this projection fund, and which selected accounts it merely compounds. */
 function Assumptions({
   rate,
   inflation,
   fundedGroups,
   uncompounded,
+  anchorPeriod,
 }: {
   rate: number;
   inflation: number;
   fundedGroups: readonly string[];
   uncompounded: readonly string[];
+  anchorPeriod: string;
 }) {
   const funded =
     fundedGroups.length === 0 ? "none of the selected accounts" : fundedGroups.join(", ");
@@ -314,6 +324,7 @@ function Assumptions({
       {uncompounded.length === 0
         ? ""
         : ` ${uncompounded.join(", ")} ${uncompounded.length === 1 ? "grows" : "grow"} at the rate with no new money.`}
+      {` Room runway below is by calendar year; the chart above dates each point to ${monthName(anchorPeriod)}, one statement's worth of that year already behind it.`}
     </Text>
   );
 }
@@ -407,6 +418,9 @@ export function ProjectionsView({
   onReset,
   subject,
 }: ProjectionsViewProps) {
+  // Must stay inside the ErrorBoundary render path: a stale plan.json throws
+  // here, and that throw is how a bad file surfaces as the rebuild message
+  // rather than a silent default or a crash outside React's own catch.
   const plan = useMemo(() => loadPlan(), []);
   const fitted = useMemo(() => fittedReturnRate(analytics.series), [analytics]);
   const [rate, setRate] = useState(DEFAULT_RATE);
@@ -474,6 +488,7 @@ export function ProjectionsView({
         inflation={inflation}
         fundedGroups={fundedGroups}
         uncompounded={scenarios.uncompounded}
+        anchorPeriod={scenarios.startPeriod}
       />
       <FittedContext fitted={fitted} />
       <GoalsPanel

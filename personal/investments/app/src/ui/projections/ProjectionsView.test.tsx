@@ -2,6 +2,7 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
+import { evaluateGoal } from "../../goals/evaluate";
 import { GOLDENS } from "../../goldens";
 import { loadPlan, retirementYear } from "../../plan";
 import { projectYears } from "../../projection/engine";
@@ -141,14 +142,44 @@ describe("the rate slider", () => {
     expect(text("retirement-tile")).not.toBe(before);
   });
 
-  test("the goals panel's projected figure follows the rate slider too", () => {
+  test("the goals panel's projected figure follows the rate slider to its own new value", () => {
     render(<Harness />);
     const goal = plan.goals[0];
     if (goal === undefined) throw new Error("expected at least one plan goal");
-    const before = screen.getByTestId(`goal-${goal.id}`).getAttribute("aria-label");
+
+    // The same year count `ProjectionsView` itself derives, so `verdictAt6`
+    // and `verdictAt10` are the literal figures the rendered card must show
+    // at each rate -- not merely "some figure that changed".
+    const startYear = Number(projectionInputs(analytics).startYear || 0);
+    const years = Math.max(30, retireYear - startYear);
+    const inputsAt6 = projectionInputs(analytics, { returnRate: 0.06, years });
+    const inputsAt10 = projectionInputs(analytics, { returnRate: 0.1, years });
+    const verdictAt6 = evaluateGoal(
+      goal,
+      analytics,
+      projectYears(inputsAt6),
+      0.06,
+      inputsAt6.fhsaCloseYear,
+    );
+    const verdictAt10 = evaluateGoal(
+      goal,
+      analytics,
+      projectYears(inputsAt10),
+      0.1,
+      inputsAt10.fhsaCloseYear,
+    );
+    if (verdictAt6.projected === null || verdictAt10.projected === null) {
+      throw new Error("expected a projectable goal at both rates");
+    }
+    expect(verdictAt10.projected).not.toBeCloseTo(verdictAt6.projected, 0);
+
+    const before = screen.getByTestId(`goal-${goal.id}`).getAttribute("aria-label") ?? "";
+    expect(before).toContain(formatCurrency(verdictAt6.projected));
+
     fireEvent.change(rateSlider(), { target: { value: "10" } });
-    const after = screen.getByTestId(`goal-${goal.id}`).getAttribute("aria-label");
-    expect(after).not.toBe(before);
+    const after = screen.getByTestId(`goal-${goal.id}`).getAttribute("aria-label") ?? "";
+    expect(after).toContain(formatCurrency(verdictAt10.projected));
+    expect(after).not.toContain(formatCurrency(verdictAt6.projected));
   });
 });
 
@@ -209,15 +240,38 @@ describe("milestones and retirement income, against the goldens", () => {
 });
 
 describe("the seam", () => {
-  test("joins the covered accounts' total without a step", () => {
-    render(<Harness />);
-    const historyLine = document.querySelector("[data-history-line]")?.getAttribute("d") ?? "";
-    const projectionLine =
-      document.querySelector("[data-projection-line]")?.getAttribute("d") ?? "";
-    const lastHistory = [...historyLine.matchAll(/[ML]([\d.-]+),([\d.-]+)/g)].at(-1);
-    const firstProjected = [...projectionLine.matchAll(/[ML]([\d.-]+),([\d.-]+)/g)][0];
-    expect(firstProjected?.[1]).toBe(lastHistory?.[1]);
-    expect(firstProjected?.[2]).toBe(lastHistory?.[2]);
+  /**
+   * `Halves` always draws the projected path starting from `series.seam`
+   * itself, so the two paths meeting at one pixel is true by construction
+   * for ANY history, including one that draws the wrong accounts entirely --
+   * asserting only that agreement proves nothing. This asserts the seam's
+   * actual VALUE, read off the chart's own accessible summary ("ending at
+   * $X"), against `runScenarios`' opening figure for a selection that is
+   * neither the default nor the whole portfolio: two accounts, one the
+   * engine covers and one it does not, so a history built from the wrong
+   * set would show a visibly different total.
+   */
+  test("the last stated point equals runScenarios' opening figure for the SELECTED accounts, not the portfolio", () => {
+    const selected = new Set(
+      chartableAccounts(analytics.series)
+        .filter((a) => a.label === "Corporate (self)" || a.label === "Crypto")
+        .map((a) => a.maskedId),
+    );
+    render(<Harness initial={selected} />);
+
+    const startYear = Number(projectionInputs(analytics).startYear || 0);
+    const years = Math.max(30, retireYear - startYear);
+    const set = runScenarios(analytics, selected, {
+      rate: 0.06,
+      spread: 0.02,
+      inflation: plan.inflation,
+      years,
+    });
+    const opening = set.base.points[0]?.nominal;
+    if (opening === undefined) throw new Error("expected an opening point");
+
+    const label = document.querySelector("svg[role='img']")?.getAttribute("aria-label") ?? "";
+    expect(label).toContain(`ending at ${formatCurrency(opening)}`);
   });
 });
 
@@ -305,14 +359,24 @@ describe("isDefaultSelection stays true for the starting selection", () => {
 });
 
 describe("heading structure", () => {
-  test("every tile heading is an h3, in document order under the page's own h2", () => {
+  test("the exact h3 names appear in document order: the three tiles, each goal, then the runway", () => {
     render(<Harness />);
-    const h2 = screen.getByRole("heading", { level: 2, name: "Where this is heading" });
-    const h3s = screen.getAllByRole("heading", { level: 3 });
-    expect(h3s.length).toBeGreaterThanOrEqual(3);
-    const order = [h2, ...h3s].map((node) =>
-      Array.from(document.querySelectorAll("h2, h3")).indexOf(node),
-    );
-    expect(order).toEqual([...order].sort((a, b) => a - b));
+    screen.getByRole("heading", { level: 2, name: "Where this is heading" });
+    const h3s = screen.getAllByRole("heading", { level: 3 }).map((node) => node.textContent);
+    const expected = [
+      /^At retirement, .+ \(age \d+\)$/,
+      /^Monthly income at [\d.]+% a year$/,
+      "Milestones, today's dollars",
+      ...plan.goals.map((goal) => goal.label),
+      "Room runway",
+    ];
+    // A demoted or promoted tile heading shifts every name after it by one
+    // position, so an exact, ordered comparison catches that where a mere
+    // count or an unordered "every name is present somewhere" check would not.
+    expect(h3s).toHaveLength(expected.length);
+    expected.forEach((match, index) => {
+      if (typeof match === "string") expect(h3s[index]).toBe(match);
+      else expect(h3s[index]).toMatch(match);
+    });
   });
 });
