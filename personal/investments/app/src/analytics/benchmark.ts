@@ -10,19 +10,12 @@ export interface BenchmarkPoint {
 }
 
 /**
- * The portfolio's own deposit-netted return, replayed as a single fund
- * purchase: the opening month buys the benchmark at its own close, and every
- * later month's net deposit (the same basis `netFlowsByPeriod` feeds the
- * fitted rate and the return chart with) buys more units at that month's
- * close. The benchmark's value is simply units held times that month's
- * close -- there is no separate "return" to fit, since the units already
- * carry the whole history.
- *
- * A month with no close at all -- the benchmark's own history starts later,
- * or a request failed to cover it -- is left out of the result entirely
- * rather than guessed at. Its deposit is not carried forward into a later
- * month either: the comparison is honestly silent for that month, and the
- * chart states which months were skipped rather than smoothing over them.
+ * Replays the portfolio's own net deposits (the same basis `netFlowsByPeriod`
+ * feeds the fitted rate and the return chart with) as unit purchases of one
+ * fund: the opening month buys at its own close, every later month's net
+ * deposit buys more units at that month's close, and the benchmark value is
+ * simply units times close. A month with no close is left out entirely,
+ * with no deposit carried forward, rather than guessed at.
  */
 export function simulateBenchmark(
   series: readonly AccountSeries[],

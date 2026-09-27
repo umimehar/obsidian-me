@@ -15,17 +15,8 @@ const USER_AGENT =
 const DATA_DIR = join(import.meta.dir, "..", "..", "..", "data");
 
 interface ChartResult {
-  chart: {
-    result:
-      | readonly [
-          {
-            timestamp: readonly number[];
-            indicators: { adjclose: readonly [{ adjclose: readonly (number | null)[] }] };
-          },
-        ]
-      | null;
-    error: unknown;
-  };
+  timestamp: readonly number[];
+  adjcloses: readonly (number | null)[];
 }
 
 /** `YYYY-MM` for a chart timestamp, in UTC so the month never drifts with the machine's own timezone. */
@@ -60,22 +51,56 @@ export function monthlyClosesFromDaily(
   return closes;
 }
 
+/**
+ * The current calendar month, in UTC -- a fetch taken mid-month can only
+ * ever see an intraday price for it, never a true month-end close, so
+ * `fetchBenchmark` drops it rather than committing a close that looks like
+ * a month end and is not one.
+ */
+function currentPeriod(): string {
+  return periodOf(Date.now() / 1000);
+}
+
+/**
+ * Validates the shape `monthlyClosesFromDaily` needs out of Yahoo's own
+ * response, rather than casting it: a field renamed or missing upstream
+ * throws a clear message here instead of surfacing later as a wrong or
+ * silently absent close.
+ */
+export function parseChartResult(raw: unknown): ChartResult {
+  const root = raw as { chart?: { result?: unknown } } | null;
+  const result = root?.chart?.result;
+  const first = Array.isArray(result) ? result[0] : undefined;
+  if (first === undefined || first === null) {
+    throw new Error(`${SYMBOL}: chart response carried no result`);
+  }
+  const timestamp = (first as { timestamp?: unknown }).timestamp;
+  const adjcloses = (first as { indicators?: { adjclose?: unknown } }).indicators?.adjclose;
+  const series = Array.isArray(adjcloses) ? adjcloses[0]?.adjclose : undefined;
+  if (!Array.isArray(timestamp) || !Array.isArray(series)) {
+    throw new Error(`${SYMBOL}: chart response is missing timestamp or adjclose`);
+  }
+  if (timestamp.length !== series.length) {
+    throw new Error(
+      `${SYMBOL}: timestamp and adjclose lengths disagree (${timestamp.length} vs ${series.length})`,
+    );
+  }
+  return { timestamp, adjcloses: series };
+}
+
 async function fetchChart(): Promise<ChartResult> {
   const url = `https://query2.finance.yahoo.com/v8/finance/chart/${SYMBOL}?interval=1d&range=10y`;
   const response = await fetch(url, { headers: { "User-Agent": USER_AGENT } });
   if (!response.ok) {
     throw new Error(`${url}: HTTP ${response.status}`);
   }
-  return (await response.json()) as ChartResult;
+  return parseChartResult(await response.json());
 }
 
 export async function fetchBenchmark(): Promise<BenchmarkData> {
   const chart = await fetchChart();
-  const result = chart.chart.result?.[0];
-  if (!result) {
-    throw new Error(`no chart result for ${SYMBOL}`);
-  }
-  const closes = monthlyClosesFromDaily(result.timestamp, result.indicators.adjclose[0].adjclose);
+  const closes = monthlyClosesFromDaily(chart.timestamp, chart.adjcloses);
+  delete closes[currentPeriod()];
   if (Object.keys(closes).length === 0) {
     throw new Error(`${SYMBOL}: chart returned no usable closes`);
   }
