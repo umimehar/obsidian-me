@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
 import { latestGroupGain } from "../analytics/groupGain";
 import { Cards } from "./Cards";
+import { DataStatus } from "./DataStatus";
 import { GroupGainLine, Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
 import { Tabs } from "./Tabs";
@@ -14,7 +15,14 @@ import { CostGapChart } from "./charts/CostGapChart";
 import { ReturnOverTime } from "./charts/ReturnOverTime";
 import { ReturnsChart } from "./charts/ReturnsChart";
 import { ValueOverTime } from "./charts/ValueOverTime";
-import { grandTotal, latestPeriod, loadAnalytics, loadCards, loadReconciliation } from "./data";
+import {
+  grandTotal,
+  latestPeriod,
+  loadAnalytics,
+  loadCards,
+  loadCoverage,
+  loadReconciliation,
+} from "./data";
 import { formatCurrency, formatRate, formatSignedCurrency } from "./format";
 import { ProjectionsView } from "./projections/ProjectionsView";
 import { type YearChange, clipReturns, clipSeries, scopeYears, yearChange } from "./scope";
@@ -205,6 +213,8 @@ function Dashboard() {
     // UNSCOPED payload and says so on the tab.
     projections: <ProjectionsView analytics={all} scopeNote={scope !== "all"} />,
     reconciliation: <Reconciliation report={report} scope={scope} />,
+    // Coverage describes the archive, not a year of it, so the scope does not apply.
+    data: <DataStatus coverage={loadCoverage()} />,
   };
 
   return (

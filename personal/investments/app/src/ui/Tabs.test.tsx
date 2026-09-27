@@ -13,6 +13,7 @@ const PANELS: Record<TabId, string> = {
   cards: "Cards panel content",
   projections: "Projections panel content",
   reconciliation: "Reconciliation panel content",
+  data: "Data panel content",
 };
 
 /**
@@ -36,6 +37,7 @@ function Harness() {
         cards: <div>{PANELS.cards}</div>,
         projections: <div>{PANELS.projections}</div>,
         reconciliation: <div>{PANELS.reconciliation}</div>,
+        data: <div>{PANELS.data}</div>,
       }}
     />
   );

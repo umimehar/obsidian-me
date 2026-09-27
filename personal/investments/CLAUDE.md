@@ -4,16 +4,25 @@ Personal finance dashboard built from Wealthsimple's monthly **PDF statements**.
 
 ## Importing a month
 
-Four commands, in this order. Nothing else is needed, and in particular the previous months' PDFs are not.
+The source folder holds only the month being imported; the owner deletes it afterwards, and the previous months' PDFs are never needed.
 
 ```
+mkdir -p ~/Downloads/monthly_pdf_statements
 cp ~/Downloads/<this month's PDFs>/*.pdf ~/Downloads/monthly_pdf_statements/
-cd app && bun run build && bun run analytics && bun run goldens && bun run cards
+cd app && bun run build && bun run analytics && bun run goldens && bun run cards && bun run tracker
 bun run check          # must be clean
 bun run contrast       # only if a colour, size, weight or badge changed
 ```
 
-Then read the `data/goldens.json` diff. That single file is where every figure the tests pin lives, so the diff IS the month's change: a total that moved the wrong way, a contribution that landed in the wrong wrapper, a rate that jumped, all of it in one reviewable place. Commit the four `data/*.json` files together.
+`build` fails with ENOENT when the folder is missing entirely, hence the `mkdir -p`. `STATEMENTS_DIR=<folder>` points it anywhere else.
+
+Then read the `data/goldens.json` diff. That single file is where every figure the tests pin lives, so the diff IS the month's change: a total that moved the wrong way, a contribution that landed in the wrong wrapper, a rate that jumped, all of it in one reviewable place. Commit the `data/*.json` files and `tracking.md` together.
+
+### Statement coverage
+
+`bun run tracker` writes `tracking.md` and `data/coverage.json` from the datastore: per account, the first and latest month and any month missing since the first; per month, how many open accounts reported; and the latest month where every open account has a statement. The dashboard's Data tab renders the JSON. `tracker.test.ts` fails `bun run check` when either file is stale against the datastore, so an import that skips the command cannot land green.
+
+A month counts as covered when any statement exists for it. Since 2026-07 the three chequing accounts send only a CASH statement where they used to send BROKERAGE and CASH; both carry the closing balance, so that is not a gap.
 
 `bun run build --rebuild` discards the archive and re-parses every PDF from scratch. It needs every PDF present, and it is for one case only: a parser change, where carrying stale parses forward is exactly wrong.
 
@@ -40,7 +49,7 @@ The CSV pipeline that preceded this lived in `scripts/` and rendered `notes/inde
 Two commands, and they are deliberately not one.
 
 - `bun run check` — biome, `tsc --noEmit`, `bun test`. The per-commit gate. It must stay clean and it runs in about twelve seconds over 1264 tests.
-- `bun run contrast` — renders the dashboard in Chromium on all seven tabs in both themes and **measures** the WCAG AA contrast of every rendered run of text against the opaque colour actually painted behind it. About fourteen seconds, and it needs a browser: `bunx playwright install chromium` once, then `bun run contrast`. Run it before shipping anything that changes a colour, a font size, a font weight, or adds a badge, a callout or a chart label.
+- `bun run contrast` — renders the dashboard in Chromium on all eight tabs in both themes and **measures** the WCAG AA contrast of every rendered run of text against the opaque colour actually painted behind it. About fourteen seconds, and it needs a browser: `bunx playwright install chromium` once, then `bun run contrast`. Run it before shipping anything that changes a colour, a font size, a font weight, or adds a badge, a callout or a chart label.
 
 It is out of `bun run check` on purpose. Folding a browser launch and a dev server into the gate that runs on every commit trades ten seconds for twenty-five, on every commit, to catch a class of regression that only a colour change can cause. The cost is that a colour change with no `bun run contrast` behind it can land green; that is what the line above exists to prevent.
 

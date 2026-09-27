@@ -1,0 +1,363 @@
+{
+  "generated": "2026-08-31T21:28:26.918Z",
+  "latestPeriod": "2026-07",
+  "latestComplete": "2026-07",
+  "accounts": [
+    {
+      "label": "Chequing 18a3",
+      "kind": "Chequing",
+      "inTotals": false,
+      "firstPeriod": "2026-04",
+      "lastPeriod": "2026-07",
+      "monthCount": 4,
+      "missing": []
+    },
+    {
+      "label": "Non-registered 1f9a",
+      "kind": "NonRegistered",
+      "inTotals": true,
+      "firstPeriod": "2025-10",
+      "lastPeriod": "2026-07",
+      "monthCount": 10,
+      "missing": []
+    },
+    {
+      "label": "RRSP (self-directed)",
+      "kind": "RRSP",
+      "inTotals": true,
+      "firstPeriod": "2025-08",
+      "lastPeriod": "2026-07",
+      "monthCount": 12,
+      "missing": []
+    },
+    {
+      "label": "Chequing 2b74",
+      "kind": "Chequing",
+      "inTotals": false,
+      "firstPeriod": "2025-07",
+      "lastPeriod": "2026-07",
+      "monthCount": 13,
+      "missing": []
+    },
+    {
+      "label": "Non-registered 2c62",
+      "kind": "NonRegistered",
+      "inTotals": true,
+      "firstPeriod": "2025-11",
+      "lastPeriod": "2026-07",
+      "monthCount": 9,
+      "missing": []
+    },
+    {
+      "label": "Chequing 8cd3",
+      "kind": "Chequing",
+      "inTotals": false,
+      "firstPeriod": "2025-09",
+      "lastPeriod": "2026-07",
+      "monthCount": 11,
+      "missing": []
+    },
+    {
+      "label": "Corporate",
+      "kind": "Corporate",
+      "inTotals": true,
+      "firstPeriod": "2026-01",
+      "lastPeriod": "2026-07",
+      "monthCount": 7,
+      "missing": []
+    },
+    {
+      "label": "TFSA (managed)",
+      "kind": "TFSA",
+      "inTotals": true,
+      "firstPeriod": "2023-06",
+      "lastPeriod": "2026-07",
+      "monthCount": 38,
+      "missing": []
+    },
+    {
+      "label": "Spousal RRSP",
+      "kind": "SpousalRRSP",
+      "inTotals": false,
+      "firstPeriod": "2026-03",
+      "lastPeriod": "2026-07",
+      "monthCount": 5,
+      "missing": []
+    },
+    {
+      "label": "RESP",
+      "kind": "RESP",
+      "inTotals": true,
+      "firstPeriod": "2026-01",
+      "lastPeriod": "2026-07",
+      "monthCount": 7,
+      "missing": []
+    },
+    {
+      "label": "RRSP (managed)",
+      "kind": "RRSP",
+      "inTotals": true,
+      "firstPeriod": "2025-11",
+      "lastPeriod": "2026-07",
+      "monthCount": 9,
+      "missing": []
+    },
+    {
+      "label": "TFSA (self-directed)",
+      "kind": "TFSA",
+      "inTotals": true,
+      "firstPeriod": "2023-06",
+      "lastPeriod": "2026-07",
+      "monthCount": 38,
+      "missing": []
+    },
+    {
+      "label": "Crypto",
+      "kind": "Crypto",
+      "inTotals": true,
+      "firstPeriod": "2026-06",
+      "lastPeriod": "2026-07",
+      "monthCount": 2,
+      "missing": []
+    },
+    {
+      "label": "FHSA",
+      "kind": "FHSA",
+      "inTotals": true,
+      "firstPeriod": "2024-12",
+      "lastPeriod": "2026-07",
+      "monthCount": 20,
+      "missing": []
+    }
+  ],
+  "months": [
+    {
+      "period": "2026-07",
+      "present": 14,
+      "expected": 14,
+      "missing": []
+    },
+    {
+      "period": "2026-06",
+      "present": 14,
+      "expected": 14,
+      "missing": []
+    },
+    {
+      "period": "2026-05",
+      "present": 13,
+      "expected": 13,
+      "missing": []
+    },
+    {
+      "period": "2026-04",
+      "present": 13,
+      "expected": 13,
+      "missing": []
+    },
+    {
+      "period": "2026-03",
+      "present": 12,
+      "expected": 12,
+      "missing": []
+    },
+    {
+      "period": "2026-02",
+      "present": 11,
+      "expected": 11,
+      "missing": []
+    },
+    {
+      "period": "2026-01",
+      "present": 11,
+      "expected": 11,
+      "missing": []
+    },
+    {
+      "period": "2025-12",
+      "present": 9,
+      "expected": 9,
+      "missing": []
+    },
+    {
+      "period": "2025-11",
+      "present": 9,
+      "expected": 9,
+      "missing": []
+    },
+    {
+      "period": "2025-10",
+      "present": 7,
+      "expected": 7,
+      "missing": []
+    },
+    {
+      "period": "2025-09",
+      "present": 6,
+      "expected": 6,
+      "missing": []
+    },
+    {
+      "period": "2025-08",
+      "present": 5,
+      "expected": 5,
+      "missing": []
+    },
+    {
+      "period": "2025-07",
+      "present": 4,
+      "expected": 4,
+      "missing": []
+    },
+    {
+      "period": "2025-06",
+      "present": 3,
+      "expected": 3,
+      "missing": []
+    },
+    {
+      "period": "2025-05",
+      "present": 3,
+      "expected": 3,
+      "missing": []
+    },
+    {
+      "period": "2025-04",
+      "present": 3,
+      "expected": 3,
+      "missing": []
+    },
+    {
+      "period": "2025-03",
+      "present": 3,
+      "expected": 3,
+      "missing": []
+    },
+    {
+      "period": "2025-02",
+      "present": 3,
+      "expected": 3,
+      "missing": []
+    },
+    {
+      "period": "2025-01",
+      "present": 3,
+      "expected": 3,
+      "missing": []
+    },
+    {
+      "period": "2024-12",
+      "present": 3,
+      "expected": 3,
+      "missing": []
+    },
+    {
+      "period": "2024-11",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2024-10",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2024-09",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2024-08",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2024-07",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2024-06",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2024-05",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2024-04",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2024-03",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2024-02",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2024-01",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2023-12",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2023-11",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2023-10",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2023-09",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2023-08",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2023-07",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    },
+    {
+      "period": "2023-06",
+      "present": 2,
+      "expected": 2,
+      "missing": []
+    }
+  ]
+}

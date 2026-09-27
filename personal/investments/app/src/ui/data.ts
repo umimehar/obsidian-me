@@ -1,7 +1,9 @@
 import rawAnalytics from "@data/analytics.json";
 import rawCards from "@data/cards.json";
+import rawCoverage from "@data/coverage.json";
 import rawReconciliation from "@data/reconciliation.json";
 import type { AnalyticsOutput } from "../analytics/build";
+import type { Coverage } from "../analytics/coverage";
 import type { Lens } from "../analytics/rollup";
 import type { CardStatement } from "../ingest/card";
 import type { ReconciliationReport, ReportedFinding } from "../validate/report";
@@ -163,4 +165,30 @@ export function loadCards(): CardStatement[] {
       typeof (s as CardStatement).cardId === "string" &&
       typeof (s as CardStatement).newBalance === "number",
   );
+}
+
+/**
+ * The statement coverage `bun run tracker` writes. Only the top-level shape is
+ * checked here; `tracker.test.ts` proves the committed file matches the
+ * datastore it was built from.
+ */
+export function parseCoverage(raw: unknown): Coverage {
+  if (typeof raw !== "object" || raw === null) {
+    throw new Error("coverage.json is not an object; run bun run tracker");
+  }
+  const c = raw as Record<string, unknown>;
+  if (
+    typeof c.generated !== "string" ||
+    typeof c.latestPeriod !== "string" ||
+    !(c.latestComplete === null || typeof c.latestComplete === "string") ||
+    !Array.isArray(c.accounts) ||
+    !Array.isArray(c.months)
+  ) {
+    throw new Error("coverage.json is missing one of its fields; run bun run tracker");
+  }
+  return raw as Coverage;
+}
+
+export function loadCoverage(): Coverage {
+  return parseCoverage(rawCoverage);
 }

@@ -8,7 +8,8 @@ export type TabId =
   | "tax"
   | "cards"
   | "projections"
-  | "reconciliation";
+  | "reconciliation"
+  | "data";
 
 export const TABS: readonly TabId[] = [
   "overview",
@@ -21,6 +22,8 @@ export const TABS: readonly TabId[] = [
   "cards",
   "projections",
   "reconciliation",
+  // Housekeeping about the archive itself, not about the money, so it goes last.
+  "data",
 ];
 
 /**

@@ -16,6 +16,7 @@ const LABELS: Record<TabId, string> = {
   cards: "Cards",
   projections: "Projections",
   reconciliation: "Reconciliation",
+  data: "Data",
 };
 
 /**

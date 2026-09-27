@@ -2,7 +2,7 @@
 title: Investments
 tags: [personal/investments]
 created: 2026-07-13
-updated: 2026-08-05
+updated: 2026-09-26
 status: active
 type: personal
 personal: investments
@@ -22,11 +22,12 @@ Summing the eleven investment accounts from their June 2026 statements gives $24
 
 ## Pages
 
+- [[tracking]], statement coverage per account and per month, and the latest month with every account in. Also on the dashboard's Data tab.
 - [[rrsp-room]], the RRSP deduction limit and available room from the latest notice of assessment, which is what the room bars measure against.
 
 ## The dashboard
 
-`app/` is a Vite + React + TypeScript app, run locally, read only. Six hash-synced tabs: overview, growth, wrappers, tax, projections, reconciliation. Charts are hand-built SVG on `d3-scale` rather than a chart library.
+`app/` is a Vite + React + TypeScript app, run locally, read only. Eight hash-synced tabs: overview, growth, wrappers, tax, cards, projections, reconciliation, data. Charts are hand-built SVG on `d3-scale` rather than a chart library.
 
 Every figure is stated at market value and at book cost, both from the statements. Gain or loss is the difference, and it appears on every group card in all three lenses and on the portfolio headline: $241,739.67 against a book cost of $223,675.08, a gain of $18,064.59.
 
@@ -38,9 +39,9 @@ Reconciliation is a tab rather than a build failure. A wrong number that is visi
 
 Drop new PDF statements into the gitignored source directory, then from `app/`:
 
-    bun run build
+    bun run build && bun run analytics && bun run goldens && bun run cards && bun run tracker
 
-Regenerates `data/datastore.json`, `data/analytics.json`, and `data/reconciliation.json`. Source PDFs stay outside the vault; only masked derived data is committed, so account numbers and the owner's address never enter git history.
+`data/datastore.json` is the permanent archive, so the folder only needs the new month's PDFs and can be deleted after. `bun run tracker` refreshes [[tracking]]. Source PDFs stay outside the vault; only masked derived data is committed, so account numbers and the owner's address never enter git history.
 
 ## Develop
 
