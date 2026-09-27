@@ -48,6 +48,8 @@ const LABELS: Record<string, string> = {
   e2ec: "FHSA",
   c2e9: "RESP",
   "91b8": "Corporate",
+  // Opened 2026-08; the app names it after the business with a "(self)" qualifier.
+  "8297": "Corporate (self)",
   "1f9a": "Non-registered 1f9a",
   "2c62": "Non-registered 2c62",
   e2d6: "Crypto",
@@ -64,6 +66,7 @@ const PURPOSES: Record<string, Purpose> = {
   e2ec: "house",
   c2e9: "education",
   "91b8": "business",
+  "8297": "business",
   "18a3": "spending",
   "2b74": "spending",
   "8cd3": "spending",
@@ -85,7 +88,7 @@ const PURPOSES: Record<string, Purpose> = {
  * a corporation is taxed in the corporation and only reaches the owner when
  * dividended out, so this account must stay out of any personal tax grouping.
  */
-const KIND_OVERRIDES: Record<string, AccountKind> = { "91b8": "Corporate" };
+const KIND_OVERRIDES: Record<string, AccountKind> = { "91b8": "Corporate", "8297": "Corporate" };
 
 /**
  * Kinds that are real money on the page but not part of the portfolio total.

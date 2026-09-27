@@ -30,9 +30,11 @@ describe("App", () => {
   test("the growth tab holds the returns chart, with its provenance stated", () => {
     render(<App />);
     clickTab("Growth");
-    expect(document.querySelectorAll("[data-returns-card]").length).toBe(14);
+    expect(document.querySelectorAll("[data-returns-card]").length).toBe(
+      GOLDENS.corpus.accountCount,
+    );
     expect(document.querySelector("[data-returns-provenance]")?.textContent).toContain(
-      "2 of 14 accounts",
+      `2 of ${GOLDENS.corpus.accountCount} accounts`,
     );
   });
 

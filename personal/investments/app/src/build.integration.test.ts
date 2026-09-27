@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -23,9 +23,17 @@ import {
 const SOURCE = process.env.STATEMENTS_DIR ?? join(homedir(), "Downloads", "monthly_pdf_statements");
 const CACHE = join(import.meta.dir, "..", ".cache");
 
-// Skipped without the source PDFs. Never commit them to make this run in CI --
-// they carry the owner's address and account numbers.
-describe.if(existsSync(SOURCE))("full corpus", () => {
+/**
+ * These tests need every PDF since the corpus began, not just a folder: an
+ * import leaves only the new month in it. The first period's statements are
+ * the marker. Never commit the PDFs to make this run in CI -- they carry the
+ * owner's address and account numbers.
+ */
+const FULL_CORPUS =
+  existsSync(SOURCE) &&
+  readdirSync(SOURCE).some((f) => f.includes(`_${GOLDENS.corpus.firstPeriod}`));
+
+describe.if(FULL_CORPUS)("full corpus", () => {
   test("parses every statement, deduplicating the fresh-download twins", async () => {
     // The source folder holds one file per statement plus any fresh
     // Wealthsimple download that is byte-identical to a conventionally named
@@ -176,7 +184,7 @@ describe.if(existsSync(SOURCE))("full corpus", () => {
  * committed datastore, because a fixture proving this proves nothing -- the
  * failure mode is a mismatch between two real code paths over real data.
  */
-describe.if(existsSync(SOURCE))("the incremental import reproduces the full build", () => {
+describe.if(FULL_CORPUS)("the incremental import reproduces the full build", () => {
   test("one month's PDFs plus the archive equal the whole corpus, statement for statement", async () => {
     const everything = dedupeToLatestVersion(
       (await ingestRaw(SOURCE, CACHE)).statements.map((s) => toArchived(s, [])),

@@ -29,6 +29,12 @@ import {
 const analytics = loadAnalytics();
 const accounts = buildReturnsSeries(analytics.returns, analytics.series);
 
+/** Months from `first` to `last`, inclusive. */
+function periodRangeCount(first: string, last: string): number {
+  const index = (p: string) => Number(p.slice(0, 4)) * 12 + Number(p.slice(5, 7));
+  return index(last) - index(first) + 1;
+}
+
 function byShortId(shortId: string): AccountReturns {
   const found = accounts.find((a) => a.shortId === shortId);
   if (found === undefined) throw new Error(`expected an account ${shortId}`);
@@ -43,15 +49,17 @@ function pointAt(shortId: string, period: string): ReturnValuePoint {
 
 describe("buildReturnsSeries against the corpus", () => {
   test("carries one entry per account in analytics.returns", () => {
-    expect(accounts).toHaveLength(14);
+    expect(accounts).toHaveLength(GOLDENS.corpus.accountCount);
   });
 
-  test("exactly 2 of the 14 accounts are stated, the other 12 derived", () => {
+  test("exactly 2 accounts are stated, every other account derived", () => {
     expect(accounts.filter((a) => a.source === "stated").map((a) => a.shortId)).toEqual([
       "9710",
       "d6d9",
     ]);
-    expect(accounts.filter((a) => a.source === "derived")).toHaveLength(12);
+    expect(accounts.filter((a) => a.source === "derived")).toHaveLength(
+      GOLDENS.corpus.accountCount - 2,
+    );
   });
 
   test("the corpus holds 21 stated points in total", () => {
@@ -144,16 +152,33 @@ describe("a null derived return keeps its reason and is never plotted as zero", 
     expect(unreconciled.every((p) => p.rate === null)).toBe(true);
   });
 
-  test("the corpus's null derived points split 12 / 5 / 3 by reason", () => {
+  test("the corpus's null derived points split by reason, one no-prior-period per account", () => {
     const gaps = accounts
       .filter((a) => a.source === "derived")
       .flatMap((a) => a.points)
       .filter((p) => p.rate === null)
       .map((p) => p.gap);
-    expect(gaps.filter((g) => g === "no-prior-period")).toHaveLength(12);
-    expect(gaps.filter((g) => g === "insufficient-data")).toHaveLength(5);
+    // One per derived account: its first month has nothing to measure against.
+    expect(gaps.filter((g) => g === "no-prior-period")).toHaveLength(
+      GOLDENS.corpus.accountCount - 2,
+    );
     expect(gaps.filter((g) => g === "unreconciled-flow")).toHaveLength(3);
-    expect(gaps).toHaveLength(20);
+  });
+
+  test("insufficient data is two historical months, then every Chequing month from 2026-07", () => {
+    // From 2026-07 the chequing accounts send only a CASH statement, which
+    // states no market value, so no return can be derived for them.
+    const chequing = new Set(
+      analytics.series.filter((s) => s.kind === "Chequing").map((s) => s.shortId),
+    );
+    const insufficient = accounts.flatMap((a) =>
+      a.points.filter((p) => p.gap === "insufficient-data").map((p) => ({ a, p })),
+    );
+    expect(insufficient.filter(({ p }) => p.period < "2026-07")).toHaveLength(2);
+    const recent = insufficient.filter(({ p }) => p.period >= "2026-07");
+    expect(recent.every(({ a }) => chequing.has(a.shortId))).toBe(true);
+    const months = periodRangeCount("2026-07", GOLDENS.corpus.latestPeriod);
+    expect(recent).toHaveLength(chequing.size * months);
   });
 
   test("no point carries both a rate and a gap", () => {
@@ -261,7 +286,10 @@ describe("returnsRateExtent and returnsPeriodExtent, the shared domains", () => 
   });
 
   test("the period extent spans every account's months, not one account's", () => {
-    expect(returnsPeriodExtent(accounts)).toEqual(["2023-06", "2026-07"]);
+    expect(returnsPeriodExtent(accounts)).toEqual([
+      GOLDENS.corpus.firstPeriod,
+      GOLDENS.corpus.latestPeriod,
+    ]);
   });
 
   test("both are null when nothing is plottable", () => {
@@ -271,8 +299,12 @@ describe("returnsRateExtent and returnsPeriodExtent, the shared domains", () => 
 });
 
 describe("provenance", () => {
-  test("counts the corpus as 2 stated of 14", () => {
-    expect(provenance(accounts)).toEqual({ stated: 2, derived: 12, total: 14 });
+  test("counts the corpus as 2 stated, the rest derived", () => {
+    expect(provenance(accounts)).toEqual({
+      stated: 2,
+      derived: GOLDENS.corpus.accountCount - 2,
+      total: GOLDENS.corpus.accountCount,
+    });
   });
 });
 

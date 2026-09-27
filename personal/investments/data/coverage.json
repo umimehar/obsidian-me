@@ -1,15 +1,15 @@
 {
-  "generated": "2026-08-31T21:28:26.918Z",
-  "latestPeriod": "2026-07",
-  "latestComplete": "2026-07",
+  "generated": "2026-09-27T01:55:26.146Z",
+  "latestPeriod": "2026-08",
+  "latestComplete": "2026-08",
   "accounts": [
     {
       "label": "Chequing 18a3",
       "kind": "Chequing",
       "inTotals": false,
       "firstPeriod": "2026-04",
-      "lastPeriod": "2026-07",
-      "monthCount": 4,
+      "lastPeriod": "2026-08",
+      "monthCount": 5,
       "missing": []
     },
     {
@@ -17,8 +17,8 @@
       "kind": "NonRegistered",
       "inTotals": true,
       "firstPeriod": "2025-10",
-      "lastPeriod": "2026-07",
-      "monthCount": 10,
+      "lastPeriod": "2026-08",
+      "monthCount": 11,
       "missing": []
     },
     {
@@ -26,8 +26,8 @@
       "kind": "RRSP",
       "inTotals": true,
       "firstPeriod": "2025-08",
-      "lastPeriod": "2026-07",
-      "monthCount": 12,
+      "lastPeriod": "2026-08",
+      "monthCount": 13,
       "missing": []
     },
     {
@@ -35,8 +35,8 @@
       "kind": "Chequing",
       "inTotals": false,
       "firstPeriod": "2025-07",
-      "lastPeriod": "2026-07",
-      "monthCount": 13,
+      "lastPeriod": "2026-08",
+      "monthCount": 14,
       "missing": []
     },
     {
@@ -44,8 +44,17 @@
       "kind": "NonRegistered",
       "inTotals": true,
       "firstPeriod": "2025-11",
-      "lastPeriod": "2026-07",
-      "monthCount": 9,
+      "lastPeriod": "2026-08",
+      "monthCount": 10,
+      "missing": []
+    },
+    {
+      "label": "Corporate (self)",
+      "kind": "Corporate",
+      "inTotals": true,
+      "firstPeriod": "2026-08",
+      "lastPeriod": "2026-08",
+      "monthCount": 1,
       "missing": []
     },
     {
@@ -53,8 +62,8 @@
       "kind": "Chequing",
       "inTotals": false,
       "firstPeriod": "2025-09",
-      "lastPeriod": "2026-07",
-      "monthCount": 11,
+      "lastPeriod": "2026-08",
+      "monthCount": 12,
       "missing": []
     },
     {
@@ -62,8 +71,8 @@
       "kind": "Corporate",
       "inTotals": true,
       "firstPeriod": "2026-01",
-      "lastPeriod": "2026-07",
-      "monthCount": 7,
+      "lastPeriod": "2026-08",
+      "monthCount": 8,
       "missing": []
     },
     {
@@ -71,8 +80,8 @@
       "kind": "TFSA",
       "inTotals": true,
       "firstPeriod": "2023-06",
-      "lastPeriod": "2026-07",
-      "monthCount": 38,
+      "lastPeriod": "2026-08",
+      "monthCount": 39,
       "missing": []
     },
     {
@@ -80,8 +89,8 @@
       "kind": "SpousalRRSP",
       "inTotals": false,
       "firstPeriod": "2026-03",
-      "lastPeriod": "2026-07",
-      "monthCount": 5,
+      "lastPeriod": "2026-08",
+      "monthCount": 6,
       "missing": []
     },
     {
@@ -89,8 +98,8 @@
       "kind": "RESP",
       "inTotals": true,
       "firstPeriod": "2026-01",
-      "lastPeriod": "2026-07",
-      "monthCount": 7,
+      "lastPeriod": "2026-08",
+      "monthCount": 8,
       "missing": []
     },
     {
@@ -98,8 +107,8 @@
       "kind": "RRSP",
       "inTotals": true,
       "firstPeriod": "2025-11",
-      "lastPeriod": "2026-07",
-      "monthCount": 9,
+      "lastPeriod": "2026-08",
+      "monthCount": 10,
       "missing": []
     },
     {
@@ -107,8 +116,8 @@
       "kind": "TFSA",
       "inTotals": true,
       "firstPeriod": "2023-06",
-      "lastPeriod": "2026-07",
-      "monthCount": 38,
+      "lastPeriod": "2026-08",
+      "monthCount": 39,
       "missing": []
     },
     {
@@ -116,8 +125,8 @@
       "kind": "Crypto",
       "inTotals": true,
       "firstPeriod": "2026-06",
-      "lastPeriod": "2026-07",
-      "monthCount": 2,
+      "lastPeriod": "2026-08",
+      "monthCount": 3,
       "missing": []
     },
     {
@@ -125,12 +134,18 @@
       "kind": "FHSA",
       "inTotals": true,
       "firstPeriod": "2024-12",
-      "lastPeriod": "2026-07",
-      "monthCount": 20,
+      "lastPeriod": "2026-08",
+      "monthCount": 21,
       "missing": []
     }
   ],
   "months": [
+    {
+      "period": "2026-08",
+      "present": 15,
+      "expected": 15,
+      "missing": []
+    },
     {
       "period": "2026-07",
       "present": 14,

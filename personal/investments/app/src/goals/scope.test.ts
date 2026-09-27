@@ -31,6 +31,7 @@ describe("resolveScope, the three scope kinds against the real corpus", () => {
     const c = resolveScope(analytics.series, { kind: "portfolio" });
     expect(c.covered.map((a) => a.shortId).sort()).toEqual([
       "2318",
+      "8297",
       "91b8",
       "9710",
       "c2e9",
@@ -45,7 +46,8 @@ describe("resolveScope, the three scope kinds against the real corpus", () => {
     // independently maintained sum. Derived from the artifact, not a
     // literal, so a future corpus change moves both sides together.
     const rollupTotal = analytics.rollups.registration.reduce((sum, r) => sum + r.total, 0);
-    expect(c.scopeValue).toBe(rollupTotal);
+    // To the cent: the two sums add the same figures in a different order.
+    expect(Math.round(c.scopeValue * 100)).toBe(Math.round(rollupTotal * 100));
   });
 });
 

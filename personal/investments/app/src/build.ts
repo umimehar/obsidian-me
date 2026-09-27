@@ -3,8 +3,9 @@ import { readdir } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { acknowledgementFor, isAcknowledged } from "./corrections";
+import { isCardStatement } from "./ingest/card";
 import { extractXml } from "./ingest/extract";
-import { parseGeometry } from "./ingest/geometry";
+import { type Page, parseGeometry } from "./ingest/geometry";
 import { parseStatement } from "./ingest/parse";
 import { detectTemplate, parseSourceFilename } from "./ingest/source";
 import type { ParsedFilename, SourceRef, Template } from "./ingest/source";
@@ -83,6 +84,36 @@ export function resolveTemplate(
 }
 
 /**
+ * The document's template, or null for a credit card statement: Wealthsimple
+ * downloads both into one folder, and `bun run cards` imports the card one.
+ * Anything else unrecognised stops the build, because it means the parser is
+ * wrong rather than the file misplaced.
+ */
+export function documentTemplate(
+  parsed: ParsedFilename,
+  pages: readonly Page[],
+  findings: Finding[],
+): Template | null {
+  if (isCardStatement(pages)) {
+    findings.push(
+      ingestFinding(
+        "warning",
+        parsed,
+        "skipped: a credit card statement, imported by `bun run cards`",
+      ),
+    );
+    return null;
+  }
+  const template = detectTemplate(pages);
+  if (!template) {
+    throw new Error(
+      `could not determine the template for ${parsed.file} from its document content`,
+    );
+  }
+  return template;
+}
+
+/**
  * Ingests one already-name-parsed file: hashes its content for dedup,
  * extracts and geometry-parses it once, then derives the template from the
  * document. Returns null for a file already ingested under another name --
@@ -109,12 +140,8 @@ async function ingestFile(
   seenHashes.set(hash, parsed.file);
 
   const xml = await extractXml(filePath, cacheDir);
-  const docTemplate = detectTemplate(parseGeometry(xml));
-  if (!docTemplate) {
-    throw new Error(
-      `could not determine the template for ${parsed.file} from its document content`,
-    );
-  }
+  const docTemplate = documentTemplate(parsed, parseGeometry(xml), findings);
+  if (!docTemplate) return null;
 
   const source: SourceRef = {
     file: parsed.file,

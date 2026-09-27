@@ -1,7 +1,7 @@
 {
   "meta": {
-    "generated": "2026-08-31T19:57:34.738Z",
-    "statementCount": 1,
+    "generated": "2026-09-27T01:55:32.205Z",
+    "statementCount": 2,
     "cardCount": 1
   },
   "statements": [
@@ -124,6 +124,135 @@
           "type": "Purchase",
           "description": "SHOPPERS DRUG MART #07",
           "amount": 107.07
+        }
+      ]
+    },
+    {
+      "file": "card_2377_2026-08.pdf",
+      "cardId": "card_2377",
+      "period": "2026-08",
+      "periodStart": "2026-07-25",
+      "periodEnd": "2026-08-24",
+      "statementDate": "2026-08-25",
+      "paymentDueDate": "2026-09-15",
+      "statementBalance": 1.5,
+      "creditLimit": 15000,
+      "previousBalance": 0,
+      "newBalance": 1.5,
+      "minimumPayment": 1.5,
+      "purchases": 2509.28,
+      "payments": 2507.78,
+      "otherCredits": 0,
+      "fees": 0,
+      "interest": 0,
+      "cashAdvances": 0,
+      "purchaseRate": 0.20989999999999998,
+      "cashAdvanceRate": 0.2299,
+      "activity": [
+        {
+          "transactionDate": "2026-07-27",
+          "postedDate": "2026-07-27",
+          "type": "Purchase",
+          "description": "DR. MEDICAL CONSULTING GR",
+          "amount": 110.1
+        },
+        {
+          "transactionDate": "2026-07-30",
+          "postedDate": "2026-07-31",
+          "type": "Purchase",
+          "description": "NAYAX CANADA INC MASTER",
+          "amount": 6.77
+        },
+        {
+          "transactionDate": "2026-08-04",
+          "postedDate": "2026-08-04",
+          "type": "Payment",
+          "description": "From chequing account",
+          "amount": -116.87
+        },
+        {
+          "transactionDate": "2026-08-05",
+          "postedDate": "2026-08-06",
+          "type": "Purchase",
+          "description": "HUNGERSTATION LLC",
+          "amount": 63.83
+        },
+        {
+          "transactionDate": "2026-08-06",
+          "postedDate": "2026-08-07",
+          "type": "Purchase",
+          "description": "CHAIIWALA OF LONDON",
+          "amount": 3.99
+        },
+        {
+          "transactionDate": "2026-08-08",
+          "postedDate": "2026-08-08",
+          "type": "Payment",
+          "description": "From chequing account",
+          "amount": -67.82
+        },
+        {
+          "transactionDate": "2026-08-15",
+          "postedDate": "2026-08-15",
+          "type": "Purchase",
+          "description": "TOMMY HILFIGER",
+          "amount": 423.71
+        },
+        {
+          "transactionDate": "2026-08-16",
+          "postedDate": "2026-08-16",
+          "type": "Purchase",
+          "description": "SKECHERS STORE 581",
+          "amount": 378.5
+        },
+        {
+          "transactionDate": "2026-08-17",
+          "postedDate": "2026-08-17",
+          "type": "Payment",
+          "description": "From chequing account",
+          "amount": -802.21
+        },
+        {
+          "transactionDate": "2026-08-19",
+          "postedDate": "2026-08-19",
+          "type": "Purchase",
+          "description": "AXIS THERAPY (MSG)",
+          "amount": 14.5
+        },
+        {
+          "transactionDate": "2026-08-19",
+          "postedDate": "2026-08-19",
+          "type": "Purchase",
+          "description": "TEMU.COM",
+          "amount": 20.43
+        },
+        {
+          "transactionDate": "2026-08-23",
+          "postedDate": "2026-08-23",
+          "type": "Purchase",
+          "description": "HOLT RENFREW SQUARE ON",
+          "amount": 1485.95
+        },
+        {
+          "transactionDate": "2026-08-24",
+          "postedDate": "2026-08-24",
+          "type": "Payment",
+          "description": "From chequing account",
+          "amount": -1520.88
+        },
+        {
+          "transactionDate": "2026-08-22",
+          "postedDate": "2026-08-24",
+          "type": "Purchase",
+          "description": "CITY OF MISSISSAUGA OFF-S",
+          "amount": 0.75
+        },
+        {
+          "transactionDate": "2026-08-22",
+          "postedDate": "2026-08-24",
+          "type": "Purchase",
+          "description": "CITY OF MISSISSAUGA OFF-S",
+          "amount": 0.75
         }
       ]
     }

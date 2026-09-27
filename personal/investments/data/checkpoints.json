@@ -5,7 +5,7 @@
       "observed": "2026-08-31T16:57:00-04:00",
       "source": "Wealthsimple app, accounts screen, screenshots",
       "coversPeriod": "2026-08",
-      "reconciledAgainst": null,
+      "reconciledAgainst": "2026-08",
       "note": "Live balances part-way through August 2026. The corpus ends at 2026-07, so this is one month ahead of it and cannot be compared to 2026-07 figures as though it were the same date. Reconcile when the 2026-08 statements are imported.",
       "portfolioTotal": 250543.54,
       "totalIsDerived": true,
@@ -118,14 +118,14 @@
         },
         {
           "id": "business-account-count",
-          "severity": "waiting",
-          "summary": "The app shows Business investing as 2 accounts totalling $60,105.76. This project tracks ONE corporate account, $52,965.76 at 2026-07. Confirmed by the owner: the second account was opened in August 2026.",
+          "severity": "resolved",
+          "summary": "RESOLVED 2026-09-26. The second business account is 8297, opened 2026-08-24 with a $5,000 deposit. Its first statement arrived in the 2026-08 import and reads $5,033.46 against the app's $5,038.29; the $4.83 is HXQ priced at $117.33 on the statement against a $117.54 close. Registered as Corporate, purpose business, label Corporate (self).",
           "leads": "Nothing to do until its first statement is issued. It should appear as a new account in the 2026-08 import, and the registry will need a label and a purpose for it."
         },
         {
           "id": "visible-total-vs-ours",
-          "severity": "open",
-          "summary": "The seven visible groups sum to $250,543.54. This project's portfolio total at 2026-07, with the spousal RRSP excluded, is $234,579.83. The gap is $15,963.71.",
+          "severity": "resolved",
+          "summary": "RESOLVED 2026-09-26. Against the 2026-08 statements the visible groups ($250,543.54) and this project's total ($250,450.58) differ by $92.96. The earlier $145.44 was a comparison across two dates, the app in late August against statements for July. The seven visible groups are the whole portfolio: the spousal RRSP is not among them and not in either total.",
           "leads": "$15,818.27 of that is the spousal RRSP at 2026-07, leaving $145.44 unaccounted -- so the app screen these groups were read from appears to still be counting the spousal asset somewhere, even though its RRSP group is not. Either a group was cut off between the two screenshots, or the screen totals a household rather than an individual. Resolve by noting exactly which accounts the screen counts before taking the next reading."
         },
         {
@@ -142,6 +142,96 @@
         "spousal": 14306.21,
         "wse401": 279.94,
         "residual": 0.0
+      },
+      "reconciliation": {
+        "reconciled": "2026-09-26",
+        "ourTotal": 250450.58,
+        "appVisibleTotal": 250543.54,
+        "difference": -92.96,
+        "summary": "Every account matches the app to within 0.3%, and the whole portfolio to within $92.96 (0.04%). No parsing defect: the statements price several ETFs a few cents off the 2026-08-31 closing trade (HXQ $117.33 vs close $117.54, VFV $189.04 vs $189.16, QQC $48.51 vs $48.55), while the app values at the close. Checked holding by holding against the day's closes.",
+        "accounts": [
+          {
+            "app": "Business investing (self)",
+            "ours": "8297",
+            "app_value": 5038.29,
+            "statement": 5033.46,
+            "explainedByClose": 4.83,
+            "residual": 0.00
+          },
+          {
+            "app": "FHSA",
+            "ours": "e2ec",
+            "app_value": 28075.57,
+            "statement": 28060.84,
+            "explainedByClose": 14.71,
+            "residual": 0.02
+          },
+          {
+            "app": "TFSA",
+            "ours": "d77c",
+            "app_value": 40733.59,
+            "statement": 40713.63,
+            "explainedByClose": 18.68,
+            "residual": 1.28
+          },
+          {
+            "app": "Family RESP",
+            "ours": "c2e9",
+            "app_value": 6217.09,
+            "statement": 6212.73,
+            "explainedByClose": 2.25,
+            "residual": 2.11
+          },
+          {
+            "app": "Managed (TFSA)",
+            "ours": "9710",
+            "app_value": 7682.38,
+            "statement": 7670.20,
+            "explainedByClose": 9.96,
+            "residual": 2.22
+          },
+          {
+            "app": "Business investing",
+            "ours": "91b8",
+            "app_value": 55067.47,
+            "statement": 55026.04,
+            "explainedByClose": 29.26,
+            "residual": 12.17
+          },
+          {
+            "app": "RRSP (group of 3)",
+            "ours": "2318 + d6d9",
+            "app_value": 38339.64,
+            "statement": 38341.58,
+            "explainedByClose": 5.11,
+            "residual": -7.05
+          },
+          {
+            "app": "Direct Indexing (USD)",
+            "ours": "1f9a",
+            "app_value": 33396.54,
+            "statement": 33394.70,
+            "explainedByClose": null,
+            "residual": null
+          },
+          {
+            "app": "Non-registered",
+            "ours": "2c62",
+            "app_value": 34280.51,
+            "statement": 34289.88,
+            "explainedByClose": null,
+            "residual": null
+          },
+          {
+            "app": "Crypto",
+            "ours": "e2d6",
+            "app_value": 1712.47,
+            "statement": 1707.52,
+            "explainedByClose": null,
+            "residual": null
+          }
+        ],
+        "residualNote": "Residuals left after repricing at the close are $12.17 or less. The accounts with USD holdings (91b8 above all) would also move with the app's live exchange rate against the statement's 1.3866, which was not captured. 1f9a, 2c62 and Crypto hold listings the price source could not match (CDRs, physical gold, crypto that trades around the clock), so they are compared on totals only; their gaps are $1.84, $9.37 and $4.95."
       }
     }
   ]

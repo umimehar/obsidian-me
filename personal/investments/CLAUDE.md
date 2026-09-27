@@ -22,6 +22,8 @@ Then read the `data/goldens.json` diff. That single file is where every figure t
 
 `bun run tracker` writes `tracking.md` and `data/coverage.json` from the datastore: per account, the first and latest month and any month missing since the first; per month, how many open accounts reported; and the latest month where every open account has a statement. The dashboard's Data tab renders the JSON. `tracker.test.ts` fails `bun run check` when either file is stale against the datastore, so an import that skips the command cannot land green.
 
+A new account needs a label and a purpose in `src/store/registry.ts`, and a `KIND_OVERRIDES` entry if it is corporate: a corporate account's statement reads "Non-Registered Cash Account" exactly like a personal one. `8297`, opened 2026-08, is the second.
+
 A month counts as covered when any statement exists for it. Since 2026-07 the three chequing accounts send only a CASH statement where they used to send BROKERAGE and CASH; both carry the closing balance, so that is not a gap.
 
 `bun run build --rebuild` discards the archive and re-parses every PDF from scratch. It needs every PDF present, and it is for one case only: a parser change, where carrying stale parses forward is exactly wrong.
@@ -181,11 +183,11 @@ Everything on the dashboard is derived from PDF statements, so the whole pipelin
 
 The app's grouping is NOT the registration lens: it splits Crypto into its own group where the lens folds it into Non-registered, so a group-by-group comparison has to map the two first or it double counts.
 
-The 2026-08-31 checkpoint carries two unexplained gaps against 2026-07, both recorded as `openQuestions` rather than resolved: RRSP reads $14,294.83 lower on the app than in this project, and Business investing shows two accounts where this project tracks one.
+The 2026-08-31 checkpoint reconciles against the 2026-08 statements to $92.96 over $250,450.58. The statements price some ETFs a few cents off the day's closing trade and the app uses the close; repricing each holding at the close explains the gaps account by account. `notes/checkpoints.md` has the detail.
 
 ## Credit cards are a separate pipeline
 
-A Wealthsimple credit card statement is a different document and a different kind of money. `src/ingest/card.ts` parses it, `src/cards/build.ts` writes `data/cards.json` from `~/Downloads/monthly_card_statements/`, and `src/ui/Cards.tsx` renders its own tab. The two pipelines share `geometry.ts` and `money.ts` and nothing else.
+A Wealthsimple credit card statement is a different document and a different kind of money. `src/ingest/card.ts` parses it, `src/cards/build.ts` writes `data/cards.json`, and `src/ui/Cards.tsx` renders its own tab. Both builds read the same download folder: `bun run build` skips a card statement with an `ingest` warning, and `bun run cards` skips everything that is not one. The two pipelines share `geometry.ts` and `money.ts` and nothing else.
 
 A card balance is money OWED. Adding it to a total built from money held would overstate the portfolio by the size of a debt, and none of the investment analytics apply to it anyway: no market value, no book cost, no contribution room, no return rate. The Cards tab says so in the open, above the figures.
 

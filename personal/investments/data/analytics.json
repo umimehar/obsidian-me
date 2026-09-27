@@ -1,8 +1,8 @@
 {
   "meta": {
-    "generated": "2026-08-31T21:28:27.601Z",
-    "datastoreGenerated": "2026-08-31T21:28:26.918Z",
-    "accountCount": 14
+    "generated": "2026-09-27T01:55:26.258Z",
+    "datastoreGenerated": "2026-09-27T01:55:26.146Z",
+    "accountCount": 15
   },
   "series": [
     {
@@ -61,6 +61,20 @@
           "marketValue": null,
           "bookCost": null,
           "cashBalance": 1300,
+          "deposits": 0,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 0,
+          "contributionMonthsSpanned": 1,
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null,
+          "contributionsSource": "derived"
+        },
+        {
+          "period": "2026-08",
+          "marketValue": null,
+          "bookCost": null,
+          "cashBalance": 700,
           "deposits": 0,
           "withdrawals": 0,
           "grants": 0,
@@ -223,11 +237,25 @@
           "contributionFirst60Days": null,
           "contributionRestOfYear": null,
           "contributionsSource": "derived"
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 33394.7,
+          "bookCost": 28856.89,
+          "cashBalance": 481.54,
+          "deposits": 1650,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 1650,
+          "contributionMonthsSpanned": 1,
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null,
+          "contributionsSource": "derived"
         }
       ],
       "contributionsByYear": {
         "2025": 14000,
-        "2026": 14750
+        "2026": 16400
       }
     },
     {
@@ -406,11 +434,25 @@
           "contributionsSource": "stated",
           "contributionFirst60Days": 0,
           "contributionRestOfYear": 12800
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 17526.53,
+          "bookCost": 17002,
+          "cashBalance": 500,
+          "deposits": 1200,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 1200,
+          "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
+          "contributionFirst60Days": 0,
+          "contributionRestOfYear": 14000
         }
       ],
       "contributionsByYear": {
         "2025": 3000,
-        "2026": 12800
+        "2026": 14000
       }
     },
     {
@@ -603,6 +645,20 @@
           "contributionFirst60Days": null,
           "contributionRestOfYear": null,
           "contributionsSource": "derived"
+        },
+        {
+          "period": "2026-08",
+          "marketValue": null,
+          "bookCost": null,
+          "cashBalance": 37.99,
+          "deposits": 0,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 0,
+          "contributionMonthsSpanned": 1,
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null,
+          "contributionsSource": "derived"
         }
       ],
       "contributionsByYear": {
@@ -744,11 +800,53 @@
           "contributionFirst60Days": null,
           "contributionRestOfYear": null,
           "contributionsSource": "derived"
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 34289.88,
+          "bookCost": 33486.15,
+          "cashBalance": 550.01,
+          "deposits": 1547,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 1547,
+          "contributionMonthsSpanned": 1,
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null,
+          "contributionsSource": "derived"
         }
       ],
       "contributionsByYear": {
         "2025": 2904.29,
-        "2026": 25021.98
+        "2026": 26568.98
+      }
+    },
+    {
+      "maskedId": "acct_8297de15",
+      "shortId": "8297",
+      "label": "Corporate (self)",
+      "kind": "Corporate",
+      "style": "self-directed",
+      "purpose": "business",
+      "inTotals": true,
+      "months": [
+        {
+          "period": "2026-08",
+          "marketValue": 5033.46,
+          "bookCost": 5000,
+          "cashBalance": 53.37,
+          "deposits": 5000,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 5000,
+          "contributionMonthsSpanned": 1,
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null,
+          "contributionsSource": "derived"
+        }
+      ],
+      "contributionsByYear": {
+        "2026": 5000
       }
     },
     {
@@ -913,6 +1011,20 @@
           "contributionFirst60Days": null,
           "contributionRestOfYear": null,
           "contributionsSource": "derived"
+        },
+        {
+          "period": "2026-08",
+          "marketValue": null,
+          "bookCost": null,
+          "cashBalance": 0,
+          "deposits": 0,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 0,
+          "contributionMonthsSpanned": 1,
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null,
+          "contributionsSource": "derived"
         }
       ],
       "contributionsByYear": {
@@ -1026,10 +1138,24 @@
           "contributionFirst60Days": null,
           "contributionRestOfYear": null,
           "contributionsSource": "derived"
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 55026.04,
+          "bookCost": 50382.27,
+          "cashBalance": 123.14,
+          "deposits": 1000,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 1000,
+          "contributionMonthsSpanned": 1,
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null,
+          "contributionsSource": "derived"
         }
       ],
       "contributionsByYear": {
-        "2026": 49000
+        "2026": 50000
       }
     },
     {
@@ -1572,6 +1698,20 @@
           "contributionsSource": "stated",
           "contributionFirst60Days": null,
           "contributionRestOfYear": null
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 7670.2,
+          "bookCost": 6349.39,
+          "cashBalance": 19.12,
+          "deposits": 0,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 0,
+          "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null
         }
       ],
       "contributionsByYear": {
@@ -1659,10 +1799,24 @@
           "contributionsSource": "stated",
           "contributionFirst60Days": 0,
           "contributionRestOfYear": 15200
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 17912.23,
+          "bookCost": 17066.77,
+          "cashBalance": 1038.94,
+          "deposits": 1800,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 1800,
+          "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
+          "contributionFirst60Days": 0,
+          "contributionRestOfYear": 17000
         }
       ],
       "contributionsByYear": {
-        "2026": 15200
+        "2026": 17000
       }
     },
     {
@@ -1771,10 +1925,24 @@
           "contributionFirst60Days": null,
           "contributionRestOfYear": null,
           "contributionsSource": "derived"
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 6212.73,
+          "bookCost": 5822.51,
+          "cashBalance": 1200,
+          "deposits": 1000,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 1000,
+          "contributionMonthsSpanned": 1,
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null,
+          "contributionsSource": "derived"
         }
       ],
       "contributionsByYear": {
-        "2026": 4000
+        "2026": 5000
       }
     },
     {
@@ -1903,6 +2071,20 @@
           "marketValue": 20799.5,
           "bookCost": 20526.33,
           "cashBalance": 8109.18,
+          "deposits": 0,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 0,
+          "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
+          "contributionFirst60Days": 0,
+          "contributionRestOfYear": 8000
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 20815.05,
+          "bookCost": 20420.34,
+          "cashBalance": 28.72,
           "deposits": 0,
           "withdrawals": 0,
           "grants": 0,
@@ -2458,6 +2640,20 @@
           "contributionsSource": "stated",
           "contributionFirst60Days": null,
           "contributionRestOfYear": null
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 40713.63,
+          "bookCost": 37403.11,
+          "cashBalance": 0,
+          "deposits": 0,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 0,
+          "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null
         }
       ],
       "contributionsByYear": {
@@ -2503,10 +2699,24 @@
           "contributionFirst60Days": null,
           "contributionRestOfYear": null,
           "contributionsSource": "derived"
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 1707.52,
+          "bookCost": 1310,
+          "cashBalance": 0,
+          "deposits": 150,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 150,
+          "contributionMonthsSpanned": 1,
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null,
+          "contributionsSource": "derived"
         }
       ],
       "contributionsByYear": {
-        "2026": 1160
+        "2026": 1310
       }
     },
     {
@@ -2797,6 +3007,20 @@
           "contributionsSource": "stated",
           "contributionFirst60Days": null,
           "contributionRestOfYear": null
+        },
+        {
+          "period": "2026-08",
+          "marketValue": 28060.84,
+          "bookCost": 25218.85,
+          "cashBalance": 0,
+          "deposits": 0,
+          "withdrawals": 0,
+          "grants": 0,
+          "contributions": 0,
+          "contributionMonthsSpanned": 1,
+          "contributionsSource": "stated",
+          "contributionFirst60Days": null,
+          "contributionRestOfYear": null
         }
       ],
       "contributionsByYear": {
@@ -2999,11 +3223,11 @@
       {
         "group": "RRSP",
         "year": 2026,
-        "used": 36000,
+        "used": 39000,
         "limit": 70752,
         "assessed": true,
-        "remaining": 34752,
-        "spousalUsed": 15200,
+        "remaining": 31752,
+        "spousalUsed": 17000,
         "lifetimeContributions": null,
         "lifetimeGrant": null
       },
@@ -3025,20 +3249,20 @@
       {
         "group": "RESP",
         "year": 2026,
-        "used": 4000,
+        "used": 5000,
         "limit": null,
         "assessed": false,
         "remaining": null,
         "spousalUsed": null,
         "lifetimeContributions": {
-          "contributed": 4000,
+          "contributed": 5000,
           "cap": 50000,
-          "remaining": 46000
+          "remaining": 45000
         },
         "lifetimeGrant": {
-          "received": 600,
+          "received": 800,
           "cap": 7200,
-          "remaining": 6600,
+          "remaining": 6400,
           "maximizingContribution": 2500
         }
       }
@@ -3065,9 +3289,9 @@
     },
     "2026": {
       "interest": 0,
-      "eligibleDividends": 237.73999999999992,
+      "eligibleDividends": 256.6399999999998,
       "foreignIncome": 18.640000000000004,
-      "realizedGains": -3030.6753741320663
+      "realizedGains": -4243.492052079513
     }
   },
   "returns": [
@@ -3097,6 +3321,13 @@
         },
         {
           "period": "2026-07",
+          "statedMwr": null,
+          "periodReturn": null,
+          "reason": "insufficient-data",
+          "source": "derived"
+        },
+        {
+          "period": "2026-08",
           "statedMwr": null,
           "periodReturn": null,
           "reason": "insufficient-data",
@@ -3174,6 +3405,13 @@
           "period": "2026-07",
           "statedMwr": null,
           "periodReturn": -1.5362439720255578,
+          "reason": null,
+          "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": 1.5858031338452265,
           "reason": null,
           "source": "derived"
         }
@@ -3263,6 +3501,13 @@
           "period": "2026-07",
           "statedMwr": null,
           "periodReturn": 0.7374377140809251,
+          "reason": null,
+          "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": 1.9344184507420263,
           "reason": null,
           "source": "derived"
         }
@@ -3361,6 +3606,13 @@
           "periodReturn": null,
           "reason": "insufficient-data",
           "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": null,
+          "reason": "insufficient-data",
+          "source": "derived"
         }
       ]
     },
@@ -3428,6 +3680,25 @@
           "statedMwr": null,
           "periodReturn": 2.7807518821402475,
           "reason": null,
+          "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": 2.9898720854998535,
+          "reason": null,
+          "source": "derived"
+        }
+      ]
+    },
+    {
+      "maskedId": "acct_8297de15",
+      "points": [
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": null,
+          "reason": "no-prior-period",
           "source": "derived"
         }
       ]
@@ -3511,6 +3782,13 @@
           "periodReturn": null,
           "reason": "insufficient-data",
           "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": null,
+          "reason": "insufficient-data",
+          "source": "derived"
         }
       ]
     },
@@ -3563,6 +3841,13 @@
           "period": "2026-07",
           "statedMwr": null,
           "periodReturn": -0.5204324842155469,
+          "reason": null,
+          "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": 2.0018215541512077,
           "reason": null,
           "source": "derived"
         }
@@ -3820,6 +4105,13 @@
           "periodReturn": -0.6146980926464709,
           "reason": null,
           "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": 1.8583574562831404,
+          "reason": null,
+          "source": "derived"
         }
       ]
     },
@@ -3872,6 +4164,13 @@
           "period": "2026-07",
           "statedMwr": null,
           "periodReturn": -0.5243434297334123,
+          "reason": null,
+          "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": 5.878780492758909,
           "reason": null,
           "source": "derived"
         }
@@ -4234,6 +4533,13 @@
           "periodReturn": -1.3046473255050237,
           "reason": null,
           "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": 1.6681986705652254,
+          "reason": null,
+          "source": "derived"
         }
       ]
     },
@@ -4251,6 +4557,13 @@
           "period": "2026-07",
           "statedMwr": null,
           "periodReturn": 10.269370221486563,
+          "reason": null,
+          "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": 27.750391653474843,
           "reason": null,
           "source": "derived"
         }
@@ -4398,6 +4711,13 @@
           "periodReturn": -0.9308276124084467,
           "reason": null,
           "source": "derived"
+        },
+        {
+          "period": "2026-08",
+          "statedMwr": null,
+          "periodReturn": 0.1033466550751026,
+          "reason": null,
+          "source": "derived"
         }
       ]
     }
@@ -4416,7 +4736,7 @@
             "kind": "TFSA",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 7536.44
+            "marketValue": 7670.2
           },
           {
             "maskedId": "acct_d77c33c7",
@@ -4425,10 +4745,10 @@
             "kind": "TFSA",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 40045.59
+            "marketValue": 40713.63
           }
         ],
-        "total": 47582.03
+        "total": 48383.829999999994
       },
       {
         "key": "RRSP",
@@ -4442,7 +4762,7 @@
             "kind": "RRSP",
             "purpose": "retirement",
             "inTotals": true,
-            "marketValue": 16016.7
+            "marketValue": 17526.53
           },
           {
             "maskedId": "acct_97ab4cb2",
@@ -4451,7 +4771,7 @@
             "kind": "SpousalRRSP",
             "purpose": "retirement",
             "inTotals": false,
-            "marketValue": 15818.27
+            "marketValue": 17912.23
           },
           {
             "maskedId": "acct_d6d9fb4a",
@@ -4460,10 +4780,10 @@
             "kind": "RRSP",
             "purpose": "retirement",
             "inTotals": true,
-            "marketValue": 20799.5
+            "marketValue": 20815.05
           }
         ],
-        "total": 36816.2
+        "total": 38341.58
       },
       {
         "key": "FHSA",
@@ -4477,10 +4797,10 @@
             "kind": "FHSA",
             "purpose": "house",
             "inTotals": true,
-            "marketValue": 28031.87
+            "marketValue": 28060.84
           }
         ],
-        "total": 28031.87
+        "total": 28060.84
       },
       {
         "key": "RESP",
@@ -4494,10 +4814,10 @@
             "kind": "RESP",
             "purpose": "education",
             "inTotals": true,
-            "marketValue": 4923.3
+            "marketValue": 6212.73
           }
         ],
-        "total": 4923.3
+        "total": 6212.73
       },
       {
         "key": "NonRegistered",
@@ -4511,7 +4831,7 @@
             "kind": "NonRegistered",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 31249.15
+            "marketValue": 33394.7
           },
           {
             "maskedId": "acct_2c620d2b",
@@ -4520,7 +4840,7 @@
             "kind": "NonRegistered",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 31792.33
+            "marketValue": 34289.88
           },
           {
             "maskedId": "acct_e2d627ff",
@@ -4529,10 +4849,10 @@
             "kind": "Crypto",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 1219.19
+            "marketValue": 1707.52
           }
         ],
-        "total": 64260.670000000006
+        "total": 69392.09999999999
       },
       {
         "key": "Corporate",
@@ -4540,16 +4860,25 @@
         "lens": "registration",
         "accounts": [
           {
+            "maskedId": "acct_8297de15",
+            "shortId": "8297",
+            "label": "Corporate (self)",
+            "kind": "Corporate",
+            "purpose": "business",
+            "inTotals": true,
+            "marketValue": 5033.46
+          },
+          {
             "maskedId": "acct_91b82482",
             "shortId": "91b8",
             "label": "Corporate",
             "kind": "Corporate",
             "purpose": "business",
             "inTotals": true,
-            "marketValue": 52965.76
+            "marketValue": 55026.04
           }
         ],
-        "total": 52965.76
+        "total": 60059.5
       },
       {
         "key": "Cash",
@@ -4617,10 +4946,10 @@
             "kind": "NonRegistered",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 31249.15
+            "marketValue": 33394.7
           }
         ],
-        "total": 31249.15
+        "total": 33394.7
       },
       {
         "key": "acct_231879ac",
@@ -4634,10 +4963,10 @@
             "kind": "RRSP",
             "purpose": "retirement",
             "inTotals": true,
-            "marketValue": 16016.7
+            "marketValue": 17526.53
           }
         ],
-        "total": 16016.7
+        "total": 17526.53
       },
       {
         "key": "acct_2b743dc7",
@@ -4668,10 +4997,27 @@
             "kind": "NonRegistered",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 31792.33
+            "marketValue": 34289.88
           }
         ],
-        "total": 31792.33
+        "total": 34289.88
+      },
+      {
+        "key": "acct_8297de15",
+        "label": "Corporate (self)",
+        "lens": "account",
+        "accounts": [
+          {
+            "maskedId": "acct_8297de15",
+            "shortId": "8297",
+            "label": "Corporate (self)",
+            "kind": "Corporate",
+            "purpose": "business",
+            "inTotals": true,
+            "marketValue": 5033.46
+          }
+        ],
+        "total": 5033.46
       },
       {
         "key": "acct_8cd3372e",
@@ -4702,10 +5048,10 @@
             "kind": "Corporate",
             "purpose": "business",
             "inTotals": true,
-            "marketValue": 52965.76
+            "marketValue": 55026.04
           }
         ],
-        "total": 52965.76
+        "total": 55026.04
       },
       {
         "key": "acct_97100dd9",
@@ -4719,10 +5065,10 @@
             "kind": "TFSA",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 7536.44
+            "marketValue": 7670.2
           }
         ],
-        "total": 7536.44
+        "total": 7670.2
       },
       {
         "key": "acct_97ab4cb2",
@@ -4736,7 +5082,7 @@
             "kind": "SpousalRRSP",
             "purpose": "retirement",
             "inTotals": false,
-            "marketValue": 15818.27
+            "marketValue": 17912.23
           }
         ],
         "total": 0
@@ -4753,10 +5099,10 @@
             "kind": "RESP",
             "purpose": "education",
             "inTotals": true,
-            "marketValue": 4923.3
+            "marketValue": 6212.73
           }
         ],
-        "total": 4923.3
+        "total": 6212.73
       },
       {
         "key": "acct_d6d9fb4a",
@@ -4770,10 +5116,10 @@
             "kind": "RRSP",
             "purpose": "retirement",
             "inTotals": true,
-            "marketValue": 20799.5
+            "marketValue": 20815.05
           }
         ],
-        "total": 20799.5
+        "total": 20815.05
       },
       {
         "key": "acct_d77c33c7",
@@ -4787,10 +5133,10 @@
             "kind": "TFSA",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 40045.59
+            "marketValue": 40713.63
           }
         ],
-        "total": 40045.59
+        "total": 40713.63
       },
       {
         "key": "acct_e2d627ff",
@@ -4804,10 +5150,10 @@
             "kind": "Crypto",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 1219.19
+            "marketValue": 1707.52
           }
         ],
-        "total": 1219.19
+        "total": 1707.52
       },
       {
         "key": "acct_e2ec057d",
@@ -4821,10 +5167,10 @@
             "kind": "FHSA",
             "purpose": "house",
             "inTotals": true,
-            "marketValue": 28031.87
+            "marketValue": 28060.84
           }
         ],
-        "total": 28031.87
+        "total": 28060.84
       }
     ],
     "purpose": [
@@ -4840,7 +5186,7 @@
             "kind": "RRSP",
             "purpose": "retirement",
             "inTotals": true,
-            "marketValue": 16016.7
+            "marketValue": 17526.53
           },
           {
             "maskedId": "acct_97ab4cb2",
@@ -4849,7 +5195,7 @@
             "kind": "SpousalRRSP",
             "purpose": "retirement",
             "inTotals": false,
-            "marketValue": 15818.27
+            "marketValue": 17912.23
           },
           {
             "maskedId": "acct_d6d9fb4a",
@@ -4858,10 +5204,10 @@
             "kind": "RRSP",
             "purpose": "retirement",
             "inTotals": true,
-            "marketValue": 20799.5
+            "marketValue": 20815.05
           }
         ],
-        "total": 36816.2
+        "total": 38341.58
       },
       {
         "key": "house",
@@ -4875,10 +5221,10 @@
             "kind": "FHSA",
             "purpose": "house",
             "inTotals": true,
-            "marketValue": 28031.87
+            "marketValue": 28060.84
           }
         ],
-        "total": 28031.87
+        "total": 28060.84
       },
       {
         "key": "education",
@@ -4892,10 +5238,10 @@
             "kind": "RESP",
             "purpose": "education",
             "inTotals": true,
-            "marketValue": 4923.3
+            "marketValue": 6212.73
           }
         ],
-        "total": 4923.3
+        "total": 6212.73
       },
       {
         "key": "business",
@@ -4903,16 +5249,25 @@
         "lens": "purpose",
         "accounts": [
           {
+            "maskedId": "acct_8297de15",
+            "shortId": "8297",
+            "label": "Corporate (self)",
+            "kind": "Corporate",
+            "purpose": "business",
+            "inTotals": true,
+            "marketValue": 5033.46
+          },
+          {
             "maskedId": "acct_91b82482",
             "shortId": "91b8",
             "label": "Corporate",
             "kind": "Corporate",
             "purpose": "business",
             "inTotals": true,
-            "marketValue": 52965.76
+            "marketValue": 55026.04
           }
         ],
-        "total": 52965.76
+        "total": 60059.5
       },
       {
         "key": "growth",
@@ -4926,7 +5281,7 @@
             "kind": "NonRegistered",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 31249.15
+            "marketValue": 33394.7
           },
           {
             "maskedId": "acct_2c620d2b",
@@ -4935,7 +5290,7 @@
             "kind": "NonRegistered",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 31792.33
+            "marketValue": 34289.88
           },
           {
             "maskedId": "acct_97100dd9",
@@ -4944,7 +5299,7 @@
             "kind": "TFSA",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 7536.44
+            "marketValue": 7670.2
           },
           {
             "maskedId": "acct_d77c33c7",
@@ -4953,7 +5308,7 @@
             "kind": "TFSA",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 40045.59
+            "marketValue": 40713.63
           },
           {
             "maskedId": "acct_e2d627ff",
@@ -4962,10 +5317,10 @@
             "kind": "Crypto",
             "purpose": "growth",
             "inTotals": true,
-            "marketValue": 1219.19
+            "marketValue": 1707.52
           }
         ],
-        "total": 111842.7
+        "total": 117775.92999999998
       },
       {
         "key": "spending",

@@ -6,10 +6,12 @@ import {
   annotateFinding,
   countedAccountNumbers,
   dedupeToLatestVersion,
+  documentTemplate,
   loadRedactions,
   maskFinding,
   resolveTemplate,
 } from "./build";
+import type { Page } from "./ingest/geometry";
 import type { ParsedFilename } from "./ingest/source";
 import { maskAccountNo } from "./store/mask";
 import type { Statement } from "./types";
@@ -291,5 +293,46 @@ describe("annotateFinding", () => {
     expect(annotated.actual).toBe(99);
     expect(annotated.delta).toBe(-1);
     expect(annotated.message).toBe("does not reconcile");
+  });
+});
+
+describe("documentTemplate", () => {
+  const parsed: ParsedFilename = {
+    file: "ACCT0001CAD_identity-abc_2026-08_v_0.pdf",
+    accountNo: "ACCT0001CAD",
+    period: "2026-08",
+    template: "BROKERAGE",
+    version: 0,
+    templateStated: false,
+  };
+  const page = (...lines: string[]): Page[] => [
+    {
+      rows: lines.map((line, i) => ({
+        y: i * 10,
+        words: line.split(" ").map((text, j) => ({ x0: j * 50, x1: j * 50 + 40, y: i * 10, text })),
+      })),
+    },
+  ];
+
+  test("skips a credit card statement with a finding that names the command importing it", () => {
+    const findings: Finding[] = [];
+    expect(
+      documentTemplate(parsed, page("Wealthsimple Credit card statement"), findings),
+    ).toBeNull();
+    expect(findings).toHaveLength(1);
+    expect(findings[0]?.message).toContain("bun run cards");
+    expect(findings[0]?.period).toBe("2026-08");
+  });
+
+  test("returns an investment statement's template with no finding", () => {
+    const findings: Finding[] = [];
+    expect(documentTemplate(parsed, page("MANAGED ACCOUNT"), findings)).toBe("BROKERAGE");
+    expect(findings).toEqual([]);
+  });
+
+  test("still stops the build on a document that is neither", () => {
+    expect(() => documentTemplate(parsed, page("Something else entirely"), [])).toThrow(
+      "could not determine the template",
+    );
   });
 });

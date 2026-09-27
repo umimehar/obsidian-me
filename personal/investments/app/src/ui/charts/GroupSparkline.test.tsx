@@ -43,6 +43,12 @@ function firstPlotPoint(): { x: number; y: number } {
   return { x: Number(match[1]), y: Number(match[2]) };
 }
 
+/** Every y coordinate the first path draws through. */
+function plotYs(): number[] {
+  const d = document.querySelector("path")?.getAttribute("d") ?? "";
+  return [...d.matchAll(/[ML](-?[\d.]+),(-?[\d.]+)/g)].map((m) => Number(m[2]));
+}
+
 /** The `from X to Y, ending at $Z.` clause one purpose group's summary must carry. */
 function summaryClauses(label: string): { range: string; ending: string } {
   const golden = groupGolden("purpose", label);
@@ -120,11 +126,10 @@ describe("GroupSparkline shared x domain", () => {
 describe("GroupSparkline y domain", () => {
   test("scales to the group's own maximum, so a small group is not flattened onto the baseline", () => {
     renderGroup("Education");
-    const { y } = firstPlotPoint();
     // Education's whole range is a small fraction of the portfolio. On a
-    // shared y domain its line would sit within a couple of percent of the
-    // baseline; on its own domain it uses the card's height.
-    expect(y).toBeLessThan(INNER_HEIGHT * 0.6);
+    // shared y domain even its highest point would sit within a couple of
+    // percent of the baseline; on its own domain it reaches the top.
+    expect(Math.min(...plotYs())).toBeLessThan(INNER_HEIGHT * 0.2);
   });
 });
 
@@ -233,7 +238,10 @@ describe("GroupSparkline cursor over the shared domain", () => {
     fireEvent.pointerMove(sparkline(), { clientX: 360 });
     expect(tooltipText()).toMatch(/No statement for this month/);
     expect(tooltipText()).not.toContain("$");
-    expect(tooltipText()).toMatch(/20(23|24)/);
+    const hoveredYear = Number(/\d{4}/.exec(tooltipText())?.[0]);
+    expect(hoveredYear).toBeLessThan(
+      Number(groupGolden("purpose", "Education").firstPeriod.slice(0, 4)),
+    );
     // The crosshair is there, and there is deliberately no dot on it: a dot
     // would put a point on the line where the group reported nothing.
     expect(document.querySelector("[data-cursor-marks]")).not.toBeNull();

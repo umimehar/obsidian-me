@@ -42,11 +42,11 @@ function lines(shortId: string): SVGPathElement[] {
 afterEach(cleanup);
 
 describe("provenance on screen", () => {
-  test("states in words that 2 of 14 accounts have statement-stated rates", () => {
+  test("states in words how many accounts have statement-stated rates", () => {
     renderChart();
     const note = document.querySelector("[data-returns-provenance]");
-    expect(note?.textContent).toContain("2 of 14 accounts");
-    expect(note?.textContent).toContain("The other 12");
+    expect(note?.textContent).toContain(`2 of ${GOLDENS.corpus.accountCount} accounts`);
+    expect(note?.textContent).toContain(`The other ${GOLDENS.corpus.accountCount - 2}`);
   });
 
   test("says the other accounts' rates are computed here, not Wealthsimple's own", () => {
@@ -385,7 +385,7 @@ describe("the chart is a responsive graphic", () => {
     const cards = [...document.querySelectorAll("[data-returns-card]")].map((node) =>
       node.getAttribute("data-returns-card"),
     );
-    expect(cards).toHaveLength(14);
+    expect(cards).toHaveLength(GOLDENS.corpus.accountCount);
     expect(cards.slice(0, 2)).toEqual(["9710", "d6d9"]);
   });
 

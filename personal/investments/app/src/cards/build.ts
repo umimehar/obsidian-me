@@ -8,8 +8,10 @@ import { parseGeometry } from "../ingest/geometry";
 import { parseSourceFilename } from "../ingest/source";
 import { redactText } from "../store/mask";
 
+// The investment statements' folder: the investment build skips card PDFs and
+// this one skips investment PDFs, so one download folder serves both.
 const SOURCE =
-  process.env.CARD_STATEMENTS_DIR ?? join(homedir(), "Downloads", "monthly_card_statements");
+  process.env.CARD_STATEMENTS_DIR ?? join(homedir(), "Downloads", "monthly_pdf_statements");
 const CACHE = join(import.meta.dir, "..", "..", ".cache");
 const DATA = join(import.meta.dir, "..", "..", "..", "data");
 const REDACTIONS_PATH = join(import.meta.dir, "..", "..", "redactions.json");

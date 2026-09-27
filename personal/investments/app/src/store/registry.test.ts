@@ -99,6 +99,20 @@ describe("buildRegistry", () => {
     expect(record?.kind).not.toBe("NonRegistered");
   });
 
+  test("classifies the second corporate account, opened 2026-08, as Corporate for business", () => {
+    const statements = [
+      makeStatement({
+        accountNo: accountNoWithShortId("8297"),
+        period: "2026-08",
+        accountType: "Order Execution Only Non-Registered Cash Account",
+      }),
+    ];
+    const [record] = buildRegistry(statements);
+    expect(record?.kind).toBe("Corporate");
+    expect(record?.purpose).toBe("business");
+    expect(record?.label).toBe("Corporate (self)");
+  });
+
   test("does not override an unrelated account's kind", () => {
     const statements = [
       makeStatement({

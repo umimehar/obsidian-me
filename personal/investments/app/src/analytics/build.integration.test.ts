@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { GOLDENS } from "../goldens";
 import type { Datastore } from "../store/datastore";
 import { buildAnalytics } from "./build";
 
@@ -15,9 +16,9 @@ describe.if(existsSync(DATASTORE_PATH))("analytics over the real datastore", () 
     return buildAnalytics(datastore, "2026-08-06T00:00:00.000Z");
   }
 
-  test("finds all 14 accounts", async () => {
+  test("finds every account", async () => {
     const output = await build();
-    expect(output.series).toHaveLength(14);
+    expect(output.series).toHaveLength(GOLDENS.corpus.accountCount);
   });
 
   test("2026-06 counts every account except the excluded kinds, to the cent", async () => {

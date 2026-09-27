@@ -2,7 +2,7 @@
 title: App checkpoints, and what they are for
 tags: [personal/investments, reference]
 created: 2026-08-31
-updated: 2026-08-31
+updated: 2026-09-26
 status: active
 type: reference
 personal: investments
@@ -38,3 +38,13 @@ The RRSP group reads $38,339.64 across three accounts against this project's $52
 Business investing shows two accounts where this project tracks one. The larger, $55,067.47, is plausibly the tracked corporate account after a month. The smaller, $5,038.29 at +0.77% all time, looks like an account no statement has ever arrived for.
 
 Account names are masked in the JSON the same way every other name in this project is. The `(self)` qualifier on the second business account is kept, because it is what tells the two apart.
+
+### Reconciled against 2026-08, on 2026-09-26
+
+It matches. The 2026-08 statements total $250,450.58 against the $250,543.54 visible in the app, $92.96 apart (0.04%), and every account is within 0.3%.
+
+The gap is pricing, not parsing. The statements price several ETFs a few cents away from the 2026-08-31 closing trade, and the app values at the close. Repricing every holding at that day's close explains the new business account to the cent (HXQ $117.33 on the statement, $117.54 at the close, times 23 shares is the whole $4.83) and the FHSA to within two cents. What remains elsewhere is $12.17 or less, which the app's live exchange rate would move on the accounts holding USD.
+
+Both earlier gaps are closed. The second business account is `8297`, opened 2026-08-24, now registered as Corporate. The RRSP group matches this project's two counted RRSP accounts to $1.94, with the spousal account outside both. The per-account table is in `checkpoints.json` under `reconciliation`.
+
+WSE401 is priced at $10.23 on the August statement, still flagged pending. The June reconciliation predicted a finalised NAV of $10.2254 from the $279.94 residual.
