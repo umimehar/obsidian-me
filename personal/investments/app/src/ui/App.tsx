@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
 import { latestGroupGain } from "../analytics/groupGain";
+import { AboutNumbers } from "./AboutNumbers";
 import { AccountFilter } from "./AccountFilter";
 import { Cards } from "./Cards";
 import { DataStatus } from "./DataStatus";
@@ -250,6 +251,11 @@ function Dashboard() {
           </Heading>
           <TaxView analytics={all} year={year} />
         </Flex>
+        <AboutNumbers
+          notes={[
+            "An estimate: book cost for USD holdings is a converted approximation, not a filing figure.",
+          ]}
+        />
       </Flex>
     ),
     growth: withSummary(

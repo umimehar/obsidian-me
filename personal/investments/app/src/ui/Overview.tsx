@@ -70,10 +70,11 @@ function AccountRow({ account }: { account: RollupAccount }) {
  * SAME call that formats the dollars: $995.74 on the RRSP and $3,911.35 on
  * the TFSA are four times apart in dollars and less than two apart as
  * returns (1.93% against 8.96%), which is the comparison the dollar figure
- * alone cannot support. The caveat sentence sits on its own line directly below the
- * figure it qualifies, the same "adjacent, not a footnote" placement
- * `ValueOverTime`'s accessible summary and `CostGapChart`'s callout use for
- * the same USD book-cost caveat.
+ * alone cannot support.
+ *
+ * The USD book-cost caveat used to print here too, once per card -- seven or
+ * eight repeats of the same sentence on one tab. It now lives once, in the
+ * Portfolio tab's `AboutNumbers`.
  */
 export function GroupGainLine({ figures }: { figures: ReturnType<typeof latestGroupGain> }) {
   if (figures === null) {
@@ -85,19 +86,14 @@ export function GroupGainLine({ figures }: { figures: ReturnType<typeof latestGr
   }
   const { bookCost, gain } = figures;
   return (
-    <Flex direction="column" gap="1" mb="3">
-      <Text size="2" color="gray" data-group-book-value="">
-        Book value {formatCurrency(bookCost)}
-        {" · "}
-        Gain against book cost{" "}
-        <Text color={gain >= 0 ? "jade" : "red"} data-group-gain="">
-          {formatGainWithShare(gain, bookCost)}
-        </Text>
+    <Text size="2" color="gray" mb="3" data-group-book-value="">
+      Book value {formatCurrency(bookCost)}
+      {" · "}
+      Gain against book cost{" "}
+      <Text color={gain >= 0 ? "jade" : "red"} data-group-gain="">
+        {formatGainWithShare(gain, bookCost)}
       </Text>
-      <Text size="1" color="gray">
-        An estimate: book cost for USD holdings is a converted approximation, not a filing figure.
-      </Text>
-    </Flex>
+    </Text>
   );
 }
 

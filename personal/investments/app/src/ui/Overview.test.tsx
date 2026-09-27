@@ -450,15 +450,18 @@ describe("Overview", () => {
       expect(gain.getAttribute("data-accent-color")).toBe("jade");
     });
 
-    test("the USD book-cost caveat sits next to the figure on every card that has one", () => {
+    test("every card with a gain prints its book value line, with no per-card USD caveat", () => {
       renderOverview();
       const cardsWithGain = [...document.querySelectorAll("[data-overview-group]")].filter(
         (card) => card.querySelector("[data-group-book-value]") !== null,
       );
       // Six of the seven registration groups have a gain; Cash does not.
       expect(cardsWithGain.length).toBe(6);
+      // The caveat used to repeat on every one of these cards. It now lives
+      // once, in the Portfolio tab's AboutNumbers, so `Overview` on its own
+      // renders none of it.
       for (const card of cardsWithGain) {
-        expect(card.textContent).toMatch(/approximate|estimate/i);
+        expect(card.textContent).not.toMatch(/approximate|estimate/i);
       }
     });
   });
