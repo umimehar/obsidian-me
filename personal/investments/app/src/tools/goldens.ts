@@ -1,9 +1,11 @@
 import { join } from "node:path";
 import rawDatastore from "@data/datastore.json";
+import { simulateBenchmark, skippedPeriods } from "../analytics/benchmark";
 import type { AnalyticsOutput } from "../analytics/build";
 import { buildCashflowSeries } from "../analytics/cashflowSeries";
 import { feeReconciliationGaps } from "../analytics/feeReconciliation";
 import { latestGroupGain } from "../analytics/groupGain";
+import type { HoldingsOutput } from "../analytics/holdings";
 import { buildIncome } from "../analytics/income";
 import { chequingInterestByAccount, incomeByYear } from "../analytics/incomeCosts";
 import { monthReview, reviewPeriods } from "../analytics/monthReview";
@@ -31,7 +33,13 @@ import {
   chartedReturnAccounts,
   plottedCount,
 } from "../ui/charts/returnsSeries";
-import { latestPeriod, lensTotal, loadAnalytics, loadReconciliation } from "../ui/data";
+import {
+  latestPeriod,
+  lensTotal,
+  loadAnalytics,
+  loadBenchmark,
+  loadReconciliation,
+} from "../ui/data";
 
 const DATA = join(import.meta.dir, "..", "..", "..", "data");
 const LENSES: readonly Lens[] = ["registration", "account", "purpose"];
@@ -199,6 +207,61 @@ function buildFutureGoldens(analytics: AnalyticsOutput, startYear: string): Futu
     retirementMonthlyIncome: income?.monthly ?? 0,
     milestone500kYear: milestoneYear(scenarios.base.points, 500_000),
     milestone1mYear: milestoneYear(scenarios.base.points, 1_000_000),
+  };
+}
+
+/** The two Cash rows only, by currency -- `holdings.currency` covers every row, this is the subset the page calls out on its own. */
+function cashByCurrency(holdings: HoldingsOutput): Goldens["holdings"]["cash"] {
+  const cad = holdings.holdings.find((h) => h.symbol === "" && h.priceCurrency === "CAD");
+  const usd = holdings.holdings.find((h) => h.symbol === "" && h.priceCurrency === "USD");
+  return { CAD: cad?.value ?? 0, USD: usd?.value ?? 0 };
+}
+
+/** `buildHoldings`'s own output, reshaped into the goldens' pinned shape -- every figure read off that same model, never recomputed. */
+function buildHoldingsGoldens(holdings: HoldingsOutput): Goldens["holdings"] {
+  const sp500 = holdings.groups.find((g) => g.label === "S&P 500");
+  const topSymbols = holdings.holdings.slice(0, 10).map((h) => ({
+    symbol: h.symbol,
+    currency: h.priceCurrency,
+    value: h.value,
+    accounts: h.accounts,
+  }));
+  const lRows = holdings.holdings
+    .filter((h) => h.symbol === "L")
+    .map((h) => ({
+      currency: h.priceCurrency,
+      name: h.name,
+      value: h.value,
+      accounts: h.accounts,
+    }));
+
+  return {
+    period: holdings.period,
+    total: holdings.total,
+    behind: holdings.behind,
+    cash: cashByCurrency(holdings),
+    currency: holdings.currency,
+    sp500: {
+      value: sp500?.value ?? 0,
+      share: sp500?.share ?? 0,
+      accountCount: sp500?.accounts.length ?? 0,
+    },
+    topSymbols,
+    assetClasses: holdings.assetClasses,
+    lRows,
+  };
+}
+
+/** `simulateBenchmark` over the committed portfolio series and benchmark closes, reshaped into the goldens' pinned shape. */
+function buildBenchmarkGoldens(analytics: AnalyticsOutput): Goldens["benchmark"] {
+  const benchmark = loadBenchmark();
+  const points = simulateBenchmark(analytics.series, benchmark.closes);
+  const last = required(points[points.length - 1], "a benchmark point");
+  return {
+    portfolioEnd: last.portfolio,
+    benchmarkEnd: last.benchmark,
+    difference: last.portfolio - last.benchmark,
+    monthsSkipped: skippedPeriods(analytics.series, benchmark.closes).length,
   };
 }
 
@@ -443,6 +506,8 @@ function buildGoldens(): Goldens {
       growth: review.growth ?? 0,
       missingValue: review.missingValue,
     },
+    holdings: buildHoldingsGoldens(analytics.holdings),
+    benchmark: buildBenchmarkGoldens(analytics),
   };
 }
 

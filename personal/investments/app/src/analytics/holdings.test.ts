@@ -10,20 +10,41 @@ const DATASTORE = rawDatastore as Datastore;
 const HOLDINGS = buildHoldings(DATASTORE.statements, DATASTORE.accounts);
 
 describe("buildHoldings, over the real corpus", () => {
+  test("period, total and behind match the golden", () => {
+    expect(HOLDINGS.period).toBe(GOLDENS.holdings.period);
+    expect(HOLDINGS.total).toBeCloseTo(GOLDENS.holdings.total, 6);
+    expect(HOLDINGS.behind).toEqual(GOLDENS.holdings.behind);
+  });
+
   test("total is within a cent per account of the portfolio total", () => {
     const tolerance = DATASTORE.accounts.length * 0.01;
     expect(Math.abs(HOLDINGS.total - GOLDENS.portfolio.total)).toBeLessThanOrEqual(tolerance);
   });
 
-  test("VFV and VOO sum into the S&P 500 group, with its own account list", () => {
+  test("VFV and VOO sum into the S&P 500 group, matching the golden value, share and account count", () => {
     const group = HOLDINGS.groups.find((g) => g.label === "S&P 500");
     expect(group).toBeDefined();
     expect(group?.symbols).toContain("VFV");
-    const vfv = HOLDINGS.holdings.find((h) => h.symbol === "VFV");
-    const voo = HOLDINGS.holdings.find((h) => h.symbol === "VOO");
-    const expectedValue = (vfv?.value ?? 0) + (voo?.value ?? 0);
-    expect(group?.value).toBeCloseTo(expectedValue, 6);
-    expect(group?.accounts.length).toBeGreaterThan(0);
+    expect(group?.value).toBeCloseTo(GOLDENS.holdings.sp500.value, 6);
+    expect(group?.share).toBeCloseTo(GOLDENS.holdings.sp500.share, 9);
+    expect(group?.accounts.length).toBe(GOLDENS.holdings.sp500.accountCount);
+  });
+
+  test("the top 10 symbols by value match the golden", () => {
+    const top = HOLDINGS.holdings.slice(0, 10).map((h) => ({
+      symbol: h.symbol,
+      currency: h.priceCurrency,
+      value: h.value,
+      accounts: h.accounts,
+    }));
+    expect(top).toEqual(GOLDENS.holdings.topSymbols);
+  });
+
+  test("the cash rows by currency match the golden", () => {
+    const cad = HOLDINGS.holdings.find((h) => h.symbol === "" && h.priceCurrency === "CAD");
+    const usd = HOLDINGS.holdings.find((h) => h.symbol === "" && h.priceCurrency === "USD");
+    expect(cad?.value).toBeCloseTo(GOLDENS.holdings.cash.CAD, 6);
+    expect(usd?.value).toBeCloseTo(GOLDENS.holdings.cash.USD, 6);
   });
 
   test("shares sum to 1 within 1e-9", () => {
@@ -49,14 +70,16 @@ describe("buildHoldings, over the real corpus", () => {
     }
   });
 
-  test("currency split sums to the total, within a cent per account", () => {
+  test("currency split matches the golden and sums to the total, within a cent per account", () => {
+    expect(HOLDINGS.currency).toEqual(GOLDENS.holdings.currency);
     const tolerance = DATASTORE.accounts.length * 0.01;
     expect(Math.abs(HOLDINGS.currency.CAD + HOLDINGS.currency.USD - HOLDINGS.total)).toBeLessThan(
       tolerance,
     );
   });
 
-  test("asset classes sum to the total", () => {
+  test("asset classes match the golden and sum to the total", () => {
+    expect(HOLDINGS.assetClasses).toEqual(GOLDENS.holdings.assetClasses);
     const sum = HOLDINGS.assetClasses.reduce((total, c) => total + c.value, 0);
     expect(Math.abs(sum - HOLDINGS.total)).toBeLessThan(0.01);
   });
@@ -78,11 +101,19 @@ describe("buildHoldings, over the real corpus", () => {
     }
   });
 
-  test("L keys apart into Loblaw (CAD) and Loews Corp (USD), never merged", () => {
-    const entries = HOLDINGS.holdings.filter((h) => h.symbol === "L");
+  test("L keys apart into Loblaw (CAD) and Loews Corp (USD), never merged, matching the golden", () => {
+    const entries = HOLDINGS.holdings
+      .filter((h) => h.symbol === "L")
+      .map((h) => ({
+        currency: h.priceCurrency,
+        name: h.name,
+        value: h.value,
+        accounts: h.accounts,
+      }));
+    expect(entries).toEqual(GOLDENS.holdings.lRows);
     expect(entries.length).toBe(2);
-    const cad = entries.find((e) => e.priceCurrency === "CAD");
-    const usd = entries.find((e) => e.priceCurrency === "USD");
+    const cad = entries.find((e) => e.currency === "CAD");
+    const usd = entries.find((e) => e.currency === "USD");
     expect(cad?.name).toBe("Loblaw Cos. Ltd.");
     expect(usd?.name).toBe("Loews Corp.");
   });

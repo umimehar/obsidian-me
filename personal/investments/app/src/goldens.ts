@@ -277,6 +277,29 @@ export interface Goldens {
     growth: number;
     missingValue: number;
   };
+  /** `buildHoldings` at its own single latest period, computed by that same function -- see `holdings.ts`. */
+  holdings: {
+    period: string;
+    total: number;
+    /** Counted account labels with no BROKERAGE statement at `period`. */
+    behind: string[];
+    /** The two Cash rows only, by currency -- distinct from `currency`, which covers every row. */
+    cash: { CAD: number; USD: number };
+    currency: { CAD: number; USD: number };
+    sp500: { value: number; share: number; accountCount: number };
+    /** The top 10 rows by value, symbol and currency together (a bare symbol can name two rows). */
+    topSymbols: { symbol: string; currency: "CAD" | "USD"; value: number; accounts: string[] }[];
+    assetClasses: { name: string; value: number }[];
+    /** Every row keyed "L", proving the symbol keys apart by currency rather than merging. */
+    lRows: { currency: "CAD" | "USD"; name: string; value: number; accounts: string[] }[];
+  };
+  /** `simulateBenchmark` over the committed portfolio series and `data/benchmark.json`. */
+  benchmark: {
+    portfolioEnd: number;
+    benchmarkEnd: number;
+    difference: number;
+    monthsSkipped: number;
+  };
 }
 
 function isGoldens(value: unknown): value is Goldens {
@@ -303,7 +326,9 @@ function isGoldens(value: unknown): value is Goldens {
     typeof c.income === "object" &&
     typeof c.incomeByYear === "object" &&
     typeof c.incomeCosts === "object" &&
-    typeof c.month === "object"
+    typeof c.month === "object" &&
+    typeof c.holdings === "object" &&
+    typeof c.benchmark === "object"
   );
 }
 

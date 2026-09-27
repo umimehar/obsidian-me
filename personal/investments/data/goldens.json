@@ -528,5 +528,163 @@
     "netDeposits": 11547,
     "growth": 4323.75,
     "missingValue": 0
+  },
+  "holdings": {
+    "period": "2026-08",
+    "total": 250450.58852199995,
+    "behind": [],
+    "cash": {
+      "CAD": 2955.8999999999996,
+      "USD": 1784.1798180000003
+    },
+    "currency": {
+      "CAD": 157819.12,
+      "USD": 92631.46852199995
+    },
+    "sp500": {
+      "value": 51902.020000000004,
+      "share": 0.2072345699257195,
+      "accountCount": 6
+    },
+    "topSymbols": [
+      {
+        "symbol": "VFV",
+        "currency": "CAD",
+        "value": 32306.57,
+        "accounts": [
+          "FHSA",
+          "Non-registered 2c62",
+          "RESP",
+          "RRSP (self-directed)",
+          "TFSA (self-directed)"
+        ]
+      },
+      {
+        "symbol": "XEQT",
+        "currency": "CAD",
+        "value": 29751.22,
+        "accounts": [
+          "Corporate (self)",
+          "FHSA",
+          "Non-registered 2c62",
+          "RESP",
+          "RRSP (self-directed)",
+          "TFSA (self-directed)"
+        ]
+      },
+      {
+        "symbol": "WSE401",
+        "currency": "CAD",
+        "value": 20786.33,
+        "accounts": [
+          "Private Market Fund"
+        ]
+      },
+      {
+        "symbol": "VOO",
+        "currency": "USD",
+        "value": 19595.45,
+        "accounts": [
+          "Corporate"
+        ]
+      },
+      {
+        "symbol": "QCN",
+        "currency": "CAD",
+        "value": 15320.380000000001,
+        "accounts": [
+          "Corporate",
+          "TFSA (managed)"
+        ]
+      },
+      {
+        "symbol": "QQC",
+        "currency": "CAD",
+        "value": 13521.84,
+        "accounts": [
+          "FHSA",
+          "Non-registered 2c62",
+          "RESP",
+          "TFSA (self-directed)"
+        ]
+      },
+      {
+        "symbol": "PSA",
+        "currency": "CAD",
+        "value": 11128.17,
+        "accounts": [
+          "RRSP (self-directed)",
+          "TFSA (self-directed)"
+        ]
+      },
+      {
+        "symbol": "L",
+        "currency": "CAD",
+        "value": 9505.630000000001,
+        "accounts": [
+          "FHSA",
+          "Non-registered 2c62"
+        ]
+      },
+      {
+        "symbol": "IEFA",
+        "currency": "USD",
+        "value": 9296.31,
+        "accounts": [
+          "Corporate"
+        ]
+      },
+      {
+        "symbol": "ACWV",
+        "currency": "USD",
+        "value": 6629.11,
+        "accounts": [
+          "Corporate"
+        ]
+      }
+    ],
+    "assetClasses": [
+      {
+        "name": "Canadian Equities and Alternatives",
+        "value": 154172.78999999998
+      },
+      {
+        "name": "US Equities and Alternatives",
+        "value": 89830.19870399995
+      },
+      {
+        "name": "Cash",
+        "value": 4740.079818
+      },
+      {
+        "name": "Crypto Assets",
+        "value": 1707.52
+      }
+    ],
+    "lRows": [
+      {
+        "currency": "CAD",
+        "name": "Loblaw Cos. Ltd.",
+        "value": 9505.630000000001,
+        "accounts": [
+          "FHSA",
+          "Non-registered 2c62"
+        ]
+      },
+      {
+        "currency": "USD",
+        "name": "Loews Corp.",
+        "value": 8.73,
+        "accounts": [
+          "Non-registered 1f9a"
+        ]
+      }
+    ]
+  },
+  "benchmark": {
+    "portfolioEnd": 250450.58,
+    "benchmarkEnd": 254075.9800332943,
+    "difference": -3625.4000332943106,
+    "monthsSkipped": 0
   }
 }
