@@ -261,18 +261,19 @@ describe("goals and runway still render, reading the plan's own goals", () => {
     }
   });
 
-  test("the runway table's window line matches the engine's first and last years", () => {
+  test("the runway table's window line matches the engine's own first and last years", () => {
     render(<Harness />);
-    const inputs = projectionInputs(analytics, { returnRate: 0.06, years: retireYear - 2020 });
-    const rows = projectYears(inputs);
+    // The same rate, and the same year count `ProjectionsView` itself
+    // derives (30, widened to reach the plan's retirement year), so `first`
+    // and `last` are the literal years the rendered table's rows span.
+    const startYear = Number(projectionInputs(analytics).startYear || 0);
+    const years = Math.max(30, retireYear - startYear);
+    const rows = projectYears(projectionInputs(analytics, { returnRate: 0.06, years }));
     const first = rows[0]?.year;
     const last = rows.at(-1)?.year;
+    if (first === undefined || last === undefined) throw new Error("expected projected rows");
     const windowLine = document.querySelector("[data-runway-window]")?.textContent ?? "";
-    // The page's own rows may differ in length from this independently built
-    // pair, so only the SHAPE of the statement -- naming a first and a last
-    // year, in that order -- is asserted here, not this test's own numbers.
-    expect(windowLine).toMatch(/runs from \d{4} to \d{4}/);
-    expect(first).not.toBe(last);
+    expect(windowLine).toContain(`runs from ${first} to ${last}`);
   });
 
   test("the runway table renders", () => {
