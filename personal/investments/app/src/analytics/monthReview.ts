@@ -115,11 +115,17 @@ function required<T>(value: T | undefined, what: string): T {
 }
 
 /**
- * Deposits and growth, summed only over the accounts priced at both `period`
- * and the calendar month immediately before it -- an account priced at only
- * one of the two contributes nothing here, on purpose. A late statement or a
- * gap would otherwise read as a swing in market growth it never caused (see
- * `accountMove`'s own comment).
+ * Deposits and growth, summed only over the accounts this period can
+ * actually explain the movement of: either priced at the calendar month
+ * immediately before `period` too (an ordinary comparable month, `start` its
+ * own stated value), or priced at `period` for the very first time ever (a
+ * newly opened account, `start` a real $0 -- there is nothing before it to
+ * compare against, and its whole balance is exactly the deposit that opened
+ * it). An account priced at `period` after a GAP -- an earlier priced month
+ * exists, just not the one immediately before this one -- contributes
+ * nothing here: its jump is a return, not a deposit or a gain the market
+ * produced, and treating a stale old value as its baseline would read it as
+ * one (see `accountMove`'s own comment, the same trap for one account).
  */
 function comparableFlows(
   accounts: readonly AccountSeries[],
@@ -134,12 +140,15 @@ function comparableFlows(
   for (const account of accounts) {
     const priced = pricedMonths(account);
     const current = priced.find((m) => m.period === period);
+    if (current === undefined || current.marketValue === null) continue;
+
     const previous = priced.find((m) => m.period === prevPeriod);
-    if (current === undefined || previous === undefined) continue;
-    if (current.marketValue === null || previous.marketValue === null) continue;
+    const isNewlyOpened = !priced.some((m) => m.period < period);
+    if (previous === undefined && !isNewlyOpened) continue;
+    if (previous !== undefined && previous.marketValue === null) continue;
 
     any = true;
-    comparableStart += previous.marketValue;
+    comparableStart += previous?.marketValue ?? 0;
     comparableEnd += current.marketValue;
     netDeposits += current.deposits - current.withdrawals;
   }

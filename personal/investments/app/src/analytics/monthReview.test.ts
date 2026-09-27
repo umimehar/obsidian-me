@@ -1,10 +1,22 @@
 import { describe, expect, test } from "bun:test";
 import { GOLDENS } from "../goldens";
+import { netFlowsByPeriod } from "../projection/fittedRate";
 import type { AccountKind, ManagementStyle } from "../store/mask";
 import type { Purpose } from "../store/registry";
 import { loadAnalytics } from "../ui/data";
+import { yearChange } from "../ui/scope";
 import { monthReview, reviewPeriods } from "./monthReview";
 import type { AccountSeries, MonthPoint } from "./types";
+
+/**
+ * An account is "returning after a gap" for `period` when its move has no
+ * `start` (nothing comparable precedes it) yet it is not in `opened` (its
+ * first-ever statement is older than `period`). Shared by every test below
+ * that needs to skip a period the comparable-flows invariant does not cover.
+ */
+function hasReturningAccount(review: ReturnType<typeof monthReview>): boolean {
+  return review.moves.some((m) => m.start === null && !review.opened.includes(m.label));
+}
 
 function month(overrides: Partial<MonthPoint> & { period: string }): MonthPoint {
   return {
@@ -62,6 +74,47 @@ describe("monthReview, over the real corpus", () => {
     const review = monthReview(REAL, "2026-08");
     expect(review.opened).toContain("Corporate (self)");
   });
+
+  test("for every period with nothing missing and nothing returning, netDeposits matches netFlowsByPeriod and the equation balances", () => {
+    const flows = netFlowsByPeriod(REAL.series);
+    let checked = 0;
+    for (const period of reviewPeriods(REAL)) {
+      const review = monthReview(REAL, period);
+      if (review.missing.length > 0 || hasReturningAccount(review)) continue;
+      checked += 1;
+      expect(review.netDeposits).toBeCloseTo(flows.get(period) ?? 0, 2);
+      const reconstructed = (review.start ?? 0) + review.netDeposits + (review.growth ?? 0);
+      expect(reconstructed).toBeCloseTo(review.end, 2);
+    }
+    // Non-vacuous: the real corpus has to actually exercise the qualifying path.
+    expect(checked).toBeGreaterThan(0);
+  });
+
+  test("summed monthly netDeposits over 2026 matches yearChange's netDeposits, over the qualifying months", () => {
+    const year = 2026;
+    const periods = reviewPeriods(REAL).filter((p) => p.startsWith(`${year}-`));
+    const qualifying = periods.filter((period) => {
+      const review = monthReview(REAL, period);
+      return review.missing.length === 0 && !hasReturningAccount(review);
+    });
+    const summedNetDeposits = qualifying.reduce(
+      (sum, period) => sum + monthReview(REAL, period).netDeposits,
+      0,
+    );
+    const change = yearChange(REAL.series, year);
+    if (change === null) throw new Error(`expected a ${year} change`);
+
+    if (qualifying.length === periods.length) {
+      // Every month in the year is individually explainable, so the monthly
+      // sum and the year's own net flows are the same figure read two ways.
+      expect(summedNetDeposits).toBeCloseTo(change.netDeposits, 2);
+    } else {
+      // A disqualified month exists in the corpus today; the invariant this
+      // asserts is only claimed over the months that qualify (see the test
+      // above), never silently widened to the whole year.
+      expect(qualifying.length).toBeGreaterThan(0);
+    }
+  });
 });
 
 describe("monthReview, over a fixture", () => {
@@ -97,6 +150,44 @@ describe("monthReview, over a fixture", () => {
     expect(review.netDeposits).toBe(50);
     expect(review.growth).toBe(50);
     expect(review.missingValue).toBe(500);
+  });
+
+  test("a funded newly opened account counts as comparable with a real $0 start", () => {
+    const opened = account({
+      maskedId: "acct_opened",
+      label: "Opened",
+      months: [month({ period: "2026-07", marketValue: 200, bookCost: 200, deposits: 200 })],
+    });
+    const steady = account({
+      maskedId: "acct_steady",
+      label: "Steady",
+      months: [
+        month({ period: "2026-06", marketValue: 1000, bookCost: 1000 }),
+        month({ period: "2026-07", marketValue: 1020, bookCost: 1000, deposits: 10 }),
+      ],
+    });
+    const analytics = {
+      meta: { generated: "", datastoreGenerated: "", accountCount: 2 },
+      series: [opened, steady],
+      rooms: {},
+      income: {},
+      returns: [],
+      rollups: { registration: [], account: [], purpose: [] },
+      activity: {},
+    };
+
+    const review = monthReview(analytics, "2026-07");
+    // Opened's $200 deposit must count as a deposit, not vanish: 200 (Opened)
+    // plus 10 (Steady).
+    expect(review.netDeposits).toBe(210);
+    // Opened's own growth is 200 - 0 - 200 = 0; only Steady's $10 is real growth.
+    expect(review.growth).toBe(10);
+    expect(hasReturningAccount(review)).toBe(false);
+    expect(review.missing).toEqual([]);
+    // Nothing missing and nothing returning: the full change decomposes
+    // exactly into deposits plus growth, with no unexplained remainder.
+    const change = review.end - (review.start ?? 0);
+    expect(change).toBe(review.netDeposits + (review.growth ?? 0));
   });
 
   test("an account that skipped a month and then reported again contributes no growth", () => {
