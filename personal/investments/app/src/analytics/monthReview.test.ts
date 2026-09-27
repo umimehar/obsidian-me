@@ -148,6 +148,7 @@ describe("monthReview, over a fixture", () => {
         groups: [],
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
+        behind: [],
       },
     };
 
@@ -191,6 +192,7 @@ describe("monthReview, over a fixture", () => {
         groups: [],
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
+        behind: [],
       },
     };
 
@@ -242,6 +244,7 @@ describe("monthReview, over a fixture", () => {
         groups: [],
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
+        behind: [],
       },
     };
 
@@ -294,6 +297,7 @@ describe("monthReview, over a fixture", () => {
         groups: [],
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
+        behind: [],
       },
     };
 
@@ -325,6 +329,7 @@ describe("monthReview, over a fixture", () => {
         groups: [],
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
+        behind: [],
       },
     };
     expect(reviewPeriods(analytics)).toEqual(["2026-07", "2026-06"]);

@@ -182,6 +182,7 @@ describe("data.ts against the real committed analytics.json", () => {
           groups: [],
           currency: { CAD: 0, USD: 0 },
           assetClasses: [],
+          behind: [],
         },
       }),
     ).toBeNull();

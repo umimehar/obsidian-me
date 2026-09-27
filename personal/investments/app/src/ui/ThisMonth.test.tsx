@@ -191,6 +191,7 @@ describe("ThisMonth", () => {
         groups: [],
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
+        behind: [],
       },
     };
 

@@ -47,6 +47,7 @@ function analyticsFixture(overrides: Partial<AnalyticsOutput> = {}): AnalyticsOu
       groups: [],
       currency: { CAD: 0, USD: 0 },
       assetClasses: [],
+      behind: [],
     },
     ...overrides,
   };

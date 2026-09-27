@@ -1,4 +1,4 @@
-import { Flex, Heading, Table, Text } from "@radix-ui/themes";
+import { Badge, Flex, Heading, Table, Text } from "@radix-ui/themes";
 import type { HoldingSummary, HoldingsOutput } from "../analytics/holdings";
 import { ShareBar } from "./ShareBar";
 import { formatPeriodLabel } from "./charts/plot";
@@ -14,14 +14,22 @@ export interface HoldingsProps {
 
 const TOP_COUNT = 15;
 
-/** One row: symbol, name, value, share, accounts holding it. */
+/** One row: symbol, name, value, share, accounts holding it, a badge when its valuation is not yet final. */
 function HoldingRow({ holding }: { holding: HoldingSummary }) {
   return (
-    <Table.Row data-holding-row={holding.symbol}>
+    <Table.Row data-holding-row={`${holding.symbol}:${holding.priceCurrency}`}>
       <Table.RowHeaderCell>{holding.symbol || holding.name}</Table.RowHeaderCell>
-      <Table.Cell>{holding.name}</Table.Cell>
+      <Table.Cell>
+        {holding.name}
+        {holding.pendingValuation ? (
+          <Badge color="amber" variant="soft" highContrast ml="2" data-pending-valuation="">
+            Valuation pending
+          </Badge>
+        ) : null}
+      </Table.Cell>
       <Table.Cell>{formatCurrency(holding.value)}</Table.Cell>
       <Table.Cell>{formatShare(holding.share)}</Table.Cell>
+      <Table.Cell>{holding.priceCurrency}</Table.Cell>
       <Table.Cell>{holding.accounts.join(", ")}</Table.Cell>
     </Table.Row>
   );
@@ -42,19 +50,23 @@ function HoldingsTable({
           <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>Value</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>Share</Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell>Currency</Table.ColumnHeaderCell>
           <Table.ColumnHeaderCell>Accounts</Table.ColumnHeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
         {rows.map((holding) => (
-          <HoldingRow key={`${holding.symbol}:${holding.name}`} holding={holding} />
+          <HoldingRow
+            key={`${holding.symbol}:${holding.name}:${holding.priceCurrency}`}
+            holding={holding}
+          />
         ))}
       </Table.Body>
     </Table.Root>
   );
 }
 
-/** The first `TOP_COUNT` rows always shown, the rest behind a disclosure. */
+/** The first `TOP_COUNT` rows always shown, the rest behind a disclosure naming how many more there are. */
 function TopHoldings({ holdings }: { holdings: readonly HoldingSummary[] }) {
   const top = holdings.slice(0, TOP_COUNT);
   const rest = holdings.slice(TOP_COUNT);
@@ -66,7 +78,9 @@ function TopHoldings({ holdings }: { holdings: readonly HoldingSummary[] }) {
       <HoldingsTable rows={top} variant="top" />
       {rest.length === 0 ? null : (
         <details data-holdings-show-all="">
-          <summary>Show all {holdings.length} holdings</summary>
+          <summary>
+            Show the other {rest.length} holding{rest.length === 1 ? "" : "s"}
+          </summary>
           <HoldingsTable rows={rest} variant="rest" />
         </details>
       )}
@@ -75,24 +89,17 @@ function TopHoldings({ holdings }: { holdings: readonly HoldingSummary[] }) {
 }
 
 /** One index group's exposure, built entirely from the model: value, share and the accounts holding it. */
-function IndexGroups({ holdings }: { holdings: HoldingsOutput }) {
-  if (holdings.groups.length === 0) return null;
+function IndexGroups({ groups }: { groups: HoldingsOutput["groups"] }) {
+  if (groups.length === 0) return null;
   return (
     <Flex direction="column" gap="2" data-index-groups="">
-      {holdings.groups.map((group) => {
-        const symbolSet = new Set(group.symbols);
-        const accounts = new Set<string>();
-        for (const holding of holdings.holdings) {
-          if (symbolSet.has(holding.symbol)) for (const a of holding.accounts) accounts.add(a);
-        }
-        return (
-          <Text key={group.label} size="2" data-index-group={group.label}>
-            {group.label} through {group.symbols.join(" and ")}: {formatCurrency(group.value)} (
-            {formatShare(group.share)}) across {accounts.size}{" "}
-            {accounts.size === 1 ? "account" : "accounts"}
-          </Text>
-        );
-      })}
+      {groups.map((group) => (
+        <Text key={group.label} size="2" data-index-group={group.label}>
+          {group.label} through {group.symbols.join(" and ")}: {formatCurrency(group.value)} (
+          {formatShare(group.share)}) across {group.accounts.length}{" "}
+          {group.accounts.length === 1 ? "account" : "accounts"}
+        </Text>
+      ))}
     </Flex>
   );
 }
@@ -137,29 +144,44 @@ function AssetClasses({
 }
 
 /**
- * A residual against the portfolio total, stated rather than hidden. Real
- * causes include an account whose latest statement is CASH only (so it
- * contributes nothing here even though it counts toward the total) and a
- * pending valuation carried at a stale purchase price -- never patched by
- * inventing a holding to close the gap.
+ * A residual against the portfolio total, stated with its sign rather than
+ * hidden. Real causes for holdings falling short include an account behind
+ * on its statement for this period (see `behind`); holdings can also land a
+ * few cents ahead of the portfolio total from rounding the same fx rate a
+ * different way, since neither figure is derived from the other.
  */
 function ResidualNote({ residual }: { residual: number }) {
   if (Math.abs(residual) < 0.01) return null;
+  return residual > 0 ? (
+    <Text size="2" color="gray" data-holdings-residual="short">
+      {formatCurrency(residual)} of the portfolio total is not reflected above, most likely an
+      account behind on its statement for this period, or a pending valuation.
+    </Text>
+  ) : (
+    <Text size="2" color="gray" data-holdings-residual="over">
+      What is shown above totals {formatCurrency(-residual)} more than the portfolio figure, almost
+      always from rounding a converted currency figure a different way.
+    </Text>
+  );
+}
+
+/** Counted accounts with no statement for this period, named rather than silently missing from the tables above. */
+function BehindNote({ behind }: { behind: readonly string[] }) {
+  if (behind.length === 0) return null;
   return (
-    <Text size="2" color="gray" data-holdings-residual="">
-      {formatCurrency(Math.abs(residual))} of the portfolio total is not reflected above, most
-      likely an account whose latest statement carries no holdings detail, or a pending valuation.
+    <Text size="2" color="gray" data-holdings-behind="">
+      Behind on a statement for this period, and left out of the figures above: {behind.join(", ")}.
     </Text>
   );
 }
 
 /**
  * What is actually owned, combined across every account counted toward the
- * portfolio total, at the latest period each account has a BROKERAGE
- * statement for. Holdings are not re-computed per year: the year filter
- * stays reachable on this tab for consistency with the rest of the
- * dashboard, but it does not change what is drawn here, which this tab
- * says in the open rather than silently ignoring the control.
+ * portfolio total, all at the single latest period any counted account
+ * reports. Holdings are not re-computed per year: the year filter stays
+ * reachable on this tab for consistency with the rest of the dashboard, but
+ * it does not change what is drawn here, which this tab says in the open
+ * rather than silently ignoring the control.
  */
 export function Holdings({ holdings, portfolioTotal, scope }: HoldingsProps) {
   const residual = portfolioTotal - holdings.total;
@@ -177,9 +199,10 @@ export function Holdings({ holdings, portfolioTotal, scope }: HoldingsProps) {
           </Text>
         )}
         <ResidualNote residual={residual} />
+        <BehindNote behind={holdings.behind} />
       </Flex>
       <TopHoldings holdings={holdings.holdings} />
-      <IndexGroups holdings={holdings} />
+      <IndexGroups groups={holdings.groups} />
       <CurrencySplit currency={holdings.currency} total={holdings.total} />
       <AssetClasses classes={holdings.assetClasses} total={holdings.total} />
     </Flex>

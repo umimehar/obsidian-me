@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-09-27T07:17:15.040Z",
+    "generated": "2026-09-27T07:56:47.015Z",
     "datastoreGenerated": "2026-09-27T02:23:09.416Z",
     "accountCount": 15
   },
@@ -7590,7 +7590,8 @@
           "TFSA (self-directed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "XEQT",
@@ -7606,7 +7607,8 @@
           "TFSA (self-directed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WSE401",
@@ -7617,7 +7619,8 @@
           "Private Market Fund"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": true
       },
       {
         "symbol": "VOO",
@@ -7628,7 +7631,8 @@
           "Corporate"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "QCN",
@@ -7640,7 +7644,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "QQC",
@@ -7654,7 +7659,8 @@
           "TFSA (self-directed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PSA",
@@ -7666,20 +7672,21 @@
           "TFSA (self-directed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "L",
-        "name": "Loews Corp.",
-        "value": 9514.36,
-        "share": 0.03798897042385766,
+        "name": "Loblaw Cos. Ltd.",
+        "value": 9505.630000000001,
+        "share": 0.037954113248829566,
         "accounts": [
           "FHSA",
-          "Non-registered 1f9a",
           "Non-registered 2c62"
         ],
-        "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "priceCurrency": "CAD",
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "IEFA",
@@ -7690,7 +7697,8 @@
           "Corporate"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ACWV",
@@ -7701,7 +7709,8 @@
           "Corporate"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CHPS",
@@ -7713,7 +7722,8 @@
           "TFSA (self-directed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EEMV",
@@ -7725,7 +7735,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "META",
@@ -7737,7 +7748,8 @@
           "Non-registered 2c62"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GOLD",
@@ -7748,7 +7760,8 @@
           "Non-registered 2c62"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ZGLD",
@@ -7760,7 +7773,8 @@
           "TFSA (self-directed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HXQ.U",
@@ -7771,10 +7785,11 @@
           "Non-registered 2c62"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
-        "symbol": "Cash:CAD",
+        "symbol": "",
         "name": "Cash (CAD)",
         "value": 2955.8999999999996,
         "share": 0.01180232802583472,
@@ -7789,7 +7804,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Cash"
+        "assetClass": "Cash",
+        "pendingValuation": false
       },
       {
         "symbol": "CHPX",
@@ -7801,7 +7817,8 @@
           "RRSP (self-directed)"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HXQ",
@@ -7812,7 +7829,8 @@
           "Corporate (self)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NVDA",
@@ -7823,7 +7841,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AAPL",
@@ -7834,7 +7853,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "VOOG",
@@ -7845,7 +7865,8 @@
           "RRSP (self-directed)"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "QUU",
@@ -7856,7 +7877,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "VGT",
@@ -7867,7 +7889,8 @@
           "RRSP (self-directed)"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MSFT",
@@ -7878,10 +7901,11 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
-        "symbol": "Cash:USD",
+        "symbol": "",
         "name": "Cash (USD)",
         "value": 1784.1798180000003,
         "share": 0.007123879518627185,
@@ -7892,7 +7916,8 @@
           "TFSA (self-directed)"
         ],
         "priceCurrency": "USD",
-        "assetClass": "Cash"
+        "assetClass": "Cash",
+        "pendingValuation": false
       },
       {
         "symbol": "GOOGL",
@@ -7903,7 +7928,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AMZN",
@@ -7914,7 +7940,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ZEA",
@@ -7925,7 +7952,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BTC",
@@ -7936,7 +7964,8 @@
           "Crypto"
         ],
         "priceCurrency": "USD",
-        "assetClass": "Crypto Assets"
+        "assetClass": "Crypto Assets",
+        "pendingValuation": false
       },
       {
         "symbol": "AVGO",
@@ -7947,7 +7976,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GSWO",
@@ -7958,7 +7988,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ETH",
@@ -7969,7 +8000,8 @@
           "Crypto"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Crypto Assets"
+        "assetClass": "Crypto Assets",
+        "pendingValuation": false
       },
       {
         "symbol": "ZCB",
@@ -7980,7 +8012,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MU",
@@ -7991,7 +8024,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BRK.B",
@@ -8002,7 +8036,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TSLA",
@@ -8013,7 +8048,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LLY",
@@ -8024,7 +8060,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "JPM",
@@ -8035,7 +8072,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AMD",
@@ -8046,7 +8084,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ZAG",
@@ -8057,7 +8096,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "V",
@@ -8068,7 +8108,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "JNJ",
@@ -8079,7 +8120,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BAC",
@@ -8090,7 +8132,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "XOM",
@@ -8101,7 +8144,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ZUAG.F",
@@ -8112,7 +8156,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DELL",
@@ -8123,7 +8168,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PLTR",
@@ -8134,7 +8180,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ABBV",
@@ -8145,7 +8192,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BLK",
@@ -8156,7 +8204,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CSCO",
@@ -8167,7 +8216,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WMT",
@@ -8178,7 +8228,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KO",
@@ -8189,7 +8240,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "INTC",
@@ -8200,7 +8252,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WFC",
@@ -8211,7 +8264,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PG",
@@ -8222,7 +8276,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "COST",
@@ -8233,7 +8288,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CVX",
@@ -8244,7 +8300,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LRCX",
@@ -8255,7 +8312,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CAT",
@@ -8266,7 +8324,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MRK",
@@ -8277,7 +8336,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AMAT",
@@ -8288,7 +8348,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TMO",
@@ -8299,7 +8360,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "UNH",
@@ -8310,7 +8372,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CDNS",
@@ -8321,7 +8384,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MA",
@@ -8332,7 +8396,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "QCOM",
@@ -8343,7 +8408,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BX",
@@ -8354,7 +8420,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "COF",
@@ -8365,7 +8432,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WDAY",
@@ -8376,7 +8444,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NFLX",
@@ -8387,7 +8456,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GE",
@@ -8398,7 +8468,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HD",
@@ -8409,7 +8480,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GS",
@@ -8420,7 +8492,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TDG",
@@ -8431,7 +8504,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ADSK",
@@ -8442,7 +8516,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ABT",
@@ -8453,7 +8528,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TJX",
@@ -8464,7 +8540,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PTC",
@@ -8475,7 +8552,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ITW",
@@ -8486,7 +8564,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SPGI",
@@ -8497,7 +8576,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FTNT",
@@ -8508,7 +8588,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SNDK",
@@ -8519,7 +8600,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AMGN",
@@ -8530,7 +8612,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PM",
@@ -8541,7 +8624,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HEI.A",
@@ -8552,7 +8636,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TRV",
@@ -8563,7 +8648,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MCD",
@@ -8574,7 +8660,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "RTX",
@@ -8585,7 +8672,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KKR",
@@ -8596,7 +8684,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PFE",
@@ -8607,7 +8696,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GPN",
@@ -8618,7 +8708,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ADP",
@@ -8629,7 +8720,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LIN",
@@ -8640,7 +8732,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BNY",
@@ -8651,7 +8744,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BKNG",
@@ -8662,7 +8756,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KLAC",
@@ -8673,7 +8768,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GEV",
@@ -8684,7 +8780,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PANW",
@@ -8695,7 +8792,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PEP",
@@ -8706,7 +8804,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "VZ",
@@ -8717,7 +8816,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "VRSN",
@@ -8728,7 +8828,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "C",
@@ -8739,7 +8840,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "UNP",
@@ -8750,7 +8852,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TXN",
@@ -8761,7 +8864,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ZHY",
@@ -8772,7 +8876,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TRMB",
@@ -8783,7 +8888,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GILD",
@@ -8794,7 +8900,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KILO.B",
@@ -8805,7 +8912,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "CAD",
-        "assetClass": "Canadian Equities and Alternatives"
+        "assetClass": "Canadian Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ETR",
@@ -8816,7 +8924,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CB",
@@ -8827,7 +8936,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MRVL",
@@ -8838,7 +8948,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CEG",
@@ -8849,7 +8960,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NDAQ",
@@ -8860,7 +8972,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MDT",
@@ -8871,7 +8984,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NEE",
@@ -8882,7 +8996,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "APH",
@@ -8893,7 +9008,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "STX",
@@ -8904,7 +9020,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DE",
@@ -8915,7 +9032,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ADI",
@@ -8926,7 +9044,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ANET",
@@ -8937,7 +9056,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HOOD",
@@ -8948,7 +9068,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "T",
@@ -8959,7 +9080,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SO",
@@ -8970,7 +9092,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DDOG",
@@ -8981,7 +9104,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ECL",
@@ -8992,7 +9116,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ETN",
@@ -9003,7 +9128,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DUK",
@@ -9014,7 +9140,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WELL",
@@ -9025,7 +9152,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GLDM",
@@ -9036,7 +9164,8 @@
           "TFSA (managed)"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BMY",
@@ -9047,7 +9176,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "UBER",
@@ -9058,7 +9188,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WDC",
@@ -9069,7 +9200,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PLD",
@@ -9080,7 +9212,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CVS",
@@ -9091,7 +9224,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GLW",
@@ -9102,7 +9236,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PWR",
@@ -9113,7 +9248,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WM",
@@ -9124,7 +9260,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EQIX",
@@ -9135,7 +9272,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NEM",
@@ -9146,7 +9284,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SBUX",
@@ -9157,7 +9296,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EBAY",
@@ -9168,7 +9308,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MO",
@@ -9179,7 +9320,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "COP",
@@ -9190,7 +9332,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HWM",
@@ -9201,7 +9344,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EOG",
@@ -9212,7 +9356,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "IBM",
@@ -9223,7 +9368,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ISRG",
@@ -9234,7 +9380,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SLB",
@@ -9245,7 +9392,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DHR",
@@ -9256,7 +9404,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WEC",
@@ -9267,7 +9416,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LMT",
@@ -9278,7 +9428,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "USB",
@@ -9289,7 +9440,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EXC",
@@ -9300,7 +9452,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ODFL",
@@ -9311,7 +9464,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PH",
@@ -9322,7 +9476,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "VRT",
@@ -9333,7 +9488,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "VRTX",
@@ -9344,7 +9500,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CRWD",
@@ -9355,7 +9512,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GD",
@@ -9366,7 +9524,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ROST",
@@ -9377,7 +9536,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PGR",
@@ -9388,7 +9548,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NET",
@@ -9399,7 +9560,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FCX",
@@ -9410,7 +9572,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TFC",
@@ -9421,7 +9584,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KMI",
@@ -9432,7 +9596,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TMUS",
@@ -9443,7 +9608,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WST",
@@ -9454,7 +9620,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EMR",
@@ -9465,7 +9632,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "APD",
@@ -9476,7 +9644,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KR",
@@ -9487,7 +9656,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BA",
@@ -9498,7 +9668,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BSX",
@@ -9509,7 +9680,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FWONA",
@@ -9520,7 +9692,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "APP",
@@ -9531,7 +9704,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MPC",
@@ -9542,7 +9716,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TT",
@@ -9553,7 +9728,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NOW",
@@ -9564,7 +9740,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SYK",
@@ -9575,7 +9752,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MSI",
@@ -9586,7 +9764,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SPG",
@@ -9597,7 +9776,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FOX",
@@ -9608,7 +9788,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MSCI",
@@ -9619,7 +9800,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MCK",
@@ -9630,7 +9812,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GIS",
@@ -9641,7 +9824,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ABNB",
@@ -9652,7 +9836,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ICE",
@@ -9663,7 +9848,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AEP",
@@ -9674,7 +9860,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "JCI",
@@ -9685,7 +9872,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "VLO",
@@ -9696,7 +9884,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HIG",
@@ -9707,7 +9896,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CL",
@@ -9718,7 +9908,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NOC",
@@ -9729,7 +9920,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CME",
@@ -9740,7 +9932,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CSX",
@@ -9751,7 +9944,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "RCL",
@@ -9762,7 +9956,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "RSG",
@@ -9773,7 +9968,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CARR",
@@ -9784,7 +9980,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LITE",
@@ -9795,7 +9992,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ROP",
@@ -9806,7 +10004,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "UPS",
@@ -9817,7 +10016,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LEN.B",
@@ -9828,7 +10028,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ORLY",
@@ -9839,7 +10040,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "IR",
@@ -9850,7 +10052,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LNG",
@@ -9861,7 +10064,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FDX",
@@ -9872,7 +10076,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WMB",
@@ -9883,7 +10088,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CMI",
@@ -9894,7 +10100,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AMT",
@@ -9905,7 +10112,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ALL",
@@ -9916,7 +10124,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FANG",
@@ -9927,7 +10136,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "COIN",
@@ -9938,7 +10148,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "OXY",
@@ -9949,7 +10160,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CMCSA",
@@ -9960,7 +10172,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DLR",
@@ -9971,7 +10184,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "REGN",
@@ -9982,7 +10196,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CPNG",
@@ -9993,7 +10208,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KHC",
@@ -10004,7 +10220,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AWK",
@@ -10015,7 +10232,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PSX",
@@ -10026,7 +10244,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ZTS",
@@ -10037,7 +10256,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NWS",
@@ -10048,7 +10268,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TGT",
@@ -10059,7 +10280,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HLT",
@@ -10070,7 +10292,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GWW",
@@ -10081,7 +10304,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DOV",
@@ -10092,7 +10316,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BDX",
@@ -10103,7 +10328,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CRDO",
@@ -10114,7 +10340,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "VICI",
@@ -10125,7 +10352,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ELV",
@@ -10136,7 +10364,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PCAR",
@@ -10147,7 +10376,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CI",
@@ -10158,7 +10388,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "YUM",
@@ -10169,7 +10400,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TRGP",
@@ -10180,7 +10412,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CVNA",
@@ -10191,7 +10424,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MAR",
@@ -10202,7 +10436,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BE",
@@ -10213,7 +10448,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DOW",
@@ -10224,7 +10460,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AZO",
@@ -10235,7 +10472,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ALAB",
@@ -10246,7 +10484,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MDLZ",
@@ -10257,7 +10496,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "URI",
@@ -10268,7 +10508,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FLEX",
@@ -10279,7 +10520,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MPWR",
@@ -10290,7 +10532,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GM",
@@ -10301,7 +10544,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DIS",
@@ -10312,7 +10556,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MSTR",
@@ -10323,7 +10568,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BKR",
@@ -10334,7 +10580,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KEYS",
@@ -10345,7 +10592,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NTRS",
@@ -10356,10 +10604,11 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
-        "symbol": "Southern Copper Corporation",
+        "symbol": "",
         "name": "Southern Copper Corporation",
         "value": 27.37,
         "share": 0.00010928303327822198,
@@ -10367,7 +10616,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "COR",
@@ -10378,7 +10628,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WBD",
@@ -10389,7 +10640,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TER",
@@ -10400,7 +10652,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HCA",
@@ -10411,7 +10664,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TWLO",
@@ -10422,7 +10676,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AFL",
@@ -10433,7 +10688,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FERG",
@@ -10444,7 +10700,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ACGL",
@@ -10455,7 +10712,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AIG",
@@ -10466,7 +10724,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AME",
@@ -10477,7 +10736,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ROK",
@@ -10488,7 +10748,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CAH",
@@ -10499,7 +10760,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FIX",
@@ -10510,7 +10772,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KVUE",
@@ -10521,7 +10784,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DAL",
@@ -10532,7 +10796,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "COHR",
@@ -10543,7 +10808,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NUE",
@@ -10554,7 +10820,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MELI",
@@ -10565,7 +10832,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HUM",
@@ -10576,7 +10844,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CIEN",
@@ -10587,7 +10856,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SYY",
@@ -10598,7 +10868,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CRWV",
@@ -10609,7 +10880,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MRSH",
@@ -10620,7 +10892,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "VST",
@@ -10631,7 +10904,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CRH",
@@ -10642,7 +10916,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DRI",
@@ -10653,7 +10928,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SHW",
@@ -10664,7 +10940,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WAB",
@@ -10675,7 +10952,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LYV",
@@ -10686,7 +10964,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PCG",
@@ -10697,7 +10976,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DHI",
@@ -10708,7 +10988,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "PHM",
@@ -10719,7 +11000,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DXCM",
@@ -10730,7 +11012,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EXE",
@@ -10741,7 +11024,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EQT",
@@ -10752,7 +11036,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "STE",
@@ -10763,7 +11048,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EW",
@@ -10774,7 +11060,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TEL",
@@ -10785,7 +11072,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NVR",
@@ -10796,7 +11084,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DGX",
@@ -10807,7 +11096,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AON",
@@ -10818,7 +11108,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DASH",
@@ -10829,7 +11120,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "RPRX",
@@ -10840,7 +11132,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MMM",
@@ -10851,7 +11144,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ULTA",
@@ -10862,7 +11156,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "F",
@@ -10873,7 +11168,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AMCR",
@@ -10884,7 +11180,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "DG",
@@ -10895,7 +11192,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NXPI",
@@ -10906,7 +11204,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LOW",
@@ -10917,7 +11216,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "O",
@@ -10928,7 +11228,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NSC",
@@ -10939,7 +11240,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GRMN",
@@ -10950,7 +11252,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HAL",
@@ -10961,7 +11264,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FICO",
@@ -10972,7 +11276,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LH",
@@ -10983,7 +11288,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AXP",
@@ -10994,7 +11300,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NRG",
@@ -11005,7 +11312,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SMCI",
@@ -11016,7 +11324,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ZBH",
@@ -11027,7 +11336,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MNST",
@@ -11038,7 +11348,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BR",
@@ -11049,7 +11360,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WPC",
@@ -11060,7 +11372,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "NKE",
@@ -11071,7 +11384,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CRCL",
@@ -11082,7 +11396,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KDP",
@@ -11093,7 +11408,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SUNB",
@@ -11104,7 +11420,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EQR",
@@ -11115,7 +11432,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "RMD",
@@ -11126,7 +11444,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "FAST",
@@ -11137,7 +11456,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CTVA",
@@ -11148,7 +11468,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "OKE",
@@ -11159,7 +11480,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ENTG",
@@ -11170,7 +11492,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KEY",
@@ -11181,7 +11504,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "RKLB",
@@ -11192,7 +11516,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "XEL",
@@ -11203,7 +11528,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LYB",
@@ -11214,7 +11540,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ON",
@@ -11225,7 +11552,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WSO",
@@ -11236,7 +11564,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SNOW",
@@ -11247,7 +11576,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "WRB",
@@ -11258,7 +11588,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HPE",
@@ -11269,7 +11600,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "BIIB",
@@ -11280,7 +11612,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MDLN",
@@ -11291,7 +11624,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "KMB",
@@ -11302,7 +11636,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "VTR",
@@ -11313,7 +11648,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "ALNY",
@@ -11324,7 +11660,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "UAL",
@@ -11335,7 +11672,20 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
+      },
+      {
+        "symbol": "L",
+        "name": "Loews Corp.",
+        "value": 8.73,
+        "share": 0.000034857175028092,
+        "accounts": [
+          "Non-registered 1f9a"
+        ],
+        "priceCurrency": "USD",
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MCHP",
@@ -11346,7 +11696,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "SW",
@@ -11357,7 +11708,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CCI",
@@ -11368,7 +11720,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LVS",
@@ -11379,7 +11732,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EXR",
@@ -11390,7 +11744,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TPL",
@@ -11401,7 +11756,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "AXON",
@@ -11412,7 +11768,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HSY",
@@ -11423,7 +11780,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "IP",
@@ -11434,7 +11792,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "INSM",
@@ -11445,7 +11804,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "TSCO",
@@ -11456,7 +11816,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "GPC",
@@ -11467,7 +11828,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "HUBB",
@@ -11478,7 +11840,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MAS",
@@ -11489,7 +11852,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "LII",
@@ -11500,7 +11864,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "MTD",
@@ -11511,7 +11876,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "CCL",
@@ -11522,7 +11888,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       },
       {
         "symbol": "EL",
@@ -11533,7 +11900,8 @@
           "Non-registered 1f9a"
         ],
         "priceCurrency": "USD",
-        "assetClass": "US Equities and Alternatives"
+        "assetClass": "US Equities and Alternatives",
+        "pendingValuation": false
       }
     ],
     "groups": [
@@ -11544,7 +11912,15 @@
           "VOO"
         ],
         "value": 51902.020000000004,
-        "share": 0.2072345699257195
+        "share": 0.2072345699257195,
+        "accounts": [
+          "Corporate",
+          "FHSA",
+          "Non-registered 2c62",
+          "RESP",
+          "RRSP (self-directed)",
+          "TFSA (self-directed)"
+        ]
       }
     ],
     "currency": {
@@ -11568,6 +11944,7 @@
         "name": "Crypto Assets",
         "value": 1707.52
       }
-    ]
+    ],
+    "behind": []
   }
 }

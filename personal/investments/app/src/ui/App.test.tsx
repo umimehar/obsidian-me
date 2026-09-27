@@ -361,6 +361,7 @@ function feeGapFixture(statedFee: number, derivedFee: number): AnalyticsOutput {
       groups: [],
       currency: { CAD: 0, USD: 0 },
       assetClasses: [],
+      behind: [],
     },
   };
 }

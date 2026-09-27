@@ -189,6 +189,7 @@ function fixture(overrides: Partial<AnalyticsOutput> = {}): AnalyticsOutput {
       groups: [],
       currency: { CAD: 0, USD: 0 },
       assetClasses: [],
+      behind: [],
     },
     ...overrides,
   };
