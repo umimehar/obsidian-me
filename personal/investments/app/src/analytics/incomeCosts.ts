@@ -10,6 +10,12 @@ export interface YearIncome {
   byAccount: Record<string, ActivityTotals>;
 }
 
+/** One period's activity totals, over the `inTotals` accounts -- what `incomeByMonth` returns one of. */
+export interface MonthlyActivity {
+  period: string;
+  totals: ActivityTotals;
+}
+
 /** One account's withholding tax for a year, alongside what its wrapper can do about it. */
 export interface AccountWithholding {
   maskedId: string;
@@ -77,12 +83,9 @@ export function incomeByYear(analytics: AnalyticsOutput): YearIncome[] {
 }
 
 /** Income and costs by month, within one calendar year, over the `inTotals` accounts only, oldest first. */
-export function incomeByMonth(
-  analytics: AnalyticsOutput,
-  year: number,
-): { period: string; totals: ActivityTotals }[] {
+export function incomeByMonth(analytics: AnalyticsOutput, year: number): MonthlyActivity[] {
   const counted = inTotalsIds(analytics);
-  const rows: { period: string; totals: ActivityTotals }[] = [];
+  const rows: MonthlyActivity[] = [];
 
   for (const [period, byAccount] of Object.entries(analytics.activity)) {
     if (periodYear(period) !== year) continue;
