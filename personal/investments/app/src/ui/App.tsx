@@ -3,12 +3,20 @@ import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
 import { latestGroupGain } from "../analytics/groupGain";
+import { AccountFilter } from "./AccountFilter";
 import { Cards } from "./Cards";
 import { DataStatus } from "./DataStatus";
 import { GroupGainLine, Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
 import { Tabs } from "./Tabs";
 import { YearFilter } from "./YearFilter";
+import {
+  chartSubject,
+  chartableAccounts,
+  defaultSelection,
+  isDefaultSelection,
+  seriesForChart,
+} from "./chartAccounts";
 import { CashflowChart } from "./charts/CashflowChart";
 import { ContributionsChart } from "./charts/ContributionsChart";
 import { CostGapChart } from "./charts/CostGapChart";
@@ -151,6 +159,9 @@ function Dashboard() {
   const latestYear = years[years.length - 1] ?? new Date().getUTCFullYear();
   const [{ tab, scope }, setHash] = useHashTab();
   const [chart, setChart] = useState<ChartMode>("value");
+  const [accounts, setAccounts] = useState<Set<string>>(() => defaultSelection(all.series));
+  const accountOptions = useMemo(() => chartableAccounts(all.series), [all]);
+  const subject = chartSubject(all.series, accounts);
 
   /**
    * The whole dashboard reads a SCOPED analytics payload, clipped once here
@@ -241,12 +252,26 @@ function Dashboard() {
           scope={scope}
           onScopeChange={(next) => setHash({ scope: next })}
         />
-        <ChartModeToggle mode={chart} onModeChange={setChart} />
+        <Flex align="center" gap="3">
+          <AccountFilter
+            accounts={accountOptions}
+            selected={accounts}
+            subject={subject}
+            isDefault={isDefaultSelection(all.series, accounts)}
+            onSelectedChange={setAccounts}
+            onReset={() => setAccounts(defaultSelection(all.series))}
+          />
+          <ChartModeToggle mode={chart} onModeChange={setChart} />
+        </Flex>
       </Flex>
       {chart === "value" ? (
-        <ValueOverTime series={analytics.series} />
+        <ValueOverTime series={seriesForChart(analytics.series, accounts)} subject={subject} />
       ) : (
-        <ReturnOverTime series={all.series} scope={scope} />
+        <ReturnOverTime
+          series={seriesForChart(all.series, accounts)}
+          scope={scope}
+          subject={subject}
+        />
       )}
       <Tabs panels={panels} tab={tab} onTabChange={(next) => setHash({ tab: next })} />
     </Flex>

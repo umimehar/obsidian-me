@@ -30,6 +30,8 @@ export interface ReturnOverTimeProps {
    */
   series: readonly AccountSeries[];
   scope: YearScope;
+  /** What the chart is of: "Portfolio", or one account's label. */
+  subject?: string;
 }
 
 const WIDTH = 800;
@@ -147,7 +149,7 @@ function returnTooltip(
  * it answers "what did this year return" rather than "where does this year
  * sit on a line that started in 2023".
  */
-export function ReturnOverTime({ series, scope }: ReturnOverTimeProps) {
+export function ReturnOverTime({ series, scope, subject = "Portfolio" }: ReturnOverTimeProps) {
   const clipId = useSvgId("return-over-time-clip");
   const reveal = useRevealMotion(INNER_WIDTH);
   const rebased = scope !== "all";
@@ -186,7 +188,7 @@ export function ReturnOverTime({ series, scope }: ReturnOverTimeProps) {
 
   const line = toPlotPoints(points, scales);
   const summary =
-    `Portfolio return from ${formatPeriodLabel(first.period)} to ` +
+    `${subject} return from ${formatPeriodLabel(first.period)} to ` +
     `${formatPeriodLabel(last.period)}, ending at ${formatRate(ending * 100)}. ` +
     "Net of deposits, so money paid in is not counted as growth.";
   const content =
@@ -208,7 +210,7 @@ export function ReturnOverTime({ series, scope }: ReturnOverTimeProps) {
         style={{ width: "100%", height: "auto" }}
         data-return-chart=""
       >
-        <title>Portfolio return over time, net of deposits</title>
+        <title>{`${subject} return over time, net of deposits`}</title>
         <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
           {scales.yTicks.map((tick) => (
             <g key={tick} transform={`translate(0,${scales.y(tick)})`}>

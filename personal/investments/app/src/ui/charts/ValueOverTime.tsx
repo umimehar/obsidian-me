@@ -22,6 +22,8 @@ import { CursorMarks, cursorSlots, useChartCursor } from "./useChartCursor";
 
 export interface ValueOverTimeProps {
   series: readonly AccountSeries[];
+  /** What the chart is of: "Portfolio", or one account's label. */
+  subject?: string;
 }
 
 const WIDTH = 800;
@@ -48,9 +50,9 @@ function toPlotPoints(
   return points.map((p) => ({ x: scales.x(periodToDate(p.period)), y: scales.y(pick(p)) }));
 }
 
-function EmptyState() {
+function EmptyState({ subject }: { subject: string }) {
   return (
-    <div role="img" aria-label="No portfolio value history yet.">
+    <div role="img" aria-label={`No ${subject} value history yet.`}>
       <p style={{ color: "var(--gray-a11)" }}>No value history yet.</p>
     </div>
   );
@@ -68,7 +70,7 @@ function EmptyState() {
  * summary below calls out the book-cost line as approximate rather than
  * implying the market-value/book-cost gap is an exact gain figure.
  */
-export function ValueOverTime({ series }: ValueOverTimeProps) {
+export function ValueOverTime({ series, subject = "Portfolio" }: ValueOverTimeProps) {
   const clipId = useSvgId("value-over-time-clip");
   const reveal = useRevealMotion(INNER_WIDTH);
   const points = useMemo(() => buildPortfolioSeries(series), [series]);
@@ -87,14 +89,14 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
   const last = points[points.length - 1];
 
   if (scales === null || first === undefined || last === undefined) {
-    return <EmptyState />;
+    return <EmptyState subject={subject} />;
   }
 
   const marketPoints = toPlotPoints(points, scales, (p) => p.marketValue);
   const bookPoints = toPlotPoints(points, scales, (p) => p.bookCost);
 
   const summary =
-    `Portfolio market value from ${formatPeriodLabel(first.period)} to ` +
+    `${subject} market value from ${formatPeriodLabel(first.period)} to ` +
     `${formatPeriodLabel(last.period)}, ending at ${formatCurrency(last.marketValue)}. ` +
     "The book cost line is an approximate figure for USD holdings, not a filing figure.";
   // One call, three consumers: the accessible name, the spoken announcement
@@ -118,7 +120,7 @@ export function ValueOverTime({ series }: ValueOverTimeProps) {
         onBlur={cursor.onBlur}
         style={{ width: "100%", height: "auto" }}
       >
-        <title>Portfolio value over time</title>
+        <title>{`${subject} value over time`}</title>
         <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
           {scales.yTicks.map((tick) => (
             <g key={tick} transform={`translate(0,${scales.y(tick)})`}>
