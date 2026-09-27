@@ -2,7 +2,7 @@
 title: "TCK-0008 — Dashboard v2: holdings across accounts and a benchmark"
 tags: [ticket, project/system, type/feature, personal/investments]
 created: 2026-09-26
-updated: 2026-09-26
+updated: 2026-09-27
 type: ticket
 id: TCK-0008
 status: ready
@@ -31,10 +31,11 @@ Show what the owner actually owns across all accounts, and compare the deposit n
 - [ ] Currency split CAD versus USD priced holdings and asset class split
 - [ ] Benchmark: a command fetches XEQT.TO monthly closes into data/benchmark.json; Growth shows the portfolio's chained deposit netted return against the same deposits invested in XEQT
 - [ ] Tests; bun run check clean
+- [ ] Holdings live on a new Holdings tab (id `holdings`) placed after Portfolio; the benchmark sits first on Growth
 
 ## Context
 
 Owner request in session on 2026-09-26, after reviewing a proposal for the investments dashboard (`personal/investments/app`). Owner decisions: retirement age 60 (owner born 1997, from the RRSP last accrual year 2068 at 71), inflation adjustable on the page, net worth and the household switch deferred until the spouse's accounts arrive, goal targets move to a committed `data/plan.json` and the code defined targets are deleted. Gates: `bun run check` clean, `bun run contrast` pass, owner's CLAUDE.md voice and no hyphen rules for any prose on the page.
 
 ## Worklog
-
+- 2026-09-27 01:30 — Owner asked for more meaningful tabs; final set is This month, Portfolio, Holdings, Growth, Income, Contributions, Future, Data. Acceptance criterion added for this ticket's tab; plan updated.

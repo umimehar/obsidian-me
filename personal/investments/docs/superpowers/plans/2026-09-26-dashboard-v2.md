@@ -48,6 +48,25 @@ Owner decisions: retire at 60, born 1997 (the RRSP last accrual year 2068 is age
 
 Each line has its test in the owning task below.
 
+## Tab set (owner request, 2026-09-27, supersedes the five tab list)
+
+The owner asked for more meaningful tabs. Final set, in order, each answering one question:
+
+| Id | Label | Question | Content | Built by |
+|---|---|---|---|---|
+| month | This month | What changed since last statement? | month review | TCK-0004 |
+| portfolio | Portfolio | What is it worth and where does it sit? | hero total, value or return chart with account filter, group cards | TCK-0003 |
+| holdings | Holdings | What do I actually own? | holdings across accounts, index groups, currency and asset class | TCK-0008 |
+| growth | Growth | How well is it doing? | returns grid, XEQT benchmark, value against cost (`CostGapChart`) | TCK-0003, TCK-0008 |
+| income | Income | What does it pay me, what does it cost? | income and costs, withholding by account, investment income for tax (`TaxView`) | TCK-0007 |
+| contributions | Contributions | What am I putting in, how much room is left? | registered contributions planner and history, `ContributionsChart`, `CashflowChart` | TCK-0006 |
+| future | Future | Where is it heading? | projection, milestones, retirement, goals, runway | TCK-0005 |
+| data | Data | Can I trust the numbers? | coverage, reconciliation, checkpoints, cards | TCK-0003 |
+
+Each ticket that builds a tab adds its id to `TabId` and `TABS` in the order above, its label to `LABELS` in `Tabs.tsx`, moves the named content out of wherever it sits now, and updates `LEGACY_TABS`. Final legacy map once all land: `overview: portfolio`, `wrappers: contributions`, `tax: income`, `projections: future`, `plan: future`, `reconciliation: data`, `cards: data`. The interim `plan` tab is removed by whichever of TCK-0005 and TCK-0006 lands second (it removes `plan` from `TabId`, `TABS` and `LABELS` and maps it in `LEGACY_TABS`). Every tab except Portfolio renders through `WithSummary`. Future ignores the year scope and says so; the others honour it where they did before. The contrast sweep iterates `TABS`, so each new tab must render at least 8 runs of text.
+
+In the task sections below, read "Plan tab" as the Future tab for projection content and the Contributions tab for registered contributions content, "Portfolio tab, Income and tax" as the Income tab, and "Portfolio tab, after the group cards" (holdings) as the Holdings tab.
+
 ---
 
 ## TCK-0003: Layout shell and tab restructure
