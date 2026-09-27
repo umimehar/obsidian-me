@@ -152,4 +152,54 @@ describe("TaxView", () => {
     renderYear(GOLDENS.income.year, "all");
     expect(screen.getByText(`Investment income, latest year ${GOLDENS.income.year}`)).toBeDefined();
   });
+
+  test("a USD conversion caveat sits beside the income figures it qualifies", () => {
+    renderYear(2026);
+    expect(row("usd-conversion-caveat").getByText(/month end rate/i)).toBeDefined();
+  });
+
+  test("corporate actions in the year are listed by symbol and date", () => {
+    const analytics = loadAnalytics();
+    const income2026 = analytics.income["2026"];
+    if (income2026 === undefined) throw new Error("expected 2026 income in the corpus");
+    render(
+      <Theme>
+        <TaxView
+          analytics={{
+            ...analytics,
+            income: {
+              2026: {
+                ...income2026,
+                corporateActions: [{ symbol: "FDXF", date: "2026-06-01" }],
+              },
+            },
+          }}
+          year={2026}
+          scope={2026}
+        />
+      </Theme>,
+    );
+    const actions = within(section("corporate-actions"));
+    expect(actions.getByText(/corporate actions to check against your tax slips/i)).toBeDefined();
+    expect(actions.getByText(/FDXF, 2026-06-01/)).toBeDefined();
+  });
+
+  test("no corporate actions renders no card at all", () => {
+    const analytics = loadAnalytics();
+    const income2026 = analytics.income["2026"];
+    if (income2026 === undefined) throw new Error("expected 2026 income in the corpus");
+    render(
+      <Theme>
+        <TaxView
+          analytics={{
+            ...analytics,
+            income: { 2026: { ...income2026, corporateActions: [] } },
+          }}
+          year={2026}
+          scope={2026}
+        />
+      </Theme>,
+    );
+    expect(document.querySelector("[data-tax-corporate-actions]")).toBeNull();
+  });
 });

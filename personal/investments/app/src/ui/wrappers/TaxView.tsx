@@ -1,5 +1,6 @@
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import type { AnalyticsOutput } from "../../analytics/build";
+import type { CorporateAction } from "../../analytics/income";
 import { formatCurrency } from "../format";
 import type { YearScope } from "../scope";
 
@@ -55,6 +56,28 @@ function CostUnknownRow({ count }: { count: number }) {
     <Text size="1" color="gray" data-tax-row="cost-unknown">
       {count} sale{count === 1 ? "" : "s"} without a cost basis.
     </Text>
+  );
+}
+
+/** A USD figure above converts at a statement's own month end rate, an approximation of the actual trade day rate -- stated once, beside the figures it qualifies. */
+const USD_CONVERSION_CAVEAT =
+  "A USD figure above is converted at each statement's month end rate, an approximation of the actual trade day rate.";
+
+function CorporateActionsCard({ actions }: { actions: readonly CorporateAction[] }) {
+  if (actions.length === 0) return null;
+  return (
+    <Card data-tax-corporate-actions="">
+      <Flex direction="column" gap="2">
+        <Text size="2" weight="bold">
+          Corporate actions to check against your tax slips
+        </Text>
+        {actions.map((action, index) => (
+          <Text size="2" color="gray" key={`${action.symbol}-${action.date}-${index}`}>
+            {action.symbol}, {action.date}
+          </Text>
+        ))}
+      </Flex>
+    </Card>
   );
 }
 
@@ -125,7 +148,12 @@ export function TaxView({ analytics, year, scope }: TaxViewProps) {
         />
         <RealizedRow realizedGains={income.realizedGains} />
         <CostUnknownRow count={income.costUnknownSales} />
+        <Text size="1" color="gray" data-tax-row="usd-conversion-caveat">
+          {USD_CONVERSION_CAVEAT}
+        </Text>
       </Card>
+
+      <CorporateActionsCard actions={income.corporateActions} />
 
       <Card data-tax-rrsp="">
         <Text size="2" color="gray" data-tax-row="rrsp-deduction">
