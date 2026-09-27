@@ -201,7 +201,15 @@ describe("RoomBar", () => {
   });
 
   test("a derived contribution figure carries its derived marker", () => {
-    const bar = renderBar(line({ group: "RESP", used: 3000, limit: null }), "derived");
+    const bar = renderBar(
+      line({
+        group: "RESP",
+        used: 3000,
+        limit: null,
+        lifetimeGrant: { received: 550, cap: 7200, remaining: 6650, maximizingContribution: 2500 },
+      }),
+      "derived",
+    );
     expect(bar.getByText(/derived/i)).toBeDefined();
   });
 
@@ -211,7 +219,15 @@ describe("RoomBar", () => {
   });
 
   test("a null limit renders no annual limit at all, not a zero or a placeholder", () => {
-    const bar = renderBar(line({ group: "RESP", used: 3000, limit: null }), "derived");
+    const bar = renderBar(
+      line({
+        group: "RESP",
+        used: 3000,
+        limit: null,
+        lifetimeGrant: { received: 550, cap: 7200, remaining: 6650, maximizingContribution: 2500 },
+      }),
+      "derived",
+    );
     expect(bar.getByText(/no annual contribution limit/i)).toBeDefined();
     expect(bar.queryByText(/annual maximum/i)).toBeNull();
     expect(bar.queryByText("$0.00")).toBeNull();

@@ -297,7 +297,7 @@ function ContributionsPanel({
       <RegisteredView analytics={all} year={year} />
       <ContributionsChart analytics={analytics} />
       <CashflowChart series={analytics.series} />
-      <ContributionHistory rooms={all.rooms} />
+      <ContributionHistory rooms={all.rooms} series={all.series} />
     </Flex>
   );
 }

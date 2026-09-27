@@ -1,7 +1,17 @@
 import { describe, expect, test } from "bun:test";
 import { formatCurrency } from "../ui/format";
 import { contributionDeadline, nextAction } from "./contributionPlan";
-import type { RoomLine } from "./rooms";
+import type { RespGrantPosition, RoomLine } from "./rooms";
+
+function grant(over: Partial<RespGrantPosition> = {}): RespGrantPosition {
+  return {
+    received: 0,
+    cap: 7200,
+    remaining: 7200,
+    maximizingContribution: 2500,
+    ...over,
+  };
+}
 
 function roomLine(over: Partial<RoomLine> = {}): RoomLine {
   return {
@@ -25,6 +35,11 @@ describe("contributionDeadline", () => {
 
   test("RRSP's 60th day falls in a leap year", () => {
     expect(contributionDeadline("RRSP", 2027)).toBe("2028-02-29");
+  });
+
+  test("a deadline landing on a Sunday rolls forward to the Monday", () => {
+    // 2025's RRSP deadline, the 60th day of 2026, is 2026-03-01 -- a Sunday.
+    expect(contributionDeadline("RRSP", 2025)).toBe("2026-03-02");
   });
 
   test("TFSA, FHSA and RESP all close December 31 of the year itself", () => {
@@ -74,7 +89,23 @@ describe("nextAction", () => {
     expect(action.deadline).toBe("2026-12-31");
   });
 
-  test("FHSA states the annual room left and the lifetime remaining", () => {
+  test("FHSA with annual room left states the amount, the deadline, and the lifetime remaining as separate context", () => {
+    const line = roomLine({
+      group: "FHSA",
+      year: 2026,
+      used: 4000,
+      limit: 8000,
+      remaining: null,
+      lifetimeContributions: { contributed: 20000, cap: 40000, remaining: 20000 },
+    });
+    const action = nextAction(line);
+    expect(action.amount).toBe(4000);
+    expect(action.text).toBe(
+      `${formatCurrency(4000)} left this year, by 2026-12-31. ${formatCurrency(20000)} of lifetime room remains for future years.`,
+    );
+  });
+
+  test("FHSA with the annual room used says so plainly, and never attaches the deadline to the lifetime figure", () => {
     const line = roomLine({
       group: "FHSA",
       year: 2026,
@@ -84,24 +115,77 @@ describe("nextAction", () => {
       lifetimeContributions: { contributed: 24000, cap: 40000, remaining: 16000 },
     });
     const action = nextAction(line);
-    expect(action.amount).toBe(0);
-    expect(action.text).toContain(formatCurrency(16000));
-    expect(action.text).toContain("2026-12-31");
+    expect(action.amount).toBeNull();
+    expect(action.text).toBe(
+      `This year's FHSA room is used. ${formatCurrency(16000)} of lifetime room remains for future years.`,
+    );
+    // The lifetime figure must never read as something owed by the annual deadline.
+    expect(action.text).not.toContain("2026-12-31");
   });
 
-  test("RESP under the grant maximizing contribution states the gap", () => {
-    const line = roomLine({ group: "RESP", year: 2026, used: 1000, limit: null, remaining: null });
+  test("RESP under the grant maximizing contribution states the gap, using the line's own figure and formatCurrency throughout", () => {
+    const line = roomLine({
+      group: "RESP",
+      year: 2026,
+      used: 1000,
+      limit: null,
+      remaining: null,
+      lifetimeGrant: grant({ maximizingContribution: 2500, remaining: 100 }),
+    });
     const action = nextAction(line);
     expect(action.amount).toBe(1500);
     expect(action.text).toBe(
-      `${formatCurrency(1500)} more by December 31 earns this year's full $500 grant.`,
+      `${formatCurrency(1500)} more by December 31 earns this year's full ${formatCurrency(500)} grant.`,
     );
   });
 
   test("RESP at or above the grant maximizing contribution says the grant is covered", () => {
-    const line = roomLine({ group: "RESP", year: 2026, used: 3000, limit: null, remaining: null });
+    const line = roomLine({
+      group: "RESP",
+      year: 2026,
+      used: 3000,
+      limit: null,
+      remaining: null,
+      lifetimeGrant: grant({ maximizingContribution: 2500, remaining: 100 }),
+    });
     const action = nextAction(line);
     expect(action.amount).toBeNull();
     expect(action.text).toBe("This year's full basic grant is covered.");
+  });
+
+  test("RESP with room carried forward past this year's basic amount states the catch up provision", () => {
+    const line = roomLine({
+      group: "RESP",
+      year: 2026,
+      used: 1000,
+      limit: null,
+      remaining: null,
+      lifetimeGrant: grant({ maximizingContribution: 2500, remaining: 3000 }),
+    });
+    const action = nextAction(line);
+    expect(action.text).toContain(formatCurrency(5000));
+    expect(action.text).toContain(formatCurrency(1000));
+    expect(action.text).toContain("cannot confirm the exact carry forward");
+  });
+
+  test("RESP at the lifetime CESG cap says so instead of promising a grant", () => {
+    const line = roomLine({
+      group: "RESP",
+      year: 2026,
+      used: 1000,
+      limit: null,
+      remaining: null,
+      lifetimeGrant: grant({ received: 7200, remaining: 0 }),
+    });
+    const action = nextAction(line);
+    expect(action.amount).toBeNull();
+    expect(action.text).toBe(
+      `The ${formatCurrency(7200)} lifetime CESG cap has been reached; no further grant will be paid.`,
+    );
+  });
+
+  test("a RESP room line missing its lifetime grant position throws rather than guessing", () => {
+    const line = roomLine({ group: "RESP", year: 2026, used: 1000, limit: null, remaining: null });
+    expect(() => nextAction(line)).toThrow();
   });
 });

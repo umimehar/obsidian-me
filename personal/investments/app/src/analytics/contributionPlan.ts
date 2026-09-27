@@ -5,19 +5,28 @@ import type { RegisteredGroup, RoomLine } from "./rooms";
 function nthDayOfYear(year: number, n: number): string {
   const date = new Date(Date.UTC(year, 0, 1));
   date.setUTCDate(date.getUTCDate() + (n - 1));
-  const iso = date.toISOString().slice(0, 10);
-  return iso;
+  return date.toISOString().slice(0, 10);
+}
+
+/** A CRA deadline that lands on a weekend moves to the next business day: Saturday forward two days, Sunday forward one. No statutory holiday table -- weekends are the one rule stated everywhere the deadline is published. */
+function rollPastWeekend(iso: string): string {
+  const date = new Date(`${iso}T00:00:00Z`);
+  const day = date.getUTCDay();
+  if (day === 6) date.setUTCDate(date.getUTCDate() + 2);
+  else if (day === 0) date.setUTCDate(date.getUTCDate() + 1);
+  return date.toISOString().slice(0, 10);
 }
 
 /**
- * The CRA deadline for a contribution to count against `year`. RRSP gets the
- * first 60 days of the following year (2027-03-01 for 2026, 2028-02-29 for
- * 2027 -- a leap year); TFSA, FHSA and RESP all close on December 31 of the
- * year itself.
+ * The CRA deadline for a contribution to count against `year`, rolled past
+ * a weekend. RRSP gets the first 60 days of the following year (2027-03-01
+ * for 2026, 2028-02-29 for 2027 -- a leap year, and 2026-03-02 for 2025,
+ * since 2026-03-01 falls on a Sunday); TFSA, FHSA and RESP all close on
+ * December 31 of the year itself.
  */
 export function contributionDeadline(group: RegisteredGroup, year: number): string {
-  if (group === "RRSP") return nthDayOfYear(year + 1, 60);
-  return `${year}-12-31`;
+  const raw = group === "RRSP" ? nthDayOfYear(year + 1, 60) : `${year}-12-31`;
+  return rollPastWeekend(raw);
 }
 
 export interface NextAction {
@@ -73,45 +82,93 @@ function tfsaAction(line: RoomLine, deadline: string): NextAction {
   };
 }
 
-/** FHSA states two remainings at once: this year's annual room, and the lifetime cap that bounds it. */
-function fhsaAction(line: RoomLine, deadline: string): NextAction {
-  const annualRemaining = line.limit !== null ? line.limit - line.used : null;
-  const lifetimeRemaining = line.lifetimeContributions?.remaining ?? null;
-
-  const parts: string[] = [];
-  if (annualRemaining !== null && annualRemaining > 0) {
-    parts.push(`${formatCurrency(annualRemaining)} left this year`);
-  }
-  if (lifetimeRemaining !== null) {
-    parts.push(`${formatCurrency(lifetimeRemaining)} left toward the lifetime cap`);
-  }
-
-  const text =
-    parts.length > 0
-      ? `${parts.join(", ")}, by ${deadline}.`
-      : `Contribute by ${deadline} to count against ${line.year}.`;
-
-  return { group: "FHSA", deadline, amount: annualRemaining, text };
+/**
+ * The lifetime remaining, stated purely as context for future years -- never
+ * glued to this year's deadline, which is what let a reader mistake
+ * $16,000 of LIFETIME room for something owed by December 31.
+ */
+function lifetimeContext(lifetimeRemaining: number | null): string {
+  return lifetimeRemaining === null
+    ? ""
+    : ` ${formatCurrency(lifetimeRemaining)} of lifetime room remains for future years.`;
 }
 
-/** The RESP's basic CESG maximizes at $2,500 contributed in the year -- see `RESP_GRANT_MAXIMIZING_CONTRIBUTION` in `rooms.ts`. */
-const RESP_GRANT_MAXIMIZING_CONTRIBUTION = 2500;
+/**
+ * FHSA states the annual room against this year's deadline, and the
+ * lifetime cap as a separate sentence with no deadline attached to it --
+ * lifetime room is not something due by December 31, only the annual
+ * figure is.
+ */
+function fhsaAction(line: RoomLine, deadline: string): NextAction {
+  const annualRemaining = line.limit !== null ? line.limit - line.used : null;
+  const context = lifetimeContext(line.lifetimeContributions?.remaining ?? null);
+
+  if (annualRemaining !== null && annualRemaining > 0) {
+    return {
+      group: "FHSA",
+      deadline,
+      amount: annualRemaining,
+      text: `${formatCurrency(annualRemaining)} left this year, by ${deadline}.${context}`,
+    };
+  }
+
+  return {
+    group: "FHSA",
+    deadline,
+    amount: null,
+    text: `This year's FHSA room is used.${context}`,
+  };
+}
+
+/**
+ * The CRA catch-up provision: contributing twice the basic maximizing
+ * amount in one year attracts twice the basic grant, when unused room has
+ * carried forward from prior years. Derived from `maximizingContribution`
+ * rather than a second hand typed pair of figures.
+ */
+const CESG_CATCHUP_MULTIPLE = 2;
+const CESG_RATE = 0.2;
 
 function respAction(line: RoomLine, deadline: string): NextAction {
-  const gap = RESP_GRANT_MAXIMIZING_CONTRIBUTION - line.used;
+  const grant = line.lifetimeGrant;
+  if (grant === null) throw new Error("RESP room line missing its lifetime grant position");
+
+  if (grant.remaining <= 0) {
+    return {
+      group: "RESP",
+      deadline,
+      amount: null,
+      text: `The ${formatCurrency(grant.cap)} lifetime CESG cap has been reached; no further grant will be paid.`,
+    };
+  }
+
+  const basicGrant = grant.maximizingContribution * CESG_RATE;
+  // Carry forward exists whenever more than a single ordinary year's room
+  // remains; the exact figure needs the beneficiary's date of birth, which
+  // this room line does not carry.
+  const carryForward =
+    grant.remaining > basicGrant
+      ? ` Unused grant room may have carried forward from prior years: contributing up to ${formatCurrency(
+          grant.maximizingContribution * CESG_CATCHUP_MULTIPLE,
+        )} this year could attract up to ${formatCurrency(
+          basicGrant * CESG_CATCHUP_MULTIPLE,
+        )} of grant, but this planner cannot confirm the exact carry forward without a date of birth.`
+      : "";
+
+  const gap = grant.maximizingContribution - line.used;
   if (gap > 0) {
     return {
       group: "RESP",
       deadline,
       amount: gap,
-      text: `${formatCurrency(gap)} more by December 31 earns this year's full $500 grant.`,
+      text: `${formatCurrency(gap)} more by December 31 earns this year's full ${formatCurrency(basicGrant)} grant.${carryForward}`,
     };
   }
   return {
     group: "RESP",
     deadline,
     amount: null,
-    text: "This year's full basic grant is covered.",
+    text: `This year's full basic grant is covered.${carryForward}`,
   };
 }
 
