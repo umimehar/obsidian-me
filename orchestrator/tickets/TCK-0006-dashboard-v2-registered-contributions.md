@@ -2,14 +2,14 @@
 title: "TCK-0006 — Dashboard v2: registered contributions planner and tax fix"
 tags: [ticket, project/system, type/feature, personal/investments]
 created: 2026-09-26
-updated: 2026-09-27
+updated: 2026-09-26
 type: ticket
 id: TCK-0006
-status: ready
+status: claimed
 project: system
 ticket_type: feature
 assigned_device: any
-claimed_by: null
+claimed_by: mac-studio
 auto_ok: false
 triage: manual
 priority: p0
