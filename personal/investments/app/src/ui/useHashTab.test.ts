@@ -65,6 +65,15 @@ describe("useHashTab, legacy hash mapping", () => {
     expect(result.current[0]).toEqual({ tab: "plan", scope: 2025 });
   });
 
+  test.each(["#constructor", "#toString", "#hasOwnProperty", "#__proto__"] as const)(
+    "%s is not a real key on LEGACY_TABS's prototype chain, and decodes to portfolio",
+    (hash) => {
+      window.location.hash = hash;
+      const { result } = renderHook(() => useHashTab());
+      expect(result.current[0]).toEqual({ tab: "portfolio", scope: "all" });
+    },
+  );
+
   test("encoding a decoded legacy hash writes the new id", () => {
     window.location.hash = "#wrappers/2025";
     const { result } = renderHook(() => useHashTab());

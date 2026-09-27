@@ -8,10 +8,10 @@ export type TabId = "month" | "portfolio" | "growth" | "plan" | "data";
 export const TABS: readonly TabId[] = ["portfolio", "growth", "plan", "data"];
 
 /**
- * Where a pasted link from the five-tab shell resolves under the new four
- * (soon five) tab structure. `decodeHash` checks `TABS` first and only falls
- * back to this map, so a link never resolves to a name that is no longer a
- * real tab.
+ * Where a pasted link from the old eight-tab shell resolves under the new
+ * four (soon five) tab structure. `decodeHash` checks `TABS` first and only
+ * falls back to this map, so a link never resolves to a name that is no
+ * longer a real tab.
  */
 export const LEGACY_TABS: Readonly<Record<string, TabId>> = {
   overview: "portfolio",
@@ -36,11 +36,24 @@ export interface HashState {
   scope: YearScope;
 }
 
+/**
+ * A safe lookup on `LEGACY_TABS`, keyed by a hash segment an attacker or a
+ * hand-edited URL controls. A plain `LEGACY_TABS[rawTab]` reaches the
+ * prototype chain for `"constructor"`, `"toString"`, `"hasOwnProperty"` and
+ * `"__proto__"`, returning a function or an object rather than `undefined` --
+ * `Object.hasOwn` checks the object's own keys only, never the chain.
+ */
+function legacyTab(rawTab: string): TabId | undefined {
+  return Object.hasOwn(LEGACY_TABS, rawTab)
+    ? LEGACY_TABS[rawTab as keyof typeof LEGACY_TABS]
+    : undefined;
+}
+
 function decodeHash(hash: string): HashState {
   const [rawTab = "", rawScope = ""] = hash.replace(/^#/, "").split("/");
   const tab = (TABS as readonly string[]).includes(rawTab)
     ? (rawTab as TabId)
-    : (LEGACY_TABS[rawTab] ?? "portfolio");
+    : (legacyTab(rawTab) ?? "portfolio");
   // A four-digit year only. `Number("")` is 0 and `Number("2024abc")` is NaN,
   // so the shape is checked before the conversion rather than after it.
   const scope: YearScope = /^\d{4}$/.test(rawScope) ? Number(rawScope) : "all";
