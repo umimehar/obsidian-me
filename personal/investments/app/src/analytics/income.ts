@@ -179,15 +179,27 @@ function usdPricedSymbolsForAccount(
  * holding record that might belong to the wrong security is worse than not
  * classifying it at all.
  */
+/**
+ * A ".U" suffix marks the USD denominated unit class of a Canadian listed
+ * ETF (HXQ.U, PSU.U) -- the fund itself is Canadian regardless of what it
+ * holds or which currency its distribution pays in, so this overrides
+ * every other signal, including the row's own USD currency.
+ */
+function isUsdUnitClassOfCanadianEtf(symbol: string | null): boolean {
+  return symbol?.endsWith(".U") ?? false;
+}
+
 function isForeignDividend(
   row: ActivityRow,
   holdingsThisStatement: ReadonlyMap<string, HoldingLookup>,
   historicalUsd: ReadonlySet<string>,
   nrtDates: ReadonlySet<string>,
 ): boolean {
+  const symbol = parseRowSymbol(row.description);
+  if (isUsdUnitClassOfCanadianEtf(symbol)) return false;
+
   if (row.currency === "USD") return true;
 
-  const symbol = parseRowSymbol(row.description);
   const holding = symbol ? holdingsThisStatement.get(symbol) : undefined;
 
   if (holding !== AMBIGUOUS) {
@@ -265,6 +277,25 @@ function corporateActionsForStatement(s: Statement): CorporateAction[] {
   return actions;
 }
 
+/**
+ * One entry per symbol per date, even when several rows fire on it -- a
+ * spin-off like XOM's 2026-07-02 STKDIS posts as a same-day pair (the old
+ * symbol removed, the new one added), both parsing to the one ticker at
+ * the front of their description, and a reader checking a tax slip needs
+ * to see that date once, not twice.
+ */
+function dedupeCorporateActions(actions: readonly CorporateAction[]): CorporateAction[] {
+  const seen = new Set<string>();
+  const deduped: CorporateAction[] = [];
+  for (const action of actions) {
+    const key = `${action.symbol}\u0000${action.date}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(action);
+  }
+  return deduped;
+}
+
 function collectCorporateActions(
   statements: readonly Statement[],
   taxableIds: ReadonlySet<string>,
@@ -277,14 +308,24 @@ function collectCorporateActions(
     if (periodYear(s.source.period) !== year) continue;
     actions.push(...corporateActionsForStatement(s));
   }
-  return actions.sort((a, b) => a.date.localeCompare(b.date) || a.symbol.localeCompare(b.symbol));
+  const sorted = actions.sort(
+    (a, b) => a.date.localeCompare(b.date) || a.symbol.localeCompare(b.symbol),
+  );
+  return dedupeCorporateActions(sorted);
 }
 
-/** One symbol's running position within a statement: quantity, CAD cost, and whether a corporate action has made both untrustworthy. */
+/**
+ * One symbol's running position within a statement: quantity, CAD cost,
+ * whether a corporate action has made both untrustworthy (`unknown`), and
+ * whether an unreadable BUY quantity has made the quantity alone
+ * untrustworthy while the cost is still real (`quantityUncertain`) -- see
+ * `processBuy` and `processSell`.
+ */
 interface LedgerEntry {
   quantity: number;
   cost: number;
   unknown: boolean;
+  quantityUncertain: boolean;
 }
 
 function seedLedger(priorHoldings: ReadonlyMap<string, HoldingLookup>): Map<string, LedgerEntry> {
@@ -293,8 +334,13 @@ function seedLedger(priorHoldings: ReadonlyMap<string, HoldingLookup>): Map<stri
     ledger.set(
       symbol,
       holding === AMBIGUOUS
-        ? { quantity: 0, cost: 0, unknown: true }
-        : { quantity: holding.quantity, cost: holding.bookCost, unknown: false },
+        ? { quantity: 0, cost: 0, unknown: true, quantityUncertain: false }
+        : {
+            quantity: holding.quantity,
+            cost: holding.bookCost,
+            unknown: false,
+            quantityUncertain: false,
+          },
     );
   }
   return ledger;
@@ -303,7 +349,7 @@ function seedLedger(priorHoldings: ReadonlyMap<string, HoldingLookup>): Map<stri
 function ledgerEntryFor(ledger: Map<string, LedgerEntry>, symbol: string): LedgerEntry {
   const existing = ledger.get(symbol);
   if (existing) return existing;
-  const fresh: LedgerEntry = { quantity: 0, cost: 0, unknown: false };
+  const fresh: LedgerEntry = { quantity: 0, cost: 0, unknown: false, quantityUncertain: false };
   ledger.set(symbol, fresh);
   return fresh;
 }
@@ -324,14 +370,50 @@ interface RowGain {
 const NO_GAIN: RowGain = { gain: 0, costUnknown: false };
 
 /**
+ * A full close: the position is absent from this statement's own closing
+ * holdings, so whatever cost the ledger still carries is realized in full
+ * -- no per-share figure is needed, which is what lets this branch price a
+ * sale even when the quantity behind it (sold or bought) was never
+ * readable at all.
+ */
+function closeOutRemainingCost(entry: LedgerEntry, proceedsCad: number): RowGain {
+  const gain = proceedsCad - entry.cost;
+  entry.cost = 0;
+  entry.quantity = 0;
+  entry.quantityUncertain = false;
+  return { gain, costUnknown: false };
+}
+
+/**
+ * A sale larger than the ledger's remaining quantity: the covered part
+ * prices at the ledger's own average cost, the uncovered part -- the
+ * shares this snapshot has no record of at all -- has no cost basis,
+ * proceeds split pro rata between the two. Costing the whole sale at the
+ * average, the previous behaviour, both mispriced the uncovered shares and
+ * could drive the ledger negative for every row that followed it this
+ * statement (see ADI 2025-11, HD 2026-03).
+ */
+function oversell(entry: LedgerEntry, soldQuantity: number, proceedsCad: number): RowGain {
+  const coveredFraction = entry.quantity > 0 ? entry.quantity / soldQuantity : 0;
+  const coveredProceeds = proceedsCad * coveredFraction;
+  const coveredCost = entry.cost;
+  entry.cost = 0;
+  entry.quantity = 0;
+  return { gain: coveredProceeds - coveredCost, costUnknown: true };
+}
+
+/**
  * One `SELL` row against the running ledger. A symbol the ledger has
  * already marked `unknown` (an ambiguous holding, or a corporate action
  * with no readable ratio -- see `applyRowToLedger`) counts as cost unknown
  * outright, never priced off a stale average. A description with no
  * readable symbol at all is the same case. A readable symbol with an
- * unreadable quantity, on a position this statement's own closing holdings
- * no longer carry, is a full close: the sale realizes the ledger's whole
- * remaining cost, not a per-share figure it has no quantity to divide by.
+ * unreadable quantity, or a readable partial sale against a ledger whose
+ * quantity an earlier unreadable BUY made uncertain, is a full close when
+ * this statement's own closing holdings no longer carry the position (see
+ * `closeOutRemainingCost`) -- otherwise it is cost unknown, and the ledger
+ * is marked `unknown` for the rest of the statement, since a quantity
+ * already wrong is not made right by the next row.
  */
 function processSell(
   row: ActivityRow,
@@ -347,16 +429,16 @@ function processSell(
 
   const proceedsCad = convertToCad(row.credit, row, s);
   const lot = parseTradeLot(row, "Sold");
+  const stillOpen = closingHoldings.get(symbol) !== undefined;
 
-  if (lot === null) {
-    if (closingHoldings.get(symbol) !== undefined) return { gain: 0, costUnknown: true };
-    const gain = proceedsCad - entry.cost;
-    entry.cost = 0;
-    entry.quantity = 0;
-    return { gain, costUnknown: false };
+  if (lot === null || entry.quantityUncertain) {
+    if (!stillOpen) return closeOutRemainingCost(entry, proceedsCad);
+    entry.unknown = true;
+    return { gain: 0, costUnknown: true };
   }
 
   if (entry.quantity <= 1e-9) return { gain: 0, costUnknown: true };
+  if (lot.quantity > entry.quantity + 1e-9) return oversell(entry, lot.quantity, proceedsCad);
 
   const costPerShare = entry.cost / entry.quantity;
   const cost = costPerShare * lot.quantity;
@@ -366,17 +448,11 @@ function processSell(
 }
 
 /**
- * One row's effect on the running ledger: `BUY` adds quantity and CAD
- * cost; `SELL` realizes a gain (see `processSell`); `STKDIV`/`STKDIS` rebase
- * quantity by the row's own stated delta at unchanged cost; `STKREORG`
- * carries no readable ratio at all, so it marks the symbol `unknown` for
- * the rest of the statement rather than let a later sale price post-split
- * shares off a pre-split average.
- */
-/**
- * A BUY with an unreadable quantity still adds its cost -- the one case
- * that matters is a same statement full close (`processSell`), which
- * consumes the ledger's whole cost and never divides by quantity at all.
+ * A BUY with an unreadable quantity still adds its cost, but marks the
+ * ledger's quantity `quantityUncertain`: dividing the now inflated cost by
+ * the old (too small) quantity would silently overstate the average cost
+ * per share for every sale that follows, in either direction -- see
+ * `processSell`.
  */
 function processBuy(row: ActivityRow, s: Statement, ledger: Map<string, LedgerEntry>): void {
   const symbol = parseRowSymbol(row.description);
@@ -386,6 +462,7 @@ function processBuy(row: ActivityRow, s: Statement, ledger: Map<string, LedgerEn
   if (entry.unknown) return;
   entry.cost += convertToCad(row.debit, row, s);
   if (lot) entry.quantity += lot.quantity;
+  else entry.quantityUncertain = true;
 }
 
 /** A stock dividend or spin-off distribution: quantity rebased by the row's own stated delta, cost unchanged. */
@@ -404,6 +481,14 @@ function processUnreadableReorg(row: ActivityRow, ledger: Map<string, LedgerEntr
   if (symbol && delta === null) ledgerEntryFor(ledger, symbol).unknown = true;
 }
 
+/**
+ * One row's effect on the running ledger: `BUY` adds quantity and CAD cost
+ * (see `processBuy`); `SELL` realizes a gain (see `processSell`);
+ * `STKDIV`/`STKDIS` rebase quantity by the row's own stated delta at
+ * unchanged cost; `STKREORG` carries no readable ratio at all, so it marks
+ * the symbol `unknown` for the rest of the statement rather than let a
+ * later sale price post-split shares off a pre-split average.
+ */
 function applyRowToLedger(
   row: ActivityRow,
   s: Statement,

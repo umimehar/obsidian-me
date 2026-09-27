@@ -139,6 +139,91 @@ describe("buildIncome", () => {
     expect(income.costUnknownSales).toBe(0);
   });
 
+  test("a BUY with an unreadable quantity makes the ledger's quantity uncertain, so a later readable partial sale is cost unknown rather than divided by too few shares", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const january = statement({
+      source: src("acct_nr", "2026-01"),
+      holdings: [holding({ symbol: "ENB", quantity: 10, bookCost: 1600 })],
+    });
+    const february = statement({
+      source: src("acct_nr", "2026-02"),
+      // Still held after the sale, so this is not a full close.
+      holdings: [holding({ symbol: "ENB", quantity: 5, bookCost: 800 })],
+      activity: [
+        activityRow({
+          code: "BUY",
+          debit: 160,
+          description: "ENB - Enbridge Inc: Bought shares (executed at 2026-02-10)",
+        }),
+        activityRow({
+          code: "SELL",
+          credit: 850,
+          description: "ENB - Enbridge Inc: Sold 5.0000 shares (executed at 2026-02-14)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [january, february], 2026, new Set(["acct_nr"]));
+    // The naive average (1760/10 * 5 = 880) would report a -30 loss on a
+    // sale that could equally have been a gain; neither is knowable from
+    // this data, so it counts as unknown rather than either guess.
+    expect(income.realizedGains).toBe(0);
+    expect(income.costUnknownSales).toBe(1);
+  });
+
+  test("a sale larger than the ledger's remaining quantity costs the covered part and marks the rest cost unknown, clamped at zero rather than negative", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const january = statement({
+      source: src("acct_nr", "2026-01"),
+      holdings: [holding({ symbol: "ADI", quantity: 10, bookCost: 200 })], // $20/share
+    });
+    const february = statement({
+      source: src("acct_nr", "2026-02"),
+      holdings: [holding({ symbol: "ADI", quantity: 8, bookCost: 176 })],
+      activity: [
+        activityRow({
+          code: "SELL",
+          credit: 300,
+          description: "ADI - Analog Devices Inc.: Sold 15.0000 shares (executed at 2026-02-03)",
+        }),
+        activityRow({
+          code: "BUY",
+          debit: 176,
+          description: "ADI - Analog Devices Inc.: Bought 8.0000 shares (executed at 2026-02-05)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [january, february], 2026, new Set(["acct_nr"]));
+    // 10 of the 15 sold are covered at $20/share: proceeds pro rata is
+    // 300 * (10/15) = 200, minus the whole $200 cost = 0 gain. The other 5
+    // have no cost basis at all, so the sale counts as cost unknown even
+    // though part of it was priced.
+    expect(income.realizedGains).toBeCloseTo(0, 2);
+    expect(income.costUnknownSales).toBe(1);
+    // The ledger clamps at zero rather than going negative: the BUY that
+    // follows lands on a clean slate, matching the real February holding.
+    const march = statement({
+      source: src("acct_nr", "2026-03"),
+      holdings: [],
+      activity: [
+        activityRow({
+          code: "SELL",
+          credit: 176,
+          description: "ADI - Analog Devices Inc.: Sold 8.0000 shares (executed at 2026-03-02)",
+        }),
+      ],
+    });
+    const withMarch = buildIncome(
+      [account],
+      [january, february, march],
+      2026,
+      new Set(["acct_nr"]),
+    );
+    // Same as above, plus March's sale of the 8 shares bought in February at
+    // their own $22/share cost: 176 - 176 = 0.
+    expect(withMarch.realizedGains).toBeCloseTo(0, 2);
+    expect(withMarch.costUnknownSales).toBe(1);
+  });
+
   test("a sale with no prior holding and no same statement BUY has an unknown cost, not a zero gain masquerading as one", () => {
     const account = series({ maskedId: "acct_nr" });
     const s = statement({
@@ -726,6 +811,56 @@ describe("buildIncome", () => {
     });
     const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
     expect(income.corporateActions).toEqual([{ symbol: "FDXF", date: "2026-06-01" }]);
+  });
+
+  test("corporateActions dedupes a same day pair of rows on the same symbol, the XOM spin-off shape", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-07"),
+      activity: [
+        activityRow({
+          code: "STKDIS",
+          date: "2026-07-02",
+          description:
+            "XOM - Exxon Mobil Corp.: Distribution of -1.3728 shares (executed at 2026-07-02)",
+        }),
+        activityRow({
+          code: "STKDIS",
+          date: "2026-07-02",
+          description:
+            "XOM - Exxonmobil Holdings Corp.: Distribution of 1.3728 shares (executed at 2026-07-02)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.corporateActions).toEqual([{ symbol: "XOM", date: "2026-07-02" }]);
+  });
+
+  test("a '.U' USD unit class of a Canadian listed ETF is a Canadian distribution, even when the row itself pays in USD", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-03"),
+      fxRate: 1.4,
+      holdings: [
+        holding({
+          symbol: "HXQ.U",
+          priceCurrency: "USD",
+          assetClass: "US Equities and Alternatives",
+        }),
+      ],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 5,
+          currency: "USD",
+          description:
+            "HXQ.U - Global X Nasdaq-100 Index Corporate Class: Cash dividend distribution",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.canadianDistributions).toBeGreaterThan(0);
+    expect(income.foreignDividends).toBe(0);
   });
 });
 

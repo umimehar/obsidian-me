@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-09-27T04:30:20.468Z",
+    "generated": "2026-09-27T04:52:10.257Z",
     "datastoreGenerated": "2026-09-27T02:23:09.416Z",
     "accountCount": 15
   },
@@ -3292,8 +3292,8 @@
       "canadianDistributions": 0,
       "foreignDividends": 21.02730799999999,
       "foreignTaxWithheld": 2.9767079999999986,
-      "realizedGains": 11.328878900255063,
-      "costUnknownSales": 12,
+      "realizedGains": 11.640512841829207,
+      "costUnknownSales": 13,
       "corporateActions": [
         {
           "symbol": "SOLS",
@@ -3314,8 +3314,8 @@
       "canadianDistributions": 90.82000000000001,
       "foreignDividends": 191.67641199999997,
       "foreignTaxWithheld": 27.953969999999998,
-      "realizedGains": 1857.3805881660546,
-      "costUnknownSales": 6,
+      "realizedGains": 1859.3522478667628,
+      "costUnknownSales": 7,
       "corporateActions": [
         {
           "symbol": "WAT",
@@ -3336,10 +3336,6 @@
         {
           "symbol": "MBGL",
           "date": "2026-07-01"
-        },
-        {
-          "symbol": "XOM",
-          "date": "2026-07-02"
         },
         {
           "symbol": "XOM",

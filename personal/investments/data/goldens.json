@@ -459,8 +459,8 @@
     "foreignDividends": 191.67641199999997,
     "foreignTaxWithheld": 27.953969999999998,
     "interest": 0.02,
-    "realizedGain": 1857.3805881660546,
-    "costUnknownSales": 6,
+    "realizedGain": 1859.3522478667628,
+    "costUnknownSales": 7,
     "rrspDeduction": 39000
   },
   "incomeByYear": {
@@ -469,16 +469,16 @@
       "canadianDistributions": 0,
       "foreignDividends": 21.02730799999999,
       "foreignTaxWithheld": 2.9767079999999986,
-      "realizedGains": 11.328878900255063,
-      "costUnknownSales": 12
+      "realizedGains": 11.640512841829207,
+      "costUnknownSales": 13
     },
     "2026": {
       "interest": 0.02,
       "canadianDistributions": 90.82000000000001,
       "foreignDividends": 191.67641199999997,
       "foreignTaxWithheld": 27.953969999999998,
-      "realizedGains": 1857.3805881660546,
-      "costUnknownSales": 6
+      "realizedGains": 1859.3522478667628,
+      "costUnknownSales": 7
     }
   },
   "month": {
