@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { monthReview, reviewPeriods } from "../analytics/monthReview";
 import {
   buildPortfolioReturns,
   endingCumulative,
@@ -8,8 +9,9 @@ import {
 import { GOLDENS } from "../goldens";
 import { App } from "./App";
 import { loadAnalytics } from "./data";
-import { formatCurrency, formatRate } from "./format";
+import { formatCurrency, formatRate, formatSignedCurrency } from "./format";
 import { inScope, yearChange } from "./scope";
+import { clickTab } from "./testSupport/clickTab";
 
 afterEach(() => {
   cleanup();
@@ -28,16 +30,6 @@ function exactly(label: string): RegExp {
 /** Radix activates a segmented control item on click; the label is its accessible name. */
 function selectYear(label: string) {
   fireEvent.click(screen.getByRole("radio", { name: exactly(label) }));
-}
-
-/**
- * Radix's TabsTrigger renders its label twice -- once visible, once hidden
- * at bold weight, so the visible width never shifts on select -- which
- * doubles the accessible name. Matching a prefix sidesteps that
- * implementation detail. Activation is on pointerdown, not click.
- */
-function clickTab(name: string) {
-  fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${name}\\b`) }), { button: 0 });
 }
 
 function total(): string {
@@ -146,6 +138,31 @@ describe("the year filter reaches every tab that can honour it", () => {
 
     openTab("Portfolio");
     expect(screen.getByRole("heading", { name: "Personal taxable income, 2024" })).toBeDefined();
+  });
+
+  test("This month limits its picker to the year scope, defaulting to that year's latest month", async () => {
+    window.location.hash = "#month/2024";
+    render(<App />);
+    const analytics = loadAnalytics();
+    const periods2024 = reviewPeriods(analytics).filter((p) => p.startsWith("2024-"));
+    const latest2024 = periods2024[0];
+    if (latest2024 === undefined) throw new Error("expected at least one 2024 period");
+    const review = monthReview(analytics, latest2024);
+    const change = review.start === null ? review.end : review.end - review.start;
+    expect(screen.getByRole("heading", { level: 2 }).textContent).toContain(
+      formatSignedCurrency(change),
+    );
+    expect(screen.getByRole("heading", { level: 2 }).textContent).toContain("December 2024");
+
+    // Radix's Select positions its listbox on a short timer after the
+    // click, later than a single microtask flush.
+    await act(async () => {
+      fireEvent.click(screen.getByRole("combobox", { name: "Month" }));
+      await new Promise((resolve) => setTimeout(resolve, 50));
+    });
+    const options = screen.getAllByRole("option").map((o) => o.textContent);
+    expect(options).toHaveLength(periods2024.length);
+    for (const option of options) expect(option).toContain("2024");
   });
 
   test("the reconciliation view filters its findings and says how many it hid", () => {

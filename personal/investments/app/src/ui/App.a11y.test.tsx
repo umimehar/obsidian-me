@@ -4,6 +4,7 @@ import { GOLDENS } from "../goldens";
 import { App } from "./App";
 import { formatCurrency } from "./format";
 import { restoreReducedMotion } from "./motionPreference";
+import { clickTab } from "./testSupport/clickTab";
 
 /**
  * The accessible name of an element, following the accname order: an
@@ -50,17 +51,6 @@ function expectNoSkippedLevel() {
     expect(level - previous).toBeLessThanOrEqual(1);
     previous = level;
   }
-}
-
-/**
- * Radix's TabsTrigger renders its label twice -- once visible, once hidden
- * at bold weight, so the visible width never shifts on select -- which
- * doubles the accessible name. Matching a prefix sidesteps that
- * implementation detail. Activation is on pointerdown, not click, so the
- * mousedown event is what a real pointer press sends.
- */
-function clickTab(name: string) {
-  fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${name}\\b`) }), { button: 0 });
 }
 
 afterEach(() => {

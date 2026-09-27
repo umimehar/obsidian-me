@@ -4,21 +4,12 @@ import { App } from "./App";
 import { defaultSelection } from "./chartAccounts";
 import { loadAnalytics } from "./data";
 import { formatCurrency } from "./format";
+import { clickTab } from "./testSupport/clickTab";
 
 afterEach(() => {
   cleanup();
   window.location.hash = "";
 });
-
-/**
- * Radix's TabsTrigger renders its label twice -- once visible, once hidden
- * at bold weight, so the visible width never shifts on select -- which
- * doubles the accessible name. Matching a prefix sidesteps that
- * implementation detail. Activation is on pointerdown, not click.
- */
-function clickTab(name: string) {
-  fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${name}\\b`) }), { button: 0 });
-}
 
 const { series } = loadAnalytics();
 const PORTFOLIO_SIZE = defaultSelection(series).size;

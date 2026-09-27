@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { GOLDENS } from "../goldens";
 import { App } from "./App";
 import { formatCurrency, formatGainWithShare } from "./format";
+import { clickTab } from "./testSupport/clickTab";
 import { coarseForm, expectNoCoarseForm } from "./testSupport/coarseForm";
 
 function roomCard(group: string) {
@@ -11,22 +12,18 @@ function roomCard(group: string) {
   return node as HTMLElement;
 }
 
-/**
- * Radix's TabsTrigger renders its label twice -- once visible, once hidden
- * at bold weight, so the visible width never shifts on select -- which
- * doubles the accessible name. Matching a prefix sidesteps that
- * implementation detail. Activation is on pointerdown, not click, so the
- * mousedown event is what a real pointer press sends.
- */
-function clickTab(name: string) {
-  fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${name}\\b`) }), { button: 0 });
-}
-
 afterEach(() => {
   window.location.hash = "";
 });
 
 describe("App", () => {
+  test("the default route renders This month, with the tab marked active", () => {
+    render(<App />);
+    expect(window.location.hash).toBe("");
+    expect(screen.getByRole("tab", { name: /^This month\b/, selected: true })).toBeDefined();
+    expect(document.querySelector("[data-month-flows]")).not.toBeNull();
+  });
+
   test("the growth tab holds the returns chart, with its provenance stated", () => {
     render(<App />);
     clickTab("Growth");
