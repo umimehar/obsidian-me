@@ -1,6 +1,7 @@
 import { Button, Flex, Heading, SegmentedControl, Text, Theme } from "@radix-ui/themes";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { simulateBenchmark, skippedPeriods } from "../analytics/benchmark";
 import type { AnalyticsOutput } from "../analytics/build";
 import { feeReconciliationGaps } from "../analytics/feeReconciliation";
 import { latestGroupGain } from "../analytics/groupGain";
@@ -24,6 +25,7 @@ import {
   isDefaultSelection,
   seriesForChart,
 } from "./chartAccounts";
+import { BenchmarkChart } from "./charts/BenchmarkChart";
 import { CashflowChart } from "./charts/CashflowChart";
 import { ContributionsChart } from "./charts/ContributionsChart";
 import { CostGapChart } from "./charts/CostGapChart";
@@ -34,6 +36,7 @@ import {
   grandTotal,
   latestPeriod,
   loadAnalytics,
+  loadBenchmark,
   loadCards,
   loadCheckpoints,
   loadCoverage,
@@ -274,9 +277,18 @@ function HoldingsPanel({ all, scope }: { all: AnalyticsOutput; scope: YearScope 
   return <Holdings holdings={all.holdings} portfolioTotal={grandTotal(all)} scope={scope} />;
 }
 
+/**
+ * The benchmark comparison sits first: the owner's request behind this
+ * ticket was a deposit-netted return against a single fund, and that
+ * question comes before the account-by-account return grid it sits above.
+ */
 function GrowthPanel({ analytics }: { analytics: AnalyticsOutput }) {
+  const benchmark = loadBenchmark();
+  const points = simulateBenchmark(analytics.series, benchmark.closes);
+  const skipped = skippedPeriods(analytics.series, benchmark.closes);
   return (
     <Flex direction="column" gap="6">
+      <BenchmarkChart points={points} skipped={skipped} symbol={benchmark.symbol} />
       <ReturnsChart returns={analytics.returns} series={analytics.series} />
       <CostGapChart series={analytics.series} />
     </Flex>

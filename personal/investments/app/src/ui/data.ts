@@ -1,4 +1,5 @@
 import rawAnalytics from "@data/analytics.json";
+import rawBenchmark from "@data/benchmark.json";
 import rawCards from "@data/cards.json";
 import rawCheckpoints from "@data/checkpoints.json";
 import rawCoverage from "@data/coverage.json";
@@ -7,6 +8,7 @@ import type { AnalyticsOutput } from "../analytics/build";
 import type { Coverage } from "../analytics/coverage";
 import type { Lens } from "../analytics/rollup";
 import type { CardStatement } from "../ingest/card";
+import type { BenchmarkData } from "../tools/benchmark";
 import type { ReconciliationReport, ReportedFinding } from "../validate/report";
 
 const LENSES: readonly Lens[] = ["registration", "account", "purpose"];
@@ -274,4 +276,32 @@ export function parseCheckpoints(raw: unknown): Checkpoint[] {
 
 export function loadCheckpoints(): Checkpoint[] {
   return parseCheckpoints(rawCheckpoints);
+}
+
+/**
+ * `bun run benchmark`'s committed output, checked the same way every other
+ * committed artifact here is: a missing field throws naming it, rather than
+ * a chart silently drawing from `undefined`.
+ */
+export function parseBenchmark(raw: unknown): BenchmarkData {
+  if (typeof raw !== "object" || raw === null) {
+    throw new Error("benchmark.json is not an object; run bun run benchmark");
+  }
+  const { symbol, fetched, closes } = raw as Record<string, unknown>;
+  if (typeof symbol !== "string" || typeof fetched !== "string") {
+    throw new Error("benchmark.json is missing symbol or fetched; run bun run benchmark");
+  }
+  if (typeof closes !== "object" || closes === null) {
+    throw new Error("benchmark.json is missing its closes map; run bun run benchmark");
+  }
+  for (const value of Object.values(closes)) {
+    if (typeof value !== "number") {
+      throw new Error("benchmark.json has a non-numeric close; run bun run benchmark");
+    }
+  }
+  return { symbol, fetched, closes: closes as Record<string, number> };
+}
+
+export function loadBenchmark(): BenchmarkData {
+  return parseBenchmark(rawBenchmark);
 }
