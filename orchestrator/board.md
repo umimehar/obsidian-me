@@ -19,13 +19,13 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0006-dashboard-v2-registered-contributions]] #project/system #type/feature #p1
 
 
 
 
 ## In Progress
 
+- [ ] [[TCK-0006-dashboard-v2-registered-contributions]] #project/system #type/feature #p1
 
 
 
