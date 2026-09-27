@@ -113,4 +113,22 @@ describe("the account filter", () => {
     fireEvent.click(screen.getByRole("menuitem", { name: "Reset to portfolio" }));
     expect(trigger().textContent).toBe(`Portfolio (${PORTFOLIO_SIZE} accounts)`);
   });
+
+  test("a selection made on Portfolio carries to Future: one shared state, not two", async () => {
+    render(<App />);
+    clickTab("Portfolio");
+    await openFilter();
+    toggle("Spousal RRSP");
+    expect(trigger().textContent).toBe(`${PORTFOLIO_SIZE + 1} accounts`);
+    await closeFilter();
+
+    await act(async () => clickTab("Future"));
+    expect(trigger().textContent).toBe(`${PORTFOLIO_SIZE + 1} accounts`);
+    await openFilter();
+    expect(item("Spousal RRSP").getAttribute("aria-checked")).toBe("true");
+    await closeFilter();
+
+    await act(async () => clickTab("Portfolio"));
+    expect(trigger().textContent).toBe(`${PORTFOLIO_SIZE + 1} accounts`);
+  });
 });
