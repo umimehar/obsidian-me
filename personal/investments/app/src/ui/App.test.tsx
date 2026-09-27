@@ -2,6 +2,7 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { GOLDENS } from "../goldens";
 import { App } from "./App";
+import { loadAnalytics } from "./data";
 import { formatCurrency, formatGainWithShare } from "./format";
 import { clickTab } from "./testSupport/clickTab";
 import { coarseForm, expectNoCoarseForm } from "./testSupport/coarseForm";
@@ -122,7 +123,9 @@ describe("App", () => {
     clickTab("Portfolio");
     const income = document.querySelector("[data-tax-income]");
     if (income === null) throw new Error("expected the tax income section to render");
-    expect(within(income as HTMLElement).getByText("-$1,067.39")).toBeDefined();
+    const realizedGain2025 = loadAnalytics().income["2025"]?.realizedGains;
+    if (realizedGain2025 === undefined) throw new Error("expected 2025 income in the corpus");
+    expect(within(income as HTMLElement).getByText(formatCurrency(realizedGain2025))).toBeDefined();
   });
 
   test("the hero and its chart show only on portfolio; other tabs carry the summary strip instead", () => {

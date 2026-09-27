@@ -455,10 +455,12 @@
   "zeroRateStretchAnnualToClose": 15313.053333333335,
   "income": {
     "year": 2026,
-    "eligibleDividends": 256.6399999999998,
-    "foreignIncome": 18.640000000000004,
-    "interest": 0,
-    "realizedGain": -4243.492052079513,
+    "canadianDistributions": 92.59,
+    "foreignDividends": 189.90641199999996,
+    "foreignTaxWithheld": 27.953969999999998,
+    "interest": 0.02,
+    "realizedGain": 1650.1048384621172,
+    "costUnknownSales": 3,
     "rrspDeduction": 39000
   },
   "month": {

@@ -203,10 +203,12 @@ export interface Goldens {
   income: {
     /** The latest income year the tax view shows. */
     year: number;
-    eligibleDividends: number;
-    foreignIncome: number;
+    canadianDistributions: number;
+    foreignDividends: number;
+    foreignTaxWithheld: number;
     interest: number;
     realizedGain: number;
+    costUnknownSales: number;
     rrspDeduction: number;
   };
   /** `monthReview` at the latest reviewable period, computed by that same function. */

@@ -7,15 +7,13 @@ import { formatCurrency } from "../format";
 import { TaxView } from "./TaxView";
 
 /**
- * Real corpus figures (`data/analytics.json`): 2026 interest 0, eligible
- * dividends 201.86, foreign income 16.84, realized gains -1335.86; 2025
- * dividends 19.41, foreign 1.18, realized gains -1067.39. Both years are a
- * realized LOSS, which is the case this view most has to get right.
+ * Real corpus figures (`data/analytics.json`, `data/goldens.json`), read
+ * through `GOLDENS.income` rather than pinned as inline literals.
  */
-function renderYear(year: number) {
+function renderYear(year: number, scope: number | "all" = year) {
   render(
     <Theme>
-      <TaxView analytics={loadAnalytics()} year={year} />
+      <TaxView analytics={loadAnalytics()} year={year} scope={scope} />
     </Theme>,
   );
 }
@@ -38,16 +36,15 @@ describe("TaxView", () => {
     const income = within(section("income"));
     expect(income.getByText(/interest/i)).toBeDefined();
     expect(income.getByText(formatCurrency(GOLDENS.income.interest))).toBeDefined();
-    expect(income.getByText(/canadian eligible dividends/i)).toBeDefined();
-    expect(income.getByText(formatCurrency(GOLDENS.income.eligibleDividends))).toBeDefined();
-    expect(income.getByText(/foreign income/i)).toBeDefined();
-    expect(income.getByText(formatCurrency(GOLDENS.income.foreignIncome))).toBeDefined();
+    expect(income.getByText(/distributions from canadian listed securities/i)).toBeDefined();
+    expect(income.getByText(formatCurrency(GOLDENS.income.canadianDistributions))).toBeDefined();
+    expect(income.getByText(/foreign dividends/i)).toBeDefined();
+    expect(income.getByText(formatCurrency(GOLDENS.income.foreignDividends))).toBeDefined();
+    expect(income.getByText(/foreign tax withheld/i)).toBeDefined();
+    expect(income.getByText(formatCurrency(GOLDENS.income.foreignTaxWithheld))).toBeDefined();
   });
 
   test("the interest row prints the interest figure, not a constant zero", () => {
-    // Every year in the corpus has $0.00 interest, so the real data cannot
-    // tell `income.interest` apart from a hardcoded zero. This is the only
-    // figure on the page that needs a constructed value to be pinned at all.
     const analytics = loadAnalytics();
     const income2026 = analytics.income["2026"];
     if (income2026 === undefined) throw new Error("expected 2026 income in the corpus");
@@ -56,74 +53,87 @@ describe("TaxView", () => {
         <TaxView
           analytics={{ ...analytics, income: { 2026: { ...income2026, interest: 412.75 } } }}
           year={2026}
+          scope={2026}
         />
       </Theme>,
     );
     expect(row("interest").getByText("$412.75")).toBeDefined();
   });
 
-  test("the latest year's realized figure is a loss and is shown as one", () => {
-    expect(GOLDENS.income.realizedGain).toBeLessThan(0);
+  test("the latest year's realized figure is signed and labelled for what it is", () => {
     renderYear(GOLDENS.income.year);
     const income = within(section("income"));
-    expect(income.getByText(/realized loss/i)).toBeDefined();
-    const loss = formatCurrency(GOLDENS.income.realizedGain);
-    expect(income.getByText(loss)).toBeDefined();
-    // The unsigned form must not appear: a loss rendered without its sign
-    // reads as a gain of the same size.
-    expect(income.queryByText(loss.replace("-", ""))).toBeNull();
+    const label = GOLDENS.income.realizedGain < 0 ? /realized loss/i : /realized gains/i;
+    expect(income.getByText(label)).toBeDefined();
+    const figure = formatCurrency(GOLDENS.income.realizedGain);
+    expect(income.getByText(figure)).toBeDefined();
+    if (GOLDENS.income.realizedGain < 0) {
+      // The unsigned form must not appear: a loss rendered without its sign
+      // reads as a gain of the same size.
+      expect(income.queryByText(figure.replace("-", ""))).toBeNull();
+    }
   });
 
-  test("the real 2025 realized figure is a loss too", () => {
-    renderYear(2025);
-    const income = within(section("income"));
-    expect(income.getByText(/realized loss/i)).toBeDefined();
-    expect(income.getByText("-$1,067.39")).toBeDefined();
-    expect(income.getByText("$19.41")).toBeDefined();
-    expect(income.getByText("$1.18")).toBeDefined();
+  test("a nonzero cost unknown count is shown", () => {
+    const analytics = loadAnalytics();
+    const income2026 = analytics.income["2026"];
+    if (income2026 === undefined) throw new Error("expected 2026 income in the corpus");
+    render(
+      <Theme>
+        <TaxView
+          analytics={{ ...analytics, income: { 2026: { ...income2026, costUnknownSales: 3 } } }}
+          year={2026}
+          scope={2026}
+        />
+      </Theme>,
+    );
+    expect(row("cost-unknown").getByText(/3 sales without a cost basis/i)).toBeDefined();
   });
 
-  test("the disclaimer sits with the estimate, not somewhere else on the page", () => {
-    renderYear(2026);
-    const estimate = within(section("estimate"));
-    expect(estimate.getByText(/not a filing figure/i)).toBeDefined();
-    expect(estimate.getByText(/estimated tax/i)).toBeDefined();
+  test("a zero cost unknown count renders no row at all", () => {
+    const analytics = loadAnalytics();
+    const income2026 = analytics.income["2026"];
+    if (income2026 === undefined) throw new Error("expected 2026 income in the corpus");
+    render(
+      <Theme>
+        <TaxView
+          analytics={{ ...analytics, income: { 2026: { ...income2026, costUnknownSales: 0 } } }}
+          year={2026}
+          scope={2026}
+        />
+      </Theme>,
+    );
+    expect(document.querySelector('[data-tax-row="cost-unknown"]')).toBeNull();
   });
 
-  test("the estimate itself is a real figure, at the rate the page states", () => {
-    renderYear(2026);
-    // Gross 2026 investment income is negative once the realized loss lands, so
-    // the taxable figure floors at zero and the tax with it. Both are asserted
-    // per row: a fabricated tax bill beside a not-for-filing disclaimer is the
-    // worst thing this view could print.
-    expect(row("taxable-income").getByText("$0.00")).toBeDefined();
-    expect(row("estimated-tax").getByText("$0.00")).toBeDefined();
-    expect(screen.getByText(/flat 30% rate/)).toBeDefined();
-  });
-
-  test("a year with no income entry says so rather than printing four zeros", () => {
+  test("a year with no income entry says so rather than printing zeros", () => {
     const analytics = loadAnalytics();
     const { 2026: _dropped, ...income } = analytics.income;
     render(
       <Theme>
-        <TaxView analytics={{ ...analytics, income }} year={2026} />
+        <TaxView analytics={{ ...analytics, income }} year={2026} scope={2026} />
       </Theme>,
     );
     expect(screen.getByText(/no income data/i)).toBeDefined();
     expect(screen.queryByText("$0.00")).toBeNull();
-    expect(document.querySelector("[data-tax-estimate]")).toBeNull();
+    expect(document.querySelector("[data-tax-income]")).toBeNull();
   });
 
-  test("the RRSP deduction echoes what was contributed, never unused room", () => {
+  test("the RRSP deduction line states what was contributed this year, never unused room", () => {
     renderYear(GOLDENS.income.year);
-    const estimate = within(section("estimate"));
-    expect(estimate.getByText(formatCurrency(GOLDENS.income.rrspDeduction))).toBeDefined();
-    // The year's unused assessed RRSP room is not a deduction, and the two
-    // are different figures, so finding the room figure anywhere on the page
-    // means the deduction was sourced from the wrong line.
+    const rrsp = within(section("rrsp"));
+    expect(rrsp.getByText(formatCurrency(GOLDENS.income.rrspDeduction))).toBeDefined();
+    expect(rrsp.getByText(/deductible against your total income/i)).toBeDefined();
     const room = GOLDENS.rooms.rrspAssessedRemaining;
     expect(room).not.toBe(GOLDENS.income.rrspDeduction);
-    expect(screen.queryByText(new RegExp(room.toLocaleString("en-CA")))).toBeNull();
+    expect(rrsp.queryByText(new RegExp(room.toLocaleString("en-CA")))).toBeNull();
+  });
+
+  test("there is no taxable income row and no flat rate estimate anywhere on the page", () => {
+    renderYear(2026);
+    expect(document.querySelector('[data-tax-row="taxable-income"]')).toBeNull();
+    expect(screen.queryByText(/flat 30%/i)).toBeNull();
+    expect(document.querySelector("[data-tax-estimate]")).toBeNull();
   });
 
   test("the corporate account is visibly absent, with the reason", () => {
@@ -131,5 +141,15 @@ describe("TaxView", () => {
     const note = within(section("exclusions"));
     expect(note.getByText(/corporate/i)).toBeDefined();
     expect(note.getByText(/taxed in the corporation/i)).toBeDefined();
+  });
+
+  test("the heading names the year directly when a specific year is scoped", () => {
+    renderYear(2025, 2025);
+    expect(screen.getByText("Investment income, 2025")).toBeDefined();
+  });
+
+  test("the heading says latest year when the scope is all time", () => {
+    renderYear(GOLDENS.income.year, "all");
+    expect(screen.getByText(`Investment income, latest year ${GOLDENS.income.year}`)).toBeDefined();
   });
 });

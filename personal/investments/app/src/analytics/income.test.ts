@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { AccountKind, ManagementStyle } from "../store/mask";
 import type { ActivityRow, Holding, Statement } from "../types";
-import { buildIncome, estimateTax } from "./income";
+import { buildIncome } from "./income";
 import type { AccountSeries } from "./types";
 
 function series(overrides: Partial<AccountSeries> = {}): AccountSeries {
@@ -85,28 +85,176 @@ function statement(over: Partial<Statement> = {}): Statement {
 }
 
 describe("buildIncome", () => {
-  test("sums CAD DIV credits as eligible dividends and USD DIV credits as foreign income", () => {
+  test("a USD sale's proceeds are converted to CAD at the statement's own fxRate before costing", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const january = statement({
+      source: src("acct_nr", "2026-01"),
+      holdings: [holding({ symbol: "ENB", quantity: 20, bookCost: 400, priceCurrency: "USD" })],
+    });
+    const february = statement({
+      source: src("acct_nr", "2026-02"),
+      fxRate: 1.4,
+      holdings: [holding({ symbol: "ENB", quantity: 8, bookCost: 160, priceCurrency: "USD" })],
+      activity: [
+        activityRow({
+          code: "SELL",
+          credit: 100,
+          currency: "USD",
+          description: "ENB - Enbridge Inc: Sold 12.0000 shares (executed at 2026-02-14)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [january, february], 2026, new Set(["acct_nr"]));
+    // proceeds 100 USD * 1.4 = 140 CAD, minus 12 shares * $20 average cost = -100
+    expect(income.realizedGains).toBeCloseTo(-100, 2);
+  });
+
+  test("a symbol bought and sold within the same statement is costed off that statement's BUY rows", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-02"),
+      activity: [
+        activityRow({
+          code: "BUY",
+          debit: 200,
+          description: "ENB - Enbridge Inc: Bought 10.0000 shares (executed at 2026-02-10)",
+        }),
+        activityRow({
+          code: "SELL",
+          credit: 130,
+          description: "ENB - Enbridge Inc: Sold 5.0000 shares (executed at 2026-02-14)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    // average cost $20/share, proceeds 130 - (5 * 20) = 30
+    expect(income.realizedGains).toBeCloseTo(30, 2);
+    expect(income.costUnknownSales).toBe(0);
+  });
+
+  test("a sale with no prior holding and no same statement BUY has an unknown cost, not a zero gain masquerading as one", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-02"),
+      activity: [
+        activityRow({
+          code: "SELL",
+          credit: 650.88,
+          description: "ENB - Enbridge Inc: Sold 12.0000 shares (executed at 2026-02-14)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.realizedGains).toBe(0);
+    expect(income.costUnknownSales).toBe(1);
+  });
+
+  test("a CAD paid dividend on a USD priced holding is foreign", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-03"),
+      holdings: [holding({ symbol: "AAPL", priceCurrency: "USD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 165.82,
+          currency: "CAD",
+          description: "AAPL - Apple Inc: Cash dividend distribution, received on 2026-03-10",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.foreignDividends).toBe(165.82);
+    expect(income.canadianDistributions).toBe(0);
+  });
+
+  test("a CAD listed ETF distribution is Canadian, not an eligible dividend by name", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-03"),
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 50,
+          currency: "CAD",
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.canadianDistributions).toBe(50);
+    expect(income.foreignDividends).toBe(0);
+  });
+
+  test("a USD dividend is converted to CAD at the statement's own fxRate", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-03"),
+      fxRate: 1.3877,
+      holdings: [holding({ symbol: "AAPL", priceCurrency: "USD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 18.64,
+          currency: "USD",
+          description: "AAPL - Apple Inc: Cash dividend distribution",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.foreignDividends).toBeCloseTo(18.64 * 1.3877, 2);
+  });
+
+  test("FPLINT securities lending interest counts as interest", () => {
     const account = series({ maskedId: "acct_nr" });
     const s = statement({
       source: src("acct_nr", "2026-03"),
       activity: [
-        activityRow({ code: "DIV", credit: 100, currency: "CAD" }),
-        activityRow({ code: "DIV", credit: 40, currency: "USD" }),
+        activityRow({
+          code: "FPLINT",
+          credit: 4.21,
+          description: "Stock lending monthly interest payment",
+        }),
       ],
     });
     const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
-    expect(income.eligibleDividends).toBe(100);
-    expect(income.foreignIncome).toBe(40);
+    expect(income.interest).toBe(4.21);
   });
 
-  test("sums INT credits as interest", () => {
+  test("NRT foreign tax withheld nets a reversal and is shown as a positive credit", () => {
     const account = series({ maskedId: "acct_nr" });
     const s = statement({
       source: src("acct_nr", "2026-03"),
-      activity: [activityRow({ code: "INT", credit: 12.5, currency: "CAD" })],
+      activity: [
+        activityRow({ code: "NRT", debit: 25, description: "Non-resident tax" }),
+        activityRow({ code: "NRT", credit: 5, description: "Non-resident tax reversal" }),
+      ],
     });
     const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
-    expect(income.interest).toBe(12.5);
+    expect(income.foreignTaxWithheld).toBe(20);
+  });
+
+  test("a DIV reversal nets to zero rather than double counting the credit", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-03"),
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 30,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+        activityRow({
+          code: "DIV",
+          debit: 30,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution reversal",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.canadianDistributions).toBe(0);
   });
 
   test("a corporate account's dividends contribute nothing to the personal estimate", () => {
@@ -114,11 +262,25 @@ describe("buildIncome", () => {
     const nonRegistered = series({ maskedId: "acct_nr", kind: "NonRegistered" as AccountKind });
     const corpStatement = statement({
       source: src("acct_corp", "2026-03"),
-      activity: [activityRow({ code: "DIV", credit: 645, currency: "CAD" })],
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 645,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
     });
     const personalStatement = statement({
       source: src("acct_nr", "2026-03"),
-      activity: [activityRow({ code: "DIV", credit: 202, currency: "CAD" })],
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 202,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
     });
     const income = buildIncome(
       [corporate, nonRegistered],
@@ -126,11 +288,7 @@ describe("buildIncome", () => {
       2026,
       new Set(["acct_corp", "acct_nr"]),
     );
-    // Regression guard for the bug that inflated 2026 eligible dividends
-    // from $202 to $645 by letting the corporate account's dividends leak
-    // into the personal estimate. Only the NonRegistered account's $202
-    // may show up here.
-    expect(income.eligibleDividends).toBe(202);
+    expect(income.canadianDistributions).toBe(202);
   });
 
   test("a TFSA's dividends contribute nothing to the personal estimate", () => {
@@ -138,11 +296,25 @@ describe("buildIncome", () => {
     const nonRegistered = series({ maskedId: "acct_nr", kind: "NonRegistered" as AccountKind });
     const tfsaStatement = statement({
       source: src("acct_tfsa", "2026-03"),
-      activity: [activityRow({ code: "DIV", credit: 300, currency: "CAD" })],
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 300,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
     });
     const personalStatement = statement({
       source: src("acct_nr", "2026-03"),
-      activity: [activityRow({ code: "DIV", credit: 50, currency: "CAD" })],
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 50,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
     });
     const income = buildIncome(
       [tfsa, nonRegistered],
@@ -150,7 +322,7 @@ describe("buildIncome", () => {
       2026,
       new Set(["acct_tfsa", "acct_nr"]),
     );
-    expect(income.eligibleDividends).toBe(50);
+    expect(income.canadianDistributions).toBe(50);
   });
 
   test("an account outside the caller's scope contributes nothing even when it is a taxable kind", () => {
@@ -158,11 +330,25 @@ describe("buildIncome", () => {
     const outOfScope = series({ maskedId: "acct_out" });
     const inStatement = statement({
       source: src("acct_in", "2026-03"),
-      activity: [activityRow({ code: "DIV", credit: 10, currency: "CAD" })],
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 10,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
     });
     const outStatement = statement({
       source: src("acct_out", "2026-03"),
-      activity: [activityRow({ code: "DIV", credit: 999, currency: "CAD" })],
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 999,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
     });
     const income = buildIncome(
       [inScope, outOfScope],
@@ -170,35 +356,63 @@ describe("buildIncome", () => {
       2026,
       new Set(["acct_in"]),
     );
-    expect(income.eligibleDividends).toBe(10);
+    expect(income.canadianDistributions).toBe(10);
   });
 
   test("a PERFORMANCE statement's duplicated activity does not double-count", () => {
     const account = series({ maskedId: "acct_nr" });
     const brokerage = statement({
       source: src("acct_nr", "2026-03", "BROKERAGE"),
-      activity: [activityRow({ code: "DIV", credit: 100, currency: "CAD" })],
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 100,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
     });
     const performance = statement({
       source: src("acct_nr", "2026-03", "PERFORMANCE"),
-      activity: [activityRow({ code: "DIV", credit: 100, currency: "CAD" })],
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 100,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
     });
     const income = buildIncome([account], [brokerage, performance], 2026, new Set(["acct_nr"]));
-    expect(income.eligibleDividends).toBe(100);
+    expect(income.canadianDistributions).toBe(100);
   });
 
   test("only sums activity within the target year", () => {
     const account = series({ maskedId: "acct_nr" });
     const thisYear = statement({
       source: src("acct_nr", "2026-03"),
-      activity: [activityRow({ code: "DIV", credit: 100, currency: "CAD" })],
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 100,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
     });
     const lastYear = statement({
       source: src("acct_nr", "2025-03"),
-      activity: [activityRow({ code: "DIV", credit: 500, currency: "CAD" })],
+      holdings: [holding({ symbol: "XEQT", priceCurrency: "CAD" })],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 500,
+          description: "XEQT - iShares Core Equity ETF: Cash dividend distribution",
+        }),
+      ],
     });
     const income = buildIncome([account], [thisYear, lastYear], 2026, new Set(["acct_nr"]));
-    expect(income.eligibleDividends).toBe(100);
+    expect(income.canadianDistributions).toBe(100);
   });
 
   test("realized gains are proceeds minus average cost from the preceding statement's holding", () => {
@@ -223,22 +437,6 @@ describe("buildIncome", () => {
     expect(income.realizedGains).toBeCloseTo(410.88, 2);
   });
 
-  test("a sale with no preceding holding for its symbol is excluded from realized gains", () => {
-    const account = series({ maskedId: "acct_nr" });
-    const s = statement({
-      source: src("acct_nr", "2026-02"),
-      activity: [
-        activityRow({
-          code: "SELL",
-          credit: 650.88,
-          description: "ENB - Enbridge Inc: Sold 12.0000 shares (executed at 2026-02-14)",
-        }),
-      ],
-    });
-    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
-    expect(income.realizedGains).toBe(0);
-  });
-
   test("realized gains from a registered or corporate account never reach the total", () => {
     const tfsa = series({ maskedId: "acct_tfsa", kind: "TFSA" as AccountKind });
     const january = statement({
@@ -258,38 +456,5 @@ describe("buildIncome", () => {
     });
     const income = buildIncome([tfsa], [january, february], 2026, new Set(["acct_tfsa"]));
     expect(income.realizedGains).toBe(0);
-  });
-});
-
-describe("estimateTax", () => {
-  test("subtracts RRSP actually contributed this year, then applies the flat rate", () => {
-    const income = { interest: 10, eligibleDividends: 200, foreignIncome: 40, realizedGains: 750 };
-    const estimate = estimateTax(income, 500, 0.3);
-    // total income 1000, minus 500 contributed = 500 taxable, at 30% = 150
-    expect(estimate.taxableIncome).toBe(500);
-    expect(estimate.rrspDeduction).toBe(500);
-    expect(estimate.estimatedTax).toBeCloseTo(150, 5);
-  });
-
-  test("floors taxable income at zero rather than going negative", () => {
-    const income = { interest: 0, eligibleDividends: 100, foreignIncome: 0, realizedGains: 0 };
-    const estimate = estimateTax(income, 5000, 0.3);
-    expect(estimate.taxableIncome).toBe(0);
-    expect(estimate.estimatedTax).toBe(0);
-  });
-
-  test("always carries the not-for-filing disclaimer", () => {
-    const income = { interest: 0, eligibleDividends: 0, foreignIncome: 0, realizedGains: 0 };
-    const estimate = estimateTax(income, 0, 0.3);
-    expect(estimate.disclaimer.length).toBeGreaterThan(0);
-    expect(estimate.disclaimer.toLowerCase()).toContain("not a filing figure");
-  });
-
-  test("uses room contributed, not unused room -- the caller supplies the contributed figure directly", () => {
-    const income = { interest: 0, eligibleDividends: 1000, foreignIncome: 0, realizedGains: 0 };
-    const contributedThisYear = 1000;
-    const estimate = estimateTax(income, contributedThisYear, 0.3);
-    expect(estimate.rrspDeduction).toBe(1000);
-    expect(estimate.taxableIncome).toBe(0);
   });
 });

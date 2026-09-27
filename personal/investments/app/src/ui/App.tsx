@@ -255,7 +255,7 @@ function PortfolioPanel({
           taxable income, {year}", its own h2, and a wrapper heading above it
           said nothing that heading did not, while sitting one level above it
           in the outline. */}
-      <TaxView analytics={all} year={year} />
+      <TaxView analytics={all} year={year} scope={scope} />
       <AboutNumbers notes={[USD_BOOK_COST_NOTE]} />
     </Flex>
   );

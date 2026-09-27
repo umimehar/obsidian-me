@@ -335,10 +335,12 @@ function buildGoldens(): Goldens {
     zeroRateStretchAnnualToClose: contributionToClose(zeroStretch.gap ?? 0, stretchYears, 0),
     income: {
       year: Number(startYear),
-      eligibleDividends: income.eligibleDividends,
-      foreignIncome: income.foreignIncome,
+      canadianDistributions: income.canadianDistributions,
+      foreignDividends: income.foreignDividends,
+      foreignTaxWithheld: income.foreignTaxWithheld,
       interest: income.interest,
       realizedGain: income.realizedGains,
+      costUnknownSales: income.costUnknownSales,
       rrspDeduction: baseInputs.contributedThisYear.RRSP ?? 0,
     },
     month: {

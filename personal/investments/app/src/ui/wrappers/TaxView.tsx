@@ -1,80 +1,95 @@
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import type { AnalyticsOutput } from "../../analytics/build";
-import { type IncomeSummary, estimateTax } from "../../analytics/income";
 import { formatCurrency } from "../format";
+import type { YearScope } from "../scope";
 
 export interface TaxViewProps {
   analytics: AnalyticsOutput;
   year: number;
+  scope: YearScope;
 }
 
-/**
- * The flat rate the estimate applies. A single rate standing in for the real
- * progressive schedule is one of the several reasons this is not a filing
- * figure, which is what the disclaimer beside it says.
- */
-const ESTIMATE_RATE = 0.3;
-
 /** `data-tax-row` is a stable test hook, not styling -- it is what lets a test pin one figure rather than one of several equal-looking ones. */
-function Row({ label, value, hook }: { label: string; value: string; hook: string }) {
+function Row({
+  label,
+  value,
+  hook,
+  tone,
+}: {
+  label: string;
+  value: string;
+  hook: string;
+  tone?: "jade" | "red";
+}) {
   return (
     <Flex justify="between" align="baseline" py="1" data-tax-row={hook}>
       <Text size="2" color="gray">
         {label}
       </Text>
-      <Text size="2">{value}</Text>
+      <Text size="2" color={tone}>
+        {value}
+      </Text>
     </Flex>
   );
 }
 
 /**
  * The realized figure, labelled for what it actually is. Both years in the
- * corpus are losses, and a loss shown under a "gains" label reads as money
- * made. The sign is kept on the figure for the same reason.
+ * corpus can be a loss, and a loss shown under a "gains" label reads as
+ * money made. The sign is kept on the figure for the same reason.
  */
 function RealizedRow({ realizedGains }: { realizedGains: number }) {
   return (
-    <Flex justify="between" align="baseline" py="1" data-tax-row="realized">
-      <Text size="2" color="gray">
-        {realizedGains < 0 ? "Realized loss" : "Realized gains"}
-      </Text>
-      {/* Jade for a gain rather than the default grey: a realized gain and a
-          realized loss are the same kind of figure, and colouring only one of
-          them made the loss look like the exception rather than the sign. */}
-      <Text size="2" color={realizedGains < 0 ? "red" : "jade"}>
-        {formatCurrency(realizedGains)}
-      </Text>
-    </Flex>
+    <Row
+      hook="realized"
+      label={realizedGains < 0 ? "Realized loss" : "Realized gains"}
+      value={formatCurrency(realizedGains)}
+      tone={realizedGains < 0 ? "red" : "jade"}
+    />
   );
 }
 
-/** The RRSP contributed in `year`, which is what the estimate deducts. Zero when the corpus has no RRSP line that year. */
+function CostUnknownRow({ count }: { count: number }) {
+  if (count <= 0) return null;
+  return (
+    <Text size="1" color="gray" data-tax-row="cost-unknown">
+      {count} sale{count === 1 ? "" : "s"} without a cost basis.
+    </Text>
+  );
+}
+
+/** The RRSP contributed in `year`, which is what the deduction line states. Zero when the corpus has no RRSP line that year. */
 function rrspContributedIn(analytics: AnalyticsOutput, year: number): number {
   const lines = analytics.rooms[String(year)] ?? [];
   return lines.find((line) => line.group === "RRSP")?.used ?? 0;
 }
 
+/** "All time" silently shows the latest year's figures, so the heading has to say so rather than let the year read as the one the reader chose. */
+function headingFor(year: number, scope: YearScope): string {
+  return scope === "all" ? `Investment income, latest year ${year}` : `Investment income, ${year}`;
+}
+
 /**
  * Personal taxable investment income for one year, straight off
- * `analytics.income[year]`, plus the rough estimate from `estimateTax`.
- *
- * What is missing from these figures is stated on the page rather than left
- * to be noticed: the corporate account is outside the personal estimate by
- * design, and the estimate's own disclaimer sits with the estimate, not in a
- * footnote a reader can scroll past.
+ * `analytics.income[year]`: interest, dividends split Canadian versus
+ * foreign, foreign tax withheld (a credit, not an expense), and realized
+ * gains or losses. The RRSP deduction is stated as a separate fact -- money
+ * contributed this year, deductible against total income -- never netted
+ * against investment income into a fabricated "taxable income" figure.
  */
-export function TaxView({ analytics, year }: TaxViewProps) {
+export function TaxView({ analytics, year, scope }: TaxViewProps) {
   const income = analytics.income[String(year)];
   const rrspContributed = rrspContributedIn(analytics, year);
+  const heading = headingFor(year, scope);
 
   if (income === undefined) {
     // A year can reach here with room lines but no income entry, since the
-    // year control is driven by the rooms map. Four zeros would read as a
-    // real position rather than as data that is not there.
+    // year control is driven by the rooms map. Zeros would read as a real
+    // position rather than as data that is not there.
     return (
       <Flex direction="column" gap="3">
         <Heading size="5" as="h2">
-          Personal taxable income, {year}
+          {heading}
         </Heading>
         <Card>
           <Text size="2" color="gray">
@@ -85,47 +100,40 @@ export function TaxView({ analytics, year }: TaxViewProps) {
     );
   }
 
-  const estimate = estimateTax(income, rrspContributed, ESTIMATE_RATE);
-
   return (
     <Flex direction="column" gap="3">
       <Heading size="5" as="h2">
-        Personal taxable income, {year}
+        {heading}
       </Heading>
 
       <Card data-tax-income="">
         <Row hook="interest" label="Interest" value={formatCurrency(income.interest)} />
         <Row
-          hook="eligible-dividends"
-          label="Canadian eligible dividends"
-          value={formatCurrency(income.eligibleDividends)}
+          hook="canadian-distributions"
+          label="Distributions from Canadian listed securities"
+          value={formatCurrency(income.canadianDistributions)}
         />
         <Row
-          hook="foreign-income"
-          label="Foreign income"
-          value={formatCurrency(income.foreignIncome)}
+          hook="foreign-dividends"
+          label="Foreign dividends"
+          value={formatCurrency(income.foreignDividends)}
+        />
+        <Row
+          hook="foreign-tax-withheld"
+          label="Foreign tax withheld (a credit you can claim)"
+          value={formatCurrency(income.foreignTaxWithheld)}
         />
         <RealizedRow realizedGains={income.realizedGains} />
+        <CostUnknownRow count={income.costUnknownSales} />
       </Card>
 
-      <Card data-tax-estimate="">
-        <Row
-          hook="rrsp-deduction"
-          label="RRSP contributed this year"
-          value={formatCurrency(estimate.rrspDeduction)}
-        />
-        <Row
-          hook="taxable-income"
-          label="Taxable income"
-          value={formatCurrency(estimate.taxableIncome)}
-        />
-        <Row
-          hook="estimated-tax"
-          label={`Estimated tax at a flat ${Math.round(ESTIMATE_RATE * 100)}% rate`}
-          value={formatCurrency(estimate.estimatedTax)}
-        />
-        <Text size="1" color="gray">
-          {estimate.disclaimer}
+      <Card data-tax-rrsp="">
+        <Text size="2" color="gray" data-tax-row="rrsp-deduction">
+          RRSP deduction available:{" "}
+          <Text as="span" weight="bold">
+            {formatCurrency(rrspContributed)}
+          </Text>{" "}
+          contributed in {year}, deductible against your total income, including salary.
         </Text>
       </Card>
 

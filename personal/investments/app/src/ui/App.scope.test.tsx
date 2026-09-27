@@ -137,7 +137,7 @@ describe("the year filter reaches every tab that can honour it", () => {
     expect(screen.queryByRole("radiogroup", { name: "Tax year" })).toBeNull();
 
     openTab("Portfolio");
-    expect(screen.getByRole("heading", { name: "Personal taxable income, 2024" })).toBeDefined();
+    expect(screen.getByRole("heading", { name: "Investment income, 2024" })).toBeDefined();
   });
 
   test("This month limits its picker to the year scope, defaulting to that year's latest month", async () => {

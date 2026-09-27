@@ -38,7 +38,7 @@ const ZERO_TOTALS: ActivityTotals = {
  * row passes through unchanged. A USD row on a statement with no disclosed
  * rate throws naming the statement, rather than silently treating it as CAD.
  */
-function convertToCad(amount: number, row: ActivityRow, statement: Statement): number {
+export function convertToCad(amount: number, row: ActivityRow, statement: Statement): number {
   if (row.currency === "CAD") return amount;
   if (statement.fxRate === null) {
     throw new Error(
