@@ -4,7 +4,7 @@ import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
 import { ReturnsChart } from "./ReturnsChart";
 import { formatPeriodLabel } from "./plot";
-import { buildReturnsSeries, chartedReturnAccounts, plottedCount } from "./returnsSeries";
+import { buildReturnsSeries, chartedReturnAccounts } from "./returnsSeries";
 
 /** The Crypto account's masked id, for the single-statement fixture below. */
 function cryptoMaskedId(): string {
@@ -20,14 +20,15 @@ function cryptoMaskedId(): string {
  * quietly changing what the page claims.
  */
 const analytics = loadAnalytics();
-/** Exactly the accounts the grid renders: Chequing and zero-plotted accounts dropped. */
+/**
+ * Exactly the accounts the grid renders: Chequing and zero-plotted accounts
+ * dropped. Used where a test needs the actual accounts (their shortIds, for
+ * example); the plain counts below come from `GOLDENS` instead, the same way
+ * every other corpus figure in this file does.
+ */
 const chartedAccounts = chartedReturnAccounts(
   buildReturnsSeries(analytics.returns, analytics.series),
   analytics.series,
-);
-const chartedPlottedTotal = chartedAccounts.reduce(
-  (sum, account) => sum + plottedCount(account.points),
-  0,
 );
 
 function renderChart() {
@@ -57,8 +58,8 @@ describe("provenance on screen", () => {
     const note = document.querySelector("[data-returns-provenance]");
     // Counted over the charted accounts, not the whole corpus: Chequing and
     // any zero-plotted account are never on this page to be counted.
-    expect(note?.textContent).toContain(`2 of ${chartedAccounts.length} accounts`);
-    expect(note?.textContent).toContain(`The other ${chartedAccounts.length - 2}`);
+    expect(note?.textContent).toContain(`2 of ${GOLDENS.returnsChartedCount} accounts`);
+    expect(note?.textContent).toContain(`The other ${GOLDENS.returnsChartedCount - 2}`);
   });
 
   test("says the other accounts' rates are computed here, not Wealthsimple's own", () => {
@@ -148,7 +149,7 @@ describe("a gap breaks the line and is never drawn at zero", () => {
     // would mean a null month got drawn, which on this chart means drawn at
     // zero -- a real rate of nothing rather than a gap.
     const dots = document.querySelectorAll("[data-returns-dot]");
-    expect(dots).toHaveLength(chartedPlottedTotal);
+    expect(dots).toHaveLength(GOLDENS.returnsChartedPlottedTotal);
     const onZero = [...dots].filter((dot) => Number(dot.getAttribute("cy")) === zeroY);
     // The genuine 0.00% months all belonged to the Chequing accounts, which
     // the grid no longer draws: no charted account holds an exact 0.00%.
@@ -317,7 +318,7 @@ describe("the rate axis", () => {
     const ys = [...document.querySelectorAll("[data-returns-dot]")].map((dot) =>
       Number(dot.getAttribute("cy")),
     );
-    expect(ys).toHaveLength(chartedPlottedTotal);
+    expect(ys).toHaveLength(GOLDENS.returnsChartedPlottedTotal);
     expect(Math.min(...ys)).toBeGreaterThanOrEqual(0);
     expect(Math.max(...ys)).toBeLessThanOrEqual(innerHeight);
     // And the negatives really do sit below the zero line, not clamped onto it.
@@ -436,7 +437,7 @@ describe("the chart is a responsive graphic", () => {
     const cards = [...document.querySelectorAll("[data-returns-card]")].map((node) =>
       node.getAttribute("data-returns-card"),
     );
-    expect(cards).toHaveLength(chartedAccounts.length);
+    expect(cards).toHaveLength(GOLDENS.returnsChartedCount);
     expect(cards.slice(0, 2)).toEqual(["9710", "d6d9"]);
     expect(cards).not.toContain("18a3");
     expect(cards).not.toContain("2b74");

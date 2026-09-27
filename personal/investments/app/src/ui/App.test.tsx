@@ -2,16 +2,8 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { GOLDENS } from "../goldens";
 import { App } from "./App";
-import { buildReturnsSeries, chartedReturnAccounts } from "./charts/returnsSeries";
-import { loadAnalytics } from "./data";
 import { formatCurrency, formatGainWithShare } from "./format";
 import { coarseForm, expectNoCoarseForm } from "./testSupport/coarseForm";
-
-/** Exactly the accounts the Growth tab's returns grid renders. */
-const chartedAccounts = chartedReturnAccounts(
-  buildReturnsSeries(loadAnalytics().returns, loadAnalytics().series),
-  loadAnalytics().series,
-);
 
 function roomCard(group: string) {
   const node = document.querySelector(`[data-room-line="${group}"]`);
@@ -38,9 +30,11 @@ describe("App", () => {
   test("the growth tab holds the returns chart, with its provenance stated", () => {
     render(<App />);
     clickTab("Growth");
-    expect(document.querySelectorAll("[data-returns-card]").length).toBe(chartedAccounts.length);
+    expect(document.querySelectorAll("[data-returns-card]").length).toBe(
+      GOLDENS.returnsChartedCount,
+    );
     expect(document.querySelector("[data-returns-provenance]")?.textContent).toContain(
-      `2 of ${chartedAccounts.length} accounts`,
+      `2 of ${GOLDENS.returnsChartedCount} accounts`,
     );
   });
 
@@ -137,7 +131,7 @@ describe("App", () => {
   test("the hero and its chart show only on portfolio; other tabs carry the summary strip instead", () => {
     render(<App />);
     expect(document.querySelector("[data-portfolio-total]")).not.toBeNull();
-    expect(document.querySelector("svg[role='img'] title")).toBeDefined();
+    expect(document.querySelector("svg[role='img'] title")).not.toBeNull();
     expect(
       [...document.querySelectorAll("svg title")].some(
         (title) => title.textContent === "Portfolio value over time",
@@ -157,6 +151,22 @@ describe("App", () => {
     expect(strip?.textContent).toContain(formatCurrency(GOLDENS.portfolio.total));
 
     // The year filter stays reachable on every tab, growth included.
+    expect(screen.getByRole("radiogroup", { name: "Year" })).toBeDefined();
+  });
+
+  test("the summary strip on every non-portfolio tab states the gain against book cost", () => {
+    render(<App />);
+    const gainText = formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost);
+
+    for (const label of ["Growth", "Plan", "Data"]) {
+      clickTab(label);
+      const strip = document.querySelector("[data-summary-strip]");
+      expect(strip).not.toBeNull();
+      expect(strip?.textContent).toContain(gainText);
+    }
+
+    // The year filter reaches Data too, not only Growth and Plan.
+    clickTab("Data");
     expect(screen.getByRole("radiogroup", { name: "Year" })).toBeDefined();
   });
 

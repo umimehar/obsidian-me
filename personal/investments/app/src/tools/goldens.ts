@@ -17,7 +17,12 @@ import { fittedReturnRate } from "../projection/fittedRate";
 import { projectedAccounts, projectionInputs } from "../projection/inputs";
 import type { Datastore } from "../store/datastore";
 import type { ReturnValuePoint } from "../ui/charts/returnsSeries";
-import { accountRateExtent, buildReturnsSeries, plottedCount } from "../ui/charts/returnsSeries";
+import {
+  accountRateExtent,
+  buildReturnsSeries,
+  chartedReturnAccounts,
+  plottedCount,
+} from "../ui/charts/returnsSeries";
 import { latestPeriod, lensTotal, loadAnalytics, loadReconciliation } from "../ui/data";
 
 const DATA = join(import.meta.dir, "..", "..", "..", "data");
@@ -220,6 +225,10 @@ function buildGoldens(): Goldens {
 
   const returnsSeries = buildReturnsSeries(analytics.returns, series);
   const returns = buildReturnGoldens(returnsSeries);
+  // The accounts the Growth tab's grid actually draws: Chequing and any
+  // zero-plotted account dropped, via the same production filter the chart
+  // calls.
+  const chartedReturns = chartedReturnAccounts(returnsSeries, series);
 
   const acknowledged = reconciliation.findings.filter((f) => f.acknowledged);
 
@@ -269,11 +278,8 @@ function buildGoldens(): Goldens {
     accounts,
     allocations,
     returns,
-    returnsWithNoRate: returnsSeries
-      .filter((a) => plottedCount(a.points) === 0)
-      .map((a) => a.shortId)
-      .sort(),
-    returnsPlottedTotal: returnsSeries.reduce((sum, a) => sum + plottedCount(a.points), 0),
+    returnsChartedCount: chartedReturns.length,
+    returnsChartedPlottedTotal: chartedReturns.reduce((sum, a) => sum + plottedCount(a.points), 0),
     cashflow: {
       period: lastCashflow.period,
       deposits: lastCashflow.deposits,

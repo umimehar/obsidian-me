@@ -359,10 +359,8 @@
       ]
     }
   },
-  "returnsWithNoRate": [
-    "8297"
-  ],
-  "returnsPlottedTotal": 145,
+  "returnsChartedCount": 11,
+  "returnsChartedPlottedTotal": 124,
   "cashflow": {
     "period": "2026-08",
     "deposits": 11547,

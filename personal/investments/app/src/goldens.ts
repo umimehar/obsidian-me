@@ -98,10 +98,14 @@ export interface Goldens {
    * every import, so every one of these moves.
    */
   returns: Record<string, { points: number; plotted: number; extent: [number, number] | null }>;
-  /** Accounts with no computable rate at all -- their card draws no line and says why. */
-  returnsWithNoRate: string[];
-  /** Total plotted dots across every account's return chart. */
-  returnsPlottedTotal: number;
+  /**
+   * How many accounts the Growth tab's returns grid actually draws --
+   * `chartedReturnAccounts` over the corpus, so a Chequing account or one
+   * cut back to zero plotted points never inflates this count.
+   */
+  returnsChartedCount: number;
+  /** Total plotted dots across every CHARTED account's return chart, matching the grid, not the whole corpus. */
+  returnsChartedPlottedTotal: number;
   cashflow: {
     /** The last month of the cashflow series. */
     period: string;
@@ -219,8 +223,8 @@ function isGoldens(value: unknown): value is Goldens {
     typeof c.accounts === "object" &&
     typeof c.allocations === "object" &&
     typeof c.returns === "object" &&
-    Array.isArray(c.returnsWithNoRate) &&
-    typeof c.returnsPlottedTotal === "number" &&
+    typeof c.returnsChartedCount === "number" &&
+    typeof c.returnsChartedPlottedTotal === "number" &&
     typeof c.cashflow === "object" &&
     typeof c.fittedRate === "object" &&
     typeof c.projection === "object" &&
