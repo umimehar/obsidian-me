@@ -302,14 +302,39 @@ function ContributionsPanel({
   );
 }
 
-function PlanPanel({ all, scope }: { all: AnalyticsOutput; scope: YearScope }) {
+interface FuturePanelProps {
+  all: AnalyticsOutput;
+  scope: YearScope;
+  accountOptions: readonly AccountSeries[];
+  accounts: Set<string>;
+  onAccountsChange: (accounts: Set<string>) => void;
+  subject: string;
+}
+
+function FuturePanel({
+  all,
+  scope,
+  accountOptions,
+  accounts,
+  onAccountsChange,
+  subject,
+}: FuturePanelProps) {
   return (
     <Flex direction="column" gap="6">
       {/* The projection is a thirty-year forecast: a past year does not
           scope it, and re-basing it to that year's close would quietly
           produce a different forecast that looks just as authoritative.
-          It reads the UNSCOPED payload and says so on the tab. */}
-      <ProjectionsView analytics={all} scopeNote={scope !== "all"} />
+          It reads the UNSCOPED payload and says so on the tab. The account
+          selection is shared with Portfolio's own filter, not a second one. */}
+      <ProjectionsView
+        analytics={all}
+        scopeNote={scope !== "all"}
+        accountOptions={accountOptions}
+        accounts={accounts}
+        onAccountsChange={onAccountsChange}
+        onReset={() => onAccountsChange(defaultSelection(all.series))}
+        subject={subject}
+      />
     </Flex>
   );
 }
@@ -419,9 +444,16 @@ function Dashboard() {
         <ContributionsPanel analytics={analytics} all={all} year={year} />
       </WithSummary>
     ),
-    plan: (
+    future: (
       <WithSummary {...summary}>
-        <PlanPanel all={all} scope={scope} />
+        <FuturePanel
+          all={all}
+          scope={scope}
+          accountOptions={accountOptions}
+          accounts={accounts}
+          onAccountsChange={setAccounts}
+          subject={subject}
+        />
       </WithSummary>
     ),
     data: (

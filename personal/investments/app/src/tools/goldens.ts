@@ -15,10 +15,13 @@ import { accountValues, buildAllocations } from "../goals/allocation";
 import { contributionToClose, evaluateGoal } from "../goals/evaluate";
 import { buildRunway } from "../goals/runway";
 import type { Goldens } from "../goldens";
+import { loadPlan, retirementYear as planRetirementYear } from "../plan";
 import { type ProjectionYear, projectYears } from "../projection/engine";
 import { fittedReturnRate } from "../projection/fittedRate";
 import { projectedAccounts, projectionInputs } from "../projection/inputs";
+import { milestoneYear, retirementIncome, runScenarios } from "../projection/scenario";
 import type { Datastore } from "../store/datastore";
+import { defaultSelection } from "../ui/chartAccounts";
 import type { ReturnValuePoint } from "../ui/charts/returnsSeries";
 import {
   accountRateExtent,
@@ -164,6 +167,39 @@ function buildGoalGoldens(
   return goals;
 }
 
+type FutureGoldens = Pick<
+  Goldens["projection"],
+  | "retirementYear"
+  | "retirementReal"
+  | "retirementNominal"
+  | "retirementMonthlyIncome"
+  | "milestone500kYear"
+  | "milestone1mYear"
+>;
+
+/** The Future tab's own headline figures, run through the same production functions the page calls. */
+function buildFutureGoldens(analytics: AnalyticsOutput, startYear: string): FutureGoldens {
+  const plan = loadPlan();
+  const retireYear = planRetirementYear(plan);
+  const years = Math.max(30, retireYear - Number(startYear));
+  const scenarios = runScenarios(analytics, defaultSelection(analytics.series), {
+    rate: 0.06,
+    spread: 0.02,
+    inflation: plan.inflation,
+    years,
+  });
+  const point = scenarios.base.points.find((p) => Number(p.year) === retireYear);
+  const income = retirementIncome(scenarios.base.points, retireYear, plan.withdrawalRate);
+  return {
+    retirementYear: retireYear,
+    retirementReal: point?.real ?? 0,
+    retirementNominal: point?.nominal ?? 0,
+    retirementMonthlyIncome: income?.monthly ?? 0,
+    milestone500kYear: milestoneYear(scenarios.base.points, 500_000),
+    milestone1mYear: milestoneYear(scenarios.base.points, 1_000_000),
+  };
+}
+
 function buildGoldens(): Goldens {
   const analytics = loadAnalytics();
   const reconciliation = loadReconciliation();
@@ -194,6 +230,8 @@ function buildGoldens(): Goldens {
   const baseInputs = projectionInputs(analytics);
   const atDefault = projectYears({ ...baseInputs, returnRate: 0.06 });
   const atFitted = projectYears({ ...baseInputs, returnRate: fitted.rate });
+
+  const future = buildFutureGoldens(analytics, baseInputs.startYear);
   const runwayRows = buildRunway(atDefault, { ...baseInputs, returnRate: 0.06 });
   const lastDefault = required(atDefault[atDefault.length - 1], "projected years at 6%");
   const lastFitted = required(atFitted[atFitted.length - 1], "projected years at the fitted rate");
@@ -323,6 +361,7 @@ function buildGoldens(): Goldens {
       fhsaCloseYear: baseInputs.fhsaCloseYear,
       fhsaCapYear,
       fhsaValueAtCapYear: fhsaCapIndex < 0 ? 0 : (fhsaSeries?.values[fhsaCapIndex] ?? 0),
+      ...future,
     },
     rooms: {
       opening: baseInputs.opening,

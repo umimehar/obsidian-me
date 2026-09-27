@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { PortfolioPoint } from "../../analytics/portfolioSeries";
-import type { ProjectionYear } from "../../projection/engine";
+import type { Scenario, ScenarioSet } from "../../projection/scenario";
 import { ProjectionChart } from "./ProjectionChart";
 import { tickY } from "./chartTestSupport";
 import { type ProjectionSeries, buildProjectionSeries } from "./projectionSeries";
@@ -12,30 +12,31 @@ function history(period: string, marketValue: number): PortfolioPoint {
   return { period, marketValue, bookCost: marketValue, accountCount: 1 };
 }
 
-function row(year: string, value: number): ProjectionYear {
+function scenario(rate: number, years: [string, number][]): Scenario {
   return {
-    year,
-    contributions: { TFSA: 7000 },
-    grant: 500,
-    roomRemaining: { TFSA: 0 },
-    cumulativeIn: 7000,
-    cumulativeGrant: 500,
-    withdrawn: 0,
-    value,
-    notes: [],
+    rate,
+    points: [
+      { year: "opening", nominal: 0, real: 0 },
+      ...years.map(([year, value]) => ({ year, nominal: value, real: value })),
+    ],
   };
 }
 
-/**
- * Two decades of headroom either side of the marks, so a mark that lands on a
- * tick is interior to the plot rather than pinned to its top or bottom edge.
- * A mark drawn at the axis end would agree with its tick even if every mark
- * were clamped.
- */
-const DOMAIN = [10000, 10000000] as const;
+function scenarioSet(base: Scenario, low: Scenario, high: Scenario): ScenarioSet {
+  return { base, low, high, startYear: "2026", uncompounded: [] };
+}
 
-function renderChart(series: ProjectionSeries, rate = 0.06) {
-  render(<ProjectionChart series={series} domain={DOMAIN} rate={rate} />);
+function renderChart(series: ProjectionSeries, rate = 0.06, retirementYear = 2027) {
+  render(
+    <ProjectionChart
+      series={series}
+      rate={rate}
+      low={0.04}
+      high={0.08}
+      retirementYear={retirementYear}
+      dollars="nominal"
+    />,
+  );
 }
 
 function chart(): HTMLElement {
@@ -58,11 +59,16 @@ function announced(): string {
   return document.querySelector("[data-cursor-announcement]")?.textContent ?? "";
 }
 
-/** $100,000 stated, then one projected year at $1,000,000: both land on a labelled tick. */
+/** $200,000 stated, then one projected year at $1,000,000 base with a $800k-$1.2m band. */
 function onTickSeries(): ProjectionSeries {
   return buildProjectionSeries(
-    [history("2026-05", 50000), history("2026-06", 100000)],
-    [row("2027", 1000000)],
+    [history("2026-05", 50000), history("2026-06", 200000)],
+    scenarioSet(
+      scenario(0.06, [["2027", 1000000]]),
+      scenario(0.04, [["2027", 800000]]),
+      scenario(0.08, [["2027", 1200000]]),
+    ),
+    "nominal",
   );
 }
 
@@ -93,8 +99,6 @@ describe("the seam is drawn, not described", () => {
     renderChart(onTickSeries());
     const seamX = Number(path("seam")?.querySelector("line")?.getAttribute("x1"));
     for (const point of pathPoints("history-line")) expect(point.x).toBeLessThanOrEqual(seamX);
-    // The projected path's own first point IS the seam, which is why the
-    // assumption grows out of the last stated figure rather than beside it.
     for (const point of pathPoints("projection-line").slice(1)) {
       expect(point.x).toBeGreaterThan(seamX);
     }
@@ -102,119 +106,38 @@ describe("the seam is drawn, not described", () => {
 });
 
 describe("the two halves are distinguished in the DOM, and never by colour alone", () => {
-  test("the stated line is solid and the projected line is dashed", () => {
+  test("the stated line is solid and the base projection line is dashed", () => {
     renderChart(onTickSeries());
     expect(path("history-line")?.getAttribute("stroke-dasharray")).toBeNull();
     expect(path("projection-line")?.getAttribute("stroke-dasharray")).toBe("5 4");
   });
 
-  test("the stated area is a flat fill and the projected area is a hatch pattern", () => {
+  test("the band is a shaded area, not a line", () => {
     renderChart(onTickSeries());
-    const hatchId = path("projection-hatch")?.getAttribute("id") ?? "";
-    expect(hatchId).not.toBe("");
-    expect(path("projection-area")?.getAttribute("fill")).toBe(`url(#${hatchId})`);
-    expect(path("history-area")?.getAttribute("fill")).not.toContain("url(");
+    expect(path("band-area")?.getAttribute("fill")).not.toBe("none");
+    expect(path("band-area")?.getAttribute("stroke")).toBe("none");
   });
 
-  test("the hatch is a real pattern with marks in it, not an empty definition", () => {
-    renderChart(onTickSeries());
-    expect(path("projection-hatch")?.querySelectorAll("line").length).toBe(1);
-  });
-
-  /**
-   * Colour is the one distinction a reader may not have. Stripping every
-   * fill and stroke colour from both halves must still leave them
-   * distinguishable, which is what the dash and the hatch are for.
-   */
-  test("the two halves still differ once colour is ignored", () => {
-    renderChart(onTickSeries());
-    const historyShape = [
-      path("history-line")?.getAttribute("stroke-dasharray"),
-      path("history-area")?.getAttribute("fill")?.startsWith("url("),
-    ];
-    const projectionShape = [
-      path("projection-line")?.getAttribute("stroke-dasharray"),
-      path("projection-area")?.getAttribute("fill")?.startsWith("url("),
-    ];
-    expect(historyShape).not.toEqual(projectionShape);
-  });
-
-  test("the legend names both halves and its swatches carry the chart's own marks", () => {
+  test("the legend names all three marks and states the band's rate range", () => {
     renderChart(onTickSeries());
     const legend = document.querySelector("[data-projection-legend]")?.textContent ?? "";
     expect(legend).toContain("Solid, left of the seam: market value your statements state.");
-    expect(legend).toContain("Hatched and dashed, right of the seam: a projection");
-    const projectionSwatch = document.querySelector('[data-legend-swatch="projection"]');
-    const historySwatch = document.querySelector('[data-legend-swatch="history"]');
-    expect(projectionSwatch?.getAttribute("fill")).toBe(
-      path("projection-area")?.getAttribute("fill"),
+    expect(legend).toContain("Dashed, right of the seam: the base rate");
+    expect(document.querySelector("[data-projection-band-note]")?.textContent).toBe(
+      "Shaded band: the range between 4.00% and 8.00% a year.",
     );
-    expect(projectionSwatch?.getAttribute("stroke-dasharray")).toBe("5 4");
-    expect(historySwatch?.getAttribute("fill")).toBe(path("history-area")?.getAttribute("fill"));
   });
 });
 
 describe("a mark's position is a figure", () => {
-  /**
-   * A ratio between two marks cannot catch a mutation that scales every mark
-   * by one constant, so each half's extent is anchored to the axis's own
-   * labelled gridline, drawn by `Gridlines` from the same scale but a separate
-   * code path.
-   */
-  test("a $100,000 stated point sits on the axis's own $100,000 tick", () => {
+  test("a $200,000 stated point sits on the axis's own $200,000 tick", () => {
     renderChart(onTickSeries());
-    expect(pathPoints("history-line").at(-1)?.y).toBeCloseTo(tickY("$100,000"), 6);
+    expect(pathPoints("history-line").at(-1)?.y).toBeCloseTo(tickY("$200,000"), 6);
   });
 
   test("a $1,000,000 projected point sits on the axis's own $1,000,000 tick", () => {
     renderChart(onTickSeries());
     expect(pathPoints("projection-line").at(-1)?.y).toBeCloseTo(tickY("$1,000,000"), 6);
-  });
-
-  test("a $50,000 stated point sits between the $10,000 and $100,000 ticks, in proportion", () => {
-    renderChart(onTickSeries());
-    const y = pathPoints("history-line")[0]?.y ?? Number.NaN;
-    const decade = tickY("$10,000") - tickY("$100,000");
-    expect(y).toBeCloseTo(tickY("$100,000") + decade * (1 - Math.log10(5)), 6);
-  });
-
-  test("both areas close down to the plot floor rather than to an arbitrary baseline", () => {
-    renderChart(onTickSeries());
-    const floor = Math.max(...pathPoints("history-area").map((point) => point.y));
-    const projectionFloor = Math.max(...pathPoints("projection-area").map((point) => point.y));
-    expect(floor).toBe(294);
-    expect(projectionFloor).toBe(294);
-  });
-
-  /**
-   * Seven evenly spaced labels running $1,000 to $1,000,000,000 look linear,
-   * and a reader who takes them that way reads the plot's midpoint as about
-   * half the end figure when it is really around $31,600, and reads thirty
-   * years of compounding rising less than three years of history as growth
-   * flattening off. Nothing else on screen contradicts either reading, so the
-   * legend has to name the scale rather than leave the gridlines to imply it.
-   */
-  test("the legend names the scale, in the open, not only when the cursor finds a zero month", () => {
-    renderChart(onTickSeries());
-    expect(document.querySelector("[data-projection-scale-note]")?.textContent).toBe(
-      "Each gridline is ten times the one below it, not a fixed step, which is what fits thirty years of compounding beside three years of history.",
-    );
-  });
-
-  test("the accessible summary names the same scale, in the same words", () => {
-    renderChart(onTickSeries());
-    const note = document.querySelector("[data-projection-scale-note]")?.textContent ?? "";
-    expect(note).not.toBe("");
-    expect(chart().getAttribute("aria-label")).toContain(note);
-  });
-
-  test("the ticks are the decades of the domain the caller supplied", () => {
-    renderChart(onTickSeries());
-    const labels = [...document.querySelectorAll("svg text")].map((node) => node.textContent);
-    expect(labels).toContain("$10,000");
-    expect(labels).toContain("$100,000");
-    expect(labels).toContain("$1,000,000");
-    expect(labels).toContain("$10,000,000");
   });
 
   test("the axis names its own ends, the first stated month and the last projected year", () => {
@@ -224,25 +147,40 @@ describe("a mark's position is a figure", () => {
     expect(labels).toContain("Dec 2027");
   });
 
-  test("one stated point is drawn per stated month, and a stated zero is not drawn", () => {
+  test("one stated point is drawn per stated month", () => {
     const series = buildProjectionSeries(
-      [history("2023-06", 0), history("2023-07", 20000), history("2023-08", 30000)],
-      [row("2024", 50000)],
+      [history("2023-06", 10000), history("2023-07", 20000), history("2023-08", 30000)],
+      scenarioSet(scenario(0.06, [["2024", 50000]]), scenario(0.04, []), scenario(0.08, [])),
+      "nominal",
     );
     renderChart(series);
-    expect(pathPoints("history-line").length).toBe(2);
-    expect(chart().getAttribute("aria-label")).toContain(
-      "1 stated month at or below zero is not drawn",
-    );
+    expect(pathPoints("history-line").length).toBe(3);
   });
 
   test("one projected point is drawn per projected year, plus the seam it grows from", () => {
     const series = buildProjectionSeries(
-      [history("2026-06", 100000)],
-      [row("2027", 200000), row("2028", 300000), row("2029", 400000)],
+      [history("2026-06", 200000)],
+      scenarioSet(
+        scenario(0.06, [
+          ["2027", 200000],
+          ["2028", 300000],
+          ["2029", 400000],
+        ]),
+        scenario(0.04, []),
+        scenario(0.08, []),
+      ),
+      "nominal",
     );
     renderChart(series);
     expect(pathPoints("projection-line").length).toBe(4);
+  });
+});
+
+describe("the retirement rule", () => {
+  test("is drawn and labelled Age 60 at the retirement year", () => {
+    renderChart(onTickSeries(), 0.06, 2027);
+    const rule = document.querySelector("[data-retirement-rule]");
+    expect(rule?.textContent).toBe("Age 60");
   });
 });
 
@@ -253,13 +191,14 @@ describe("the readout", () => {
     expect(announced()).toContain("May 2026. Market value $50,000.00. Stated, history.");
   });
 
-  test("a projected month announces the rate it assumes and never claims to be stated", () => {
+  test("a projected month announces the rate it assumes and the band either side", () => {
     renderChart(onTickSeries());
     fireEvent.keyDown(chart(), { key: "End" });
     const spoken = announced();
     expect(spoken).toContain("Dec 2027");
     expect(spoken).toContain("Projected value $1,000,000.00");
     expect(spoken).toContain("A scenario at 6.00% a year, not a stated figure");
+    expect(spoken).toContain("Range $800,000.00 to $1,200,000.00");
   });
 
   test("the tooltip, the announcement and the accessible name carry one set of words", () => {
@@ -267,35 +206,8 @@ describe("the readout", () => {
     fireEvent.keyDown(chart(), { key: "End" });
     const tooltip = document.querySelector("[data-chart-tooltip]")?.textContent ?? "";
     expect(tooltip).toContain("Projected value $1,000,000.00");
-    expect(chart().getAttribute("aria-label")).toContain("Projected value $1,000,000.00");
+    expect(chart().getAttribute("aria-label")).toContain("reaches $1,000,000.00");
     expect(announced()).toContain("Projected value $1,000,000.00");
-  });
-
-  /** A figure a reader hears must not be coarser than the one on screen. */
-  test("a projected figure keeps its cents", () => {
-    const series = buildProjectionSeries([history("2026-06", 100000)], [row("2027", 7636455.38)]);
-    renderChart(series);
-    fireEvent.keyDown(chart(), { key: "End" });
-    expect(announced()).toContain("$7,636,455.38");
-    expect(announced()).not.toContain("$7,636,455 ");
-  });
-
-  /**
-   * Stepping crosses the seam without stopping anywhere invented. The months
-   * between two projected Decembers are not missing data, so the keyboard
-   * walks the points rather than the calendar.
-   */
-  test("stepping right from the last stated month lands on the first projected year", () => {
-    const series = buildProjectionSeries(
-      [history("2026-01", 20000), history("2026-06", 100000)],
-      [row("2027", 200000), row("2028", 300000)],
-    );
-    renderChart(series);
-    fireEvent.keyDown(chart(), { key: "Home" });
-    fireEvent.keyDown(chart(), { key: "ArrowRight" });
-    expect(announced()).toContain("Jun 2026. Market value $100,000.00. Stated, history.");
-    fireEvent.keyDown(chart(), { key: "ArrowRight" });
-    expect(announced()).toContain("Dec 2027. Projected value $200,000.00");
   });
 
   test("the crosshair is absent until the cursor moves, then marks the point", () => {
@@ -311,15 +223,28 @@ describe("the accessible summary", () => {
     renderChart(onTickSeries());
     const label = chart().getAttribute("aria-label") ?? "";
     expect(label).toContain("drawn solid from May 2026 to Jun 2026");
-    expect(label).toContain("ending at $100,000.00");
-    expect(label).toContain("To the right of Jun 2026 a hatched projection at 6.00% a year");
-    expect(label).toContain("reaches $1,000,000.00 by Dec 2027");
+    expect(label).toContain("ending at $200,000.00");
+    expect(label).toContain("a dashed base scenario at 6.00% a year reaches $1,000,000.00");
     expect(label).toContain("a scenario, not a figure any statement states");
   });
 
   test("states the rate it was handed, not a fixed one", () => {
     renderChart(onTickSeries(), 0.24839250232739074);
-    expect(chart().getAttribute("aria-label")).toContain("hatched projection at 24.84% a year");
+    expect(chart().getAttribute("aria-label")).toContain("base scenario at 24.84% a year");
+  });
+
+  test("names today's dollars when in that mode", () => {
+    render(
+      <ProjectionChart
+        series={onTickSeries()}
+        rate={0.06}
+        low={0.04}
+        high={0.08}
+        retirementYear={2027}
+        dollars="real"
+      />,
+    );
+    expect(chart().getAttribute("aria-label")).toContain("in today's dollars");
   });
 });
 
@@ -333,20 +258,14 @@ describe("the chart is a responsive graphic", () => {
 
 describe("nothing to draw", () => {
   test("an empty series says so rather than drawing an axis into nothing", () => {
-    render(<ProjectionChart series={buildProjectionSeries([], [])} domain={DOMAIN} rate={0.06} />);
+    const series = buildProjectionSeries(
+      [],
+      scenarioSet(scenario(0.06, []), scenario(0.04, []), scenario(0.08, [])),
+      "nominal",
+    );
+    renderChart(series);
     expect(screen.getByText(/nothing to project from/)).toBeDefined();
     expect(path("history-line")).toBeNull();
     expect(path("projection-line")).toBeNull();
-  });
-
-  test("a history of nothing but stated zeros draws no marks either", () => {
-    render(
-      <ProjectionChart
-        series={buildProjectionSeries([history("2023-06", 0)], [])}
-        domain={DOMAIN}
-        rate={0.06}
-      />,
-    );
-    expect(path("history-line")).toBeNull();
   });
 });

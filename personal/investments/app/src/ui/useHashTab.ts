@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import type { YearScope } from "./scope";
 
-export type TabId = "month" | "portfolio" | "growth" | "contributions" | "plan" | "data";
+export type TabId = "month" | "portfolio" | "growth" | "contributions" | "future" | "data";
 
 export const TABS: readonly TabId[] = [
   "month",
   "portfolio",
   "growth",
   "contributions",
-  "plan",
+  "future",
   "data",
 ];
 
@@ -18,14 +18,16 @@ export const TABS: readonly TabId[] = [
  * map, so a link never resolves to a name that is no longer a real tab.
  * None of these map to "month": it is new, with no old tab that ever meant
  * it. `wrappers` now resolves to `contributions`, where the registered
- * planner actually lives; `plan` stays a real tab of its own until Future
- * lands and takes over the projection, so it needs no legacy entry yet.
+ * planner actually lives. `plan` and `projections` both resolve to
+ * `future`, which took over the projection when the interim `plan` tab was
+ * removed.
  */
 export const LEGACY_TABS: Readonly<Record<string, TabId>> = {
   overview: "portfolio",
   wrappers: "contributions",
   tax: "portfolio",
-  projections: "plan",
+  projections: "future",
+  plan: "future",
   reconciliation: "data",
   cards: "data",
 };

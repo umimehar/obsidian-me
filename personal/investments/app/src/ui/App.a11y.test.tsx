@@ -72,7 +72,7 @@ describe("App accessibility", () => {
     render(<App />);
     expectNoSkippedLevel();
 
-    for (const label of ["Growth", "Plan", "Data"]) {
+    for (const label of ["Growth", "Future", "Data"]) {
       clickTab(label);
       expectNoSkippedLevel();
     }
@@ -202,7 +202,7 @@ describe("App accessibility", () => {
       expect(screen.getByRole("radiogroup", { name })).toBeDefined();
     }
 
-    clickTab("Plan");
+    clickTab("Future");
     expect(screen.getByRole("radiogroup", { name: "Year" })).toBeDefined();
     expect(screen.queryByRole("radiogroup", { name: "Tax year" })).toBeNull();
   });
@@ -315,7 +315,7 @@ describe("App accessibility", () => {
       return badges.length;
     };
     let seen = sweep();
-    for (const label of ["Growth", "Plan", "Data"]) {
+    for (const label of ["Growth", "Future", "Data"]) {
       clickTab(label);
       seen += sweep();
     }

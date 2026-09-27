@@ -1,14 +1,18 @@
-import { Button, Callout, Flex, Heading, Text } from "@radix-ui/themes";
+import { Callout, Flex, Heading, SegmentedControl, Text } from "@radix-ui/themes";
 import { useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../../analytics/build";
 import { buildPortfolioSeries } from "../../analytics/portfolioSeries";
-import { loadPlan } from "../../plan";
+import type { AccountSeries } from "../../analytics/types";
+import { loadPlan, retirementYear as planRetirementYear } from "../../plan";
 import { projectYears } from "../../projection/engine";
 import { fittedReturnRate } from "../../projection/fittedRate";
-import { projectedAccounts, projectionInputs } from "../../projection/inputs";
+import { groupOf, projectionInputs } from "../../projection/inputs";
+import { milestoneYear, retirementIncome, runScenarios } from "../../projection/scenario";
+import type { ScenarioPoint } from "../../projection/scenario";
+import { AccountFilter } from "../AccountFilter";
+import { isDefaultSelection, seriesForChart } from "../chartAccounts";
 import { ProjectionChart } from "../charts/ProjectionChart";
-import { buildProjectionSeries, logDecadeDomain } from "../charts/projectionSeries";
-import { grandTotal } from "../data";
+import { type DollarsMode, buildProjectionSeries } from "../charts/projectionSeries";
 import { formatCurrency, formatRate } from "../format";
 import { GoalsPanel } from "./GoalsPanel";
 import { RunwayTable } from "./RunwayTable";
@@ -17,32 +21,30 @@ export interface ProjectionsViewProps {
   analytics: AnalyticsOutput;
   /** True when a year is selected elsewhere, which this view deliberately ignores. */
   scopeNote?: boolean;
+  accountOptions: readonly AccountSeries[];
+  accounts: ReadonlySet<string>;
+  onAccountsChange: (accounts: Set<string>) => void;
+  onReset: () => void;
+  subject: string;
 }
 
-/**
- * The rate the projection defaults to, and it is deliberately not the rate
- * fitted from the statements.
- *
- * Owner decision, 2026-08-07. The fit over the corpus is 24.84% a year, which
- * is arithmetically right and useless as a thirty-year assumption: it compounds
- * the opening balance to roughly $431M by 2056, and it is a three-year window
- * over one strong equity run. 6% nominal is a conventional long-run figure
- * instead, labelled on screen as an assumption that did not come from this
- * data. The fitted rate is offered beside it, with its window stated, and the
- * slider moves either way -- but the number a reader sees first must be the
- * conservative one.
- */
 const DEFAULT_RATE = 0.06;
+const SPREAD = 0.02;
+const RATE_MAX = 0.12;
+const INFLATION_MAX = 0.05;
+const MIN_YEARS = 30;
 
-/**
- * The most the slider offers, and with it the top of the chart's axis.
- *
- * Widened past the fitted rate whenever the fit exceeds it, so applying the
- * fitted rate can never send the projected line off the top of a chart whose
- * axis was built without it.
- */
-function maxRate(fitted: number): number {
-  return Math.max(0.25, Math.ceil(fitted * 100) / 100);
+const MILESTONES = [500_000, 1_000_000] as const;
+
+/** The scenario point at a calendar year, or undefined when the horizon does not reach it. */
+function pointAt(points: readonly ScenarioPoint[], year: number): ScenarioPoint | undefined {
+  return points.find((p) => Number(p.year) === year);
+}
+
+/** Which figure a chosen-dollars tile prints: what actually lands, or today's purchasing power. */
+function chosen(point: ScenarioPoint | undefined, dollars: DollarsMode): number | null {
+  if (point === undefined) return null;
+  return dollars === "real" ? point.real : point.nominal;
 }
 
 /**
@@ -50,157 +52,182 @@ function maxRate(fitted: number): number {
  *
  * Every other figure on this page was transcribed from a PDF. This one is
  * invented, which makes it the least certain thing here and the one that most
- * needs its qualification adjacent to it. Phase 2b settled that a caveat
- * belongs next to the number it qualifies.
+ * needs its qualification adjacent to it.
  */
 function Disclaimer() {
   return (
     <Callout.Root color="amber" variant="surface" highContrast data-projection-disclaimer="">
       <Callout.Text>
-        This is a scenario, not a forecast. It assumes one flat return every year for thirty years,
-        which no real portfolio delivers, and it assumes contributions keep arriving under today's
-        CRA rules. It is not advice and it is not a filing figure.
+        This is a scenario, not a forecast. It assumes one flat return every year across a low to
+        high band, which no real portfolio delivers, and it assumes contributions keep arriving
+        under today's CRA rules. It is not advice and it is not a filing figure.
       </Callout.Text>
     </Callout.Root>
   );
 }
 
-/** The end figure, at full precision, with the year and the assumption it rests on. */
-function EndValue({
-  value,
+/** The retirement tile: balance in the chosen dollars, at the plan's own retirement year. */
+function RetirementTile({
   year,
-  rate,
+  age,
+  value,
+  dollars,
 }: {
-  value: number;
-  year: string;
-  rate: number;
+  year: number;
+  age: number;
+  value: number | null;
+  dollars: DollarsMode;
 }) {
+  const dollarsWord = dollars === "real" ? "today's dollars" : "future dollars";
+  return (
+    <Flex direction="column" gap="1" data-retirement-tile="">
+      <Heading size="2" as="h3" color="gray" weight="regular">
+        {`At retirement, ${year} (age ${age})`}
+      </Heading>
+      <Text size="7" weight="bold">
+        {value === null ? "Not within the horizon" : formatCurrency(value)}
+      </Text>
+      <Text size="2" color="gray">
+        {value === null ? "" : `In ${dollarsWord}, at the base rate.`}
+      </Text>
+    </Flex>
+  );
+}
+
+/** The monthly income the plan's withdrawal rate funds, always in today's dollars. */
+function IncomeTile({
+  income,
+  withdrawalRate,
+}: {
+  income: { balance: number; monthly: number } | null;
+  withdrawalRate: number;
+}) {
+  return (
+    <Flex direction="column" gap="1" data-retirement-income="">
+      <Heading size="2" as="h3" color="gray" weight="regular">
+        {`Monthly income at ${formatRate(withdrawalRate * 100)} a year`}
+      </Heading>
+      <Text size="7" weight="bold">
+        {income === null ? "Not within the horizon" : formatCurrency(income.monthly)}
+      </Text>
+      <Text size="2" color="gray">
+        {income === null ? "" : "In today's dollars, drawn from the retirement balance above."}
+      </Text>
+    </Flex>
+  );
+}
+
+/** The first year each milestone is reached in today's dollars, at the base rate. */
+function MilestonesTile({ points }: { points: readonly ScenarioPoint[] }) {
   return (
     <Flex direction="column" gap="1">
       <Heading size="2" as="h3" color="gray" weight="regular">
-        {`Projected value at the end of ${year}`}
+        Milestones, today's dollars
       </Heading>
-      <Text size="8" weight="bold" data-projection-end-value="">
-        {formatCurrency(value)}
-      </Text>
-      <Text size="2" color="gray" data-projection-rate="">
-        {`Rate in use: ${formatRate(rate * 100)} a year.`}
-      </Text>
+      {MILESTONES.map((threshold) => {
+        const year = milestoneYear(points, threshold);
+        return (
+          <Text key={threshold} size="3" data-milestone={threshold === 500_000 ? "500k" : "1m"}>
+            {`${formatCurrency(threshold)}: ${year ?? "not within the horizon"}`}
+          </Text>
+        );
+      })}
     </Flex>
   );
 }
 
-/** The slider, plus the two rates worth one click each. */
-function RateControl({
+/** The return rate and inflation sliders, plus the today's/future dollars toggle. */
+function Controls({
   rate,
-  fitted,
   onRateChange,
+  inflation,
+  onInflationChange,
+  dollars,
+  onDollarsChange,
 }: {
   rate: number;
-  fitted: number;
   onRateChange: (rate: number) => void;
+  inflation: number;
+  onInflationChange: (inflation: number) => void;
+  dollars: DollarsMode;
+  onDollarsChange: (dollars: DollarsMode) => void;
 }) {
-  const limit = maxRate(fitted);
   return (
-    <Flex direction="column" gap="2" data-projection-rate-control="">
-      <Text as="label" size="2" htmlFor="projection-rate">
-        {`Annual return assumed: ${formatRate(rate * 100)}`}
-      </Text>
-      <input
-        id="projection-rate"
-        type="range"
-        min={0}
-        max={limit * 100}
-        step="any"
-        value={rate * 100}
-        // Without this the slider announces `value` raw, so applying the
-        // fitted rate has the label read 24.84% while the control says
-        // 24.839250232739074, a bare unitless number. One `formatRate` call
-        // for what is read and what is heard, the same rule the tooltips follow.
-        aria-valuetext={formatRate(rate * 100)}
-        onChange={(event) => onRateChange(Number(event.target.value) / 100)}
-      />
-      <Flex gap="2" wrap="wrap">
-        <Button
-          size="1"
-          variant="soft"
-          highContrast
-          data-apply-fitted=""
-          onClick={() => onRateChange(fitted)}
-        >
-          {`Apply your fitted ${formatRate(fitted * 100)}`}
-        </Button>
-        <Button
-          size="1"
-          variant="soft"
-          color="gray"
-          data-apply-default=""
-          onClick={() => onRateChange(DEFAULT_RATE)}
-        >
-          {`Back to ${formatRate(DEFAULT_RATE * 100)}`}
-        </Button>
+    <Flex direction="column" gap="4">
+      <Flex direction="column" gap="2" data-projection-rate-control="">
+        <Text as="label" size="2" htmlFor="projection-rate">
+          {`Return rate assumed: ${formatRate(rate * 100)} a year`}
+        </Text>
+        <input
+          id="projection-rate"
+          type="range"
+          min={0}
+          max={RATE_MAX * 100}
+          step="any"
+          value={rate * 100}
+          aria-valuetext={formatRate(rate * 100)}
+          onChange={(event) => onRateChange(Number(event.target.value) / 100)}
+        />
       </Flex>
+      <Flex direction="column" gap="2" data-projection-inflation-control="">
+        <Text as="label" size="2" htmlFor="projection-inflation">
+          {`Inflation assumed: ${formatRate(inflation * 100)} a year`}
+        </Text>
+        <input
+          id="projection-inflation"
+          type="range"
+          min={0}
+          max={INFLATION_MAX * 100}
+          step="any"
+          value={inflation * 100}
+          aria-valuetext={formatRate(inflation * 100)}
+          onChange={(event) => onInflationChange(Number(event.target.value) / 100)}
+        />
+      </Flex>
+      <SegmentedControl.Root
+        value={dollars}
+        onValueChange={(value) => onDollarsChange(value === "nominal" ? "nominal" : "real")}
+        aria-label="Dollars"
+        data-dollars-toggle=""
+      >
+        <SegmentedControl.Item value="real">Today's dollars</SegmentedControl.Item>
+        <SegmentedControl.Item value="nominal">Future dollars</SegmentedControl.Item>
+      </SegmentedControl.Root>
     </Flex>
   );
 }
 
-/**
- * Where each rate came from, in words, beside the control that applies it.
- *
- * The default's line says plainly that it is not from this data, because a
- * figure on a personal dashboard is otherwise read as a figure about the
- * person. The fitted rate's line states its window, its accounts and the word
- * derived, and then states what the netting behind it cannot see: securities
- * transferred in kind arrive in no cash block, so they are not subtracted as
- * money in and read as growth instead. Their dollar value is not stated
- * anywhere in the corpus, so the figure cannot be corrected, only qualified.
- */
-function Provenance({
-  fitted,
+/** Which accounts CRA rules let this projection fund, and which selected accounts it merely compounds. */
+function Assumptions({
+  rate,
+  inflation,
+  fundedGroups,
+  uncompounded,
 }: {
-  fitted: ReturnType<typeof fittedReturnRate>;
+  rate: number;
+  inflation: number;
+  fundedGroups: readonly string[];
+  uncompounded: readonly string[];
 }) {
+  const funded =
+    fundedGroups.length === 0 ? "none of the selected accounts" : fundedGroups.join(", ");
   return (
-    <Flex direction="column" gap="2" data-projection-provenance="">
-      <Text size="2" color="gray">
-        The default, {formatRate(DEFAULT_RATE * 100)} a year, is a conventional long-run assumption.
-        It did not come from your data.
-      </Text>
-      <Text size="2" color="gray">
-        Your last {fitted.months} months ran at {formatRate(fitted.rate * 100)} a year, net of
-        deposits. That figure is derived here, not stated on any statement: it is fitted across{" "}
-        {fitted.accounts} counted accounts over {fitted.monthsFitted} month to month steps. Three
-        years is a short window over one strong run, so it is a record of a period rather than a
-        thirty year expectation.
-      </Text>
-      <Text size="2" color="gray">
-        Securities transferred in kind are not netted out of that fitted figure. Only cash deposits
-        are subtracted, and a transfer of holdings arrives in no cash block and states no dollar
-        value, so a month that received one reads as growth.
-      </Text>
-    </Flex>
+    <Text size="2" color="gray" data-projection-assumptions="">
+      Assumes {formatRate(rate * 100)} a year and {formatRate(inflation * 100)} inflation. New money
+      keeps landing in {funded} under today's CRA rules.
+      {uncompounded.length === 0
+        ? ""
+        : ` ${uncompounded.join(", ")} ${uncompounded.length === 1 ? "grows" : "grow"} at the rate with no new money.`}
+    </Text>
   );
 }
 
-/** What the projection covers, and what it leaves out, stated rather than left as a gap in the total. */
-function Coverage({
-  covered,
-  uncovered,
-  openingTotal,
-  portfolioTotal,
-}: {
-  covered: number;
-  uncovered: number;
-  openingTotal: number;
-  portfolioTotal: number;
-}) {
+/** The fitted rate, stated as context only: no button applies it. */
+function FittedContext({ fitted }: { fitted: ReturnType<typeof fittedReturnRate> }) {
   return (
-    <Text size="2" color="gray" data-projection-coverage="">
-      The projection covers {covered} counted accounts, the ones with a contribution rule or a
-      funding plan behind them. {uncovered} counted accounts holding{" "}
-      {formatCurrency(portfolioTotal - openingTotal)} are left out, so the history line ends at{" "}
-      {formatCurrency(openingTotal)} rather than at the portfolio total of{" "}
-      {formatCurrency(portfolioTotal)}.
+    <Text size="2" color="gray" data-projection-fitted-context="">
+      Your last {fitted.months} months ran at {formatRate(fitted.rate * 100)} a year after deposits;
+      a short strong run, not a thirty year expectation.
     </Text>
   );
 }
@@ -210,66 +237,104 @@ function EmptyState() {
   return (
     <Flex direction="column" gap="2">
       <Heading size="5" as="h2">
-        Thirty year projection
+        Where this is heading
       </Heading>
       <Text size="2" color="gray" data-projection-empty="">
-        The accounts this projection covers state no market value to start from, so there is nothing
-        to project. A projection from zero would be a figure about nothing.
+        The selected accounts state no market value to start from, so there is nothing to project. A
+        projection from zero would be a figure about nothing.
       </Text>
     </Flex>
   );
 }
 
 /**
- * The one invented view in this dashboard.
- *
- * The engine, the inputs and the fitted rate all already exist and are used
- * here rather than restated: `projectionInputs` derives every input from
- * `analytics.json` at call time, so a new statement moves the seam and the
- * starting balance with no change here. What this view owns is the rate a
- * reader chooses, the words around it, and the seam.
+ * Where the portfolio, or a chosen selection of it, is heading: a low to
+ * high band in today's dollars by default, milestones, and a retirement
+ * income at the plan's own age. The rate a reader chooses, the dollars mode,
+ * and the account selection are the only things this view owns; the
+ * scenarios themselves come from `runScenarios`.
  */
-export function ProjectionsView({ analytics, scopeNote = false }: ProjectionsViewProps) {
+export function ProjectionsView({
+  analytics,
+  scopeNote = false,
+  accountOptions,
+  accounts,
+  onAccountsChange,
+  onReset,
+  subject,
+}: ProjectionsViewProps) {
+  const plan = useMemo(() => loadPlan(), []);
   const fitted = useMemo(() => fittedReturnRate(analytics.series), [analytics]);
   const [rate, setRate] = useState(DEFAULT_RATE);
+  const [inflation, setInflation] = useState(plan.inflation);
+  const [dollars, setDollars] = useState<DollarsMode>("real");
 
-  const accounts = useMemo(() => projectedAccounts(analytics.series), [analytics]);
-  const history = useMemo(() => buildPortfolioSeries(accounts), [accounts]);
-  // Held once so the goals panel and the runway table read the same inputs
-  // the chart's own rows came from, rather than each deriving its own and
-  // risking the two halves of the page disagreeing about one projection.
+  const retireYear = planRetirementYear(plan);
+  const startYearNumber = Number(projectionInputs(analytics).startYear || 0);
+  const years = Math.max(MIN_YEARS, retireYear - startYearNumber);
+
+  const scenarios = useMemo(
+    () => runScenarios(analytics, accounts, { rate, spread: SPREAD, inflation, years }),
+    [analytics, accounts, rate, inflation, years],
+  );
+
+  // The selected accounts' own stated history, the same subset the account
+  // filter names and the scenario's opening balance is drawn from -- never
+  // the whole portfolio, or the seam would jump against the scenario that
+  // continues from it.
+  const history = useMemo(
+    () => buildPortfolioSeries(seriesForChart(analytics.series, accounts)),
+    [analytics, accounts],
+  );
+  const series = useMemo(
+    () => buildProjectionSeries(history, scenarios, dollars),
+    [history, scenarios, dollars],
+  );
+
+  // Held once so the goals panel and the runway table -- which still evaluate
+  // the plan's own goals against the whole portfolio, not the chart's
+  // selection -- read the same base-rate rows the rest of the app always has.
   const inputs = useMemo(
-    () => projectionInputs(analytics, { returnRate: rate }),
-    [analytics, rate],
+    () => projectionInputs(analytics, { returnRate: rate, years }),
+    [analytics, rate, years],
   );
   const rows = useMemo(() => projectYears(inputs), [inputs]);
-  // The axis is built from the largest scenario the controls offer, never from
-  // the one on screen: that is what holds the stated half still while the rate
-  // slider moves.
-  const domain = useMemo(() => {
-    const widest = projectYears(projectionInputs(analytics, { returnRate: maxRate(fitted.rate) }));
-    return logDecadeDomain([
-      ...history.map((point) => point.marketValue),
-      ...widest.map((row) => row.value),
-    ]);
-  }, [analytics, history, fitted.rate]);
 
-  const series = useMemo(() => buildProjectionSeries(history, rows), [history, rows]);
-  const openingTotal = history[history.length - 1]?.marketValue ?? 0;
-  const end = rows[rows.length - 1];
+  const opening = scenarios.base.points[0]?.nominal ?? 0;
+  if (opening <= 0) return <EmptyState />;
 
-  if (openingTotal <= 0 || domain === null || end === undefined) return <EmptyState />;
+  const retirementPoint = pointAt(scenarios.base.points, retireYear);
+  const income = retirementIncome(scenarios.base.points, retireYear, plan.withdrawalRate);
+  const fundedGroups = [
+    ...new Set(
+      analytics.series
+        .filter((a) => a.inTotals && accounts.has(a.maskedId))
+        .map((a) => groupOf(a.kind))
+        .filter((group): group is NonNullable<typeof group> => group !== null),
+    ),
+  ];
 
   return (
-    <Flex direction="column" gap="4">
-      <Heading size="5" as="h2">
-        Thirty year projection
-      </Heading>
+    <Flex direction="column" gap="5">
+      <Flex direction="column" gap="2">
+        <Heading size="5" as="h2">
+          Where this is heading
+        </Heading>
+        <Flex align="center" gap="3" wrap="wrap">
+          <Text size="2" color="gray">
+            {subject}
+          </Text>
+          <AccountFilter
+            accounts={accountOptions}
+            selected={accounts}
+            subject={subject}
+            isDefault={isDefaultSelection(analytics.series, accounts)}
+            onSelectedChange={onAccountsChange}
+            onReset={onReset}
+          />
+        </Flex>
+      </Flex>
       {scopeNote ? (
-        // Said in the open rather than left for the reader to infer from
-        // figures that did not move. The alternative -- re-basing the
-        // forecast to the selected year's close -- would silently produce a
-        // different projection with nothing on screen saying the start moved.
         <Callout.Root color="gray" variant="surface" data-projection-scope-note="">
           <Callout.Text>
             The year filter does not apply here. A forecast runs forward from the latest statement,
@@ -277,23 +342,46 @@ export function ProjectionsView({ analytics, scopeNote = false }: ProjectionsVie
           </Callout.Text>
         </Callout.Root>
       ) : null}
-      <EndValue value={end.value} year={end.year} rate={rate} />
-      <Disclaimer />
-      <RateControl rate={rate} fitted={fitted.rate} onRateChange={setRate} />
-      <Provenance fitted={fitted} />
-      <Coverage
-        covered={accounts.length}
-        uncovered={analytics.series.filter((a) => a.inTotals).length - accounts.length}
-        openingTotal={openingTotal}
-        portfolioTotal={grandTotal(analytics)}
+      <Controls
+        rate={rate}
+        onRateChange={setRate}
+        inflation={inflation}
+        onInflationChange={setInflation}
+        dollars={dollars}
+        onDollarsChange={setDollars}
       />
-      <ProjectionChart series={series} domain={domain} rate={rate} />
+      <Flex gap="6" wrap="wrap">
+        <RetirementTile
+          year={retireYear}
+          age={plan.retirementAge}
+          value={chosen(retirementPoint, dollars)}
+          dollars={dollars}
+        />
+        <IncomeTile income={income} withdrawalRate={plan.withdrawalRate} />
+        <MilestonesTile points={scenarios.base.points} />
+      </Flex>
+      <Disclaimer />
+      <ProjectionChart
+        series={series}
+        rate={rate}
+        low={scenarios.low.rate}
+        high={scenarios.high.rate}
+        retirementYear={retireYear}
+        dollars={dollars}
+      />
+      <Assumptions
+        rate={rate}
+        inflation={inflation}
+        fundedGroups={fundedGroups}
+        uncompounded={scenarios.uncompounded}
+      />
+      <FittedContext fitted={fitted} />
       <GoalsPanel
         analytics={analytics}
         rows={rows}
         rate={rate}
         fhsaCloseYear={inputs.fhsaCloseYear}
-        goals={loadPlan().goals}
+        goals={plan.goals}
       />
       <RunwayTable rows={rows} inputs={inputs} />
     </Flex>

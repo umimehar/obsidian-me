@@ -136,6 +136,16 @@ export interface Goldens {
     fhsaCloseYear: string;
     fhsaCapYear: string;
     fhsaValueAtCapYear: number;
+    /** The plan's own retirement year, birthYear plus retirementAge. */
+    retirementYear: number;
+    /** The default-selection base scenario's balance at the retirement year, today's and future dollars. */
+    retirementReal: number;
+    retirementNominal: number;
+    /** The plan's withdrawal rate applied monthly to the real retirement balance. */
+    retirementMonthlyIncome: number;
+    /** The first year the base scenario reaches each milestone, in today's dollars, or null. */
+    milestone500kYear: string | null;
+    milestone1mYear: string | null;
   };
   rooms: {
     /** Each projected group's opening balance -- its accounts' latest stated market values. */

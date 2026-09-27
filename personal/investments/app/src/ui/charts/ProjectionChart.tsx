@@ -1,14 +1,15 @@
 import { Flex, Text } from "@radix-ui/themes";
-import { type ScaleLogarithmic, type ScaleTime, scaleLog, scaleTime } from "d3-scale";
+import { type ScaleLinear, type ScaleTime, scaleLinear, scaleTime } from "d3-scale";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import { formatCurrency, formatRate } from "../format";
 import { ChartTooltip, CursorAnnouncement, readoutSuffix, tooltipAnchorStyle } from "./Tooltip";
-import { type PlotPoint, areaPath, formatAxisCurrency, formatPeriodLabel, linePath } from "./plot";
+import { type PlotPoint, formatAxisCurrency, formatPeriodLabel, linePath } from "./plot";
 import {
+  type DollarsMode,
   type ProjectionPoint,
   type ProjectionSeries,
-  decadeTicks,
+  projectionDomain,
   projectionPoints,
   projectionTooltipLines,
 } from "./projectionSeries";
@@ -20,72 +21,83 @@ import { CursorMarks, type CursorSlot, useChartCursor } from "./useChartCursor";
 
 export interface ProjectionChartProps {
   series: ProjectionSeries;
-  /**
-   * The logarithmic axis's domain. Supplied by the caller rather than derived
-   * from `series`, because it must be built from the largest scenario the
-   * controls can produce: an axis rebuilt from the scenario on screen would
-   * redraw the stated history every time the rate slider moved.
-   */
-  domain: readonly [number, number];
-  /** The annual rate the projected half assumes, as a fraction. */
+  /** The base scenario's annual rate, as a fraction, stated in the tooltip. */
   rate: number;
+  low: number;
+  high: number;
+  /** The calendar year the vertical rule marks. */
+  retirementYear: number;
+  dollars: DollarsMode;
 }
 
 const WIDTH = 800;
 const HEIGHT = 340;
-const MARGIN = { top: 16, right: 16, bottom: 30, left: 108 };
+const MARGIN = { top: 16, right: 16, bottom: 30, left: 88 };
 const INNER_WIDTH = WIDTH - MARGIN.left - MARGIN.right;
 const INNER_HEIGHT = HEIGHT - MARGIN.top - MARGIN.bottom;
-/** Hoisted so the cursor's pointer handler keeps one identity across renders. */
 const CURSOR_GEOMETRY = { viewBoxWidth: WIDTH, marginLeft: MARGIN.left };
 
 const HISTORY_FILL = "var(--jade-a5)";
 const HISTORY_STROKE = "var(--jade-a11)";
-const PROJECTION_STROKE = "var(--gray-a11)";
+const BASE_STROKE = "var(--gray-a11)";
+const BAND_FILL = "var(--gray-a4)";
 
 interface Axes {
   x: ScaleTime<number, number>;
-  y: ScaleLogarithmic<number, number>;
+  y: ScaleLinear<number, number>;
   yTicks: number[];
 }
 
-/** Only the points a logarithmic axis can place. A stated zero is reported by the cursor and left undrawn. */
-function drawable(points: readonly ProjectionPoint[]): ProjectionPoint[] {
-  return points.filter((point) => point.value > 0);
-}
-
-function toPlotPoints(points: readonly ProjectionPoint[], axes: Axes): PlotPoint[] {
+function toPlotPoints(points: readonly ProjectionPoint[], axes: Axes, at: "value"): PlotPoint[];
+function toPlotPoints(
+  points: readonly ProjectionPoint[],
+  axes: Axes,
+  at: "low" | "high",
+): PlotPoint[];
+function toPlotPoints(
+  points: readonly ProjectionPoint[],
+  axes: Axes,
+  at: "value" | "low" | "high",
+): PlotPoint[] {
   return points.map((point) => ({
     x: axes.x(periodToDate(point.period)),
-    y: axes.y(point.value),
+    y: axes.y((at === "value" ? point.value : (point[at] ?? point.value)) as number),
   }));
 }
 
+/** A closed path between a low and a high line: forward along the high edge, back along the low one. */
+function bandPath(points: readonly PlotPoint[][]): string {
+  const [high, low] = points;
+  if (high === undefined || low === undefined || high.length === 0) return "";
+  const forward = high.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
+  const backward = [...low]
+    .reverse()
+    .map((p) => `L${p.x},${p.y}`)
+    .join(" ");
+  return `${forward} ${backward} Z`;
+}
+
 /**
- * A logarithmic value axis and a time axis over the whole span, history and
- * projection together.
+ * A linear axis over the whole span, history and projection together, zero
+ * to the largest figure either half draws.
  *
- * Logarithmic, not linear, and that is not a stylistic choice. Thirty years at
- * the default 6% multiplies the opening balance by about forty, so on a linear
- * axis the three years of stated history would occupy the bottom two percent of
- * the plot and read as a flat line at zero. The seam this view exists to show
- * would be invisible. Decade ticks keep every figure readable against a
- * labelled gridline instead.
+ * Linear, not logarithmic: the band this chart now draws is the point, and a
+ * band read on a compressed log scale would look narrower than the range it
+ * actually states. The seam and the retirement rule are what keeps thirty
+ * years of growth legible beside three years of history instead.
  */
-function buildAxes(
-  points: readonly ProjectionPoint[],
-  domain: readonly [number, number],
-): Axes | null {
-  const drawn = drawable(points);
-  const first = drawn[0];
-  const last = drawn[drawn.length - 1];
-  if (first === undefined || last === undefined) return null;
+function buildAxes(points: readonly ProjectionPoint[], series: ProjectionSeries): Axes | null {
+  const first = points[0];
+  const last = points[points.length - 1];
+  const domain = projectionDomain(series);
+  if (first === undefined || last === undefined || domain === null) return null;
+  const y = scaleLinear().domain(domain).nice().range([INNER_HEIGHT, 0]);
   return {
     x: scaleTime()
       .domain([periodToDate(first.period), periodToDate(last.period)])
       .range([0, INNER_WIDTH]),
-    y: scaleLog().domain([domain[0], domain[1]]).range([INNER_HEIGHT, 0]),
-    yTicks: decadeTicks(domain),
+    y,
+    yTicks: y.ticks(5),
   };
 }
 
@@ -97,7 +109,6 @@ function EmptyState() {
   );
 }
 
-/** Decade gridlines, each labelled with the figure it stands for. */
 function Gridlines({ axes }: { axes: Axes }) {
   return (
     <>
@@ -113,31 +124,7 @@ function Gridlines({ axes }: { axes: Axes }) {
   );
 }
 
-/**
- * The scale, named in words, because evenly spaced gridlines are exactly the
- * cue a reader skips.
- *
- * The labels read $1,000 through $1,000,000,000 at even spacing, and a reader
- * who assumes a linear axis reads the plot's midpoint as about half the end
- * figure. On this axis that midpoint is around $31,600. The same reader sees
- * thirty years of compounding rise less than three years of history did and
- * concludes growth flattens off. Both readings are wrong, and nothing else on
- * screen contradicts either.
- *
- * One constant, spoken by the legend and carried in the accessible summary, so
- * a sighted reader and a screen reader cannot be told two different things
- * about the same axis.
- */
-const DECADE_NOTE =
-  "Each gridline is ten times the one below it, not a fixed step, which is what fits thirty years of compounding beside three years of history.";
-
-/**
- * The grammar in words, so the difference between the two halves is not left
- * to colour or to the reader's guess. Both swatches are drawn with the same
- * fills the chart itself uses, so a legend cannot drift from the marks it
- * names.
- */
-function Legend({ hatchId }: { hatchId: string }) {
+function Legend({ low, high }: { low: number; high: number }) {
   return (
     <Flex direction="column" gap="1" data-projection-legend="">
       <Flex align="center" gap="2">
@@ -156,74 +143,41 @@ function Legend({ hatchId }: { hatchId: string }) {
       <Flex align="center" gap="2">
         <svg width={28} height={12} aria-hidden="true" style={{ flex: "none" }}>
           <rect
-            data-legend-swatch="projection"
+            data-legend-swatch="base"
             {...swatchRect(28, 12)}
-            fill={`url(#${hatchId})`}
-            stroke={PROJECTION_STROKE}
+            fill="none"
+            stroke={BASE_STROKE}
             strokeDasharray={DERIVED_DASH}
           />
         </svg>
         <Text size="2" color="gray">
-          Hatched and dashed, right of the seam: a projection, invented from an assumed rate. No
-          statement states any of it.
+          Dashed, right of the seam: the base rate, invented from an assumed return. No statement
+          states any of it.
         </Text>
       </Flex>
-      <Text size="2" color="gray" data-projection-scale-note="">
-        {DECADE_NOTE}
-      </Text>
+      <Flex align="center" gap="2">
+        <svg width={28} height={12} aria-hidden="true" style={{ flex: "none" }}>
+          <rect data-legend-swatch="band" {...swatchRect(28, 12)} fill={BAND_FILL} stroke="none" />
+        </svg>
+        <Text size="2" color="gray" data-projection-band-note="">
+          {`Shaded band: the range between ${formatRate(low * 100)} and ${formatRate(high * 100)} a year.`}
+        </Text>
+      </Flex>
     </Flex>
   );
 }
 
-/** The diagonal hatch that marks every projected mark as an assumption rather than a figure. */
-function HatchPattern({ id }: { id: string }) {
-  return (
-    <pattern
-      id={id}
-      data-projection-hatch=""
-      width={7}
-      height={7}
-      patternUnits="userSpaceOnUse"
-      patternTransform="rotate(45)"
-    >
-      <rect width={7} height={7} fill="var(--gray-a2)" />
-      <line x1={0} y1={0} x2={0} y2={7} stroke="var(--gray-a8)" strokeWidth={1.5} />
-    </pattern>
-  );
-}
-
-/**
- * The two halves, joined at the seam.
- *
- * The projected path starts at the seam point itself rather than at the first
- * projected year, so the assumption visibly grows out of the last stated
- * figure instead of floating beside it. The seam point is drawn by the history
- * half, so it is stated once and only once.
- */
-function Halves({
-  series,
-  axes,
-  clipId,
-  hatchId,
-}: {
-  series: ProjectionSeries;
-  axes: Axes;
-  clipId: string;
-  hatchId: string;
-}) {
-  const historyPlot = toPlotPoints(drawable(series.history), axes);
-  const seam = series.seam !== null && series.seam.value > 0 ? [series.seam] : [];
-  const projectionPlot = toPlotPoints([...seam, ...drawable(series.projection)], axes);
+function Halves({ series, axes }: { series: ProjectionSeries; axes: Axes }) {
+  const historyPlot = toPlotPoints(series.history, axes, "value");
+  const seam = series.seam !== null ? [series.seam] : [];
+  const projected = [...seam, ...series.projection];
+  const basePlot = toPlotPoints(projected, axes, "value");
+  const highPlot = toPlotPoints(projected, axes, "high");
+  const lowPlot = toPlotPoints(projected, axes, "low");
 
   return (
-    <g clipPath={`url(#${clipId})`}>
-      <path
-        data-projection-area=""
-        d={areaPath(projectionPlot, INNER_HEIGHT)}
-        fill={`url(#${hatchId})`}
-        stroke="none"
-      />
-      <path data-history-area="" d={areaPath(historyPlot, INNER_HEIGHT)} fill={HISTORY_FILL} />
+    <g>
+      <path data-band-area="" d={bandPath([highPlot, lowPlot])} fill={BAND_FILL} stroke="none" />
       <path
         data-history-line=""
         d={linePath(historyPlot)}
@@ -233,9 +187,9 @@ function Halves({
       />
       <path
         data-projection-line=""
-        d={linePath(projectionPlot)}
+        d={linePath(basePlot)}
         fill="none"
-        stroke={PROJECTION_STROKE}
+        stroke={BASE_STROKE}
         strokeWidth={2}
         strokeDasharray={DERIVED_DASH}
       />
@@ -243,7 +197,6 @@ function Halves({
   );
 }
 
-/** The vertical rule at the last stated month: exactly where fact stops. */
 function Seam({ seam, axes }: { seam: ProjectionPoint; axes: Axes }) {
   const x = axes.x(periodToDate(seam.period));
   return (
@@ -256,23 +209,28 @@ function Seam({ seam, axes }: { seam: ProjectionPoint; axes: Axes }) {
   );
 }
 
-/**
- * The axis a cursor walks: every calendar month of the stated half, so a month
- * no statement covers stays a gap the cursor reports as one, then one slot per
- * projected year, because the months between two projected Decembers are not
- * missing data. There is nothing annual about them to miss.
- *
- * This deliberately starts at `history[0]`, while `buildAxes` starts the x
- * domain at the first DRAWABLE point. The two disagree by exactly the leading
- * run of months at or below zero, which the axis cannot place but the cursor
- * still has to report -- in this corpus one month, putting that slot at
- * x = -1.66, inside the left margin and effectively unreachable. The readout
- * is right either way. The offset grows with the length of that leading run,
- * so a corpus opening with a long unfunded stretch would push several slots
- * off the plot: reconcile the two here if that ever happens, rather than
- * moving the axis, which would leave a mark drawn against a domain no
- * gridline covers.
- */
+/** The vertical rule at the retirement year, labelled "Age 60" per the owner's own plan. */
+function RetirementRule({ year, axes }: { year: number; axes: Axes }) {
+  const x = axes.x(periodToDate(`${year}-12`));
+  if (!Number.isFinite(x) || x < 0 || x > INNER_WIDTH) return null;
+  return (
+    <g data-retirement-rule="">
+      <line
+        x1={x}
+        x2={x}
+        y1={0}
+        y2={INNER_HEIGHT}
+        stroke="var(--amber-a9)"
+        strokeWidth={1}
+        strokeDasharray="2 3"
+      />
+      <text x={x} y={-4} textAnchor="middle" fontSize={11} fill="var(--amber-a11)">
+        Age 60
+      </text>
+    </g>
+  );
+}
+
 function buildSlots(series: ProjectionSeries, axes: Axes): CursorSlot[] {
   const first = series.history[0];
   const months =
@@ -283,67 +241,62 @@ function buildSlots(series: ProjectionSeries, axes: Axes): CursorSlot[] {
   return periods.map((period) => ({ period, x: axes.x(periodToDate(period)) }));
 }
 
-/** What a screen reader gets before the cursor moves anywhere. */
-function summary(series: ProjectionSeries, rate: number): string {
-  const first = drawable(series.history)[0];
+function summary(series: ProjectionSeries, rate: number, dollars: DollarsMode): string {
+  const first = series.history[0];
   const seam = series.seam;
   const end = series.projection[series.projection.length - 1];
   if (first === undefined || seam === null || end === undefined) {
     return "No stated market value to draw, so there is nothing to project from.";
   }
-  const undrawn = series.history.length - drawable(series.history).length;
-  const zeros =
-    undrawn === 0
-      ? ""
-      : ` ${undrawn} stated month at or below zero is not drawn, because a logarithmic axis cannot place it.`;
+  const dollarsWord = dollars === "real" ? "today's dollars" : "future dollars";
   return (
-    "Market value across the accounts this projection covers, drawn solid from " +
+    "Market value across the accounts selected, drawn solid from " +
     `${formatPeriodLabel(first.period)} to ${formatPeriodLabel(seam.period)}, ending at ` +
-    `${formatCurrency(seam.value)}. To the right of ${formatPeriodLabel(seam.period)} a hatched ` +
-    `projection at ${formatRate(rate * 100)} a year reaches ${formatCurrency(end.value)} by ` +
-    `${formatPeriodLabel(end.period)}. The projected half is a scenario, not a figure any ` +
-    `statement states. ${DECADE_NOTE}${zeros}`
+    `${formatCurrency(seam.value)}. To the right of ${formatPeriodLabel(seam.period)} a dashed ` +
+    `base scenario at ${formatRate(rate * 100)} a year reaches ${formatCurrency(end.value)} by ` +
+    `${formatPeriodLabel(end.period)}, in ${dollarsWord}, with a shaded low to high band either ` +
+    "side. The projected half is a scenario, not a figure any statement states."
   );
 }
 
 /**
- * Stated history and projected years on one axis, with the seam between them
- * drawn rather than described.
- *
- * The two halves are distinguished three ways at once and never by colour
- * alone: the stated half is a solid fill under a solid line, the projected half
- * a diagonal hatch under a dashed line, and a labelled rule stands at the last
- * stated month. A reader has to be able to see where fact stops, because
- * everything to the right of that rule is the only thing on this page that
- * nobody transcribed from a statement.
+ * Stated history and a low/base/high scenario band on one linear axis, with
+ * the seam between fact and assumption drawn, and a rule at the retirement
+ * year.
  */
-export function ProjectionChart({ series, domain, rate }: ProjectionChartProps) {
-  const clipId = useSvgId("projection-clip");
-  const hatchId = useSvgId("projection-hatch");
+export function ProjectionChart({
+  series,
+  rate,
+  low,
+  high,
+  retirementYear,
+  dollars,
+}: ProjectionChartProps) {
   const reveal = useRevealMotion(INNER_WIDTH);
+  const clipId = useSvgId("projection-clip");
   const points = useMemo(() => projectionPoints(series), [series]);
-  const axes = useMemo(() => buildAxes(points, domain), [points, domain]);
+  const axes = useMemo(() => buildAxes(points, series), [points, series]);
   const slots = useMemo(() => (axes === null ? [] : buildSlots(series, axes)), [series, axes]);
   const cursor = useChartCursor(points, slots, CURSOR_GEOMETRY);
 
   if (axes === null || series.seam === null) return <EmptyState />;
 
   const lines =
-    cursor.period === null ? [] : projectionTooltipLines(cursor.period, cursor.point, rate);
+    cursor.period === null
+      ? []
+      : projectionTooltipLines(cursor.period, cursor.point, rate, dollars);
   const readout = readoutSuffix(lines);
-  const cursorValue = cursor.point === null || cursor.point.value <= 0 ? null : cursor.point.value;
-  const drawn = drawable(points);
-  const firstDrawn = drawn[0];
-  const lastDrawn = drawn[drawn.length - 1];
+  const first = series.history[0];
+  const last = series.projection[series.projection.length - 1] ?? series.seam;
 
   return (
     <Flex direction="column" gap="3" data-projection-chart="">
-      <Legend hatchId={hatchId} />
+      <Legend low={low} high={high} />
       <div style={{ position: "relative" }}>
         <svg
           viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
           role="img"
-          aria-label={`${summary(series, rate)}${readout}`}
+          aria-label={`${summary(series, rate, dollars)}${readout}`}
           // biome-ignore lint/a11y/noNoninteractiveTabindex: a chart is a graphic that still has to be reachable, or its tooltip is mouse-only
           tabIndex={0}
           onPointerMove={cursor.onPointerMove}
@@ -352,10 +305,7 @@ export function ProjectionChart({ series, domain, rate }: ProjectionChartProps) 
           onBlur={cursor.onBlur}
           style={{ width: "100%", height: "auto", display: "block" }}
         >
-          <title>Stated value and a thirty year projection, on one axis</title>
-          <defs>
-            <HatchPattern id={hatchId} />
-          </defs>
+          <title>Stated value and a range of scenarios, on one axis</title>
           <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
             <Gridlines axes={axes} />
             <clipPath id={clipId}>
@@ -367,29 +317,30 @@ export function ProjectionChart({ series, domain, rate }: ProjectionChartProps) 
                 transition={{ duration: reveal.duration, ease: "easeOut" }}
               />
             </clipPath>
-            <Halves series={series} axes={axes} clipId={clipId} hatchId={hatchId} />
+            <g clipPath={`url(#${clipId})`}>
+              <Halves series={series} axes={axes} />
+            </g>
             <Seam seam={series.seam} axes={axes} />
+            <RetirementRule year={retirementYear} axes={axes} />
             <CursorMarks
               x={cursor.x}
-              y={cursorValue === null ? null : axes.y(cursorValue)}
+              y={cursor.point === null ? null : axes.y(cursor.point.value)}
               height={INNER_HEIGHT}
             />
-            {firstDrawn === undefined ? null : (
+            {first === undefined ? null : (
               <text x={0} y={INNER_HEIGHT + 20} fontSize={11} fill="var(--gray-a11)">
-                {formatPeriodLabel(firstDrawn.period)}
+                {formatPeriodLabel(first.period)}
               </text>
             )}
-            {lastDrawn === undefined ? null : (
-              <text
-                x={INNER_WIDTH}
-                y={INNER_HEIGHT + 20}
-                textAnchor="end"
-                fontSize={11}
-                fill="var(--gray-a11)"
-              >
-                {formatPeriodLabel(lastDrawn.period)}
-              </text>
-            )}
+            <text
+              x={INNER_WIDTH}
+              y={INNER_HEIGHT + 20}
+              textAnchor="end"
+              fontSize={11}
+              fill="var(--gray-a11)"
+            >
+              {formatPeriodLabel(last.period)}
+            </text>
           </g>
         </svg>
         <CursorAnnouncement lines={lines} />

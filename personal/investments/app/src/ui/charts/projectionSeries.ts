@@ -1,80 +1,81 @@
 import type { PortfolioPoint } from "../../analytics/portfolioSeries";
-import type { ProjectionYear } from "../../projection/engine";
+import type { ScenarioSet } from "../../projection/scenario";
 import { formatCurrency, formatRate } from "../format";
 import { formatPeriodLabel } from "./plot";
 
+/** Which currency a rendered figure is in: what actually lands, or today's purchasing power. */
+export type DollarsMode = "nominal" | "real";
+
 /**
- * One point on the projections chart, either side of the seam.
+ * One point on the projection chart, either side of the seam.
  *
  * `half` is the whole idea of this view. Everything left of the seam is a
- * market value a statement stated; everything right of it is invented by the
- * engine from an assumed rate. The two are never merged into one undifferentiated
- * line, and `half` is what lets the chart draw them differently and the
- * tooltip describe them differently.
+ * market value a statement stated; everything right of it is invented from
+ * an assumed rate. `low`/`high` are null on a history point, and hold the
+ * band's edges on a projected one -- `value` is always the base scenario's
+ * figure, in whichever dollars mode the caller chose.
  */
 export interface ProjectionPoint {
   /** `YYYY-MM`. History points are monthly; projected points sit at `YYYY-12`. */
   period: string;
   value: number;
   half: "history" | "projection";
-  /** Contributions accumulated by this projected year. Null on a history point. */
-  contributedToDate: number | null;
-  /** Government grant accumulated by this projected year. Null on a history point. */
-  grantToDate: number | null;
+  low: number | null;
+  high: number | null;
 }
 
 export interface ProjectionSeries {
-  /** Every stated month, including any at or below zero, which the chart cannot draw but the cursor still reports. */
   history: ProjectionPoint[];
-  /** One point per engine row that falls after the seam. */
+  /** One point per projected year, base scenario plus the low/high band. */
   projection: ProjectionPoint[];
   /** The last stated month: where fact stops and assumption starts. Null when nothing is stated. */
   seam: ProjectionPoint | null;
 }
 
 function historyPoint(point: PortfolioPoint): ProjectionPoint {
-  return {
-    period: point.period,
-    value: point.marketValue,
-    half: "history",
-    contributedToDate: null,
-    grantToDate: null,
-  };
+  return { period: point.period, value: point.marketValue, half: "history", low: null, high: null };
 }
 
-function projectedPoint(row: ProjectionYear): ProjectionPoint {
-  return {
-    period: `${row.year}-12`,
-    value: row.value,
-    half: "projection",
-    contributedToDate: row.cumulativeIn,
-    grantToDate: row.cumulativeGrant,
-  };
+/** The scenario point's figure in the chosen dollars: what actually lands, or today's purchasing power. */
+function pick(point: { nominal: number; real: number } | undefined, dollars: DollarsMode): number {
+  if (point === undefined) return 0;
+  return dollars === "real" ? point.real : point.nominal;
 }
 
 /**
- * The stated history and the projected years, joined at the seam.
+ * The stated history and the three scenarios' figures, joined at the seam.
  *
- * A projected row whose December is not strictly after the seam is dropped.
- * The engine's first row is the start year, and when the statements already
- * run to that December the year is over: drawing it would put a projected
- * point on top of a stated one and let the cursor resolve one period to two
- * figures.
+ * `points[0]` of every scenario in `scenarios` is the opening snapshot,
+ * matching the seam value itself, so it is dropped here rather than drawn a
+ * second time: `buildProjectionSeries` starts each scenario from index 1,
+ * the engine's own first row.
  *
  * Pure. `history` carries every stated month, including a zero month the
- * chart's logarithmic axis cannot place -- dropping it here would leave the
- * cursor reporting "no figure" for a month the statements do state.
+ * chart cannot place on a linear axis but the cursor still has to report.
  */
 export function buildProjectionSeries(
   history: readonly PortfolioPoint[],
-  rows: readonly ProjectionYear[],
+  scenarios: ScenarioSet,
+  dollars: DollarsMode,
 ): ProjectionSeries {
   const historyPoints = history.map(historyPoint);
   const seam = historyPoints[historyPoints.length - 1] ?? null;
-  // No seam means nothing stated to project from, and a projection with
-  // nothing behind it is a figure about nothing rather than a scenario.
-  const projection =
-    seam === null ? [] : rows.map(projectedPoint).filter((point) => point.period > seam.period);
+  if (seam === null) return { history: historyPoints, projection: [], seam: null };
+
+  const base = scenarios.base.points.slice(1);
+  const low = scenarios.low.points.slice(1);
+  const high = scenarios.high.points.slice(1);
+
+  const projection: ProjectionPoint[] = base
+    .map((point, index) => ({
+      period: `${point.year}-12`,
+      value: pick(point, dollars),
+      half: "projection" as const,
+      low: pick(low[index], dollars),
+      high: pick(high[index], dollars),
+    }))
+    .filter((point) => point.period > seam.period);
+
   return { history: historyPoints, projection, seam };
 }
 
@@ -84,63 +85,46 @@ export function projectionPoints(series: ProjectionSeries): ProjectionPoint[] {
 }
 
 /**
- * The decade domain a logarithmic axis spans, widened outward to whole powers
- * of ten so the ticks are round figures.
+ * The linear y domain: zero to the largest figure either half ever draws,
+ * niced outward so the top gridline is a round number.
  *
- * Null when no positive value exists, which is the empty state: a logarithmic
- * axis has no domain to build from zero, and a chart drawn on a degenerate one
- * would place every mark at the same height.
- *
- * The caller passes the values of the LARGEST scenario its controls offer, not
- * of the scenario on screen. That is what keeps the axis, and with it the whole
- * history half, fixed while the rate slider moves: a reader dragging an
- * assumption must not see the past redraw itself.
+ * Null when nothing is stated at all, which is the empty state.
  */
-export function logDecadeDomain(values: readonly number[]): readonly [number, number] | null {
-  const positive = values.filter((value) => value > 0);
-  if (positive.length === 0) return null;
-  const low = 10 ** Math.floor(Math.log10(Math.min(...positive)));
-  const high = 10 ** Math.ceil(Math.log10(Math.max(...positive)));
-  return [low, high === low ? high * 10 : high];
-}
-
-/** The powers of ten inside a domain, inclusive, which are the only ticks a decade axis needs. */
-export function decadeTicks(domain: readonly [number, number]): number[] {
-  const ticks: number[] = [];
-  for (let value = domain[0]; value <= domain[1] * 1.0000001; value *= 10) {
-    ticks.push(Math.round(value));
-  }
-  return ticks;
+export function projectionDomain(series: ProjectionSeries): readonly [number, number] | null {
+  if (series.seam === null) return null;
+  const values = [
+    ...series.history.map((p) => p.value),
+    ...series.projection.flatMap((p) => [p.value, p.low ?? p.value, p.high ?? p.value]),
+  ];
+  const max = Math.max(0, ...values);
+  return [0, max];
 }
 
 /**
- * What the cursor says about one point, one line at a time.
- *
- * The single source of the visible tooltip, the live announcement and the
- * chart's accessible name alike, so a projected figure cannot be announced at
- * a coarser precision than it is drawn at. `rate` is stated on every projected
- * line rather than only in the controls above, because a figure a reader hears
- * in isolation has to carry the assumption that produced it.
+ * What the cursor says about one point, one line at a time. The single
+ * source of the visible tooltip, the live announcement and the chart's
+ * accessible name alike.
  */
 export function projectionTooltipLines(
   period: string,
   point: ProjectionPoint | null,
   rate: number,
+  dollars: DollarsMode,
 ): string[] {
   const label = formatPeriodLabel(period);
   if (point === null) return [label, "No statement for this month"];
+  const dollarsWord = dollars === "real" ? "today's dollars" : "future dollars";
   if (point.half === "history") {
-    const zero =
-      point.value > 0
-        ? []
-        : ["A stated zero, which a logarithmic axis cannot place, so no point is drawn"];
-    return [label, `Market value ${formatCurrency(point.value)}`, "Stated, history", ...zero];
+    return [label, `Market value ${formatCurrency(point.value)}`, "Stated, history"];
   }
+  const band =
+    point.low === null || point.high === null
+      ? ""
+      : `Range ${formatCurrency(point.low)} to ${formatCurrency(point.high)}, in ${dollarsWord}`;
   return [
     label,
-    `Projected value ${formatCurrency(point.value)}`,
+    `Projected value ${formatCurrency(point.value)}, in ${dollarsWord}`,
     `A scenario at ${formatRate(rate * 100)} a year, not a stated figure`,
-    `Contributions to date ${formatCurrency(point.contributedToDate ?? 0)}, ` +
-      `grants ${formatCurrency(point.grantToDate ?? 0)}`,
-  ];
+    band,
+  ].filter((line) => line.length > 0);
 }

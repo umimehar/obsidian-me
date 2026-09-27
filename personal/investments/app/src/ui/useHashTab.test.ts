@@ -44,7 +44,8 @@ describe("useHashTab, legacy hash mapping", () => {
     ["#overview", "portfolio"],
     ["#wrappers", "contributions"],
     ["#tax", "portfolio"],
-    ["#projections", "plan"],
+    ["#projections", "future"],
+    ["#plan", "future"],
     ["#reconciliation", "data"],
     ["#cards", "data"],
   ] as const)("%s decodes to %s", (hash, tab) => {
@@ -100,15 +101,15 @@ describe("useHashTab, the year scope half", () => {
   });
 
   test("setting a scope writes it beside the tab", () => {
-    window.location.hash = "#plan";
+    window.location.hash = "#future";
     const { result } = renderHook(() => useHashTab());
 
     act(() => {
       result.current[1]({ scope: 2023 });
     });
 
-    expect(result.current[0]).toEqual({ tab: "plan", scope: 2023 });
-    expect(window.location.hash).toBe("#plan/2023");
+    expect(result.current[0]).toEqual({ tab: "future", scope: 2023 });
+    expect(window.location.hash).toBe("#future/2023");
   });
 
   test("returning to all time drops the year from the hash rather than writing it out", () => {

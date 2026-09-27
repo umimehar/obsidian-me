@@ -66,21 +66,18 @@ describe("App", () => {
    * actually reachable from the tab, drawing both halves of its seam, and
    * defaulting to the 6% assumption rather than the fitted rate.
    */
-  test("the projections tab holds the projection, seam and all", () => {
+  test("the future tab holds the projection, seam and all", () => {
     render(<App />);
-    clickTab("Plan");
+    clickTab("Future");
     expect(document.querySelector("[data-projection-chart]")).not.toBeNull();
     expect(document.querySelector("[data-seam]")?.getAttribute("data-seam-period")).toBe(
       GOLDENS.projection.seamPeriod,
     );
     expect(document.querySelector("[data-history-line]")).not.toBeNull();
     expect(document.querySelector("[data-projection-line]")).not.toBeNull();
-    expect(document.querySelector("[data-projection-rate]")?.textContent).toBe(
-      "Rate in use: 6.00% a year.",
-    );
-    expect(document.querySelector("[data-projection-end-value]")?.textContent).toBe(
-      formatCurrency(GOLDENS.projection.defaultRateEndValue),
-    );
+    expect(screen.getByRole("radio", { name: "Today's dollars", checked: true })).toBeDefined();
+    expect(document.querySelector("[data-retirement-tile]")).not.toBeNull();
+    expect(document.querySelector("[data-apply-fitted]")).toBeNull();
   });
 
   test("renders the overview and the tax view together on portfolio, and the room lines on contributions", () => {
@@ -160,7 +157,7 @@ describe("App", () => {
     render(<App />);
     const gainText = formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost);
 
-    for (const label of ["Growth", "Contributions", "Plan", "Data"]) {
+    for (const label of ["Growth", "Contributions", "Future", "Data"]) {
       clickTab(label);
       const strip = document.querySelector("[data-summary-strip]");
       expect(strip).not.toBeNull();
@@ -240,7 +237,7 @@ describe("the headline book value and gain", () => {
     // every group card -- eight or nine repeats of the same caveat on one
     // tab. It now lives once, in the tab's own AboutNumbers disclosure.
     render(<App />);
-    for (const tab of ["Portfolio", "Growth", "Contributions", "Plan", "Data"]) {
+    for (const tab of ["Portfolio", "Growth", "Contributions", "Future", "Data"]) {
       clickTab(tab);
       const matches = screen.getAllByText(/An estimate: book cost for USD holdings/);
       expect(matches).toHaveLength(1);
@@ -273,7 +270,7 @@ describe("the headline book value and gain", () => {
     // and its chart test above); this pins that leaving and coming back
     // does not drift the figures it shows.
     render(<App />);
-    for (const label of ["Growth", "Contributions", "Plan", "Data"]) {
+    for (const label of ["Growth", "Contributions", "Future", "Data"]) {
       fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${label}\\b`) }), {
         button: 0,
       });

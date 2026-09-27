@@ -188,18 +188,18 @@ describe("the year filter reaches every tab that can honour it", () => {
 
   test("the projection ignores it and says so, rather than re-basing itself silently", () => {
     render(<App />);
-    openTab("Plan");
-    const unscoped = document.querySelector("[data-projection-end-value]")?.textContent;
+    openTab("Future");
+    const unscoped = document.querySelector("[data-retirement-tile]")?.textContent;
     expect(document.querySelector("[data-projection-scope-note]")).toBeNull();
 
     selectYear("2024");
-    openTab("Plan");
+    openTab("Future");
     expect(document.querySelector("[data-projection-scope-note]")?.textContent).toMatch(
       /year filter does not apply/i,
     );
     // The forecast itself is unmoved: a re-based projection would look just as
     // authoritative with nothing saying its starting point had changed.
-    expect(document.querySelector("[data-projection-end-value]")?.textContent).toBe(unscoped);
+    expect(document.querySelector("[data-retirement-tile]")?.textContent).toBe(unscoped);
   });
 });
 
