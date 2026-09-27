@@ -25,13 +25,13 @@ kanban-plugin: board
 
 ## In Progress
 
-- [ ] [[TCK-0006-dashboard-v2-registered-contributions]] #project/system #type/feature #p1
 
 
 
 
 ## Review
 
+- [ ] [[TCK-0006-dashboard-v2-registered-contributions]] #project/system #type/feature #p1
 
 - [ ] [[TCK-0002-business-vehicle-info-database]] #project/system #type/feature #p1
 
