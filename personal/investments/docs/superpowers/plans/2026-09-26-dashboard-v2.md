@@ -269,6 +269,39 @@ Page, top to bottom:
 
 ## TCK-0006: Registered contributions planner and tax fix
 
+### Task 6.0: Investment income for tax, correct figures (owner priority, do first)
+
+The owner asked that the personal taxable income figures be correct and follow the year filter. An audit against `data/datastore.json` found, for the taxable accounts (NonRegistered `1f9a`, `2c62`, Crypto `e2d6`):
+
+- Realized gains subtract CAD book cost from USD sale proceeds. `2c62` sold $14,876.70 USD in 2026 across 22 sales. With proceeds converted at each statement's own `fxRate`, 2026 moves from the shown −$4,243.49 to +$1,740.80 (before the next item).
+- A sale with no prior statement holding (bought and sold inside one statement period) counts as $0: 30 sales ($2,140.21 of proceeds) in 2026, 65 in 2025. Cost must come from that period's `BUY` rows for the symbol before the sale (average cost of what was bought); only when there is still no cost basis is the sale listed as "cost unknown", never as zero.
+- "Canadian eligible dividends" is every CAD paid `DIV`. `1f9a` (direct indexing of US stocks) paid $165.82 in CAD with US tax withheld; those are foreign source. Classify a `DIV` row as foreign when the security is USD priced in the statement's holdings, or when an `NRT` row for the same symbol exists in that statement; otherwise it is a Canadian listed distribution. Do not call Canadian listed ETF distributions "eligible dividends": the T3 or T5 decides their character. Label them "Distributions from Canadian listed securities".
+- USD `DIV` amounts are summed raw ($18.64 USD shown as CAD; $25.86 CAD at the statement rate).
+- `FPLINT` securities lending interest is interest income and is ignored.
+- `NRT` foreign tax withheld is never shown; it is a foreign tax credit. Net reversals (`debit - credit`).
+- Reversal rows on `DIV`, `INT`, `FPLINT` must net (`credit - debit`), the same rule as `src/analytics/activity.ts` after TCK-0004's fix; reuse one helper for both rather than two rules.
+- On "All time" the view silently shows the latest year; the heading must say "Latest year, 2026" in that case.
+
+**Files:** `src/analytics/income.ts`, `src/analytics/income.test.ts`, `src/ui/wrappers/TaxView.tsx`, `src/ui/wrappers/TaxView.test.tsx`, goldens (`income` key) via `bun run analytics` and `bun run goldens`.
+
+**Interfaces:**
+```ts
+export interface IncomeSummary {
+  interest: number;                 // INT + FPLINT, net, CAD
+  canadianDistributions: number;    // DIV on CAD listed securities, net, CAD
+  foreignDividends: number;         // DIV on US listed securities or with NRT, net, CAD
+  foreignTaxWithheld: number;       // NRT net, CAD, positive
+  realizedGains: number;            // proceeds converted to CAD minus average cost
+  costUnknownSales: number;         // count of sales with no cost basis at all
+}
+```
+(`eligibleDividends` and `foreignIncome` are removed, not kept alongside.)
+
+- [ ] Failing fixture tests, one per defect above: USD sale converted; same period buy then sell uses the buy's cost; a sale with no basis increments `costUnknownSales` and adds nothing; CAD paid dividend on a USD priced holding is foreign; a CAD listed ETF distribution is Canadian; USD dividend converted; FPLINT counted as interest; NRT net of a reversal; a DIV reversal nets to zero.
+- [ ] Real corpus test: 2026 `realizedGains` equals a golden computed by `buildIncome` itself after the fix, and is greater than zero (the sign flip is the regression to pin).
+- [ ] TaxView (moves to the Income tab in TCK-0007; for now in place): rows Interest, Distributions from Canadian listed securities, Foreign dividends, Foreign tax withheld (a credit you can claim), Realized gains or losses, and "N sales without a cost basis" when nonzero; heading "Investment income, {year}" or "Investment income, latest year {year}" on All time; the RRSP deduction line of Task 6.3. Tests for the year filter: `#portfolio/2025` shows 2025 figures and `#portfolio` shows the latest year label.
+- [ ] `bun run analytics`, `bun run goldens`, `bun run check`, `bun run contrast`; commit `fix(investments): correct investment income for tax`.
+
 ### Task 6.1: Deadlines and next actions
 
 **Files:** Create `src/analytics/contributionPlan.ts`, `src/analytics/contributionPlan.test.ts`.

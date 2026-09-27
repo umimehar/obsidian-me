@@ -12,7 +12,7 @@ assigned_device: any
 claimed_by: null
 auto_ok: false
 triage: manual
-priority: p1
+priority: p0
 effort: medium
 depends_on: [TCK-0003]
 created_by: umar
@@ -33,6 +33,7 @@ Turn the Registered wrappers view into a Registered contributions planner with r
 - [ ] Tax view no longer presents investment income minus the RRSP deduction as taxable income; it shows investment income by type and the RRSP deduction as separate facts
 - [ ] Tests; bun run check clean
 - [ ] Registered contributions, `ContributionsChart` and `CashflowChart` live on a new Contributions tab (id `contributions`); `#wrappers` resolves to it; the interim Plan tab is removed once Future and Contributions both exist
+- [ ] Investment income for tax is correct: USD sale proceeds converted, same month buy and sell costed, foreign versus Canadian dividends classified, USD dividends converted, lending interest and foreign tax withheld shown, reversals netted, latest year labelled on All time (plan Task 6.0)
 
 ## Context
 
@@ -40,3 +41,4 @@ Owner request in session on 2026-09-26, after reviewing a proposal for the inves
 
 ## Worklog
 - 2026-09-27 01:30 — Owner asked for more meaningful tabs; final set is This month, Portfolio, Holdings, Growth, Income, Contributions, Future, Data. Acceptance criterion added for this ticket's tab; plan updated.
+- 2026-09-27 01:45 — Owner asked that personal taxable income be correct and follow the year filter. Audit: the filter already works (2026, 2025, 2024 each render); the figures do not. 2026 realized shows −$4,243.49 and is +$1,740.80 once USD proceeds are converted, before costing 30 same month sales counted as $0; $165.82 of US source dividends labelled Canadian eligible; USD dividends unconverted; lending interest and withholding missing. Plan Task 6.0 added; priority raised to p0 so this runs next.
