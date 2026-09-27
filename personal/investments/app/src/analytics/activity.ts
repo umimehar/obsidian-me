@@ -49,6 +49,21 @@ export function convertToCad(amount: number, row: ActivityRow, statement: Statem
 }
 
 /**
+ * `credit - debit`, converted to CAD -- the reversal netting rule for `DIV`,
+ * `INT` and `FPLINT`: an amended statement can carry a reversal on the
+ * opposite side of an earlier row, and the true figure is the pair netted.
+ * Shared with `income.ts` so the rule lives once.
+ */
+export function netCreditDebit(row: ActivityRow, statement: Statement): number {
+  return convertToCad(row.credit - row.debit, row, statement);
+}
+
+/** `debit - credit`, converted to CAD -- the same netting rule, the other way round, for `NRT`. */
+export function netDebitCredit(row: ActivityRow, statement: Statement): number {
+  return convertToCad(row.debit - row.credit, row, statement);
+}
+
+/**
  * One row's contribution to `ActivityTotals`, converted to CAD. `convertToCad`
  * is called only for the one field a row's own code actually feeds -- never
  * for every field unconditionally, or an unrelated USD `BUY`/`SELL` row on a
@@ -57,18 +72,18 @@ export function convertToCad(amount: number, row: ActivityRow, statement: Statem
 function totalsForRow(row: ActivityRow, statement: Statement): ActivityTotals {
   switch (row.code) {
     case "DIV":
-      return { ...ZERO_TOTALS, dividends: convertToCad(row.credit - row.debit, row, statement) };
+      return { ...ZERO_TOTALS, dividends: netCreditDebit(row, statement) };
     case "INT":
-      return { ...ZERO_TOTALS, interest: convertToCad(row.credit - row.debit, row, statement) };
+      return { ...ZERO_TOTALS, interest: netCreditDebit(row, statement) };
     case "FPLINT":
       return {
         ...ZERO_TOTALS,
-        lendingIncome: convertToCad(row.credit - row.debit, row, statement),
+        lendingIncome: netCreditDebit(row, statement),
       };
     case "NRT":
       return {
         ...ZERO_TOTALS,
-        withholdingTax: convertToCad(row.debit - row.credit, row, statement),
+        withholdingTax: netDebitCredit(row, statement),
       };
     case "FEE":
       return { ...ZERO_TOTALS, fees: convertToCad(row.debit, row, statement) };

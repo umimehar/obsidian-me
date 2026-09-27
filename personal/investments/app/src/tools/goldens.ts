@@ -238,6 +238,8 @@ function buildGoldens(): Goldens {
   const respLine = lines.find((l) => l.group === "RESP");
   const rrspLine = lines.find((l) => l.group === "RRSP");
   const income = required(analytics.income[startYear], `income summary for ${startYear}`);
+  const income2025 = required(analytics.income["2025"], "income summary for 2025");
+  const income2026 = required(analytics.income["2026"], "income summary for 2026");
   const cesgRow = required(
     runwayRows.find((r) => r.id === "cesg"),
     "CESG runway row",
@@ -342,6 +344,24 @@ function buildGoldens(): Goldens {
       realizedGain: income.realizedGains,
       costUnknownSales: income.costUnknownSales,
       rrspDeduction: baseInputs.contributedThisYear.RRSP ?? 0,
+    },
+    incomeByYear: {
+      "2025": {
+        interest: income2025.interest,
+        canadianDistributions: income2025.canadianDistributions,
+        foreignDividends: income2025.foreignDividends,
+        foreignTaxWithheld: income2025.foreignTaxWithheld,
+        realizedGains: income2025.realizedGains,
+        costUnknownSales: income2025.costUnknownSales,
+      },
+      "2026": {
+        interest: income2026.interest,
+        canadianDistributions: income2026.canadianDistributions,
+        foreignDividends: income2026.foreignDividends,
+        foreignTaxWithheld: income2026.foreignTaxWithheld,
+        realizedGains: income2026.realizedGains,
+        costUnknownSales: income2026.costUnknownSales,
+      },
     },
     month: {
       period: review.period,

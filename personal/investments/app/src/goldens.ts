@@ -211,6 +211,24 @@ export interface Goldens {
     costUnknownSales: number;
     rrspDeduction: number;
   };
+  /**
+   * `analytics.income["2025"]` and `["2026"]`, verbatim -- the corpus
+   * regression pin for `buildIncome`'s realized gains fix. Both years come
+   * straight off the same `analytics.json` the dashboard reads, never
+   * recomputed here, so a regression in the pipeline shows up as a red
+   * test rather than a `bun run goldens` run quietly re-blessing it.
+   */
+  incomeByYear: Record<
+    "2025" | "2026",
+    {
+      interest: number;
+      canadianDistributions: number;
+      foreignDividends: number;
+      foreignTaxWithheld: number;
+      realizedGains: number;
+      costUnknownSales: number;
+    }
+  >;
   /** `monthReview` at the latest reviewable period, computed by that same function. */
   month: {
     period: string;
@@ -245,6 +263,7 @@ function isGoldens(value: unknown): value is Goldens {
     typeof c.goals === "object" &&
     typeof c.zeroRateStretchAnnualToClose === "number" &&
     typeof c.income === "object" &&
+    typeof c.incomeByYear === "object" &&
     typeof c.month === "object"
   );
 }

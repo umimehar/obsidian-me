@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test";
+import { GOLDENS } from "../goldens";
 import type { AccountKind, ManagementStyle } from "../store/mask";
 import type { ActivityRow, Holding, Statement } from "../types";
+import { loadAnalytics } from "../ui/data";
 import { buildIncome } from "./income";
 import type { AccountSeries } from "./types";
 
@@ -456,5 +458,297 @@ describe("buildIncome", () => {
     });
     const income = buildIncome([tfsa], [january, february], 2026, new Set(["acct_tfsa"]));
     expect(income.realizedGains).toBe(0);
+  });
+
+  test("a same month buy before the sale is costed against it, in date order", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-03"),
+      activity: [
+        activityRow({
+          date: "2026-03-05",
+          code: "BUY",
+          debit: 200,
+          description: "AXP - American Express: Bought 10.0000 shares (executed at 2026-03-05)",
+        }),
+        activityRow({
+          date: "2026-03-20",
+          code: "SELL",
+          credit: 130,
+          description: "AXP - American Express: Sold 5.0000 shares (executed at 2026-03-20)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    // average cost $20/share from the earlier buy, proceeds 130 - (5 * 20) = 30
+    expect(income.realizedGains).toBeCloseTo(30, 2);
+    expect(income.costUnknownSales).toBe(0);
+  });
+
+  test("a same month buy AFTER the sale is not costed against it -- the sale predates the shares", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-03"),
+      activity: [
+        activityRow({
+          date: "2026-03-05",
+          code: "SELL",
+          credit: 130,
+          description: "AXP - American Express: Sold 5.0000 shares (executed at 2026-03-05)",
+        }),
+        activityRow({
+          date: "2026-03-20",
+          code: "BUY",
+          debit: 200,
+          description: "AXP - American Express: Bought 10.0000 shares (executed at 2026-03-20)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.realizedGains).toBe(0);
+    expect(income.costUnknownSales).toBe(1);
+  });
+
+  test("a stock split (STKREORG, no readable ratio) marks the symbol unknown for the rest of the statement", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const january = statement({
+      source: src("acct_nr", "2026-01"),
+      holdings: [holding({ symbol: "NFLX", quantity: 0.0267, bookCost: 41.62 })],
+    });
+    const february = statement({
+      source: src("acct_nr", "2026-02"),
+      holdings: [],
+      activity: [
+        activityRow({
+          date: "2026-02-01",
+          code: "SELL",
+          credit: 0.16,
+          description: "NFLX - Netflix Inc: Sold 0.0001 shares (executed at 2026-01-31)",
+        }),
+        activityRow({
+          date: "2026-02-02",
+          code: "STKREORG",
+          description: "NFLX - Netflix Inc: stock reorganization (executed at 2026-02-02)",
+        }),
+        activityRow({
+          date: "2026-02-03",
+          code: "SELL",
+          credit: 85,
+          description: "NFLX - Netflix Inc: Sold 0.57 shares (executed at 2026-02-03)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [january, february], 2026, new Set(["acct_nr"]));
+    // Only the pre-split sale is priced: 0.16 - (0.0001 * 41.62/0.0267) = 0.0041
+    expect(income.realizedGains).toBeCloseTo(0.0041, 3);
+    // The post-split sale counts as cost unknown, never priced off the pre-split average.
+    expect(income.costUnknownSales).toBe(1);
+  });
+
+  test("a SELL with a blank description counts as cost unknown, never a silent zero", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-02"),
+      holdings: [holding({ symbol: "ENB", quantity: 20, bookCost: 400 })],
+      activity: [activityRow({ code: "SELL", credit: 5.54, description: "" })],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.realizedGains).toBe(0);
+    expect(income.costUnknownSales).toBe(1);
+  });
+
+  test("a readable symbol with an unreadable quantity, absent from the closing holdings, is a full close", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-06"),
+      holdings: [],
+      activity: [
+        activityRow({
+          date: "2026-06-01",
+          code: "BUY",
+          debit: 383.45,
+          description: "AMHE - Harvest Amazon Enhanced High Income Shares ETF - Class A:",
+        }),
+        activityRow({
+          date: "2026-06-02",
+          code: "SELL",
+          credit: 383.75,
+          description: "AMHE - Harvest Amazon Enhanced High Income Shares ETF - Class A: Sold",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.realizedGains).toBeCloseTo(0.3, 2);
+    expect(income.costUnknownSales).toBe(0);
+  });
+
+  test("the same unreadable quantity case, still open in the closing holdings, is cost unknown rather than guessed", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-06"),
+      holdings: [holding({ symbol: "AMHE", quantity: 1, bookCost: 100 })],
+      activity: [
+        activityRow({
+          code: "SELL",
+          credit: 50,
+          description: "AMHE - Harvest Amazon Enhanced High Income Shares ETF - Class A: Sold",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.realizedGains).toBe(0);
+    expect(income.costUnknownSales).toBe(1);
+  });
+
+  test("a symbol two holdings both claim is ambiguous, and its sales are cost unknown", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const january = statement({
+      source: src("acct_nr", "2026-01"),
+      holdings: [
+        holding({
+          symbol: "A",
+          name: "Agilent Technologies Inc.",
+          quantity: 0.1208,
+          bookCost: 24.6,
+        }),
+        holding({ symbol: "A", name: "Aon plc.", quantity: 0.0387, bookCost: 18.78 }),
+      ],
+    });
+    const february = statement({
+      source: src("acct_nr", "2026-02"),
+      holdings: [],
+      activity: [
+        activityRow({
+          code: "SELL",
+          credit: 30,
+          description: "A - Agilent Technologies Inc.: Sold 0.1208 shares (executed at 2026-02-01)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [january, february], 2026, new Set(["acct_nr"]));
+    expect(income.realizedGains).toBe(0);
+    expect(income.costUnknownSales).toBe(1);
+  });
+
+  test("a CAD priced holding at a placeholder $0 market price is not trusted as Canadian", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-06"),
+      holdings: [
+        holding({
+          symbol: "XOM",
+          priceCurrency: "CAD",
+          marketPrice: 0,
+          assetClass: "US Equities and Alternatives",
+        }),
+      ],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 1.76,
+          description:
+            "XOM - Exxon Mobil Corp.: Cash dividend distribution, received on 2026-06-10",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.foreignDividends).toBe(1.76);
+    expect(income.canadianDistributions).toBe(0);
+  });
+
+  test("a symbol seen priced in USD in an earlier statement is foreign even once sold out of the current one", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const october = statement({
+      source: src("acct_nr", "2025-10"),
+      holdings: [holding({ symbol: "LNG", priceCurrency: "USD", marketPrice: 212 })],
+    });
+    const november = statement({
+      source: src("acct_nr", "2025-11"),
+      holdings: [],
+      activity: [
+        activityRow({
+          code: "DIV",
+          credit: 0.04,
+          description:
+            "LNG - Cheniere Energy Inc.: Cash dividend distribution, received on 2025-11-10",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [october, november], 2025, new Set(["acct_nr"]));
+    expect(income.foreignDividends).toBe(0.04);
+    expect(income.canadianDistributions).toBe(0);
+  });
+
+  test("a STKDIS spin-off rebases the same symbol's quantity at unchanged cost", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const january = statement({
+      source: src("acct_nr", "2026-01"),
+      holdings: [holding({ symbol: "XOM", quantity: 2, bookCost: 200 })],
+    });
+    const february = statement({
+      source: src("acct_nr", "2026-02"),
+      holdings: [holding({ symbol: "XOM", quantity: 3, bookCost: 200 })],
+      activity: [
+        activityRow({
+          code: "STKDIS",
+          description: "XOM - Exxon Mobil Corp.: Distribution of 1 shares (executed at 2026-02-02)",
+        }),
+        activityRow({
+          code: "SELL",
+          credit: 90,
+          description: "XOM - Exxon Mobil Corp.: Sold 1.0000 shares (executed at 2026-02-05)",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [january, february], 2026, new Set(["acct_nr"]));
+    // Ledger after the distribution: 3 shares, $200 cost, $66.67/share.
+    // 90 - (1 * 200/3) = 23.33
+    expect(income.realizedGains).toBeCloseTo(23.33, 1);
+  });
+
+  test("corporateActions lists the year's stock dividends and spin-offs, symbol and date", () => {
+    const account = series({ maskedId: "acct_nr" });
+    const s = statement({
+      source: src("acct_nr", "2026-06"),
+      activity: [
+        activityRow({
+          code: "STKDIV",
+          date: "2026-06-01",
+          description:
+            "FDXF - Fedex Freight Holding Company Inc.: Stock dividend distribution of 0.05",
+        }),
+      ],
+    });
+    const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
+    expect(income.corporateActions).toEqual([{ symbol: "FDXF", date: "2026-06-01" }]);
+  });
+
+  test("real corpus: 2026 realized gains are positive and match the golden, the regression this fix pins", () => {
+    const analytics = loadAnalytics();
+    const income2026 = analytics.income["2026"];
+    if (income2026 === undefined) throw new Error("expected 2026 income in the corpus");
+    expect(income2026.realizedGains).toBeGreaterThan(0);
+    expect(income2026.realizedGains).toBe(GOLDENS.incomeByYear["2026"].realizedGains);
+    expect(income2026.canadianDistributions).toBe(
+      GOLDENS.incomeByYear["2026"].canadianDistributions,
+    );
+    expect(income2026.foreignDividends).toBe(GOLDENS.incomeByYear["2026"].foreignDividends);
+    expect(income2026.foreignTaxWithheld).toBe(GOLDENS.incomeByYear["2026"].foreignTaxWithheld);
+    expect(income2026.interest).toBe(GOLDENS.incomeByYear["2026"].interest);
+    expect(income2026.costUnknownSales).toBe(GOLDENS.incomeByYear["2026"].costUnknownSales);
+  });
+
+  test("real corpus: 2025 income matches the golden", () => {
+    const analytics = loadAnalytics();
+    const income2025 = analytics.income["2025"];
+    if (income2025 === undefined) throw new Error("expected 2025 income in the corpus");
+    expect(income2025.realizedGains).toBe(GOLDENS.incomeByYear["2025"].realizedGains);
+    expect(income2025.canadianDistributions).toBe(
+      GOLDENS.incomeByYear["2025"].canadianDistributions,
+    );
+    expect(income2025.foreignDividends).toBe(GOLDENS.incomeByYear["2025"].foreignDividends);
+    expect(income2025.foreignTaxWithheld).toBe(GOLDENS.incomeByYear["2025"].foreignTaxWithheld);
+    expect(income2025.interest).toBe(GOLDENS.incomeByYear["2025"].interest);
+    expect(income2025.costUnknownSales).toBe(GOLDENS.incomeByYear["2025"].costUnknownSales);
   });
 });

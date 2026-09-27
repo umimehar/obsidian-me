@@ -1,6 +1,6 @@
 import type { AccountKind } from "../store/mask";
 import type { ActivityRow, Holding, Statement } from "../types";
-import { type ActivityByPeriod, buildActivity, convertToCad } from "./activity";
+import { type ActivityByPeriod, buildActivity, convertToCad, netCreditDebit } from "./activity";
 import type { AccountSeries } from "./types";
 
 /**
@@ -24,6 +24,12 @@ const TAXABLE_KINDS: ReadonlySet<AccountKind> = new Set(["NonRegistered", "Crypt
  */
 export type IncomeScope = ReadonlySet<string>;
 
+/** One spin-off or reorganization row worth flagging against a tax slip: the symbol it touched and the date it landed. */
+export interface CorporateAction {
+  symbol: string;
+  date: string;
+}
+
 export interface IncomeSummary {
   /** INT and FPLINT (securities lending), net of reversals, CAD. */
   interest: number;
@@ -33,10 +39,12 @@ export interface IncomeSummary {
   foreignDividends: number;
   /** NRT, net of reversals, CAD, positive. A foreign tax credit, not an expense. */
   foreignTaxWithheld: number;
-  /** Proceeds converted to CAD at the statement's own rate, minus average cost. */
+  /** Proceeds converted to CAD at the statement's own rate, minus the ledger's average cost. */
   realizedGains: number;
-  /** Sales with no cost basis at all: no preceding holding and no same period BUY for the symbol. */
+  /** Sales with no cost basis at all. */
   costUnknownSales: number;
+  /** Stock dividends and spin-off distributions in the year, oldest first -- see `CorporateAction`. */
+  corporateActions: readonly CorporateAction[];
 }
 
 function periodYear(period: string): number {
@@ -58,8 +66,7 @@ function taxableAccountIds(series: readonly AccountSeries[], scope: IncomeScope)
  * Interest and securities lending income, and foreign tax withheld, for the
  * taxable accounts in the target year -- read straight off `buildActivity`'s
  * per period, per account totals rather than re-deriving the reversal
- * netting rule a second time. `activity.ts` already nets `INT`/`FPLINT`
- * (`credit - debit`) and `NRT` (`debit - credit`) in CAD.
+ * netting rule a second time.
  */
 function sumInterestAndWithholding(
   activity: ActivityByPeriod,
@@ -80,10 +87,10 @@ function sumInterestAndWithholding(
 }
 
 /**
- * The ticker at the front of a `BUY`, `SELL` or `DIV` row's description --
- * e.g. `"ENB - Enbridge Inc: Sold 12.0000 shares (executed at 2024-08-14)"`
- * yields `"ENB"`. Null for the description shapes ingest sometimes truncates
- * with no leading ticker at all.
+ * The ticker at the front of a `BUY`, `SELL`, `DIV`, `STKDIV` or `STKDIS`
+ * row's description -- e.g. `"ENB - Enbridge Inc: Sold 12.0000 shares
+ * (executed at 2024-08-14)"` yields `"ENB"`. Null for the blank
+ * descriptions ingest sometimes carries.
  */
 function parseRowSymbol(description: string): string | null {
   return /^(\S+) -/.exec(description)?.[1] ?? null;
@@ -103,10 +110,28 @@ function parseTradeLot(
   return { symbol, quantity };
 }
 
-function holdingsBySymbol(holdings: readonly Holding[]): Map<string, Holding> {
-  const map = new Map<string, Holding>();
+/**
+ * A `STKDIV` or `STKDIS` row's signed share delta -- e.g. `"Stock dividend
+ * distribution of 0.0107"` or `"Distribution of -1.3728 shares"` both yield
+ * their number, sign included. Null when the row states no figure at all
+ * (a `STKREORG` reorg, which carries none).
+ */
+function parseCorporateActionDelta(description: string): number | null {
+  const match = /[Dd]istribution of (-?[\d.]+)/.exec(description);
+  if (!match?.[1]) return null;
+  const delta = Number(match[1]);
+  return Number.isFinite(delta) ? delta : null;
+}
+
+/** A sentinel for a symbol two distinct holdings both claim in one statement -- never silently keep the last. */
+const AMBIGUOUS = "ambiguous" as const;
+type HoldingLookup = Holding | typeof AMBIGUOUS;
+
+function holdingsBySymbol(holdings: readonly Holding[]): Map<string, HoldingLookup> {
+  const map = new Map<string, HoldingLookup>();
   for (const h of holdings) {
-    if (h.symbol) map.set(h.symbol, h);
+    if (!h.symbol) continue;
+    map.set(h.symbol, map.has(h.symbol) ? AMBIGUOUS : h);
   }
   return map;
 }
@@ -121,22 +146,58 @@ function nrtDatesForStatement(s: Statement): ReadonlySet<string> {
 }
 
 /**
- * Whether one `DIV` row is foreign source: the row itself is in USD, or its
- * symbol prices in USD on this statement's holdings, or -- when the symbol
- * cannot be resolved against a holding at all, the one case a `DIV` row
- * carries no currency or holding evidence of its own -- an `NRT` row fired
- * on the same date in the same statement, which only happens on a foreign
- * security. Everything else is a Canadian listed distribution.
+ * Every symbol this account has ever carried at a real USD market price
+ * (`priceCurrency: "USD"` and `marketPrice > 0`, so a placeholder price
+ * from a pending valuation never taints the set), across every statement
+ * regardless of period. The one signal that survives a month where the
+ * position was already sold and so is absent from that statement's own
+ * holdings.
+ */
+function usdPricedSymbolsForAccount(
+  statements: readonly Statement[],
+  accountId: string,
+): ReadonlySet<string> {
+  const symbols = new Set<string>();
+  for (const s of statements) {
+    if (s.source.accountNo !== accountId) continue;
+    for (const h of s.holdings) {
+      if (h.symbol && h.priceCurrency === "USD" && h.marketPrice > 0) symbols.add(h.symbol);
+    }
+  }
+  return symbols;
+}
+
+/**
+ * Whether one `DIV` row is foreign source: the row itself is in USD, its
+ * holding's asset class opens with "US Equities", the symbol has ever
+ * priced in USD for this account (current statement included), or --
+ * failing all of that -- an `NRT` row fired on the same date in the same
+ * statement. A CAD `priceCurrency` is trusted only when `marketPrice > 0`,
+ * since a pending or stale $0 price is not evidence of anything. A symbol
+ * two holdings both claim (`AMBIGUOUS`) skips the holding-based checks
+ * entirely and falls straight to the NRT fallback -- classifying it off a
+ * holding record that might belong to the wrong security is worse than not
+ * classifying it at all.
  */
 function isForeignDividend(
   row: ActivityRow,
-  holdings: ReadonlyMap<string, Holding>,
+  holdingsThisStatement: ReadonlyMap<string, HoldingLookup>,
+  historicalUsd: ReadonlySet<string>,
   nrtDates: ReadonlySet<string>,
 ): boolean {
   if (row.currency === "USD") return true;
+
   const symbol = parseRowSymbol(row.description);
-  const holding = symbol ? holdings.get(symbol) : undefined;
-  if (holding) return holding.priceCurrency === "USD";
+  const holding = symbol ? holdingsThisStatement.get(symbol) : undefined;
+
+  if (holding !== AMBIGUOUS) {
+    if (holding?.assetClass.startsWith("US Equities")) return true;
+    if (symbol !== null && historicalUsd.has(symbol)) return true;
+    if (holding !== undefined && holding.priceCurrency === "CAD" && holding.marketPrice > 0) {
+      return false;
+    }
+  }
+
   return nrtDates.has(row.date);
 }
 
@@ -145,10 +206,11 @@ interface DividendTotals {
   foreignDividends: number;
 }
 
-const ZERO_DIVIDENDS: DividendTotals = { canadianDistributions: 0, foreignDividends: 0 };
-
 /** One statement's `DIV` rows, classified and netted (`credit - debit`), converted to CAD. */
-function dividendTotalsForStatement(s: Statement): DividendTotals {
+function dividendTotalsForStatement(
+  s: Statement,
+  historicalUsd: ReadonlySet<string>,
+): DividendTotals {
   const holdings = holdingsBySymbol(s.holdings);
   const nrtDates = nrtDatesForStatement(s);
   let canadianDistributions = 0;
@@ -156,8 +218,8 @@ function dividendTotalsForStatement(s: Statement): DividendTotals {
 
   for (const row of s.activity) {
     if (row.code !== "DIV") continue;
-    const net = convertToCad(row.credit - row.debit, row, s);
-    if (isForeignDividend(row, holdings, nrtDates)) foreignDividends += net;
+    const net = netCreditDebit(row, s);
+    if (isForeignDividend(row, holdings, historicalUsd, nrtDates)) foreignDividends += net;
     else canadianDistributions += net;
   }
 
@@ -169,37 +231,89 @@ function sumDividends(
   taxableIds: ReadonlySet<string>,
   year: number,
 ): DividendTotals {
+  const historicalUsdByAccount = new Map<string, ReadonlySet<string>>();
   let canadianDistributions = 0;
   let foreignDividends = 0;
+
   for (const s of statements) {
     if (s.source.template === "PERFORMANCE") continue;
     if (!taxableIds.has(s.source.accountNo)) continue;
     if (periodYear(s.source.period) !== year) continue;
-    const totals = dividendTotalsForStatement(s);
+
+    const accountId = s.source.accountNo;
+    let historicalUsd = historicalUsdByAccount.get(accountId);
+    if (historicalUsd === undefined) {
+      historicalUsd = usdPricedSymbolsForAccount(statements, accountId);
+      historicalUsdByAccount.set(accountId, historicalUsd);
+    }
+
+    const totals = dividendTotalsForStatement(s, historicalUsd);
     canadianDistributions += totals.canadianDistributions;
     foreignDividends += totals.foreignDividends;
   }
   return { canadianDistributions, foreignDividends };
 }
 
-/**
- * A symbol's average cost per share from this statement's own `BUY` rows --
- * the cost basis for a sale that closes out a position bought and sold
- * inside the same monthly snapshot, where no preceding holding exists to
- * price it against. Null when the symbol has no `BUY` row this statement
- * either, which is the genuine cost unknown case.
- */
-function sameStatementBuyCostPerShare(s: Statement, symbol: string): number | null {
-  let quantity = 0;
-  let costCad = 0;
+/** One statement's `STKDIV`/`STKDIS` rows, symbol and date -- the corporate actions worth flagging against a tax slip. */
+function corporateActionsForStatement(s: Statement): CorporateAction[] {
+  const actions: CorporateAction[] = [];
   for (const row of s.activity) {
-    if (row.code !== "BUY") continue;
-    const lot = parseTradeLot(row, "Bought");
-    if (!lot || lot.symbol !== symbol) continue;
-    quantity += lot.quantity;
-    costCad += convertToCad(row.debit, row, s);
+    if (row.code !== "STKDIV" && row.code !== "STKDIS") continue;
+    const symbol = parseRowSymbol(row.description);
+    if (symbol) actions.push({ symbol, date: row.date });
   }
-  return quantity > 0 ? costCad / quantity : null;
+  return actions;
+}
+
+function collectCorporateActions(
+  statements: readonly Statement[],
+  taxableIds: ReadonlySet<string>,
+  year: number,
+): CorporateAction[] {
+  const actions: CorporateAction[] = [];
+  for (const s of statements) {
+    if (s.source.template === "PERFORMANCE") continue;
+    if (!taxableIds.has(s.source.accountNo)) continue;
+    if (periodYear(s.source.period) !== year) continue;
+    actions.push(...corporateActionsForStatement(s));
+  }
+  return actions.sort((a, b) => a.date.localeCompare(b.date) || a.symbol.localeCompare(b.symbol));
+}
+
+/** One symbol's running position within a statement: quantity, CAD cost, and whether a corporate action has made both untrustworthy. */
+interface LedgerEntry {
+  quantity: number;
+  cost: number;
+  unknown: boolean;
+}
+
+function seedLedger(priorHoldings: ReadonlyMap<string, HoldingLookup>): Map<string, LedgerEntry> {
+  const ledger = new Map<string, LedgerEntry>();
+  for (const [symbol, holding] of priorHoldings) {
+    ledger.set(
+      symbol,
+      holding === AMBIGUOUS
+        ? { quantity: 0, cost: 0, unknown: true }
+        : { quantity: holding.quantity, cost: holding.bookCost, unknown: false },
+    );
+  }
+  return ledger;
+}
+
+function ledgerEntryFor(ledger: Map<string, LedgerEntry>, symbol: string): LedgerEntry {
+  const existing = ledger.get(symbol);
+  if (existing) return existing;
+  const fresh: LedgerEntry = { quantity: 0, cost: 0, unknown: false };
+  ledger.set(symbol, fresh);
+  return fresh;
+}
+
+/** `s.activity` in date order, original row order breaking a tie -- a stable sort, since the source array is already close to chronological. */
+function orderedRows(s: Statement): readonly ActivityRow[] {
+  return s.activity
+    .map((row, index) => ({ row, index }))
+    .sort((a, b) => a.row.date.localeCompare(b.row.date) || a.index - b.index)
+    .map(({ row }) => row);
 }
 
 interface RowGain {
@@ -210,36 +324,108 @@ interface RowGain {
 const NO_GAIN: RowGain = { gain: 0, costUnknown: false };
 
 /**
- * One `SELL` row's gain: proceeds (converted to CAD at the statement's own
- * `fxRate`) minus average cost per share times the quantity sold. Cost comes
- * from the holding as of the immediately preceding BROKERAGE statement when
- * one exists, or failing that from this statement's own `BUY` rows for the
- * symbol (a position opened and closed within one month). Only when neither
- * exists is the sale "cost unknown": it counts nothing toward the gain
- * rather than the zero a missing cost basis used to silently produce.
+ * One `SELL` row against the running ledger. A symbol the ledger has
+ * already marked `unknown` (an ambiguous holding, or a corporate action
+ * with no readable ratio -- see `applyRowToLedger`) counts as cost unknown
+ * outright, never priced off a stale average. A description with no
+ * readable symbol at all is the same case. A readable symbol with an
+ * unreadable quantity, on a position this statement's own closing holdings
+ * no longer carry, is a full close: the sale realizes the ledger's whole
+ * remaining cost, not a per-share figure it has no quantity to divide by.
  */
-function gainForRow(
+function processSell(
   row: ActivityRow,
   s: Statement,
-  priorHoldings: ReadonlyMap<string, Holding>,
+  ledger: Map<string, LedgerEntry>,
+  closingHoldings: ReadonlyMap<string, HoldingLookup>,
 ): RowGain {
-  if (row.code !== "SELL") return NO_GAIN;
-  const lot = parseTradeLot(row, "Sold");
-  if (!lot) return NO_GAIN;
+  const symbol = parseRowSymbol(row.description);
+  if (symbol === null) return { gain: 0, costUnknown: true };
+
+  const entry = ledgerEntryFor(ledger, symbol);
+  if (entry.unknown) return { gain: 0, costUnknown: true };
 
   const proceedsCad = convertToCad(row.credit, row, s);
-  const prior = priorHoldings.get(lot.symbol);
-  if (prior && prior.quantity > 0) {
-    const averageCostPerShare = prior.bookCost / prior.quantity;
-    return { gain: proceedsCad - averageCostPerShare * lot.quantity, costUnknown: false };
+  const lot = parseTradeLot(row, "Sold");
+
+  if (lot === null) {
+    if (closingHoldings.get(symbol) !== undefined) return { gain: 0, costUnknown: true };
+    const gain = proceedsCad - entry.cost;
+    entry.cost = 0;
+    entry.quantity = 0;
+    return { gain, costUnknown: false };
   }
 
-  const sameStatementCost = sameStatementBuyCostPerShare(s, lot.symbol);
-  if (sameStatementCost !== null) {
-    return { gain: proceedsCad - sameStatementCost * lot.quantity, costUnknown: false };
-  }
+  if (entry.quantity <= 1e-9) return { gain: 0, costUnknown: true };
 
-  return { gain: 0, costUnknown: true };
+  const costPerShare = entry.cost / entry.quantity;
+  const cost = costPerShare * lot.quantity;
+  entry.cost -= cost;
+  entry.quantity -= lot.quantity;
+  return { gain: proceedsCad - cost, costUnknown: false };
+}
+
+/**
+ * One row's effect on the running ledger: `BUY` adds quantity and CAD
+ * cost; `SELL` realizes a gain (see `processSell`); `STKDIV`/`STKDIS` rebase
+ * quantity by the row's own stated delta at unchanged cost; `STKREORG`
+ * carries no readable ratio at all, so it marks the symbol `unknown` for
+ * the rest of the statement rather than let a later sale price post-split
+ * shares off a pre-split average.
+ */
+/**
+ * A BUY with an unreadable quantity still adds its cost -- the one case
+ * that matters is a same statement full close (`processSell`), which
+ * consumes the ledger's whole cost and never divides by quantity at all.
+ */
+function processBuy(row: ActivityRow, s: Statement, ledger: Map<string, LedgerEntry>): void {
+  const symbol = parseRowSymbol(row.description);
+  if (!symbol) return;
+  const lot = parseTradeLot(row, "Bought");
+  const entry = ledgerEntryFor(ledger, symbol);
+  if (entry.unknown) return;
+  entry.cost += convertToCad(row.debit, row, s);
+  if (lot) entry.quantity += lot.quantity;
+}
+
+/** A stock dividend or spin-off distribution: quantity rebased by the row's own stated delta, cost unchanged. */
+function processCorporateActionDelta(row: ActivityRow, ledger: Map<string, LedgerEntry>): void {
+  const symbol = parseRowSymbol(row.description);
+  const delta = parseCorporateActionDelta(row.description);
+  if (!symbol || delta === null) return;
+  const entry = ledgerEntryFor(ledger, symbol);
+  if (!entry.unknown) entry.quantity += delta;
+}
+
+/** A reorg with no readable ratio: mark the symbol unknown for the rest of the statement -- see `applyRowToLedger`. */
+function processUnreadableReorg(row: ActivityRow, ledger: Map<string, LedgerEntry>): void {
+  const symbol = parseRowSymbol(row.description);
+  const delta = parseCorporateActionDelta(row.description);
+  if (symbol && delta === null) ledgerEntryFor(ledger, symbol).unknown = true;
+}
+
+function applyRowToLedger(
+  row: ActivityRow,
+  s: Statement,
+  ledger: Map<string, LedgerEntry>,
+  closingHoldings: ReadonlyMap<string, HoldingLookup>,
+): RowGain {
+  switch (row.code) {
+    case "BUY":
+      processBuy(row, s, ledger);
+      return NO_GAIN;
+    case "SELL":
+      return processSell(row, s, ledger, closingHoldings);
+    case "STKDIV":
+    case "STKDIS":
+      processCorporateActionDelta(row, ledger);
+      return NO_GAIN;
+    case "STKREORG":
+      processUnreadableReorg(row, ledger);
+      return NO_GAIN;
+    default:
+      return NO_GAIN;
+  }
 }
 
 interface StatementGain {
@@ -249,22 +435,24 @@ interface StatementGain {
 
 function realizedGainForStatement(
   s: Statement,
-  priorHoldings: ReadonlyMap<string, Holding>,
+  priorHoldings: ReadonlyMap<string, HoldingLookup>,
 ): StatementGain {
+  const ledger = seedLedger(priorHoldings);
+  const closingHoldings = holdingsBySymbol(s.holdings);
   let gain = 0;
   let costUnknownCount = 0;
-  for (const row of s.activity) {
-    const r = gainForRow(row, s, priorHoldings);
-    gain += r.gain;
-    if (r.costUnknown) costUnknownCount += 1;
+  for (const row of orderedRows(s)) {
+    const result = applyRowToLedger(row, s, ledger, closingHoldings);
+    gain += result.gain;
+    if (result.costUnknown) costUnknownCount += 1;
   }
   return { gain, costUnknownCount };
 }
 
 /**
  * One account's realized gains and cost unknown count for `year`, walking
- * every BROKERAGE statement in order so `priorHoldings` always reflects the
- * immediately preceding one -- see `gainForRow`.
+ * every BROKERAGE statement in order so the ledger always seeds from the
+ * immediately preceding one -- see `realizedGainForStatement`.
  */
 function realizedGainForAccount(
   statements: readonly Statement[],
@@ -277,7 +465,7 @@ function realizedGainForAccount(
 
   let gain = 0;
   let costUnknownCount = 0;
-  let priorHoldings = new Map<string, Holding>();
+  let priorHoldings = new Map<string, HoldingLookup>();
 
   for (const s of brokerage) {
     if (periodYear(s.source.period) === year) {
@@ -323,6 +511,7 @@ export function buildIncome(
   const { interest, foreignTaxWithheld } = sumInterestAndWithholding(activity, taxableIds, year);
   const { canadianDistributions, foreignDividends } = sumDividends(statements, taxableIds, year);
   const { realizedGains, costUnknownSales } = sumRealizedGains(statements, taxableIds, year);
+  const corporateActions = collectCorporateActions(statements, taxableIds, year);
   return {
     interest,
     canadianDistributions,
@@ -330,5 +519,6 @@ export function buildIncome(
     foreignTaxWithheld,
     realizedGains,
     costUnknownSales,
+    corporateActions,
   };
 }
