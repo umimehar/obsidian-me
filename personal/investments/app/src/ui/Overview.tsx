@@ -1,4 +1,4 @@
-import { Badge, Box, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { Badge, Box, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../analytics/build";
@@ -257,18 +257,20 @@ export function Overview({ analytics }: OverviewProps) {
   return (
     <Flex direction="column" gap="4">
       <LensToggle lens={lens} onLensChange={setLens} />
-      <AnimatePresence mode="popLayout">
-        {groups.map((group) => (
-          <GroupCard
-            key={group.key}
-            group={group}
-            grandTotalValue={total}
-            motionSpec={motionSpec}
-            series={analytics.series}
-            xDomain={xDomain}
-          />
-        ))}
-      </AnimatePresence>
+      <Grid columns={{ initial: "1", md: "2" }} gap="4">
+        <AnimatePresence mode="popLayout">
+          {groups.map((group) => (
+            <GroupCard
+              key={group.key}
+              group={group}
+              grandTotalValue={total}
+              motionSpec={motionSpec}
+              series={analytics.series}
+              xDomain={xDomain}
+            />
+          ))}
+        </AnimatePresence>
+      </Grid>
     </Flex>
   );
 }

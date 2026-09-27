@@ -71,7 +71,7 @@ describe("App", () => {
    */
   test("the projections tab holds the projection, seam and all", () => {
     render(<App />);
-    clickTab("Projections");
+    clickTab("Plan");
     expect(document.querySelector("[data-projection-chart]")).not.toBeNull();
     expect(document.querySelector("[data-seam]")?.getAttribute("data-seam-period")).toBe(
       GOLDENS.projection.seamPeriod,
@@ -86,22 +86,23 @@ describe("App", () => {
     );
   });
 
-  test("renders the overview, the registered wrappers and the tax view together", () => {
+  test("renders the overview and the tax view together on portfolio, and the room lines on plan", () => {
     render(<App />);
     expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe(
       formatCurrency(GOLDENS.portfolio.total),
     );
-
-    clickTab("Wrappers");
-    expect(document.querySelectorAll("[data-room-line]").length).toBe(4);
-
-    clickTab("Tax");
+    // Portfolio holds both the account groups and, under it, the tax view --
+    // no click needed, since both live in the same panel now.
+    expect(document.querySelectorAll("[data-overview-group]").length).toBeGreaterThan(0);
     expect(document.querySelector("[data-tax-income]")).not.toBeNull();
+
+    clickTab("Plan");
+    expect(document.querySelectorAll("[data-room-line]").length).toBe(4);
   });
 
   test("the reconciliation view renders beneath the figures it reconciles", () => {
     render(<App />);
-    clickTab("Reconciliation");
+    clickTab("Data");
     expect(document.querySelector("[data-recon-ground-truth]")).not.toBeNull();
     // Every finding but the ground-truth line, which is promoted into the
     // headline card rather than dropped.
@@ -112,39 +113,45 @@ describe("App", () => {
 
   test("the year control drives both the room lines and the tax figures", () => {
     render(<App />);
-    clickTab("Wrappers");
+    clickTab("Plan");
     expect(within(roomCard("TFSA")).getByText("$7,000.00")).toBeDefined();
 
     fireEvent.click(screen.getByRole("radio", { name: "2025" }));
     expect(within(roomCard("TFSA")).getByText("$25,000.00")).toBeDefined();
 
     // Switching tabs proves the year is shared state, not a control local
-    // to the wrappers panel: the tax panel's own year control already
-    // reads 2025 without being touched.
-    clickTab("Tax");
+    // to the plan panel: the portfolio tab's own tax view already reads
+    // 2025 without being touched.
+    clickTab("Portfolio");
     const income = document.querySelector("[data-tax-income]");
     if (income === null) throw new Error("expected the tax income section to render");
     expect(within(income as HTMLElement).getByText("-$1,067.39")).toBeDefined();
   });
 
-  test("the portfolio total and its chart stay visible on tabs other than overview", () => {
-    // The whole reason these two moved out of Overview and above the
-    // Tabs is so they never disappear when another panel is selected.
-    // Checked on two different non-default tabs, not just one, so the
-    // assertion is about every tab rather than one that happens to work.
+  test("the hero and its chart show only on portfolio; other tabs carry the summary strip instead", () => {
     render(<App />);
+    expect(document.querySelector("[data-portfolio-total]")).not.toBeNull();
+    expect(document.querySelector("svg[role='img'] title")).toBeDefined();
+    expect(
+      [...document.querySelectorAll("svg title")].some(
+        (title) => title.textContent === "Portfolio value over time",
+      ),
+    ).toBe(true);
+    expect(document.querySelector("[data-summary-strip]")).toBeNull();
 
-    clickTab("Wrappers");
-    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe(
-      formatCurrency(GOLDENS.portfolio.total),
-    );
-    expect(document.querySelector('[role="img"]')).not.toBeNull();
+    clickTab("Growth");
+    expect(document.querySelector("[data-portfolio-total]")).toBeNull();
+    expect(
+      [...document.querySelectorAll("svg title")].some(
+        (title) => title.textContent === "Portfolio value over time",
+      ),
+    ).toBe(false);
+    const strip = document.querySelector("[data-summary-strip]");
+    expect(strip).not.toBeNull();
+    expect(strip?.textContent).toContain(formatCurrency(GOLDENS.portfolio.total));
 
-    clickTab("Reconciliation");
-    expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe(
-      formatCurrency(GOLDENS.portfolio.total),
-    );
-    expect(document.querySelector('[role="img"]')).not.toBeNull();
+    // The year filter stays reachable on every tab, growth included.
+    expect(screen.getByRole("radiogroup", { name: "Year" })).toBeDefined();
   });
 
   test("the portfolio total never changes as the overview lens changes", () => {
@@ -230,20 +237,25 @@ describe("the headline book value and gain", () => {
     expect(coarseForm(gain)).toBe(`$${Math.round(gain).toLocaleString("en-CA")}`);
   });
 
-  test("stays visible, at the same figures, on every tab", () => {
-    // The whole point of hoisting this block above the tabs: it must not
-    // regress into disappearing or drifting when another panel is active.
+  test("the same book value and gain reappear, unchanged, on returning to portfolio", () => {
+    // The headline itself now lives only on the Portfolio tab (see the hero
+    // and its chart test above); this pins that leaving and coming back
+    // does not drift the figures it shows.
     render(<App />);
-    for (const label of ["Growth", "Wrappers", "Tax", "Projections", "Reconciliation"]) {
+    for (const label of ["Growth", "Plan", "Data"]) {
       fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${label}\\b`) }), {
         button: 0,
       });
-      const block = within(headlineBlock());
-      expect(block.getByText(bookValueText())).toBeDefined();
-      expect(
-        block.getByText(formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost)),
-      ).toBeDefined();
+      expect(document.querySelector("[data-summary-strip]")?.textContent).toContain(
+        formatCurrency(GOLDENS.portfolio.total),
+      );
     }
+    fireEvent.mouseDown(screen.getByRole("tab", { name: /^Portfolio\b/ }), { button: 0 });
+    const block = within(headlineBlock());
+    expect(block.getByText(bookValueText())).toBeDefined();
+    expect(
+      block.getByText(formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost)),
+    ).toBeDefined();
   });
 
   test("introduces no heading, per the headline-figures-are-not-a-section-name rule", () => {

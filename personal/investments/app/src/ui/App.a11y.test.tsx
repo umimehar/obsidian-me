@@ -82,7 +82,7 @@ describe("App accessibility", () => {
     render(<App />);
     expectNoSkippedLevel();
 
-    for (const label of ["Growth", "Wrappers", "Tax", "Projections", "Reconciliation"]) {
+    for (const label of ["Growth", "Plan", "Data"]) {
       clickTab(label);
       expectNoSkippedLevel();
     }
@@ -140,29 +140,29 @@ describe("App accessibility", () => {
     // The control sweep above covers buttons, radios and summaries only, which
     // is how a set of unnamed bars once went unnoticed. A bar is either
     // decorative and hidden, or exposed and named. Never exposed and anonymous.
-    // Room bars live on the wrappers tab, which is not the default panel.
+    // Room bars live on the plan tab, which is not the default panel.
     //
     // No bar in this app claims the role today: both the Overview's share bars
-    // and the Wrappers room bars are hidden decoration, because a bar carrying
+    // and the Plan tab's room bars are hidden decoration, because a bar carrying
     // a value announces a whole-percent aria-valuetext beside a figure printed
     // at full precision. The rule is kept for whatever brings the role back,
     // and the sweep below is what holds the current shape.
     render(<App />);
-    clickTab("Wrappers");
+    clickTab("Plan");
     for (const bar of document.querySelectorAll('[role="progressbar"]')) {
       if (bar.getAttribute("aria-hidden") === "true") continue;
       expect(accessibleName(bar)).not.toBe("");
     }
   });
 
-  test("every fill bar on the wrappers tab is hidden decoration, announcing no percentage", () => {
+  test("every fill bar on the plan tab is hidden decoration, announcing no percentage", () => {
     // Non-vacuous where the role sweep above no longer is: this counts the
     // bars that actually render. The room fill is the second instance of the
     // defect ShareBar was rebuilt for -- Radix's Progress announced "47%"
     // for a true 46.641% and "25%" for 24.921%, neither figure printed
     // anywhere on the card that carried it.
     render(<App />);
-    clickTab("Wrappers");
+    clickTab("Plan");
     const bars = [...document.querySelectorAll("[data-room-line] [data-share-bar]")];
     expect(bars.length).toBeGreaterThan(0);
     for (const bar of bars) {
@@ -172,11 +172,11 @@ describe("App accessibility", () => {
     }
   });
 
-  test("nothing on the wrappers tab announces a percentage on any attribute", () => {
+  test("nothing on the plan tab announces a percentage on any attribute", () => {
     // The check that survives the bar coming back wearing a role, or the
     // figure reappearing on a title or a label somewhere else on the tab.
     render(<App />);
-    clickTab("Wrappers");
+    clickTab("Plan");
     const nodes = [...document.querySelectorAll("[data-room-line], [data-room-line] *")];
     expect(nodes.length).toBeGreaterThan(20);
     for (const node of nodes) {
@@ -210,7 +210,7 @@ describe("App accessibility", () => {
       expect(screen.getByRole("radiogroup", { name })).toBeDefined();
     }
 
-    clickTab("Wrappers");
+    clickTab("Plan");
     expect(screen.getByRole("radiogroup", { name: "Year" })).toBeDefined();
     expect(screen.queryByRole("radiogroup", { name: "Tax year" })).toBeNull();
   });
@@ -323,7 +323,7 @@ describe("App accessibility", () => {
       return badges.length;
     };
     let seen = sweep();
-    for (const label of ["Growth", "Wrappers", "Reconciliation"]) {
+    for (const label of ["Growth", "Plan", "Data"]) {
       clickTab(label);
       seen += sweep();
     }
@@ -332,7 +332,7 @@ describe("App accessibility", () => {
 
   test("the finding groups are native disclosures, so they are keyboard reachable", () => {
     render(<App />);
-    clickTab("Reconciliation");
+    clickTab("Data");
     const groups = document.querySelectorAll("details[data-finding-group]");
     expect(groups.length).toBeGreaterThan(0);
     for (const group of groups) {

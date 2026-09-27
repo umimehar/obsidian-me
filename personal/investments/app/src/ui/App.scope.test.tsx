@@ -92,13 +92,13 @@ describe("the year filter", () => {
   test("the year rides in the hash, so a scoped view is linkable", () => {
     render(<App />);
     selectYear("2024");
-    expect(window.location.hash).toBe("#overview/2024");
+    expect(window.location.hash).toBe("#portfolio/2024");
     selectYear("All time");
-    expect(window.location.hash).toBe("#overview");
+    expect(window.location.hash).toBe("#portfolio");
   });
 
   test("opening on a scoped hash renders that year without a click", () => {
-    window.location.hash = "#overview/2024";
+    window.location.hash = "#portfolio/2024";
     render(<App />);
     const change = yearChange(loadAnalytics().series, 2024);
     expect(total()).toBe(formatCurrency(change?.end ?? -1));
@@ -118,14 +118,14 @@ describe("the year filter reaches every tab that can honour it", () => {
     });
   }
 
-  test("the wrappers and tax views follow it, with no second year control of their own", () => {
+  test("the registered room and tax views follow it, with no second year control of their own", () => {
     render(<App />);
     selectYear("2024");
-    openTab("Wrappers");
+    openTab("Plan");
     expect(panelText()).toContain("2024");
     expect(screen.queryByRole("radiogroup", { name: "Tax year" })).toBeNull();
 
-    openTab("Tax");
+    openTab("Portfolio");
     expect(panelText()).toContain("2024");
   });
 
@@ -134,7 +134,7 @@ describe("the year filter reaches every tab that can honour it", () => {
     // of what the filter is hiding is stated rather than left to be noticed.
     render(<App />);
     selectYear("2024");
-    openTab("Reconciliation");
+    openTab("Data");
     const hidden = document.querySelector("[data-recon-hidden]")?.textContent ?? "";
     expect(hidden).toMatch(/hidden by the year filter/);
 
@@ -145,19 +145,19 @@ describe("the year filter reaches every tab that can honour it", () => {
   test("the cards view says the year has no statement rather than that none exist", () => {
     render(<App />);
     selectYear("2024");
-    openTab("Cards");
+    openTab("Data");
     expect(panelText()).toContain("No credit card statement for 2024");
     expect(panelText()).not.toContain("No credit card statements imported yet");
   });
 
   test("the projection ignores it and says so, rather than re-basing itself silently", () => {
     render(<App />);
-    openTab("Projections");
+    openTab("Plan");
     const unscoped = document.querySelector("[data-projection-end-value]")?.textContent;
     expect(document.querySelector("[data-projection-scope-note]")).toBeNull();
 
     selectYear("2024");
-    openTab("Projections");
+    openTab("Plan");
     expect(document.querySelector("[data-projection-scope-note]")?.textContent).toMatch(
       /year filter does not apply/i,
     );
