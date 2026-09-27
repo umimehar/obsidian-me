@@ -17,13 +17,13 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0007-dashboard-v2-income-costs]] #project/system #type/feature #p1
 
 
 
 
 ## In Progress
 
+- [ ] [[TCK-0007-dashboard-v2-income-costs]] #project/system #type/feature #p1
 
 
 
