@@ -209,6 +209,16 @@ export interface Goldens {
     realizedGain: number;
     rrspDeduction: number;
   };
+  /** `monthReview` at the latest reviewable period, computed by that same function. */
+  month: {
+    period: string;
+    /** Full portfolio end minus full portfolio start (both nullable-safe). */
+    change: number;
+    /** Comparable-subset deposits, see `monthReview`'s own doc. */
+    netDeposits: number;
+    growth: number;
+    missingValue: number;
+  };
 }
 
 function isGoldens(value: unknown): value is Goldens {
@@ -232,7 +242,8 @@ function isGoldens(value: unknown): value is Goldens {
     typeof c.runway === "object" &&
     typeof c.goals === "object" &&
     typeof c.zeroRateStretchAnnualToClose === "number" &&
-    typeof c.income === "object"
+    typeof c.income === "object" &&
+    typeof c.month === "object"
   );
 }
 

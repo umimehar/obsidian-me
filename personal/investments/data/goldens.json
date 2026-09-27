@@ -460,5 +460,12 @@
     "interest": 0,
     "realizedGain": -4243.492052079513,
     "rrspDeduction": 39000
+  },
+  "month": {
+    "period": "2026-08",
+    "change": 15870.75,
+    "netDeposits": 6547,
+    "growth": 4290.290000000008,
+    "missingValue": 0
   }
 }

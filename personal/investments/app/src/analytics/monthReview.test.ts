@@ -48,12 +48,14 @@ describe("monthReview, over the real corpus", () => {
     expect(review.end).toBeCloseTo(GOLDENS.portfolio.total, 2);
   });
 
-  test("start plus netDeposits plus growth equals end, to the cent", () => {
+  test("netDeposits and growth match the month golden, computed by this same function", () => {
     const [latest] = reviewPeriods(REAL);
     if (latest === undefined) throw new Error("expected at least one reviewable period");
     const review = monthReview(REAL, latest);
-    const reconstructed = (review.start ?? 0) + review.netDeposits + (review.growth ?? 0);
-    expect(reconstructed).toBeCloseTo(review.end, 2);
+    expect(review.period).toBe(GOLDENS.month.period);
+    expect(review.netDeposits).toBeCloseTo(GOLDENS.month.netDeposits, 2);
+    expect(review.growth).not.toBeNull();
+    expect(review.growth ?? 0).toBeCloseTo(GOLDENS.month.growth, 2);
   });
 
   test("Corporate (self) (8297) opened in 2026-08", () => {
@@ -90,6 +92,50 @@ describe("monthReview, over a fixture", () => {
     const review = monthReview(analytics, "2026-07");
     expect(review.missing).toEqual(["Behind"]);
     expect(review.moves.map((m) => m.label)).toEqual(["Present"]);
+    // Behind's own $500 balance must never leak into growth as a swing:
+    // netDeposits/growth come only from Present, the sole comparable account.
+    expect(review.netDeposits).toBe(50);
+    expect(review.growth).toBe(50);
+    expect(review.missingValue).toBe(500);
+  });
+
+  test("an account that skipped a month and then reported again contributes no growth", () => {
+    const returning = account({
+      maskedId: "acct_returning",
+      label: "Returning",
+      months: [
+        month({ period: "2026-05", marketValue: 100, bookCost: 100 }),
+        // No 2026-06 statement at all: a genuine gap, not a missing-this-period case.
+        month({ period: "2026-07", marketValue: 500, bookCost: 100 }),
+      ],
+    });
+    const steady = account({
+      maskedId: "acct_steady",
+      label: "Steady",
+      months: [
+        month({ period: "2026-06", marketValue: 1000, bookCost: 1000 }),
+        month({ period: "2026-07", marketValue: 1020, bookCost: 1000, deposits: 10 }),
+      ],
+    });
+    const analytics = {
+      meta: { generated: "", datastoreGenerated: "", accountCount: 2 },
+      series: [returning, steady],
+      rooms: {},
+      income: {},
+      returns: [],
+      rollups: { registration: [], account: [], purpose: [] },
+      activity: {},
+    };
+
+    const review = monthReview(analytics, "2026-07");
+    // Returning's 100 -> 500 jump must not show up as $390 of growth: it had
+    // no priced statement at 2026-06, the immediately preceding month.
+    expect(review.netDeposits).toBe(10);
+    expect(review.growth).toBe(10);
+    const returningMove = review.moves.find((m) => m.label === "Returning");
+    expect(returningMove?.start).toBeNull();
+    expect(returningMove?.growth).toBeNull();
+    expect(returningMove?.change).toBeNull();
   });
 
   test("moves are sorted by |change| descending, an unopened-before account's null change last", () => {

@@ -3,6 +3,7 @@ import rawDatastore from "@data/datastore.json";
 import type { AnalyticsOutput } from "../analytics/build";
 import { buildCashflowSeries } from "../analytics/cashflowSeries";
 import { latestGroupGain } from "../analytics/groupGain";
+import { monthReview, reviewPeriods } from "../analytics/monthReview";
 import { buildPortfolioSeries } from "../analytics/portfolioSeries";
 import { latestMarketValue, rollup } from "../analytics/rollup";
 import type { Lens } from "../analytics/rollup";
@@ -242,6 +243,9 @@ function buildGoldens(): Goldens {
     "CESG runway row",
   );
 
+  const [latestReviewPeriod] = reviewPeriods(analytics);
+  const review = monthReview(analytics, required(latestReviewPeriod, "a reviewable period"));
+
   return {
     corpus: {
       statementCount: reconciliation.statementCount,
@@ -336,6 +340,13 @@ function buildGoldens(): Goldens {
       interest: income.interest,
       realizedGain: income.realizedGains,
       rrspDeduction: baseInputs.contributedThisYear.RRSP ?? 0,
+    },
+    month: {
+      period: review.period,
+      change: review.end - (review.start ?? 0),
+      netDeposits: review.netDeposits,
+      growth: review.growth ?? 0,
+      missingValue: review.missingValue,
     },
   };
 }
