@@ -1,5 +1,7 @@
 import { Flex, Heading, Text } from "@radix-ui/themes";
 import type { AnalyticsOutput } from "../../analytics/build";
+import { firstYearForGroup } from "../../analytics/rooms";
+import { latestPeriod } from "../data";
 import { RoomBar } from "./RoomBar";
 import { contributionsSourceFor } from "./roomSource";
 
@@ -17,6 +19,7 @@ export interface RegisteredViewProps {
  */
 export function RegisteredView({ analytics, year }: RegisteredViewProps) {
   const lines = analytics.rooms[String(year)] ?? [];
+  const corpusLatestPeriod = latestPeriod(analytics);
 
   return (
     <Flex direction="column" gap="2">
@@ -33,6 +36,10 @@ export function RegisteredView({ analytics, year }: RegisteredViewProps) {
             key={line.group}
             line={line}
             contributionsSource={contributionsSourceFor(analytics.series, line.group, year)}
+            actionContext={{
+              firstYear: firstYearForGroup(analytics.series, line.group),
+              latestPeriod: corpusLatestPeriod,
+            }}
           />
         ))
       )}

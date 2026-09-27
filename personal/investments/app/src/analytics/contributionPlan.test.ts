@@ -199,3 +199,69 @@ describe("nextAction", () => {
     expect(() => nextAction(line)).toThrow();
   });
 });
+
+describe("nextAction with context", () => {
+  test("a year before the group's first account says so, not a next action for an account that did not exist", () => {
+    const line = roomLine({ group: "TFSA", year: 2023, used: 6000, limit: 6500 });
+    const action = nextAction(line, { firstYear: 2026, latestPeriod: "2026-08" });
+    expect(action.text).toBe("No account yet.");
+    expect(action.amount).toBeNull();
+  });
+
+  test("a year that has ended reads in the past tense, with no deadline in the text", () => {
+    const line = roomLine({
+      group: "TFSA",
+      year: 2024,
+      used: 7000,
+      limit: 7000,
+      assessed: true,
+      remaining: 500,
+    });
+    const action = nextAction(line, { firstYear: 2023, latestPeriod: "2026-08" });
+    expect(action.text).toBe(
+      `Contributed ${formatCurrency(7000)} of ${formatCurrency(7000)}. Room left unused: ${formatCurrency(500)}.`,
+    );
+    expect(action.text).not.toContain("2024-12-31");
+  });
+
+  test("a RESP past year with no unused room states only what was contributed", () => {
+    const line = roomLine({ group: "RESP", year: 2024, used: 2500, limit: null, remaining: null });
+    const action = nextAction(line, { firstYear: 2023, latestPeriod: "2026-08" });
+    expect(action.text).toBe(`Contributed ${formatCurrency(2500)}.`);
+  });
+
+  test("RRSP for last year still gives a live deadline when the corpus's latest statement predates it", () => {
+    const line = roomLine({
+      group: "RRSP",
+      year: 2025,
+      used: 15000,
+      limit: 60191,
+      assessed: true,
+      remaining: 45191,
+    });
+    const action = nextAction(line, { firstYear: 2023, latestPeriod: "2026-02" });
+    expect(action.deadline).toBe("2026-03-02");
+    expect(action.text).toContain("can be deducted against 2025 income");
+  });
+
+  test("RRSP for last year reads past tense once a later statement proves the deadline closed", () => {
+    const line = roomLine({
+      group: "RRSP",
+      year: 2025,
+      used: 15000,
+      limit: 60191,
+      assessed: true,
+      remaining: 45191,
+    });
+    const action = nextAction(line, { firstYear: 2023, latestPeriod: "2026-03" });
+    expect(action.text).toBe(
+      `Contributed ${formatCurrency(15000)} of ${formatCurrency(60191)}. Room left unused: ${formatCurrency(45191)}.`,
+    );
+  });
+
+  test("a null latestPeriod (an empty corpus) never counts a deadline as passed", () => {
+    const line = roomLine({ group: "TFSA", year: 2020, used: 5000, limit: 6000 });
+    const action = nextAction(line, { firstYear: 2018, latestPeriod: null });
+    expect(action.text).not.toContain("Contributed");
+  });
+});

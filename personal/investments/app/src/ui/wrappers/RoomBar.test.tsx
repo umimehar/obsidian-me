@@ -1,9 +1,11 @@
 import { describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { cleanup, render, screen, within } from "@testing-library/react";
-import { nextAction } from "../../analytics/contributionPlan";
+import { type NextActionContext, nextAction } from "../../analytics/contributionPlan";
 import type { RoomLine } from "../../analytics/rooms";
 import { RoomBar } from "./RoomBar";
+
+const NO_CONTEXT: NextActionContext = { firstYear: null, latestPeriod: null };
 
 /**
  * Hand-built lines, unlike the real-corpus tests in `RegisteredView.test.tsx`.
@@ -26,10 +28,14 @@ function line(overrides: Partial<RoomLine>): RoomLine {
   };
 }
 
-function renderBar(roomLine: RoomLine, source: "stated" | "derived" | null = "stated") {
+function renderBar(
+  roomLine: RoomLine,
+  source: "stated" | "derived" | null = "stated",
+  actionContext: NextActionContext = NO_CONTEXT,
+) {
   render(
     <Theme>
-      <RoomBar line={roomLine} contributionsSource={source} />
+      <RoomBar line={roomLine} contributionsSource={source} actionContext={actionContext} />
     </Theme>,
   );
   const card = document.querySelector("[data-room-line]");
@@ -314,5 +320,64 @@ describe("RoomBar", () => {
     });
     const bar = renderBar(roomLine);
     expect(bar.getByText(/2027-03-01/)).toBeDefined();
+  });
+
+  test("a year before the group's first account says so, rather than a next action for an account that did not exist", () => {
+    const roomLine = line({
+      group: "RESP",
+      year: 2023,
+      used: 2500,
+      limit: null,
+      lifetimeGrant: { received: 0, cap: 7200, remaining: 7200, maximizingContribution: 2500 },
+    });
+    const bar = renderBar(roomLine, "stated", { firstYear: 2026, latestPeriod: "2026-08" });
+    const action = document.querySelector("[data-next-action]");
+    expect(action?.textContent).toBe("No account yet.");
+    expect(bar.queryByText(/earns this year's full/i)).toBeNull();
+  });
+
+  test("a year that has ended states what happened in the past tense, with no deadline", () => {
+    const roomLine = line({
+      group: "TFSA",
+      year: 2024,
+      used: 7000,
+      limit: 7000,
+      assessed: true,
+      remaining: 500,
+    });
+    const bar = renderBar(roomLine, "stated", { firstYear: 2023, latestPeriod: "2026-08" });
+    expect(bar.getByText(/Contributed \$7,000\.00 of \$7,000\.00\./)).toBeDefined();
+    expect(bar.getByText(/Room left unused: \$500\.00\./)).toBeDefined();
+    expect(bar.queryByText("2024-12-31")).toBeNull();
+  });
+
+  test("RRSP for last year still states a live deadline when the corpus's latest statement predates it", () => {
+    // 2025's RRSP deadline is 2026-03-02; a corpus whose latest statement is
+    // still 2026-02 has not yet proven that window closed.
+    const roomLine = line({
+      group: "RRSP",
+      year: 2025,
+      used: 15000,
+      limit: 60191,
+      assessed: true,
+      remaining: 45191,
+    });
+    const bar = renderBar(roomLine, "stated", { firstYear: 2023, latestPeriod: "2026-02" });
+    expect(bar.getByText(/Up to \$45,191\.00 more can be deducted/)).toBeDefined();
+    expect(bar.getByText(/2026-03-02/)).toBeDefined();
+  });
+
+  test("RRSP for last year reads past tense once a later statement proves the deadline closed", () => {
+    const roomLine = line({
+      group: "RRSP",
+      year: 2025,
+      used: 15000,
+      limit: 60191,
+      assessed: true,
+      remaining: 45191,
+    });
+    const bar = renderBar(roomLine, "stated", { firstYear: 2023, latestPeriod: "2026-03" });
+    expect(bar.getByText(/Contributed \$15,000\.00 of \$60,191\.00\./)).toBeDefined();
+    expect(bar.getByText(/Room left unused: \$45,191\.00\./)).toBeDefined();
   });
 });

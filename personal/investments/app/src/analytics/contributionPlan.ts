@@ -174,9 +174,80 @@ function respAction(line: RoomLine, deadline: string): NextAction {
   };
 }
 
-/** One registered wrapper's room line, turned into the one thing to do about it next: how much, by when, in words. */
-export function nextAction(line: RoomLine): NextAction {
+/**
+ * What to say about a room line for a year the corpus can actually speak
+ * to: whether the group has an account at all yet (`firstYear`), and
+ * whether the year's own deadline has already passed as of the corpus's
+ * own latest statement (`latestPeriod`) -- never the wall clock, which
+ * would call a still open RRSP window closed the moment today's date
+ * ticks past December 31 even though no January or February statement has
+ * arrived yet to prove it.
+ */
+export interface NextActionContext {
+  firstYear: number | null;
+  latestPeriod: string | null;
+}
+
+const NO_CONTEXT: NextActionContext = { firstYear: null, latestPeriod: null };
+
+function noAccountYetAction(line: RoomLine, deadline: string): NextAction {
+  return { group: line.group, deadline, amount: null, text: "No account yet." };
+}
+
+/** The last calendar day of `period` ("YYYY-MM"), as an ISO date. */
+function monthEnd(period: string): string {
+  const [yearStr, monthStr] = period.split("-");
+  const date = new Date(Date.UTC(Number(yearStr), Number(monthStr), 0));
+  return date.toISOString().slice(0, 10);
+}
+
+/**
+ * Whether `deadline` has already passed as of the corpus's own latest
+ * statement. A `latestPeriod` of null (an empty corpus) never counts a
+ * deadline as passed, since there is no statement to prove it.
+ */
+function deadlineHasPassed(deadline: string, latestPeriod: string | null): boolean {
+  return latestPeriod !== null && deadline <= monthEnd(latestPeriod);
+}
+
+/**
+ * The past tense summary for a year whose deadline has closed: what was
+ * contributed, against the limit when one exists, and any assessed room
+ * left unused -- never a deadline, since there is nothing left to do by
+ * one.
+ */
+function pastAction(line: RoomLine, deadline: string): NextAction {
+  const ofLimit = line.limit !== null ? ` of ${formatCurrency(line.limit)}` : "";
+  const unused =
+    line.assessed && line.remaining !== null && line.remaining > 0
+      ? ` Room left unused: ${formatCurrency(line.remaining)}.`
+      : "";
+  return {
+    group: line.group,
+    deadline,
+    amount: null,
+    text: `Contributed ${formatCurrency(line.used)}${ofLimit}.${unused}`,
+  };
+}
+
+/**
+ * One registered wrapper's room line, turned into the one thing to do
+ * about it next: how much, by when, in words. A year before the group's
+ * first account (`context.firstYear`) says so rather than stating a next
+ * action for an account that did not exist yet; a year whose own deadline
+ * has already passed (`context.latestPeriod`) is summarized in the past
+ * tense instead.
+ */
+export function nextAction(line: RoomLine, context: NextActionContext = NO_CONTEXT): NextAction {
   const deadline = contributionDeadline(line.group, line.year);
+
+  if (context.firstYear !== null && line.year < context.firstYear) {
+    return noAccountYetAction(line, deadline);
+  }
+  if (deadlineHasPassed(deadline, context.latestPeriod)) {
+    return pastAction(line, deadline);
+  }
+
   switch (line.group) {
     case "RRSP":
       return rrspAction(line, deadline);

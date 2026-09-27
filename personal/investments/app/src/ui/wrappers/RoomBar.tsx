@@ -1,5 +1,5 @@
 import { Badge, Card, Flex, Heading, Text } from "@radix-ui/themes";
-import { nextAction } from "../../analytics/contributionPlan";
+import { type NextActionContext, nextAction } from "../../analytics/contributionPlan";
 import type {
   LifetimePosition,
   RegisteredGroup,
@@ -14,6 +14,8 @@ export interface RoomBarProps {
   line: RoomLine;
   /** From `contributionsSourceFor` -- null when nothing was contributed that year. */
   contributionsSource: ContributionsSource;
+  /** See `NextActionContext` -- the first year this group had an account, and the corpus's own latest statement period. */
+  actionContext: NextActionContext;
 }
 
 /**
@@ -166,7 +168,7 @@ function GrantLine({ grant }: { grant: RespGrantPosition }) {
  *
  * `data-room-line` is a stable test hook, not styling.
  */
-export function RoomBar({ line, contributionsSource }: RoomBarProps) {
+export function RoomBar({ line, contributionsSource, actionContext }: RoomBarProps) {
   return (
     <Card mb="3" data-room-line={line.group}>
       <Flex direction="column" gap="2">
@@ -212,15 +214,15 @@ export function RoomBar({ line, contributionsSource }: RoomBarProps) {
 
         {line.lifetimeGrant !== null ? <GrantLine grant={line.lifetimeGrant} /> : null}
 
-        <NextActionLine line={line} />
+        <NextActionLine line={line} context={actionContext} />
       </Flex>
     </Card>
   );
 }
 
 /** What to do next about this wrapper, and by when -- see `nextAction`. */
-function NextActionLine({ line }: { line: RoomLine }) {
-  const action = nextAction(line);
+function NextActionLine({ line, context }: { line: RoomLine; context: NextActionContext }) {
+  const action = nextAction(line, context);
   return (
     <Text size="2" color="jade" data-next-action="">
       {action.text}

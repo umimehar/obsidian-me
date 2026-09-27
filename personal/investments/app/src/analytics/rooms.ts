@@ -370,3 +370,29 @@ export function buildRoomLines(
   }
   return lines;
 }
+
+/**
+ * The earliest year any account in `group` has a month at all, or null when
+ * the group has no account with one. `buildRoomLines` sums a group's
+ * accounts for every year the CORPUS covers, not just the years an
+ * individual account existed, so a year before the group's first account
+ * opened still carries a `RoomLine` at `used: 0` -- a stated zero rather
+ * than the true "no account yet" this predates. Shared between
+ * `ContributionHistory` and `RoomBar`'s next action, so the two guards
+ * cannot silently disagree.
+ */
+export function firstYearForGroup(
+  series: readonly AccountSeries[],
+  group: RegisteredGroup,
+): number | null {
+  const kinds = REGISTERED_KINDS[group];
+  let first: number | null = null;
+  for (const account of series) {
+    if (!kinds.includes(account.kind)) continue;
+    const period = account.months[0]?.period;
+    if (!period) continue;
+    const year = Number(period.slice(0, 4));
+    if (first === null || year < first) first = year;
+  }
+  return first;
+}
