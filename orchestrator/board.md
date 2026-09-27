@@ -20,13 +20,13 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0004-dashboard-v2-this-month]] #project/system #type/feature #p1
 
 
 
 
 ## In Progress
 
+- [ ] [[TCK-0004-dashboard-v2-this-month]] #project/system #type/feature #p1
 
 
 

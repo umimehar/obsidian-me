@@ -36,3 +36,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-26 22:34 · mac-studio · start · TCK-0003 · starting layout shell
 - 2026-09-26 23:13 · mac-studio · done · TCK-0003 · layout shell shipped, agent review PASS in round 3
 - 2026-09-26 23:13 · mac-studio · claim · TCK-0004 · this month page
+- 2026-09-26 23:13 · mac-studio · start · TCK-0004 · starting this month page
