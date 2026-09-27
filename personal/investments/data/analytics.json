@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-09-27T03:16:40.595Z",
+    "generated": "2026-09-27T03:31:11.566Z",
     "datastoreGenerated": "2026-09-27T02:23:09.416Z",
     "accountCount": 15
   },
@@ -5442,7 +5442,7 @@
         "fxConversions": 0
       },
       "acct_d6d9fb4a": {
-        "dividends": 81.8,
+        "dividends": 40.9,
         "interest": 0,
         "lendingIncome": 0,
         "withholdingTax": 0,
@@ -6133,7 +6133,7 @@
         "dividends": 10.839999999999998,
         "interest": 0,
         "lendingIncome": 0,
-        "withholdingTax": 1.4900000000000007,
+        "withholdingTax": 1.3900000000000008,
         "fees": 2.8,
         "fxConversions": 0
       },
@@ -6706,7 +6706,7 @@
       "acct_d77c33c7": {
         "dividends": 19.29,
         "interest": 0,
-        "lendingIncome": 0.03,
+        "lendingIncome": 0.02,
         "withholdingTax": 1.29,
         "fees": 0,
         "fxConversions": 0

@@ -3,12 +3,14 @@ import type { ActivityRow, Statement } from "../types";
 /**
  * One account-month's activity income and costs, in CAD.
  *
- * Row sides checked against the real corpus (`jq` over `data/datastore.json`,
- * 2026-09-27): DIV, INT and FPLINT post their income to `credit`; NRT posts
- * its tax to `debit`; FEE posts a charge to `debit` and an ETF rebate to
- * `credit`, so reading `debit` alone keeps the rebate out of a "fees paid"
- * figure; FXCONVERSION rows use either side depending on direction, so only
- * the row count is kept.
+ * DIV, INT and FPLINT income nets `credit - debit`: an amended statement can
+ * carry a reversal on the opposite side of an earlier row, and the true
+ * figure is the pair netted, not the credit alone. NRT nets `debit - credit`
+ * for the same reason. FEE stays debit-only: its credit side is an ETF
+ * rebate, a different kind of row, not a reversal of a fee. FXCONVERSION
+ * uses either side depending on direction, so only the row count is kept.
+ * Chequing accounts' CASH-template rows carry no code at all, so their
+ * interest is invisible here -- a known gap, not a bug in this module.
  */
 export interface ActivityTotals {
   dividends: number;
@@ -33,10 +35,8 @@ const ZERO_TOTALS: ActivityTotals = {
 
 /**
  * A USD row's amount converted to CAD at the statement's own `fxRate`. A CAD
- * row passes through unchanged. Review Focus line 4: USD activity rows are
- * never summed raw with CAD rows, and a USD row on a statement with no
- * disclosed rate throws naming the statement rather than silently treating
- * it as CAD.
+ * row passes through unchanged. A USD row on a statement with no disclosed
+ * rate throws naming the statement, rather than silently treating it as CAD.
  */
 function convertToCad(amount: number, row: ActivityRow, statement: Statement): number {
   if (row.currency === "CAD") return amount;
@@ -57,13 +57,19 @@ function convertToCad(amount: number, row: ActivityRow, statement: Statement): n
 function totalsForRow(row: ActivityRow, statement: Statement): ActivityTotals {
   switch (row.code) {
     case "DIV":
-      return { ...ZERO_TOTALS, dividends: convertToCad(row.credit, row, statement) };
+      return { ...ZERO_TOTALS, dividends: convertToCad(row.credit - row.debit, row, statement) };
     case "INT":
-      return { ...ZERO_TOTALS, interest: convertToCad(row.credit, row, statement) };
+      return { ...ZERO_TOTALS, interest: convertToCad(row.credit - row.debit, row, statement) };
     case "FPLINT":
-      return { ...ZERO_TOTALS, lendingIncome: convertToCad(row.credit, row, statement) };
+      return {
+        ...ZERO_TOTALS,
+        lendingIncome: convertToCad(row.credit - row.debit, row, statement),
+      };
     case "NRT":
-      return { ...ZERO_TOTALS, withholdingTax: convertToCad(row.debit, row, statement) };
+      return {
+        ...ZERO_TOTALS,
+        withholdingTax: convertToCad(row.debit - row.credit, row, statement),
+      };
     case "FEE":
       return { ...ZERO_TOTALS, fees: convertToCad(row.debit, row, statement) };
     case "FXCONVERSION":
@@ -93,9 +99,8 @@ export function sumActivity(rows: readonly ActivityTotals[]): ActivityTotals {
  * Activity income and costs per period per account, over every BROKERAGE and
  * CASH statement. PERFORMANCE statements are skipped: they duplicate their
  * BROKERAGE twin's activity rows, the same reason `income.ts` and `rooms.ts`
- * drop them. The row amounts are converted with `convertToCad` before being
- * added, never after -- summing raw USD and CAD figures together is exactly
- * the mistake Review Focus line 4 exists to catch.
+ * drop them. Each row is converted to CAD before it is added to the running
+ * total, never after -- summing raw USD and CAD figures together first.
  */
 export function buildActivity(statements: readonly Statement[]): ActivityByPeriod {
   const byPeriod: ActivityByPeriod = {};

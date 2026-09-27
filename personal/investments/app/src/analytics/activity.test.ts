@@ -66,6 +66,42 @@ describe("buildActivity", () => {
     expect(activity["2026-08"]?.acct_0001?.withholdingTax).toBe(0.27);
   });
 
+  test("a DIV credit reversal (an amended statement's debit twin) nets to the true dividend", () => {
+    // Real corpus, d6d9 2026-04: two DIV credits of 40.90 plus an amended
+    // reversal debit of 40.90, true net 40.90, not 81.80.
+    const s = statement({
+      activity: [
+        row("DIV", { credit: 40.9 }),
+        row("DIV", { credit: 40.9 }),
+        row("DIV", { debit: 40.9 }),
+      ],
+    });
+    const activity = buildActivity([s]);
+    expect(activity["2026-08"]?.acct_0001?.dividends).toBeCloseTo(40.9, 6);
+  });
+
+  test("an INT debit reversal nets against the credit", () => {
+    const s = statement({ activity: [row("INT", { credit: 5 }), row("INT", { debit: 5 })] });
+    const activity = buildActivity([s]);
+    expect(activity["2026-08"]?.acct_0001?.interest).toBe(0);
+  });
+
+  test("an FPLINT debit reverses a credit, netting to zero", () => {
+    // Real corpus, d77c 2024-03: a stock-lending debit reversing a credit.
+    const s = statement({
+      activity: [row("FPLINT", { credit: 0.01 }), row("FPLINT", { debit: 0.01 })],
+    });
+    const activity = buildActivity([s]);
+    expect(activity["2026-08"]?.acct_0001?.lendingIncome).toBe(0);
+  });
+
+  test("an NRT credit reverses a debit, netting the withholding to zero", () => {
+    // Real corpus, 1f9a 2026-01: an NRT credit reversing an NRT debit.
+    const s = statement({ activity: [row("NRT", { debit: 0.1 }), row("NRT", { credit: 0.1 })] });
+    const activity = buildActivity([s]);
+    expect(activity["2026-08"]?.acct_0001?.withholdingTax).toBe(0);
+  });
+
   test("a USD row on a statement with a null fxRate throws, naming the statement", () => {
     const s = statement({
       fxRate: null,
