@@ -1,4 +1,4 @@
-import { Badge, Callout, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { Badge, Callout, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { motion } from "motion/react";
 import { useMemo } from "react";
 import type { ReturnSeries } from "../../analytics/returns";
@@ -11,6 +11,7 @@ import {
   type PlottedReturnPoint,
   accountRateExtent,
   buildReturnsSeries,
+  chartedReturnAccounts,
   distinctGaps,
   gapPhrase,
   latestStatedLines,
@@ -384,7 +385,12 @@ function AccountReturnsCard({
  * would put the artifact straight back on the page.
  */
 export function ReturnsChart({ returns, series }: ReturnsChartProps) {
-  const accounts = useMemo(() => buildReturnsSeries(returns, series), [returns, series]);
+  const built = useMemo(() => buildReturnsSeries(returns, series), [returns, series]);
+  // Chequing and any account with no plotted point at all (a single, too-new
+  // statement) are dropped from the grid entirely, so the provenance
+  // sentence and the rendered cards can never disagree about which accounts
+  // are on the page.
+  const accounts = useMemo(() => chartedReturnAccounts(built, series), [built, series]);
   const xDomain = useMemo(() => returnsPeriodExtent(accounts), [accounts]);
   const rateExtent = useMemo(() => returnsRateExtent(accounts), [accounts]);
   const scales = useMemo(
@@ -422,15 +428,17 @@ export function ReturnsChart({ returns, series }: ReturnsChartProps) {
       </Heading>
       <ProvenanceNote accounts={accounts} />
       <Legend />
-      {accounts.map((account) => (
-        <AccountReturnsCard
-          key={account.maskedId}
-          account={account}
-          scales={scales}
-          xDomain={xDomain}
-          rateDomain={rateExtent}
-        />
-      ))}
+      <Grid columns={{ initial: "1", md: "2" }} gap="4">
+        {accounts.map((account) => (
+          <AccountReturnsCard
+            key={account.maskedId}
+            account={account}
+            scales={scales}
+            xDomain={xDomain}
+            rateDomain={rateExtent}
+          />
+        ))}
+      </Grid>
     </Flex>
   );
 }

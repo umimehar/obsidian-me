@@ -2,8 +2,16 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { GOLDENS } from "../goldens";
 import { App } from "./App";
+import { buildReturnsSeries, chartedReturnAccounts } from "./charts/returnsSeries";
+import { loadAnalytics } from "./data";
 import { formatCurrency, formatGainWithShare } from "./format";
 import { coarseForm, expectNoCoarseForm } from "./testSupport/coarseForm";
+
+/** Exactly the accounts the Growth tab's returns grid renders. */
+const chartedAccounts = chartedReturnAccounts(
+  buildReturnsSeries(loadAnalytics().returns, loadAnalytics().series),
+  loadAnalytics().series,
+);
 
 function roomCard(group: string) {
   const node = document.querySelector(`[data-room-line="${group}"]`);
@@ -30,11 +38,9 @@ describe("App", () => {
   test("the growth tab holds the returns chart, with its provenance stated", () => {
     render(<App />);
     clickTab("Growth");
-    expect(document.querySelectorAll("[data-returns-card]").length).toBe(
-      GOLDENS.corpus.accountCount,
-    );
+    expect(document.querySelectorAll("[data-returns-card]").length).toBe(chartedAccounts.length);
     expect(document.querySelector("[data-returns-provenance]")?.textContent).toContain(
-      `2 of ${GOLDENS.corpus.accountCount} accounts`,
+      `2 of ${chartedAccounts.length} accounts`,
     );
   });
 

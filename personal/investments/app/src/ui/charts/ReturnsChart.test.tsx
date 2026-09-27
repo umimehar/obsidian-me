@@ -4,6 +4,7 @@ import { GOLDENS } from "../../goldens";
 import { loadAnalytics } from "../data";
 import { ReturnsChart } from "./ReturnsChart";
 import { formatPeriodLabel } from "./plot";
+import { buildReturnsSeries, chartedReturnAccounts, plottedCount } from "./returnsSeries";
 
 /** The Crypto account's masked id, for the single-statement fixture below. */
 function cryptoMaskedId(): string {
@@ -19,6 +20,15 @@ function cryptoMaskedId(): string {
  * quietly changing what the page claims.
  */
 const analytics = loadAnalytics();
+/** Exactly the accounts the grid renders: Chequing and zero-plotted accounts dropped. */
+const chartedAccounts = chartedReturnAccounts(
+  buildReturnsSeries(analytics.returns, analytics.series),
+  analytics.series,
+);
+const chartedPlottedTotal = chartedAccounts.reduce(
+  (sum, account) => sum + plottedCount(account.points),
+  0,
+);
 
 function renderChart() {
   render(<ReturnsChart returns={analytics.returns} series={analytics.series} />);
@@ -45,8 +55,10 @@ describe("provenance on screen", () => {
   test("states in words how many accounts have statement-stated rates", () => {
     renderChart();
     const note = document.querySelector("[data-returns-provenance]");
-    expect(note?.textContent).toContain(`2 of ${GOLDENS.corpus.accountCount} accounts`);
-    expect(note?.textContent).toContain(`The other ${GOLDENS.corpus.accountCount - 2}`);
+    // Counted over the charted accounts, not the whole corpus: Chequing and
+    // any zero-plotted account are never on this page to be counted.
+    expect(note?.textContent).toContain(`2 of ${chartedAccounts.length} accounts`);
+    expect(note?.textContent).toContain(`The other ${chartedAccounts.length - 2}`);
   });
 
   test("says the other accounts' rates are computed here, not Wealthsimple's own", () => {
@@ -136,10 +148,11 @@ describe("a gap breaks the line and is never drawn at zero", () => {
     // would mean a null month got drawn, which on this chart means drawn at
     // zero -- a real rate of nothing rather than a gap.
     const dots = document.querySelectorAll("[data-returns-dot]");
-    expect(dots).toHaveLength(GOLDENS.returnsPlottedTotal);
+    expect(dots).toHaveLength(chartedPlottedTotal);
     const onZero = [...dots].filter((dot) => Number(dot.getAttribute("cy")) === zeroY);
-    // The six genuine 0.00% months on the two Chequing accounts, and no others.
-    expect(onZero).toHaveLength(6);
+    // The genuine 0.00% months all belonged to the Chequing accounts, which
+    // the grid no longer draws: no charted account holds an exact 0.00%.
+    expect(onZero).toHaveLength(0);
   });
 
   test("no cursor marker is drawn on a month with no figure", () => {
@@ -154,19 +167,17 @@ describe("a gap breaks the line and is never drawn at zero", () => {
     expect(card("d77c").querySelector("[data-cursor-marker]")).not.toBeNull();
   });
 
-  test("an account with no computable month draws no line and says why", () => {
+  test("an account cut back to no computable month is dropped from the grid, not shown empty", () => {
     // Built by cutting a real account back to its first month: with nothing
-    // earlier to compare against there is no rate to draw. Crypto WAS this
-    // account until 2026-07 gave it a second statement, so the corpus does
-    // not currently hold one -- `GOLDENS.returnsWithNoRate` records that, and
-    // the state stays covered either way.
+    // earlier to compare against there is no rate to draw, and
+    // `chartedReturnAccounts` drops an account with zero plotted points
+    // rather than rendering an empty card for it.
     expect(GOLDENS.returns.e2d6?.points).toBeGreaterThan(0);
     const returns = loadAnalytics().returns.map((entry) =>
       entry.maskedId === cryptoMaskedId() ? { ...entry, points: entry.points.slice(0, 1) } : entry,
     );
     render(<ReturnsChart returns={returns} series={loadAnalytics().series} />);
-    expect(lines("e2d6")).toHaveLength(0);
-    expect(card("e2d6").textContent).toContain("no earlier statement to compare against");
+    expect(document.querySelector('[data-returns-card="e2d6"]')).toBeNull();
   });
 });
 
@@ -213,9 +224,40 @@ describe("a near-flat card says its range in words", () => {
   });
 
   test("an account whose every month is the same rate reads as a single figure", () => {
-    renderChart();
-    // Chequing 18a3 sat still: both its computable months are 0.00%.
-    expect(card("18a3").querySelector("[data-flat-range]")?.textContent).toBe(
+    // Chequing 18a3 used to be this fixture (flat at 0.00%), but the grid no
+    // longer draws Chequing at all, so this exercises the same rendering
+    // path with a synthetic account instead of a corpus one.
+    const [account] = analytics.series;
+    if (account === undefined) throw new Error("expected at least one account in the corpus");
+    const flatMasked = "flat-fixture";
+    const returns = [
+      {
+        maskedId: flatMasked,
+        points: [
+          {
+            period: "2026-01",
+            source: "derived" as const,
+            periodReturn: 0,
+            reason: null,
+            statedMwr: null,
+          },
+          {
+            period: "2026-02",
+            source: "derived" as const,
+            periodReturn: 0,
+            reason: null,
+            statedMwr: null,
+          },
+        ],
+      },
+      ...analytics.returns,
+    ];
+    const series = [
+      { ...account, maskedId: flatMasked, shortId: flatMasked, kind: "TFSA" as const },
+      ...analytics.series,
+    ];
+    render(<ReturnsChart returns={returns} series={series} />);
+    expect(card(flatMasked).querySelector("[data-flat-range]")?.textContent).toBe(
       "Every month with a figure is 0.00%, so the line is flat on the shared axis.",
     );
   });
@@ -227,20 +269,29 @@ describe("a near-flat card says its range in words", () => {
     expect(card("9710").querySelector("[data-flat-range]")).toBeNull();
   });
 
-  test("exactly the four cards whose span is under 2% of the shared axis carry one", () => {
+  test("exactly the cards whose span is under 2% of the shared axis carry one", () => {
     renderChart();
     const flat = [...document.querySelectorAll("[data-flat-range]")].map((node) =>
       node.closest("[data-returns-card]")?.getAttribute("data-returns-card"),
     );
     // The cards whose own rate span is a sliver of the shared axis. Derived
-    // from each account's own extent rather than listed, so an account whose
-    // rates spread out after an import leaves this list on its own.
-    const shared = Object.values(GOLDENS.returns)
-      .map((r) => r.extent)
+    // from each charted account's own extent rather than listed, so an
+    // account whose rates spread out after an import leaves this list on its
+    // own -- and scoped to the charted set, since three of the corpus's flat
+    // accounts (Chequing) are no longer drawn at all.
+    const chartedIds = new Set(chartedAccounts.map((a) => a.shortId));
+    const shared = Object.entries(GOLDENS.returns)
+      .filter(([shortId]) => chartedIds.has(shortId))
+      .map(([, r]) => r.extent)
       .filter((e): e is [number, number] => e !== null);
     const axisSpan = Math.max(...shared.map((e) => e[1])) - Math.min(...shared.map((e) => e[0]));
     const nearlyFlat = Object.entries(GOLDENS.returns)
-      .filter(([, r]) => r.extent !== null && r.extent[1] - r.extent[0] < axisSpan * 0.02)
+      .filter(
+        ([shortId, r]) =>
+          chartedIds.has(shortId) &&
+          r.extent !== null &&
+          r.extent[1] - r.extent[0] < axisSpan * 0.02,
+      )
       .map(([shortId]) => shortId)
       .sort();
     expect(nearlyFlat.length).toBeGreaterThan(0);
@@ -266,7 +317,7 @@ describe("the rate axis", () => {
     const ys = [...document.querySelectorAll("[data-returns-dot]")].map((dot) =>
       Number(dot.getAttribute("cy")),
     );
-    expect(ys).toHaveLength(GOLDENS.returnsPlottedTotal);
+    expect(ys).toHaveLength(chartedPlottedTotal);
     expect(Math.min(...ys)).toBeGreaterThanOrEqual(0);
     expect(Math.max(...ys)).toBeLessThanOrEqual(innerHeight);
     // And the negatives really do sit below the zero line, not clamped onto it.
@@ -380,18 +431,25 @@ describe("the chart is a responsive graphic", () => {
     }
   });
 
-  test("renders one card per account in the corpus, stated ones first", () => {
+  test("renders one card per charted account, stated ones first, Chequing left out", () => {
     renderChart();
     const cards = [...document.querySelectorAll("[data-returns-card]")].map((node) =>
       node.getAttribute("data-returns-card"),
     );
-    expect(cards).toHaveLength(GOLDENS.corpus.accountCount);
+    expect(cards).toHaveLength(chartedAccounts.length);
     expect(cards.slice(0, 2)).toEqual(["9710", "d6d9"]);
+    expect(cards).not.toContain("18a3");
+    expect(cards).not.toContain("2b74");
+    expect(cards).not.toContain("8cd3");
   });
 
-  test("a Chequing account is marked as excluded from totals, same as the Overview", () => {
+  test("the spousal RRSP is marked as excluded from totals, same as the Overview", () => {
+    // Chequing used to be this fixture, but the grid no longer draws it at
+    // all. The spousal RRSP is `inTotals: false` for an unrelated reason
+    // (it is the spouse's asset) and still has a plotted point, so it stays
+    // in the grid and still carries the badge.
     renderChart();
-    expect(card("18a3").textContent).toContain("Excluded from totals");
+    expect(card("97ab").textContent).toContain("Excluded from totals");
     expect(card("d77c").textContent).not.toContain("Excluded from totals");
   });
 });

@@ -136,6 +136,28 @@ export function plottedCount(points: readonly ReturnValuePoint[]): number {
   return points.filter((point) => point.rate !== null).length;
 }
 
+/**
+ * The accounts the Growth tab's grid actually draws.
+ *
+ * Chequing is money held rather than invested, so a return card for it is
+ * three flat lines that say nothing about performance. An account with no
+ * plotted point at all -- 8297, opened with a single statement and no prior
+ * period to compute a return against -- would draw an empty card, which
+ * reads as a rendering failure rather than as an account that is simply too
+ * new. Both are dropped here rather than in the component, so the provenance
+ * sentence's counts and the rendered cards can never disagree about which
+ * accounts are on the page.
+ */
+export function chartedReturnAccounts(
+  accounts: readonly AccountReturns[],
+  series: readonly AccountSeries[],
+): AccountReturns[] {
+  const kindById = new Map(series.map((account) => [account.maskedId, account.kind]));
+  return accounts.filter(
+    (account) => kindById.get(account.maskedId) !== "Chequing" && plottedCount(account.points) > 0,
+  );
+}
+
 /** The narrowing that makes `PlottedReturnPoint` reachable without a cast. */
 function hasRate(point: ReturnValuePoint): point is PlottedReturnPoint {
   return point.rate !== null;

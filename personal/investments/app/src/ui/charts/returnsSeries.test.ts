@@ -8,6 +8,7 @@ import {
   type ReturnValuePoint,
   accountRateExtent,
   buildReturnsSeries,
+  chartedReturnAccounts,
   distinctGaps,
   gapPhrase,
   latestStatedLines,
@@ -503,5 +504,37 @@ describe("returnsTooltipLines", () => {
         if (point.rate === null) expect(text(lines)).not.toContain("This month ");
       }
     }
+  });
+});
+
+describe("chartedReturnAccounts, over the real corpus", () => {
+  const charted = chartedReturnAccounts(accounts, analytics.series);
+
+  test("drops every Chequing account", () => {
+    expect(charted.some((a) => a.label.startsWith("Chequing"))).toBe(false);
+    expect(accounts.some((a) => a.label.startsWith("Chequing"))).toBe(true);
+  });
+
+  test("drops an account with no plotted point at all", () => {
+    // 8297, Corporate (self), opened 2026-08 with a single statement and no
+    // prior period to compute a return against: plottedCount is 0 for it.
+    const corporateSelf = accounts.find((a) => a.label === "Corporate (self)");
+    expect(corporateSelf).toBeDefined();
+    expect(plottedCount(corporateSelf?.points ?? [])).toBe(0);
+    expect(charted.some((a) => a.label === "Corporate (self)")).toBe(false);
+  });
+
+  test("every remaining account has at least one plotted point", () => {
+    expect(charted.length).toBeGreaterThan(0);
+    for (const account of charted) {
+      expect(plottedCount(account.points)).toBeGreaterThan(0);
+    }
+  });
+
+  test("keeps every non-Chequing account that has a plotted point", () => {
+    const expectedCount = accounts.filter(
+      (a) => !a.label.startsWith("Chequing") && plottedCount(a.points) > 0,
+    ).length;
+    expect(charted.length).toBe(expectedCount);
   });
 });
