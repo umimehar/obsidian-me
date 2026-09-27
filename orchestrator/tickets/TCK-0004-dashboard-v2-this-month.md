@@ -5,7 +5,7 @@ created: 2026-09-26
 updated: 2026-09-26
 type: ticket
 id: TCK-0004
-status: in-progress
+status: done
 project: system
 ticket_type: feature
 assigned_device: any
