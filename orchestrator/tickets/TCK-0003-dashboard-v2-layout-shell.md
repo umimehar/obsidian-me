@@ -27,13 +27,13 @@ Restructure the investments dashboard into five tabs (This month, Portfolio, Gro
 
 ## Acceptance criteria
 
-- [ ] Tabs are This month, Portfolio, Growth, Plan, Data; old hashes (#overview, #wrappers, #tax, #projections, #reconciliation, #cards) resolve to the new tab that now holds that content
-- [ ] Hero chart, year filter, account filter and chart mode toggle render on Portfolio only; every other tab shows a one line summary strip (total, gain, as of period)
-- [ ] Page max width 72rem with a two column card grid where cards sit side by side
-- [ ] The USD book cost note renders once per tab behind an About these numbers disclosure instead of on every card
-- [ ] Growth return charts exclude chequing and accounts with no derived or stated rate, and render in a grid
-- [ ] Data tab holds Reconciliation, statement coverage and Cards
-- [ ] bun run check clean, bun run contrast pass (updated for the new tabs)
+- [x] Tabs are This month, Portfolio, Growth, Plan, Data; old hashes (#overview, #wrappers, #tax, #projections, #reconciliation, #cards) resolve to the new tab that now holds that content
+- [x] Hero chart, year filter, account filter and chart mode toggle render on Portfolio only; every other tab shows a one line summary strip (total, gain, as of period)
+- [x] Page max width 72rem with a two column card grid where cards sit side by side
+- [x] The USD book cost note renders once per tab behind an About these numbers disclosure instead of on every card
+- [x] Growth return charts exclude chequing and accounts with no derived or stated rate, and render in a grid
+- [x] Data tab holds Reconciliation, statement coverage and Cards
+- [x] bun run check clean, bun run contrast pass (updated for the new tabs)
 
 ## Context
 
@@ -44,3 +44,6 @@ Owner request in session on 2026-09-26, after reviewing a proposal for the inves
 - 2026-09-26 23:10 — Implementation delegated to a Sonnet subagent, per the owner's routing (Opus plans, Sonnet executes).
 - 2026-09-27 00:00 — Four commits: 88ff9fe (five tabs, legacy hash map), fa5ba09 (hero on Portfolio only, summary strip, 72rem), 3882f0a (one About these numbers note per tab), 8bceec7 (growth returns grid without chequing). `bun run check`: 1365 pass, 14 skip, 0 fail. `bun run contrast`: AA pass, worst light 4.66, dark 7.50.
 - 2026-09-27 00:02 — Agent review dispatched at Opus, high effort.
+- 2026-09-27 00:10 — Review round 1 FAIL on five: a `#constructor` hash rendered an empty panel, the year scope tests could not fail, the summary strip gain had no tone, dead no figure card code, `Dashboard` over 100 lines. Six fix commits (434a09c to c15a5e2). The implementer used `git stash` for a mutation check; nothing lost, lesson recorded in `knowledge/lessons.md`.
+- 2026-09-27 00:40 — Round 2 FAIL on one: `Dashboard` still 118 lines counting comments. Fixed in 0874bab (75 lines), plus the caveat test now loops over all four tabs, mutation checked.
+- 2026-09-27 00:45 — Round 3 PASS. `bun run check`: 1370 pass, 14 skip, 0 fail. `bun run contrast`: AA pass, worst light 4.66, dark 7.50.

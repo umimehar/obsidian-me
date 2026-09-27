@@ -40,6 +40,14 @@ ALWAYS treat both `autoBackupAfterFileChange` **and** `autoSaveInterval` in `.ob
 
 NEVER rely on a settings change as the mitigation. Commit real work early and often under a real message, because a commit that already exists cannot be swept into a nameless one. When a capture does happen, check whether it is pushed (`git rev-list --left-right --count origin/main...HEAD`) BEFORE considering an amend, and if it is pushed on a branch other sessions share, leave history alone and record what the commit really contained in the endeavor's log.
 
+### a subagent brief must restate the vault's never stash rule (2026-09-27)
+
+Why:
+- During TCK-0003 an implementer subagent ran `git stash` to prove its new tests failed against the old code. The obsidian-loop skill forbids stash in this vault because an interrupted stash has eaten vault edits before, but a subagent never reads that skill; it sees only its brief.
+- Nothing was lost that time. The mutation check it wanted is legitimate; the tool was the wrong one.
+
+ALWAYS put "never `git stash`; commit first, then mutate and restore with `git diff --quiet` as the check" in every implementer brief for work in this vault.
+
 ### pin mcp<2 for stdio servers that import McpError (2026-08-04)
 
 Why:
