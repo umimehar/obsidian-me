@@ -5,7 +5,7 @@ created: 2026-09-26
 updated: 2026-09-26
 type: ticket
 id: TCK-0003
-status: claimed
+status: in-progress
 project: system
 ticket_type: feature
 assigned_device: any
@@ -16,7 +16,7 @@ priority: p1
 effort: medium
 depends_on: []
 created_by: umar
-session: null
+session: 5d58b682-52ea-4755-b750-b787fdc2ed32
 ---
 
 # TCK-0003 — Dashboard v2: layout shell and tab restructure

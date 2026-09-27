@@ -21,13 +21,13 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0003-dashboard-v2-layout-shell]] #project/system #type/feature #p1
 
 
 
 
 ## In Progress
 
+- [ ] [[TCK-0003-dashboard-v2-layout-shell]] #project/system #type/feature #p1
 
 
 
