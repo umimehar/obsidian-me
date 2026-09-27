@@ -12,6 +12,7 @@ import { GroupGainLine, Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
 import { SummaryStrip } from "./SummaryStrip";
 import { Tabs } from "./Tabs";
+import { ThisMonth } from "./ThisMonth";
 import { YearFilter } from "./YearFilter";
 import {
   chartSubject,
@@ -31,6 +32,7 @@ import {
   latestPeriod,
   loadAnalytics,
   loadCards,
+  loadCheckpoints,
   loadCoverage,
   loadReconciliation,
 } from "./data";
@@ -259,6 +261,10 @@ function PortfolioPanel({
   );
 }
 
+function MonthPanel({ analytics }: { analytics: AnalyticsOutput }) {
+  return <ThisMonth analytics={analytics} checkpoints={loadCheckpoints()} />;
+}
+
 function GrowthPanel({ analytics }: { analytics: AnalyticsOutput }) {
   return (
     <Flex direction="column" gap="6">
@@ -358,9 +364,14 @@ function Dashboard() {
   const summary = { total, period, figures: portfolioGain, years, scope, onScopeChange };
 
   const panels: Record<TabId, ReactNode> = {
-    // TCK-0004 fills this in and adds "month" to TABS; it is unreachable
-    // until then.
-    month: null,
+    // Reads the UNSCOPED payload, like Plan: a month review needs the
+    // statement before it to compute a baseline, which a year filter could
+    // clip away.
+    month: (
+      <WithSummary {...summary}>
+        <MonthPanel analytics={all} />
+      </WithSummary>
+    ),
     portfolio: (
       <PortfolioPanel
         analytics={analytics}

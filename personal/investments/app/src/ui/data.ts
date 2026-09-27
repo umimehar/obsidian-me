@@ -1,5 +1,6 @@
 import rawAnalytics from "@data/analytics.json";
 import rawCards from "@data/cards.json";
+import rawCheckpoints from "@data/checkpoints.json";
 import rawCoverage from "@data/coverage.json";
 import rawReconciliation from "@data/reconciliation.json";
 import type { AnalyticsOutput } from "../analytics/build";
@@ -192,4 +193,47 @@ export function parseCoverage(raw: unknown): Coverage {
 
 export function loadCoverage(): Coverage {
   return parseCoverage(rawCoverage);
+}
+
+/**
+ * A reading the owner took off the Wealthsimple app's own screen, compared
+ * against the statements once they cover the same period. `reconciliation`
+ * is null on a checkpoint not yet reconciled against a statement.
+ */
+export interface Checkpoint {
+  coversPeriod: string;
+  reconciliation: { ourTotal: number; appVisibleTotal: number; difference: number } | null;
+}
+
+function isReconciliation(
+  value: unknown,
+): value is { ourTotal: number; appVisibleTotal: number; difference: number } {
+  if (typeof value !== "object" || value === null) return false;
+  const c = value as Record<string, unknown>;
+  return (
+    typeof c.ourTotal === "number" &&
+    typeof c.appVisibleTotal === "number" &&
+    typeof c.difference === "number"
+  );
+}
+
+function isCheckpoint(value: unknown): value is Checkpoint {
+  if (typeof value !== "object" || value === null) return false;
+  const c = value as Record<string, unknown>;
+  if (typeof c.coversPeriod !== "string") return false;
+  return c.reconciliation === undefined || isReconciliation(c.reconciliation);
+}
+
+/**
+ * The owner-recorded checkpoints, for This month's "app against statements"
+ * line. A malformed entry is dropped rather than thrown on -- a checkpoint is
+ * a bonus reading, not something the rest of the dashboard depends on.
+ */
+export function loadCheckpoints(): Checkpoint[] {
+  if (typeof rawCheckpoints !== "object" || rawCheckpoints === null) return [];
+  const { checkpoints } = rawCheckpoints as { checkpoints?: unknown };
+  if (!Array.isArray(checkpoints)) return [];
+  return checkpoints
+    .filter(isCheckpoint)
+    .map((c) => ({ coversPeriod: c.coversPeriod, reconciliation: c.reconciliation ?? null }));
 }

@@ -30,6 +30,16 @@ function selectYear(label: string) {
   fireEvent.click(screen.getByRole("radio", { name: exactly(label) }));
 }
 
+/**
+ * Radix's TabsTrigger renders its label twice -- once visible, once hidden
+ * at bold weight, so the visible width never shifts on select -- which
+ * doubles the accessible name. Matching a prefix sidesteps that
+ * implementation detail. Activation is on pointerdown, not click.
+ */
+function clickTab(name: string) {
+  fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${name}\\b`) }), { button: 0 });
+}
+
 function total(): string {
   return document.querySelector("[data-portfolio-total]")?.textContent ?? "";
 }
@@ -37,6 +47,7 @@ function total(): string {
 describe("the year filter", () => {
   test("defaults to all time, showing the whole corpus and no year change line", () => {
     render(<App />);
+    clickTab("Portfolio");
     expect(screen.getByRole("radio", { name: exactly("All time") })).toBeDefined();
     expect(total()).toBe(formatCurrency(GOLDENS.portfolio.total));
     // A change line under "all time" would be a year's change with no year.
@@ -56,6 +67,7 @@ describe("the year filter", () => {
 
   test("selecting a year moves the headline to that year's own ending value", () => {
     render(<App />);
+    clickTab("Portfolio");
     selectYear("2025");
     const change = yearChange(loadAnalytics().series, 2025);
     if (change === null) throw new Error("expected a 2025 change");
@@ -67,6 +79,7 @@ describe("the year filter", () => {
     // The guardrail. 2026 grew by roughly $149,000 of which most was money
     // paid in; a bare "+$149,063" would be true and deeply misleading.
     render(<App />);
+    clickTab("Portfolio");
     selectYear("2026");
     const change = yearChange(loadAnalytics().series, 2026);
     if (change === null) throw new Error("expected a 2026 change");
@@ -80,6 +93,7 @@ describe("the year filter", () => {
 
   test("the change line's percentage is the chained return, the same one the chart draws", () => {
     render(<App />);
+    clickTab("Portfolio");
     selectYear("2026");
     const change = yearChange(loadAnalytics().series, 2026);
     if (change?.returnRate == null) throw new Error("expected a 2026 return");
@@ -91,6 +105,7 @@ describe("the year filter", () => {
 
   test("the year rides in the hash, so a scoped view is linkable", () => {
     render(<App />);
+    clickTab("Portfolio");
     selectYear("2024");
     expect(window.location.hash).toBe("#portfolio/2024");
     selectYear("All time");
@@ -174,6 +189,7 @@ describe("the year filter reaches every tab that can honour it", () => {
 describe("the chart switcher", () => {
   test("defaults to the value chart and switches to the return chart", () => {
     render(<App />);
+    clickTab("Portfolio");
     expect(document.querySelector("[data-return-chart]")).toBeNull();
 
     fireEvent.click(screen.getByRole("radio", { name: exactly("Return") }));
@@ -185,6 +201,7 @@ describe("the chart switcher", () => {
 
   test("the return chart states a deposit-netted figure and says so", () => {
     render(<App />);
+    clickTab("Portfolio");
     fireEvent.click(screen.getByRole("radio", { name: exactly("Return") }));
     const label = document.querySelector("[data-return-chart]")?.getAttribute("aria-label") ?? "";
     const ending = endingCumulative(buildPortfolioReturns(loadAnalytics().series));
@@ -194,6 +211,7 @@ describe("the chart switcher", () => {
 
   test("under a year, the return chart re-bases to that year and keeps its first month", () => {
     render(<App />);
+    clickTab("Portfolio");
     selectYear("2026");
     fireEvent.click(screen.getByRole("radio", { name: exactly("Return") }));
 
@@ -211,6 +229,7 @@ describe("the chart switcher", () => {
     // Two figures for one year is one too many. This is the pair that had to
     // be made one: the line read 22.61% while the chart read 10.50%.
     render(<App />);
+    clickTab("Portfolio");
     selectYear("2026");
     const line = document.querySelector("[data-year-change]")?.textContent ?? "";
     fireEvent.click(screen.getByRole("radio", { name: exactly("Return") }));

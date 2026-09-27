@@ -56,14 +56,15 @@ describe("Tabs", () => {
     // hidden at bold weight, so the visible width never shifts on select --
     // which doubles the accessible name. Matching a prefix sidesteps that
     // implementation detail rather than pinning it.
-    for (const label of ["Portfolio", "Growth", "Plan", "Data"]) {
+    for (const label of ["This month", "Portfolio", "Growth", "Plan", "Data"]) {
       expect(screen.getByRole("tab", { name: new RegExp(`^${label}\\b`) })).toBeDefined();
     }
   });
 
   test("the active panel's content is present and the inactive panels' is absent", () => {
     renderTabs();
-    expect(screen.getByText(PANELS.portfolio)).toBeDefined();
+    expect(screen.getByText(PANELS.month)).toBeDefined();
+    expect(screen.queryByText(PANELS.portfolio)).toBeNull();
     expect(screen.queryByText(PANELS.growth)).toBeNull();
     expect(screen.queryByText(PANELS.plan)).toBeNull();
     expect(screen.queryByText(PANELS.data)).toBeNull();

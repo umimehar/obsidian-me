@@ -13,17 +13,17 @@ describe("useHashTab, the tab half", () => {
     expect(result.current[0].tab).toBe("growth");
   });
 
-  test("an empty hash resolves to portfolio, all time", () => {
+  test("an empty hash resolves to this month, all time", () => {
     window.location.hash = "";
     const { result } = renderHook(() => useHashTab());
-    expect(result.current[0]).toEqual({ tab: "portfolio", scope: "all" });
+    expect(result.current[0]).toEqual({ tab: "month", scope: "all" });
   });
 
-  test("an unknown hash resolves to portfolio rather than throwing or rendering nothing", () => {
+  test("an unknown hash resolves to this month rather than throwing or rendering nothing", () => {
     window.location.hash = "#not-a-real-tab";
     expect(() => renderHook(() => useHashTab())).not.toThrow();
     const { result } = renderHook(() => useHashTab());
-    expect(result.current[0].tab).toBe("portfolio");
+    expect(result.current[0].tab).toBe("month");
   });
 
   test("setting a tab writes the hash and leaves the scope alone", () => {
@@ -66,11 +66,11 @@ describe("useHashTab, legacy hash mapping", () => {
   });
 
   test.each(["#constructor", "#toString", "#hasOwnProperty", "#__proto__"] as const)(
-    "%s is not a real key on LEGACY_TABS's prototype chain, and decodes to portfolio",
+    "%s is not a real key on LEGACY_TABS's prototype chain, and decodes to this month",
     (hash) => {
       window.location.hash = hash;
       const { result } = renderHook(() => useHashTab());
-      expect(result.current[0]).toEqual({ tab: "portfolio", scope: "all" });
+      expect(result.current[0]).toEqual({ tab: "month", scope: "all" });
     },
   );
 

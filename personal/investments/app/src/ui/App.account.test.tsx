@@ -10,6 +10,16 @@ afterEach(() => {
   window.location.hash = "";
 });
 
+/**
+ * Radix's TabsTrigger renders its label twice -- once visible, once hidden
+ * at bold weight, so the visible width never shifts on select -- which
+ * doubles the accessible name. Matching a prefix sidesteps that
+ * implementation detail. Activation is on pointerdown, not click.
+ */
+function clickTab(name: string) {
+  fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${name}\\b`) }), { button: 0 });
+}
+
 const { series } = loadAnalytics();
 const PORTFOLIO_SIZE = defaultSelection(series).size;
 
@@ -61,6 +71,7 @@ function lastValue(label: string): number {
 describe("the account filter", () => {
   test("opens showing every portfolio account ticked and the spousal account not", async () => {
     render(<App />);
+    clickTab("Portfolio");
     expect(trigger().textContent).toBe(`Portfolio (${PORTFOLIO_SIZE} accounts)`);
     await openFilter();
     const ticked = screen
@@ -73,6 +84,7 @@ describe("the account filter", () => {
 
   test("the ticks, the button and the chart stay in step as accounts are toggled", async () => {
     render(<App />);
+    clickTab("Portfolio");
     const before = document.querySelector("[data-portfolio-total]")?.textContent;
     await openFilter();
     for (const a of series) {
@@ -96,6 +108,7 @@ describe("the account filter", () => {
 
   test("reset returns to the portfolio, and the return mode follows the selection", async () => {
     render(<App />);
+    clickTab("Portfolio");
     await openFilter();
     toggle("Spousal RRSP");
     expect(trigger().textContent).toBe(`${PORTFOLIO_SIZE + 1} accounts`);

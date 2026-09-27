@@ -16,6 +16,15 @@ export function formatPeriodLabel(period: string): string {
   }).format(periodToDate(period));
 }
 
+/** A `YYYY-MM` period with the month spelled out, "August 2026" -- for prose, where the chart's short form reads as an abbreviation. */
+export function formatMonthLabel(period: string): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(periodToDate(period));
+}
+
 /**
  * An amount for an axis tick only, whole dollars.
  *

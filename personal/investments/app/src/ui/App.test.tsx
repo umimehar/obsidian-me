@@ -88,11 +88,11 @@ describe("App", () => {
 
   test("renders the overview and the tax view together on portfolio, and the room lines on plan", () => {
     render(<App />);
+    clickTab("Portfolio");
     expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe(
       formatCurrency(GOLDENS.portfolio.total),
     );
-    // Portfolio holds both the account groups and, under it, the tax view --
-    // no click needed, since both live in the same panel now.
+    // Portfolio holds both the account groups and, under it, the tax view.
     expect(document.querySelectorAll("[data-overview-group]").length).toBeGreaterThan(0);
     expect(document.querySelector("[data-tax-income]")).not.toBeNull();
 
@@ -130,6 +130,7 @@ describe("App", () => {
 
   test("the hero and its chart show only on portfolio; other tabs carry the summary strip instead", () => {
     render(<App />);
+    clickTab("Portfolio");
     expect(document.querySelector("[data-portfolio-total]")).not.toBeNull();
     expect(document.querySelector("svg[role='img'] title")).not.toBeNull();
     expect(
@@ -175,6 +176,7 @@ describe("App", () => {
     // regroup the same money, so the headline total above the tabs must
     // never move when the account-grouping lens does.
     render(<App />);
+    clickTab("Portfolio");
     const total = () => document.querySelector("[data-portfolio-total]")?.textContent;
     expect(total()).toBe(formatCurrency(GOLDENS.portfolio.total));
 
@@ -222,6 +224,7 @@ function headlineBlock(): HTMLElement {
 describe("the headline book value and gain", () => {
   test("prints the corpus's book value and gain, from the same GroupGainLine the cards use", () => {
     render(<App />);
+    clickTab("Portfolio");
     const block = within(headlineBlock());
     expect(block.getByText(bookValueText())).toBeDefined();
     const gain = block.getByText(
@@ -246,6 +249,7 @@ describe("the headline book value and gain", () => {
 
   test("no figure here announces coarser than what it prints", () => {
     render(<App />);
+    clickTab("Portfolio");
     const text = headlineBlock().textContent ?? "";
     for (const figure of [
       GOLDENS.portfolio.total,
@@ -293,6 +297,7 @@ describe("the headline book value and gain", () => {
     // exactly one heading in the block, and it is the existing section label,
     // not one contributed by the new book value/gain figures.
     render(<App />);
+    clickTab("Portfolio");
     const headings = headlineBlock().querySelectorAll("h1, h2, h3, h4, h5, h6");
     expect(headings.length).toBe(1);
     expect(headings[0]?.tagName).toBe("H2");

@@ -90,6 +90,7 @@ describe("App accessibility", () => {
 
   test("the headline figure is not itself a heading", () => {
     render(<App />);
+    clickTab("Portfolio");
     expect(
       screen.queryByRole("heading", { name: formatCurrency(GOLDENS.portfolio.total) }),
     ).toBeNull();
@@ -189,9 +190,10 @@ describe("App accessibility", () => {
   test("every graphic is named, since a chart has no text a reader can fall back to", () => {
     // The same sweep, for the role that replaced the Overview's bars. An
     // unnamed role="img" announces as "image" and says nothing at all.
-    // The portfolio chart is above the tabs and the group sparklines are on
-    // the default overview tab, so no tab switch is needed here.
+    // The portfolio chart and the group sparklines are on the Portfolio tab,
+    // which is no longer the default -- This month is.
     render(<App />);
+    clickTab("Portfolio");
     const graphics = [...document.querySelectorAll('[role="img"]')];
     // One portfolio chart plus one per group card in the default lens.
     expect(graphics.length).toBeGreaterThan(5);
@@ -201,11 +203,11 @@ describe("App accessibility", () => {
   });
 
   test("every segmented control says what it selects", () => {
-    // The year and chart controls sit above the tabs, so they are named on
-    // every tab rather than only on the one that happens to be open. The lens
-    // toggle is on the default overview tab. The tax-year control is gone: one
-    // year control now scopes the whole dashboard.
+    // The year control is named on every tab; the chart and lens controls
+    // live only on the Portfolio tab. The tax-year control is gone: one year
+    // control now scopes the whole dashboard.
     render(<App />);
+    clickTab("Portfolio");
     for (const name of ["Year", "Chart", "Group accounts by"]) {
       expect(screen.getByRole("radiogroup", { name })).toBeDefined();
     }
