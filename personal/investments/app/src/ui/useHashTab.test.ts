@@ -42,7 +42,7 @@ describe("useHashTab, the tab half", () => {
 describe("useHashTab, legacy hash mapping", () => {
   test.each([
     ["#overview", "portfolio"],
-    ["#wrappers", "plan"],
+    ["#wrappers", "contributions"],
     ["#tax", "portfolio"],
     ["#projections", "plan"],
     ["#reconciliation", "data"],
@@ -59,10 +59,10 @@ describe("useHashTab, legacy hash mapping", () => {
     expect(result.current[0]).toEqual({ tab: "portfolio", scope: "all" });
   });
 
-  test("#wrappers/2025 decodes to plan, 2025", () => {
+  test("#wrappers/2025 decodes to contributions, 2025", () => {
     window.location.hash = "#wrappers/2025";
     const { result } = renderHook(() => useHashTab());
-    expect(result.current[0]).toEqual({ tab: "plan", scope: 2025 });
+    expect(result.current[0]).toEqual({ tab: "contributions", scope: 2025 });
   });
 
   test.each(["#constructor", "#toString", "#hasOwnProperty", "#__proto__"] as const)(
@@ -82,7 +82,7 @@ describe("useHashTab, legacy hash mapping", () => {
       result.current[1]({ scope: 2025 });
     });
 
-    expect(window.location.hash).toBe("#plan/2025");
+    expect(window.location.hash).toBe("#contributions/2025");
   });
 });
 

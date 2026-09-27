@@ -36,18 +36,18 @@ describe("App", () => {
     );
   });
 
-  test("the growth tab also holds the contributions chart, one card per wrapper", () => {
+  test("the contributions tab holds the contributions chart, one card per wrapper", () => {
     render(<App />);
-    clickTab("Growth");
+    clickTab("Contributions");
     expect(document.querySelectorAll("[data-contributions-card]").length).toBe(4);
     expect(document.querySelector("[data-contributions-provenance]")?.textContent).toContain(
       "1 of 4 wrappers states every figure it draws",
     );
   });
 
-  test("the growth tab also holds the monthly cashflow chart", () => {
+  test("the contributions tab also holds the monthly cashflow chart", () => {
     render(<App />);
-    clickTab("Growth");
+    clickTab("Contributions");
     expect(screen.getByRole("heading", { name: "Monthly cashflow" })).toBeDefined();
     expect(document.querySelectorAll('[data-cashflow-bar="deposit"]').length).toBeGreaterThan(0);
   });
@@ -84,7 +84,7 @@ describe("App", () => {
     );
   });
 
-  test("renders the overview and the tax view together on portfolio, and the room lines on plan", () => {
+  test("renders the overview and the tax view together on portfolio, and the room lines on contributions", () => {
     render(<App />);
     clickTab("Portfolio");
     expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe(
@@ -94,7 +94,7 @@ describe("App", () => {
     expect(document.querySelectorAll("[data-overview-group]").length).toBeGreaterThan(0);
     expect(document.querySelector("[data-tax-income]")).not.toBeNull();
 
-    clickTab("Plan");
+    clickTab("Contributions");
     expect(document.querySelectorAll("[data-room-line]").length).toBe(4);
   });
 
@@ -111,15 +111,15 @@ describe("App", () => {
 
   test("the year control drives both the room lines and the tax figures", () => {
     render(<App />);
-    clickTab("Plan");
+    clickTab("Contributions");
     expect(within(roomCard("TFSA")).getByText("$7,000.00")).toBeDefined();
 
     fireEvent.click(screen.getByRole("radio", { name: "2025" }));
     expect(within(roomCard("TFSA")).getByText("$25,000.00")).toBeDefined();
 
     // Switching tabs proves the year is shared state, not a control local
-    // to the plan panel: the portfolio tab's own tax view already reads
-    // 2025 without being touched.
+    // to the contributions panel: the portfolio tab's own tax view already
+    // reads 2025 without being touched.
     clickTab("Portfolio");
     const income = document.querySelector("[data-tax-income]");
     if (income === null) throw new Error("expected the tax income section to render");
@@ -159,7 +159,7 @@ describe("App", () => {
     render(<App />);
     const gainText = formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost);
 
-    for (const label of ["Growth", "Plan", "Data"]) {
+    for (const label of ["Growth", "Contributions", "Plan", "Data"]) {
       clickTab(label);
       const strip = document.querySelector("[data-summary-strip]");
       expect(strip).not.toBeNull();
@@ -239,7 +239,7 @@ describe("the headline book value and gain", () => {
     // every group card -- eight or nine repeats of the same caveat on one
     // tab. It now lives once, in the tab's own AboutNumbers disclosure.
     render(<App />);
-    for (const tab of ["Portfolio", "Growth", "Plan", "Data"]) {
+    for (const tab of ["Portfolio", "Growth", "Contributions", "Plan", "Data"]) {
       clickTab(tab);
       const matches = screen.getAllByText(/An estimate: book cost for USD holdings/);
       expect(matches).toHaveLength(1);
@@ -272,7 +272,7 @@ describe("the headline book value and gain", () => {
     // and its chart test above); this pins that leaving and coming back
     // does not drift the figures it shows.
     render(<App />);
-    for (const label of ["Growth", "Plan", "Data"]) {
+    for (const label of ["Growth", "Contributions", "Plan", "Data"]) {
       fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${label}\\b`) }), {
         button: 0,
       });

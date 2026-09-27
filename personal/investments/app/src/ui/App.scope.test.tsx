@@ -128,7 +128,7 @@ describe("the year filter reaches every tab that can honour it", () => {
   test("the registered room and tax views follow it, with no second year control of their own", () => {
     render(<App />);
     selectYear("2024");
-    openTab("Plan");
+    openTab("Contributions");
     // Specific to the content each view renders for 2024, not merely that
     // "2024" appears somewhere on the panel -- the year filter itself now
     // renders inside every panel and its own "2024" radio label would match

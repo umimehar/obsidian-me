@@ -9,6 +9,7 @@ const PANELS: Record<TabId, string> = {
   month: "This month panel content",
   portfolio: "Portfolio panel content",
   growth: "Growth panel content",
+  contributions: "Contributions panel content",
   plan: "Plan panel content",
   data: "Data panel content",
 };
@@ -30,6 +31,7 @@ function Harness() {
         month: <div>{PANELS.month}</div>,
         portfolio: <div>{PANELS.portfolio}</div>,
         growth: <div>{PANELS.growth}</div>,
+        contributions: <div>{PANELS.contributions}</div>,
         plan: <div>{PANELS.plan}</div>,
         data: <div>{PANELS.data}</div>,
       }}
@@ -56,7 +58,7 @@ describe("Tabs", () => {
     // hidden at bold weight, so the visible width never shifts on select --
     // which doubles the accessible name. Matching a prefix sidesteps that
     // implementation detail rather than pinning it.
-    for (const label of ["This month", "Portfolio", "Growth", "Plan", "Data"]) {
+    for (const label of ["This month", "Portfolio", "Growth", "Contributions", "Plan", "Data"]) {
       expect(screen.getByRole("tab", { name: new RegExp(`^${label}\\b`) })).toBeDefined();
     }
   });
@@ -66,6 +68,7 @@ describe("Tabs", () => {
     expect(screen.getByText(PANELS.month)).toBeDefined();
     expect(screen.queryByText(PANELS.portfolio)).toBeNull();
     expect(screen.queryByText(PANELS.growth)).toBeNull();
+    expect(screen.queryByText(PANELS.contributions)).toBeNull();
     expect(screen.queryByText(PANELS.plan)).toBeNull();
     expect(screen.queryByText(PANELS.data)).toBeNull();
   });

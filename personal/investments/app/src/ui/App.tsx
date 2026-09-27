@@ -48,6 +48,7 @@ import {
 } from "./scope";
 import { ErrorBoundary } from "./states/ErrorBoundary";
 import { type TabId, useHashTab } from "./useHashTab";
+import { ContributionHistory } from "./wrappers/ContributionHistory";
 import { RegisteredView } from "./wrappers/RegisteredView";
 import { TaxView } from "./wrappers/TaxView";
 
@@ -269,25 +270,41 @@ function GrowthPanel({ analytics }: { analytics: AnalyticsOutput }) {
   return (
     <Flex direction="column" gap="6">
       <ReturnsChart returns={analytics.returns} series={analytics.series} />
-      <ContributionsChart analytics={analytics} />
-      <CashflowChart series={analytics.series} />
       <CostGapChart series={analytics.series} />
     </Flex>
   );
 }
 
-function PlanPanel({
+/**
+ * What is being put in, and how much room is left. `RegisteredView` reads
+ * the UNSCOPED `all` for the same reason `PlanPanel` did before it moved
+ * here -- a registered wrapper's room is a fact about the calendar year, not
+ * about the account selection or return chart the scoped `analytics` exists
+ * for. `ContributionHistory` reads every year the corpus covers, not just
+ * `year`, so it also reads off `all`.
+ */
+function ContributionsPanel({
+  analytics,
   all,
   year,
-  scope,
 }: {
+  analytics: AnalyticsOutput;
   all: AnalyticsOutput;
   year: number;
-  scope: YearScope;
 }) {
   return (
     <Flex direction="column" gap="6">
       <RegisteredView analytics={all} year={year} />
+      <ContributionsChart analytics={analytics} />
+      <CashflowChart series={analytics.series} />
+      <ContributionHistory rooms={all.rooms} />
+    </Flex>
+  );
+}
+
+function PlanPanel({ all, scope }: { all: AnalyticsOutput; scope: YearScope }) {
+  return (
+    <Flex direction="column" gap="6">
       {/* The projection is a thirty-year forecast: a past year does not
           scope it, and re-basing it to that year's close would quietly
           produce a different forecast that looks just as authoritative.
@@ -397,9 +414,14 @@ function Dashboard() {
         <GrowthPanel analytics={analytics} />
       </WithSummary>
     ),
+    contributions: (
+      <WithSummary {...summary}>
+        <ContributionsPanel analytics={analytics} all={all} year={year} />
+      </WithSummary>
+    ),
     plan: (
       <WithSummary {...summary}>
-        <PlanPanel all={all} year={year} scope={scope} />
+        <PlanPanel all={all} scope={scope} />
       </WithSummary>
     ),
     data: (

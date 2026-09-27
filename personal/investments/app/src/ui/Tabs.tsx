@@ -12,6 +12,7 @@ const LABELS: Record<TabId, string> = {
   month: "This month",
   portfolio: "Portfolio",
   growth: "Growth",
+  contributions: "Contributions",
   plan: "Plan",
   data: "Data",
 };
