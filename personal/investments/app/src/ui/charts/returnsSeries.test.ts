@@ -9,7 +9,6 @@ import {
   accountRateExtent,
   buildReturnsSeries,
   chartedReturnAccounts,
-  distinctGaps,
   gapPhrase,
   latestStatedLines,
   plottedCount,
@@ -309,15 +308,7 @@ describe("provenance", () => {
   });
 });
 
-describe("distinctGaps and gapPhrase", () => {
-  test("names the single reason the Crypto account has no figure", () => {
-    expect(distinctGaps(byShortId("e2d6").points)).toEqual(["no-prior-period"]);
-  });
-
-  test("does not repeat a reason that occurs twice", () => {
-    expect(distinctGaps(byShortId("d6d9").points)).toEqual(["no-stated-rate"]);
-  });
-
+describe("gapPhrase", () => {
   test("every reason has words, and none of them is the word zero", () => {
     for (const gap of [
       "no-prior-period",

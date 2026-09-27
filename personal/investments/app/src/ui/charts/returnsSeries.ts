@@ -239,15 +239,6 @@ export function provenance(accounts: readonly AccountReturns[]): ReturnsProvenan
   return { stated, derived: accounts.length - stated, total: accounts.length };
 }
 
-/** Every reason an account has a gap, each named once, in first-seen order. */
-export function distinctGaps(points: readonly ReturnValuePoint[]): ReturnGap[] {
-  const seen: ReturnGap[] = [];
-  for (const point of points) {
-    if (point.gap !== null && !seen.includes(point.gap)) seen.push(point.gap);
-  }
-  return seen;
-}
-
 const GAP_PHRASES: Readonly<Record<ReturnGap, string>> = {
   "no-prior-period": "no earlier statement to compare against",
   "insufficient-data": "a market value is missing for this month or the one before",

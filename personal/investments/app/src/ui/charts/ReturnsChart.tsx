@@ -12,8 +12,6 @@ import {
   accountRateExtent,
   buildReturnsSeries,
   chartedReturnAccounts,
-  distinctGaps,
-  gapPhrase,
   latestStatedLines,
   plottedCount,
   provenance,
@@ -180,17 +178,6 @@ function FlatRangeNote({
   );
 }
 
-/** An account no month can be computed for. It states the reasons rather than drawing an empty band. */
-function NoFigureNote({ account }: { account: AccountReturns }) {
-  const reasons = distinctGaps(account.points).map(gapPhrase);
-  return (
-    <Text size="2" color="gray" as="p">
-      No month has a return figure.
-      {reasons.length === 0 ? "" : ` Reason: ${reasons.join("; ")}.`}
-    </Text>
-  );
-}
-
 /** `PlottedReturnPoint` carries a non-null `rate` in the type, so there is no null here to coerce. */
 function toPlotPoints(segment: readonly PlottedReturnPoint[], scales: ChartScales): PlotPoint[] {
   return segment.map((point) => ({
@@ -289,7 +276,6 @@ function AccountReturnsCard({
   const slots = useMemo(() => cursorSlots(xDomain, scales), [xDomain, scales]);
   const cursor = useChartCursor(account.points, slots, CURSOR_GEOMETRY);
 
-  const drawable = scales !== null && plottedCount(account.points) > 0;
   const lines =
     cursor.period === null ? [] : returnsTooltipLines(cursor.period, cursor.point, account.source);
   const readout = readoutSuffix(lines);
@@ -319,9 +305,11 @@ function AccountReturnsCard({
           </Flex>
         </Flex>
         <StatedHeadline account={account} />
-        {!drawable || scales === null ? (
-          <NoFigureNote account={account} />
-        ) : (
+        {/* `scales` is only null when the whole chart has no domain, which
+            `ReturnsChart` handles above by not rendering any card at all; the
+            filter that keeps this card in the grid already guarantees it has
+            a plotted point. This guard is TypeScript's, not the data's. */}
+        {scales === null ? null : (
           <div style={{ position: "relative" }}>
             <svg
               viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
