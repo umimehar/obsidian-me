@@ -1,10 +1,15 @@
 import { describe, expect, test } from "bun:test";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { GOLDENS } from "../goldens";
+import type { Datastore } from "../store/datastore";
 import type { AccountKind, ManagementStyle } from "../store/mask";
 import type { ActivityRow, Holding, Statement } from "../types";
-import { loadAnalytics } from "../ui/data";
 import { buildIncome } from "./income";
+import { buildSeries } from "./series";
 import type { AccountSeries } from "./types";
+
+const DATASTORE_PATH = join(import.meta.dir, "..", "..", "..", "data", "datastore.json");
 
 function series(overrides: Partial<AccountSeries> = {}): AccountSeries {
   return {
@@ -722,11 +727,29 @@ describe("buildIncome", () => {
     const income = buildIncome([account], [s], 2026, new Set(["acct_nr"]));
     expect(income.corporateActions).toEqual([{ symbol: "FDXF", date: "2026-06-01" }]);
   });
+});
 
-  test("real corpus: 2026 realized gains are positive and match the golden, the regression this fix pins", () => {
-    const analytics = loadAnalytics();
-    const income2026 = analytics.income["2026"];
-    if (income2026 === undefined) throw new Error("expected 2026 income in the corpus");
+/**
+ * Skipped without the real datastore -- it is the owner's masked financial
+ * history and this suite must still run somewhere that lacks it. Calls
+ * `buildIncome` itself over `datastore.json`, never through the committed
+ * `analytics.json`: reading `analytics.income` would compare the pipeline's
+ * output to a golden copied from that SAME output, which stays green even
+ * if a real rule (the split handling, an averaging bug) is deleted, because
+ * both `bun run analytics` and `bun run goldens` would re-bless the same
+ * wrong figure in one breath. Calling `buildIncome` here is the second,
+ * independent computation that closes that gap.
+ */
+describe.if(existsSync(DATASTORE_PATH))("buildIncome over the real datastore", () => {
+  async function incomeFor(year: number) {
+    const datastore = (await Bun.file(DATASTORE_PATH).json()) as Datastore;
+    const series = buildSeries(datastore.statements, datastore.accounts);
+    const allAccountIds = new Set(series.map((s) => s.maskedId));
+    return buildIncome(series, datastore.statements, year, allAccountIds);
+  }
+
+  test("2026 realized gains are positive and match the golden, the regression this fix pins", async () => {
+    const income2026 = await incomeFor(2026);
     expect(income2026.realizedGains).toBeGreaterThan(0);
     expect(income2026.realizedGains).toBe(GOLDENS.incomeByYear["2026"].realizedGains);
     expect(income2026.canadianDistributions).toBe(
@@ -738,10 +761,8 @@ describe("buildIncome", () => {
     expect(income2026.costUnknownSales).toBe(GOLDENS.incomeByYear["2026"].costUnknownSales);
   });
 
-  test("real corpus: 2025 income matches the golden", () => {
-    const analytics = loadAnalytics();
-    const income2025 = analytics.income["2025"];
-    if (income2025 === undefined) throw new Error("expected 2025 income in the corpus");
+  test("2025 income matches the golden", async () => {
+    const income2025 = await incomeFor(2025);
     expect(income2025.realizedGains).toBe(GOLDENS.incomeByYear["2025"].realizedGains);
     expect(income2025.canadianDistributions).toBe(
       GOLDENS.incomeByYear["2025"].canadianDistributions,

@@ -3,10 +3,12 @@ import rawDatastore from "@data/datastore.json";
 import type { AnalyticsOutput } from "../analytics/build";
 import { buildCashflowSeries } from "../analytics/cashflowSeries";
 import { latestGroupGain } from "../analytics/groupGain";
+import { buildIncome } from "../analytics/income";
 import { monthReview, reviewPeriods } from "../analytics/monthReview";
 import { buildPortfolioSeries } from "../analytics/portfolioSeries";
 import { latestMarketValue, rollup } from "../analytics/rollup";
 import type { Lens } from "../analytics/rollup";
+import { buildSeries } from "../analytics/series";
 import type { AccountSeries } from "../analytics/types";
 import { GOLDEN_GOALS, STRETCH_GOAL } from "../goals/__fixtures__/goals";
 import { accountValues, buildAllocations } from "../goals/allocation";
@@ -238,8 +240,18 @@ function buildGoldens(): Goldens {
   const respLine = lines.find((l) => l.group === "RESP");
   const rrspLine = lines.find((l) => l.group === "RRSP");
   const income = required(analytics.income[startYear], `income summary for ${startYear}`);
-  const income2025 = required(analytics.income["2025"], "income summary for 2025");
-  const income2026 = required(analytics.income["2026"], "income summary for 2026");
+  // Independent of `analytics.income`: built by calling `buildIncome` itself
+  // over `datastore.json`, the same inputs `analytics/build.ts` uses, rather
+  // than reading the committed `analytics.json`'s own copy of the answer.
+  // Comparing the pipeline's output to a golden copied from that SAME
+  // output would stay green even if a real costing rule were deleted --
+  // both `bun run analytics` and this command would re-bless the same wrong
+  // figure in one breath.
+  const rawStatements = (rawDatastore as Datastore).statements;
+  const incomeSeries = buildSeries(rawStatements, (rawDatastore as Datastore).accounts);
+  const incomeAccountIds = new Set(incomeSeries.map((s) => s.maskedId));
+  const income2025 = buildIncome(incomeSeries, rawStatements, 2025, incomeAccountIds);
+  const income2026 = buildIncome(incomeSeries, rawStatements, 2026, incomeAccountIds);
   const cesgRow = required(
     runwayRows.find((r) => r.id === "cesg"),
     "CESG runway row",
