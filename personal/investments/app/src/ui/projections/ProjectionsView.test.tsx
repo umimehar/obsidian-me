@@ -379,4 +379,11 @@ describe("heading structure", () => {
       else expect(h3s[index]).toMatch(match);
     });
   });
+
+  test("the assumptions sentence explains the one year offset between the chart and the runway table", () => {
+    render(<Harness />);
+    expect(document.body.textContent).toContain(
+      "so a year's contributions in the table show up on the chart the following August.",
+    );
+  });
 });

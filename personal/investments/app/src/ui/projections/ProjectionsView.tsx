@@ -324,7 +324,7 @@ function Assumptions({
       {uncompounded.length === 0
         ? ""
         : ` ${uncompounded.join(", ")} ${uncompounded.length === 1 ? "grows" : "grow"} at the rate with no new money.`}
-      {` Room runway below is by calendar year; the chart above dates each point to ${monthName(anchorPeriod)}, one statement's worth of that year already behind it.`}
+      {` The Room runway table below counts calendar years. The chart dates each point to ${monthName(anchorPeriod)}, the month of your latest statement, so a year's contributions in the table show up on the chart the following ${monthName(anchorPeriod)}.`}
     </Text>
   );
 }
