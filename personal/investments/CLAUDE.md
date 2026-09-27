@@ -10,6 +10,7 @@ The source folder holds only the month being imported; the owner deletes it afte
 mkdir -p ~/Downloads/monthly_pdf_statements
 cp ~/Downloads/<this month's PDFs>/*.pdf ~/Downloads/monthly_pdf_statements/
 cd app && bun run build && bun run analytics && bun run goldens && bun run cards && bun run tracker
+bun run benchmark      # monthly, after build: refreshes the XEQT close data/benchmark.json reads
 bun run check          # must be clean
 bun run contrast       # only if a colour, size, weight or badge changed
 ```

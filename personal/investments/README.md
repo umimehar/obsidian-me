@@ -27,7 +27,7 @@ Summing the eleven investment accounts from their June 2026 statements gives $24
 
 ## The dashboard
 
-`app/` is a Vite + React + TypeScript app, run locally, read only. Eight hash-synced tabs: overview, growth, wrappers, tax, cards, projections, reconciliation, data. Charts are hand-built SVG on `d3-scale` rather than a chart library.
+`app/` is a Vite + React + TypeScript app, run locally, read only. Eight tabs synced to the hash, in order: this month, portfolio, holdings, growth, income, contributions, future, data. The Holdings tab combines every account down to one symbol at a time, with an S&P 500 exposure line and a currency and asset class split. The Growth tab opens with the portfolio's chained, deposit netted return against the same deposits invested in XEQT, the single fund benchmark, ahead of the per account returns grid. Charts are hand built SVG on `d3-scale` rather than a chart library.
 
 Every figure is stated at market value and at book cost, both from the statements. Gain or loss is the difference, and it appears on every group card in all three lenses and on the portfolio headline: $241,739.67 against a book cost of $223,675.08, a gain of $18,064.59.
 
@@ -40,8 +40,9 @@ Reconciliation is a tab rather than a build failure. A wrong number that is visi
 Drop new PDF statements into the gitignored source directory, then from `app/`:
 
     bun run build && bun run analytics && bun run goldens && bun run cards && bun run tracker
+    bun run benchmark   # monthly, after build, refreshes data/benchmark.json
 
-`data/datastore.json` is the permanent archive, so the folder only needs the new month's PDFs and can be deleted after. `bun run tracker` refreshes [[tracking]]. Source PDFs stay outside the vault; only masked derived data is committed, so account numbers and the owner's address never enter git history.
+`data/datastore.json` is the permanent archive, so the folder only needs the new month's PDFs and can be deleted after. `bun run tracker` refreshes [[tracking]]. `bun run benchmark` fetches XEQT's own monthly closes so the Growth tab's comparison stays current; it needs no PDF and can run on its own schedule. Source PDFs stay outside the vault; only masked derived data is committed, so account numbers and the owner's address never enter git history.
 
 ## Develop
 
@@ -49,6 +50,7 @@ Drop new PDF statements into the gitignored source directory, then from `app/`:
     bun run check      # biome + tsc + bun test
     bun run contrast   # WCAG AA sweep in Chromium, both themes
     bun run dev        # the dashboard, locally
+    bun run benchmark  # refreshes data/benchmark.json from XEQT's own monthly closes
 
 `bun run check` is the per-commit gate and runs in about ten seconds. `bun run contrast` needs a browser (`bunx playwright install chromium` once) and takes about fifteen; it renders the real app, drives every tab, both themes, all three overview lenses and a hover on every chart, then measures what is actually painted. Run it before shipping anything that changes a colour, a size or a weight.
 
