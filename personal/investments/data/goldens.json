@@ -495,7 +495,7 @@
         "lendingIncome": 2.2979420000000004,
         "withholdingTax": 298.820626,
         "fees": 28.950000000000003,
-        "fxConversions": 14,
+        "fxConversions": 7,
         "fxConversionAmount": 982.8399999999999
       },
       "2026": {
@@ -504,7 +504,7 @@
         "lendingIncome": 1.7252009999999998,
         "withholdingTax": 97.86595399999999,
         "fees": 201.78000000000003,
-        "fxConversions": 42,
+        "fxConversions": 21,
         "fxConversionAmount": 24089.239999999998
       }
     },

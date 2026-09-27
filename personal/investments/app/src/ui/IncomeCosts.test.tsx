@@ -226,7 +226,7 @@ describe("IncomeCosts, withholding by kind (fixture)", () => {
     cleanup();
   });
 
-  test("an RRSP account with withholding says to check why, capital US kept intact", () => {
+  test("an RRSP account's recovery cell reads the exact full sentence, capital US intact", () => {
     const rrsp = account({ maskedId: "acct_rrsp", kind: "RRSP" });
     const analytics = fixture({
       series: [rrsp],
@@ -238,10 +238,12 @@ describe("IncomeCosts, withholding by kind (fixture)", () => {
       </Theme>,
     );
     const row = document.querySelector('[data-withholding-row="acct_rrsp"]');
-    expect(row?.textContent).toContain(
-      "Not recoverable; US listed securities held directly in an RRSP are exempt",
+    const cells = row?.querySelectorAll("td, th") ?? [];
+    const recoveryCell = cells[cells.length - 1];
+    expect(recoveryCell?.textContent).toBe(
+      "Not recoverable; US listed securities held directly in an RRSP are exempt, so check " +
+        "why this was withheld",
     );
-    expect(row?.textContent).not.toContain("us listed");
   });
 
   test("the spousal RRSP appears on its own line, not in the account table", () => {

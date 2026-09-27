@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-09-27T06:44:46.262Z",
+    "generated": "2026-09-27T07:02:56.465Z",
     "datastoreGenerated": "2026-09-27T02:23:09.416Z",
     "accountCount": 15
   },
@@ -5457,7 +5457,7 @@
         "lendingIncome": 0,
         "withholdingTax": 1.920984,
         "fees": 0,
-        "fxConversions": 2,
+        "fxConversions": 1,
         "fxConversionAmount": 66.67
       },
       "acct_8cd3372e": {
@@ -5520,7 +5520,7 @@
         "lendingIncome": 0.161744,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 2,
+        "fxConversions": 1,
         "fxConversionAmount": 4173.99
       },
       "acct_e2ec057d": {
@@ -5677,7 +5677,7 @@
         "lendingIncome": 0.02,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 2,
+        "fxConversions": 1,
         "fxConversionAmount": 5737
       },
       "acct_2b743dc7": {
@@ -5695,7 +5695,7 @@
         "lendingIncome": 0,
         "withholdingTax": 1.20785,
         "fees": 0,
-        "fxConversions": 2,
+        "fxConversions": 1,
         "fxConversionAmount": 428
       },
       "acct_8cd3372e": {
@@ -6097,7 +6097,7 @@
         "lendingIncome": 0.35036,
         "withholdingTax": 56.372650000000014,
         "fees": 0,
-        "fxConversions": 6,
+        "fxConversions": 3,
         "fxConversionAmount": 572.39
       },
       "acct_e2ec057d": {
@@ -6180,7 +6180,7 @@
         "lendingIncome": 0.46141200000000004,
         "withholdingTax": 26.951512000000005,
         "fees": 0,
-        "fxConversions": 8,
+        "fxConversions": 4,
         "fxConversionAmount": 410.45
       },
       "acct_e2ec057d": {
@@ -6310,7 +6310,7 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 2,
+        "fxConversions": 1,
         "fxConversionAmount": 811
       },
       "acct_8cd3372e": {
@@ -6364,7 +6364,7 @@
         "lendingIncome": 0.45973600000000003,
         "withholdingTax": 7.608282,
         "fees": 0,
-        "fxConversions": 4,
+        "fxConversions": 2,
         "fxConversionAmount": 2802.9300000000003
       },
       "acct_e2ec057d": {
@@ -6373,7 +6373,7 @@
         "lendingIncome": 0.132058,
         "withholdingTax": 5.329866,
         "fees": 0,
-        "fxConversions": 8,
+        "fxConversions": 4,
         "fxConversionAmount": 4389.08
       }
     },
@@ -6411,7 +6411,7 @@
         "lendingIncome": 0,
         "withholdingTax": 0,
         "fees": 0,
-        "fxConversions": 14,
+        "fxConversions": 7,
         "fxConversionAmount": 4284.39
       },
       "acct_8cd3372e": {
@@ -6465,7 +6465,7 @@
         "lendingIncome": 0.18913600000000003,
         "withholdingTax": 1.200496,
         "fees": 0,
-        "fxConversions": 2,
+        "fxConversions": 1,
         "fxConversionAmount": 732.41
       },
       "acct_e2ec057d": {
@@ -6474,7 +6474,7 @@
         "lendingIncome": 0.07821,
         "withholdingTax": 0.8048780000000001,
         "fees": 0,
-        "fxConversions": 4,
+        "fxConversions": 2,
         "fxConversionAmount": 663.77
       }
     },

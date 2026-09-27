@@ -46,7 +46,7 @@ export async function loadRedactions(path: string): Promise<string[]> {
     : [];
 }
 
-/** Builds an ingest-time anomaly finding straight from a filename, before any Statement exists to key it on. */
+/** Builds an ingest-time finding from a filename, before any Statement exists to key it on. */
 function ingestFinding(
   severity: Finding["severity"],
   parsed: Pick<ParsedFilename, "accountNo" | "period" | "file">,

@@ -34,7 +34,8 @@ export interface IncomeCostsProps {
 const RECOVERY_TEXT: Record<WithholdingRecovery, string> = {
   credit: "Claimable as a foreign tax credit",
   "exempt for US listed funds":
-    "Not recoverable; US listed securities held directly in an RRSP are exempt, so check why this was withheld",
+    "Not recoverable; US listed securities held directly in an RRSP are exempt, so check why " +
+    "this was withheld",
   lost: "Lost, cannot be recovered",
 };
 

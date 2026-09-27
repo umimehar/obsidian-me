@@ -280,7 +280,8 @@ function GrowthPanel({ analytics }: { analytics: AnalyticsOutput }) {
  * chequing's history, which the Income tab's own chequing line still states.
  */
 const CHEQUING_INTEREST_NOTE =
-  "From 2026-07, chequing statements carry no activity codes at all, so interest earned after that point does not appear here.";
+  "From 2026-07, chequing statements carry no activity codes at all, so interest earned after " +
+  "that point does not appear here.";
 
 /**
  * A Canadian listed fund holding US stocks can have US withholding tax
@@ -289,21 +290,30 @@ const CHEQUING_INTEREST_NOTE =
  * appear in the withholding table or its totals at all.
  */
 const FUND_WITHHOLDING_NOTE =
-  "A Canadian listed fund holding US stocks can have withholding tax deducted inside the fund itself, which never appears as a row on your statements.";
+  "A Canadian listed fund holding US stocks can have withholding tax deducted inside the fund " +
+  "itself, which never appears as a row on your statements.";
 
 /**
- * One line per account whose statements state more (or less) in fees than
- * any FEE/REIMB activity row accounts for -- an account that bundles a
- * trading cost into a trade's own price rather than itemising it, computed
- * live so the figure can never go stale the way a typed one would.
+ * One line per account whose statements state more in fees than any
+ * FEE/REIMB activity row accounts for -- an account that bundles a trading
+ * cost into a trade's own price rather than itemising it, computed live so
+ * the figure can never go stale the way a typed one would.
+ *
+ * A negative gap (activity rows account for MORE than the statements state)
+ * is a different kind of mismatch, not this one, and is worded as a surplus
+ * rather than forced through the same "unstated cost" sentence, which would
+ * otherwise print a nonsensical "about -$12.34 of unstated cost".
  */
-function feeGapNotes(analytics: AnalyticsOutput, year: number): string[] {
+export function feeGapNotes(analytics: AnalyticsOutput, year: number): string[] {
   const gaps = feeReconciliationGaps(analytics, year);
-  return gaps.map(
-    (gap) =>
-      "Some accounts bundle a trading cost into the price of what they buy rather than " +
-      `stating it as a fee, so it is not itemised here. In ${year}, ${gap.label} carried ` +
-      `about ${formatCurrency(gap.gap)} of this kind of unstated cost.`,
+  return gaps.map((gap) =>
+    gap.gap > 0
+      ? "Some accounts bundle a trading cost into the price of what they buy rather than " +
+        `stating it as a fee, so it is not itemised here. In ${year}, ${gap.label} carried ` +
+        `about ${formatCurrency(gap.gap)} of this kind of unstated cost.`
+      : `In ${year}, ${gap.label}'s FEE and REIMB activity rows total about ` +
+        `${formatCurrency(Math.abs(gap.gap))} more than its statements state as fees, a ` +
+        "surplus this dashboard cannot otherwise explain.",
   );
 }
 

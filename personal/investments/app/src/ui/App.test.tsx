@@ -1,7 +1,10 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import type { AnalyticsOutput } from "../analytics/build";
 import { GOLDENS } from "../goldens";
-import { App } from "./App";
+import type { AccountKind, ManagementStyle } from "../store/mask";
+import type { Purpose } from "../store/registry";
+import { App, feeGapNotes } from "./App";
 import { formatCurrency, formatGainWithShare } from "./format";
 import { clickTab } from "./testSupport/clickTab";
 import { coarseForm, expectNoCoarseForm } from "./testSupport/coarseForm";
@@ -313,5 +316,68 @@ describe("the headline book value and gain", () => {
     expect(headings.length).toBe(1);
     expect(headings[0]?.tagName).toBe("H2");
     expect(headings[0]?.textContent).toMatch(/^Portfolio total/);
+  });
+});
+
+function feeGapAccount(overrides: { maskedId: string; inTotals?: boolean }) {
+  return {
+    maskedId: overrides.maskedId,
+    shortId: overrides.maskedId.slice(0, 4),
+    label: "Fixture account",
+    kind: "NonRegistered" as AccountKind,
+    style: "self-directed" as ManagementStyle,
+    purpose: "unassigned" as Purpose,
+    inTotals: overrides.inTotals ?? true,
+    months: [],
+    contributionsByYear: {},
+  };
+}
+
+const ZERO_ACTIVITY = {
+  dividends: 0,
+  interest: 0,
+  lendingIncome: 0,
+  withholdingTax: 0,
+  fees: 0,
+  fxConversions: 0,
+  fxConversionAmount: 0,
+};
+
+function feeGapFixture(statedFee: number, derivedFee: number): AnalyticsOutput {
+  const account = feeGapAccount({ maskedId: "acct_gap" });
+  return {
+    meta: { generated: "", datastoreGenerated: "", accountCount: 1 },
+    series: [account],
+    rooms: {},
+    income: {},
+    returns: [],
+    rollups: { registration: [], account: [], purpose: [] },
+    activity: { "2026-01": { acct_gap: { ...ZERO_ACTIVITY, fees: derivedFee } } },
+    statedFees: { "2026-01": { acct_gap: statedFee } },
+  };
+}
+
+describe("feeGapNotes", () => {
+  test("a positive gap (stated more than derived) reads as an unstated cost", () => {
+    const notes = feeGapNotes(feeGapFixture(23.87, 0), 2026);
+    expect(notes).toEqual([
+      "Some accounts bundle a trading cost into the price of what they buy rather than " +
+        "stating it as a fee, so it is not itemised here. In 2026, Fixture account carried " +
+        "about $23.87 of this kind of unstated cost.",
+    ]);
+  });
+
+  test("a negative gap (derived more than stated) reads as a surplus, never a negative cost", () => {
+    const notes = feeGapNotes(feeGapFixture(0, 12.34), 2026);
+    expect(notes).toEqual([
+      "In 2026, Fixture account's FEE and REIMB activity rows total about $12.34 more than " +
+        "its statements state as fees, a surplus this dashboard cannot otherwise explain.",
+    ]);
+    // The bug this guards against: no note may ever read "-$" as a cost.
+    for (const note of notes) expect(note).not.toContain("-$");
+  });
+
+  test("no gap produces no note", () => {
+    expect(feeGapNotes(feeGapFixture(10, 10), 2026)).toEqual([]);
   });
 });

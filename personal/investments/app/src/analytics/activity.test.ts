@@ -161,7 +161,10 @@ describe("buildActivity", () => {
     expect(activity["2026-08"]?.acct_0001?.fees).toBe(0);
   });
 
-  test("FXCONVERSION counts every row but values only the CAD side, once per conversion", () => {
+  test("FXCONVERSION counts and values only the CAD side of the pair, never the USD twin", () => {
+    // Real corpus, 2318 2026-06-04: a CAD row of 5,737.00 and a USD row of
+    // 4,049.59 post for the SAME conversion, so counting both rows would
+    // double the true number of conversions.
     const s = statement({
       activity: [
         row("FXCONVERSION", { debit: 300, currency: "CAD" }),
@@ -169,16 +172,26 @@ describe("buildActivity", () => {
       ],
     });
     const activity = buildActivity([s]);
-    expect(activity["2026-08"]?.acct_0001?.fxConversions).toBe(2);
+    expect(activity["2026-08"]?.acct_0001?.fxConversions).toBe(1);
     expect(activity["2026-08"]?.acct_0001?.fxConversionAmount).toBe(300);
   });
 
-  test("a CAD-to-CAD FXCONVERSION pair values both sides but the two cancel to the CAD side's own amount", () => {
+  test("a lone CAD-side row (no USD twin in this statement) still counts and values", () => {
     const s = statement({
       activity: [row("FXCONVERSION", { debit: 811, currency: "CAD" })],
     });
     const activity = buildActivity([s]);
+    expect(activity["2026-08"]?.acct_0001?.fxConversions).toBe(1);
     expect(activity["2026-08"]?.acct_0001?.fxConversionAmount).toBe(811);
+  });
+
+  test("a lone USD-side row counts and values as zero, never as a second conversion", () => {
+    const s = statement({
+      activity: [row("FXCONVERSION", { credit: 500, currency: "USD" as Currency })],
+    });
+    const activity = buildActivity([s]);
+    expect(activity["2026-08"]?.acct_0001?.fxConversions).toBe(0);
+    expect(activity["2026-08"]?.acct_0001?.fxConversionAmount).toBe(0);
   });
 
   test("an amended version is collapsed to the latest, never double counted", () => {

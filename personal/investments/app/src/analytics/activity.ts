@@ -15,9 +15,11 @@ import type { ActivityRow, Currency, Statement } from "../types";
  * (see `isFeeRefund`); this is what reconciles fees to the statements' own
  * figure -- see `feeReconciliation.ts` for the one account whose statements
  * still do not reconcile, because its trading costs are bundled into a
- * trade's own price rather than itemised at all. FXCONVERSION uses either
- * side depending on direction for the row count, and the CAD side alone for
- * the amount, so a conversion is valued once rather than on both legs.
+ * trade's own price rather than itemised at all. FXCONVERSION counts and
+ * values the CAD side of the pair only: every conversion posts one CAD row
+ * and one USD row for the same event, and counting both would double the
+ * true number of conversions the same way summing both would double the
+ * amount.
  * Chequing accounts carried BROKERAGE statements with coded INT rows through
  * 2026-06; from 2026-07 they send only a CASH statement, which -- like every
  * CASH statement -- carries no activity code at all, so interest earned
@@ -30,6 +32,7 @@ export interface ActivityTotals {
   lendingIncome: number;
   withholdingTax: number;
   fees: number;
+  /** One per conversion, read off its CAD-side row only -- never the USD twin of the same pair. */
   fxConversions: number;
   /** The CAD side of every FXCONVERSION pair -- one conversion valued once, not both legs. */
   fxConversionAmount: number;
@@ -137,7 +140,7 @@ function totalsForRow(row: ActivityRow, statement: Statement): ActivityTotals {
     case "FXCONVERSION":
       return {
         ...ZERO_TOTALS,
-        fxConversions: 1,
+        fxConversions: row.currency === "CAD" ? 1 : 0,
         fxConversionAmount: row.currency === "CAD" ? Math.abs(row.debit - row.credit) : 0,
       };
     default:
