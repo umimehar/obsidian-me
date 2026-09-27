@@ -31,7 +31,7 @@ Missing counts every month from the account's first statement to the latest mont
 | TFSA (managed) | TFSA | yes | 2023-06 | 2026-08 | 39 | none |
 | Spousal RRSP | SpousalRRSP | no | 2026-03 | 2026-08 | 6 | none |
 | RESP | RESP | yes | 2026-01 | 2026-08 | 8 | none |
-| RRSP (managed) | RRSP | yes | 2025-11 | 2026-08 | 10 | none |
+| Private Market Fund | RRSP | yes | 2025-11 | 2026-08 | 10 | none |
 | TFSA (self-directed) | TFSA | yes | 2023-06 | 2026-08 | 39 | none |
 | Crypto | Crypto | yes | 2026-06 | 2026-08 | 3 | none |
 | FHSA | FHSA | yes | 2024-12 | 2026-08 | 21 | none |

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-27T01:55:26.146Z",
+  "generated": "2026-09-27T02:23:09.416Z",
   "latestPeriod": "2026-08",
   "latestComplete": "2026-08",
   "accounts": [
@@ -103,7 +103,7 @@
       "missing": []
     },
     {
-      "label": "RRSP (managed)",
+      "label": "Private Market Fund",
       "kind": "RRSP",
       "inTotals": true,
       "firstPeriod": "2025-11",

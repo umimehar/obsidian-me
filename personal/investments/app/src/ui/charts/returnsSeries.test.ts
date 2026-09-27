@@ -74,7 +74,7 @@ describe("buildReturnsSeries against the corpus", () => {
 
   test("carries each account's display label and shortId from the series", () => {
     expect(byShortId("9710").label).toBe("TFSA (managed)");
-    expect(byShortId("d6d9").label).toBe("RRSP (managed)");
+    expect(byShortId("d6d9").label).toBe("Private Market Fund");
     expect(byShortId("d77c").label).toBe("TFSA (self-directed)");
   });
 

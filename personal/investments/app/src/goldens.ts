@@ -75,7 +75,7 @@ export interface Goldens {
   /**
    * Account-lens group labels whose latest gain is negative, sorted. Empty
    * when the corpus holds no loss at all, which is a real state: the two
-   * losses that existed at 2026-06 (RRSP (managed) -$3.16, Crypto -$45.04)
+   * losses that existed at 2026-06 (Private Market Fund -$3.16, Crypto -$45.04)
    * both turned positive at 2026-07. A test that pins a loss figure as a
    * constant becomes unsatisfiable the month the market moves, so the loss
    * RENDERING is proven on a fixture and this records only whether the real

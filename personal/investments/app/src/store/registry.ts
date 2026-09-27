@@ -43,7 +43,9 @@ const LABELS: Record<string, string> = {
   d77c: "TFSA (self-directed)",
   "9710": "TFSA (managed)",
   "2318": "RRSP (self-directed)",
-  d6d9: "RRSP (managed)",
+  // Its statements say "Managed RRSP Account"; it holds only Wealthsimple's
+  // private markets funds, and the app names it after them.
+  d6d9: "Private Market Fund",
   "97ab": "Spousal RRSP",
   e2ec: "FHSA",
   c2e9: "RESP",

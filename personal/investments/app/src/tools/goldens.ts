@@ -87,7 +87,7 @@ function buildGroups(series: readonly AccountSeries[]): Goldens["groups"] {
 /**
  * Account-lens groups whose latest gain is negative. Recorded rather than
  * asserted as a constant, because whether the corpus contains a loss at all is
- * a property of this month's market: RRSP (managed) and Crypto were the
+ * a property of this month's market: Private Market Fund and Crypto were the
  * corpus's only two losses at 2026-06 and both turned positive at 2026-07,
  * which silently made a test that pinned -$3.16 unsatisfiable.
  */

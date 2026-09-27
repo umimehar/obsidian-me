@@ -194,7 +194,7 @@ describe("latestGroupGain against the real committed analytics.json", () => {
 
   test("every account-lens loss the corpus holds is exactly the set the goldens record", () => {
     // Whether the corpus holds a loss AT ALL is a property of this month's
-    // market, not of the code: RRSP (managed) at -$3.16 and Crypto at
+    // market, not of the code: Private Market Fund at -$3.16 and Crypto at
     // -$45.04 were the only two at 2026-06 and both turned positive at
     // 2026-07. Pinning either figure made this test unsatisfiable the month
     // the market moved, so what is asserted is the agreement between the

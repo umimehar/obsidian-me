@@ -69,7 +69,7 @@ The limit is real and worth stating. A regression that lands in the pipeline and
 
 Three tests could not simply be re-pointed at a golden, because the July data removed the state they exercised:
 
-- The corpus held no per-account loss at all after 2026-07. RRSP (managed) at `-$3.16` and Crypto at `-$45.04` both turned positive. `GOLDENS.lossGroups` now records whichever losses exist, and the assertion runs over that list, so a loss appearing or disappearing is a goldens diff rather than a red test.
+- The corpus held no per-account loss at all after 2026-07. Private Market Fund at `-$3.16` and Crypto at `-$45.04` both turned positive. `GOLDENS.lossGroups` now records whichever losses exist, and the assertion runs over that list, so a loss appearing or disappearing is a goldens diff rather than a red test.
 - Crypto stopped being a single-statement account when 2026-07 gave it a second. Both the sparkline's lone-marker case and `plottedCount`'s zero case now cut the real account back to its first month.
 - `expectNoCoarseForm` needs both rounding directions covered. Which figures round up and which round down changes every month, so `Overview.test.tsx` asserts that both directions are present among the figures it checks rather than naming which is which.
 

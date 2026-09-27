@@ -48,3 +48,11 @@ The gap is pricing, not parsing. The statements price several ETFs a few cents a
 Both earlier gaps are closed. The second business account is `8297`, opened 2026-08-24, now registered as Corporate. The RRSP group matches this project's two counted RRSP accounts to $1.94, with the spousal account outside both. The per-account table is in `checkpoints.json` under `reconciliation`.
 
 WSE401 is priced at $10.23 on the August statement, still flagged pending. The June reconciliation predicted a finalised NAV of $10.2254 from the $279.94 residual.
+
+## 2026-09-26, 22:22
+
+The RRSP group only: $39,738.35 across three accounts, at the Friday 2026-09-25 close. Not yet comparable to anything, because the corpus ends at 2026-08.
+
+It settles what the app's three RRSP accounts are. The owner's RRSP ($18,743.25) and the Private Market Fund ($20,995.10) make up the group total to the cent. The spouse's RRSP ($19,109.65) is listed beside them and left out of the total, which is how this project treats `97ab`. There is no empty third account.
+
+The Private Market Fund is `d6d9`. Its statements call it "Managed RRSP Account", which is why it was labelled "RRSP (managed)" until 2026-09-26; it is labelled after the app now.

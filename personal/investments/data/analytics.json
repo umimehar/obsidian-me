@@ -1,7 +1,7 @@
 {
   "meta": {
-    "generated": "2026-09-27T01:55:26.258Z",
-    "datastoreGenerated": "2026-09-27T01:55:26.146Z",
+    "generated": "2026-09-27T02:23:09.534Z",
+    "datastoreGenerated": "2026-09-27T02:23:09.416Z",
     "accountCount": 15
   },
   "series": [
@@ -1948,7 +1948,7 @@
     {
       "maskedId": "acct_d6d9fb4a",
       "shortId": "d6d9",
-      "label": "RRSP (managed)",
+      "label": "Private Market Fund",
       "kind": "RRSP",
       "style": "managed",
       "purpose": "retirement",
@@ -4776,7 +4776,7 @@
           {
             "maskedId": "acct_d6d9fb4a",
             "shortId": "d6d9",
-            "label": "RRSP (managed)",
+            "label": "Private Market Fund",
             "kind": "RRSP",
             "purpose": "retirement",
             "inTotals": true,
@@ -5106,13 +5106,13 @@
       },
       {
         "key": "acct_d6d9fb4a",
-        "label": "RRSP (managed)",
+        "label": "Private Market Fund",
         "lens": "account",
         "accounts": [
           {
             "maskedId": "acct_d6d9fb4a",
             "shortId": "d6d9",
-            "label": "RRSP (managed)",
+            "label": "Private Market Fund",
             "kind": "RRSP",
             "purpose": "retirement",
             "inTotals": true,
@@ -5200,7 +5200,7 @@
           {
             "maskedId": "acct_d6d9fb4a",
             "shortId": "d6d9",
-            "label": "RRSP (managed)",
+            "label": "Private Market Fund",
             "kind": "RRSP",
             "purpose": "retirement",
             "inTotals": true,

@@ -233,6 +233,47 @@
         ],
         "residualNote": "Residuals left after repricing at the close are $12.17 or less. The accounts with USD holdings (91b8 above all) would also move with the app's live exchange rate against the statement's 1.3866, which was not captured. 1f9a, 2c62 and Crypto hold listings the price source could not match (CDRs, physical gold, crypto that trades around the clock), so they are compared on totals only; their gaps are $1.84, $9.37 and $4.95."
       }
+    },
+    {
+      "observed": "2026-09-26T22:22:27-04:00",
+      "source": "Wealthsimple app, accounts screen, one screenshot of the RRSP group",
+      "coversPeriod": "2026-09",
+      "reconciledAgainst": null,
+      "note": "Taken on a Saturday, so the prices are the Friday 2026-09-25 close, not a month end. Compare against the 2026-09 statements knowing the market moves over the last week of September.",
+      "portfolioTotal": null,
+      "totalNote": "Only the RRSP group was captured.",
+      "groups": [
+        {
+          "label": "RRSP",
+          "statedTotal": 39738.35,
+          "accountCount": 3,
+          "accounts": [
+            {
+              "label": "[redacted]'s RRSP",
+              "ours": "2318",
+              "value": 18743.25,
+              "allTimeReturnPercent": 7.10
+            },
+            {
+              "label": "Private Market Fund (Managed)",
+              "ours": "d6d9",
+              "value": 20995.10,
+              "allTimeReturnPercent": 4.98
+            },
+            {
+              "label": "[redacted]'s RRSP",
+              "ours": "97ab",
+              "value": 19109.65,
+              "allTimeReturnPercent": 6.16,
+              "inGroupTotal": false
+            }
+          ],
+          "partsSumTo": 39738.35,
+          "partsNote": "The group total is the first two accounts to the cent. The spouse's RRSP is listed with an info marker and left out of the total, the same treatment this project gives the spousal account. The two owners' names are masked; the ours field maps each row to its short id.",
+          "accountsNote": "This answers the RRSP question the 2026-08-31 checkpoint left implicit: the app's three RRSP accounts are the owner's, the private markets fund and the spouse's, and the third is not in the total. It is not an empty account."
+        }
+      ],
+      "openQuestions": []
     }
   ]
 }

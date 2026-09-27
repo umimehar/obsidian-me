@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-09-27T01:55:26.146Z",
+    "generated": "2026-09-27T02:23:09.416Z",
     "statementCount": 246,
     "accountCount": 15
   },
@@ -181,7 +181,7 @@
     {
       "maskedId": "acct_d6d9fb4a",
       "shortId": "d6d9",
-      "label": "RRSP (managed)",
+      "label": "Private Market Fund",
       "kind": "RRSP",
       "style": "managed",
       "purpose": "retirement",

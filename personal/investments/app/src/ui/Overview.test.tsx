@@ -390,7 +390,7 @@ describe("Overview", () => {
 
     test("every real per-account loss the corpus holds prints an explicit minus sign in red", () => {
       // Whether the corpus holds a loss at all is a property of this month's
-      // market: RRSP (managed) at -$3.16 and Crypto at -$45.04 were the only
+      // market: Private Market Fund at -$3.16 and Crypto at -$45.04 were the only
       // two at 2026-06, and both turned positive at 2026-07. So this runs
       // over whatever losses the goldens record -- none, today.
       //
