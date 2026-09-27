@@ -27,7 +27,6 @@ kanban-plugin: board
 
 ## In Progress
 
-- [ ] [[TCK-0003-dashboard-v2-layout-shell]] #project/system #type/feature #p1
 
 
 
@@ -47,6 +46,7 @@ kanban-plugin: board
 
 ## Done
 
+- [x] [[TCK-0003-dashboard-v2-layout-shell]] #project/system #type/feature #p1
 - [x] [[TCK-0001-investments-phase-3-goals-and-runway]] #project/system #type/feature #p2
 
 
