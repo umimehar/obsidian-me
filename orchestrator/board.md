@@ -6,6 +6,7 @@ kanban-plugin: board
 
 ## Backlog
 
+- [ ] [[TCK-0009-investments-usd-cash-deposits]] #project/system #type/bug #p2
 
 
 
