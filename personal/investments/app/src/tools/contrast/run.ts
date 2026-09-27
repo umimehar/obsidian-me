@@ -380,13 +380,13 @@ async function sweepTheme(
         problems.push(`${theme}/${tab} swept only ${found} runs of text; the tab is empty`);
       }
 
-      if (tab === "overview") {
+      if (tab === "portfolio") {
         await sweepLenses(page, { tab, theme }, samples, problems, lensesSwept);
       }
 
       hovered += await sweepHovers(page, { tab, theme }, samples, problems, tonesSwept);
 
-      if (tab === "overview") {
+      if (tab === "portfolio") {
         const swept = await sweepReturnChart(page, { tab, theme }, samples, tonesSwept);
         if (swept) chartModesSwept.add(RETURN_MODE);
         else

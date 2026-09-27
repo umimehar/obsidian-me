@@ -1,30 +1,26 @@
 import { useCallback, useEffect, useState } from "react";
 import type { YearScope } from "./scope";
 
-export type TabId =
-  | "overview"
-  | "growth"
-  | "wrappers"
-  | "tax"
-  | "cards"
-  | "projections"
-  | "reconciliation"
-  | "data";
+// "month" stays in the union now so a later ticket only has to edit the
+// array below, not every place that already switches on `TabId`.
+export type TabId = "month" | "portfolio" | "growth" | "plan" | "data";
 
-export const TABS: readonly TabId[] = [
-  "overview",
-  "growth",
-  "wrappers",
-  "tax",
-  // Cards sits after tax and before projections: it is real money the owner
-  // owes, so it belongs on the page, but it feeds none of the figures the
-  // tabs before it build up and none of the projections after it.
-  "cards",
-  "projections",
-  "reconciliation",
-  // Housekeeping about the archive itself, not about the money, so it goes last.
-  "data",
-];
+export const TABS: readonly TabId[] = ["portfolio", "growth", "plan", "data"];
+
+/**
+ * Where a pasted link from the five-tab shell resolves under the new four
+ * (soon five) tab structure. `decodeHash` checks `TABS` first and only falls
+ * back to this map, so a link never resolves to a name that is no longer a
+ * real tab.
+ */
+export const LEGACY_TABS: Readonly<Record<string, TabId>> = {
+  overview: "portfolio",
+  wrappers: "plan",
+  tax: "portfolio",
+  projections: "plan",
+  reconciliation: "data",
+  cards: "data",
+};
 
 /**
  * The hash carries the tab and the year scope, `#growth` or `#growth/2024`.
@@ -42,7 +38,9 @@ export interface HashState {
 
 function decodeHash(hash: string): HashState {
   const [rawTab = "", rawScope = ""] = hash.replace(/^#/, "").split("/");
-  const tab = (TABS as readonly string[]).includes(rawTab) ? (rawTab as TabId) : "overview";
+  const tab = (TABS as readonly string[]).includes(rawTab)
+    ? (rawTab as TabId)
+    : (LEGACY_TABS[rawTab] ?? "portfolio");
   // A four-digit year only. `Number("")` is 0 and `Number("2024abc")` is NaN,
   // so the shape is checked before the conversion rather than after it.
   const scope: YearScope = /^\d{4}$/.test(rawScope) ? Number(rawScope) : "all";

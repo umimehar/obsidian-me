@@ -6,13 +6,10 @@ import { useHashTab } from "./useHashTab";
 import type { TabId } from "./useHashTab";
 
 const PANELS: Record<TabId, string> = {
-  overview: "Overview panel content",
+  month: "This month panel content",
+  portfolio: "Portfolio panel content",
   growth: "Growth panel content",
-  wrappers: "Wrappers panel content",
-  tax: "Tax panel content",
-  cards: "Cards panel content",
-  projections: "Projections panel content",
-  reconciliation: "Reconciliation panel content",
+  plan: "Plan panel content",
   data: "Data panel content",
 };
 
@@ -30,13 +27,10 @@ function Harness() {
       tab={tab}
       onTabChange={(next) => setHash({ tab: next })}
       panels={{
-        overview: <div>{PANELS.overview}</div>,
+        month: <div>{PANELS.month}</div>,
+        portfolio: <div>{PANELS.portfolio}</div>,
         growth: <div>{PANELS.growth}</div>,
-        wrappers: <div>{PANELS.wrappers}</div>,
-        tax: <div>{PANELS.tax}</div>,
-        cards: <div>{PANELS.cards}</div>,
-        projections: <div>{PANELS.projections}</div>,
-        reconciliation: <div>{PANELS.reconciliation}</div>,
+        plan: <div>{PANELS.plan}</div>,
         data: <div>{PANELS.data}</div>,
       }}
     />
@@ -62,43 +56,34 @@ describe("Tabs", () => {
     // hidden at bold weight, so the visible width never shifts on select --
     // which doubles the accessible name. Matching a prefix sidesteps that
     // implementation detail rather than pinning it.
-    for (const label of [
-      "Overview",
-      "Growth",
-      "Wrappers",
-      "Tax",
-      "Projections",
-      "Reconciliation",
-    ]) {
+    for (const label of ["Portfolio", "Growth", "Plan", "Data"]) {
       expect(screen.getByRole("tab", { name: new RegExp(`^${label}\\b`) })).toBeDefined();
     }
   });
 
   test("the active panel's content is present and the inactive panels' is absent", () => {
     renderTabs();
-    expect(screen.getByText(PANELS.overview)).toBeDefined();
+    expect(screen.getByText(PANELS.portfolio)).toBeDefined();
     expect(screen.queryByText(PANELS.growth)).toBeNull();
-    expect(screen.queryByText(PANELS.wrappers)).toBeNull();
-    expect(screen.queryByText(PANELS.tax)).toBeNull();
-    expect(screen.queryByText(PANELS.projections)).toBeNull();
-    expect(screen.queryByText(PANELS.reconciliation)).toBeNull();
+    expect(screen.queryByText(PANELS.plan)).toBeNull();
+    expect(screen.queryByText(PANELS.data)).toBeNull();
   });
 
   test("opening with a hash already naming a tab renders that tab's panel", () => {
-    window.location.hash = "#reconciliation";
+    window.location.hash = "#data";
     renderTabs();
 
-    expect(screen.getByText(PANELS.reconciliation)).toBeDefined();
-    expect(screen.queryByText(PANELS.overview)).toBeNull();
+    expect(screen.getByText(PANELS.data)).toBeDefined();
+    expect(screen.queryByText(PANELS.portfolio)).toBeNull();
   });
 
   test("switching tab changes which panel's content is present", () => {
     renderTabs();
     // Radix's TabsTrigger activates on pointerdown, not click, so the test
     // fires the same event a real pointer press sends.
-    fireEvent.mouseDown(screen.getByRole("tab", { name: /^Reconciliation\b/ }), { button: 0 });
+    fireEvent.mouseDown(screen.getByRole("tab", { name: /^Data\b/ }), { button: 0 });
 
-    expect(screen.getByText(PANELS.reconciliation)).toBeDefined();
-    expect(screen.queryByText(PANELS.overview)).toBeNull();
+    expect(screen.getByText(PANELS.data)).toBeDefined();
+    expect(screen.queryByText(PANELS.portfolio)).toBeNull();
   });
 });
