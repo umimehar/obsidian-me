@@ -8,6 +8,7 @@ import type { TabId } from "./useHashTab";
 const PANELS: Record<TabId, string> = {
   month: "This month panel content",
   portfolio: "Portfolio panel content",
+  holdings: "Holdings panel content",
   growth: "Growth panel content",
   income: "Income panel content",
   contributions: "Contributions panel content",
@@ -31,6 +32,7 @@ function Harness() {
       panels={{
         month: <div>{PANELS.month}</div>,
         portfolio: <div>{PANELS.portfolio}</div>,
+        holdings: <div>{PANELS.holdings}</div>,
         growth: <div>{PANELS.growth}</div>,
         income: <div>{PANELS.income}</div>,
         contributions: <div>{PANELS.contributions}</div>,

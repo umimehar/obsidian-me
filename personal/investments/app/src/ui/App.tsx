@@ -9,6 +9,7 @@ import { AboutNumbers } from "./AboutNumbers";
 import { AccountFilter } from "./AccountFilter";
 import { Cards } from "./Cards";
 import { DataStatus } from "./DataStatus";
+import { Holdings } from "./Holdings";
 import { IncomeCosts } from "./IncomeCosts";
 import { GroupGainLine, Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
@@ -263,6 +264,16 @@ function MonthPanel({ analytics, scope }: { analytics: AnalyticsOutput; scope: Y
   return <ThisMonth analytics={analytics} checkpoints={loadCheckpoints()} scope={scope} />;
 }
 
+/**
+ * What is actually owned, combined across accounts. Reads the UNSCOPED
+ * `all`: holdings are computed once, at each account's own latest BROKERAGE
+ * statement, not per year, and the view itself says so when a year is
+ * selected rather than silently ignoring the control.
+ */
+function HoldingsPanel({ all, scope }: { all: AnalyticsOutput; scope: YearScope }) {
+  return <Holdings holdings={all.holdings} portfolioTotal={grandTotal(all)} scope={scope} />;
+}
+
 function GrowthPanel({ analytics }: { analytics: AnalyticsOutput }) {
   return (
     <Flex direction="column" gap="6">
@@ -493,6 +504,11 @@ function Dashboard() {
         chart={chart}
         onChartChange={setChart}
       />
+    ),
+    holdings: (
+      <WithSummary {...summary}>
+        <HoldingsPanel all={all} scope={scope} />
+      </WithSummary>
     ),
     growth: (
       <WithSummary {...summary}>

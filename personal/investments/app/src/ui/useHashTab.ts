@@ -4,6 +4,7 @@ import type { YearScope } from "./scope";
 export type TabId =
   | "month"
   | "portfolio"
+  | "holdings"
   | "growth"
   | "income"
   | "contributions"
@@ -13,6 +14,7 @@ export type TabId =
 export const TABS: readonly TabId[] = [
   "month",
   "portfolio",
+  "holdings",
   "growth",
   "income",
   "contributions",
