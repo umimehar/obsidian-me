@@ -136,7 +136,7 @@ describe("the year filter reaches every tab that can honour it", () => {
     expect(screen.getByRole("heading", { name: "Registered contributions, 2024" })).toBeDefined();
     expect(screen.queryByRole("radiogroup", { name: "Tax year" })).toBeNull();
 
-    openTab("Portfolio");
+    openTab("Income");
     expect(screen.getByRole("heading", { name: "Investment income, 2024" })).toBeDefined();
   });
 

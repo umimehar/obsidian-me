@@ -1,12 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
 import type { YearScope } from "./scope";
 
-export type TabId = "month" | "portfolio" | "growth" | "contributions" | "future" | "data";
+export type TabId =
+  | "month"
+  | "portfolio"
+  | "growth"
+  | "income"
+  | "contributions"
+  | "future"
+  | "data";
 
 export const TABS: readonly TabId[] = [
   "month",
   "portfolio",
   "growth",
+  "income",
   "contributions",
   "future",
   "data",
@@ -20,12 +28,13 @@ export const TABS: readonly TabId[] = [
  * it. `wrappers` now resolves to `contributions`, where the registered
  * planner actually lives. `plan` and `projections` both resolve to
  * `future`, which took over the projection when the interim `plan` tab was
- * removed.
+ * removed. `tax` resolves to `income`, where the investment income view now
+ * lives alongside the income and cost figures it used to sit above alone.
  */
 export const LEGACY_TABS: Readonly<Record<string, TabId>> = {
   overview: "portfolio",
   wrappers: "contributions",
-  tax: "portfolio",
+  tax: "income",
   projections: "future",
   plan: "future",
   reconciliation: "data",

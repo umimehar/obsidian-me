@@ -8,6 +8,7 @@ import { AboutNumbers } from "./AboutNumbers";
 import { AccountFilter } from "./AccountFilter";
 import { Cards } from "./Cards";
 import { DataStatus } from "./DataStatus";
+import { IncomeCosts } from "./IncomeCosts";
 import { GroupGainLine, Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
 import { SummaryStrip } from "./SummaryStrip";
@@ -50,7 +51,6 @@ import { ErrorBoundary } from "./states/ErrorBoundary";
 import { type TabId, useHashTab } from "./useHashTab";
 import { ContributionHistory } from "./wrappers/ContributionHistory";
 import { RegisteredView } from "./wrappers/RegisteredView";
-import { TaxView } from "./wrappers/TaxView";
 
 type Appearance = "inherit" | "light" | "dark";
 
@@ -142,6 +142,8 @@ interface WithSummaryProps {
   scope: YearScope;
   onScopeChange: (scope: YearScope) => void;
   children: ReactNode;
+  /** Notes beyond the USD book-cost caveat every tab carries -- a tab-specific data limit, appended after it. */
+  extraNotes?: readonly string[];
 }
 
 /**
@@ -160,6 +162,7 @@ function WithSummary({
   scope,
   onScopeChange,
   children,
+  extraNotes = [],
 }: WithSummaryProps) {
   return (
     <Flex direction="column" gap="6">
@@ -168,7 +171,7 @@ function WithSummary({
         <YearFilter years={years} scope={scope} onScopeChange={onScopeChange} />
       </Flex>
       {children}
-      <AboutNumbers notes={[USD_BOOK_COST_NOTE]} />
+      <AboutNumbers notes={[USD_BOOK_COST_NOTE, ...extraNotes]} />
     </Flex>
   );
 }
@@ -176,7 +179,6 @@ function WithSummary({
 interface PortfolioPanelProps {
   analytics: AnalyticsOutput;
   all: AnalyticsOutput;
-  year: number;
   change: YearChange | null;
   portfolioGain: ReturnType<typeof latestGroupGain>;
   total: number;
@@ -195,7 +197,6 @@ interface PortfolioPanelProps {
 function PortfolioPanel({
   analytics,
   all,
-  year,
   change,
   portfolioGain,
   total,
@@ -252,11 +253,6 @@ function PortfolioPanel({
         />
       )}
       <Overview analytics={analytics} />
-      {/* No section heading of its own: TaxView already opens with "Personal
-          taxable income, {year}", its own h2, and a wrapper heading above it
-          said nothing that heading did not, while sitting one level above it
-          in the outline. */}
-      <TaxView analytics={all} year={year} scope={scope} />
       <AboutNumbers notes={[USD_BOOK_COST_NOTE]} />
     </Flex>
   );
@@ -273,6 +269,33 @@ function GrowthPanel({ analytics }: { analytics: AnalyticsOutput }) {
       <CostGapChart series={analytics.series} />
     </Flex>
   );
+}
+
+/**
+ * The one gap this tab has to disclose: a chequing account's CASH-template
+ * statements carry no activity code at all, so any interest it pays never
+ * reaches `activity.ts` and never appears here.
+ */
+const CHEQUING_INTEREST_NOTE =
+  "Chequing statements carry no activity codes, so interest earned in a chequing account does not appear here.";
+
+/**
+ * What the portfolio pays and what it costs, plus -- underneath, in
+ * `IncomeCosts`'s own section -- the personal taxable income view.
+ * `IncomeCosts` reads the UNSCOPED `all` for the same reason
+ * `ContributionsPanel` does: the year table states every year the corpus
+ * covers, not only the scoped one.
+ */
+function IncomePanel({
+  all,
+  year,
+  scope,
+}: {
+  all: AnalyticsOutput;
+  year: number;
+  scope: YearScope;
+}) {
+  return <IncomeCosts analytics={all} year={year} scope={scope} />;
 }
 
 /**
@@ -418,7 +441,6 @@ function Dashboard() {
       <PortfolioPanel
         analytics={analytics}
         all={all}
-        year={year}
         change={change}
         portfolioGain={portfolioGain}
         total={total}
@@ -437,6 +459,11 @@ function Dashboard() {
     growth: (
       <WithSummary {...summary}>
         <GrowthPanel analytics={analytics} />
+      </WithSummary>
+    ),
+    income: (
+      <WithSummary {...summary} extraNotes={[CHEQUING_INTEREST_NOTE]}>
+        <IncomePanel all={all} year={year} scope={scope} />
       </WithSummary>
     ),
     contributions: (

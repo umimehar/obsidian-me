@@ -80,15 +80,17 @@ describe("App", () => {
     expect(document.querySelector("[data-apply-fitted]")).toBeNull();
   });
 
-  test("renders the overview and the tax view together on portfolio, and the room lines on contributions", () => {
+  test("renders the overview on portfolio, the tax view on income, and the room lines on contributions", () => {
     render(<App />);
     clickTab("Portfolio");
     expect(document.querySelector("[data-portfolio-total]")?.textContent).toBe(
       formatCurrency(GOLDENS.portfolio.total),
     );
-    // Portfolio holds both the account groups and, under it, the tax view.
     expect(document.querySelectorAll("[data-overview-group]").length).toBeGreaterThan(0);
+
+    clickTab("Income");
     expect(document.querySelector("[data-tax-income]")).not.toBeNull();
+    expect(document.querySelector("[data-income-year-table]")).not.toBeNull();
 
     clickTab("Contributions");
     expect(document.querySelectorAll("[data-room-line]").length).toBe(4);
@@ -114,9 +116,9 @@ describe("App", () => {
     expect(within(roomCard("TFSA")).getByText("$25,000.00")).toBeDefined();
 
     // Switching tabs proves the year is shared state, not a control local
-    // to the contributions panel: the portfolio tab's own tax view already
+    // to the contributions panel: the income tab's own tax view already
     // reads 2025 without being touched.
-    clickTab("Portfolio");
+    clickTab("Income");
     const income = document.querySelector("[data-tax-income]");
     if (income === null) throw new Error("expected the tax income section to render");
     expect(
@@ -157,7 +159,7 @@ describe("App", () => {
     render(<App />);
     const gainText = formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost);
 
-    for (const label of ["Growth", "Contributions", "Future", "Data"]) {
+    for (const label of ["Growth", "Income", "Contributions", "Future", "Data"]) {
       clickTab(label);
       const strip = document.querySelector("[data-summary-strip]");
       expect(strip).not.toBeNull();
@@ -237,7 +239,7 @@ describe("the headline book value and gain", () => {
     // every group card -- eight or nine repeats of the same caveat on one
     // tab. It now lives once, in the tab's own AboutNumbers disclosure.
     render(<App />);
-    for (const tab of ["Portfolio", "Growth", "Contributions", "Future", "Data"]) {
+    for (const tab of ["Portfolio", "Growth", "Income", "Contributions", "Future", "Data"]) {
       clickTab(tab);
       const matches = screen.getAllByText(/An estimate: book cost for USD holdings/);
       expect(matches).toHaveLength(1);
@@ -270,7 +272,7 @@ describe("the headline book value and gain", () => {
     // and its chart test above); this pins that leaving and coming back
     // does not drift the figures it shows.
     render(<App />);
-    for (const label of ["Growth", "Contributions", "Future", "Data"]) {
+    for (const label of ["Growth", "Income", "Contributions", "Future", "Data"]) {
       fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${label}\\b`) }), {
         button: 0,
       });

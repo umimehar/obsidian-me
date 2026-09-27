@@ -43,7 +43,7 @@ describe("useHashTab, legacy hash mapping", () => {
   test.each([
     ["#overview", "portfolio"],
     ["#wrappers", "contributions"],
-    ["#tax", "portfolio"],
+    ["#tax", "income"],
     ["#projections", "future"],
     ["#plan", "future"],
     ["#reconciliation", "data"],
