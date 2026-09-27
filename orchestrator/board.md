@@ -11,7 +11,6 @@ kanban-plugin: board
 
 ## Ready
 
-- [ ] [[TCK-0005-dashboard-v2-projection]] #project/system #type/feature #p1
 - [ ] [[TCK-0007-dashboard-v2-income-costs]] #project/system #type/feature #p1
 - [ ] [[TCK-0008-dashboard-v2-holdings-benchmark]] #project/system #type/feature #p1
 
@@ -19,6 +18,7 @@ kanban-plugin: board
 
 ## Claimed
 
+- [ ] [[TCK-0005-dashboard-v2-projection]] #project/system #type/feature #p1
 
 
 

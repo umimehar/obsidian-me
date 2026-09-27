@@ -41,3 +41,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-26 23:55 · mac-studio · claim · TCK-0006 · tax income correction and contributions
 - 2026-09-26 23:55 · mac-studio · start · TCK-0006 · starting with Task 6.0 tax income
 - 2026-09-27 01:01 · mac-studio · review · TCK-0006 · three agent review rounds used; tax figures confirmed, handed to the owner
+- 2026-09-27 01:01 · mac-studio · claim · TCK-0005 · projection in today's dollars, Future tab
