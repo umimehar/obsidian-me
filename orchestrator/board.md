@@ -11,7 +11,6 @@ kanban-plugin: board
 
 ## Ready
 
-- [ ] [[TCK-0003-dashboard-v2-layout-shell]] #project/system #type/feature #p1
 - [ ] [[TCK-0004-dashboard-v2-this-month]] #project/system #type/feature #p1
 - [ ] [[TCK-0005-dashboard-v2-projection]] #project/system #type/feature #p1
 - [ ] [[TCK-0006-dashboard-v2-registered-contributions]] #project/system #type/feature #p1
@@ -22,6 +21,7 @@ kanban-plugin: board
 
 ## Claimed
 
+- [ ] [[TCK-0003-dashboard-v2-layout-shell]] #project/system #type/feature #p1
 
 
 
