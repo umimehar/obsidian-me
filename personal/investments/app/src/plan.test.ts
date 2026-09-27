@@ -47,6 +47,55 @@ describe("parsePlan", () => {
   test("throws when goals is not an array", () => {
     expect(() => parsePlan({ ...VALID, goals: "nope" })).toThrow(/goals/);
   });
+
+  test("throws naming a goal scope with an unknown purpose", () => {
+    const bad = {
+      ...VALID,
+      goals: [{ ...VALID.goals[0], scope: { kind: "purpose", purpose: "vacation" } }],
+    };
+    expect(() => parsePlan(bad)).toThrow(/goals\[0\]\.scope\.purpose/);
+  });
+
+  test("throws naming a goal scope with an unknown group", () => {
+    const bad = {
+      ...VALID,
+      goals: [{ ...VALID.goals[0], scope: { kind: "groups", groups: ["RRSP", "Chequing"] } }],
+    };
+    expect(() => parsePlan(bad)).toThrow(/goals\[0\]\.scope\.groups\[1\]/);
+  });
+
+  test("throws naming a goal scope with an unknown kind", () => {
+    const bad = { ...VALID, goals: [{ ...VALID.goals[0], scope: { kind: "everything" } }] };
+    expect(() => parsePlan(bad)).toThrow(/goals\[0\]\.scope\.kind/);
+  });
+
+  test("accepts a portfolio scope, which carries nothing else", () => {
+    const ok = { ...VALID, goals: [{ ...VALID.goals[0], scope: { kind: "portfolio" } }] };
+    expect(parsePlan(ok).goals[0]?.scope).toEqual({ kind: "portfolio" });
+  });
+
+  test.each([
+    ["retirementAge", 20],
+    ["retirementAge", 90],
+    ["inflation", 0.3],
+    ["inflation", -0.01],
+    ["withdrawalRate", 0.5],
+    ["birthYear", 2200],
+    ["birthYear", 1800],
+  ] as const)("throws naming %s out of its plausible range (%d)", (field, value) => {
+    expect(() => parsePlan({ ...VALID, [field]: value })).toThrow(new RegExp(field));
+  });
+
+  test("accepts the edges of each range", () => {
+    const edges = {
+      ...VALID,
+      retirementAge: 30,
+      inflation: 0.2,
+      withdrawalRate: 0,
+      birthYear: 1900,
+    };
+    expect(() => parsePlan(edges)).not.toThrow();
+  });
 });
 
 describe("loadPlan, the committed file", () => {
