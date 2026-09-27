@@ -24,12 +24,12 @@ kanban-plugin: board
 
 ## In Progress
 
-- [ ] [[TCK-0005-dashboard-v2-projection]] #project/system #type/feature #p1
-
 
 
 
 ## Review
+
+- [ ] [[TCK-0005-dashboard-v2-projection]] #project/system #type/feature #p1
 
 - [ ] [[TCK-0006-dashboard-v2-registered-contributions]] #project/system #type/feature #p1
 

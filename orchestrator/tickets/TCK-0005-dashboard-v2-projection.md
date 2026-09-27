@@ -5,7 +5,7 @@ created: 2026-09-26
 updated: 2026-09-27
 type: ticket
 id: TCK-0005
-status: in-progress
+status: review
 project: system
 ticket_type: feature
 assigned_device: any
@@ -27,15 +27,15 @@ Make the projection answer where the money is heading in terms the owner thinks 
 
 ## Acceptance criteria
 
-- [ ] Inflation slider (default from plan.json, 2.5%) and a nominal / today's dollars toggle, default today's dollars
-- [ ] Three rate lines (low, base, high around the chosen rate) drawn as a band on a linear axis with the base line
-- [ ] Milestone years: first $500k and $1M in today's dollars, per the base rate
-- [ ] Retirement at 60 from plan.json: projected balance and 4% a year as monthly income in today's dollars
-- [ ] Account selection shared with the Portfolio account filter: projection runs for all or selected accounts
-- [ ] Fitted rate shown as context only, capped out of the one click apply, with the window caveat
-- [ ] data/plan.json holds retirement age, birth year, default inflation and goal targets; the code defined goal targets are deleted and goals read the plan file
-- [ ] Tests: engine inflation deflator, milestone detection, selection, plan parsing errors; bun run check clean
-- [ ] The projection lives on a new Future tab (id `future`, label Future), moved out of the interim Plan tab; `#projections` and `#plan` resolve to it; Future ignores the year scope and states that
+- [x] Inflation slider (default from plan.json, 2.5%) and a nominal / today's dollars toggle, default today's dollars
+- [x] Three rate lines (low, base, high around the chosen rate) drawn as a band on a linear axis with the base line
+- [x] Milestone years: first $500k and $1M in today's dollars, per the base rate
+- [x] Retirement at 60 from plan.json: projected balance and 4% a year as monthly income in today's dollars
+- [x] Account selection shared with the Portfolio account filter: projection runs for all or selected accounts
+- [x] Fitted rate shown as context only, capped out of the one click apply, with the window caveat
+- [x] data/plan.json holds retirement age, birth year, default inflation and goal targets; the code defined goal targets are deleted and goals read the plan file
+- [x] Tests: engine inflation deflator, milestone detection, selection, plan parsing errors; bun run check clean
+- [x] The projection lives on a new Future tab (id `future`, label Future), moved out of the interim Plan tab; `#projections` and `#plan` resolve to it; Future ignores the year scope and states that
 
 ## Context
 
@@ -43,3 +43,4 @@ Owner request in session on 2026-09-26, after reviewing a proposal for the inves
 
 ## Worklog
 - 2026-09-27 01:30 — Owner asked for more meaningful tabs; final set is This month, Portfolio, Holdings, Growth, Income, Contributions, Future, Data. Acceptance criterion added for this ticket's tab; plan updated.
+- 2026-09-27 — Implemented across three commits: `data/plan.json` plus `src/plan.ts` replacing `goals/config.ts`; `src/projection/scenario.ts` (`runScenarios`, `deflate`, `milestoneYear`, `retirementIncome`); the Future tab replacing the interim Plan tab, `ProjectionChart` moved from a log axis to a linear one with a low to high band. `bun run check` clean (1470 tests), `bun run contrast` AA pass. Goldens gained six Future-tab fields, no other figure moved.

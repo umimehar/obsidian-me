@@ -43,3 +43,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-27 01:01 · mac-studio · review · TCK-0006 · three agent review rounds used; tax figures confirmed, handed to the owner
 - 2026-09-27 01:01 · mac-studio · claim · TCK-0005 · projection in today's dollars, Future tab
 - 2026-09-27 01:01 · mac-studio · start · TCK-0005 · starting Future tab
+- 2026-09-27 05:24 · mac-studio · review · TCK-0005 · Future tab shipped: plan.json, scenario module, linear band chart; bun run check clean, bun run contrast pass
