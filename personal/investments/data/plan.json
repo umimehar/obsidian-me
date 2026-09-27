@@ -1,0 +1,24 @@
+{
+  "birthYear": 1997,
+  "retirementAge": 60,
+  "inflation": 0.025,
+  "withdrawalRate": 0.04,
+  "goals": [
+    {
+      "id": "house",
+      "label": "House down payment",
+      "scope": { "kind": "purpose", "purpose": "house" },
+      "target": 40000,
+      "by": "2028",
+      "source": "Target is the FHSA's $40,000 lifetime contribution cap. The 2028 year is the first year the projection's FHSA lifetime room reaches zero, the year contributions stop, not the year the account closes."
+    },
+    {
+      "id": "education",
+      "label": "Education",
+      "scope": { "kind": "purpose", "purpose": "education" },
+      "target": 50000,
+      "by": "2042",
+      "source": "Target is the RESP's $50,000 lifetime contribution cap. The 2042 year is cesgLastYear, DEFAULT_RESP_BIRTH_YEAR (2025) plus 17, a documented default rather than a confirmed beneficiary birth year."
+    }
+  ]
+}

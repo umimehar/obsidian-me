@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { AnalyticsOutput } from "../../analytics/build";
-import { GOALS } from "../../goals/config";
 import { evaluateGoal } from "../../goals/evaluate";
 import { GOLDENS } from "../../goldens";
+import { loadPlan } from "../../plan";
 import { projectYears } from "../../projection/engine";
 import { fittedReturnRate } from "../../projection/fittedRate";
 import { projectedAccounts, projectionInputs } from "../../projection/inputs";
@@ -444,7 +444,7 @@ describe("the goals panel and the room runway table are mounted below the chart"
     setRate(20);
     const rows20 = projectYears(projectionInputs(analytics, { returnRate: 0.2 }));
     const inputs20 = projectionInputs(analytics, { returnRate: 0.2 });
-    const educationGoal = GOALS.find((g) => g.id === "education");
+    const educationGoal = loadPlan().goals.find((g) => g.id === "education");
     if (educationGoal === undefined) throw new Error("expected the education goal");
     const verdict = evaluateGoal(educationGoal, analytics, rows20, 0.2, inputs20.fhsaCloseYear);
     if (verdict.projected === null) throw new Error("expected a projectable goal at 20%");
@@ -473,7 +473,7 @@ describe("the goals panel and the room runway table are mounted below the chart"
     renderView();
     const engineInputs = projectionInputs(analytics, { returnRate: 0.06 });
     const rows6 = projectYears(engineInputs);
-    const houseGoal = GOALS.find((g) => g.id === "house");
+    const houseGoal = loadPlan().goals.find((g) => g.id === "house");
     if (houseGoal === undefined) throw new Error("expected the house goal");
     const verdict = evaluateGoal(houseGoal, analytics, rows6, 0.06, engineInputs.fhsaCloseYear);
     if (verdict.projected === null) throw new Error("expected a projectable house goal");

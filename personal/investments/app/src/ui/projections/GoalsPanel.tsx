@@ -1,8 +1,8 @@
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import type { AnalyticsOutput } from "../../analytics/build";
-import { GOALS, type Goal } from "../../goals/config";
 import { type GoalVerdict, evaluateGoal } from "../../goals/evaluate";
 import type { ScopeCoverage } from "../../goals/scope";
+import type { Goal } from "../../plan";
 import type { ProjectionYear } from "../../projection/engine";
 import { formatCurrency } from "../format";
 
@@ -11,12 +11,8 @@ export interface GoalsPanelProps {
   rows: readonly ProjectionYear[];
   rate: number;
   fhsaCloseYear: string;
-  /**
-   * Defaults to the shipped `GOALS`. It exists so a test can render a scope
-   * the shipped config does not carry -- a `growth` purpose, a raised
-   * target -- never as a runtime feature. Nothing in the app passes it.
-   */
-  goals?: readonly Goal[];
+  /** The plan's goals, read from `data/plan.json` by the caller. */
+  goals: readonly Goal[];
 }
 
 /** How many of the scope's accounts the projection reaches, and what is left out when it does not reach all of them. */
@@ -172,13 +168,7 @@ function GoalCard({ goal, verdict }: GoalCardProps) {
  * the chart already drew from, so a goal card and the chart beside it can
  * never disagree about which scenario is on screen.
  */
-export function GoalsPanel({
-  analytics,
-  rows,
-  rate,
-  fhsaCloseYear,
-  goals = GOALS,
-}: GoalsPanelProps) {
+export function GoalsPanel({ analytics, rows, rate, fhsaCloseYear, goals }: GoalsPanelProps) {
   return (
     <Flex direction="column" gap="2">
       {goals.map((goal) => (

@@ -1,5 +1,7 @@
-import { GOALS } from "../config";
-import type { Goal } from "../config";
+import type { Goal } from "../../plan";
+import { loadPlan } from "../../plan";
+
+const GOALS = loadPlan().goals;
 
 /**
  * Goals the tests evaluate against the REAL corpus but which are not shipped

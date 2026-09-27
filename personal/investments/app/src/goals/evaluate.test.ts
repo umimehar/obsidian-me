@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { GOLDENS } from "../goldens";
+import type { Goal } from "../plan";
 import { projectYears } from "../projection/engine";
 import { projectionInputs } from "../projection/inputs";
 import { loadAnalytics } from "../ui/data";
@@ -10,7 +11,6 @@ import {
   HOUSE_GOAL,
   STRETCH_GOAL,
 } from "./__fixtures__/goals";
-import type { Goal } from "./config";
 import { contributionToClose, evaluateGoal } from "./evaluate";
 
 const analytics = loadAnalytics();

@@ -8,9 +8,9 @@ import {
   HOUSE_GOAL,
   STRETCH_GOAL,
 } from "../../goals/__fixtures__/goals";
-import type { Goal } from "../../goals/config";
-import { GOALS } from "../../goals/config";
 import { GOLDENS } from "../../goldens";
+import type { Goal } from "../../plan";
+import { loadPlan } from "../../plan";
 import { projectYears } from "../../projection/engine";
 import { projectionInputs } from "../../projection/inputs";
 import { loadAnalytics } from "../data";
@@ -31,13 +31,14 @@ import { GoalsPanel } from "./GoalsPanel";
  * `projected`, `monthly`, `uncoveredValue` and `gap` each go through this
  * guard, because each is rendered nowhere but its own `formatCurrency` call.
  * `target` does not, and never can: `goal.source` legitimately spells out
- * the bare "$40,000" and "$50,000" as prose (see `goals/config.ts`), so a
+ * the bare "$40,000" and "$50,000" as prose (see `data/plan.json`), so a
  * coarse form of `target` is expected to appear in the card's own text, not
  * a defect the guard could flag.
  */
 const analytics: AnalyticsOutput = loadAnalytics();
 const rows6 = projectYears(projectionInputs(analytics, { returnRate: 0.06 }));
 const rows12 = projectYears(projectionInputs(analytics, { returnRate: 0.12 }));
+const GOALS = loadPlan().goals;
 
 const houseGoal = HOUSE_GOAL;
 const educationGoal = EDUCATION_GOAL;
@@ -49,7 +50,7 @@ function goalGolden(id: string) {
   return found;
 }
 
-function renderPanel(rows = rows6, rate = 0.06, goals?: readonly Goal[]) {
+function renderPanel(rows = rows6, rate = 0.06, goals: readonly Goal[] = GOALS) {
   render(
     <Theme>
       <GoalsPanel
@@ -170,7 +171,13 @@ describe("the education card, against the real corpus", () => {
   test("raising the rate raises the projected figure, and the history stays the same page", () => {
     const { unmount } = render(
       <Theme>
-        <GoalsPanel analytics={analytics} rows={rows6} rate={0.06} fhsaCloseYear="2039" />
+        <GoalsPanel
+          analytics={analytics}
+          rows={rows6}
+          rate={0.06}
+          fhsaCloseYear="2039"
+          goals={GOALS}
+        />
       </Theme>,
     );
     const at6 = cardText("education");
@@ -178,7 +185,13 @@ describe("the education card, against the real corpus", () => {
 
     render(
       <Theme>
-        <GoalsPanel analytics={analytics} rows={rows12} rate={0.12} fhsaCloseYear="2039" />
+        <GoalsPanel
+          analytics={analytics}
+          rows={rows12}
+          rate={0.12}
+          fhsaCloseYear="2039"
+          goals={GOALS}
+        />
       </Theme>,
     );
     const at12 = cardText("education");
@@ -392,7 +405,7 @@ describe("heading structure", () => {
  * SCOPE, not year:
  * only a goal whose scope reaches the FHSA can ever see this prop move
  * anything, so this uses the `goals` seam `GoalsPanel`'s own doc comment
- * says exists for exactly this -- a scope the shipped config does not
+ * says exists for exactly this -- a scope the plan file does not
  * carry -- rather than adding a goal to `GOALS` that nothing in the app
  * needs.
  */

@@ -1,12 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import { groupGolden } from "../goldens";
+import { loadPlan } from "../plan";
 import { projectYears } from "../projection/engine";
 import { projectionInputs } from "../projection/inputs";
 import { loadAnalytics } from "../ui/data";
-import { GOALS } from "./config";
 import { resolveScope } from "./scope";
 
 const analytics = loadAnalytics();
+const GOALS = loadPlan().goals;
 
 describe("resolveScope, the three scope kinds against the real corpus", () => {
   test("a purpose scope resolves to that purpose's counted accounts", () => {
@@ -72,7 +73,7 @@ describe("resolveScope, the coverage split is the honest part", () => {
   });
 });
 
-describe("GOALS, the shipped config", () => {
+describe("GOALS, the plan file's goals", () => {
   test("the shipped goals are the two with statutory targets", () => {
     expect(GOALS.map((g) => g.id)).toEqual(["house", "education"]);
     const house = GOALS[0];

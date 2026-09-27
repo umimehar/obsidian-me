@@ -2,6 +2,7 @@ import { Button, Callout, Flex, Heading, Text } from "@radix-ui/themes";
 import { useMemo, useState } from "react";
 import type { AnalyticsOutput } from "../../analytics/build";
 import { buildPortfolioSeries } from "../../analytics/portfolioSeries";
+import { loadPlan } from "../../plan";
 import { projectYears } from "../../projection/engine";
 import { fittedReturnRate } from "../../projection/fittedRate";
 import { projectedAccounts, projectionInputs } from "../../projection/inputs";
@@ -292,6 +293,7 @@ export function ProjectionsView({ analytics, scopeNote = false }: ProjectionsVie
         rows={rows}
         rate={rate}
         fhsaCloseYear={inputs.fhsaCloseYear}
+        goals={loadPlan().goals}
       />
       <RunwayTable rows={rows} inputs={inputs} />
     </Flex>

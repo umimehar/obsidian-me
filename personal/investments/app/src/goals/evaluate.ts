@@ -1,9 +1,9 @@
 import type { AnalyticsOutput } from "../analytics/build";
 import type { AccountSeries } from "../analytics/types";
+import type { Goal } from "../plan";
 import type { ProjectionYear } from "../projection/engine";
 import { type ProjectionGroup, groupOf } from "../projection/inputs";
 import { accountValues } from "./allocation";
-import type { Goal } from "./config";
 import { type ScopeCoverage, resolveScope } from "./scope";
 
 export interface GoalVerdict {
