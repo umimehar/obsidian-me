@@ -1,4 +1,4 @@
-import { dedupeToLatestVersion } from "../build";
+import { dedupeToLatestVersion } from "../statementVersion";
 import type { Statement } from "../types";
 import { convertAmountToCad } from "./activity";
 

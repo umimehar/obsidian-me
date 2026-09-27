@@ -9,12 +9,19 @@ import { type Page, parseGeometry } from "./ingest/geometry";
 import { parseStatement } from "./ingest/parse";
 import { detectTemplate, parseSourceFilename } from "./ingest/source";
 import type { ParsedFilename, SourceRef, Template } from "./ingest/source";
+import { dedupeToLatestVersion } from "./statementVersion";
 import { archivedStatements, mergeIntoArchive, toArchived } from "./store/archive";
 import { buildDatastore } from "./store/datastore";
 import { maskAccountNo } from "./store/mask";
 import { buildRegistry } from "./store/registry";
 import { OBSERVATIONS } from "./truth";
 import type { Statement } from "./types";
+
+// Re-exported for `build.test.ts` and `build.integration.test.ts`, which
+// import it from here -- the function itself lives in `statementVersion.ts`
+// now, dependency-free, so `analytics/activity.ts` can use it without
+// pulling this file's Node-only ingest pipeline into the browser bundle.
+export { dedupeToLatestVersion };
 import { runChecks } from "./validate/checks";
 import type { Finding, ReconciliationReport, ReportedFinding } from "./validate/report";
 
@@ -188,25 +195,6 @@ export async function ingestRaw(sourceDir: string, cacheDir: string): Promise<In
     );
   }
   return { statements, findings };
-}
-
-/**
- * Keeps only the highest `source.version` per (accountNo, period, template)
- * group, in first-seen order. Nothing downstream of `ingestAll` -- the
- * registry, the datastore, or any check besides `checkSupersession` itself --
- * should ever see two versions of the same statement: an amended statement
- * beside its original would otherwise double-count a whole account into
- * ground truth, and `checkCrossDocument` would pick whichever twin happened
- * to sort first rather than the one that actually supersedes the rest.
- */
-export function dedupeToLatestVersion(statements: readonly Statement[]): Statement[] {
-  const latestByGroup = new Map<string, Statement>();
-  for (const s of statements) {
-    const key = `${s.source.accountNo}|${s.source.period}|${s.source.template}`;
-    const current = latestByGroup.get(key);
-    if (!current || s.source.version > current.source.version) latestByGroup.set(key, s);
-  }
-  return [...latestByGroup.values()];
 }
 
 export async function ingestAll(sourceDir: string, cacheDir: string): Promise<Statement[]> {
