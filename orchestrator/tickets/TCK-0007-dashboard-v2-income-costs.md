@@ -39,3 +39,6 @@ Owner request in session on 2026-09-26, after reviewing a proposal for the inves
 
 ## Worklog
 - 2026-09-27 01:30 — Owner asked for more meaningful tabs; final set is This month, Portfolio, Holdings, Growth, Income, Contributions, Future, Data. Acceptance criterion added for this ticket's tab; plan updated.
+- 2026-09-27 06:00 — Implementation delegated to a Sonnet subagent.
+- 2026-09-27 06:15 — Four commits d0c0594 to 47857a9: income and costs model on the shared activity totals, monthly dividends chart, year and withholding tables, Income tab with TaxView moved off Portfolio and #tax mapped. 2025: dividends $3,017.06, withholding $298.82, fees $29.65; 2026: dividends $1,657.22, withholding $97.87, fees $212.55. `bun run check`: 1528 pass, 0 fail; contrast AA pass.
+- 2026-09-27 06:16 — Agent review dispatched at Opus, asked to explain zero interest and the 2026 fee jump from the raw rows.
