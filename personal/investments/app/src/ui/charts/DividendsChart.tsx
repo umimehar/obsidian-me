@@ -42,7 +42,7 @@ function EmptyState({ year }: { year: number }) {
   );
 }
 
-/** The chart's own period range: the first and last month with a statement, never the whole corpus. */
+/** The chart's own range: its first and last month with a statement, never the whole corpus. */
 function extent(months: readonly MonthlyActivity[]): [string, string] | null {
   const first = months[0];
   const last = months[months.length - 1];

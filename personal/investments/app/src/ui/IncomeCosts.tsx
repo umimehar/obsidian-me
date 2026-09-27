@@ -59,7 +59,7 @@ function YearRow({ year, selected }: { year: YearIncome; selected: boolean }) {
   );
 }
 
-/** Every year the corpus covers, oldest first; the selected row carries `aria-current` and its own tint. */
+/** Every year the corpus covers, oldest first; the selected row gets `aria-current` and a tint. */
 function YearTable({
   years,
   selectedYear,
@@ -90,7 +90,7 @@ function YearTable({
   );
 }
 
-/** One chequing account's interest, stated apart from the year table: it never counts toward the portfolio total. */
+/** One chequing account's interest, apart from the table: never counted in the portfolio total. */
 function ChequingInterestLine({ row }: { row: ChequingInterest }) {
   return (
     <Text size="2" color="gray" data-chequing-interest={row.maskedId}>
@@ -113,7 +113,7 @@ function AccountIncomeRow({ row }: { row: AccountIncome }) {
   );
 }
 
-/** Income and costs by account, for the selected year, sorted by what each account actually pays. */
+/** Income and costs by account, for the selected year, sorted by what each account pays. */
 function AccountIncomeTable({ rows, year }: { rows: readonly AccountIncome[]; year: number }) {
   if (rows.length === 0) {
     return (
@@ -153,7 +153,7 @@ function WithholdingRow({ row }: { row: AccountWithholding }) {
   );
 }
 
-/** The spousal RRSP's own withholding, stated apart from the accounts that count toward the totals above. */
+/** The spousal RRSP's own withholding, apart from the accounts counted in the totals above. */
 function SpousalRow({ row }: { row: AccountWithholding }) {
   return (
     <Text size="2" color="gray" data-withholding-spousal={row.maskedId}>
@@ -195,7 +195,7 @@ function WithholdingTable({
   );
 }
 
-/** "All time" silently shows the latest year's figures, so the heading has to say so -- `TaxView` follows the same rule. */
+/** "All time" silently shows the latest year, so the heading says so -- `TaxView` does the same. */
 function headingFor(year: number, scope: YearScope): string {
   return scope === "all" ? `Income and costs, latest year ${year}` : `Income and costs, ${year}`;
 }
