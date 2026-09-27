@@ -12,6 +12,7 @@ import type { ScenarioPoint } from "../../projection/scenario";
 import { AccountFilter } from "../AccountFilter";
 import { isDefaultSelection, seriesForChart } from "../chartAccounts";
 import { ProjectionChart } from "../charts/ProjectionChart";
+import { formatPeriodLabel } from "../charts/plot";
 import { type DollarsMode, buildProjectionSeries } from "../charts/projectionSeries";
 import { formatCurrency, formatRate } from "../format";
 import { GoalsPanel } from "./GoalsPanel";
@@ -33,7 +34,6 @@ const SPREAD = 0.02;
 const RATE_MAX = 0.12;
 const INFLATION_MAX = 0.05;
 const MIN_YEARS = 30;
-
 const MILESTONES = [500_000, 1_000_000] as const;
 
 /** The scenario point at a calendar year, or undefined when the horizon does not reach it. */
@@ -47,12 +47,22 @@ function chosen(point: ScenarioPoint | undefined, dollars: DollarsMode): number 
   return dollars === "real" ? point.real : point.nominal;
 }
 
+/** The registered groups CRA rules let new money land in, for the selected accounts the engine covers. */
+function fundedGroupLabels(
+  series: readonly AccountSeries[],
+  accounts: ReadonlySet<string>,
+): string[] {
+  const groups = series
+    .filter((a) => a.inTotals && accounts.has(a.maskedId))
+    .map((a) => groupOf(a.kind))
+    .filter((group): group is NonNullable<typeof group> => group !== null);
+  return [...new Set(groups)];
+}
+
 /**
- * The caveat, in the open above the figures rather than in a footnote.
- *
  * Every other figure on this page was transcribed from a PDF. This one is
- * invented, which makes it the least certain thing here and the one that most
- * needs its qualification adjacent to it.
+ * invented, which makes it the least certain thing here and the one that
+ * most needs its qualification adjacent to it.
  */
 function Disclaimer() {
   return (
@@ -66,23 +76,74 @@ function Disclaimer() {
   );
 }
 
-/** The retirement tile: balance in the chosen dollars, at the plan's own retirement year. */
+/** The heading, the subject and the account filter, plus the year-scope note when it applies. */
+function Header({
+  subject,
+  accountOptions,
+  accounts,
+  onAccountsChange,
+  onReset,
+  isDefault,
+  scopeNote,
+}: {
+  subject: string;
+  accountOptions: readonly AccountSeries[];
+  accounts: ReadonlySet<string>;
+  onAccountsChange: (accounts: Set<string>) => void;
+  onReset: () => void;
+  isDefault: boolean;
+  scopeNote: boolean;
+}) {
+  return (
+    <Flex direction="column" gap="2">
+      <Heading size="5" as="h2">
+        Where this is heading
+      </Heading>
+      <Flex align="center" gap="3" wrap="wrap">
+        <Text size="2" color="gray">
+          {subject}
+        </Text>
+        <AccountFilter
+          accounts={accountOptions}
+          selected={accounts}
+          subject={subject}
+          isDefault={isDefault}
+          onSelectedChange={onAccountsChange}
+          onReset={onReset}
+        />
+      </Flex>
+      {scopeNote ? (
+        <Callout.Root color="gray" variant="surface" data-projection-scope-note="">
+          <Callout.Text>
+            The year filter does not apply here. A forecast runs forward from the latest statement,
+            so this always projects from the whole corpus.
+          </Callout.Text>
+        </Callout.Root>
+      ) : null}
+    </Flex>
+  );
+}
+
+/** The retirement tile: balance in the chosen dollars, named by the month it actually falls in. */
 function RetirementTile({
+  period,
   year,
   age,
   value,
   dollars,
 }: {
+  period: string | undefined;
   year: number;
   age: number;
   value: number | null;
   dollars: DollarsMode;
 }) {
   const dollarsWord = dollars === "real" ? "today's dollars" : "future dollars";
+  const when = period === undefined ? String(year) : formatPeriodLabel(period, { month: "long" });
   return (
     <Flex direction="column" gap="1" data-retirement-tile="">
       <Heading size="2" as="h3" color="gray" weight="regular">
-        {`At retirement, ${year} (age ${age})`}
+        {`At retirement, ${when} (age ${age})`}
       </Heading>
       <Text size="7" weight="bold">
         {value === null ? "Not within the horizon" : formatCurrency(value)}
@@ -132,6 +193,41 @@ function MilestonesTile({ points }: { points: readonly ScenarioPoint[] }) {
           </Text>
         );
       })}
+    </Flex>
+  );
+}
+
+/** The three headline tiles, side by side. */
+function Tiles({
+  retirementPeriod,
+  retireYear,
+  age,
+  retirementValue,
+  dollars,
+  income,
+  withdrawalRate,
+  points,
+}: {
+  retirementPeriod: string | undefined;
+  retireYear: number;
+  age: number;
+  retirementValue: number | null;
+  dollars: DollarsMode;
+  income: { balance: number; monthly: number } | null;
+  withdrawalRate: number;
+  points: readonly ScenarioPoint[];
+}) {
+  return (
+    <Flex gap="6" wrap="wrap">
+      <RetirementTile
+        period={retirementPeriod}
+        year={retireYear}
+        age={age}
+        value={retirementValue}
+        dollars={dollars}
+      />
+      <IncomeTile income={income} withdrawalRate={withdrawalRate} />
+      <MilestonesTile points={points} />
     </Flex>
   );
 }
@@ -248,30 +344,22 @@ function EmptyState() {
 }
 
 /**
- * Where the portfolio, or a chosen selection of it, is heading: a low to
- * high band in today's dollars by default, milestones, and a retirement
- * income at the plan's own age. The rate a reader chooses, the dollars mode,
- * and the account selection are the only things this view owns; the
- * scenarios themselves come from `runScenarios`.
+ * Everything derived from the analytics payload, the selection and the two
+ * dials, held in one hook so the exported component's body stays a layout
+ * rather than a second copy of this arithmetic.
  */
-export function ProjectionsView({
-  analytics,
-  scopeNote = false,
-  accountOptions,
-  accounts,
-  onAccountsChange,
-  onReset,
-  subject,
-}: ProjectionsViewProps) {
-  const plan = useMemo(() => loadPlan(), []);
-  const fitted = useMemo(() => fittedReturnRate(analytics.series), [analytics]);
-  const [rate, setRate] = useState(DEFAULT_RATE);
-  const [inflation, setInflation] = useState(plan.inflation);
-  const [dollars, setDollars] = useState<DollarsMode>("real");
-
-  const retireYear = planRetirementYear(plan);
-  const startYearNumber = Number(projectionInputs(analytics).startYear || 0);
-  const years = Math.max(MIN_YEARS, retireYear - startYearNumber);
+function useProjectionData(
+  analytics: AnalyticsOutput,
+  accounts: ReadonlySet<string>,
+  rate: number,
+  inflation: number,
+  dollars: DollarsMode,
+  retireYear: number,
+) {
+  // Depends only on `analytics`: the years this projection runs never
+  // changes with the rate slider, so this must not refit on every drag.
+  const anchorInputs = useMemo(() => projectionInputs(analytics), [analytics]);
+  const years = Math.max(MIN_YEARS, retireYear - Number(anchorInputs.startYear || 0));
 
   const scenarios = useMemo(
     () => runScenarios(analytics, accounts, { rate, spread: SPREAD, inflation, years }),
@@ -300,48 +388,59 @@ export function ProjectionsView({
   );
   const rows = useMemo(() => projectYears(inputs), [inputs]);
 
+  return { scenarios, series, inputs, rows };
+}
+
+/**
+ * Where the portfolio, or a chosen selection of it, is heading: a low to
+ * high band in today's dollars by default, milestones, and a retirement
+ * income at the plan's own age. The rate a reader chooses, the dollars mode,
+ * and the account selection are the only things this view owns; the
+ * scenarios themselves come from `runScenarios`.
+ */
+export function ProjectionsView({
+  analytics,
+  scopeNote = false,
+  accountOptions,
+  accounts,
+  onAccountsChange,
+  onReset,
+  subject,
+}: ProjectionsViewProps) {
+  const plan = useMemo(() => loadPlan(), []);
+  const fitted = useMemo(() => fittedReturnRate(analytics.series), [analytics]);
+  const [rate, setRate] = useState(DEFAULT_RATE);
+  const [inflation, setInflation] = useState(plan.inflation);
+  const [dollars, setDollars] = useState<DollarsMode>("real");
+  const retireYear = planRetirementYear(plan);
+
+  const { scenarios, series, inputs, rows } = useProjectionData(
+    analytics,
+    accounts,
+    rate,
+    inflation,
+    dollars,
+    retireYear,
+  );
+
   const opening = scenarios.base.points[0]?.nominal ?? 0;
   if (opening <= 0) return <EmptyState />;
 
   const retirementPoint = pointAt(scenarios.base.points, retireYear);
   const income = retirementIncome(scenarios.base.points, retireYear, plan.withdrawalRate);
-  const fundedGroups = [
-    ...new Set(
-      analytics.series
-        .filter((a) => a.inTotals && accounts.has(a.maskedId))
-        .map((a) => groupOf(a.kind))
-        .filter((group): group is NonNullable<typeof group> => group !== null),
-    ),
-  ];
+  const fundedGroups = fundedGroupLabels(analytics.series, accounts);
 
   return (
     <Flex direction="column" gap="5">
-      <Flex direction="column" gap="2">
-        <Heading size="5" as="h2">
-          Where this is heading
-        </Heading>
-        <Flex align="center" gap="3" wrap="wrap">
-          <Text size="2" color="gray">
-            {subject}
-          </Text>
-          <AccountFilter
-            accounts={accountOptions}
-            selected={accounts}
-            subject={subject}
-            isDefault={isDefaultSelection(analytics.series, accounts)}
-            onSelectedChange={onAccountsChange}
-            onReset={onReset}
-          />
-        </Flex>
-      </Flex>
-      {scopeNote ? (
-        <Callout.Root color="gray" variant="surface" data-projection-scope-note="">
-          <Callout.Text>
-            The year filter does not apply here. A forecast runs forward from the latest statement,
-            so this always projects from the whole corpus.
-          </Callout.Text>
-        </Callout.Root>
-      ) : null}
+      <Header
+        subject={subject}
+        accountOptions={accountOptions}
+        accounts={accounts}
+        onAccountsChange={onAccountsChange}
+        onReset={onReset}
+        isDefault={isDefaultSelection(analytics.series, accounts)}
+        scopeNote={scopeNote}
+      />
       <Controls
         rate={rate}
         onRateChange={setRate}
@@ -350,23 +449,24 @@ export function ProjectionsView({
         dollars={dollars}
         onDollarsChange={setDollars}
       />
-      <Flex gap="6" wrap="wrap">
-        <RetirementTile
-          year={retireYear}
-          age={plan.retirementAge}
-          value={chosen(retirementPoint, dollars)}
-          dollars={dollars}
-        />
-        <IncomeTile income={income} withdrawalRate={plan.withdrawalRate} />
-        <MilestonesTile points={scenarios.base.points} />
-      </Flex>
+      <Tiles
+        retirementPeriod={retirementPoint?.period}
+        retireYear={retireYear}
+        age={plan.retirementAge}
+        retirementValue={chosen(retirementPoint, dollars)}
+        dollars={dollars}
+        income={income}
+        withdrawalRate={plan.withdrawalRate}
+        points={scenarios.base.points}
+      />
       <Disclaimer />
       <ProjectionChart
         series={series}
         rate={rate}
         low={scenarios.low.rate}
         high={scenarios.high.rate}
-        retirementYear={retireYear}
+        retirementPeriod={retirementPoint?.period ?? `${retireYear}-01`}
+        retirementAge={plan.retirementAge}
         dollars={dollars}
       />
       <Assumptions

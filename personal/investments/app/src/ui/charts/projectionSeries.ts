@@ -16,7 +16,7 @@ export type DollarsMode = "nominal" | "real";
  * figure, in whichever dollars mode the caller chose.
  */
 export interface ProjectionPoint {
-  /** `YYYY-MM`. History points are monthly; projected points sit at `YYYY-12`. */
+  /** `YYYY-MM`. History points are monthly; a projected point sits at the anchor month, some whole years later. */
   period: string;
   value: number;
   half: "history" | "projection";
@@ -68,7 +68,7 @@ export function buildProjectionSeries(
 
   const projection: ProjectionPoint[] = base
     .map((point, index) => ({
-      period: `${point.year}-12`,
+      period: point.period,
       value: pick(point, dollars),
       half: "projection" as const,
       low: pick(low[index], dollars),

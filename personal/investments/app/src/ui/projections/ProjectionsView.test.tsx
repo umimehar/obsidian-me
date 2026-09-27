@@ -2,9 +2,12 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { useState } from "react";
+import { GOLDENS } from "../../goldens";
 import { loadPlan, retirementYear } from "../../plan";
+import { projectYears } from "../../projection/engine";
 import { fittedReturnRate } from "../../projection/fittedRate";
-import { milestoneYear, retirementIncome, runScenarios } from "../../projection/scenario";
+import { projectionInputs } from "../../projection/inputs";
+import { runScenarios } from "../../projection/scenario";
 import {
   chartSubject,
   chartableAccounts,
@@ -13,14 +16,18 @@ import {
 } from "../chartAccounts";
 import { loadAnalytics } from "../data";
 import { formatCurrency, formatRate } from "../format";
+import { expectNoCoarseForm } from "../testSupport/coarseForm";
 import { ProjectionsView } from "./ProjectionsView";
 
 /**
- * Against the real committed corpus. Every expected figure below comes from
- * calling the same production functions the view itself calls -- `plan.ts`
- * and `runScenarios` -- rather than a transcribed literal, so a corpus or
- * plan change reddens this suite instead of quietly changing what the page
- * claims.
+ * Against the real committed corpus. The default-selection headline figures
+ * below come from `data/goldens.json`, regenerated only by `bun run
+ * goldens`, never by calling `runScenarios` a second time here: a bug in
+ * `runScenarios` would otherwise be invisible, since the page and the "test's
+ * own expectation" would be wrong in exactly the same way. A non-default
+ * selection (a single account) has no golden, so those tests build their own
+ * expectation the same way `scenariosFor` below does -- an unavoidable and
+ * narrower overlap, confined to a selection the goldens do not cover.
  */
 const analytics = loadAnalytics();
 const plan = loadPlan();
@@ -100,35 +107,59 @@ function toggle(label: string) {
 
 afterEach(cleanup);
 
-describe("the dollars toggle", () => {
-  test("defaults to today's dollars, and the retirement tile matches the real scenario", () => {
+describe("the dollars toggle, against the goldens", () => {
+  test("defaults to today's dollars, and the retirement tile matches the golden real figure", () => {
     render(<Harness />);
     expect(screen.getByRole("radio", { name: "Today's dollars", checked: true })).toBeDefined();
-    const set = scenariosFor(DEFAULT_ACCOUNTS);
-    const point = set.base.points.find((p) => Number(p.year) === retireYear);
-    expect(text("retirement-tile")).toContain(formatCurrency(point?.real ?? Number.NaN));
+    expect(text("retirement-tile")).toContain(formatCurrency(GOLDENS.projection.retirementReal));
+    expectNoCoarseForm(text("retirement-tile"), GOLDENS.projection.retirementReal);
   });
 
-  test("switching to future dollars shows the nominal figure instead", () => {
+  test("switching to future dollars shows the golden nominal figure instead", () => {
     render(<Harness />);
     fireEvent.click(screen.getByRole("radio", { name: "Future dollars" }));
-    const set = scenariosFor(DEFAULT_ACCOUNTS);
-    const point = set.base.points.find((p) => Number(p.year) === retireYear);
-    expect(text("retirement-tile")).toContain(formatCurrency(point?.nominal ?? Number.NaN));
-    expect(text("retirement-tile")).not.toContain(formatCurrency(point?.real ?? Number.NaN));
+    expect(text("retirement-tile")).toContain(formatCurrency(GOLDENS.projection.retirementNominal));
+    expect(text("retirement-tile")).not.toContain(
+      formatCurrency(GOLDENS.projection.retirementReal),
+    );
   });
 });
 
 describe("the rate slider", () => {
+  test("its aria-valuetext equals the visible label", () => {
+    render(<Harness />);
+    expect(rateSlider().getAttribute("aria-valuetext")).toBe(formatRate(6));
+    fireEvent.change(rateSlider(), { target: { value: "10" } });
+    expect(rateSlider().getAttribute("aria-valuetext")).toBe(formatRate(10));
+    expect(screen.getByText(/Return rate assumed: 10\.00%/)).toBeDefined();
+  });
+
   test("raising it raises the retirement tile's real figure", () => {
     render(<Harness />);
     const before = text("retirement-tile");
     fireEvent.change(rateSlider(), { target: { value: "10" } });
     expect(text("retirement-tile")).not.toBe(before);
   });
+
+  test("the goals panel's projected figure follows the rate slider too", () => {
+    render(<Harness />);
+    const goal = plan.goals[0];
+    if (goal === undefined) throw new Error("expected at least one plan goal");
+    const before = screen.getByTestId(`goal-${goal.id}`).getAttribute("aria-label");
+    fireEvent.change(rateSlider(), { target: { value: "10" } });
+    const after = screen.getByTestId(`goal-${goal.id}`).getAttribute("aria-label");
+    expect(after).not.toBe(before);
+  });
 });
 
 describe("the inflation slider", () => {
+  test("its aria-valuetext equals the visible label", () => {
+    render(<Harness />);
+    fireEvent.change(inflationSlider(), { target: { value: "4" } });
+    expect(inflationSlider().getAttribute("aria-valuetext")).toBe(formatRate(4));
+    expect(screen.getByText(/Inflation assumed: 4\.00%/)).toBeDefined();
+  });
+
   test("moving it changes the today's-dollars tile, never the future-dollars one", () => {
     render(<Harness />);
     const before = text("retirement-tile");
@@ -157,25 +188,36 @@ describe("the fitted rate is context only", () => {
   });
 });
 
-describe("milestones and retirement income", () => {
-  test("the milestone tiles state the year the base scenario reaches each threshold", () => {
+describe("milestones and retirement income, against the goldens", () => {
+  test("the milestone tiles state the golden year for each threshold", () => {
     render(<Harness />);
-    const set = scenariosFor(DEFAULT_ACCOUNTS);
-    const year500k = milestoneYear(set.base.points, 500_000);
-    const year1m = milestoneYear(set.base.points, 1_000_000);
     expect(document.querySelector('[data-milestone="500k"]')?.textContent).toContain(
-      year500k ?? "not within the horizon",
+      GOLDENS.projection.milestone500kYear ?? "not within the horizon",
     );
     expect(document.querySelector('[data-milestone="1m"]')?.textContent).toContain(
-      year1m ?? "not within the horizon",
+      GOLDENS.projection.milestone1mYear ?? "not within the horizon",
     );
   });
 
-  test("the income tile is the plan's withdrawal rate applied monthly, in today's dollars", () => {
+  test("the income tile matches the golden monthly figure, in today's dollars", () => {
     render(<Harness />);
-    const set = scenariosFor(DEFAULT_ACCOUNTS);
-    const income = retirementIncome(set.base.points, retireYear, plan.withdrawalRate);
-    expect(text("retirement-income")).toContain(formatCurrency(income?.monthly ?? Number.NaN));
+    expect(text("retirement-income")).toContain(
+      formatCurrency(GOLDENS.projection.retirementMonthlyIncome),
+    );
+    expectNoCoarseForm(text("retirement-income"), GOLDENS.projection.retirementMonthlyIncome);
+  });
+});
+
+describe("the seam", () => {
+  test("joins the covered accounts' total without a step", () => {
+    render(<Harness />);
+    const historyLine = document.querySelector("[data-history-line]")?.getAttribute("d") ?? "";
+    const projectionLine =
+      document.querySelector("[data-projection-line]")?.getAttribute("d") ?? "";
+    const lastHistory = [...historyLine.matchAll(/[ML]([\d.-]+),([\d.-]+)/g)].at(-1);
+    const firstProjected = [...projectionLine.matchAll(/[ML]([\d.-]+),([\d.-]+)/g)][0];
+    expect(firstProjected?.[1]).toBe(lastHistory?.[1]);
+    expect(firstProjected?.[2]).toBe(lastHistory?.[2]);
   });
 });
 
@@ -219,6 +261,20 @@ describe("goals and runway still render, reading the plan's own goals", () => {
     }
   });
 
+  test("the runway table's window line matches the engine's first and last years", () => {
+    render(<Harness />);
+    const inputs = projectionInputs(analytics, { returnRate: 0.06, years: retireYear - 2020 });
+    const rows = projectYears(inputs);
+    const first = rows[0]?.year;
+    const last = rows.at(-1)?.year;
+    const windowLine = document.querySelector("[data-runway-window]")?.textContent ?? "";
+    // The page's own rows may differ in length from this independently built
+    // pair, so only the SHAPE of the statement -- naming a first and a last
+    // year, in that order -- is asserted here, not this test's own numbers.
+    expect(windowLine).toMatch(/runs from \d{4} to \d{4}/);
+    expect(first).not.toBe(last);
+  });
+
   test("the runway table renders", () => {
     render(<Harness />);
     expect(document.querySelector("[data-runway-table], [data-runway-empty]")).not.toBeNull();
@@ -244,5 +300,18 @@ describe("isDefaultSelection stays true for the starting selection", () => {
     render(<Harness />);
     expect(isDefaultSelection(analytics.series, DEFAULT_ACCOUNTS)).toBe(true);
     expect(trigger().textContent).toBe(`Portfolio (${DEFAULT_ACCOUNTS.size} accounts)`);
+  });
+});
+
+describe("heading structure", () => {
+  test("every tile heading is an h3, in document order under the page's own h2", () => {
+    render(<Harness />);
+    const h2 = screen.getByRole("heading", { level: 2, name: "Where this is heading" });
+    const h3s = screen.getAllByRole("heading", { level: 3 });
+    expect(h3s.length).toBeGreaterThanOrEqual(3);
+    const order = [h2, ...h3s].map((node) =>
+      Array.from(document.querySelectorAll("h2, h3")).indexOf(node),
+    );
+    expect(order).toEqual([...order].sort((a, b) => a - b));
   });
 });

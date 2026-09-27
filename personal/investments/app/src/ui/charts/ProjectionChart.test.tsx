@@ -12,28 +12,34 @@ function history(period: string, marketValue: number): PortfolioPoint {
   return { period, marketValue, bookCost: marketValue, accountCount: 1 };
 }
 
-function scenario(rate: number, years: [string, number][]): Scenario {
+function scenario(rate: number, points: [string, number][]): Scenario {
   return {
     rate,
     points: [
-      { year: "opening", nominal: 0, real: 0 },
-      ...years.map(([year, value]) => ({ year, nominal: value, real: value })),
+      { period: "2020-01", year: "2020", nominal: 0, real: 0 },
+      ...points.map(([period, value]) => ({
+        period,
+        year: period.slice(0, 4),
+        nominal: value,
+        real: value,
+      })),
     ],
   };
 }
 
 function scenarioSet(base: Scenario, low: Scenario, high: Scenario): ScenarioSet {
-  return { base, low, high, startYear: "2026", uncompounded: [] };
+  return { base, low, high, startPeriod: "2026-06", uncompounded: [] };
 }
 
-function renderChart(series: ProjectionSeries, rate = 0.06, retirementYear = 2027) {
+function renderChart(series: ProjectionSeries, rate = 0.06, retirementPeriod = "2027-12") {
   render(
     <ProjectionChart
       series={series}
       rate={rate}
       low={0.04}
       high={0.08}
-      retirementYear={retirementYear}
+      retirementPeriod={retirementPeriod}
+      retirementAge={60}
       dollars="nominal"
     />,
   );
@@ -64,9 +70,9 @@ function onTickSeries(): ProjectionSeries {
   return buildProjectionSeries(
     [history("2026-05", 50000), history("2026-06", 200000)],
     scenarioSet(
-      scenario(0.06, [["2027", 1000000]]),
-      scenario(0.04, [["2027", 800000]]),
-      scenario(0.08, [["2027", 1200000]]),
+      scenario(0.06, [["2027-12", 1000000]]),
+      scenario(0.04, [["2027-12", 800000]]),
+      scenario(0.08, [["2027-12", 1200000]]),
     ),
     "nominal",
   );
@@ -150,7 +156,7 @@ describe("a mark's position is a figure", () => {
   test("one stated point is drawn per stated month", () => {
     const series = buildProjectionSeries(
       [history("2023-06", 10000), history("2023-07", 20000), history("2023-08", 30000)],
-      scenarioSet(scenario(0.06, [["2024", 50000]]), scenario(0.04, []), scenario(0.08, [])),
+      scenarioSet(scenario(0.06, [["2024-12", 50000]]), scenario(0.04, []), scenario(0.08, [])),
       "nominal",
     );
     renderChart(series);
@@ -162,9 +168,9 @@ describe("a mark's position is a figure", () => {
       [history("2026-06", 200000)],
       scenarioSet(
         scenario(0.06, [
-          ["2027", 200000],
-          ["2028", 300000],
-          ["2029", 400000],
+          ["2027-12", 200000],
+          ["2028-12", 300000],
+          ["2029-12", 400000],
         ]),
         scenario(0.04, []),
         scenario(0.08, []),
@@ -178,9 +184,45 @@ describe("a mark's position is a figure", () => {
 
 describe("the retirement rule", () => {
   test("is drawn and labelled Age 60 at the retirement year", () => {
-    renderChart(onTickSeries(), 0.06, 2027);
+    renderChart(onTickSeries(), 0.06, "2027-12");
     const rule = document.querySelector("[data-retirement-rule]");
     expect(rule?.textContent).toBe("Age 60");
+  });
+
+  test("names whatever age the plan supplies, not a fixed 60", () => {
+    render(
+      <ProjectionChart
+        series={onTickSeries()}
+        rate={0.06}
+        low={0.04}
+        high={0.08}
+        retirementPeriod="2027-12"
+        retirementAge={55}
+        dollars="nominal"
+      />,
+    );
+    expect(document.querySelector("[data-retirement-rule]")?.textContent).toBe("Age 55");
+  });
+
+  test("right-anchors its label near the plot's right edge instead of overhanging the margin", () => {
+    // The last drawn point IS the right edge; a middle-anchored label there
+    // would overhang past the plot into the margin.
+    renderChart(onTickSeries(), 0.06, "2027-12");
+    const text = document.querySelector("[data-retirement-rule] text");
+    expect(text?.getAttribute("text-anchor")).toBe("end");
+  });
+
+  test("sits at the retirement point's own period, not a synthesized December", () => {
+    // The seam's history ends May/Jun 2026; a retirement period of 2027-03
+    // must land strictly between the seam and the 2027-12 projected point,
+    // never on top of either -- which it would if the rule ignored its own
+    // month and snapped to December like the old bug.
+    renderChart(onTickSeries(), 0.06, "2027-03");
+    const ruleX = Number(document.querySelector("[data-retirement-rule] line")?.getAttribute("x1"));
+    const seamX = Number(document.querySelector("[data-seam] line")?.getAttribute("x1"));
+    const lastPointX = pathPoints("projection-line").at(-1)?.x ?? Number.NaN;
+    expect(ruleX).toBeGreaterThan(seamX);
+    expect(ruleX).toBeLessThan(lastPointX);
   });
 });
 
@@ -240,7 +282,8 @@ describe("the accessible summary", () => {
         rate={0.06}
         low={0.04}
         high={0.08}
-        retirementYear={2027}
+        retirementPeriod="2027-12"
+        retirementAge={60}
         dollars="real"
       />,
     );

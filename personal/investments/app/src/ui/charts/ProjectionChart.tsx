@@ -25,8 +25,10 @@ export interface ProjectionChartProps {
   rate: number;
   low: number;
   high: number;
-  /** The calendar year the vertical rule marks. */
-  retirementYear: number;
+  /** `YYYY-MM`, the anchor month in the retirement year: where the vertical rule sits. */
+  retirementPeriod: string;
+  /** The plan's own retirement age, named on the rule's label. */
+  retirementAge: number;
   dollars: DollarsMode;
 }
 
@@ -209,10 +211,22 @@ function Seam({ seam, axes }: { seam: ProjectionPoint; axes: Axes }) {
   );
 }
 
-/** The vertical rule at the retirement year, labelled "Age 60" per the owner's own plan. */
-function RetirementRule({ year, axes }: { year: number; axes: Axes }) {
-  const x = axes.x(periodToDate(`${year}-12`));
+/**
+ * The vertical rule at retirement, labelled "Age {age}" from the plan.
+ *
+ * Positioned from the scenario's own retirement `period` -- the anchor month
+ * in the retirement year, per `scenario.ts` -- never a synthesized December
+ * of that year, which would misplace the rule by up to eleven months for a
+ * corpus whose latest statement is not from December.
+ *
+ * The label right-anchors once it sits close enough to the plot's right edge
+ * that a middle anchor would overhang the margin, matching the same rule the
+ * chart's own month labels at the axis ends already follow.
+ */
+function RetirementRule({ period, age, axes }: { period: string; age: number; axes: Axes }) {
+  const x = axes.x(periodToDate(period));
   if (!Number.isFinite(x) || x < 0 || x > INNER_WIDTH) return null;
+  const nearRightEdge = x > INNER_WIDTH - 40;
   return (
     <g data-retirement-rule="">
       <line
@@ -224,8 +238,14 @@ function RetirementRule({ year, axes }: { year: number; axes: Axes }) {
         strokeWidth={1}
         strokeDasharray="2 3"
       />
-      <text x={x} y={-4} textAnchor="middle" fontSize={11} fill="var(--amber-a11)">
-        Age 60
+      <text
+        x={x}
+        y={-4}
+        textAnchor={nearRightEdge ? "end" : "middle"}
+        fontSize={11}
+        fill="var(--amber-a11)"
+      >
+        {`Age ${age}`}
       </text>
     </g>
   );
@@ -269,7 +289,8 @@ export function ProjectionChart({
   rate,
   low,
   high,
-  retirementYear,
+  retirementPeriod,
+  retirementAge,
   dollars,
 }: ProjectionChartProps) {
   const reveal = useRevealMotion(INNER_WIDTH);
@@ -321,7 +342,7 @@ export function ProjectionChart({
               <Halves series={series} axes={axes} />
             </g>
             <Seam seam={series.seam} axes={axes} />
-            <RetirementRule year={retirementYear} axes={axes} />
+            <RetirementRule period={retirementPeriod} age={retirementAge} axes={axes} />
             <CursorMarks
               x={cursor.x}
               y={cursor.point === null ? null : axes.y(cursor.point.value)}

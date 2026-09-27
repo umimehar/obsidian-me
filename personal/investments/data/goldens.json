@@ -383,11 +383,11 @@
     "fhsaCapYear": "2028",
     "fhsaValueAtCapYear": 49900.90941344001,
     "retirementYear": 2057,
-    "retirementReal": 3901943.4434219203,
-    "retirementNominal": 8598934.93423816,
-    "retirementMonthlyIncome": 13006.478144739734,
-    "milestone500kYear": "2029",
-    "milestone1mYear": "2034"
+    "retirementReal": 3728581.9143854957,
+    "retirementNominal": 8016476.353054868,
+    "retirementMonthlyIncome": 12428.606381284984,
+    "milestone500kYear": "2030",
+    "milestone1mYear": "2035"
   },
   "rooms": {
     "opening": {

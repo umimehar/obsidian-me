@@ -277,11 +277,11 @@ function GrowthPanel({ analytics }: { analytics: AnalyticsOutput }) {
 
 /**
  * What is being put in, and how much room is left. `RegisteredView` reads
- * the UNSCOPED `all` for the same reason `PlanPanel` did before it moved
- * here -- a registered wrapper's room is a fact about the calendar year, not
- * about the account selection or return chart the scoped `analytics` exists
- * for. `ContributionHistory` reads every year the corpus covers, not just
- * `year`, so it also reads off `all`.
+ * the UNSCOPED `all` for the same reason `FuturePanel` does -- a registered
+ * wrapper's room is a fact about the calendar year, not about the account
+ * selection or return chart the scoped `analytics` exists for.
+ * `ContributionHistory` reads every year the corpus covers, not just `year`,
+ * so it also reads off `all`.
  */
 function ContributionsPanel({
   analytics,

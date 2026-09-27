@@ -13,34 +13,39 @@ function history(period: string, marketValue: number): PortfolioPoint {
 }
 
 /** A scenario whose opening point is dropped by `.slice(1)`, matching the real shape. */
-function scenario(rate: number, years: [string, number, number][]): Scenario {
+function scenario(rate: number, points: [string, number, number][]): Scenario {
   return {
     rate,
     points: [
-      { year: "opening", nominal: 0, real: 0 },
-      ...years.map(([year, nominal, real]) => ({ year, nominal, real })),
+      { period: "2020-01", year: "2020", nominal: 0, real: 0 },
+      ...points.map(([period, nominal, real]) => ({
+        period,
+        year: period.slice(0, 4),
+        nominal,
+        real,
+      })),
     ],
   };
 }
 
 function scenarioSet(base: Scenario, low: Scenario, high: Scenario): ScenarioSet {
-  return { base, low, high, startYear: "2026", uncompounded: [] };
+  return { base, low, high, startPeriod: "2026-06", uncompounded: [] };
 }
 
 describe("the seam", () => {
   test("the last stated month is the seam, and the projection starts after it", () => {
     const scenarios = scenarioSet(
       scenario(0.06, [
-        ["2026", 1100, 1100],
-        ["2027", 1200, 1150],
+        ["2026-12", 1100, 1100],
+        ["2027-12", 1200, 1150],
       ]),
       scenario(0.04, [
-        ["2026", 1080, 1080],
-        ["2027", 1150, 1100],
+        ["2026-12", 1080, 1080],
+        ["2027-12", 1150, 1100],
       ]),
       scenario(0.08, [
-        ["2026", 1120, 1120],
-        ["2027", 1260, 1200],
+        ["2026-12", 1120, 1120],
+        ["2027-12", 1260, 1200],
       ]),
     );
     const series = buildProjectionSeries(
@@ -59,16 +64,16 @@ describe("the seam", () => {
   test("a projected year that does not fall after the seam is dropped", () => {
     const scenarios = scenarioSet(
       scenario(0.06, [
-        ["2026", 1100, 1100],
-        ["2027", 1200, 1150],
+        ["2026-12", 1100, 1100],
+        ["2027-12", 1200, 1150],
       ]),
       scenario(0.06, [
-        ["2026", 1100, 1100],
-        ["2027", 1200, 1150],
+        ["2026-12", 1100, 1100],
+        ["2027-12", 1200, 1150],
       ]),
       scenario(0.06, [
-        ["2026", 1100, 1100],
-        ["2027", 1200, 1150],
+        ["2026-12", 1100, 1100],
+        ["2027-12", 1200, 1150],
       ]),
     );
     const series = buildProjectionSeries([history("2026-12", 1000)], scenarios, "nominal");
@@ -87,9 +92,9 @@ describe("the seam", () => {
 
   test("no history at all leaves no seam and no projected point", () => {
     const scenarios = scenarioSet(
-      scenario(0.06, [["2026", 1100, 1100]]),
-      scenario(0.04, [["2026", 1080, 1080]]),
-      scenario(0.08, [["2026", 1120, 1120]]),
+      scenario(0.06, [["2026-12", 1100, 1100]]),
+      scenario(0.04, [["2026-12", 1080, 1080]]),
+      scenario(0.08, [["2026-12", 1120, 1120]]),
     );
     const series = buildProjectionSeries([], scenarios, "nominal");
     expect(series.seam).toBeNull();
@@ -98,9 +103,9 @@ describe("the seam", () => {
 
   test("each half is labelled, so a point always knows which side of the seam it is on", () => {
     const scenarios = scenarioSet(
-      scenario(0.06, [["2027", 1200, 1150]]),
-      scenario(0.04, [["2027", 1150, 1100]]),
-      scenario(0.08, [["2027", 1260, 1200]]),
+      scenario(0.06, [["2027-12", 1200, 1150]]),
+      scenario(0.04, [["2027-12", 1150, 1100]]),
+      scenario(0.08, [["2027-12", 1260, 1200]]),
     );
     const series = buildProjectionSeries([history("2026-06", 1000)], scenarios, "nominal");
     expect(projectionPoints(series).map((point) => point.half)).toEqual(["history", "projection"]);
@@ -108,9 +113,9 @@ describe("the seam", () => {
 
   test("the real dollars mode reads the real figure, not the nominal one", () => {
     const scenarios = scenarioSet(
-      scenario(0.06, [["2027", 1200, 1150]]),
-      scenario(0.04, [["2027", 1150, 1100]]),
-      scenario(0.08, [["2027", 1260, 1200]]),
+      scenario(0.06, [["2027-12", 1200, 1150]]),
+      scenario(0.04, [["2027-12", 1150, 1100]]),
+      scenario(0.08, [["2027-12", 1260, 1200]]),
     );
     const series = buildProjectionSeries([history("2026-06", 1000)], scenarios, "real");
     expect(series.projection[0]?.value).toBe(1150);
@@ -122,9 +127,9 @@ describe("the seam", () => {
 describe("projectionDomain", () => {
   test("spans zero to the largest figure either half draws", () => {
     const scenarios = scenarioSet(
-      scenario(0.06, [["2027", 1200, 1150]]),
-      scenario(0.04, [["2027", 1150, 1100]]),
-      scenario(0.08, [["2027", 1500, 1200]]),
+      scenario(0.06, [["2027-12", 1200, 1150]]),
+      scenario(0.04, [["2027-12", 1150, 1100]]),
+      scenario(0.08, [["2027-12", 1500, 1200]]),
     );
     const series = buildProjectionSeries([history("2026-06", 1000)], scenarios, "nominal");
     expect(projectionDomain(series)).toEqual([0, 1500]);
@@ -146,9 +151,9 @@ describe("what the cursor says", () => {
 
   test("a projected month names the rate it assumes and the band either side", () => {
     const scenarios = scenarioSet(
-      scenario(0.06, [["2056", 7636455.3846, 3636455.3846]]),
-      scenario(0.04, [["2056", 6000000, 3000000]]),
-      scenario(0.08, [["2056", 9000000, 4000000]]),
+      scenario(0.06, [["2056-12", 7636455.3846, 3636455.3846]]),
+      scenario(0.04, [["2056-12", 6000000, 3000000]]),
+      scenario(0.08, [["2056-12", 9000000, 4000000]]),
     );
     const series = buildProjectionSeries([history("2026-06", 1000)], scenarios, "nominal");
     const lines = projectionTooltipLines("2056-12", series.projection[0] ?? null, 0.06, "nominal");
@@ -160,9 +165,9 @@ describe("what the cursor says", () => {
 
   test("the today's dollars mode names itself in the readout", () => {
     const scenarios = scenarioSet(
-      scenario(0.06, [["2056", 7636455.3846, 3636455.3846]]),
-      scenario(0.04, [["2056", 6000000, 3000000]]),
-      scenario(0.08, [["2056", 9000000, 4000000]]),
+      scenario(0.06, [["2056-12", 7636455.3846, 3636455.3846]]),
+      scenario(0.04, [["2056-12", 6000000, 3000000]]),
+      scenario(0.08, [["2056-12", 9000000, 4000000]]),
     );
     const series = buildProjectionSeries([history("2026-06", 1000)], scenarios, "real");
     const lines = projectionTooltipLines("2056-12", series.projection[0] ?? null, 0.06, "real");

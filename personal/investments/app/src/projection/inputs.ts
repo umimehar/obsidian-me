@@ -131,7 +131,7 @@ export function groupOf(kind: AccountKind): ProjectionGroup | null {
  * Chequing accounts run to 2026-07 -- reading either of those would start
  * the projection from a year the invested accounts have no figures for.
  */
-function latestCountedPeriod(series: readonly AccountSeries[]): string | null {
+export function latestCountedPeriod(series: readonly AccountSeries[]): string | null {
   let latest: string | null = null;
   for (const account of series) {
     if (!account.inTotals) continue;
