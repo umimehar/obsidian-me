@@ -114,4 +114,12 @@ describe("FlowTiles", () => {
       "Payroll deposited here is only the part that reached Wealthsimple.",
     );
   });
+
+  test("a tile's figure never wraps, even a long negative one in the single narrow column", () => {
+    renderTiles(summary());
+    const wrapped = [...tile("Left in cash").querySelectorAll("*")].some(
+      (el) => (el as HTMLElement).style.whiteSpace === "nowrap",
+    );
+    expect(wrapped).toBe(true);
+  });
 });
