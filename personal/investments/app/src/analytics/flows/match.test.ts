@@ -8,12 +8,13 @@ const leg = (
   date: string,
   amount: number,
   currency: "CAD" | "USD" = "CAD",
+  code?: string,
 ): FlowRow => ({
   id,
   accountId,
   period: date.slice(0, 7),
   date,
-  code: amount > 0 ? "CONT" : "TRFOUT",
+  code: code ?? (amount > 0 ? "CONT" : "TRFOUT"),
   category: amount > 0 ? "outsideBank" : "leftWealthsimple",
   movement: true,
   amountCad: amount,
@@ -87,6 +88,21 @@ describe("matchTransfers", () => {
       leg("i2", "nr", "2026-07-14", 40),
     ]);
     expect(new Set(rows.map((r) => r.pairId)).size).toBe(2);
+  });
+
+  test("a same-day WD and TRFOUT of equal amount prefer the transfer code for the one match", () => {
+    // Real corpus, 2026-01-14: 2b74 carries both a WD -700 and a TRFOUT -700
+    // the same day, with only one +700 credit to pair against (2c62). The
+    // transfer code is the more specific movement and should win the match,
+    // leaving the WD unpaired rather than the TRFOUT.
+    const rows = matchTransfers([
+      leg("wd", "2b74", "2026-01-14", -700, "CAD", "WD"),
+      leg("out", "2b74", "2026-01-14", -700, "CAD", "TRFOUT"),
+      leg("in", "2c62", "2026-01-14", 700, "CAD", "CONT"),
+    ]);
+    const byId = new Map(rows.map((r) => [r.id, r]));
+    expect(byId.get("out")?.pairId).not.toBeNull();
+    expect(byId.get("wd")?.pairId).toBeNull();
   });
 
   test("non movement rows are never paired", () => {

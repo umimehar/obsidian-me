@@ -17,8 +17,10 @@ export const ASSET_CLASS_LABELS: Readonly<Record<AssetClass, string>> = {
  * markets is every symbol d6d9 (Private Market Fund) actually buys besides
  * PSA: WSE300P, WSE401 and WSE401P. Crypto is BTC and ETH, the only two
  * symbols e2d6 buys -- its BUY descriptions read "Purchase of ... BTC/ETH",
- * not the "SYMBOL - name" form the ticker regex parses, so this table is
- * what actually classifies them. Fixed income is every ETF in the corpus
+ * not the "SYMBOL - name" form the primary ticker regex parses, so
+ * `classify.ts`'s fallback pattern reads the ticker straight out of that
+ * wording and this table still does the classifying. Fixed income is every
+ * ETF in the corpus
  * whose holding name contains "Bond" or "Aggregate": the six BMO bond ETFs
  * (ZAG, ZFL, ZCS, ZCB, ZHY, ZUAG.F).
  */

@@ -43,6 +43,12 @@ const FIXED: Readonly<Record<string, FlowCategory>> = {
 };
 const IN_KIND = /Transfer of [\d.]+ shares (into|out of) the account/;
 const SYMBOL = /^([A-Z0-9.]+) - /;
+/** A crypto BUY/SELL description: "Purchase of 0.0028564000 BTC (executed at ...), FX Rate: ...". */
+const CRYPTO_SYMBOL = /^(?:Purchase|Sale) of [\d.]+ ([A-Z]+) /;
+
+function symbolOf(description: string): string {
+  return SYMBOL.exec(description)?.[1] ?? CRYPTO_SYMBOL.exec(description)?.[1] ?? "";
+}
 
 /** A CASH template row's code, read off its description. The description itself never leaves the build. */
 export function resolveCashCode(description: string): string {
@@ -124,7 +130,7 @@ function buildFlowRow(
     currency: row.currency,
     amount: signed,
     fxRate: row.currency === "USD" ? s.fxRate : null,
-    symbol: /^(BUY|SELL|DIV)$/.test(code) ? (SYMBOL.exec(row.description)?.[1] ?? "") : "",
+    symbol: /^(BUY|SELL|DIV)$/.test(code) ? symbolOf(row.description) : "",
     pairId: null,
     lagDays: null,
   };

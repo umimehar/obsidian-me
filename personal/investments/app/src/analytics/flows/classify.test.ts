@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { AccountRecord } from "../../store/registry";
 import type { ActivityRow, Currency, Statement } from "../../types";
+import { assetClassOf } from "./assetClass";
 import { classifyStatement, resolveCashCode } from "./classify";
 
 function row(code: string, overrides: Partial<ActivityRow> = {}): ActivityRow {
@@ -351,6 +352,27 @@ describe("classifyStatement", () => {
     const [r] = classifyStatement(s, account());
     expect(r?.category).toBe("buy");
     expect(r?.symbol).toBe("");
+  });
+
+  test("a crypto BUY row reads its symbol off the 'Purchase of ... BTC' description", () => {
+    // Real corpus, e2d6: crypto descriptions don't match the "SYMBOL - name"
+    // form, only "Purchase of <qty> <TICKER> (executed at ...), FX Rate: ...".
+    const s = statementFixture({
+      accountNo: "acct_e2d6",
+      activity: [
+        row("BUY", {
+          debit: 830.08,
+          description:
+            "Purchase of 0.0028564000 BTC (executed at 2026-06-05), FX Rate: 1.3903 $CAD",
+        }),
+      ],
+    });
+    const [r] = classifyStatement(
+      s,
+      account({ kind: "Crypto", shortId: "e2d6", maskedId: "acct_e2d6" }),
+    );
+    expect(r?.symbol).toBe("BTC");
+    expect(assetClassOf(r?.symbol ?? "")).toBe("crypto");
   });
 
   test("an in-kind transfer in carries no cash and is excluded from movement", () => {
