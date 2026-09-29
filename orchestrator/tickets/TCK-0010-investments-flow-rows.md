@@ -5,11 +5,11 @@ created: 2026-09-29
 updated: 2026-09-29
 type: ticket
 id: TCK-0010
-status: ready
+status: claimed
 project: system
 ticket_type: feature
 assigned_device: any
-claimed_by: null
+claimed_by: mac-studio
 auto_ok: false
 triage: manual
 priority: p1
