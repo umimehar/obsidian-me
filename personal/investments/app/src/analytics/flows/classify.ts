@@ -2,6 +2,7 @@ import type { AccountKind } from "../../store/mask";
 import { type AccountRecord, isPayrollDeposit } from "../../store/registry";
 import type { ActivityRow, Statement } from "../../types";
 import { convertToCad, isFeeRefund } from "../activity";
+import { isListedSymbol } from "./assetClass";
 import type { FlowCategory, FlowRow, SourceCategory } from "./types";
 
 const MOVEMENT_CODES = new Set([
@@ -48,6 +49,40 @@ const CRYPTO_SYMBOL = /^(?:Purchase|Sale) of [\d.]+ ([A-Z]+) /;
 
 function symbolOf(description: string): string {
   return SYMBOL.exec(description)?.[1] ?? CRYPTO_SYMBOL.exec(description)?.[1] ?? "";
+}
+
+/**
+ * A held name that reads as a non-equity class the asset class table
+ * happens not to list: a bond fund, a money market or savings vehicle, a
+ * treasury bill. Deliberately narrow -- most symbols the table does not
+ * list are ordinary equities, and naming every one of them (a real BUY row
+ * every symbol not in `CLASSES`, about 150 distinct tickers on the real
+ * corpus) buries the handful that are actually worth a reader's attention
+ * in noise nobody reads to the end.
+ */
+const SUSPECT_NAME =
+  /\b(Bond|Aggregate|Treasury|T-Bill|Money Market|Savings|Cash|High Interest)\b/i;
+
+/**
+ * Every BUY row's symbol whose statement description names it with a
+ * non-equity sounding held name and which the asset class table does not
+ * already list -- computed once at build time, from the full statement
+ * description `flows.json` never otherwise carries (see the module doc on
+ * `resolveCashCode`), so the browser bundle never needs the description
+ * text itself, only this short, already-filtered list of tickers.
+ */
+export function collectSuspectSymbols(statements: readonly Statement[]): string[] {
+  const suspects = new Set<string>();
+  for (const s of statements) {
+    for (const row of s.activity) {
+      if (row.code !== "BUY") continue;
+      const symbol = symbolOf(row.description);
+      if (symbol === "" || isListedSymbol(symbol)) continue;
+      const name = row.description.slice(symbol.length + 3);
+      if (SUSPECT_NAME.test(name)) suspects.add(symbol);
+    }
+  }
+  return [...suspects].sort();
 }
 
 /** A CASH template row's code, read off its description. The description itself never leaves the build. */

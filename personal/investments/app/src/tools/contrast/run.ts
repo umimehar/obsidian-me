@@ -236,24 +236,44 @@ async function sweepFlowSankey(
   if ((await chart.count()) === 0) return false;
   await chart.scrollIntoViewIfNeeded().catch(() => undefined);
 
-  const largestKey = await page.evaluate((selector) => {
-    let bestKey: string | null = null;
+  // A screen point actually on the largest band's own path, not the
+  // element's `getBoundingClientRect()`: an SVG path's box is the geometry
+  // of its centreline, with no allowance for `stroke-width` at all, so a
+  // curved band -- every band here is a bezier -- can report a box a few
+  // pixels tall regardless of how wide the rendered stroke actually is.
+  // The exact geometric midpoint has its own failure: `NodeLabels` paints
+  // labels after the links, so a midpoint that happens to fall under a
+  // node's own label (the widest band on the real corpus does, landing
+  // under "Non registered") hovers the label instead and opens nothing.
+  // Sampling several points along the path and keeping the first one
+  // `elementFromPoint` actually resolves back to the path -- the same test
+  // the real pointer's hit-testing performs -- finds a pixel the mouse can
+  // truly land on rather than trusting the geometry alone.
+  const point = await page.evaluate((selector) => {
+    let best: Element | null = null;
     let bestWidth = -1;
     for (const link of document.querySelectorAll(selector)) {
       const width = Number(link.getAttribute("stroke-width") ?? "0");
-      const key = link.getAttribute("data-flow-link");
-      if (key !== null && width > bestWidth) {
+      if (width > bestWidth) {
         bestWidth = width;
-        bestKey = key;
+        best = link;
       }
     }
-    return bestKey;
+    if (!(best instanceof SVGPathElement)) return null;
+    const ctm = best.getScreenCTM();
+    if (ctm === null) return null;
+    const length = best.getTotalLength();
+    for (const fraction of [0.5, 0.35, 0.65, 0.2, 0.8, 0.1, 0.9]) {
+      const p = best.getPointAtLength(length * fraction);
+      const x = p.x * ctm.a + p.y * ctm.c + ctm.e;
+      const y = p.x * ctm.b + p.y * ctm.d + ctm.f;
+      if (document.elementFromPoint(x, y) === best) return { x, y };
+    }
+    return null;
   }, FLOW_LINK);
-  if (largestKey === null) return false;
+  if (point === null) return false;
 
-  const box = await page.locator(`[data-flow-link="${largestKey}"]`).boundingBox();
-  if (box === null) return false;
-  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.move(point.x, point.y);
   await page.waitForTimeout(50);
   const opened = await sweepState(page, { ...at, state: "hover flow band" }, samples, TOOLTIP);
   await page.mouse.move(AWAY.x, AWAY.y);

@@ -6,7 +6,7 @@ import { flowSummary } from "../analytics/flows/summary";
 import type { FlowAccount, FlowsData } from "../analytics/flows/types";
 import type { AccountSeries } from "../analytics/types";
 import { FlowControls } from "./FlowControls";
-import { FlowRows } from "./FlowRows";
+import { DRILL_DOWN_HEADING_ID, FlowRows } from "./FlowRows";
 import { FlowTable } from "./FlowTable";
 import { FlowTiles } from "./FlowTiles";
 import { ShareBar } from "./ShareBar";
@@ -14,8 +14,9 @@ import { DestinationChart } from "./charts/DestinationChart";
 import { Sankey } from "./charts/Sankey";
 import { linkKey } from "./charts/sankeyLayout";
 import { buildFlowNotes } from "./flowNotes";
-import { resolvePeriod } from "./flowPeriods";
+import { periodInCorpus, resolvePeriod } from "./flowPeriods";
 import { formatCurrency, formatShare } from "./format";
+import { useNarrowFlow } from "./useNarrowFlow";
 
 export interface FlowProps {
   flows: FlowsData;
@@ -24,18 +25,21 @@ export interface FlowProps {
   onPeriodChange: (p: FlowPeriod | "all") => void;
 }
 
-const NARROW_QUERY = "(max-width: 40rem)";
-
-/** True below 40rem, where the Sankey gives way to two ranked lists. False by default, including in tests. */
-function useNarrowFlow(): boolean {
-  const [narrow, setNarrow] = useState(() => window.matchMedia(NARROW_QUERY).matches);
+/**
+ * Scrolls the drill down's own heading into view and moves focus to it,
+ * whenever `selectedKey` names a real selection -- a band or a table row
+ * chosen while the drill down sits well below the fold otherwise leaves the
+ * reader looking at wherever they already were, with no visible sign
+ * anything happened.
+ */
+function useScrollDrillDownIntoView(selectedKey: string | null): void {
   useEffect(() => {
-    const media = window.matchMedia(NARROW_QUERY);
-    const onChange = (event: MediaQueryListEvent) => setNarrow(event.matches);
-    media.addEventListener("change", onChange);
-    return () => media.removeEventListener("change", onChange);
-  }, []);
-  return narrow;
+    if (selectedKey === null) return;
+    const heading = document.getElementById(DRILL_DOWN_HEADING_ID);
+    if (heading === null) return;
+    heading.scrollIntoView({ block: "nearest" });
+    heading.focus();
+  }, [selectedKey]);
 }
 
 /** Every selected account with no statement yet at the period's end, named -- never read as a silent $0. */
@@ -133,7 +137,21 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
 
   const accountOptions = useMemo(() => flowAccountOptions(series), [series]);
   const isDefaultAccounts = accounts.size === flows.accounts.length;
-  const resolved = useMemo(() => resolvePeriod(flows, period), [flows, period]);
+
+  // The hash decoder cannot see the data, so a shape it accepts -- #flow/2030,
+  // a real YYYY the corpus has not reached -- still decodes to a concrete
+  // period. Falling back here, where the period meets the data, reads no
+  // rows and no blocks rather than five $0.00 tiles and an empty year
+  // select; the hash is rewritten to "all" in an effect, once, so the URL
+  // stops naming a period that was never real.
+  const outOfCorpus = period !== "all" && !periodInCorpus(flows, period);
+  const resolved = useMemo(
+    () => (outOfCorpus ? resolvePeriod(flows, "all") : resolvePeriod(flows, period)),
+    [flows, period, outOfCorpus],
+  );
+  useEffect(() => {
+    if (outOfCorpus) onPeriodChange("all");
+  }, [outOfCorpus, onPeriodChange]);
 
   const graph = useMemo(
     () => buildFlowGraph(flows, resolved, groupBy, accounts),
@@ -158,6 +176,7 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
 
   const selectedKey =
     selected !== null && graph.links.some((l) => linkKey(l) === selected) ? selected : null;
+  useScrollDrillDownIntoView(selectedKey);
 
   return (
     <Flex direction="column" gap="5" data-flow-tab="">
@@ -180,9 +199,9 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
       ) : (
         <Sankey graph={graph} selected={selectedKey} onSelect={setSelected} />
       )}
-      <FlowRows flows={flows} graph={graph} selected={selectedKey} />
+      <FlowRows key={selectedKey ?? "none"} flows={flows} graph={graph} selected={selectedKey} />
       <DestinationChart buckets={buckets} />
-      <FlowTable graph={graph} selected={selectedKey} onSelect={setSelected} />
+      <FlowTable graph={graph} selected={selectedKey} onSelect={setSelected} narrow={narrow} />
       {notes.length === 0 ? null : (
         <Flex direction="column" gap="1" data-flow-notes="">
           {notes.map((note) => (

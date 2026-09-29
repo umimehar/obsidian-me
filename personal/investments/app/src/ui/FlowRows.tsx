@@ -1,4 +1,5 @@
-import { Table, Text } from "@radix-ui/themes";
+import { Button, Flex, Heading, Table, Text } from "@radix-ui/themes";
+import { useState } from "react";
 import type { FlowGraph } from "../analytics/flows/graph";
 import type { FlowAccount, FlowRow, FlowsData } from "../analytics/flows/types";
 import { linkKey } from "./charts/sankeyLayout";
@@ -12,6 +13,16 @@ export interface FlowRowsProps {
 
 const CASH_EXPLANATION =
   "Change in cash balances over the period, from each statement's opening and closing cash.";
+
+/**
+ * The heading's id, stable because the page ever renders one drill down at
+ * once: `Flow` scrolls this into view and focuses it on every new
+ * selection, the same target whichever band or table row triggered it.
+ */
+export const DRILL_DOWN_HEADING_ID = "flow-drilldown-heading";
+
+/** No band's own rows exceed this without help -- the Non registered -> Invested band alone carries 1,057. */
+const ROW_CAP = 50;
 
 /** The other leg of a paired row's account label, or null when the row is unpaired or its partner is missing. */
 function partnerLabel(
@@ -27,10 +38,19 @@ function partnerLabel(
   return accountsById.get(partner.accountId)?.label ?? null;
 }
 
-/** "US$1,234.56 at 1.3542" for a USD row, or null for a CAD one -- the rate at its own four decimals, not a money figure. */
+/**
+ * "US$1,234.56 at 1.3542" for a USD row, or null for a CAD one -- the rate
+ * at its own four decimals, not a money figure. The sign leads the whole
+ * string, from `formatCurrency`'s own negative rendering on the magnitude
+ * alone: `US${formatCurrency(row.amount)}` on a negative row put the minus
+ * sign after the currency prefix ("US-$1,200.00"), a sign nobody reads as
+ * negative at a glance.
+ */
 function usdAside(row: FlowRow): string | null {
   if (row.currency !== "USD" || row.fxRate === null) return null;
-  return `US${formatCurrency(row.amount)} at ${row.fxRate.toFixed(4)}`;
+  const magnitude = formatCurrency(Math.abs(row.amount));
+  const sign = row.amount < 0 ? "-" : "";
+  return `${sign}US${magnitude} at ${row.fxRate.toFixed(4)}`;
 }
 
 interface DrillRowProps {
@@ -61,6 +81,33 @@ function DrillRow({ row, accountsById, rowsById }: DrillRowProps) {
   );
 }
 
+/** Every row behind `link`, largest `|amountCad|` first -- the figure a reader scanning a long band cares most about. */
+function rowsFor(
+  link: { rowIds: readonly string[] },
+  rowsById: ReadonlyMap<string, FlowRow>,
+): FlowRow[] {
+  return link.rowIds
+    .map((id) => rowsById.get(id))
+    .filter((r): r is FlowRow => r !== undefined)
+    .sort((a, b) => Math.abs(b.amountCad) - Math.abs(a.amountCad));
+}
+
+/** The drill down's own heading, the scroll and focus target `Flow` uses on every new selection. */
+function DrillDownHeading() {
+  return (
+    <Heading
+      id={DRILL_DOWN_HEADING_ID}
+      size="3"
+      as="h3"
+      tabIndex={-1}
+      style={{ outline: "none" }}
+      data-flow-rows-heading=""
+    >
+      Selected flow
+    </Heading>
+  );
+}
+
 /**
  * The statement rows behind the selected band. A cash-change or
  * unreconciled link carries no `rowIds` at all -- it comes from a
@@ -68,43 +115,69 @@ function DrillRow({ row, accountsById, rowsById }: DrillRowProps) {
  * -- and explains itself in one sentence instead of an empty table. No row
  * here ever carries a statement description, only its code: `FlowRow`
  * itself has no description field.
+ *
+ * A band with more than `ROW_CAP` rows -- Non registered to Invested alone
+ * carries 1,057 on the real corpus -- shows only the largest `ROW_CAP`
+ * until the reader asks for the rest, so selecting a big band never drops
+ * a thousand-row table into the page.
  */
 export function FlowRows({ flows, graph, selected }: FlowRowsProps) {
+  // A fresh selection always opens capped: `Flow` remounts this component on
+  // every new `selected` key (`key={selectedKey}`), which is what resets
+  // this state rather than an effect watching a value the effect body never
+  // reads.
+  const [expanded, setExpanded] = useState(false);
+
   if (selected === null) return null;
   const link = graph.links.find((l) => linkKey(l) === selected);
   if (link === undefined) return null;
 
   if (link.rowIds.length === 0) {
     return (
-      <Text size="2" color="gray" data-flow-rows="">
-        {CASH_EXPLANATION}
-      </Text>
+      <Flex direction="column" gap="2" data-flow-rows="">
+        <DrillDownHeading />
+        <Text size="2" color="gray">
+          {CASH_EXPLANATION}
+        </Text>
+      </Flex>
     );
   }
 
   const rowsById = new Map(flows.rows.map((r) => [r.id, r]));
   const accountsById = new Map(flows.accounts.map((a) => [a.accountId, a]));
-  const rows = link.rowIds
-    .map((id) => rowsById.get(id))
-    .filter((r): r is FlowRow => r !== undefined)
-    .sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+  const allRows = rowsFor(link, rowsById);
+  const rows = expanded ? allRows : allRows.slice(0, ROW_CAP);
 
   return (
-    <Table.Root size="1" variant="surface" data-flow-rows="">
-      <Table.Header>
-        <Table.Row>
-          <Table.ColumnHeaderCell>Date</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Account</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Code</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell align="right">Amount</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Partner account</Table.ColumnHeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {rows.map((row) => (
-          <DrillRow key={row.id} row={row} accountsById={accountsById} rowsById={rowsById} />
-        ))}
-      </Table.Body>
-    </Table.Root>
+    <Flex direction="column" gap="2" data-flow-rows="">
+      <DrillDownHeading />
+      <Table.Root size="1" variant="surface">
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeaderCell>Date</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Account</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Code</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell align="right">Amount</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Partner account</Table.ColumnHeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {rows.map((row) => (
+            <DrillRow key={row.id} row={row} accountsById={accountsById} rowsById={rowsById} />
+          ))}
+        </Table.Body>
+      </Table.Root>
+      {!expanded && allRows.length > ROW_CAP ? (
+        <Button
+          size="1"
+          variant="soft"
+          color="gray"
+          data-flow-rows-expand=""
+          onClick={() => setExpanded(true)}
+        >
+          Show all {allRows.length} rows
+        </Button>
+      ) : null}
+    </Flex>
   );
 }

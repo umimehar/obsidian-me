@@ -74,4 +74,12 @@ export interface FlowsData {
   accounts: FlowAccount[];
   rows: FlowRow[];
   blocks: CashBlock[];
+  /**
+   * Every BUY symbol whose held name reads as a non-equity class the asset
+   * class table does not list -- a bond fund, a money market or savings
+   * vehicle -- computed once at build time from the statement description
+   * (`collectSuspectSymbols`). The description itself never reaches this
+   * file; only these already-filtered tickers do.
+   */
+  suspectSymbols: string[];
 }

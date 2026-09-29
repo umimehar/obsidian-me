@@ -37,8 +37,13 @@ function row(overrides: Partial<FlowRow> & { accountId: string }): FlowRow {
   };
 }
 
-function data(rows: FlowRow[], accounts: FlowAccount[], blocks: CashBlock[] = []): FlowsData {
-  return { generated: "2026-09-29", accounts, rows, blocks };
+function data(
+  rows: FlowRow[],
+  accounts: FlowAccount[],
+  blocks: CashBlock[] = [],
+  suspectSymbols: string[] = [],
+): FlowsData {
+  return { generated: "2026-09-29", accounts, rows, blocks, suspectSymbols };
 }
 
 const PERIOD = { from: "2026-01", to: "2026-12" };
@@ -402,7 +407,7 @@ describe("flowSummary", () => {
     expect(s.laggedPairs).toBe(1);
   });
 
-  test("unlistedSymbols names bought symbols the asset class table does not know, sorted and deduped", () => {
+  test("unlistedSymbols names bought symbols flagged suspect at build time, sorted and deduped", () => {
     const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
     const rows = [
       row({
@@ -440,8 +445,31 @@ describe("flowSummary", () => {
         amountCad: -10,
         amount: -10,
       }),
+      // An ordinary equity the table does not list either, but never
+      // flagged suspect at build time -- stays out of the note.
+      row({
+        accountId: "acct_tfsa",
+        id: "acct_tfsa:4",
+        code: "BUY",
+        category: "buy",
+        symbol: "QQQ",
+        amountCad: -10,
+        amount: -10,
+      }),
     ];
-    const s = flowSummary(data(rows, [tfsa]), PERIOD, new Set(["acct_tfsa"]));
+    const s = flowSummary(data(rows, [tfsa], [], ["AAA", "ZZZ"]), PERIOD, new Set(["acct_tfsa"]));
     expect(s.unlistedSymbols).toEqual(["AAA", "ZZZ"]);
+  });
+
+  test("costs and left are a plain zero, never -0, when nothing fed them", () => {
+    const cheq = account({ accountId: "acct_cheq", kind: "Chequing" });
+    const rows = [
+      row({ accountId: "acct_cheq", category: "payroll", amountCad: 1000, amount: 1000 }),
+    ];
+    const s = flowSummary(data(rows, [cheq]), PERIOD, new Set(["acct_cheq"]));
+    expect(s.costs).toBe(0);
+    expect(Object.is(s.costs, -0)).toBe(false);
+    expect(s.left).toBe(0);
+    expect(Object.is(s.left, -0)).toBe(false);
   });
 });

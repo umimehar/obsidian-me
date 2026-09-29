@@ -95,11 +95,13 @@ describe("FlowTiles", () => {
     }
   });
 
-  test("contributions by account type render beneath the paid-in tile, only when present", () => {
+  test("contributions by account type render beneath the paid-in tile, one kind and figure per line", () => {
     renderTiles(summary());
     const line = document.querySelector("[data-flow-contributions]");
-    expect(line?.textContent).toContain(`TFSA ${formatCurrency(7000.42)}`);
-    expect(line?.textContent).toContain(`RESP ${formatCurrency(4000.01)}`);
+    const terms = [...(line?.querySelectorAll("dt") ?? [])].map((n) => n.textContent);
+    const figures = [...(line?.querySelectorAll("dd") ?? [])].map((n) => n.textContent);
+    expect(terms).toEqual(["TFSA", "RESP"]);
+    expect(figures).toEqual([formatCurrency(7000.42), formatCurrency(4000.01)]);
 
     cleanup();
     renderTiles(summary({ contributionsByKind: {} }));

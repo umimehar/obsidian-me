@@ -89,4 +89,21 @@ describe("the Flow tab, wired into App", () => {
     expect(() => render(<App />)).not.toThrow();
     expect(screen.getByRole("combobox", { name: "Period" }).textContent).toBe("All time");
   });
+
+  test("a year the corpus has not reached falls back to all time and rewrites the hash", async () => {
+    window.location.hash = "#flow/2030";
+    render(<App />);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    expect(window.location.hash).toBe("#flow");
+    expect(screen.getByRole("combobox", { name: "Period" }).textContent).toBe("All time");
+  });
+
+  test("a Costs tile with nothing to feed it never reads -$0.00", () => {
+    window.location.hash = "#flow/2023-06";
+    render(<App />);
+    expect(tile("Costs").textContent).not.toContain("-$0.00");
+    expect(tile("Left in cash").textContent).not.toContain("-$0.00");
+  });
 });

@@ -69,7 +69,13 @@ function autoBlocks(rows: readonly FlowRow[]): CashBlock[] {
 }
 
 function data(rows: FlowRow[], accounts: FlowAccount[], blocks?: CashBlock[]): FlowsData {
-  return { generated: "2026-09-29", accounts, rows, blocks: blocks ?? autoBlocks(rows) };
+  return {
+    generated: "2026-09-29",
+    accounts,
+    rows,
+    blocks: blocks ?? autoBlocks(rows),
+    suspectSymbols: [],
+  };
 }
 
 const ALL_PERIOD = { from: "2026-01", to: "2026-12" };

@@ -1,8 +1,22 @@
 import { afterEach, describe, expect, test } from "bun:test";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { FlowGraph, FlowLink, FlowNode } from "../../analytics/flows/graph";
 import { expectNoCoarseForm } from "../testSupport/coarseForm";
 import { Sankey } from "./Sankey";
+
+type ResizeCallback = (entries: readonly { contentRect: { width: number } }[]) => void;
+
+/** A minimal stand-in for the real `ResizeObserver`, which happy-dom does not implement. */
+class FakeResizeObserver {
+  static instances: FakeResizeObserver[] = [];
+  callback: ResizeCallback;
+  constructor(callback: ResizeCallback) {
+    this.callback = callback;
+    FakeResizeObserver.instances.push(this);
+  }
+  observe(): void {}
+  disconnect(): void {}
+}
 
 afterEach(cleanup);
 
@@ -280,6 +294,36 @@ describe("the empty graph", () => {
       <Sankey graph={{ nodes: [], links: [], totalIn: 0 }} selected={null} onSelect={() => {}} />,
     );
     expect(document.querySelector("svg")).toBeNull();
+  });
+});
+
+describe("Sankey, measured width", () => {
+  test("the layout is laid out at the container's own measured width, not a fixed constant", () => {
+    const original = window.ResizeObserver;
+    FakeResizeObserver.instances = [];
+    window.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
+    try {
+      renderChart();
+      const svg = document.querySelector("svg");
+      const observer = FakeResizeObserver.instances[0];
+      expect(observer).toBeDefined();
+      act(() => {
+        observer?.callback([{ contentRect: { width: 900 } }]);
+      });
+      const [minX, minY, width, height] = (svg?.getAttribute("viewBox") ?? "").split(" ");
+      expect(minX).toBe("0");
+      expect(minY).toBe("0");
+      expect(width).toBe("900");
+      expect(Number(height)).toBeGreaterThan(0);
+    } finally {
+      window.ResizeObserver = original;
+    }
+  });
+
+  test("every label renders at exactly 12px, the fixed font size, whatever the width", () => {
+    renderChart();
+    const label = document.querySelector("[data-flow-label]");
+    expect(label?.getAttribute("font-size")).toBe("12");
   });
 });
 

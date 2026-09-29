@@ -1,10 +1,24 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
-import { cleanup, fireEvent, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import type { DestinationBucket } from "../../analytics/flows/graph";
 import { DestinationChart } from "./DestinationChart";
 
 afterEach(cleanup);
+
+type ResizeCallback = (entries: readonly { contentRect: { width: number } }[]) => void;
+
+/** A minimal stand-in for the real `ResizeObserver`, which happy-dom does not implement. */
+class FakeResizeObserver {
+  static instances: FakeResizeObserver[] = [];
+  callback: ResizeCallback;
+  constructor(callback: ResizeCallback) {
+    this.callback = callback;
+    FakeResizeObserver.instances.push(this);
+  }
+  observe(): void {}
+  disconnect(): void {}
+}
 
 const BUCKETS: DestinationBucket[] = [
   { bucket: "2026-01", values: { TFSA: 1000, RRSP: 500 } },
@@ -47,5 +61,33 @@ describe("DestinationChart", () => {
     chart.getBoundingClientRect = () => new DOMRect(0, 0, 800, 260);
     fireEvent.pointerMove(chart, { clientX: 100, clientY: 100 });
     expect(document.querySelector("[data-chart-tooltip]")).not.toBeNull();
+  });
+
+  test("a legend names every series in text, in the same order and colour the bars use", () => {
+    renderChart();
+    const legend = document.querySelector("[data-destination-legend]");
+    expect(legend?.textContent).toBe("TFSARRSP");
+    const swatches = legend?.querySelectorAll("rect") ?? [];
+    expect(swatches).toHaveLength(2);
+    expect(swatches[0]?.getAttribute("fill")).toBe("var(--jade-9)");
+    expect(swatches[1]?.getAttribute("fill")).toBe("var(--blue-9)");
+  });
+
+  test("the chart is laid out at the container's own measured width", () => {
+    const original = window.ResizeObserver;
+    FakeResizeObserver.instances = [];
+    window.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
+    try {
+      renderChart();
+      const observer = FakeResizeObserver.instances[0];
+      expect(observer).toBeDefined();
+      act(() => {
+        observer?.callback([{ contentRect: { width: 350 } }]);
+      });
+      const [, , width] = (svg().getAttribute("viewBox") ?? "").split(" ");
+      expect(width).toBe("350");
+    } finally {
+      window.ResizeObserver = original;
+    }
   });
 });

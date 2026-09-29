@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import type { FlowPeriod } from "../analytics/flows/period";
 import type { FlowAccount, FlowRow, FlowsData } from "../analytics/flows/types";
 import type { AccountSeries } from "../analytics/types";
 import type { AccountKind } from "../store/mask";
@@ -49,19 +50,20 @@ const MISSING_FLOWS: FlowsData = {
       residual: 0,
     },
   ],
+  suspectSymbols: [],
 };
 
 const { series } = loadAnalytics();
 
-function renderFlow(flows: FlowsData, accountSeries: readonly AccountSeries[] = series) {
+function renderFlow(
+  flows: FlowsData,
+  accountSeries: readonly AccountSeries[] = series,
+  period: FlowPeriod | "all" = { from: "2026-06", to: "2026-06" },
+  onPeriodChange: (p: FlowPeriod | "all") => void = () => {},
+) {
   render(
     <Theme>
-      <Flow
-        flows={flows}
-        series={accountSeries}
-        period={{ from: "2026-06", to: "2026-06" }}
-        onPeriodChange={() => {}}
-      />
+      <Flow flows={flows} series={accountSeries} period={period} onPeriodChange={onPeriodChange} />
     </Theme>,
   );
 }
@@ -197,6 +199,7 @@ const MOVE_FLOWS: FlowsData = {
       residual: 0,
     },
   ],
+  suspectSymbols: [],
 };
 
 function chequingCheckbox(): HTMLElement {
@@ -232,5 +235,66 @@ describe("Flow, account exclusion", () => {
     expect(document.querySelector("[data-flow-table]")?.textContent).toContain(
       "Moved from another account",
     );
+  });
+});
+
+describe("Flow, an out-of-corpus period", () => {
+  test("a year the corpus has not reached falls back to all time and rewrites the hash", () => {
+    const picked: { period: FlowPeriod | "all" | null } = { period: null };
+    renderFlow(MOVE_FLOWS, MOVE_SERIES, { from: "2030-01", to: "2030-12" }, (p) => {
+      picked.period = p;
+    });
+    expect(picked.period).toBe("all");
+    // Rendered from the corpus's own full span, not five $0.00 tiles.
+    expect(
+      document.querySelector('[data-flow-tile="Paid in from outside"]')?.textContent,
+    ).toContain("$2,000.00");
+  });
+
+  test("a period the corpus does cover is left alone", () => {
+    const picked: { period: FlowPeriod | "all" | null } = { period: null };
+    renderFlow(MOVE_FLOWS, MOVE_SERIES, { from: "2026-06", to: "2026-06" }, (p) => {
+      picked.period = p;
+    });
+    expect(picked.period).toBeNull();
+  });
+});
+
+describe("Flow, the drill down's scroll and focus", () => {
+  const originalScrollIntoView = Element.prototype.scrollIntoView;
+  let scrolled: Element[] = [];
+
+  function stubScroll() {
+    scrolled = [];
+    Element.prototype.scrollIntoView = function scrollIntoViewStub(this: Element) {
+      scrolled.push(this);
+    };
+  }
+
+  afterEach(() => {
+    Element.prototype.scrollIntoView = originalScrollIntoView;
+  });
+
+  test("selecting a band scrolls the drill down's heading into view and focuses it", () => {
+    renderFlow(loadFlows());
+    stubScroll();
+    const band = document.querySelector("[data-flow-link]");
+    if (band === null) throw new Error("expected at least one Sankey band");
+    fireEvent.click(band);
+    const heading = document.getElementById("flow-drilldown-heading");
+    expect(heading).not.toBeNull();
+    expect(scrolled).toContain(heading as Element);
+    expect(document.activeElement).toBe(heading);
+  });
+
+  test("selecting a flows-table row does the same", () => {
+    renderFlow(loadFlows());
+    stubScroll();
+    const row = document.querySelector("[data-flow-table-row]");
+    if (row === null) throw new Error("expected at least one flows table row");
+    fireEvent.click(row);
+    const heading = document.getElementById("flow-drilldown-heading");
+    expect(scrolled).toContain(heading as Element);
+    expect(document.activeElement).toBe(heading);
   });
 });

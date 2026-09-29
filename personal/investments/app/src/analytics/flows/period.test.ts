@@ -34,6 +34,7 @@ function data(
       rowsNet: 0,
       residual: 0,
     })),
+    suspectSymbols: [],
   };
 }
 

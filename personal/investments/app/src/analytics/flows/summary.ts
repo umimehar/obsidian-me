@@ -1,5 +1,5 @@
 import type { AccountKind } from "../../store/mask";
-import { assetClassOf, isListedSymbol } from "./assetClass";
+import { assetClassOf } from "./assetClass";
 import { inPeriod } from "./period";
 import type { FlowPeriod } from "./period";
 import type { FlowRow, FlowsData, SourceCategory } from "./types";
@@ -20,6 +20,12 @@ export interface FlowSummary {
   unpairedLegs: number;
   laggedPairs: number;
   residual: number;
+  /**
+   * Symbols the period bought that both go uncounted by the asset class
+   * table and read, by their own held name, as a likely non-equity class
+   * (`collectSuspectSymbols`) -- never every unlisted symbol, which on the
+   * real corpus is most ordinary equities and would name about 150 tickers.
+   */
   unlistedSymbols: string[];
 }
 
@@ -124,14 +130,35 @@ function sumCash(
   return { cashChange, residual };
 }
 
-function sumUnlistedSymbols(rows: readonly FlowRow[]): string[] {
+/**
+ * Every symbol in `suspectSymbols` (built once, from the held name, at
+ * build time -- see `collectSuspectSymbols`) that the period's own selected
+ * rows actually bought, scoped to this call the same way every other
+ * figure here is scoped to the period and account selection.
+ */
+function sumUnlistedSymbols(
+  rows: readonly FlowRow[],
+  suspectSymbols: ReadonlySet<string>,
+): string[] {
   return [
     ...new Set(
       rows
-        .filter((r) => r.category === "buy" && r.symbol !== "" && !isListedSymbol(r.symbol))
+        .filter((r) => r.category === "buy" && r.symbol !== "" && suspectSymbols.has(r.symbol))
         .map((r) => r.symbol),
     ),
   ].sort();
+}
+
+/**
+ * The negated sum of `amount` over `rows`, with `-0` normalised to a plain
+ * `0`. Negating a sum of zero rows (no fee, no withholding, nothing left
+ * Wealthsimple) yields the IEEE `-0`, which is numerically zero but reads
+ * through `formatCurrency` as "-$0.00" -- a real month, `2023-06`'s Costs
+ * tile, prints a minus sign in front of nothing.
+ */
+function negatedSum(rows: readonly FlowRow[], amount: (r: FlowRow) => number): number {
+  const total = rows.reduce((s, r) => s + amount(r), 0);
+  return total === 0 ? 0 : -total;
 }
 
 function countLagged(rows: readonly FlowRow[]): number {
@@ -158,12 +185,14 @@ export function flowSummary(
   const invested = sumTraded(rows, false);
   const cashEquivalentNet = sumTraded(rows, true);
   const { cashChange, residual } = sumCash(data, p, accounts);
-  const costs = -rows
-    .filter((r) => r.category === "fee" || r.category === "withholding")
-    .reduce((s, r) => s + r.amountCad, 0);
-  const left = -rows
-    .filter((r) => r.category === "leftWealthsimple" && r.pairId === null)
-    .reduce((s, r) => s + r.amountCad, 0);
+  const costs = negatedSum(
+    rows.filter((r) => r.category === "fee" || r.category === "withholding"),
+    (r) => r.amountCad,
+  );
+  const left = negatedSum(
+    rows.filter((r) => r.category === "leftWealthsimple" && r.pairId === null),
+    (r) => r.amountCad,
+  );
   const denominator = paidIn + grants + income;
 
   return {
@@ -182,6 +211,6 @@ export function flowSummary(
     unpairedLegs: rows.filter((r) => r.movement && r.pairId === null).length,
     laggedPairs: countLagged(rows),
     residual,
-    unlistedSymbols: sumUnlistedSymbols(rows),
+    unlistedSymbols: sumUnlistedSymbols(rows, new Set(data.suspectSymbols)),
   };
 }

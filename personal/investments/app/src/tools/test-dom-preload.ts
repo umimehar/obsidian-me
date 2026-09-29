@@ -2,6 +2,16 @@ import { afterEach } from "bun:test";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 
 /**
+ * `@testing-library/dom` dumps the whole rendered DOM into a failure message
+ * by default, uncapped. A large tree -- the Flow tab's flows table, at over
+ * a thousand rows on the real corpus -- can make that dump big enough to
+ * crash `bun test` outright rather than print a readable failure. Capping it
+ * here, once, keeps every test file's failure output legible without each
+ * one setting the environment variable itself.
+ */
+process.env.DEBUG_PRINT_LIMIT ??= "3000";
+
+/**
  * Registers a DOM (via happy-dom) into the global scope before any test
  * file runs, so a `.tsx` component test can call `render()` from
  * `@testing-library/react` outside a browser. Loaded through `bunfig.toml`'s

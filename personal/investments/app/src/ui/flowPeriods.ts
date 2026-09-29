@@ -36,3 +36,16 @@ export function presetOf(data: FlowsData, period: FlowPeriod | "all"): FlowPerio
 export function resolvePeriod(data: FlowsData, period: FlowPeriod | "all"): FlowPeriod {
   return period === "all" ? allTime(data) : period;
 }
+
+/**
+ * Whether `period` overlaps the corpus's own span at all. `useHashTab`'s
+ * decoder cannot see the data, so a shape it accepts -- `#flow/2030`, a real
+ * `YYYY` four digits after today's corpus -- still decodes to a concrete
+ * period. Left unresolved that period selects no row and no block, which
+ * reads as five `$0.00` tiles and an empty year select rather than the
+ * honest "there is no such period" that falling back to all time gives.
+ */
+export function periodInCorpus(data: FlowsData, period: FlowPeriod): boolean {
+  const bounds = allTime(data);
+  return period.to >= bounds.from && period.from <= bounds.to;
+}

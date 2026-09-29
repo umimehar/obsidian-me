@@ -12,7 +12,9 @@ export interface FlowTilesProps {
  * One tile: a label and one formatted figure, stated twice from the one
  * `value` string the caller already formatted -- once as the visible text,
  * once in `aria-label` -- so a screen reader and a sighted reader are always
- * looking at the same figure.
+ * looking at the same figure. `white-space: nowrap` on the figure keeps a
+ * long one (`-$18,285.69`) from wrapping mid-number in the single narrow
+ * column the tiles render as below 40rem.
  */
 function Tile({ label, value }: { label: string; value: string }) {
   return (
@@ -21,7 +23,7 @@ function Tile({ label, value }: { label: string; value: string }) {
         <Text size="1" color="gray">
           {label}
         </Text>
-        <Text size="5" weight="bold">
+        <Text size="5" weight="bold" style={{ whiteSpace: "nowrap" }}>
           {value}
         </Text>
       </Flex>
@@ -29,7 +31,14 @@ function Tile({ label, value }: { label: string; value: string }) {
   );
 }
 
-/** Every registered kind the period's rows contributed to, in `CONTRIBUTION_KINDS` order, only when nonzero. */
+/**
+ * Every registered kind the period's rows contributed to, in
+ * `CONTRIBUTION_KINDS` order, only when nonzero -- one kind and one figure
+ * per line, a definition list rather than a comma-joined sentence, so a
+ * kind and its own figure stay visually paired instead of running together
+ * ("Spousal RRSP (spouse's asset) $17,000.00, FHSA $8,000.00" reading as one
+ * clause).
+ */
 function ContributionsLine({ summary }: { summary: FlowSummary }) {
   const entries: { kind: AccountKind; amount: number }[] = [];
   for (const kind of CONTRIBUTION_KINDS) {
@@ -38,10 +47,25 @@ function ContributionsLine({ summary }: { summary: FlowSummary }) {
   }
   if (entries.length === 0) return null;
   return (
-    <Text size="1" color="gray" data-flow-contributions="">
-      Contributions:{" "}
-      {entries.map((e) => `${KIND_LABELS[e.kind]} ${formatCurrency(e.amount)}`).join(", ")}
-    </Text>
+    <Flex asChild direction="column" gap="1" data-flow-contributions="">
+      <dl style={{ margin: 0 }}>
+        <Text size="1" color="gray" weight="medium">
+          Contributions
+        </Text>
+        {entries.map((e) => (
+          <Flex key={e.kind} asChild justify="between" gap="2">
+            <div>
+              <Text asChild size="1" color="gray">
+                <dt>{KIND_LABELS[e.kind]}</dt>
+              </Text>
+              <Text asChild size="1" color="gray" style={{ whiteSpace: "nowrap" }}>
+                <dd style={{ margin: 0 }}>{formatCurrency(e.amount)}</dd>
+              </Text>
+            </div>
+          </Flex>
+        ))}
+      </dl>
+    </Flex>
   );
 }
 
@@ -58,7 +82,7 @@ export function FlowTiles({ summary }: FlowTilesProps) {
     summary.investedRate === null ? NOT_ENOUGH_IN : formatShare(summary.investedRate);
   return (
     <Flex direction="column" gap="3" data-flow-tiles="">
-      <Grid columns={{ initial: "2", sm: "3", md: "6" }} gap="3">
+      <Grid columns={{ initial: "1", xs: "2", sm: "3", md: "6" }} gap="3">
         <Flex direction="column" gap="2">
           <Tile label="Paid in from outside" value={formatCurrency(summary.paidIn)} />
           <ContributionsLine summary={summary} />

@@ -16,7 +16,13 @@ function block(period: string): CashBlock {
 }
 
 function flowsWith(periods: readonly string[]): FlowsData {
-  return { generated: "2026-01-01", accounts: [], rows: [], blocks: periods.map(block) };
+  return {
+    generated: "2026-01-01",
+    accounts: [],
+    rows: [],
+    blocks: periods.map(block),
+    suspectSymbols: [],
+  };
 }
 
 const DATA = flowsWith(["2025-07", "2025-08", "2026-01", "2026-06"]);

@@ -77,3 +77,40 @@ describe("FlowTable", () => {
     expect(row?.getAttribute("aria-pressed")).toBe("true");
   });
 });
+
+describe("FlowTable, narrow", () => {
+  function renderNarrow(
+    selected: string | null = null,
+    onSelect: (k: string | null) => void = () => {},
+  ) {
+    render(
+      <Theme>
+        <FlowTable graph={GRAPH} selected={selected} onSelect={onSelect} narrow={true} />
+      </Theme>,
+    );
+  }
+
+  test("renders no table element at all, only rows", () => {
+    renderNarrow();
+    expect(document.querySelector("table")).toBeNull();
+    expect(document.querySelectorAll("[data-flow-table-row]")).toHaveLength(3);
+  });
+
+  test("each row is two lines: From -> To, then amount and share", () => {
+    renderNarrow();
+    const row = document.querySelector(
+      `[data-flow-table-row="${linkKey({ source: "b1", target: "c2a" })}"]`,
+    );
+    expect(row?.textContent).toContain("Chequing → TFSA");
+    expect(row?.textContent).toContain(`${formatCurrency(3000)} · ${formatShare(3000 / 5000)}`);
+  });
+
+  test("clicking a narrow row still selects that link", () => {
+    const picked: { key: string | null } = { key: null };
+    renderNarrow(null, (key) => {
+      picked.key = key;
+    });
+    fireEvent.click(screen.getAllByRole("button")[0] as HTMLElement);
+    expect(picked.key).toBe(linkKey({ source: "a0", target: "b1" }));
+  });
+});

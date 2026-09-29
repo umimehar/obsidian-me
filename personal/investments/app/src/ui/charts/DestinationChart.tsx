@@ -6,17 +6,16 @@ import { ChartTooltip, CursorAnnouncement, readoutSuffix, tooltipAnchorStyle } f
 import { formatAxisCurrency, formatPeriodLabel } from "./plot";
 import { buildValueAxis } from "./scales";
 import { CursorMarks, type CursorSlot, useChartCursor } from "./useChartCursor";
+import { useMeasuredWidth } from "./useMeasuredWidth";
 
 export interface DestinationChartProps {
   buckets: readonly DestinationBucket[];
 }
 
-const WIDTH = 800;
+/** The width used before the container has been measured, and the floor a measurement never falls below. */
+const FALLBACK_WIDTH = 400;
 const HEIGHT = 260;
 const MARGIN = { top: 16, right: 16, bottom: 28, left: 68 };
-const INNER_WIDTH = WIDTH - MARGIN.left - MARGIN.right;
-const INNER_HEIGHT = HEIGHT - MARGIN.top - MARGIN.bottom;
-const CURSOR_GEOMETRY = { viewBoxWidth: WIDTH, marginLeft: MARGIN.left };
 const BAND_FRACTION = 0.7;
 
 /** Radix step 9, in the order the spec assigns them, cycling if a group by ever draws more series. */
@@ -38,8 +37,8 @@ interface Band {
   center: number;
 }
 
-function placeBuckets(buckets: readonly DestinationBucket[]): Band[] {
-  const width = buckets.length === 0 ? 0 : INNER_WIDTH / buckets.length;
+function placeBuckets(buckets: readonly DestinationBucket[], innerWidth: number): Band[] {
+  const width = buckets.length === 0 ? 0 : innerWidth / buckets.length;
   return buckets.map((b, index) => ({
     bucket: b.bucket,
     x: index * width + (width * (1 - BAND_FRACTION)) / 2,
@@ -73,12 +72,16 @@ function bucketLabel(bucket: string): string {
   return /^\d{4}-\d{2}$/.test(bucket) ? formatPeriodLabel(bucket) : bucket;
 }
 
-function Gridlines({ yTicks, y }: { yTicks: number[]; y: (v: number) => number }) {
+function Gridlines({
+  yTicks,
+  y,
+  innerWidth,
+}: { yTicks: number[]; y: (v: number) => number; innerWidth: number }) {
   return (
     <>
       {yTicks.map((tick) => (
         <g key={tick} transform={`translate(0,${y(tick)})`}>
-          <line x1={0} x2={INNER_WIDTH} stroke="var(--gray-a4)" />
+          <line x1={0} x2={innerWidth} stroke="var(--gray-a4)" />
           <text x={-8} dy="0.32em" textAnchor="end" fontSize={11} fill="var(--gray-a11)">
             {formatAxisCurrency(tick)}
           </text>
@@ -131,14 +134,14 @@ function StackedBars({ buckets, bands, labels, y }: StackedBarsProps) {
   );
 }
 
-function XAxis({ bands }: { bands: readonly Band[] }) {
+function XAxis({ bands, innerHeight }: { bands: readonly Band[]; innerHeight: number }) {
   return (
     <>
       {bands.map((band) => (
         <text
           key={band.bucket}
           x={band.center}
-          y={INNER_HEIGHT + 20}
+          y={innerHeight + 20}
           textAnchor="middle"
           fontSize={11}
           fill="var(--gray-a11)"
@@ -147,6 +150,28 @@ function XAxis({ bands }: { bands: readonly Band[] }) {
         </text>
       ))}
     </>
+  );
+}
+
+/**
+ * One swatch and its name per series, in the same order and colour the bars
+ * use -- text, not colour alone, so the chart still says which series is
+ * which for a colour-blind reader or in forced-colours mode.
+ */
+function Legend({ labels }: { labels: readonly string[] }) {
+  return (
+    <Flex gap="3" wrap="wrap" data-destination-legend="">
+      {labels.map((label, index) => (
+        <Flex key={label} align="center" gap="1">
+          <svg width={10} height={10} aria-hidden="true" style={{ flex: "none" }}>
+            <rect width={10} height={10} fill={PALETTE[index % PALETTE.length]} rx={2} />
+          </svg>
+          <Text size="1" color="gray">
+            {label}
+          </Text>
+        </Flex>
+      ))}
+    </Flex>
   );
 }
 
@@ -175,18 +200,26 @@ function chartSummary(buckets: readonly DestinationBucket[]): string {
  * current group by. Built the same way `CashflowChart` is: `useChartCursor`
  * for hover and keyboard, `ChartTooltip`/`CursorAnnouncement` for the
  * readout, so `bun run contrast` hovers it exactly like every other chart.
+ * Laid out at the container's own measured width, the same fix the Sankey
+ * needed: a viewBox wider than the rendered box scales every font down with
+ * it, and a fixed 800 painted this chart's 11px axis labels well under 11px
+ * on a 390px phone.
  */
 export function DestinationChart({ buckets }: DestinationChartProps) {
-  const bands = useMemo(() => placeBuckets(buckets), [buckets]);
+  const { ref: containerRef, width } = useMeasuredWidth<HTMLDivElement>(FALLBACK_WIDTH);
+  const innerWidth = width - MARGIN.left - MARGIN.right;
+  const innerHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
+  const cursorGeometry = useMemo(() => ({ viewBoxWidth: width, marginLeft: MARGIN.left }), [width]);
+  const bands = useMemo(() => placeBuckets(buckets, innerWidth), [buckets, innerWidth]);
   const labels = useMemo(() => labelOrder(buckets), [buckets]);
   const max = useMemo(() => bucketMax(buckets), [buckets]);
-  const axis = useMemo(() => buildValueAxis(Math.max(max, 1), INNER_HEIGHT), [max]);
+  const axis = useMemo(() => buildValueAxis(Math.max(max, 1), innerHeight), [max, innerHeight]);
   const points = useMemo(() => buckets.map((b) => ({ period: b.bucket })), [buckets]);
   const slots = useMemo<CursorSlot[]>(
     () => bands.map((b) => ({ period: b.bucket, x: b.center })),
     [bands],
   );
-  const cursor = useChartCursor(points, slots, CURSOR_GEOMETRY);
+  const cursor = useChartCursor(points, slots, cursorGeometry);
 
   if (buckets.length === 0) {
     return (
@@ -210,9 +243,10 @@ export function DestinationChart({ buckets }: DestinationChartProps) {
       <Heading size="5" as="h2">
         Money arriving by destination
       </Heading>
-      <div style={{ position: "relative" }}>
+      <Legend labels={labels} />
+      <div ref={containerRef} style={{ position: "relative" }}>
         <svg
-          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+          viewBox={`0 0 ${width} ${HEIGHT}`}
           role="img"
           aria-label={`${chartSummary(buckets)}${readout}`}
           // biome-ignore lint/a11y/noNoninteractiveTabindex: a chart is a graphic that still has to be reachable, or its tooltip is mouse-only
@@ -225,15 +259,15 @@ export function DestinationChart({ buckets }: DestinationChartProps) {
         >
           <title>Money arriving in accounts, by destination</title>
           <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
-            <Gridlines yTicks={axis.yTicks} y={axis.y} />
+            <Gridlines yTicks={axis.yTicks} y={axis.y} innerWidth={innerWidth} />
             <StackedBars buckets={buckets} bands={bands} labels={labels} y={axis.y} />
-            <XAxis bands={bands} />
-            <CursorMarks x={cursor.x} y={null} height={INNER_HEIGHT} />
+            <XAxis bands={bands} innerHeight={innerHeight} />
+            <CursorMarks x={cursor.x} y={null} height={innerHeight} />
           </g>
         </svg>
         <CursorAnnouncement lines={lines} />
         {lines.length === 0 ? null : (
-          <div style={{ ...tooltipAnchorStyle(MARGIN.left + (cursor.x ?? 0), WIDTH), top: 0 }}>
+          <div style={{ ...tooltipAnchorStyle(MARGIN.left + (cursor.x ?? 0), width), top: 0 }}>
             <ChartTooltip lines={lines} />
           </div>
         )}

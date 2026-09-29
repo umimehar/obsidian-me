@@ -10,6 +10,14 @@ export interface AccountFilterProps {
   isDefault: boolean;
   onSelectedChange: (selected: Set<string>) => void;
   onReset: () => void;
+  /**
+   * The trigger's label when every account is selected: "Portfolio" on the
+   * tabs that have a portfolio total to name themselves after. The Flow tab
+   * has no such total -- it counts registered contributions alongside
+   * chequing and the spousal RRSP -- so it passes "All accounts" instead,
+   * never "Portfolio".
+   */
+  defaultLabel?: string;
 }
 
 /**
@@ -24,8 +32,9 @@ export function AccountFilter({
   isDefault,
   onSelectedChange,
   onReset,
+  defaultLabel = "Portfolio",
 }: AccountFilterProps) {
-  const label = isDefault ? `Portfolio (${selected.size} accounts)` : subject;
+  const label = isDefault ? `${defaultLabel} (${selected.size} accounts)` : subject;
 
   function toggle(id: string, checked: boolean) {
     const next = new Set(selected);

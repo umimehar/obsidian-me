@@ -1,6 +1,6 @@
 import type { Datastore } from "../../store/datastore";
 import { closedPeriod } from "../../store/registry";
-import { classifyStatement } from "./classify";
+import { classifyStatement, collectSuspectSymbols } from "./classify";
 import { matchTransfers } from "./match";
 import { buildCashBlocks } from "./reconcile";
 import { selectFlowStatements } from "./select";
@@ -49,5 +49,6 @@ export function buildFlows(datastore: Datastore): FlowsData {
     accounts: datastore.accounts.map(toFlowAccount),
     rows,
     blocks: buildCashBlocks(statements, rows),
+    suspectSymbols: collectSuspectSymbols(statements),
   };
 }

@@ -3,7 +3,6 @@ import { Theme } from "@radix-ui/themes";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { FlowPeriod } from "../analytics/flows/period";
 import { FlowControls } from "./FlowControls";
-import { defaultSelection } from "./chartAccounts";
 import { loadAnalytics, loadFlows } from "./data";
 
 afterEach(cleanup);
@@ -11,10 +10,17 @@ afterEach(cleanup);
 const { series } = loadAnalytics();
 const flows = loadFlows();
 
+const ALL_ACCOUNT_IDS = new Set(series.map((a) => a.maskedId));
+
 function Harness({
   period,
   onPeriodChange,
-}: { period: FlowPeriod | "all"; onPeriodChange: (p: FlowPeriod | "all") => void }) {
+  accounts = ALL_ACCOUNT_IDS,
+}: {
+  period: FlowPeriod | "all";
+  onPeriodChange: (p: FlowPeriod | "all") => void;
+  accounts?: ReadonlySet<string>;
+}) {
   return (
     <Theme>
       <FlowControls
@@ -24,9 +30,9 @@ function Harness({
         groupBy="accountType"
         onGroupByChange={() => {}}
         accountOptions={series}
-        accounts={defaultSelection(series)}
+        accounts={new Set(accounts)}
         onAccountsChange={() => {}}
-        isDefaultAccounts={true}
+        isDefaultAccounts={accounts.size === series.length}
         onResetAccounts={() => {}}
       />
     </Theme>
@@ -74,5 +80,30 @@ describe("FlowControls", () => {
     rerender(<Harness period={{ from: "2026-01", to: "2026-06" }} onPeriodChange={() => {}} />);
     expect(screen.getByRole("combobox", { name: "From" })).toBeDefined();
     expect(screen.getByRole("combobox", { name: "To" })).toBeDefined();
+  });
+
+  test("the account filter reads 'All accounts', never 'Portfolio', when every account is selected", () => {
+    render(<Harness period="all" onPeriodChange={() => {}} />);
+    const trigger = document.querySelector("[data-account-filter]");
+    expect(trigger?.textContent).toBe(`All accounts (${series.length} accounts)`);
+    expect(trigger?.textContent).not.toContain("Portfolio");
+  });
+
+  test("a partial selection reads the account count, or the single account's own label", () => {
+    const [first, second] = series;
+    if (first === undefined || second === undefined) throw new Error("need two accounts");
+    const { rerender } = render(
+      <Harness
+        period="all"
+        onPeriodChange={() => {}}
+        accounts={new Set([first.maskedId, second.maskedId])}
+      />,
+    );
+    expect(document.querySelector("[data-account-filter]")?.textContent).toBe("2 accounts");
+
+    rerender(
+      <Harness period="all" onPeriodChange={() => {}} accounts={new Set([first.maskedId])} />,
+    );
+    expect(document.querySelector("[data-account-filter]")?.textContent).toBe(first.label);
   });
 });

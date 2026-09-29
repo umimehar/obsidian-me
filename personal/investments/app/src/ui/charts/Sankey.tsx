@@ -12,6 +12,7 @@ import {
   sankeyHeight,
 } from "./sankeyLayout";
 import { useSvgId } from "./svgId";
+import { useMeasuredWidth } from "./useMeasuredWidth";
 
 export interface SankeyProps {
   graph: FlowGraph;
@@ -19,7 +20,13 @@ export interface SankeyProps {
   onSelect: (key: string | null) => void;
 }
 
-const WIDTH = 1152;
+/**
+ * The width used before the container has been measured, and the floor a
+ * measurement never falls below -- the narrow layout takes over below
+ * 40rem (640px at the root font size), so the Sankey itself never has to
+ * lay out any narrower than that in practice.
+ */
+const FALLBACK_WIDTH = 640;
 const LABEL_GAP = 6;
 /**
  * The longest real node name (measured against the running corpus,
@@ -30,8 +37,7 @@ const LABEL_GAP = 6;
  */
 const NAME_MAX_WIDTH = 267;
 const LABEL_MARGIN = NAME_MAX_WIDTH + LABEL_GAP + 15;
-const BOX_BASE: Omit<SankeyBox, "height"> = {
-  width: WIDTH,
+const BOX_BASE: Omit<SankeyBox, "height" | "width"> = {
   nodeWidth: 16,
   nodeGap: 6,
   labelLeft: LABEL_MARGIN,
@@ -185,7 +191,7 @@ function NodeLabels({ nodes, totalIn }: NodeLabelsProps) {
             <text
               data-flow-label={n.id}
               textAnchor={anchor}
-              fontSize={11}
+              fontSize={12}
               fill="var(--gray-12)"
               paintOrder="stroke"
               stroke="var(--color-background)"
@@ -278,8 +284,9 @@ const EMPTY_HIGHLIGHT: ReadonlySet<string> = new Set();
 export function Sankey({ graph, selected, onSelect }: SankeyProps) {
   const summaryId = useSvgId("flow-summary");
   const [hoverKey, setHoverKey] = useState<string | null>(null);
+  const { ref: containerRef, width } = useMeasuredWidth<HTMLDivElement>(FALLBACK_WIDTH);
   const height = useMemo(() => sankeyHeight(graph), [graph]);
-  const box: SankeyBox = useMemo(() => ({ ...BOX_BASE, height }), [height]);
+  const box: SankeyBox = useMemo(() => ({ ...BOX_BASE, width, height }), [width, height]);
   const layout = useMemo(() => layoutSankey(graph, box), [graph, box]);
   const labels = useMemo(() => labelsOf(graph.nodes), [graph.nodes]);
   const summary = useMemo(
@@ -303,9 +310,9 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
     activeLink === null ? EMPTY_HIGHLIGHT : new Set([activeLink.source, activeLink.target]);
 
   return (
-    <div style={{ position: "relative" }}>
+    <div ref={containerRef} style={{ position: "relative" }}>
       <svg
-        viewBox={`0 0 ${WIDTH} ${height}`}
+        viewBox={`0 0 ${width} ${height}`}
         // biome-ignore lint/a11y/useSemanticElements: an interactive chart, not a form's fieldset
         role="group"
         aria-label="Money flow"
@@ -329,7 +336,7 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
       </p>
       <CursorAnnouncement lines={lines} />
       {activeLink === null ? null : (
-        <div style={{ ...tooltipAnchorStyle(pathStartX(activeLink.path), WIDTH), top: 0 }}>
+        <div style={{ ...tooltipAnchorStyle(pathStartX(activeLink.path), width), top: 0 }}>
           <ChartTooltip lines={lines} />
         </div>
       )}

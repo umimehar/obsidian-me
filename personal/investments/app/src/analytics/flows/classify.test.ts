@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import type { AccountRecord } from "../../store/registry";
 import type { ActivityRow, Currency, Statement } from "../../types";
 import { assetClassOf } from "./assetClass";
-import { classifyStatement, resolveCashCode } from "./classify";
+import { classifyStatement, collectSuspectSymbols, resolveCashCode } from "./classify";
 
 function row(code: string, overrides: Partial<ActivityRow> = {}): ActivityRow {
   return {
@@ -436,5 +436,54 @@ describe("classifyStatement", () => {
         account({ kind: "NonRegistered", shortId: "2c62", maskedId: "acct_2c62" }),
       ),
     ).toThrow();
+  });
+});
+
+describe("collectSuspectSymbols", () => {
+  test("flags an unlisted symbol whose held name reads as a non-equity class", () => {
+    const s = statementFixture({
+      activity: [row("BUY", { debit: 100, description: "ZBND - BMO Bond Index ETF" })],
+    });
+    expect(collectSuspectSymbols([s])).toEqual(["ZBND"]);
+  });
+
+  test("does not flag an unlisted symbol with an ordinary equity name", () => {
+    const s = statementFixture({
+      activity: [row("BUY", { debit: 100, description: "AAPL - Apple Inc" })],
+    });
+    expect(collectSuspectSymbols([s])).toEqual([]);
+  });
+
+  test("does not flag a symbol the asset class table already lists, even with a matching name", () => {
+    const s = statementFixture({
+      activity: [
+        row("BUY", { debit: 100, description: "PSA - Purpose High Interest Savings ETF" }),
+      ],
+    });
+    expect(assetClassOf("PSA")).toBe("cashEquivalent");
+    expect(collectSuspectSymbols([s])).toEqual([]);
+  });
+
+  test("matches every keyword, case-insensitively, sorted and deduped across statements", () => {
+    const statements = [
+      statementFixture({
+        activity: [
+          row("BUY", { debit: 100, description: "ZTB - treasury bill fund" }),
+          row("BUY", { debit: 50, description: "XMMF - Money Market Fund" }),
+        ],
+      }),
+      statementFixture({
+        period: "2026-06",
+        activity: [row("BUY", { debit: 25, description: "ZTB - treasury bill fund" })],
+      }),
+    ];
+    expect(collectSuspectSymbols(statements)).toEqual(["XMMF", "ZTB"]);
+  });
+
+  test("a non-BUY row, even with a suspect-reading description, is ignored", () => {
+    const s = statementFixture({
+      activity: [row("SELL", { credit: 100, description: "ZBND - BMO Bond Index ETF" })],
+    });
+    expect(collectSuspectSymbols([s])).toEqual([]);
   });
 });

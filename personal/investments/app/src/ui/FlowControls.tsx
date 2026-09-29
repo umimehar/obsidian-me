@@ -52,6 +52,23 @@ const GROUP_ORDER: readonly GroupBy[] = [
   "holding",
 ];
 
+/**
+ * What the account filter's trigger names when the selection is not every
+ * account: the single account's own label, or a plain count. Never
+ * "Portfolio" -- this tab has no portfolio total, since it counts
+ * registered contributions alongside chequing and the spousal RRSP, which
+ * `chartAccounts.ts`'s `chartSubject` (the Portfolio tab's own version of
+ * this) excludes.
+ */
+function accountsSubject(
+  accountOptions: readonly AccountSeries[],
+  selected: ReadonlySet<string>,
+): string {
+  const picked = accountOptions.filter((a) => selected.has(a.maskedId));
+  const [only] = picked;
+  return picked.length === 1 && only !== undefined ? only.label : `${picked.length} accounts`;
+}
+
 /** The period a newly chosen preset opens with, before either dependent select is touched. */
 function defaultPeriodFor(flows: FlowsData, preset: FlowPeriodPreset): FlowPeriod | "all" {
   const months = monthOptions(flows);
@@ -74,7 +91,14 @@ function PresetSelect({
   return (
     <Select.Root
       value={preset}
-      onValueChange={(value) => onPeriodChange(defaultPeriodFor(flows, value as FlowPeriodPreset))}
+      onValueChange={(value) => {
+        // A lookup against the select's own known values, not a cast: the
+        // value Radix hands back is always one of `PRESET_ORDER`'s own
+        // strings, but reading it back typed as one is a claim the type
+        // checker should verify, not one this component asserts.
+        const next = PRESET_ORDER.find((p) => p === value);
+        if (next !== undefined) onPeriodChange(defaultPeriodFor(flows, next));
+      }}
     >
       <Select.Trigger aria-label="Period" data-flow-period="" />
       <Select.Content>
@@ -190,7 +214,13 @@ export function FlowControls(props: FlowControlsProps) {
         />
       </Flex>
       <Flex align="center" gap="3">
-        <Select.Root value={groupBy} onValueChange={(v) => onGroupByChange(v as GroupBy)}>
+        <Select.Root
+          value={groupBy}
+          onValueChange={(v) => {
+            const next = GROUP_ORDER.find((g) => g === v);
+            if (next !== undefined) onGroupByChange(next);
+          }}
+        >
           <Select.Trigger aria-label="Group by" />
           <Select.Content>
             {GROUP_ORDER.map((g) => (
@@ -203,10 +233,11 @@ export function FlowControls(props: FlowControlsProps) {
         <AccountFilter
           accounts={accountOptions}
           selected={accounts}
-          subject="accounts"
+          subject={accountsSubject(accountOptions, accounts)}
           isDefault={props.isDefaultAccounts}
           onSelectedChange={onAccountsChange}
           onReset={props.onResetAccounts}
+          defaultLabel="All accounts"
         />
       </Flex>
     </Flex>
