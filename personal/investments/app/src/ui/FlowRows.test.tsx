@@ -90,10 +90,21 @@ const USD_ROW = row({
   fxRate: 1.3542,
 });
 
+const PAYROLL2 = row({
+  id: "r5",
+  accountId: "acct_a",
+  code: "AFT_IN",
+  category: "payroll",
+  date: "2026-06-15",
+  period: "2026-06",
+  amountCad: 2100,
+  amount: 2100,
+});
+
 const FLOWS: FlowsData = {
   generated: "2026-01-01",
   accounts: [CHEQUING, TFSA],
-  rows: [PAYROLL, OUT_LEG, IN_LEG, USD_ROW],
+  rows: [PAYROLL, PAYROLL2, OUT_LEG, IN_LEG, USD_ROW],
   blocks: [],
 };
 
@@ -110,13 +121,13 @@ const CASH_KEY = linkKey({ source: "grp:Chequing", target: "now:cash" });
 const USD_KEY = linkKey({ source: "src:income", target: "grp:Chequing" });
 
 const GRAPH: FlowGraph = {
-  nodes: [node("src:payroll", 0, 2000, "Payroll deposited")],
+  nodes: [node("src:payroll", 0, 4100, "Payroll deposited")],
   links: [
-    link("src:payroll", "land:chequing", 2000, ["r1"]),
+    link("src:payroll", "land:chequing", 4100, ["r1", "r5"]),
     link("grp:Chequing", "now:cash", 100, []),
     link("src:income", "grp:Chequing", 135.42, ["r4"]),
   ],
-  totalIn: 2000,
+  totalIn: 4100,
 };
 
 function renderRows(selected: string | null) {
@@ -133,14 +144,17 @@ describe("FlowRows", () => {
     expect(document.querySelector("[data-flow-rows]")).toBeNull();
   });
 
-  test("a payroll band lists its one row, with no description anywhere", () => {
+  test("a payroll band lists every one of its rows, oldest first, with no description anywhere", () => {
     renderRows(PAYROLL_KEY);
     const rows = document.querySelectorAll("[data-flow-row]");
-    expect(rows).toHaveLength(1);
+    expect(rows).toHaveLength(2);
+    expect(rows[0]?.getAttribute("data-flow-row")).toBe("r1");
+    expect(rows[1]?.getAttribute("data-flow-row")).toBe("r5");
     expect(rows[0]?.textContent).toContain("2026-05-15");
     expect(rows[0]?.textContent).toContain("acct_a");
     expect(rows[0]?.textContent).toContain("AFT_IN");
     expect(rows[0]?.textContent).toContain(formatCurrency(2000));
+    expect(rows[1]?.textContent).toContain(formatCurrency(2100));
     expect(document.body.textContent).not.toContain("Direct deposit");
   });
 
