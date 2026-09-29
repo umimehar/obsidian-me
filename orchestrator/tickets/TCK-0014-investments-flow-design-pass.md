@@ -34,6 +34,9 @@ An impeccable critique and polish pass over the Flow tab in both themes at 72rem
 
 ## Context
 
+Carried from the TCK-0012 review: column 0 leader lines start at the node's right edge (`edgeX = n.x1` in `Sankey.tsx` `NodeLabels`) and cross the node; start them at `n.x0`.
+
+
 Plan: `personal/investments/docs/superpowers/plans/2026-09-29-money-flow.md`, Ticket F (Task 10). Spec: `personal/investments/docs/superpowers/specs/2026-09-29-money-flow-design.md`. Read `personal/investments/CLAUDE.md` first. Owner decisions 2026-09-29: new Flow tab after This month, chequing is a hub node, PSA and savings ETFs are a cash equivalent node excluded from the invested rate.
 
 ## Worklog
