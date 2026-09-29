@@ -41,6 +41,10 @@ Two things the merge deliberately does not do. A re-imported month overwrites it
 
 One consequence worth knowing: `ingest` findings describe the files present in that run, so a byte-identical duplicate PDF that is not in this month's folder stops being reported. The statements are unaffected.
 
+## The browser bundle must never reach the ingest pipeline
+
+`src/build.ts` and everything under `src/ingest/` import `node:crypto` and `node:fs`. A UI reachable module that imports them, even for one helper, breaks `bun run dev` while `bun run check` stays green, because bun test runs under Node. It happened once (`dedupeToLatestVersion`, now in the dependency free `src/statementVersion.ts`). Run `bun run build:ui` after touching an import that the dashboard can reach.
+
 ## What this replaced
 
 The CSV pipeline that preceded this lived in `scripts/` and rendered `notes/index.html`. **Both were deleted on 2026-08-24**, after the rebuild shipped every feature the spec's Predictions section called for. Its findings are gone with it and most were true only of the CSVs: no market value in the data, a currency field contaminated with ticker symbols, account kind inferred from a filename. None of those is true here. If you find a note repeating one, it is describing a pipeline that no longer exists.

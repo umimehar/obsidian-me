@@ -179,6 +179,14 @@ ALWAYS ask what STATES a visual gate reaches, not just what pages. Hover-only, f
 
 NEVER report a gate's number as evidence for a change the gate cannot see. When a state is out of the sweep, measure it by reusing the gate's OWN sampling and maths against a driven page rather than reimplementing the arithmetic, and say in the report that it was measured out-of-band and why.
 
+### a golden copied from the built artifact cannot catch a regression (2026-09-27)
+
+Why:
+- Twice in the investments dashboard v2 run, a corpus test compared the committed `analytics.json` against a golden that `tools/goldens.ts` had copied from that same file. Removing the stock split rule moved 2025 realized gains by about $1,000 and both corpus tests stayed green, because neither file changed.
+- The same shape appeared as tests computing their expected value with the function under test: an income tile 2.2 times too high passed every test.
+
+ALWAYS compute a golden by calling the production function on the source data (`buildIncome(datastore)`), and make the corpus test call it too; a reviewer should prove it by mutating the function WITHOUT regenerating the artifact.
+
 ### a guard that reads a label it wrote proves only its own formatting (2026-08-26)
 
 Why:
