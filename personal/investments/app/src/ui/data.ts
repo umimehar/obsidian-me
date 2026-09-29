@@ -3,9 +3,11 @@ import rawBenchmark from "@data/benchmark.json";
 import rawCards from "@data/cards.json";
 import rawCheckpoints from "@data/checkpoints.json";
 import rawCoverage from "@data/coverage.json";
+import rawFlows from "@data/flows.json";
 import rawReconciliation from "@data/reconciliation.json";
 import type { AnalyticsOutput } from "../analytics/build";
 import type { Coverage } from "../analytics/coverage";
+import type { FlowsData } from "../analytics/flows/types";
 import type { Lens } from "../analytics/rollup";
 import type { CardStatement } from "../ingest/card";
 import type { BenchmarkData } from "../tools/benchmark";
@@ -49,6 +51,36 @@ export function parseAnalytics(raw: unknown): AnalyticsOutput {
 /** The real committed payload, parsed once at module load. */
 export function loadAnalytics(): AnalyticsOutput {
   return parseAnalytics(rawAnalytics);
+}
+
+/**
+ * A narrow structural check on the raw `flows.json` import, the same shape
+ * `isAnalyticsOutput` checks its own file with: it never trusts the file's
+ * shape with an unchecked cast, and the nested figures are exercised by
+ * the flows corpus tests against the real committed file, not re-validated
+ * here.
+ */
+function isFlowsData(value: unknown): value is FlowsData {
+  if (typeof value !== "object" || value === null) return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.generated === "string" &&
+    Array.isArray(candidate.accounts) &&
+    Array.isArray(candidate.rows) &&
+    Array.isArray(candidate.blocks)
+  );
+}
+
+export function parseFlows(raw: unknown): FlowsData {
+  if (!isFlowsData(raw)) {
+    throw new Error("flows.json is missing one of generated, accounts, rows, blocks");
+  }
+  return raw;
+}
+
+/** The real committed payload, parsed once at module load. */
+export function loadFlows(): FlowsData {
+  return parseFlows(rawFlows);
 }
 
 /** A figure a check could not compute stays null; it must never arrive as a zero. */

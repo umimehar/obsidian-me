@@ -2,6 +2,7 @@ import { join } from "node:path";
 import type { Datastore } from "../store/datastore";
 import type { Statement } from "../types";
 import { type ActivityByPeriod, buildActivity } from "./activity";
+import { buildFlows } from "./flows/build";
 import { type HoldingsOutput, buildHoldings } from "./holdings";
 import { type IncomeScope, type IncomeSummary, buildIncome } from "./income";
 import { type ReturnSeries, buildReturns } from "./returns";
@@ -103,5 +104,15 @@ if (import.meta.main) {
     `wrote analytics.json: ${output.series.length} accounts, ` +
       `${Object.keys(output.rooms).length} room years, ${Object.keys(output.income).length} income years, ` +
       `${output.returns.length} return series`,
+  );
+
+  const flows = buildFlows(datastore);
+  await Bun.write(join(DATA_DIR, "flows.json"), JSON.stringify(flows));
+  const pairCount = new Set(flows.rows.filter((r) => r.pairId !== null).map((r) => r.pairId)).size;
+  const unpairedLegs = flows.rows.filter((r) => r.movement && r.pairId === null).length;
+  const residualBlocks = flows.blocks.filter((b) => Math.abs(b.residual) > 0.005).length;
+  console.log(
+    `wrote flows.json: ${flows.rows.length} rows, ${pairCount} pairs, ` +
+      `${unpairedLegs} unpaired legs, ${flows.blocks.length} blocks, ${residualBlocks} with a residual`,
   );
 }
