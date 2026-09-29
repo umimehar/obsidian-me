@@ -80,6 +80,17 @@ const PURPOSES: Record<string, Purpose> = {
 };
 
 /**
+ * Deposits the owner confirmed are payroll, keyed by shortId and code
+ * (2026-09-29). 2b74's biweekly `DEP` rows are the payroll that later
+ * arrives as `AFT_IN`; nothing on the row itself says so.
+ */
+const PAYROLL_CODES: Readonly<Record<string, readonly string[]>> = { "2b74": ["DEP"] };
+
+export function isPayrollDeposit(shortId: string, code: string): boolean {
+  return PAYROLL_CODES[shortId]?.includes(code) ?? false;
+}
+
+/**
  * A corporate investing account prints "Non-Registered Cash Account" on its
  * statements exactly like a real personal non-registered account -- nothing
  * in the document distinguishes the two, so this cannot be derived by

@@ -105,7 +105,7 @@ export function netDebitCredit(row: ActivityRow, statement: Statement): number {
  * entirely -- excluded, not guessed at -- rather than netted in on the
  * assumption every `REIMB` row is a fee refund.
  */
-function isFeeRefund(row: ActivityRow): boolean {
+export function isFeeRefund(row: ActivityRow): boolean {
   return /ETF Rebate|ACCOUNTING_REIMBURSEMENT/i.test(row.description);
 }
 
