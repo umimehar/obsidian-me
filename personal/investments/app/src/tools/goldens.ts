@@ -5,7 +5,7 @@ import type { AnalyticsOutput } from "../analytics/build";
 import { buildCashflowSeries } from "../analytics/cashflowSeries";
 import { feeReconciliationGaps } from "../analytics/feeReconciliation";
 import { buildFlows } from "../analytics/flows/build";
-import { buildFlowGraph } from "../analytics/flows/graph";
+import { buildFlowGraph, depositsByDestination } from "../analytics/flows/graph";
 import { type FlowPeriod, allTime, yearPeriod } from "../analytics/flows/period";
 import { flowSummary } from "../analytics/flows/summary";
 import type { FlowsData } from "../analytics/flows/types";
@@ -279,6 +279,16 @@ function flowHeadline(
   };
 }
 
+/** `depositsByDestination` for 2026-07 alone, group by account type, keyed by destination label. */
+function destinationSample202607(
+  flows: FlowsData,
+  allAccounts: ReadonlySet<string>,
+): Record<string, number> {
+  const p = { from: "2026-07", to: "2026-07" };
+  const [bucket] = depositsByDestination(flows, p, "accountType", allAccounts);
+  return bucket?.values ?? {};
+}
+
 /** `buildFlows(datastore)`'s own row/pair counts and the 2025, 2026 and all-time headline. */
 function buildFlowGoldens(datastore: Datastore): Goldens["flows"] {
   const flows = buildFlows(datastore);
@@ -297,6 +307,7 @@ function buildFlowGoldens(datastore: Datastore): Goldens["flows"] {
       "2026": flowHeadline(flows, yearPeriod(2026), allAccounts),
       all: flowHeadline(flows, allTime(flows), allAccounts),
     },
+    destinationSample202607: destinationSample202607(flows, allAccounts),
   };
 }
 

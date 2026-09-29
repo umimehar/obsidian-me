@@ -257,20 +257,26 @@ interface CashTotals {
 }
 
 /**
- * Per selected account, the period's row-explained cash change and residual,
- * converted to CAD. `closing - opening` splits into `rowsNet + residual` by
- * `buildCashBlocks`'s own definition; the cash link carries `rowsNet` (what
- * the classified rows account for) rather than the raw `closing - opening`,
- * so the residual is never counted twice, once folded into "now:cash" and
- * again as "now:unreconciled". Identical on the real corpus, where every
- * block's residual is 0 and `rowsNet` equals `closing - opening` exactly.
+ * Per selected account, the period's stated cash change and residual,
+ * converted to CAD. The cash link carries the raw `closing - opening`; the
+ * unreconciled link carries `-residual`, so that once both land in the
+ * graph -- the residual link's negative case flipping to a `src:` source
+ * via the usual mirror rule -- the identity `rowsNet + residual =
+ * closing - opening` (`buildCashBlocks`'s own definition) makes the two
+ * links exactly close the gap the row-derived links leave open. A positive
+ * residual (real cash grew more than the rows explain) flips to
+ * `src:unreconciled -> own`, unexplained money arriving; a negative one
+ * (real cash grew less) stays `own -> now:unreconciled`, unexplained money
+ * leaving. Identical to summing `rowsNet` alone on the real corpus, where
+ * every block's residual is 0.
  */
 function cashTotalsByAccount(data: FlowsData, p: FlowPeriod, ctx: Ctx): Map<string, CashTotals> {
   const byAccount = new Map<string, CashTotals>();
   for (const b of data.blocks) {
     if (!ctx.accounts.has(b.accountId) || !inPeriod(b.period, p)) continue;
-    const changed = Math.abs(b.rowsNet) > 1e-7 || Math.abs(b.residual) > 1e-7;
-    if (b.currency === "USD" && b.fxRate === null) {
+    const changed = Math.abs(b.closing - b.opening) > 1e-7 || Math.abs(b.residual) > 1e-7;
+    const rate = b.currency === "USD" ? b.fxRate : 1;
+    if (rate === null) {
       if (changed) {
         throw new Error(
           `flow graph: ${b.accountId} ${b.period} has a USD cash change with no fx rate`,
@@ -278,10 +284,9 @@ function cashTotalsByAccount(data: FlowsData, p: FlowPeriod, ctx: Ctx): Map<stri
       }
       continue;
     }
-    const rate = b.currency === "USD" ? (b.fxRate as number) : 1;
     const entry = byAccount.get(b.accountId) ?? { cash: 0, unrec: 0 };
-    entry.cash += b.rowsNet * rate;
-    entry.unrec += b.residual * rate;
+    entry.cash += (b.closing - b.opening) * rate;
+    entry.unrec += -b.residual * rate;
     byAccount.set(b.accountId, entry);
   }
   return byAccount;
@@ -433,31 +438,26 @@ function buildNodes(links: readonly FlowLink[], ctx: Ctx): FlowNode[] {
  * `(source, target)` keys than `accountType` does, so far more of these
  * sub-cent remainders get dropped in a single month -- on the real corpus
  * that adds up to a one-cent gap for a couple of single-month, `account`
- * group-by periods. A genuine bug (a dropped rule, a sign error) produces a
- * gap of dollars, not cents, so five cents of slack absorbs the rounding
- * without hiding a real one.
+ * group-by periods -- a rounding artifact of comparing sums that were
+ * already truncated, not a real imbalance. Asserting on the unrounded
+ * aggregate (`buildFlowGraph` does this before dropping sub-cent links,
+ * never after) keeps the worst real gap on the corpus at floating-point
+ * epsilon, so the tolerance stays one cent, tight enough to catch an
+ * actual dropped rule or sign error.
  */
-const BALANCE_TOLERANCE = 0.05;
-
-function isReconciliationNode(id: string): boolean {
-  return id === "now:unreconciled" || id === "src:unreconciled";
-}
+const BALANCE_TOLERANCE = 0.01;
 
 /**
  * The sum out of column 0 equals the sum into column 3, and every column
- * 1/2 node balances -- excluding the unreconciled link. A residual is the
- * "this does not fit the model" signal; forcing it to balance would defeat
- * its purpose. It is 0 on the real corpus regardless (255 of 255 blocks),
- * so the exclusion never masks a real gap there.
+ * 1/2 node balances. The unreconciled link fully participates: `own`'s
+ * cash and unreconciled links are constructed (see `cashTotalsByAccount`)
+ * so that `rowsNet + residual = closing - opening` makes every node close
+ * exactly, so excluding it would only ever hide a genuine gap, never
+ * explain a spurious one.
  */
 export function assertBalanced(nodes: readonly FlowNode[], links: readonly FlowLink[]): void {
-  const conserved = links.filter(
-    (l) => !isReconciliationNode(l.source) && !isReconciliationNode(l.target),
-  );
-  const col0Out = conserved
-    .filter((l) => columnOf(l.source) === 0)
-    .reduce((s, l) => s + l.value, 0);
-  const col3In = conserved.filter((l) => columnOf(l.target) === 3).reduce((s, l) => s + l.value, 0);
+  const col0Out = links.filter((l) => columnOf(l.source) === 0).reduce((s, l) => s + l.value, 0);
+  const col3In = links.filter((l) => columnOf(l.target) === 3).reduce((s, l) => s + l.value, 0);
   if (Math.abs(col0Out - col3In) > BALANCE_TOLERANCE) {
     throw new Error(
       `flow graph does not balance: sources ${col0Out.toFixed(2)} vs uses ${col3In.toFixed(2)}`,
@@ -465,7 +465,7 @@ export function assertBalanced(nodes: readonly FlowNode[], links: readonly FlowL
   }
   const inByNode = new Map<string, number>();
   const outByNode = new Map<string, number>();
-  for (const l of conserved) {
+  for (const l of links) {
     outByNode.set(l.source, (outByNode.get(l.source) ?? 0) + l.value);
     inByNode.set(l.target, (inByNode.get(l.target) ?? 0) + l.value);
   }
@@ -490,24 +490,36 @@ function buildContext(data: FlowsData, groupBy: GroupBy, accounts: ReadonlySet<s
   };
 }
 
+/** Every aggregated `(source, target)` pair, flipped to its canonical direction, unrounded. */
 function finalizeLinks(parts: readonly LinkPart[]): FlowLink[] {
   const links: FlowLink[] = [];
   for (const [key, entry] of aggregate(parts)) {
     const [source, target] = key.split("->") as [string, string];
-    const flipped = flipNegative({
-      source,
-      target,
-      value: entry.value,
-      recycled: entry.recycled,
-      rowIds: [...entry.rowIds],
-    });
-    if (Math.abs(flipped.value) < 0.01) continue;
-    links.push(flipped);
+    links.push(
+      flipNegative({
+        source,
+        target,
+        value: entry.value,
+        recycled: entry.recycled,
+        rowIds: [...entry.rowIds],
+      }),
+    );
   }
   return links;
 }
 
-/** Nodes and links for a period, group by and account selection. Throws if the graph does not balance. */
+/** Links under a cent in absolute value are dropped for display, after balance is already proven. */
+function dropSubCent(links: readonly FlowLink[]): FlowLink[] {
+  return links.filter((l) => Math.abs(l.value) >= 0.01);
+}
+
+/**
+ * Nodes and links for a period, group by and account selection. Balance is
+ * checked on the unrounded aggregate, before sub-cent links are dropped for
+ * display -- checking it after would compare two sums that were each
+ * independently truncated, which is where the spurious one-cent gaps came
+ * from. Throws if the graph does not balance.
+ */
 export function buildFlowGraph(
   data: FlowsData,
   p: FlowPeriod,
@@ -519,9 +531,11 @@ export function buildFlowGraph(
   const parts = selectedRows.flatMap((row) => rowLinks(row, ctx));
   parts.push(...cashLinks(data, p, ctx));
 
-  const links = finalizeLinks(parts);
+  const rawLinks = finalizeLinks(parts);
+  assertBalanced(buildNodes(rawLinks, ctx), rawLinks);
+
+  const links = dropSubCent(rawLinks);
   const nodes = buildNodes(links, ctx);
-  assertBalanced(nodes, links);
   const totalIn = links.filter((l) => columnOf(l.source) === 0).reduce((s, l) => s + l.value, 0);
   return { nodes, links, totalIn };
 }
@@ -536,11 +550,27 @@ function bucketKey(period: string, yearly: boolean): string {
   return yearly ? period.slice(0, 4) : period;
 }
 
+/** A genuine deposit into an account: money handed off from the chequing hub or landed straight in. */
+function depositPartsOf(row: FlowRow, ctx: Ctx): LinkPart[] {
+  const parts = rowLinks(row, ctx);
+  // A row routed through `src:moved` is money that moved from another of
+  // the owner's own accounts, not new money arriving -- excluded even
+  // though its landing link's source still reads `land:direct`.
+  if (parts.some((part) => part.source === "src:moved")) return [];
+  return parts.filter(
+    (part) =>
+      part.target.startsWith("grp:") &&
+      (part.source === "land:chequing" || part.source === "land:direct"),
+  );
+}
+
 /**
- * Money arriving in accounts (links landing on a column 2 node), bucketed
- * by month, or by year past 24 months, keyed by the destination's label.
- * Built off the same `rowLinks` the Sankey uses, so the two can never
- * disagree about what "money arriving in an account" means.
+ * Money arriving in accounts -- deposits landing from the chequing hub or
+ * straight in, never recycled money (income, sale proceeds) or money moved
+ * between the owner's own accounts -- bucketed by month, or by year past
+ * 24 months, keyed by the destination's label. Built off the same
+ * `rowLinks` the Sankey uses, so the two can never disagree about what a
+ * link between column 1 and column 2 means.
  */
 export function depositsByDestination(
   data: FlowsData,
@@ -553,7 +583,7 @@ export function depositsByDestination(
   const buckets = new Map<string, Record<string, number>>();
   for (const row of data.rows) {
     if (!accounts.has(row.accountId) || !inPeriod(row.period, p)) continue;
-    const parts = rowLinks(row, ctx).filter((part) => part.target.startsWith("grp:"));
+    const parts = depositPartsOf(row, ctx);
     if (parts.length === 0) continue;
     const key = bucketKey(row.period, yearly);
     const values = buckets.get(key) ?? {};

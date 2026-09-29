@@ -31,19 +31,21 @@ export function yearPeriod(year: number): FlowPeriod {
 }
 
 /**
- * Every selected account missing a statement at the period's end: still
- * open (its own recorded range covers `p.to`) with no block there, or
- * closed before `p.to` while some OTHER selected account does report at
- * `p.to` -- evidence the period genuinely closed and this account simply
- * fell behind, rather than the whole corpus not having reached that month
- * yet for anyone.
+ * Every selected, still-active account missing a statement at the period's
+ * end: still open (its own recorded range covers `p.to`) with no block
+ * there, or fell behind before `p.to` while some OTHER selected account
+ * does report at `p.to` -- evidence the period genuinely closed and this
+ * account simply lagged, rather than the whole corpus not having reached
+ * that month yet for anyone. An account `build.ts` marked `closed` (its
+ * latest statement states a $0 balance) is never named: it stopped
+ * reporting because it was closed, not because it is missing.
  */
 export function missingAccounts(
   data: FlowsData,
   p: FlowPeriod,
   accounts: ReadonlySet<string>,
 ): FlowAccount[] {
-  const selected = data.accounts.filter((a) => accounts.has(a.accountId));
+  const selected = data.accounts.filter((a) => accounts.has(a.accountId) && !a.closed);
   const reportedAtTo = new Set(
     data.blocks.filter((b) => b.period === p.to).map((b) => b.accountId),
   );

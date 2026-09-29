@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { GOLDENS } from "../../goldens";
 import type { Datastore } from "../../store/datastore";
 import { loadFlows } from "../../ui/data";
-import { type GroupBy, buildFlowGraph } from "./graph";
+import { type GroupBy, buildFlowGraph, depositsByDestination } from "./graph";
 import { allTime, yearPeriod } from "./period";
 import { flowSummary } from "./summary";
 
@@ -57,6 +57,30 @@ describe.if(existsSync(DATASTORE_PATH))("the flow graph over the real corpus", (
       expect(s.investedRate).toBeCloseTo(golden.investedRate ?? 0, 6);
       expect(graph.totalIn).toBeCloseTo(golden.totalIn, 2);
     }
+  });
+
+  test("the row, pair and lag counts match the goldens", () => {
+    const data = loadFlows();
+    const pairIds = new Set(data.rows.filter((r) => r.pairId !== null).map((r) => r.pairId));
+    const laggedPairIds = new Set(
+      data.rows.filter((r) => r.lagDays !== null && r.lagDays > 0).map((r) => r.pairId),
+    );
+    const unpairedLegs = data.rows.filter((r) => r.movement && r.pairId === null).length;
+
+    expect(data.rows.length).toBe(GOLDENS.flows.rowCount);
+    expect(pairIds.size).toBe(GOLDENS.flows.pairCount);
+    expect(laggedPairIds.size).toBe(GOLDENS.flows.laggedPairs);
+    expect(unpairedLegs).toBe(GOLDENS.flows.unpairedLegs);
+  });
+
+  test("depositsByDestination for 2026-07 by account type matches the golden, excluding recycled and moved money", () => {
+    const data = loadFlows();
+    const all = new Set(data.accounts.map((a) => a.accountId));
+    const p = { from: "2026-07", to: "2026-07" };
+
+    const [bucket] = depositsByDestination(data, p, "accountType", all);
+
+    expect(bucket?.values).toEqual(GOLDENS.flows.destinationSample202607);
   });
 
   test("chequing inflows count once: 2b74 2026-05 payroll in equals the statement's own deposits", async () => {

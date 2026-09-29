@@ -60,6 +60,13 @@ export interface FlowAccount {
   inTotals: boolean;
   firstPeriod: string;
   lastPeriod: string;
+  /**
+   * The account's latest statement carries a $0 portfolio (or, on a CASH
+   * template, $0 cash closings) and its `lastPeriod` is before the corpus's
+   * latest period -- it stopped reporting because it was closed, not
+   * because this import simply has not reached that month for it yet.
+   */
+  closed: boolean;
 }
 
 export interface FlowsData {

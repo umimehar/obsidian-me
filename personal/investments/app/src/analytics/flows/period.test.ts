@@ -11,6 +11,7 @@ function account(overrides: Partial<FlowAccount> & { accountId: string }): FlowA
     inTotals: true,
     firstPeriod: "2023-01",
     lastPeriod: "2026-08",
+    closed: false,
     ...overrides,
   };
 }
@@ -98,16 +99,22 @@ describe("missingAccounts", () => {
     expect(missing.map((a) => a.accountId)).toEqual(["acct_late"]);
   });
 
-  test("ignores a closed account when no other selected account reports at the period end either", () => {
+  test("ignores a closed account even while another selected account reports at the period end", () => {
     const closed = account({
       accountId: "acct_closed",
       firstPeriod: "2023-01",
       lastPeriod: "2024-06",
+      closed: true,
     });
-    const d = data([closed], []);
+    const other = account({
+      accountId: "acct_other",
+      firstPeriod: "2023-01",
+      lastPeriod: "2026-08",
+    });
+    const d = data([closed, other], [{ accountId: "acct_other", period: "2026-08" }]);
     const p = { from: "2026-08", to: "2026-08" };
 
-    expect(missingAccounts(d, p, new Set(["acct_closed"]))).toEqual([]);
+    expect(missingAccounts(d, p, new Set(["acct_closed", "acct_other"]))).toEqual([]);
   });
 
   test("a newly opened account with a statement at the period end is not missing", () => {

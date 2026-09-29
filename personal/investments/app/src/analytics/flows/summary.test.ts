@@ -13,6 +13,7 @@ function account(
     inTotals: true,
     firstPeriod: "2026-01",
     lastPeriod: "2026-12",
+    closed: false,
     ...overrides,
   };
 }
@@ -262,7 +263,7 @@ describe("flowSummary", () => {
     expect(s.investedRate).toBeCloseTo(0.4, 6);
   });
 
-  test("cashChange and leftInCash come from block rowsNet, and residual is kept separate", () => {
+  test("cashChange is the raw closing minus opening, and a positive residual is kept separate", () => {
     const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
     const block: CashBlock = {
       accountId: "acct_tfsa",
@@ -275,9 +276,44 @@ describe("flowSummary", () => {
       residual: 5,
     };
     const s = flowSummary(data([], [tfsa], [block]), PERIOD, new Set(["acct_tfsa"]));
-    expect(s.cashChange).toBeCloseTo(100, 6);
+    expect(s.cashChange).toBeCloseTo(105, 6);
     expect(s.residual).toBeCloseTo(5, 6);
-    expect(s.leftInCash).toBeCloseTo(100, 6);
+    expect(s.leftInCash).toBeCloseTo(105, 6);
+  });
+
+  test("cashChange still reads the raw closing minus opening with a negative residual", () => {
+    const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
+    const block: CashBlock = {
+      accountId: "acct_tfsa",
+      period: "2026-05",
+      currency: "CAD",
+      opening: 0,
+      closing: 95,
+      fxRate: null,
+      rowsNet: 100,
+      residual: -5,
+    };
+    const s = flowSummary(data([], [tfsa], [block]), PERIOD, new Set(["acct_tfsa"]));
+    expect(s.cashChange).toBeCloseTo(95, 6);
+    expect(s.residual).toBeCloseTo(-5, 6);
+    expect(s.leftInCash).toBeCloseTo(95, 6);
+  });
+
+  test("a USD block with no fx rate and a nonzero change throws, naming account and period", () => {
+    const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
+    const block: CashBlock = {
+      accountId: "acct_tfsa",
+      period: "2026-05",
+      currency: "USD",
+      opening: 0,
+      closing: 10,
+      fxRate: null,
+      rowsNet: 10,
+      residual: 0,
+    };
+    const s = () => flowSummary(data([], [tfsa], [block]), PERIOD, new Set(["acct_tfsa"]));
+    expect(s).toThrow(/acct_tfsa/);
+    expect(s).toThrow(/2026-05/);
   });
 
   test("unpairedLegs counts movement rows with no pair, and laggedPairs counts distinct lagged pairs", () => {
@@ -314,6 +350,55 @@ describe("flowSummary", () => {
     ];
     const s = flowSummary(data(rows, [cheq, rrsp]), PERIOD, new Set(["acct_cheq", "acct_rrsp"]));
     expect(s.unpairedLegs).toBe(1);
+    expect(s.laggedPairs).toBe(1);
+  });
+
+  test("laggedPairs counts only pairs with lagDays greater than 0, never a same-day pair", () => {
+    const cheq = account({ accountId: "acct_cheq", kind: "Chequing" });
+    const rrsp = account({ accountId: "acct_rrsp", kind: "RRSP" });
+    const rows = [
+      row({
+        accountId: "acct_cheq",
+        id: "same-o",
+        code: "TRFOUT",
+        movement: true,
+        amountCad: -20,
+        amount: -20,
+        pairId: "same-o>same-i",
+        lagDays: 0,
+      }),
+      row({
+        accountId: "acct_rrsp",
+        id: "same-i",
+        code: "CONT",
+        movement: true,
+        amountCad: 20,
+        amount: 20,
+        pairId: "same-o>same-i",
+        lagDays: 0,
+      }),
+      row({
+        accountId: "acct_cheq",
+        id: "lag-o",
+        code: "TRFOUT",
+        movement: true,
+        amountCad: -30,
+        amount: -30,
+        pairId: "lag-o>lag-i",
+        lagDays: 3,
+      }),
+      row({
+        accountId: "acct_rrsp",
+        id: "lag-i",
+        code: "CONT",
+        movement: true,
+        amountCad: 30,
+        amount: 30,
+        pairId: "lag-o>lag-i",
+        lagDays: 3,
+      }),
+    ];
+    const s = flowSummary(data(rows, [cheq, rrsp]), PERIOD, new Set(["acct_cheq", "acct_rrsp"]));
     expect(s.laggedPairs).toBe(1);
   });
 

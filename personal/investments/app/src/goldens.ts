@@ -327,6 +327,15 @@ export interface Goldens {
         totalIn: number;
       }
     >;
+    /**
+     * `depositsByDestination` for the single month 2026-07, group by
+     * account type -- the reviewer's own worked example that caught
+     * recycled money (income, sale proceeds) and money moved between the
+     * owner's own accounts being counted as a deposit. Deposits from the
+     * land nodes alone sum to $9,050.00; the unfixed function returned
+     * $33,594.70, of which $24,366.16 was sale proceeds and $178.54 income.
+     */
+    destinationSample202607: Record<string, number>;
   };
 }
 

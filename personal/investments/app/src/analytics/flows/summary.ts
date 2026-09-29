@@ -84,6 +84,14 @@ function sumTraded(rows: readonly FlowRow[], wantCashEquivalent: boolean): numbe
   return total;
 }
 
+/**
+ * `cashChange` is the raw `closing - opening`, matching `graph.ts`'s cash
+ * link exactly -- both figures have to describe the same money. A USD
+ * block with no fx rate throws naming the account and period, the same as
+ * `graph.ts`'s cash link, rather than silently dropping a real change: a
+ * summary tile that quietly reads $0 lower than the Sankey it sits beside
+ * is worse than a loud failure.
+ */
 function sumCash(
   data: FlowsData,
   p: FlowPeriod,
@@ -93,12 +101,17 @@ function sumCash(
   let residual = 0;
   for (const b of data.blocks) {
     if (!accounts.has(b.accountId) || !inPeriod(b.period, p)) continue;
-    if (b.currency === "USD" && b.fxRate === null) continue;
-    const rate = b.currency === "USD" ? (b.fxRate as number) : 1;
-    // Row-explained change, not the raw `closing - opening`, so a nonzero
-    // residual is never folded into `cashChange` and counted a second time
-    // as `residual` -- the same reasoning `graph.ts`'s cash link follows.
-    cashChange += b.rowsNet * rate;
+    const changed = Math.abs(b.closing - b.opening) > 1e-7 || Math.abs(b.residual) > 1e-7;
+    const rate = b.currency === "USD" ? b.fxRate : 1;
+    if (rate === null) {
+      if (changed) {
+        throw new Error(
+          `flow summary: ${b.accountId} ${b.period} has a USD cash change with no fx rate`,
+        );
+      }
+      continue;
+    }
+    cashChange += (b.closing - b.opening) * rate;
     residual += b.residual * rate;
   }
   return { cashChange, residual };

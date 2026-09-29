@@ -702,7 +702,7 @@
           "business": 0
         },
         "invested": 67007.13810800003,
-        "leftInCash": 35963.719391000006,
+        "leftInCash": 35963.719391,
         "income": 3223.777766000002,
         "costs": 327.7706259999999,
         "left": 3209.9700000000003,
@@ -718,7 +718,7 @@
           "business": 55000
         },
         "invested": 144508.81501500006,
-        "leftInCash": -18285.692293999997,
+        "leftInCash": -18285.692294000008,
         "income": 2035.255242999998,
         "costs": 321.3459540000001,
         "left": 10885.850000000002,
@@ -741,6 +741,14 @@
         "investedRate": 0.8699836118030425,
         "totalIn": 447040.20723299996
       }
+    },
+    "destinationSample202607": {
+      "Non registered": 2900,
+      "Spousal RRSP (spouse's asset)": 1600,
+      "RRSP": 1400,
+      "Crypto": 100,
+      "RESP": 1050,
+      "Corporate": 2000
     }
   }
 }

@@ -8,6 +8,7 @@ import {
   type GroupBy,
   assertBalanced,
   buildFlowGraph,
+  depositsByDestination,
 } from "./graph";
 import type { CashBlock, FlowAccount, FlowRow, FlowsData } from "./types";
 
@@ -21,6 +22,7 @@ function account(
     inTotals: true,
     firstPeriod: "2026-01",
     lastPeriod: "2026-12",
+    closed: false,
     ...overrides,
   };
 }
@@ -210,6 +212,39 @@ describe("buildFlowGraph", () => {
     expect(linkLike(graph.links, "grp:TFSA", "now:cashEquivalent")?.value).toBeCloseTo(500, 6);
   });
 
+  test("group by purpose labels nodes by the account's purpose, sentence-cased", () => {
+    const rrsp = account({ accountId: "acct_rrsp", kind: "RRSP", purpose: "retirement" });
+    const house = account({ accountId: "acct_house", kind: "NonRegistered", purpose: "house" });
+    const contribution = row({
+      accountId: "acct_rrsp",
+      code: "CONT",
+      category: "outsideBank",
+      movement: true,
+      amountCad: 500,
+      amount: 500,
+    });
+    const deposit = row({
+      accountId: "acct_house",
+      id: "acct_house:0",
+      code: "CONT",
+      category: "outsideBank",
+      movement: true,
+      amountCad: 300,
+      amount: 300,
+    });
+    const d = data([contribution, deposit], [rrsp, house]);
+    const accounts = new Set(["acct_rrsp", "acct_house"]);
+
+    const graph = buildFlowGraph(d, ALL_PERIOD, "purpose", accounts);
+
+    const retirement = graph.nodes.find((n: FlowNode) => n.id === "grp:retirement");
+    const houseNode = graph.nodes.find((n: FlowNode) => n.id === "grp:house");
+    expect(retirement?.label).toBe("Retirement");
+    expect(houseNode?.label).toBe("House");
+    expect(linkLike(graph.links, "land:direct", "grp:retirement")?.value).toBeCloseTo(500, 6);
+    expect(linkLike(graph.links, "land:direct", "grp:house")?.value).toBeCloseTo(300, 6);
+  });
+
   test("group by holding: a buy with an empty symbol lands under Unnamed holding", () => {
     const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
     const buy = row({
@@ -230,7 +265,11 @@ describe("buildFlowGraph", () => {
     expect(linkLike(graph.links, "grp:TFSA", "now:holding:")?.value).toBeCloseTo(200, 6);
   });
 
-  test("a block residual links to now:unreconciled without double counting the row-explained change", () => {
+  test("a positive residual (real cash grew more than the rows explain) flips to money arriving from nowhere", () => {
+    // opening 0, closing 105, one +100 CONT row: rowsNet 100, residual
+    // closing - opening - rowsNet = 5. The cash link is the raw
+    // closing - opening (105); the unreconciled link is -residual (-5),
+    // which nets negative and flips to src:unreconciled -> own.
     const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
     const contribution = row({
       accountId: "acct_tfsa",
@@ -255,8 +294,42 @@ describe("buildFlowGraph", () => {
 
     const graph = buildFlowGraph(d, ALL_PERIOD, "accountType", accounts);
 
+    expect(linkLike(graph.links, "src:unreconciled", "grp:TFSA")?.value).toBeCloseTo(5, 6);
+    expect(linkLike(graph.links, "grp:TFSA", "now:unreconciled")).toBeUndefined();
+    expect(linkLike(graph.links, "grp:TFSA", "now:cash")?.value).toBeCloseTo(105, 6);
+  });
+
+  test("a negative residual (real cash grew less than the rows explain) stays money leaving unexplained", () => {
+    // opening 0, closing 95, the same +100 CONT row: rowsNet 100, residual
+    // 95 - 0 - 100 = -5. The unreconciled link -residual is +5, positive,
+    // so it stays own -> now:unreconciled with no flip.
+    const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
+    const contribution = row({
+      accountId: "acct_tfsa",
+      code: "CONT",
+      category: "outsideBank",
+      movement: true,
+      amountCad: 100,
+      amount: 100,
+    });
+    const block: CashBlock = {
+      accountId: "acct_tfsa",
+      period: "2026-05",
+      currency: "CAD" as Currency,
+      opening: 0,
+      closing: 95,
+      fxRate: null,
+      rowsNet: 100,
+      residual: -5,
+    };
+    const d = data([contribution], [tfsa], [block]);
+    const accounts = new Set(["acct_tfsa"]);
+
+    const graph = buildFlowGraph(d, ALL_PERIOD, "accountType", accounts);
+
     expect(linkLike(graph.links, "grp:TFSA", "now:unreconciled")?.value).toBeCloseTo(5, 6);
-    expect(linkLike(graph.links, "grp:TFSA", "now:cash")?.value).toBeCloseTo(100, 6);
+    expect(linkLike(graph.links, "src:unreconciled", "grp:TFSA")).toBeUndefined();
+    expect(linkLike(graph.links, "grp:TFSA", "now:cash")?.value).toBeCloseTo(95, 6);
   });
 
   test("a USD block with no fx rate and a nonzero change throws, naming account and period", () => {
@@ -361,5 +434,104 @@ describe("buildFlowGraph", () => {
     for (const groupBy of groupBys) {
       expect(() => buildFlowGraph(d, ALL_PERIOD, groupBy, accounts)).not.toThrow();
     }
+  });
+});
+
+describe("depositsByDestination", () => {
+  test("a paired chequing-to-account transfer counts as a deposit landing from the hub", () => {
+    const cheq = account({ accountId: "acct_cheq", kind: "Chequing" });
+    const rrsp = account({ accountId: "acct_rrsp", kind: "RRSP" });
+    const [out, inn] = pair(
+      { accountId: "acct_cheq", amountCad: -800, amount: -800 },
+      { accountId: "acct_rrsp", amountCad: 800, amount: 800 },
+    );
+    const d = data([out as FlowRow, inn as FlowRow], [cheq, rrsp]);
+    const buckets = depositsByDestination(
+      d,
+      ALL_PERIOD,
+      "accountType",
+      new Set(["acct_cheq", "acct_rrsp"]),
+    );
+
+    expect(buckets).toEqual([{ bucket: "2026-05", values: { RRSP: 800 } }]);
+  });
+
+  test("an unpaired outside contribution counts, landing straight in", () => {
+    const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
+    const contribution = row({
+      accountId: "acct_tfsa",
+      code: "CONT",
+      category: "outsideBank",
+      movement: true,
+      amountCad: 300,
+      amount: 300,
+    });
+    const d = data([contribution], [tfsa]);
+    const buckets = depositsByDestination(d, ALL_PERIOD, "accountType", new Set(["acct_tfsa"]));
+
+    expect(buckets).toEqual([{ bucket: "2026-05", values: { TFSA: 300 } }]);
+  });
+
+  test("income and sale proceeds never count as a deposit", () => {
+    const rrsp = account({ accountId: "acct_rrsp", kind: "RRSP" });
+    const div = row({
+      accountId: "acct_rrsp",
+      code: "DIV",
+      category: "income",
+      amountCad: 50,
+      amount: 50,
+    });
+    const d = data([div], [rrsp]);
+    const buckets = depositsByDestination(d, ALL_PERIOD, "accountType", new Set(["acct_rrsp"]));
+
+    expect(buckets).toEqual([]);
+  });
+
+  test("money moved from another (unselected) account never counts as a deposit", () => {
+    const cheq = account({ accountId: "acct_cheq", kind: "Chequing" });
+    const rrsp = account({ accountId: "acct_rrsp", kind: "RRSP" });
+    const [out, inn] = pair(
+      { accountId: "acct_cheq", amountCad: -800, amount: -800 },
+      { accountId: "acct_rrsp", amountCad: 800, amount: 800 },
+    );
+    // Both legs stay in `rows` (the real corpus always carries both), but
+    // only the RRSP account is selected -- the chequing leg is filtered
+    // out of the graph, not out of the pairing lookup.
+    const d = data([out as FlowRow, inn as FlowRow], [cheq, rrsp]);
+    const buckets = depositsByDestination(d, ALL_PERIOD, "accountType", new Set(["acct_rrsp"]));
+
+    expect(buckets).toEqual([]);
+  });
+
+  test("buckets by year once the period spans more than 24 months", () => {
+    const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
+    const a = row({
+      accountId: "acct_tfsa",
+      id: "acct_tfsa:0",
+      period: "2023-01",
+      code: "CONT",
+      category: "outsideBank",
+      movement: true,
+      amountCad: 100,
+      amount: 100,
+    });
+    const b = row({
+      accountId: "acct_tfsa",
+      id: "acct_tfsa:1",
+      period: "2026-06",
+      code: "CONT",
+      category: "outsideBank",
+      movement: true,
+      amountCad: 200,
+      amount: 200,
+    });
+    const d = data([a, b], [tfsa]);
+    const p = { from: "2023-01", to: "2026-06" };
+    const buckets = depositsByDestination(d, p, "accountType", new Set(["acct_tfsa"]));
+
+    expect(buckets).toEqual([
+      { bucket: "2023", values: { TFSA: 100 } },
+      { bucket: "2026", values: { TFSA: 200 } },
+    ]);
   });
 });
