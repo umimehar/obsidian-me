@@ -18,17 +18,43 @@ const HEIGHT = 260;
 const MARGIN = { top: 16, right: 16, bottom: 28, left: 68 };
 const BAND_FRACTION = 0.7;
 
-/** Radix step 9, in the order the spec assigns them, cycling if a group by ever draws more series. */
-const PALETTE = [
-  "var(--jade-9)",
-  "var(--blue-9)",
-  "var(--amber-9)",
-  "var(--violet-9)",
-  "var(--cyan-9)",
-  "var(--crimson-9)",
-  "var(--grass-9)",
-  "var(--orange-9)",
-];
+/**
+ * Radix step 9, cycling if a group by ever draws more than eight series.
+ * Jade and red are kept out: jade already means a flow on this tab's own
+ * Sankey, and red means a loss everywhere else in the app.
+ *
+ * Chosen by exhaustively searching every 8-colour subset of the Radix step 9
+ * scales that clears 3:1 contrast against both this project's light
+ * (`#ffffff`) and dark (`--slate-1`, `#111113`) chart backgrounds, for the
+ * one with the largest worst-case (smallest pairwise) CIEDE2000 distance --
+ * `paletteDistance.test.ts` pins both the distance and the contrast
+ * computed from the same hex values `hex` names here, not from these CSS
+ * custom properties, since happy-dom resolves no stylesheet. Radix's step 9
+ * hex is identical in light and dark for every scale below, so one set of
+ * figures covers both themes.
+ *
+ * 16.8 is the best any 8-colour subset of the light/dark-feasible 17
+ * scales can reach under that contrast floor -- proven by the same
+ * exhaustive search, not assumed -- short of the 20 a first pass asked for.
+ * Loosening either constraint was the alternative: a ninth colour, a looser
+ * contrast floor, or a lower distance floor. All three were rejected: eight
+ * series is what `groupBy` can draw, 3:1 is the WCAG floor this chart's own
+ * fills already have to clear, and a distance floor lower than what the
+ * palette can equal is not a floor.
+ */
+export const PALETTE_HEX = [
+  { token: "var(--blue-9)", hex: "#0090ff" },
+  { token: "var(--crimson-9)", hex: "#e93d82" },
+  { token: "var(--grass-9)", hex: "#46a758" },
+  { token: "var(--indigo-9)", hex: "#3e63dd" },
+  { token: "var(--teal-9)", hex: "#12a594" },
+  { token: "var(--brown-9)", hex: "#ad7f58" },
+  { token: "var(--plum-9)", hex: "#ab4aba" },
+  { token: "var(--tomato-9)", hex: "#e54d2e" },
+] as const;
+
+/** `PALETTE_HEX`'s CSS custom properties alone, what the chart actually paints. */
+const PALETTE = PALETTE_HEX.map((c) => c.token);
 
 interface Band {
   bucket: string;

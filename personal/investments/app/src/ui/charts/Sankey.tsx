@@ -262,6 +262,36 @@ function pathStartX(path: string): number {
 const EMPTY_HIGHLIGHT: ReadonlySet<string> = new Set();
 
 /**
+ * The plain-text readout for a PIN with nothing currently hovered, above
+ * the chart. See `Sankey`'s own comment on `showPinnedLine` for why this
+ * exists separately from the floating tooltip.
+ */
+function PinnedReadout({ text }: { text: string }) {
+  return (
+    <Text
+      size="2"
+      color="gray"
+      as="p"
+      mb="2"
+      data-flow-pinned-readout=""
+      style={{ margin: 0, marginBottom: 8 }}
+    >
+      {text}
+    </Text>
+  );
+}
+
+/** Shown only while the chart's own floor (`minChartWidth`) has pushed it wider than the container. */
+function ScrollHint({ shown }: { shown: boolean }) {
+  if (!shown) return null;
+  return (
+    <Text size="1" color="gray" as="p" mb="1" style={{ margin: 0, marginBottom: 4 }}>
+      Scrolls sideways to fit every account.
+    </Text>
+  );
+}
+
+/**
  * A hand rolled Sankey of the period's money flow: four fixed columns laid
  * out by `layoutSankey`, rendered as focusable, clickable bands. Every node
  * and link label comes from `nodeLines`/`linkText`, each one call to
@@ -326,24 +356,9 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
 
   return (
     <div style={{ position: "relative" }}>
-      {showPinnedLine ? (
-        <Text
-          size="2"
-          color="gray"
-          as="p"
-          mb="2"
-          data-flow-pinned-readout=""
-          style={{ margin: 0, marginBottom: 8 }}
-        >
-          {activeText}
-        </Text>
-      ) : null}
+      {showPinnedLine && activeText !== null ? <PinnedReadout text={activeText} /> : null}
       <div ref={containerRef} style={{ position: "relative" }}>
-        {needsScroll ? (
-          <Text size="1" color="gray" as="p" mb="1" style={{ margin: 0, marginBottom: 4 }}>
-            Scrolls sideways to fit every account.
-          </Text>
-        ) : null}
+        <ScrollHint shown={needsScroll} />
         <div style={{ overflowX: needsScroll ? "auto" : "visible" }}>
           <svg
             viewBox={`0 0 ${layoutWidth} ${height}`}

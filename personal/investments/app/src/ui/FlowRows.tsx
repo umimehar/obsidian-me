@@ -1,4 +1,5 @@
 import { Button, Flex, Heading, Table, Text } from "@radix-ui/themes";
+import type { CSSProperties } from "react";
 import { useState } from "react";
 import type { FlowGraph } from "../analytics/flows/graph";
 import type { FlowAccount, FlowRow, FlowsData } from "../analytics/flows/types";
@@ -25,6 +26,41 @@ export const DRILL_DOWN_HEADING_ID = "flow-drilldown-heading";
 
 /** No band's own rows exceed this without help -- the Non registered -> Invested band alone carries 1,057. */
 const ROW_CAP = 50;
+
+/**
+ * Windows the drill down's own table the same way `FlowTable` windows the
+ * flows table -- "Show all N rows" un-caps the data, but 1,057 rows is
+ * still too long for a summary view to grow the page by, so the region
+ * scrolls in place with its header pinned rather than the page scrolling
+ * past a table taller than the tab.
+ */
+const TABLE_MAX_HEIGHT = 360;
+const ROW_HEIGHT_PX = 33;
+
+/**
+ * Applied to each header CELL, not the `<tr>` -- see `FlowTable.tsx`'s
+ * identical `STICKY_HEADER_CELL` comment for why, and `app.css`'s
+ * `.rt-TableRootTable { overflow: visible }` rule this also depends on.
+ * Verified by scrolling the real 60-row expanded table.
+ */
+const STICKY_HEADER_CELL: CSSProperties = {
+  position: "sticky",
+  top: 0,
+  background: "var(--color-panel-solid)",
+  zIndex: 1,
+};
+
+/**
+ * `Table.Root` always wraps its rows in Radix's own `ScrollArea`, sized to
+ * `height: 100%` of `Table.Root`'s own box -- see `FlowTable.tsx`'s
+ * identical `wideTableHeight` comment for why a `max-height` on a wrapper
+ * div around `Table.Root` breaks the sticky header instead of fixing it.
+ * A definite `height` on `Table.Root` itself, capped at `TABLE_MAX_HEIGHT`,
+ * makes Radix's own ScrollArea the real scrolling ancestor.
+ */
+function wideTableHeight(rowCount: number): number {
+  return Math.min(TABLE_MAX_HEIGHT, ROW_HEIGHT_PX + rowCount * ROW_HEIGHT_PX);
+}
 
 /** The other leg of a paired row's account label, or null when the row is unpaired or its partner is missing. */
 function partnerLabel(
@@ -203,7 +239,11 @@ export function FlowRows({ flows, graph, selected, narrow = false }: FlowRowsPro
     return (
       <Flex direction="column" gap="2" data-flow-rows="">
         <DrillDownHeading />
-        <Flex direction="column" data-flow-rows-table="">
+        <Flex
+          direction="column"
+          data-flow-rows-table=""
+          style={{ maxHeight: TABLE_MAX_HEIGHT, overflowY: "auto" }}
+        >
           {rows.map((row) => (
             <NarrowDrillRow
               key={row.id}
@@ -221,14 +261,23 @@ export function FlowRows({ flows, graph, selected, narrow = false }: FlowRowsPro
   return (
     <Flex direction="column" gap="2" data-flow-rows="">
       <DrillDownHeading />
-      <Table.Root size="1" variant="surface" data-flow-rows-table="">
+      <Table.Root
+        size="1"
+        variant="surface"
+        data-flow-rows-table=""
+        style={{ height: wideTableHeight(rows.length) }}
+      >
         <Table.Header>
           <Table.Row>
-            <Table.ColumnHeaderCell>Date</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Account</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Code</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell align="right">Amount</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Partner account</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell style={STICKY_HEADER_CELL}>Date</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell style={STICKY_HEADER_CELL}>Account</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell style={STICKY_HEADER_CELL}>Code</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell align="right" style={STICKY_HEADER_CELL}>
+              Amount
+            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell style={STICKY_HEADER_CELL}>
+              Partner account
+            </Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>

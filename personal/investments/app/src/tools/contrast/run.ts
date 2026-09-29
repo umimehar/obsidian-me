@@ -111,7 +111,22 @@ const FLOW_LABEL_WIDTHS: readonly number[] = [1152, 800, 660];
  * with nothing catching it. This is the thing that catches it: an actual
  * Chromium layout, on the actual running chart.
  */
-function checkFlowLabelOverlaps(): { a: string; b: string }[] {
+interface FlowLabelSweep {
+  pairs: { a: string; b: string }[];
+  /** How many `[data-flow-label]` elements `getBBox()` actually measured. */
+  count: number;
+}
+
+/**
+ * Runs inside the page: every pair of rendered `[data-flow-label]` text boxes
+ * whose real, browser-measured `getBBox()` intersects, plus how many labels
+ * were measured at all. That count is what lets a caller tell "swept and
+ * found nothing wrong" apart from "found nothing because there was nothing to
+ * find" -- `svg === null` (wrong tab, or the narrow layout with no Sankey)
+ * and an empty `<svg>` (mounted but not yet laid out) both used to read back
+ * as `[]`, identical to a genuinely clean sweep.
+ */
+function checkFlowLabelOverlaps(): FlowLabelSweep {
   interface Box {
     id: string;
     x0: number;
@@ -149,7 +164,33 @@ function checkFlowLabelOverlaps(): { a: string; b: string }[] {
     return pairs;
   }
   const svg = document.querySelector('svg[role="group"]');
-  return svg === null ? [] : overlapping(boxesFor(svg));
+  const boxes = svg === null ? [] : boxesFor(svg);
+  return { pairs: overlapping(boxes), count: boxes.length };
+}
+
+/**
+ * One `checkFlowLabelOverlaps()` measurement at the page's current state,
+ * pushing an overlap problem for every intersecting pair and, separately, a
+ * problem when it measured zero labels -- a selector pointed at the wrong
+ * root, a tab that failed to mount, or a narrow layout with no Sankey at all
+ * would otherwise read back as a silent, contentedly empty pass.
+ */
+async function sweepFlowLabelOverlapsHere(
+  page: Page,
+  at: { tab: string; theme: Theme; state: string },
+  problems: string[],
+): Promise<void> {
+  const { pairs, count } = await page.evaluate(checkFlowLabelOverlaps);
+  if (count === 0) {
+    problems.push(`${at.theme}/${at.tab} ${at.state}: zero [data-flow-label] boxes measured`);
+    return;
+  }
+  for (const pair of pairs) {
+    problems.push(
+      `${at.theme}/${at.tab} ${at.state}: two [data-flow-label] boxes intersect: ` +
+        `${pair.a} and ${pair.b}`,
+    );
+  }
 }
 
 /**
@@ -169,14 +210,37 @@ async function sweepFlowLabelOverlaps(
   for (const width of FLOW_LABEL_WIDTHS) {
     await page.setViewportSize({ width, height: original?.height ?? 720 });
     await page.waitForTimeout(100);
-    const pairs = await page.evaluate(checkFlowLabelOverlaps);
-    for (const pair of pairs) {
-      problems.push(
-        `${at.theme}/${at.tab} at ${width}px two [data-flow-label] boxes intersect: ` +
-          `${pair.a} and ${pair.b}`,
-      );
-    }
+    await sweepFlowLabelOverlapsHere(page, { ...at, state: `${width}px` }, problems);
   }
+  if (original !== null) await page.setViewportSize(original);
+}
+
+/**
+ * The densest real case: a full calendar year (`#flow/2026`, twelve months
+ * of activity rather than "all time"'s coarser buckets) grouped "By
+ * account" -- every individual account its own column-3 node rather than
+ * folded into a handful of registration types, the most labels the Sankey
+ * ever has to fit into one column at once -- at 800px, the width the
+ * ticket's own carried issue named for this chart. `FLOW_LABEL_WIDTHS`
+ * sweeps the tab's default period and group by at three widths; this is the
+ * one state that plausibly collides for a reason those three miss entirely.
+ */
+async function sweepFlowDenseGrouping(
+  page: Page,
+  at: { tab: string; theme: Theme },
+  problems: string[],
+): Promise<void> {
+  const original = page.viewportSize();
+  await page.evaluate(() => {
+    window.location.hash = "flow/2026";
+  });
+  await page.waitForTimeout(200);
+  await page.getByLabel("Group by").click();
+  await page.getByRole("option", { name: "Account", exact: true }).click();
+  await page.waitForTimeout(150);
+  await page.setViewportSize({ width: 800, height: original?.height ?? 720 });
+  await page.waitForTimeout(100);
+  await sweepFlowLabelOverlapsHere(page, { ...at, state: "2026, by account, 800px" }, problems);
   if (original !== null) await page.setViewportSize(original);
 }
 
@@ -539,6 +603,7 @@ async function sweepTab(
     if (!swept) problems.push(`${theme}/${tab} no [data-flow-link] band was hovered`);
     state.hovered += swept ? 1 : 0;
     await sweepFlowLabelOverlaps(page, { tab, theme }, problems);
+    await sweepFlowDenseGrouping(page, { tab, theme }, problems);
   }
 
   if (tab === "portfolio") {

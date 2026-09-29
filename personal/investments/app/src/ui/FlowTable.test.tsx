@@ -27,6 +27,18 @@ const GRAPH: FlowGraph = {
   totalIn: 5000,
 };
 
+/** More flows than either variant's own windowed region can show without scrolling. */
+function longGraph(count: number): FlowGraph {
+  const nodes: FlowNode[] = [node("src", 0, count * 100, "Payroll deposited")];
+  const links: FlowLink[] = [];
+  for (let i = 0; i < count; i += 1) {
+    const id = `dest${i}`;
+    nodes.push(node(id, 1, 100, `Account ${i}`));
+    links.push(link("src", id, 100));
+  }
+  return { nodes, links, totalIn: count * 100 };
+}
+
 function renderTable(
   selected: string | null = null,
   onSelect: (k: string | null) => void = () => {},
@@ -76,6 +88,39 @@ describe("FlowTable", () => {
     );
     expect(row?.getAttribute("aria-pressed")).toBe("true");
   });
+
+  test("a caption states the row count and sort order", () => {
+    renderTable();
+    const caption = document.querySelector("[data-flow-table-caption]");
+    expect(caption?.textContent).toBe("3 flows, largest first");
+  });
+
+  test("every header cell is pinned so the header never scrolls out of view", () => {
+    renderTable();
+    const cells = [...document.querySelectorAll("thead th")];
+    expect(cells.length).toBeGreaterThan(0);
+    for (const cell of cells) {
+      expect((cell as HTMLElement).style.position).toBe("sticky");
+    }
+  });
+
+  test("no scroll hint when every row already fits", () => {
+    renderTable();
+    expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+  });
+
+  test("a scroll hint appears once there are more rows than the window shows", () => {
+    render(
+      <Theme>
+        <FlowTable graph={longGraph(40)} selected={null} onSelect={() => {}} />
+      </Theme>,
+    );
+    const caption = document.querySelector("[data-flow-table-caption]");
+    expect(caption?.textContent).toBe("40 flows, largest first");
+    expect(document.querySelector("[data-flow-table-scroll-hint]")?.textContent).toBe(
+      "Scroll for more.",
+    );
+  });
 });
 
 describe("FlowTable, narrow", () => {
@@ -112,5 +157,24 @@ describe("FlowTable, narrow", () => {
     });
     fireEvent.click(screen.getAllByRole("button")[0] as HTMLElement);
     expect(picked.key).toBe(linkKey({ source: "a0", target: "b1" }));
+  });
+
+  test("a caption states the row count, and no scroll hint when every row fits", () => {
+    renderNarrow();
+    expect(document.querySelector("[data-flow-table-caption]")?.textContent).toBe(
+      "3 flows, largest first",
+    );
+    expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+  });
+
+  test("a scroll hint appears once there are more rows than the narrow window shows", () => {
+    render(
+      <Theme>
+        <FlowTable graph={longGraph(40)} selected={null} onSelect={() => {}} narrow={true} />
+      </Theme>,
+    );
+    expect(document.querySelector("[data-flow-table-scroll-hint]")?.textContent).toBe(
+      "Scroll for more.",
+    );
   });
 });

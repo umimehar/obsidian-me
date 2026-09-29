@@ -312,4 +312,23 @@ describe("FlowRows, the row cap", () => {
     renderRows(PAYROLL_KEY);
     expect(document.querySelector("[data-flow-rows-expand]")).toBeNull();
   });
+
+  test("the expanded 60-row table windows in a scrollable region with a pinned header", () => {
+    renderBig();
+    const expand = document.querySelector("[data-flow-rows-expand]");
+    if (expand === null) throw new Error("expected the expand button to render");
+    fireEvent.click(expand);
+    expect(document.querySelectorAll("[data-flow-row]")).toHaveLength(60);
+    // `Table.Root` gets a definite `height`, capped at the same 360px the
+    // narrow variant's own region caps at -- see `wideTableHeight`'s own
+    // comment for why that has to be a real height rather than a
+    // `max-height` on a wrapper div for the sticky header below to work.
+    const table = document.querySelector("[data-flow-rows-table]") as HTMLElement | null;
+    expect(table?.style.height).toBe("360px");
+    const headerCells = [...document.querySelectorAll("thead th")];
+    expect(headerCells.length).toBeGreaterThan(0);
+    for (const cell of headerCells) {
+      expect((cell as HTMLElement).style.position).toBe("sticky");
+    }
+  });
 });

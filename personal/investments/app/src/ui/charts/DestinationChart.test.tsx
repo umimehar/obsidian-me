@@ -69,8 +69,8 @@ describe("DestinationChart", () => {
     expect(legend?.textContent).toBe("TFSARRSP");
     const swatches = legend?.querySelectorAll("rect") ?? [];
     expect(swatches).toHaveLength(2);
-    expect(swatches[0]?.getAttribute("fill")).toBe("var(--jade-9)");
-    expect(swatches[1]?.getAttribute("fill")).toBe("var(--blue-9)");
+    expect(swatches[0]?.getAttribute("fill")).toBe("var(--blue-9)");
+    expect(swatches[1]?.getAttribute("fill")).toBe("var(--crimson-9)");
   });
 
   test("the chart is laid out at the container's own measured width", () => {

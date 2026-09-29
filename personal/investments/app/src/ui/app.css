@@ -63,3 +63,23 @@ summary {
 .ivt-selected-row {
   background-color: var(--accent-a3);
 }
+
+/*
+ * The Flow tab's two windowed tables (the flows table and the drill down)
+ * give their sticky header cells a real containing block to stick against.
+ * `Table.Root` wraps every table in its own `ScrollArea`, whose viewport
+ * really does scroll, but `.rt-TableRootTable` -- the `<table>` element
+ * itself -- carries `overflow: hidden`, which the CSS spec also treats as a
+ * scroll container even though it never actually scrolls. A `position:
+ * sticky` cell finds THAT container first and sticks to its own
+ * (motionless) box, not to the `ScrollArea` viewport that is actually
+ * moving underneath it -- verified by scrolling the real rendered table:
+ * the header scrolled away with the body until this rule went in. Scoped to
+ * these two tables' own `data-flow-table`/`data-flow-rows-table` markers,
+ * not every Radix table in the app, since most tables never ask to be
+ * sticky and `overflow: hidden` is what gives them their rounded corners.
+ */
+[data-flow-table] .rt-TableRootTable,
+[data-flow-rows-table] .rt-TableRootTable {
+  overflow: visible;
+}
