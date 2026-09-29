@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { buildFlowGraph } from "../../analytics/flows/graph";
 import type { FlowGraph, FlowLink, FlowNode, GroupBy } from "../../analytics/flows/graph";
-import { yearPeriod } from "../../analytics/flows/period";
+import { allTime, yearPeriod } from "../../analytics/flows/period";
 import { loadFlows } from "../data";
 import {
   type SankeyBox,
@@ -9,6 +9,7 @@ import {
   layoutSankey,
   linkKey,
   minChartWidth,
+  outerMargins,
   sankeyHeight,
 } from "./sankeyLayout";
 
@@ -212,6 +213,33 @@ describe("layoutSankey: the empty graph", () => {
   });
 });
 
+describe("layoutSankey: name wrapping", () => {
+  test("a name over 18 characters wraps onto two lines at a word boundary, leaving the figure line intact", () => {
+    const g = graph(
+      [node("a", 0, 100, "Spousal RRSP (spouse's asset)"), node("b", 3, 100)],
+      [link("a", "b", 100)],
+    );
+    const layout = layoutSankey(g, BOX);
+    const placed = layout.nodes.find((n) => n.id === "a");
+    expect(placed).toBeDefined();
+    // Wrapped name (two lines) + the amount · share line = three lines.
+    expect(placed?.labelLines.length).toBe(3);
+    expect(placed?.labelLines[0]).not.toBe("Spousal RRSP (spouse's asset)");
+    expect(placed?.labelLines.slice(0, 2).join(" ")).toBe("Spousal RRSP (spouse's asset)");
+  });
+
+  test("a short name stays on one line", () => {
+    const g = graph(
+      [node("a", 0, 100, "Left Wealthsimple"), node("b", 3, 100)],
+      [link("a", "b", 100)],
+    );
+    const layout = layoutSankey(g, BOX);
+    const placed = layout.nodes.find((n) => n.id === "a");
+    expect(placed?.labelLines.length).toBe(2);
+    expect(placed?.labelLines[0]).toBe("Left Wealthsimple");
+  });
+});
+
 describe("linkKey", () => {
   test("joins source and target with an arrow", () => {
     expect(linkKey({ source: "a", target: "b" })).toBe("a->b");
@@ -241,12 +269,15 @@ describe("against the real 2026 corpus", () => {
 });
 
 /**
- * Sankey.tsx's own rendering constants, mirrored here rather than imported:
- * this file tests the layout module in isolation from the React component,
- * and the two are kept honest by `minChartWidth`/`labelOverlaps` being the
- * one place both a layout width and an overlap check are computed.
+ * `Sankey.tsx`'s own node shape, mirrored here rather than imported: this
+ * file tests the layout module in isolation from the React component, and
+ * the two are kept honest by `minChartWidth`/`outerMargins`/`labelOverlaps`
+ * being the one place a layout width, its margins and an overlap check are
+ * all computed.
  */
-const REAL_BOX_SHAPE = { nodeWidth: 16, nodeGap: 6, labelLeft: 288, labelRight: 288 };
+function boxShapeFor(g: FlowGraph) {
+  return { nodeWidth: 16, nodeGap: 6, ...outerMargins(g) };
+}
 
 /**
  * The chart never lays out narrower than `minChartWidth` -- exactly the
@@ -255,25 +286,39 @@ const REAL_BOX_SHAPE = { nodeWidth: 16, nodeGap: 6, labelLeft: 288, labelRight: 
  * at or above it, `labelOverlaps` must come back empty.
  */
 function layoutAtLeastNeeded(g: FlowGraph, requestedWidth: number) {
-  const needed = minChartWidth(g, REAL_BOX_SHAPE);
+  const box = boxShapeFor(g);
+  const needed = minChartWidth(g, box);
   const width = Math.max(requestedWidth, needed);
-  const box: SankeyBox = { ...REAL_BOX_SHAPE, width, height: sankeyHeight(g) };
-  return layoutSankey(g, box);
+  return layoutSankey(g, { ...box, width, height: sankeyHeight(g) });
 }
 
-describe("Sankey label collisions, the real 2026 graph at narrow widths", () => {
+describe("Sankey label collisions, the real corpus at narrow widths", () => {
   const flows = loadFlows();
   const accounts = new Set(flows.accounts.map((a) => a.accountId));
+  const periods = { "2026": yearPeriod(2026), "all time": allTime(flows) };
 
-  test.each([800, 1025, 1440] as const)(
-    "zero label overlaps at %dpx requested width, for every group by",
+  test.each([800] as const)(
+    "zero label overlaps at %dpx requested width, for every group by (2026, scroll allowed)",
     (requestedWidth) => {
       for (const groupBy of ["accountType", "account", "holding"] as const satisfies GroupBy[]) {
-        const g = buildFlowGraph(flows, yearPeriod(2026), groupBy, accounts);
+        const g = buildFlowGraph(flows, periods["2026"], groupBy, accounts);
         const layout = layoutAtLeastNeeded(g, requestedWidth);
-        const overlaps = labelOverlaps(layout, g.totalIn);
-        expect(overlaps).toEqual([]);
+        expect(labelOverlaps(layout)).toEqual([]);
       }
     },
   );
+
+  test.each(
+    (["2026", "all time"] as const).flatMap((periodName) =>
+      (["accountType", "account", "holding"] as const satisfies GroupBy[]).map(
+        (groupBy) => [periodName, groupBy] as const,
+      ),
+    ),
+  )("%s under %s fits at 1025px with zero overlaps and no scroll", (periodName, groupBy) => {
+    const g = buildFlowGraph(flows, periods[periodName], groupBy, accounts);
+    const needed = minChartWidth(g, boxShapeFor(g));
+    expect(needed).toBeLessThanOrEqual(1025);
+    const layout = layoutAtLeastNeeded(g, 1025);
+    expect(labelOverlaps(layout)).toEqual([]);
+  });
 });

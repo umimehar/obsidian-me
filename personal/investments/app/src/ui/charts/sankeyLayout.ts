@@ -17,6 +17,12 @@ export interface PlacedNode extends FlowNode {
   y0: number;
   y1: number;
   labelY: number;
+  /** The wrapped name (one or two lines) followed by the `amount · share` line -- the exact lines `Sankey.tsx` renders as `<tspan>`s. */
+  labelLines: readonly string[];
+  /** The widest of `labelLines`, estimated -- what `minChartWidth`/`labelOverlaps` size a margin or a box from. */
+  labelWidth: number;
+  /** `labelLines.length * LABEL_LINE_HEIGHT` -- two lines for an unwrapped name, three for a wrapped one. */
+  labelHeight: number;
 }
 
 export interface PlacedLink extends FlowLink {
@@ -34,14 +40,9 @@ export interface SankeyLayout {
 const COLUMNS: readonly Column[] = [0, 1, 2, 3];
 const MIN_NODE_HEIGHT = 2;
 
-/** A node label is two lines -- the name, then `amount · share` -- at 11px. */
-/** Exported so `Sankey.tsx` positions its two `<tspan>`s at the same height this spacing assumes. */
+/** A node label is two or three lines -- the (possibly wrapped) name, then `amount · share` -- at 12px. */
 export const LABEL_LINE_HEIGHT = 13;
-const LABEL_BLOCK_HEIGHT = LABEL_LINE_HEIGHT * 2;
 const LABEL_BLOCK_GAP = 6;
-/** Two line heights plus a gap, not a single line's 28: the whole block has to clear the next one. */
-const MIN_LABEL_GAP = LABEL_BLOCK_HEIGHT + LABEL_BLOCK_GAP;
-const HALF_LABEL_BLOCK = LABEL_BLOCK_HEIGHT / 2;
 
 export const linkKey = (l: { source: string; target: string }): string =>
   `${l.source}->${l.target}`;
@@ -50,58 +51,124 @@ export const linkKey = (l: { source: string; target: string }): string =>
 export const LABEL_GAP = 6;
 const LABEL_FONT_SIZE = 12;
 /**
- * An average character width for the app's system sans-serif at
- * `LABEL_FONT_SIZE`, calibrated generously (rather than exactly) so it
- * never UNDER-estimates a real label's rendered width -- there is no
- * canvas or DOM to measure text against outside a browser, and this drives
- * a MINIMUM layout width the actual rendered text then has to fit inside,
- * so overestimating wastes a few pixels of margin and underestimating
- * reintroduces the collision this exists to prevent.
+ * A name longer than this wraps onto a second line at a word boundary
+ * (`wrapName`). Short enough that "Spousal RRSP (spouse's asset)" (30
+ * characters) and "Fees and withholding" (21) both wrap, long enough that
+ * "Left Wealthsimple" (17) does not need to.
  */
-const CHAR_WIDTH_FACTOR = 0.62;
+const WRAP_THRESHOLD = 18;
+/**
+ * The average character width for the app's system sans-serif at
+ * `LABEL_FONT_SIZE`, calibrated against the real running chart rather than
+ * guessed: `tspan.getComputedTextLength()` on 19 distinct real node names
+ * and 30 distinct `amount · share` lines from the 2026 corpus in Chromium
+ * averaged 6.10px/char (name lines) and 6.05px/char (figure lines), with
+ * "Chequing" the single highest outlier at 6.76 (a short word, so fixed
+ * per-glyph kerning is not amortised over many characters). 6.3/12 = 0.525
+ * keeps a small margin above that average without reintroducing the
+ * ~200px of dead margin the old 0.62 (7.44px/char) produced on every
+ * period, driven by one long name. Re-measure this the same way if the
+ * font ever changes.
+ */
+const CHAR_WIDTH_FACTOR = 0.525;
 
 function estimateTextWidth(text: string): number {
   return text.length * LABEL_FONT_SIZE * CHAR_WIDTH_FACTOR;
 }
 
 /**
- * A node's two label lines: its own name, then `amount · share` of the
- * period's total in -- one `formatCurrency` call and one `formatShare` call
- * for the whole node, never one per line. The one place this is computed,
- * shared by `Sankey.tsx`'s own rendering and by `minChartWidth`/
- * `labelOverlaps` below, so a label's estimated width can never drift from
- * the text actually painted.
+ * A node's own name and its `amount · share` line -- one `formatCurrency`
+ * call and one `formatShare` call for the whole node, never one per line.
+ * The single string this returns for the name is what the accessible name
+ * (aria-label, hover readout) is built from; it is never wrapped, so those
+ * never change when `labelBlockOf` below wraps the DISPLAYED name for
+ * layout purposes only.
  */
 export function nodeLines(node: FlowNode, totalIn: number): readonly [string, string] {
   const share = totalIn > 0 ? node.value / totalIn : 0;
   return [node.label, `${formatCurrency(node.value)} · ${formatShare(share)}`];
 }
 
-/** The wider of a node's two label lines, estimated. */
-function labelBlockWidth(node: FlowNode, totalIn: number): number {
+/**
+ * Splits a name onto two lines at whichever word boundary minimizes the
+ * wider of the two resulting lines, when the name alone would otherwise
+ * exceed `WRAP_THRESHOLD`. A single-word name cannot be split and is left
+ * alone.
+ */
+function wrapName(name: string): string[] {
+  if (name.length <= WRAP_THRESHOLD) return [name];
+  const words = name.split(" ");
+  if (words.length < 2) return [name];
+  let best: [string, string] = [name, ""];
+  let bestMax = Number.POSITIVE_INFINITY;
+  for (let i = 1; i < words.length; i++) {
+    const line1 = words.slice(0, i).join(" ");
+    const line2 = words.slice(i).join(" ");
+    const widest = Math.max(estimateTextWidth(line1), estimateTextWidth(line2));
+    if (widest < bestMax) {
+      bestMax = widest;
+      best = [line1, line2];
+    }
+  }
+  return best;
+}
+
+interface LabelBlock {
+  lines: readonly string[];
+  width: number;
+  height: number;
+}
+
+/** A node's display lines -- its (possibly wrapped) name, then its figure line -- and the box they occupy. */
+function labelBlockOf(node: FlowNode, totalIn: number): LabelBlock {
   const [name, figure] = nodeLines(node, totalIn);
-  return Math.max(estimateTextWidth(name), estimateTextWidth(figure));
+  const lines = [...wrapName(name), figure];
+  const width = Math.max(...lines.map(estimateTextWidth));
+  return { lines, width, height: lines.length * LABEL_LINE_HEIGHT };
+}
+
+function widestLabelByColumn(graph: FlowGraph): Map<Column, number> {
+  const widest = new Map<Column, number>();
+  for (const n of graph.nodes) {
+    const w = labelBlockOf(n, graph.totalIn).width;
+    widest.set(n.column, Math.max(widest.get(n.column) ?? 0, w));
+  }
+  return widest;
+}
+
+/**
+ * A small fixed cushion beyond the widest measured label, absorbing the
+ * gap between the estimate and a handful of real outlier glyphs rather
+ * than inflating `CHAR_WIDTH_FACTOR` itself for the whole corpus.
+ */
+const MARGIN_SLACK = 15;
+
+/**
+ * The outer margins sized from THIS graph's own widest wrapped labels in
+ * columns 0 and 3, not a shared worst-case constant -- so a period whose
+ * longest name is short does not carry the same ~290px margin a period
+ * with "Spousal RRSP (spouse's asset)" needs.
+ */
+export function outerMargins(graph: FlowGraph): Pick<SankeyBox, "labelLeft" | "labelRight"> {
+  const widest = widestLabelByColumn(graph);
+  return {
+    labelLeft: (widest.get(0) ?? 0) + LABEL_GAP + MARGIN_SLACK,
+    labelRight: (widest.get(3) ?? 0) + LABEL_GAP + MARGIN_SLACK,
+  };
 }
 
 /**
  * The narrowest total chart width at which no column's label block can
  * reach into the next column's own node -- the geometric floor
  * `labelOverlaps` exists to prove holds. Computed from the graph's OWN
- * labels, not a worst-case constant, so a period whose longest name is
- * short lays out no wider than it needs to; a period with a name as long
- * as "Spousal RRSP (spouse's asset)" needs a genuinely wider chart, and a
- * fixed constant either wastes space on every other period or collides on
- * this one.
+ * wrapped labels, not a worst-case constant, so a period whose longest name
+ * is short lays out no wider than it needs to.
  */
 export function minChartWidth(
   graph: FlowGraph,
   box: Pick<SankeyBox, "nodeWidth" | "labelLeft" | "labelRight">,
 ): number {
-  const widestByColumn = new Map<Column, number>();
-  for (const n of graph.nodes) {
-    const w = labelBlockWidth(n, graph.totalIn);
-    widestByColumn.set(n.column, Math.max(widestByColumn.get(n.column) ?? 0, w));
-  }
+  const widestByColumn = widestLabelByColumn(graph);
   // Columns 0-2 each hand a label off toward the next column's node; the
   // three inner gaps are laid out evenly (`columnX0`), so the tightest one
   // sets the shared span.
@@ -122,17 +189,15 @@ interface LabelBox {
   y1: number;
 }
 
-function labelBoxOf(n: PlacedNode, totalIn: number): LabelBox {
-  const width = labelBlockWidth(n, totalIn);
-  const height = LABEL_LINE_HEIGHT * 2;
+function labelBoxOf(n: PlacedNode): LabelBox {
   const rightAnchored = n.column !== 0;
   const edge = rightAnchored ? n.x1 + LABEL_GAP : n.x0 - LABEL_GAP;
   return {
     id: n.id,
-    x0: rightAnchored ? edge : edge - width,
-    x1: rightAnchored ? edge + width : edge,
-    y0: n.labelY - height / 2,
-    y1: n.labelY + height / 2,
+    x0: rightAnchored ? edge : edge - n.labelWidth,
+    x1: rightAnchored ? edge + n.labelWidth : edge,
+    y0: n.labelY - n.labelHeight / 2,
+    y1: n.labelY + n.labelHeight / 2,
   };
 }
 
@@ -148,8 +213,8 @@ function boxesOverlap(a: LabelBox, b: LabelBox): boolean {
  * collision this whole module exists to prevent gets caught before it
  * ships rather than after a reviewer's screenshot finds it.
  */
-export function labelOverlaps(layout: SankeyLayout, totalIn: number): [string, string][] {
-  const boxes = layout.nodes.map((n) => labelBoxOf(n, totalIn));
+export function labelOverlaps(layout: SankeyLayout): [string, string][] {
+  const boxes = layout.nodes.map((n) => labelBoxOf(n));
   const pairs: [string, string][] = [];
   for (let i = 0; i < boxes.length; i++) {
     for (let j = i + 1; j < boxes.length; j++) {
@@ -230,6 +295,7 @@ function stackColumn(
   nodeWidth: number,
   k: number,
   nodeGap: number,
+  totalIn: number,
 ): PlacedNode[] {
   let y = 0;
   const placed: PlacedNode[] = [];
@@ -237,40 +303,60 @@ function stackColumn(
     const height = Math.max(MIN_NODE_HEIGHT, n.value * k);
     const y0 = y;
     const y1 = y0 + height;
-    placed.push({ ...n, x0, x1: x0 + nodeWidth, y0, y1, labelY: (y0 + y1) / 2 });
+    const block = labelBlockOf(n, totalIn);
+    placed.push({
+      ...n,
+      x0,
+      x1: x0 + nodeWidth,
+      y0,
+      y1,
+      labelY: (y0 + y1) / 2,
+      labelLines: block.lines,
+      labelWidth: block.width,
+      labelHeight: block.height,
+    });
     y = y1 + nodeGap;
   }
   return placed;
 }
 
+/** The minimum vertical gap between two labels' centres, from their own (possibly different) block heights. */
+function requiredLabelGap(a: PlacedNode, b: PlacedNode): number {
+  return (a.labelHeight + b.labelHeight) / 2 + LABEL_BLOCK_GAP;
+}
+
 /**
  * Downward pass then upward pass, the classic two-pass label declutter: push
- * each label at least `MIN_LABEL_GAP` below the previous one, then pull the
- * column back inside `height` from the bottom up so no label sits below the
- * box and the minimum gap still holds.
+ * each label at least far enough below the previous one to clear both their
+ * blocks, then pull the column back inside `height` from the bottom up so no
+ * label sits below the box and the minimum gap still holds.
  *
- * The clamp is on the whole two-line text BLOCK, not the label's own y: a
- * label anchored at `height` still draws its second line below the box,
- * clipped. Bounding the last label to `height − HALF_LABEL_BLOCK` keeps its
- * block inside, and the upward pass starts from that already-clamped
- * position rather than from the unclamped overflow, so every label above it
- * ends up inside the box too.
+ * The clamp is on the whole text BLOCK, not the label's own y: a label
+ * anchored at `height` still draws its last line below the box, clipped.
+ * Bounding the last label to `height − its own half-height` keeps its block
+ * inside, and the upward pass starts from that already-clamped position
+ * rather than from the unclamped overflow, so every label above it ends up
+ * inside the box too.
  */
 function resolveLabels(nodes: PlacedNode[], height: number): void {
   for (let i = 1; i < nodes.length; i++) {
     const prev = nodes[i - 1];
     const cur = nodes[i];
     if (prev === undefined || cur === undefined) continue;
-    if (cur.labelY - prev.labelY < MIN_LABEL_GAP) cur.labelY = prev.labelY + MIN_LABEL_GAP;
+    const gap = requiredLabelGap(prev, cur);
+    if (cur.labelY - prev.labelY < gap) cur.labelY = prev.labelY + gap;
   }
   const last = nodes[nodes.length - 1];
-  const bottomBound = height - HALF_LABEL_BLOCK;
-  if (last !== undefined && last.labelY > bottomBound) last.labelY = bottomBound;
+  if (last !== undefined) {
+    const bottomBound = height - last.labelHeight / 2;
+    if (last.labelY > bottomBound) last.labelY = bottomBound;
+  }
   for (let i = nodes.length - 2; i >= 0; i--) {
     const next = nodes[i + 1];
     const cur = nodes[i];
     if (next === undefined || cur === undefined) continue;
-    if (next.labelY - cur.labelY < MIN_LABEL_GAP) cur.labelY = next.labelY - MIN_LABEL_GAP;
+    const gap = requiredLabelGap(cur, next);
+    if (next.labelY - cur.labelY < gap) cur.labelY = next.labelY - gap;
   }
 }
 
@@ -389,6 +475,7 @@ export function layoutSankey(graph: FlowGraph, box: SankeyBox): SankeyLayout {
       box.nodeWidth,
       k,
       box.nodeGap,
+      graph.totalIn,
     );
     resolveLabels(placed, box.height);
     for (const n of placed) nodesById.set(n.id, n);

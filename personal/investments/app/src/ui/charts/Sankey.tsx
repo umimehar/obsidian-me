@@ -12,7 +12,7 @@ import {
   type SankeyBox,
   layoutSankey,
   minChartWidth,
-  nodeLines,
+  outerMargins,
   sankeyHeight,
 } from "./sankeyLayout";
 import { useSvgId } from "./svgId";
@@ -31,21 +31,7 @@ export interface SankeyProps {
  * lay out any narrower than that in practice.
  */
 const FALLBACK_WIDTH = 640;
-/**
- * The outer margins for column 0's and column 3's own labels. Generous
- * enough for the longest real node name on its own ("Spousal RRSP
- * (spouse's asset)"); the INNER spacing between columns is what
- * `minChartWidth` sizes dynamically, because that is where a name this
- * long collided with the next column's node below about 1100px.
- */
-const NAME_MAX_WIDTH = 267;
-const LABEL_MARGIN = NAME_MAX_WIDTH + LABEL_GAP + 15;
-const BOX_BASE: Omit<SankeyBox, "height" | "width"> = {
-  nodeWidth: 16,
-  nodeGap: 6,
-  labelLeft: LABEL_MARGIN,
-  labelRight: LABEL_MARGIN,
-};
+const NODE_SHAPE = { nodeWidth: 16, nodeGap: 6 };
 const TOP_FLOWS = 5;
 /** A label whose block sits more than this many units from its node's own centre gets a leader line. */
 const LEADER_THRESHOLD = 4;
@@ -148,26 +134,28 @@ function labelPosition(n: PlacedNode): { x: number; anchor: "start" | "end" } {
 
 interface NodeLabelsProps {
   nodes: readonly PlacedNode[];
-  totalIn: number;
 }
 
 /**
- * Every node's two-line label, painted after the bands so it reads over
- * them, with a background-coloured halo (`paint-order: stroke`) for
- * legibility against whatever band tone happens to sit underneath. A label
- * `resolveLabels` pushed more than `LEADER_THRESHOLD` units from its node's
- * own centre gets a leader line back to the node's edge, so a reader does
- * not lose track of which rectangle a displaced label belongs to.
+ * Every node's label -- its (possibly word-wrapped) name, then the
+ * `amount · share` line, two or three `<tspan>`s from `n.labelLines`,
+ * centred on `n.labelY` and spaced `LABEL_LINE_HEIGHT` apart -- painted
+ * after the bands so it reads over them, with a background-coloured halo
+ * (`paint-order: stroke`) for legibility against whatever band tone
+ * happens to sit underneath. A label `resolveLabels` pushed more than
+ * `LEADER_THRESHOLD` units from its node's own centre gets a leader line
+ * back to the node's edge, so a reader does not lose track of which
+ * rectangle a displaced label belongs to.
  */
-function NodeLabels({ nodes, totalIn }: NodeLabelsProps) {
+function NodeLabels({ nodes }: NodeLabelsProps) {
   return (
     <>
       {nodes.map((n) => {
-        const [name, figure] = nodeLines(n, totalIn);
         const { x, anchor } = labelPosition(n);
         const centreY = (n.y0 + n.y1) / 2;
         const edgeX = n.column === 3 ? n.x0 : n.x1;
         const displaced = Math.abs(n.labelY - centreY) > LEADER_THRESHOLD;
+        const lineCount = n.labelLines.length;
         return (
           <g key={n.id}>
             {displaced ? (
@@ -191,12 +179,19 @@ function NodeLabels({ nodes, totalIn }: NodeLabelsProps) {
               strokeWidth={HALO_WIDTH}
               strokeLinejoin="round"
             >
-              <tspan x={x} y={n.labelY - LABEL_LINE_HEIGHT / 2} dy="0.32em">
-                {name}
-              </tspan>
-              <tspan x={x} y={n.labelY + LABEL_LINE_HEIGHT / 2} dy="0.32em">
-                {figure}
-              </tspan>
+              {n.labelLines.map((line, i) => (
+                <tspan
+                  // The label's own lines, painted top to bottom: never
+                  // reordered and never repeated, so the index is a stable key.
+                  // biome-ignore lint/suspicious/noArrayIndexKey: fine, see above
+                  key={i}
+                  x={x}
+                  y={n.labelY + (i - (lineCount - 1) / 2) * LABEL_LINE_HEIGHT}
+                  dy="0.32em"
+                >
+                  {line}
+                </tspan>
+              ))}
             </text>
           </g>
         );
@@ -280,18 +275,23 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
   const { ref: containerRef, width: measuredWidth } =
     useMeasuredWidth<HTMLDivElement>(FALLBACK_WIDTH);
   const height = useMemo(() => sankeyHeight(graph), [graph]);
+  // Outer margins sized from column 0's and column 3's own widest wrapped
+  // label, never a constant sized for the single longest name this project
+  // has ever seen -- see `outerMargins`.
+  const margins = useMemo(() => outerMargins(graph), [graph]);
+  const boxShape = useMemo(() => ({ ...NODE_SHAPE, ...margins }), [margins]);
   // Never narrower than the graph's own labels need -- see `minChartWidth`.
   // Below that floor the chart gets its own horizontally scrollable region
   // rather than squeezing labels back into collision, and the page itself
   // never scrolls for it.
   const layoutWidth = useMemo(
-    () => Math.max(measuredWidth, minChartWidth(graph, BOX_BASE)),
-    [graph, measuredWidth],
+    () => Math.max(measuredWidth, minChartWidth(graph, boxShape)),
+    [graph, measuredWidth, boxShape],
   );
   const needsScroll = layoutWidth > measuredWidth;
   const box: SankeyBox = useMemo(
-    () => ({ ...BOX_BASE, width: layoutWidth, height }),
-    [layoutWidth, height],
+    () => ({ ...boxShape, width: layoutWidth, height }),
+    [boxShape, layoutWidth, height],
   );
   const layout = useMemo(() => layoutSankey(graph, box), [graph, box]);
   const labels = useMemo(() => labelsOf(graph.nodes), [graph.nodes]);
@@ -362,7 +362,7 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
               onSelect={onSelect}
               onHover={setHoverKey}
             />
-            <NodeLabels nodes={layout.nodes} totalIn={graph.totalIn} />
+            <NodeLabels nodes={layout.nodes} />
           </svg>
         </div>
         <p id={summaryId} style={VISUALLY_HIDDEN}>

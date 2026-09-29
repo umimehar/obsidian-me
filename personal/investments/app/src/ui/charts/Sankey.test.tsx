@@ -3,10 +3,12 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { FlowGraph, FlowLink, FlowNode } from "../../analytics/flows/graph";
 import { expectNoCoarseForm } from "../testSupport/coarseForm";
 import { Sankey } from "./Sankey";
-import { minChartWidth } from "./sankeyLayout";
+import { minChartWidth, outerMargins } from "./sankeyLayout";
 
-/** The same box shape `Sankey.tsx` itself passes to `minChartWidth`. */
-const BOX_SHAPE = { nodeWidth: 16, labelLeft: 288, labelRight: 288 };
+/** The same box shape `Sankey.tsx` itself passes to `minChartWidth`: dynamic outer margins plus its fixed node width. */
+function boxShapeFor(graph: FlowGraph) {
+  return { nodeWidth: 16, ...outerMargins(graph) };
+}
 
 type ResizeCallback = (entries: readonly { contentRect: { width: number } }[]) => void;
 
@@ -339,7 +341,7 @@ describe("Sankey, measured width", () => {
       const observer = FakeResizeObserver.instances[0];
       expect(observer).toBeDefined();
       const wide = 5000;
-      expect(wide).toBeGreaterThan(minChartWidth(GRAPH, BOX_SHAPE));
+      expect(wide).toBeGreaterThan(minChartWidth(GRAPH, boxShapeFor(GRAPH)));
       act(() => {
         observer?.callback([{ contentRect: { width: wide } }]);
       });
@@ -366,7 +368,7 @@ describe("Sankey, measured width", () => {
     try {
       renderChart();
       const observer = FakeResizeObserver.instances[0];
-      const needed = minChartWidth(GRAPH, BOX_SHAPE);
+      const needed = minChartWidth(GRAPH, boxShapeFor(GRAPH));
       const narrow = Math.round(needed / 2);
       act(() => {
         observer?.callback([{ contentRect: { width: narrow } }]);
