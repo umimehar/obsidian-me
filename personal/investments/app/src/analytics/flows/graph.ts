@@ -96,7 +96,43 @@ const STATIC_LABELS: Readonly<Record<string, string>> = {
   "now:costs": "Fees and withholding",
   "now:left": "Left Wealthsimple",
   "now:moved": "Moved to another account",
+  "now:holding:other": "Other holdings",
 };
+
+/**
+ * The `holding` group by, on the real corpus, draws 411 distinct symbols as
+ * their own column-3 node -- an 18,000-unit-tall chart no reader can scan.
+ * `assetClass` never needs this: it has five classes, never hundreds.
+ */
+const HOLDING_CAP = 12;
+const OTHER_HOLDING = "now:holding:other";
+
+/**
+ * Every `now:holding:<symbol>` part beyond the 12 largest by total absolute
+ * value is retargeted to `now:holding:other` before aggregation, so the
+ * rest of the pipeline -- `aggregate`, `finalizeLinks`, `assertBalanced` --
+ * sees one merged link with every excluded row's id unioned into it, the
+ * same way any other two links into one target already merge.
+ */
+function capHoldingParts(parts: readonly LinkPart[]): LinkPart[] {
+  const totals = new Map<string, number>();
+  for (const part of parts) {
+    if (!part.target.startsWith("now:holding:")) continue;
+    totals.set(part.target, (totals.get(part.target) ?? 0) + Math.abs(part.value));
+  }
+  if (totals.size <= HOLDING_CAP) return [...parts];
+  const kept = new Set(
+    [...totals.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, HOLDING_CAP)
+      .map(([id]) => id),
+  );
+  return parts.map((part) =>
+    part.target.startsWith("now:holding:") && !kept.has(part.target)
+      ? { ...part, target: OTHER_HOLDING }
+      : part,
+  );
+}
 
 const COLUMN3_ORDER: readonly string[] = [
   "now:cashEquivalent",
@@ -528,7 +564,8 @@ export function buildFlowGraph(
 ): FlowGraph {
   const ctx = buildContext(data, groupBy, accounts);
   const selectedRows = data.rows.filter((r) => accounts.has(r.accountId) && inPeriod(r.period, p));
-  const parts = selectedRows.flatMap((row) => rowLinks(row, ctx));
+  const rowParts = selectedRows.flatMap((row) => rowLinks(row, ctx));
+  const parts = groupBy === "holding" ? capHoldingParts(rowParts) : rowParts;
   parts.push(...cashLinks(data, p, ctx));
 
   const rawLinks = finalizeLinks(parts);

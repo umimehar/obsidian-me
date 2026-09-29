@@ -265,6 +265,43 @@ describe("buildFlowGraph", () => {
     expect(linkLike(graph.links, "grp:TFSA", "now:holding:")?.value).toBeCloseTo(200, 6);
   });
 
+  test("group by holding caps at the 12 largest, rolling the rest into Other holdings", () => {
+    const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
+    // 15 symbols, SYM0 the largest at $1,000 down to SYM14 the smallest at
+    // $986: the top 12 (SYM0..SYM11) keep their own node, the smallest 3
+    // (SYM12..SYM14, $988 + $987 + $986 = $2,961) roll into one.
+    const rows = Array.from({ length: 15 }, (_, i) =>
+      row({
+        id: `buy${i}`,
+        accountId: "acct_tfsa",
+        code: "BUY",
+        category: "buy",
+        symbol: `SYM${i}`,
+        amountCad: -(1000 - i),
+        amount: -(1000 - i),
+      }),
+    );
+    const d = data(rows, [tfsa]);
+    const accounts = new Set(["acct_tfsa"]);
+
+    const graph = buildFlowGraph(d, ALL_PERIOD, "holding", accounts);
+
+    const holdingNodes = graph.nodes.filter((n: FlowNode) => n.id.startsWith("now:holding:"));
+    expect(holdingNodes).toHaveLength(13);
+    expect(graph.nodes.find((n: FlowNode) => n.id === "now:holding:SYM0")?.value).toBeCloseTo(
+      1000,
+      6,
+    );
+    const other = graph.nodes.find((n: FlowNode) => n.id === "now:holding:other");
+    expect(other?.label).toBe("Other holdings");
+    expect(other?.value).toBeCloseTo(988 + 987 + 986, 6);
+    const otherLink = linkLike(graph.links, "grp:TFSA", "now:holding:other");
+    expect(otherLink?.value).toBeCloseTo(988 + 987 + 986, 6);
+    expect([...(otherLink?.rowIds ?? [])].sort()).toEqual(["buy12", "buy13", "buy14"]);
+    // The kept 12 are untouched, still their own symbol.
+    expect(linkLike(graph.links, "grp:TFSA", "now:holding:SYM11")?.value).toBeCloseTo(989, 6);
+  });
+
   test("a positive residual (real cash grew more than the rows explain) flips to money arriving from nowhere", () => {
     // opening 0, closing 105, one +100 CONT row: rowsNet 100, residual
     // closing - opening - rowsNet = 5. The cash link is the raw
