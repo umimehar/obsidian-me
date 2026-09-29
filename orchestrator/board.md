@@ -22,13 +22,14 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0009-investments-usd-cash-deposits]] #project/system #type/bug #p1
 
 
 
 
 
 ## In Progress
+
+- [ ] [[TCK-0009-investments-usd-cash-deposits]] #project/system #type/bug #p1
 
 
 

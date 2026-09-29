@@ -5,7 +5,7 @@ created: 2026-09-27
 updated: 2026-09-29
 type: ticket
 id: TCK-0009
-status: claimed
+status: in-progress
 project: system
 ticket_type: bug
 assigned_device: any
@@ -16,7 +16,7 @@ priority: p1
 effort: small
 depends_on: []
 created_by: agent:mac-studio
-session: 5d58b682-52ea-4755-b750-b787fdc2ed32
+session: 84ef9f69-04a1-4e04-b797-30b71ca694d2
 ---
 
 # TCK-0009 — Investments: count USD cash deposits as money paid in
