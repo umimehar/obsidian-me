@@ -104,6 +104,22 @@ export function isPayrollDeposit(shortId: string, code: string): boolean {
 const KIND_OVERRIDES: Record<string, AccountKind> = { "91b8": "Corporate", "8297": "Corporate" };
 
 /**
+ * Owner-declared account closures, keyed by shortId, to the closing period
+ * "YYYY-MM". Empty today: every account in the corpus is live. A $0 balance
+ * is never proof of closure on its own -- 8cd3 is a live pass-through
+ * chequing account that sits at $0 between movements ($63,666 of outside
+ * money has gone through it), and inferring closure from a zero-balance
+ * statement would let `missingAccounts` silently stop naming it the first
+ * month its statement is late.
+ */
+const CLOSED_ACCOUNTS: Readonly<Record<string, string>> = {};
+
+/** The declared closing period for a shortId, or null if the account is live. */
+export function closedPeriod(shortId: string): string | null {
+  return CLOSED_ACCOUNTS[shortId] ?? null;
+}
+
+/**
  * Kinds that are real money on the page but not part of the portfolio total.
  *
  * Chequing is money held rather than invested. `SpousalRRSP` is a different

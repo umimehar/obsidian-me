@@ -84,7 +84,7 @@ describe("missingAccounts", () => {
     expect(missing.map((a) => a.accountId)).toEqual(["acct_open"]);
   });
 
-  test("names an account that fell behind (lastPeriod before the period end) while another still reports", () => {
+  test("names an account that fell behind (lastPeriod before the period end) while another still reports, even at $0 cash -- closure is never inferred from a balance here", () => {
     const late = account({ accountId: "acct_late", firstPeriod: "2023-01", lastPeriod: "2026-06" });
     const other = account({
       accountId: "acct_other",
