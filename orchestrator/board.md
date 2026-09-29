@@ -29,7 +29,6 @@ kanban-plugin: board
 
 ## In Progress
 
-- [ ] [[TCK-0009-investments-usd-cash-deposits]] #project/system #type/bug #p1
 
 
 
@@ -50,6 +49,8 @@ kanban-plugin: board
 
 
 ## Done
+
+- [x] [[TCK-0009-investments-usd-cash-deposits]] #project/system #type/bug #p1
 
 - [x] [[TCK-0008-dashboard-v2-holdings-benchmark]] #project/system #type/feature #p1
 - [x] [[TCK-0007-dashboard-v2-income-costs]] #project/system #type/feature #p1
