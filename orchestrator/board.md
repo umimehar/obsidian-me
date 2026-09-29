@@ -11,7 +11,6 @@ kanban-plugin: board
 
 ## Ready
 
-- [ ] [[TCK-0012-investments-sankey-chart]] #project/system #type/feature #p1
 - [ ] [[TCK-0013-investments-flow-tab]] #project/system #type/feature #p1
 - [ ] [[TCK-0014-investments-flow-design-pass]] #project/system #type/feature #p1
 
@@ -19,6 +18,8 @@ kanban-plugin: board
 
 
 ## Claimed
+
+- [ ] [[TCK-0012-investments-sankey-chart]] #project/system #type/feature #p1
 
 
 
