@@ -29,7 +29,14 @@ const SOURCE_CATEGORIES: readonly SourceCategory[] = [
   "interacIn",
   "business",
 ];
-const CONTRIBUTION_KINDS: readonly AccountKind[] = ["TFSA", "RRSP", "SpousalRRSP", "FHSA", "RESP"];
+/** Shared with `FlowTiles`'s contributions-by-kind line, so the two name and order kinds the same way. */
+export const CONTRIBUTION_KINDS: readonly AccountKind[] = [
+  "TFSA",
+  "RRSP",
+  "SpousalRRSP",
+  "FHSA",
+  "RESP",
+];
 
 function selectedRows(data: FlowsData, p: FlowPeriod, accounts: ReadonlySet<string>): FlowRow[] {
   return data.rows.filter((r) => accounts.has(r.accountId) && inPeriod(r.period, p));

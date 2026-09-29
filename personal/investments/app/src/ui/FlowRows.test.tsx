@@ -1,0 +1,164 @@
+import { afterEach, describe, expect, test } from "bun:test";
+import { Theme } from "@radix-ui/themes";
+import { cleanup, render } from "@testing-library/react";
+import type { FlowGraph, FlowLink, FlowNode } from "../analytics/flows/graph";
+import type { FlowAccount, FlowRow, FlowsData } from "../analytics/flows/types";
+import type { AccountKind } from "../store/mask";
+import type { Purpose } from "../store/registry";
+import type { Currency } from "../types";
+import { FlowRows } from "./FlowRows";
+import { linkKey } from "./charts/sankeyLayout";
+import { formatCurrency } from "./format";
+
+afterEach(cleanup);
+
+function account(
+  overrides: Partial<FlowAccount> & { accountId: string; kind: AccountKind },
+): FlowAccount {
+  return {
+    shortId: overrides.accountId.slice(-4),
+    label: overrides.accountId,
+    purpose: "growth" as Purpose,
+    inTotals: true,
+    firstPeriod: "2026-01",
+    lastPeriod: "2026-12",
+    closed: false,
+    ...overrides,
+  };
+}
+
+function row(overrides: Partial<FlowRow> & { accountId: string; id: string }): FlowRow {
+  return {
+    period: "2026-05",
+    date: "2026-05-15",
+    code: "CONT",
+    category: "outsideBank",
+    movement: false,
+    amountCad: 0,
+    currency: "CAD" as Currency,
+    amount: 0,
+    fxRate: null,
+    symbol: "",
+    pairId: null,
+    lagDays: null,
+    ...overrides,
+  };
+}
+
+const CHEQUING = account({ accountId: "acct_a", kind: "Chequing" });
+const TFSA = account({ accountId: "acct_b", kind: "TFSA" });
+
+const PAYROLL = row({
+  id: "r1",
+  accountId: "acct_a",
+  code: "AFT_IN",
+  category: "payroll",
+  amountCad: 2000,
+  amount: 2000,
+});
+
+const OUT_LEG = row({
+  id: "r2",
+  accountId: "acct_a",
+  code: "TRFOUT",
+  category: "outsideBank",
+  movement: true,
+  amountCad: -500,
+  amount: -500,
+  pairId: "r2>r3",
+});
+
+const IN_LEG = row({
+  id: "r3",
+  accountId: "acct_b",
+  code: "CONT",
+  category: "outsideBank",
+  movement: true,
+  amountCad: 500,
+  amount: 500,
+  pairId: "r2>r3",
+});
+
+const USD_ROW = row({
+  id: "r4",
+  accountId: "acct_a",
+  code: "DIV",
+  category: "income",
+  amountCad: 135.42,
+  amount: 100,
+  currency: "USD" as Currency,
+  fxRate: 1.3542,
+});
+
+const FLOWS: FlowsData = {
+  generated: "2026-01-01",
+  accounts: [CHEQUING, TFSA],
+  rows: [PAYROLL, OUT_LEG, IN_LEG, USD_ROW],
+  blocks: [],
+};
+
+function node(id: string, column: 0 | 1 | 2 | 3, value: number, label: string): FlowNode {
+  return { id, column, label, value };
+}
+
+function link(source: string, target: string, value: number, rowIds: string[]): FlowLink {
+  return { source, target, value, recycled: false, rowIds };
+}
+
+const PAYROLL_KEY = linkKey({ source: "src:payroll", target: "land:chequing" });
+const CASH_KEY = linkKey({ source: "grp:Chequing", target: "now:cash" });
+const USD_KEY = linkKey({ source: "src:income", target: "grp:Chequing" });
+
+const GRAPH: FlowGraph = {
+  nodes: [node("src:payroll", 0, 2000, "Payroll deposited")],
+  links: [
+    link("src:payroll", "land:chequing", 2000, ["r1"]),
+    link("grp:Chequing", "now:cash", 100, []),
+    link("src:income", "grp:Chequing", 135.42, ["r4"]),
+  ],
+  totalIn: 2000,
+};
+
+function renderRows(selected: string | null) {
+  render(
+    <Theme>
+      <FlowRows flows={FLOWS} graph={GRAPH} selected={selected} />
+    </Theme>,
+  );
+}
+
+describe("FlowRows", () => {
+  test("nothing renders with no selection", () => {
+    renderRows(null);
+    expect(document.querySelector("[data-flow-rows]")).toBeNull();
+  });
+
+  test("a payroll band lists its one row, with no description anywhere", () => {
+    renderRows(PAYROLL_KEY);
+    const rows = document.querySelectorAll("[data-flow-row]");
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.textContent).toContain("2026-05-15");
+    expect(rows[0]?.textContent).toContain("acct_a");
+    expect(rows[0]?.textContent).toContain("AFT_IN");
+    expect(rows[0]?.textContent).toContain(formatCurrency(2000));
+    expect(document.body.textContent).not.toContain("Direct deposit");
+  });
+
+  test("a link with no rows explains itself in one sentence", () => {
+    renderRows(CASH_KEY);
+    expect(document.querySelector("[data-flow-rows]")?.textContent).toBe(
+      "Change in cash balances over the period, from each statement's opening and closing cash.",
+    );
+  });
+
+  test("a USD row shows the original amount and its statement's rate", () => {
+    renderRows(USD_KEY);
+    const row1 = document.querySelector('[data-flow-row="r4"]');
+    expect(row1?.textContent).toContain(`US${formatCurrency(100)} at 1.3542`);
+  });
+
+  test("an unknown selection renders nothing rather than throwing", () => {
+    expect(() => renderRows("not-a-real-key")).not.toThrow();
+    expect(document.querySelector("[data-flow-rows]")).toBeNull();
+  });
+});

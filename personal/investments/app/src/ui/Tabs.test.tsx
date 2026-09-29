@@ -7,6 +7,7 @@ import type { TabId } from "./useHashTab";
 
 const PANELS: Record<TabId, string> = {
   month: "This month panel content",
+  flow: "Flow panel content",
   portfolio: "Portfolio panel content",
   holdings: "Holdings panel content",
   growth: "Growth panel content",
@@ -31,6 +32,7 @@ function Harness() {
       onTabChange={(next) => setHash({ tab: next })}
       panels={{
         month: <div>{PANELS.month}</div>,
+        flow: <div>{PANELS.flow}</div>,
         portfolio: <div>{PANELS.portfolio}</div>,
         holdings: <div>{PANELS.holdings}</div>,
         growth: <div>{PANELS.growth}</div>,
@@ -64,6 +66,7 @@ describe("Tabs", () => {
     // implementation detail rather than pinning it.
     for (const label of [
       "This month",
+      "Flow",
       "Portfolio",
       "Growth",
       "Income",
@@ -78,6 +81,7 @@ describe("Tabs", () => {
   test("the active panel's content is present and the inactive panels' is absent", () => {
     renderTabs();
     expect(screen.getByText(PANELS.month)).toBeDefined();
+    expect(screen.queryByText(PANELS.flow)).toBeNull();
     expect(screen.queryByText(PANELS.portfolio)).toBeNull();
     expect(screen.queryByText(PANELS.growth)).toBeNull();
     expect(screen.queryByText(PANELS.income)).toBeNull();

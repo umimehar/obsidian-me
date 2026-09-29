@@ -51,7 +51,8 @@ interface LinkPart {
 
 const SOURCE_CATEGORIES = new Set(["payroll", "outsideBank", "interacIn", "business"]);
 
-const KIND_LABELS: Readonly<Record<AccountKind, string>> = {
+/** Shared with `FlowTiles`'s contribution-by-kind line, so the two name a kind the same way. */
+export const KIND_LABELS: Readonly<Record<AccountKind, string>> = {
   TFSA: "TFSA",
   RRSP: "RRSP",
   SpousalRRSP: "Spousal RRSP (spouse's asset)",

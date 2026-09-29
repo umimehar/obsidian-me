@@ -214,6 +214,52 @@ async function sweepChartHovers(
   return opened > 0;
 }
 
+/** The Flow tab's Sankey band elements, one per rendered link. */
+const FLOW_LINK = "[data-flow-link]";
+
+/**
+ * The Flow tab's Sankey is `role="group"`, not `role="img"`: its bands are
+ * individually interactive, so the generic `sweepHovers` loop above -- which
+ * only ever looks at `svg[role="img"]` -- never reaches it. This scrolls the
+ * chart into view, hovers the widest band (the largest single money flow,
+ * read off its own `stroke-width`), and measures the readout that opens.
+ * Returns false when no band could be found or hovered, so the caller can
+ * fail the run outright: an unhovered Sankey is exactly the kind of silent
+ * hole `bun run contrast`'s own history warns against.
+ */
+async function sweepFlowSankey(
+  page: Page,
+  at: { tab: string; theme: Theme },
+  samples: Sample[],
+): Promise<boolean> {
+  const chart = page.locator('svg[role="group"]').first();
+  if ((await chart.count()) === 0) return false;
+  await chart.scrollIntoViewIfNeeded().catch(() => undefined);
+
+  const largestKey = await page.evaluate((selector) => {
+    let bestKey: string | null = null;
+    let bestWidth = -1;
+    for (const link of document.querySelectorAll(selector)) {
+      const width = Number(link.getAttribute("stroke-width") ?? "0");
+      const key = link.getAttribute("data-flow-link");
+      if (key !== null && width > bestWidth) {
+        bestWidth = width;
+        bestKey = key;
+      }
+    }
+    return bestKey;
+  }, FLOW_LINK);
+  if (largestKey === null) return false;
+
+  const box = await page.locator(`[data-flow-link="${largestKey}"]`).boundingBox();
+  if (box === null) return false;
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.waitForTimeout(50);
+  const opened = await sweepState(page, { ...at, state: "hover flow band" }, samples, TOOLTIP);
+  await page.mouse.move(AWAY.x, AWAY.y);
+  return opened > 0;
+}
+
 async function sweepHovers(
   page: Page,
   at: { tab: string; theme: Theme },
@@ -348,56 +394,70 @@ async function sweepLenses(
   }
 }
 
-async function sweepTheme(
-  browser: Browser,
-  url: string,
-  theme: Theme,
-): Promise<{
+interface ThemeSweepState {
   samples: Sample[];
   problems: string[];
   hovered: number;
   lensesSwept: Set<string>;
   tonesSwept: Set<string>;
   chartModesSwept: Set<string>;
-}> {
+}
+
+/** One tab's whole sweep: the default state, its lenses/return mode if it has any, and every hover. */
+async function sweepTab(
+  page: Page,
+  tab: string,
+  theme: Theme,
+  state: ThemeSweepState,
+): Promise<void> {
+  const { samples, problems, lensesSwept, tonesSwept, chartModesSwept } = state;
+  await showTab(page, tab);
+  const found = await sweepState(page, { tab, theme, state: "default" }, samples);
+  if (found < MIN_RUNS_PER_TAB) {
+    problems.push(`${theme}/${tab} swept only ${found} runs of text; the tab is empty`);
+  }
+
+  if (tab === "portfolio") {
+    await sweepLenses(page, { tab, theme }, samples, problems, lensesSwept);
+  }
+
+  state.hovered += await sweepHovers(page, { tab, theme }, samples, problems, tonesSwept);
+
+  if (tab === "flow") {
+    const swept = await sweepFlowSankey(page, { tab, theme }, samples);
+    if (!swept) problems.push(`${theme}/${tab} no [data-flow-link] band was hovered`);
+    state.hovered += swept ? 1 : 0;
+  }
+
+  if (tab === "portfolio") {
+    const swept = await sweepReturnChart(page, { tab, theme }, samples, tonesSwept);
+    if (swept) chartModesSwept.add(RETURN_MODE);
+    else problems.push(`${theme}/${tab} the ${RETURN_MODE} chart never became the selected one`);
+    state.hovered += swept ? 1 : 0;
+  }
+}
+
+async function sweepTheme(browser: Browser, url: string, theme: Theme): Promise<ThemeSweepState> {
   // Always a light OS preference, so `inherit` and the toggle behave the same
   // way in both passes and `applyTheme` needs at most one click.
   const context = await browser.newContext({ colorScheme: "light", reducedMotion: "reduce" });
-  const samples: Sample[] = [];
-  const problems: string[] = [];
-  const lensesSwept = new Set<string>();
-  const tonesSwept = new Set<string>();
-  const chartModesSwept = new Set<string>();
-  let hovered = 0;
+  const state: ThemeSweepState = {
+    samples: [],
+    problems: [],
+    hovered: 0,
+    lensesSwept: new Set<string>(),
+    tonesSwept: new Set<string>(),
+    chartModesSwept: new Set<string>(),
+  };
   try {
     const page = await context.newPage();
     await page.goto(url, { waitUntil: "networkidle" });
     await applyTheme(page, theme);
-    for (const tab of TABS) {
-      await showTab(page, tab);
-      const found = await sweepState(page, { tab, theme, state: "default" }, samples);
-      if (found < MIN_RUNS_PER_TAB) {
-        problems.push(`${theme}/${tab} swept only ${found} runs of text; the tab is empty`);
-      }
-
-      if (tab === "portfolio") {
-        await sweepLenses(page, { tab, theme }, samples, problems, lensesSwept);
-      }
-
-      hovered += await sweepHovers(page, { tab, theme }, samples, problems, tonesSwept);
-
-      if (tab === "portfolio") {
-        const swept = await sweepReturnChart(page, { tab, theme }, samples, tonesSwept);
-        if (swept) chartModesSwept.add(RETURN_MODE);
-        else
-          problems.push(`${theme}/${tab} the ${RETURN_MODE} chart never became the selected one`);
-        hovered += swept ? 1 : 0;
-      }
-    }
+    for (const tab of TABS) await sweepTab(page, tab, theme, state);
   } finally {
     await context.close();
   }
-  return { samples, problems, hovered, lensesSwept, tonesSwept, chartModesSwept };
+  return state;
 }
 
 async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {

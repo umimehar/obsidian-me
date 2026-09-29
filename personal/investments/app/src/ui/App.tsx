@@ -10,6 +10,7 @@ import { AboutNumbers } from "./AboutNumbers";
 import { AccountFilter } from "./AccountFilter";
 import { Cards } from "./Cards";
 import { DataStatus } from "./DataStatus";
+import { Flow } from "./Flow";
 import { Holdings } from "./Holdings";
 import { IncomeCosts } from "./IncomeCosts";
 import { GroupGainLine, Overview } from "./Overview";
@@ -40,6 +41,7 @@ import {
   loadCards,
   loadCheckpoints,
   loadCoverage,
+  loadFlows,
   loadReconciliation,
 } from "./data";
 import { formatCurrency, formatRate, formatSignedCurrency } from "./format";
@@ -53,7 +55,7 @@ import {
   yearChange,
 } from "./scope";
 import { ErrorBoundary } from "./states/ErrorBoundary";
-import { type TabId, useHashTab } from "./useHashTab";
+import { type HashState, type TabId, useHashTab } from "./useHashTab";
 import { ContributionHistory } from "./wrappers/ContributionHistory";
 import { RegisteredView } from "./wrappers/RegisteredView";
 
@@ -268,6 +270,25 @@ function MonthPanel({ analytics, scope }: { analytics: AnalyticsOutput; scope: Y
 }
 
 /**
+ * The global `YearFilter` is hidden on this tab: the Flow tab has its own
+ * period control in the hash's second segment, and showing both would be two
+ * controls that look alike but scope different things.
+ */
+function FlowPanel({
+  all,
+  period,
+  onPeriodChange,
+}: {
+  all: AnalyticsOutput;
+  period: HashState["flowPeriod"];
+  onPeriodChange: (p: HashState["flowPeriod"]) => void;
+}) {
+  return (
+    <Flow flows={loadFlows()} series={all.series} period={period} onPeriodChange={onPeriodChange} />
+  );
+}
+
+/**
  * What is actually owned, combined across accounts. Reads the UNSCOPED
  * `all`: holdings are computed once, at each account's own latest BROKERAGE
  * statement, not per year, and the view itself says so when a year is
@@ -462,7 +483,7 @@ function Dashboard() {
   const report = loadReconciliation();
   const years = scopeYears(all);
   const latestYear = years[years.length - 1] ?? new Date().getUTCFullYear();
-  const [{ tab, scope }, setHash] = useHashTab();
+  const [{ tab, scope, flowPeriod }, setHash] = useHashTab();
   const [chart, setChart] = useState<ChartMode>("value");
   const [accounts, setAccounts] = useState<Set<string>>(() => defaultSelection(all.series));
   const accountOptions = useMemo(() => chartableAccounts(all.series), [all]);
@@ -497,6 +518,13 @@ function Dashboard() {
       <WithSummary {...summary}>
         <MonthPanel analytics={all} scope={scope} />
       </WithSummary>
+    ),
+    flow: (
+      <FlowPanel
+        all={all}
+        period={flowPeriod}
+        onPeriodChange={(next) => setHash({ flowPeriod: next })}
+      />
     ),
     portfolio: (
       <PortfolioPanel

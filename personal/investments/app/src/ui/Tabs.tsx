@@ -10,6 +10,7 @@ export interface TabsProps {
 
 const LABELS: Record<TabId, string> = {
   month: "This month",
+  flow: "Flow",
   portfolio: "Portfolio",
   holdings: "Holdings",
   growth: "Growth",
