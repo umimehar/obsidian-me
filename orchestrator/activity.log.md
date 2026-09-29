@@ -52,3 +52,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-27 03:12 · mac-studio · start · TCK-0008 · starting Holdings and benchmark
 - 2026-09-27 03:49 · mac-studio · create · TCK-0009 · USD cash deposits not counted as paid in; found by the TCK-0008 review
 - 2026-09-27 04:12 · mac-studio · done · TCK-0008 · holdings and benchmark shipped, agent review PASS in round 2
+- 2026-09-29 · mac-studio · create · TCK-0010..TCK-0014 · money flow tickets from the plan; TCK-0009 triaged to Ready by the owner

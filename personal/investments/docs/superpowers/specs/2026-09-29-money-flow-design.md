@@ -52,6 +52,9 @@ Contributions and deposits stay distinct. "Paid in from outside" is a cash movem
 
 ### The cash summaries reconcile
 
+The rows reproduce every one of the 255 cash blocks exactly: opening plus the signed rows equals closing, to the cent, in both currencies, and every month's opening equals the prior month's closing. The Unreconciled node is therefore $0 on today's corpus and exists for the month it is not.
+
+
 With a plain code to bucket mapping, the activity rows reproduce the statement's own `paidIn` and `paidOut` exactly on 219 of 249 cash blocks, CAD and USD. All 30 misses are classification, not missing money: `REIMB` netted into fees on 9710 and d6d9, RESP grants filed under `other`, a reversed dividend on d6d9 2026-04 (81.80 credited against 40.90 debited), and $23.87 of fees on 2c62 across 2026-03 to 2026-05 that the statement states and the `BUY` rows fold into their amounts.
 
 The balance identity per account, currency and period is `opening + in = closing + out`, with in and out from the rows. Any gap between that and the statement's closing balance is a residual, carried as an Unreconciled node rather than absorbed.
@@ -74,20 +77,22 @@ Four columns, left to right.
 
 1. Came from: Payroll, Outside bank, Interac received, Business, Government grant, Portfolio income (dividends net of reversals, interest, securities lending, rewards), Sale proceeds, and Drawn from cash when balances fell over the period.
 2. Landed in: Chequing, or Straight into an account. Chequing is the hub: money that entered chequing and moved on flows through it.
-3. Group by, default account type: TFSA, RRSP, spousal RRSP, FHSA, RESP, non registered, corporate, crypto. Swappable to account, purpose, asset class or holding.
+3. Accounts, grouped by account type by default: TFSA, RRSP, spousal RRSP, FHSA, RESP, non registered, corporate, crypto. Group by account or purpose regroups this column.
 4. Where it is now: Invested (net buys), Cash, Cash equivalents, Fees and withholding, Left Wealthsimple, Unreconciled.
+
+Moves between the owner's accounts that do not leave chequing (TFSA to TFSA, or an account whose partner is outside the account filter) route through a Moved to another account node on the right and a Moved from another account node on the left, so no link ever runs backwards and every node still balances. A move whose two legs land in the same node is not drawn.
 
 Links may span columns: chequing money that left Wealthsimple goes from column 2 straight to column 4, and sale proceeds and portfolio income skip column 2 and link straight to the account group they arose in.
 
 Sources in a period sum to uses exactly. Recycled money (sale proceeds, income) is drawn in a lighter tone of its band and excluded from "Paid in from outside". The spousal RRSP is labelled "Spousal RRSP (spouse's asset)". The credit card is not in the flow at all: it is a debt, and its own pipeline.
 
-In the Sankey, Invested is gross buys, balanced by Sale proceeds on the left; the Invested tile is buys less sale proceeds, the new money that went into securities. Group by holding or asset class splits column 3 by what was bought, read off the `BUY` rows; money still in cash sits under Cash in column 4 regardless.
+In the Sankey, Invested is gross buys, balanced by Sale proceeds on the left; the Invested tile is buys less sale proceeds, the new money that went into securities. Group by asset class or holding keeps column 3 on account type and splits Invested in column 4 by what was bought, read off the `BUY` rows (VFV and VOO also roll up to S&P 500 through `INDEX_GROUPS` in the holding view's table). Money arriving in an account cannot be attributed to a holding until it is spent, so no dollar is assigned to a holding before its `BUY` row. A `BUY` row with an empty description (71 in the corpus) lands under Unnamed holding.
 
-Every node label carries its amount and its share of the period's total in, from one `formatCurrency` and one `formatShare` call. Hovering a band highlights it and its two nodes and shows a readout; clicking pins it and opens the drill down below the chart. Keyboard: bands are focusable in column order, Enter pins, and the chart's accessible summary lists the five largest flows in words.
+Every node label carries its amount and its share of the period's total in, from one `formatCurrency` and one `formatShare` call. Hovering a band highlights it and its two nodes and shows a readout; clicking pins it and opens the drill down below the chart. Keyboard: bands are focusable in column order, Enter pins, and the chart's accessible summary lists the five largest flows in words. The chart is `role="group"` rather than `role="img"`, since its bands are interactive, so `bun run contrast` gains an explicit step that hovers the largest band and measures its readout.
 
 Layout is hand rolled in `src/ui/charts/sankeyLayout.ts`, a pure function from nodes and links to rectangles and paths, unit tested. d3-sankey 0.12.3, last published 2022-06, was considered and rejected: it brings d3-array 2 and d3-shape 1 for iterative placement this fixed four column graph does not need.
 
-Below 40rem the chart collapses to two columns (Came from to Where it is now) and the flows table leads.
+Below 40rem the Sankey is replaced by two ranked lists, Came from and Where it is now, each row an amount and share, with the flows table after them. Two lists and no links, because collapsing four columns into two would have to invent which source paid for which destination.
 
 ## The rest of the tab
 
@@ -95,7 +100,7 @@ Controls, one row: period (this month, a chosen month, a year, a custom range, a
 
 Summary tiles for the period: Paid in from outside, Invested, Left in cash (cash plus cash equivalents change), Income earned, Costs (fees plus withholding), Invested rate (invested over paid in from outside plus income; cash equivalents count as not invested, footnoted). Beneath the first tile, contributions by registered account type.
 
-A stacked bar chart of new money by destination per month, or per year when the period spans more than 24 months, stacked by the current group by.
+A stacked bar chart of money arriving in accounts (the links into column 3) per month, or per year when the period spans more than 24 months, stacked by the current group by.
 
 A flows table: source, destination, amount, share of the period's total in. Sorted by amount.
 

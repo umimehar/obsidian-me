@@ -2,17 +2,17 @@
 title: "TCK-0009 — Investments: count USD cash deposits as money paid in"
 tags: [ticket, project/system, type/bug, personal/investments]
 created: 2026-09-27
-updated: 2026-09-27
+updated: 2026-09-29
 type: ticket
 id: TCK-0009
-status: backlog
+status: ready
 project: system
 ticket_type: bug
 assigned_device: any
 claimed_by: null
 auto_ok: false
 triage: manual
-priority: p2
+priority: p1
 effort: small
 depends_on: []
 created_by: agent:mac-studio
@@ -38,5 +38,7 @@ session: 5d58b682-52ea-4755-b750-b787fdc2ed32
 Found by the agent reviewer of TCK-0008 while recomputing the XEQT benchmark. Filed to Backlog per the loop protocol; the owner triages it to Ready.
 
 ## Worklog
+
+- 2026-09-29 — Triaged to Ready by the owner as the first ticket of the money flow work (plan Ticket A, Task 1).
 
 - 2026-09-27 08:20 — Created from the TCK-0008 review. Only two USD deposit months exist in the corpus today, both in 2c62.
