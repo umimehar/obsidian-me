@@ -11,12 +11,13 @@ kanban-plugin: board
 
 ## Ready
 
-- [ ] [[TCK-0014-investments-flow-design-pass]] #project/system #type/feature #p1
 
 
 
 
 ## Claimed
+
+- [ ] [[TCK-0014-investments-flow-design-pass]] #project/system #type/feature #p1
 
 
 
