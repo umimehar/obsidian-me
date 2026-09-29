@@ -16,9 +16,9 @@ export interface MonthPoint {
   bookCost: number | null;
   /** The CAD cash block's `closing`. Null when the statement carries no CAD cash block. */
   cashBalance: number | null;
-  /** The CAD cash block's `paidIn.deposits`. Zero when unstated (a CASH-template statement has no `paidIn`). */
+  /** Summed across every cash block, converted to CAD at the statement's `fxRate`. Zero when unstated. */
   deposits: number;
-  /** The CAD cash block's `paidOut.withdrawals`. Zero when unstated (a CASH-template statement has no `paidOut`). */
+  /** Summed across every cash block, converted to CAD at the statement's `fxRate`. Zero when unstated. */
   withdrawals: number;
   /**
    * The delta between this statement's stated year-to-date contribution

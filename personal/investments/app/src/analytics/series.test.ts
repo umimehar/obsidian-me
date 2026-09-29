@@ -212,6 +212,36 @@ describe("buildSeries", () => {
     expect(series?.months[0]?.withdrawals).toBeCloseTo(10 * 1.3979, 6);
   });
 
+  test("a rateless statement with a zero USD cash block does not throw, and deposits equal the CAD figure", () => {
+    const s = statement({
+      source: src("2025-11", "CASH"),
+      fxRate: null,
+      portfolio: null,
+      cash: [
+        cashBlock("CAD", { deposits: 500, withdrawals: 0 }),
+        cashBlock("USD", { deposits: 0, withdrawals: 0 }),
+      ],
+    });
+
+    const [series] = buildSeries([s], [account()]);
+
+    expect(series?.months[0]?.deposits).toBe(500);
+  });
+
+  test("a rateless statement with a nonzero USD deposit throws rather than silently converting at no rate", () => {
+    const s = statement({
+      source: src("2025-11", "CASH"),
+      fxRate: null,
+      portfolio: null,
+      cash: [
+        cashBlock("CAD", { deposits: 0, withdrawals: 0 }),
+        cashBlock("USD", { deposits: 100, withdrawals: 0 }),
+      ],
+    });
+
+    expect(() => buildSeries([s], [account()])).toThrow();
+  });
+
   test("leaves a month with no statement absent rather than zero-filled", () => {
     const jan = statement({ source: src("2026-01", "BROKERAGE") });
     const march = statement({ source: src("2026-03", "BROKERAGE") });
@@ -416,6 +446,19 @@ describe("buildSeries derived contributions", () => {
     expect(series?.months[0]).toMatchObject({ contributions: 500, contributionsSource: "derived" });
     expect(series?.months[1]).toMatchObject({ contributions: 200, contributionsSource: "derived" });
     expect(series?.contributionsByYear).toEqual({ "2026": 700 });
+  });
+
+  test("a USD TRFIN credit converts to CAD at the statement's own fxRate", () => {
+    const jan = statement({
+      source: src("2026-01", "BROKERAGE"),
+      contributions: null,
+      fxRate: 1.4,
+      activity: [activity("TRFIN", 100, { currency: "USD" })],
+    });
+
+    const [series] = buildSeries([jan], [account()]);
+
+    expect(series?.months[0]?.contributions).toBeCloseTo(140, 6);
   });
 
   test("a DEP credit never reaches a wrapper with an annual room bar, whatever route derived it", () => {

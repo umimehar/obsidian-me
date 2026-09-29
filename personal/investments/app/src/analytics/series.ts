@@ -1,7 +1,7 @@
 import type { AccountKind } from "../store/mask";
 import type { AccountRecord } from "../store/registry";
 import type { Contributions, Statement } from "../types";
-import { convertAmountToCad } from "./activity";
+import { convertAmountToCad, convertToCad } from "./activity";
 import type { AccountSeries, MonthPoint } from "./types";
 
 /**
@@ -58,11 +58,18 @@ function contributionCodesFor(kind: AccountKind): ReadonlySet<string> {
   return codes;
 }
 
-/** Sums this statement's contribution-shaped activity credits (see `contributionCodesFor`). */
+/**
+ * Sums this statement's contribution-shaped activity credits (see
+ * `contributionCodesFor`), each converted to CAD at the statement's own
+ * `fxRate`. A zero credit skips the conversion call, the same guard
+ * `cashFlowsInCad` uses, so a rateless statement with no USD activity here
+ * never throws.
+ */
 function deriveContributionFromActivity(s: Statement, codes: ReadonlySet<string>): number {
   let total = 0;
   for (const row of s.activity) {
-    if (codes.has(row.code)) total += row.credit;
+    if (!codes.has(row.code) || row.credit === 0) continue;
+    total += convertToCad(row.credit, row, s);
   }
   return total;
 }
