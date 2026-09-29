@@ -19,7 +19,6 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0012-investments-sankey-chart]] #project/system #type/feature #p1
 
 
 
@@ -29,6 +28,8 @@ kanban-plugin: board
 
 
 ## In Progress
+
+- [ ] [[TCK-0012-investments-sankey-chart]] #project/system #type/feature #p1
 
 
 
