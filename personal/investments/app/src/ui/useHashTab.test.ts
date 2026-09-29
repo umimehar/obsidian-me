@@ -16,7 +16,7 @@ describe("useHashTab, the tab half", () => {
   test("an empty hash resolves to this month, all time", () => {
     window.location.hash = "";
     const { result } = renderHook(() => useHashTab());
-    expect(result.current[0]).toEqual({ tab: "month", scope: "all" });
+    expect(result.current[0]).toEqual({ tab: "month", scope: "all", flowPeriod: "all" });
   });
 
   test("an unknown hash resolves to this month rather than throwing or rendering nothing", () => {
@@ -34,7 +34,7 @@ describe("useHashTab, the tab half", () => {
       result.current[1]({ tab: "data" });
     });
 
-    expect(result.current[0]).toEqual({ tab: "data", scope: 2025 });
+    expect(result.current[0]).toEqual({ tab: "data", scope: 2025, flowPeriod: "all" });
     expect(window.location.hash).toBe("#data/2025");
   });
 });
@@ -57,13 +57,13 @@ describe("useHashTab, legacy hash mapping", () => {
   test("#overview decodes with all-time scope", () => {
     window.location.hash = "#overview";
     const { result } = renderHook(() => useHashTab());
-    expect(result.current[0]).toEqual({ tab: "portfolio", scope: "all" });
+    expect(result.current[0]).toEqual({ tab: "portfolio", scope: "all", flowPeriod: "all" });
   });
 
   test("#wrappers/2025 decodes to contributions, 2025", () => {
     window.location.hash = "#wrappers/2025";
     const { result } = renderHook(() => useHashTab());
-    expect(result.current[0]).toEqual({ tab: "contributions", scope: 2025 });
+    expect(result.current[0]).toEqual({ tab: "contributions", scope: 2025, flowPeriod: "all" });
   });
 
   test.each(["#constructor", "#toString", "#hasOwnProperty", "#__proto__"] as const)(
@@ -71,7 +71,7 @@ describe("useHashTab, legacy hash mapping", () => {
     (hash) => {
       window.location.hash = hash;
       const { result } = renderHook(() => useHashTab());
-      expect(result.current[0]).toEqual({ tab: "month", scope: "all" });
+      expect(result.current[0]).toEqual({ tab: "month", scope: "all", flowPeriod: "all" });
     },
   );
 
@@ -91,7 +91,7 @@ describe("useHashTab, the year scope half", () => {
   test("a hash carrying a year resolves to that year", () => {
     window.location.hash = "#growth/2024";
     const { result } = renderHook(() => useHashTab());
-    expect(result.current[0]).toEqual({ tab: "growth", scope: 2024 });
+    expect(result.current[0]).toEqual({ tab: "growth", scope: 2024, flowPeriod: "all" });
   });
 
   test("a tab with no year is all time, which is the default view", () => {
@@ -108,7 +108,7 @@ describe("useHashTab, the year scope half", () => {
       result.current[1]({ scope: 2023 });
     });
 
-    expect(result.current[0]).toEqual({ tab: "future", scope: 2023 });
+    expect(result.current[0]).toEqual({ tab: "future", scope: 2023, flowPeriod: "all" });
     expect(window.location.hash).toBe("#future/2023");
   });
 
@@ -153,6 +153,72 @@ describe("useHashTab, the year scope half", () => {
     // Re-reading the hash the write produced must give back what was written:
     // this is the property that makes a scoped view linkable at all.
     const { result: reopened } = renderHook(() => useHashTab());
-    expect(reopened.current[0]).toEqual({ tab: "data", scope: 2026 });
+    expect(reopened.current[0]).toEqual({ tab: "data", scope: 2026, flowPeriod: "all" });
+  });
+});
+
+describe("useHashTab, the flow period", () => {
+  test("a whole year round trips as YYYY", () => {
+    window.location.hash = "#flow/2026";
+    const { result } = renderHook(() => useHashTab());
+    expect(result.current[0]).toEqual({
+      tab: "flow",
+      scope: "all",
+      flowPeriod: { from: "2026-01", to: "2026-12" },
+    });
+    expect(window.location.hash).toBe("#flow/2026");
+  });
+
+  test("a single month round trips as YYYY-MM", () => {
+    window.location.hash = "#flow/2026-09";
+    const { result } = renderHook(() => useHashTab());
+    expect(result.current[0].flowPeriod).toEqual({ from: "2026-09", to: "2026-09" });
+
+    act(() => {
+      result.current[1]({ flowPeriod: { from: "2026-03", to: "2026-03" } });
+    });
+    expect(window.location.hash).toBe("#flow/2026-03");
+  });
+
+  test("a range round trips as YYYY-MM..YYYY-MM", () => {
+    window.location.hash = "#flow/2025-07..2026-06";
+    const { result } = renderHook(() => useHashTab());
+    expect(result.current[0].flowPeriod).toEqual({ from: "2025-07", to: "2026-06" });
+    expect(window.location.hash).toBe("#flow/2025-07..2026-06");
+  });
+
+  test("a reversed range decodes to all time", () => {
+    window.location.hash = "#flow/2026-09..2026-01";
+    const { result } = renderHook(() => useHashTab());
+    expect(result.current[0].flowPeriod).toBe("all");
+  });
+
+  test("a month with no 13th month decodes to all time", () => {
+    window.location.hash = "#flow/2025-13";
+    const { result } = renderHook(() => useHashTab());
+    expect(result.current[0].flowPeriod).toBe("all");
+  });
+
+  test("#flow with no period is all time, and stays bare when written back", () => {
+    window.location.hash = "#flow";
+    const { result } = renderHook(() => useHashTab());
+    expect(result.current[0]).toEqual({ tab: "flow", scope: "all", flowPeriod: "all" });
+
+    act(() => {
+      result.current[1]({ flowPeriod: "all" });
+    });
+    expect(window.location.hash).toBe("#flow");
+  });
+
+  test("on #flow/2025 the year scope stays all, never implying the global filter", () => {
+    window.location.hash = "#flow/2025";
+    const { result } = renderHook(() => useHashTab());
+    expect(result.current[0].scope).toBe("all");
+  });
+
+  test("#growth/2024 is unaffected by the flow period change", () => {
+    window.location.hash = "#growth/2024";
+    const { result } = renderHook(() => useHashTab());
+    expect(result.current[0]).toEqual({ tab: "growth", scope: 2024, flowPeriod: "all" });
   });
 });

@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
+import type { FlowPeriod } from "../analytics/flows/period";
+import { yearPeriod } from "../analytics/flows/period";
 import type { YearScope } from "./scope";
 
 export type TabId =
   | "month"
+  | "flow"
   | "portfolio"
   | "holdings"
   | "growth"
@@ -13,6 +16,7 @@ export type TabId =
 
 export const TABS: readonly TabId[] = [
   "month",
+  "flow",
   "portfolio",
   "holdings",
   "growth",
@@ -55,6 +59,13 @@ export const LEGACY_TABS: Readonly<Record<string, TabId>> = {
 export interface HashState {
   tab: TabId;
   scope: YearScope;
+  /**
+   * The Flow tab's own period control, carried in the hash's second segment
+   * in place of the year scope: `#flow/2026`, `#flow/2026-09`,
+   * `#flow/2026-01..2026-06`. Only meaningful when `tab` is `"flow"`; `scope`
+   * stays `"all"` there so the global year filter is never implied by it.
+   */
+  flowPeriod: FlowPeriod | "all";
 }
 
 /**
@@ -70,18 +81,54 @@ function legacyTab(rawTab: string): TabId | undefined {
     : undefined;
 }
 
+/** A `YYYY-MM` string is a real calendar month, 01 through 12. */
+function isMonth(raw: string): boolean {
+  if (!/^\d{4}-\d{2}$/.test(raw)) return false;
+  const m = Number(raw.slice(5));
+  return m >= 1 && m <= 12;
+}
+
+/**
+ * `YYYY` a year, `YYYY-MM` a single month, `YYYY-MM..YYYY-MM` a range when
+ * `from <= to` and both sides are real months, anything else all time. Total:
+ * a hand-edited or truncated link always resolves to a period rather than
+ * throwing.
+ */
+function decodeFlowPeriod(raw: string): FlowPeriod | "all" {
+  if (/^\d{4}$/.test(raw)) return yearPeriod(Number(raw));
+  if (isMonth(raw)) return { from: raw, to: raw };
+  const [from = "", to = ""] = raw.split("..");
+  if (raw.includes("..") && isMonth(from) && isMonth(to) && from <= to) return { from, to };
+  return "all";
+}
+
+/** The inverse of `decodeFlowPeriod`: a whole calendar year encodes as `YYYY`, else `YYYY-MM[..YYYY-MM]`. */
+function encodeFlowPeriod(p: FlowPeriod | "all"): string | null {
+  if (p === "all") return null;
+  const year = p.from.slice(0, 4);
+  if (p.from === `${year}-01` && p.to === `${year}-12`) return year;
+  return p.from === p.to ? p.from : `${p.from}..${p.to}`;
+}
+
 function decodeHash(hash: string): HashState {
-  const [rawTab = "", rawScope = ""] = hash.replace(/^#/, "").split("/");
+  const [rawTab = "", rawSecond = ""] = hash.replace(/^#/, "").split("/");
   const tab = (TABS as readonly string[]).includes(rawTab)
     ? (rawTab as TabId)
     : (legacyTab(rawTab) ?? "month");
+  if (tab === "flow") {
+    return { tab, scope: "all", flowPeriod: decodeFlowPeriod(rawSecond) };
+  }
   // A four-digit year only. `Number("")` is 0 and `Number("2024abc")` is NaN,
   // so the shape is checked before the conversion rather than after it.
-  const scope: YearScope = /^\d{4}$/.test(rawScope) ? Number(rawScope) : "all";
-  return { tab, scope };
+  const scope: YearScope = /^\d{4}$/.test(rawSecond) ? Number(rawSecond) : "all";
+  return { tab, scope, flowPeriod: "all" };
 }
 
-function encodeHash({ tab, scope }: HashState): string {
+function encodeHash({ tab, scope, flowPeriod }: HashState): string {
+  if (tab === "flow") {
+    const segment = encodeFlowPeriod(flowPeriod);
+    return segment === null ? tab : `${tab}/${segment}`;
+  }
   return scope === "all" ? tab : `${tab}/${scope}`;
 }
 
