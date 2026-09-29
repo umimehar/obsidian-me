@@ -29,7 +29,6 @@ kanban-plugin: board
 
 ## In Progress
 
-- [ ] [[TCK-0010-investments-flow-rows]] #project/system #type/feature #p1
 
 
 
@@ -51,6 +50,8 @@ kanban-plugin: board
 
 
 ## Done
+
+- [x] [[TCK-0010-investments-flow-rows]] #project/system #type/feature #p1
 
 - [x] [[TCK-0009-investments-usd-cash-deposits]] #project/system #type/bug #p1
 
