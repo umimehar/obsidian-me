@@ -21,7 +21,6 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0010-investments-flow-rows]] #project/system #type/feature #p1
 
 
 
@@ -29,6 +28,8 @@ kanban-plugin: board
 
 
 ## In Progress
+
+- [ ] [[TCK-0010-investments-flow-rows]] #project/system #type/feature #p1
 
 
 

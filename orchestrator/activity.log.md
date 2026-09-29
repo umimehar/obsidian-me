@@ -57,3 +57,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-29 15:13 · mac-studio · start · TCK-0009 · starting USD deposits fix
 - 2026-09-29 15:23 · mac-studio · done · TCK-0009 · USD deposits and contributions converted, agent review PASS in round 3
 - 2026-09-29 15:23 · mac-studio · claim · TCK-0010 · flow rows, classification and pairing
+- 2026-09-29 15:23 · mac-studio · start · TCK-0010 · starting flow rows
