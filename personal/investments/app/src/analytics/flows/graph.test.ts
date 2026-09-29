@@ -411,6 +411,34 @@ describe("buildFlowGraph", () => {
     expect(() => assertBalanced(nodes, links)).toThrow(/grp:TFSA/);
   });
 
+  test("five sub-cent deposits from different sources still balance, because balance is checked before dropping them", () => {
+    // Each of the five categories contributes its own tiny (0.006) link
+    // into land:direct, individually under the one-cent drop threshold, but
+    // they all share the SAME land:direct -> grp:TFSA landing link, which
+    // sums to 0.03 and survives the drop. Checking balance on the raw,
+    // unrounded aggregate (before any link is dropped) sees all five small
+    // sources and the landing link and finds them exactly equal. Checking
+    // balance AFTER dropping -- the bug this guards against -- would see
+    // land:direct with nothing in and 0.03 out, and wrongly throw.
+    const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
+    const categories = ["payroll", "outsideBank", "interacIn", "business", "grant"] as const;
+    const rows = categories.map((category, i) =>
+      row({
+        accountId: "acct_tfsa",
+        id: `acct_tfsa:${i}`,
+        code: category === "grant" ? "GRANT" : "CONT",
+        category,
+        movement: category !== "grant",
+        amountCad: 0.006,
+        amount: 0.006,
+      }),
+    );
+    const d = data(rows, [tfsa]);
+    const accounts = new Set(["acct_tfsa"]);
+
+    expect(() => buildFlowGraph(d, ALL_PERIOD, "accountType", accounts)).not.toThrow();
+  });
+
   test("the graph balances every group by for a small corpus without throwing", () => {
     const cheq = account({ accountId: "acct_cheq", kind: "Chequing" });
     const rrsp = account({ accountId: "acct_rrsp", kind: "RRSP" });
