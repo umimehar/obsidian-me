@@ -1,0 +1,97 @@
+import { describe, expect, test } from "bun:test";
+import { matchTransfers } from "./match";
+import type { FlowRow } from "./types";
+
+const leg = (
+  id: string,
+  accountId: string,
+  date: string,
+  amount: number,
+  currency: "CAD" | "USD" = "CAD",
+): FlowRow => ({
+  id,
+  accountId,
+  period: date.slice(0, 7),
+  date,
+  code: amount > 0 ? "CONT" : "TRFOUT",
+  category: amount > 0 ? "outsideBank" : "leftWealthsimple",
+  movement: true,
+  amountCad: amount,
+  currency,
+  amount,
+  fxRate: null,
+  symbol: "",
+  pairId: null,
+  lagDays: null,
+});
+
+describe("matchTransfers", () => {
+  test("same date, same amount, opposite sign, different accounts pair with lag 0", () => {
+    const [out, inn] = matchTransfers([
+      leg("o", "cheq", "2026-07-14", -800),
+      leg("i", "rrsp", "2026-07-14", 800),
+    ]);
+    expect(out?.pairId).toBe("o>i");
+    expect(inn?.pairId).toBe("o>i");
+    expect(inn?.lagDays).toBe(0);
+  });
+
+  test("a two day lag pairs in the second pass and records the lag", () => {
+    const rows = matchTransfers([
+      leg("o", "a", "2026-01-14", -500),
+      leg("i", "b", "2026-01-16", 500),
+    ]);
+    expect(rows[1]?.lagDays).toBe(2);
+  });
+
+  test("an exact date match wins over a closer id with a lag", () => {
+    const rows = matchTransfers([
+      leg("o", "a", "2026-01-14", -500),
+      leg("i1", "b", "2026-01-15", 500),
+      leg("i2", "c", "2026-01-14", 500),
+    ]);
+    expect(rows[0]?.pairId).toBe("o>i2");
+    expect(rows[1]?.pairId).toBeNull();
+  });
+
+  test("four days apart never pair", () => {
+    const rows = matchTransfers([
+      leg("o", "a", "2026-01-10", -500),
+      leg("i", "b", "2026-01-14", 500),
+    ]);
+    expect(rows.every((r) => r.pairId === null)).toBe(true);
+  });
+
+  test("the same account never pairs with itself", () => {
+    const rows = matchTransfers([
+      leg("o", "a", "2026-01-10", -500),
+      leg("i", "a", "2026-01-10", 500),
+    ]);
+    expect(rows.every((r) => r.pairId === null)).toBe(true);
+  });
+
+  test("currencies never cross, and a cent apart never pairs", () => {
+    const rows = matchTransfers([
+      leg("o", "a", "2026-01-10", -500),
+      leg("u", "b", "2026-01-10", 500, "USD"),
+      leg("c", "c", "2026-01-10", 500.01),
+    ]);
+    expect(rows.every((r) => r.pairId === null)).toBe(true);
+  });
+
+  test("two identical transfers on one day pair one to one", () => {
+    const rows = matchTransfers([
+      leg("o1", "cheq", "2026-07-14", -40),
+      leg("o2", "cheq", "2026-07-14", -40),
+      leg("i1", "nr", "2026-07-14", 40),
+      leg("i2", "nr", "2026-07-14", 40),
+    ]);
+    expect(new Set(rows.map((r) => r.pairId)).size).toBe(2);
+  });
+
+  test("non movement rows are never paired", () => {
+    const div = { ...leg("d", "b", "2026-01-10", 500), movement: false };
+    const rows = matchTransfers([leg("o", "a", "2026-01-10", -500), div]);
+    expect(rows.every((r) => r.pairId === null)).toBe(true);
+  });
+});
