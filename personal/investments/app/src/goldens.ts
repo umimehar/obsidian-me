@@ -1,4 +1,5 @@
 import raw from "@data/goldens.json";
+import type { SourceCategory } from "./analytics/flows/types";
 
 /**
  * Corpus facts, snapshotted from the committed artifacts.
@@ -300,6 +301,33 @@ export interface Goldens {
     difference: number;
     monthsSkipped: number;
   };
+  /**
+   * `buildFlows(datastore)`'s own row and pair counts, plus the headline
+   * summary tiles for 2025, 2026 and all time -- each computed by calling
+   * `flowSummary` and `buildFlowGraph` over the real corpus, never
+   * hand-typed. `totalIn` is the graph's own sum out of column 0, the
+   * same figure the Sankey's total reads.
+   */
+  flows: {
+    rowCount: number;
+    pairCount: number;
+    laggedPairs: number;
+    unpairedLegs: number;
+    headline: Record<
+      "2025" | "2026" | "all",
+      {
+        paidIn: number;
+        paidInBySource: Record<SourceCategory, number>;
+        invested: number;
+        leftInCash: number;
+        income: number;
+        costs: number;
+        left: number;
+        investedRate: number | null;
+        totalIn: number;
+      }
+    >;
+  };
 }
 
 function isGoldens(value: unknown): value is Goldens {
@@ -328,7 +356,8 @@ function isGoldens(value: unknown): value is Goldens {
     typeof c.incomeCosts === "object" &&
     typeof c.month === "object" &&
     typeof c.holdings === "object" &&
-    typeof c.benchmark === "object"
+    typeof c.benchmark === "object" &&
+    typeof c.flows === "object"
   );
 }
 

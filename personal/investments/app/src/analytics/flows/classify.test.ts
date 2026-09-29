@@ -383,8 +383,7 @@ describe("classifyStatement", () => {
       activity: [
         row("SELL", {
           credit: 300.05,
-          description:
-            "Sale of 0.0010000000 BTC (executed at 2026-06-05), FX Rate: 1.3903 $CAD",
+          description: "Sale of 0.0010000000 BTC (executed at 2026-06-05), FX Rate: 1.3903 $CAD",
         }),
       ],
     });

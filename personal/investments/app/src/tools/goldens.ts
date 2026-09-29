@@ -4,6 +4,11 @@ import { simulateBenchmark, skippedPeriods } from "../analytics/benchmark";
 import type { AnalyticsOutput } from "../analytics/build";
 import { buildCashflowSeries } from "../analytics/cashflowSeries";
 import { feeReconciliationGaps } from "../analytics/feeReconciliation";
+import { buildFlows } from "../analytics/flows/build";
+import { buildFlowGraph } from "../analytics/flows/graph";
+import { type FlowPeriod, allTime, yearPeriod } from "../analytics/flows/period";
+import { flowSummary } from "../analytics/flows/summary";
+import type { FlowsData } from "../analytics/flows/types";
 import { latestGroupGain } from "../analytics/groupGain";
 import type { HoldingsOutput } from "../analytics/holdings";
 import { buildIncome } from "../analytics/income";
@@ -253,6 +258,48 @@ function buildHoldingsGoldens(holdings: HoldingsOutput): Goldens["holdings"] {
 }
 
 /** `simulateBenchmark` over the committed portfolio series and benchmark closes, reshaped into the goldens' pinned shape. */
+/** The summary tiles plus the graph's own `totalIn`, for one period over every account. */
+function flowHeadline(
+  flows: FlowsData,
+  p: FlowPeriod,
+  allAccounts: ReadonlySet<string>,
+): Goldens["flows"]["headline"]["2025"] {
+  const s = flowSummary(flows, p, allAccounts);
+  const graph = buildFlowGraph(flows, p, "accountType", allAccounts);
+  return {
+    paidIn: s.paidIn,
+    paidInBySource: s.paidInBySource,
+    invested: s.invested,
+    leftInCash: s.leftInCash,
+    income: s.income,
+    costs: s.costs,
+    left: s.left,
+    investedRate: s.investedRate,
+    totalIn: graph.totalIn,
+  };
+}
+
+/** `buildFlows(datastore)`'s own row/pair counts and the 2025, 2026 and all-time headline. */
+function buildFlowGoldens(datastore: Datastore): Goldens["flows"] {
+  const flows = buildFlows(datastore);
+  const allAccounts = new Set(flows.accounts.map((a) => a.accountId));
+  const pairIds = new Set(flows.rows.filter((r) => r.pairId !== null).map((r) => r.pairId));
+  const laggedPairIds = new Set(
+    flows.rows.filter((r) => r.lagDays !== null && r.lagDays > 0).map((r) => r.pairId),
+  );
+  return {
+    rowCount: flows.rows.length,
+    pairCount: pairIds.size,
+    laggedPairs: laggedPairIds.size,
+    unpairedLegs: flows.rows.filter((r) => r.movement && r.pairId === null).length,
+    headline: {
+      "2025": flowHeadline(flows, yearPeriod(2025), allAccounts),
+      "2026": flowHeadline(flows, yearPeriod(2026), allAccounts),
+      all: flowHeadline(flows, allTime(flows), allAccounts),
+    },
+  };
+}
+
 function buildBenchmarkGoldens(analytics: AnalyticsOutput): Goldens["benchmark"] {
   const benchmark = loadBenchmark();
   const points = simulateBenchmark(analytics.series, benchmark.closes);
@@ -508,6 +555,7 @@ function buildGoldens(): Goldens {
     },
     holdings: buildHoldingsGoldens(analytics.holdings),
     benchmark: buildBenchmarkGoldens(analytics),
+    flows: buildFlowGoldens(rawDatastore as Datastore),
   };
 }
 
