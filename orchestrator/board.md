@@ -17,7 +17,6 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0014-investments-flow-design-pass]] #project/system #type/feature #p1
 
 
 
@@ -29,6 +28,8 @@ kanban-plugin: board
 
 
 ## In Progress
+
+- [ ] [[TCK-0014-investments-flow-design-pass]] #project/system #type/feature #p1
 
 
 
