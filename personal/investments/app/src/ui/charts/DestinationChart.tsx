@@ -134,21 +134,69 @@ function StackedBars({ buckets, bands, labels, y }: StackedBarsProps) {
   );
 }
 
+/**
+ * An estimate of the axis font's average character width at 11px, calibrated
+ * the same way `sankeyLayout.ts`'s `CHAR_WIDTH_FACTOR` was: a small margin
+ * above the system sans-serif's real rendered width, never a guess.
+ */
+const AXIS_CHAR_WIDTH = 6.3;
+const AXIS_LABEL_PADDING = 8;
+
+/**
+ * Skips bucket labels evenly rather than crowding one under every bar. A
+ * year of monthly buckets in the tab's own narrow width ran twelve
+ * three-character-plus-year labels edge to edge with no gap, and adjoining
+ * ones merged into unreadable text.
+ */
+function labelStride(bands: readonly Band[]): number {
+  if (bands.length < 2) return 1;
+  const spacing = (bands[1]?.center ?? 0) - (bands[0]?.center ?? 0);
+  if (spacing <= 0) return 1;
+  const widest = Math.max(...bands.map((b) => bucketLabel(b.bucket).length)) * AXIS_CHAR_WIDTH;
+  return Math.max(1, Math.ceil((widest + AXIS_LABEL_PADDING) / spacing));
+}
+
+/**
+ * Which band indices get an axis label: every `stride`-th one, always
+ * keeping the first and last bucket -- the two a reader most needs to
+ * orient the chart by. The last stride pick is DROPPED rather than kept
+ * alongside a forced-in final label when the two would sit closer than a
+ * full stride apart: always unioning the final index in, on top of
+ * whatever the stride already lands on, could place its own label right
+ * next to the one before it -- the same crowding this whole function
+ * exists to prevent, just moved to the last pair instead of every pair.
+ */
+function shownLabelIndices(bandCount: number, stride: number): ReadonlySet<number> {
+  const shown = new Set<number>();
+  for (let index = 0; index < bandCount; index += stride) shown.add(index);
+  const lastIndex = bandCount - 1;
+  if (lastIndex < 0) return shown;
+  const previous = [...shown].filter((index) => index !== lastIndex).at(-1);
+  if (previous !== undefined && lastIndex - previous < stride) shown.delete(previous);
+  shown.add(lastIndex);
+  return shown;
+}
+
 function XAxis({ bands, innerHeight }: { bands: readonly Band[]; innerHeight: number }) {
+  const stride = labelStride(bands);
+  const shown = shownLabelIndices(bands.length, stride);
   return (
     <>
-      {bands.map((band) => (
-        <text
-          key={band.bucket}
-          x={band.center}
-          y={innerHeight + 20}
-          textAnchor="middle"
-          fontSize={11}
-          fill="var(--gray-a11)"
-        >
-          {bucketLabel(band.bucket)}
-        </text>
-      ))}
+      {bands.map((band, index) => {
+        if (!shown.has(index)) return null;
+        return (
+          <text
+            key={band.bucket}
+            x={band.center}
+            y={innerHeight + 20}
+            textAnchor="middle"
+            fontSize={11}
+            fill="var(--gray-a11)"
+          >
+            {bucketLabel(band.bucket)}
+          </text>
+        );
+      })}
     </>
   );
 }

@@ -96,6 +96,15 @@ function NarrowRow({ link, labels, totalIn, selected, onSelect }: RowProps) {
 }
 
 /**
+ * A cap on how tall the table sits before it scrolls in its own region --
+ * the period's flows run 58 to 64 rows on the real corpus, too long for a
+ * summary view to push the rest of the tab down by. The data is not
+ * truncated, only the viewport: every row is still in the DOM and reachable
+ * by scrolling or by keyboard.
+ */
+const TABLE_MAX_HEIGHT = 360;
+
+/**
  * The period's flows as a table -- source, destination, amount and share of
  * money in, sorted largest first. Clicking a row selects that band, the same
  * selection the Sankey and the drill down below it share, so the three views
@@ -109,7 +118,11 @@ export function FlowTable({ graph, selected, onSelect, narrow = false }: FlowTab
 
   if (narrow) {
     return (
-      <Flex direction="column" data-flow-table="">
+      <Flex
+        direction="column"
+        data-flow-table=""
+        style={{ maxHeight: TABLE_MAX_HEIGHT, overflowY: "auto" }}
+      >
         {links.map((link) => (
           <Row
             key={linkKey(link)}
@@ -125,27 +138,29 @@ export function FlowTable({ graph, selected, onSelect, narrow = false }: FlowTab
   }
 
   return (
-    <Table.Root size="1" variant="surface" data-flow-table="">
-      <Table.Header>
-        <Table.Row>
-          <Table.ColumnHeaderCell>From</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>To</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell align="right">Amount</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell align="right">Share of money in</Table.ColumnHeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {links.map((link) => (
-          <Row
-            key={linkKey(link)}
-            link={link}
-            labels={labels}
-            totalIn={graph.totalIn}
-            selected={selected}
-            onSelect={onSelect}
-          />
-        ))}
-      </Table.Body>
-    </Table.Root>
+    <div style={{ maxHeight: TABLE_MAX_HEIGHT, overflowY: "auto" }}>
+      <Table.Root size="1" variant="surface" data-flow-table="">
+        <Table.Header>
+          <Table.Row>
+            <Table.ColumnHeaderCell>From</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>To</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell align="right">Amount</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell align="right">Share of money in</Table.ColumnHeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {links.map((link) => (
+            <Row
+              key={linkKey(link)}
+              link={link}
+              labels={labels}
+              totalIn={graph.totalIn}
+              selected={selected}
+              onSelect={onSelect}
+            />
+          ))}
+        </Table.Body>
+      </Table.Root>
+    </div>
   );
 }

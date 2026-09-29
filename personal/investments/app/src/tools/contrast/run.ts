@@ -89,6 +89,97 @@ const CHART_GROUP = '[role="radiogroup"][aria-label="Chart"]';
 
 const EXTRA_LENSES: readonly string[] = ["By account", "By purpose"];
 
+/**
+ * The widths the Sankey's own label collision guard sweeps: 1152px (72rem,
+ * this project's standard desktop width), 800px (the width the ticket's own
+ * carried issue named for the chart's horizontal scroll), and 660px, just
+ * above the 40rem/640px breakpoint where the Sankey gives up the least
+ * margin to its own labels before the tab switches to the narrow ranked
+ * lists instead. Measured against the real corpus, 660px is where a
+ * mis-calibrated `CHAR_WIDTH_FACTOR` first produces a genuine collision:
+ * the floor `minChartWidth` computes binds tightly there, while at 800px
+ * and 1152px it either does not bind or binds with enough slack from
+ * `LABEL_GAP` to absorb a plausible drift.
+ */
+const FLOW_LABEL_WIDTHS: readonly number[] = [1152, 800, 660];
+
+/**
+ * Runs inside the page: every pair of rendered `[data-flow-label]` text boxes
+ * whose real, browser-measured `getBBox()` intersects. This is the geometric
+ * ground truth `sankeyLayout.ts`'s `labelOverlaps` can only estimate -- that
+ * unit test has no fonts to measure against, so `CHAR_WIDTH_FACTOR` can drift
+ * with nothing catching it. This is the thing that catches it: an actual
+ * Chromium layout, on the actual running chart.
+ */
+function checkFlowLabelOverlaps(): { a: string; b: string }[] {
+  interface Box {
+    id: string;
+    x0: number;
+    x1: number;
+    y0: number;
+    y1: number;
+  }
+  function boxesFor(svg: Element): Box[] {
+    const boxes: Box[] = [];
+    for (const el of svg.querySelectorAll("[data-flow-label]")) {
+      if (!(el instanceof SVGTextElement)) continue;
+      const b = el.getBBox();
+      boxes.push({
+        id: el.getAttribute("data-flow-label") ?? "",
+        x0: b.x,
+        x1: b.x + b.width,
+        y0: b.y,
+        y1: b.y + b.height,
+      });
+    }
+    return boxes;
+  }
+  function overlapping(boxes: readonly Box[]): { a: string; b: string }[] {
+    const pairs: { a: string; b: string }[] = [];
+    for (let i = 0; i < boxes.length; i += 1) {
+      for (let j = i + 1; j < boxes.length; j += 1) {
+        const a = boxes[i];
+        const b = boxes[j];
+        if (a === undefined || b === undefined) continue;
+        if (a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1) {
+          pairs.push({ a: a.id, b: b.id });
+        }
+      }
+    }
+    return pairs;
+  }
+  const svg = document.querySelector('svg[role="group"]');
+  return svg === null ? [] : overlapping(boxesFor(svg));
+}
+
+/**
+ * Resizes the page to each of `FLOW_LABEL_WIDTHS` in turn and fails the run
+ * if any two Sankey node labels intersect at that width, restoring the
+ * viewport afterwards so later tabs render at the size the rest of the sweep
+ * expects. This is the guard the ticket asks for by name: a drift in
+ * `CHAR_WIDTH_FACTOR` that lets two labels collide has nothing else in the
+ * pipeline that would catch it before a reviewer's own screenshot does.
+ */
+async function sweepFlowLabelOverlaps(
+  page: Page,
+  at: { tab: string; theme: Theme },
+  problems: string[],
+): Promise<void> {
+  const original = page.viewportSize();
+  for (const width of FLOW_LABEL_WIDTHS) {
+    await page.setViewportSize({ width, height: original?.height ?? 720 });
+    await page.waitForTimeout(100);
+    const pairs = await page.evaluate(checkFlowLabelOverlaps);
+    for (const pair of pairs) {
+      problems.push(
+        `${at.theme}/${at.tab} at ${width}px two [data-flow-label] boxes intersect: ` +
+          `${pair.a} and ${pair.b}`,
+      );
+    }
+  }
+  if (original !== null) await page.setViewportSize(original);
+}
+
 /** Somewhere no chart can be, so a pointer parked here leaves every cursor cleared. */
 const AWAY = { x: 0, y: 0 } as const;
 
@@ -447,6 +538,7 @@ async function sweepTab(
     const swept = await sweepFlowSankey(page, { tab, theme }, samples);
     if (!swept) problems.push(`${theme}/${tab} no [data-flow-link] band was hovered`);
     state.hovered += swept ? 1 : 0;
+    await sweepFlowLabelOverlaps(page, { tab, theme }, problems);
   }
 
   if (tab === "portfolio") {

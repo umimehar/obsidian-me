@@ -153,7 +153,7 @@ function NodeLabels({ nodes }: NodeLabelsProps) {
       {nodes.map((n) => {
         const { x, anchor } = labelPosition(n);
         const centreY = (n.y0 + n.y1) / 2;
-        const edgeX = n.column === 3 ? n.x0 : n.x1;
+        const edgeX = n.column === 0 ? n.x0 : n.x1;
         const displaced = Math.abs(n.labelY - centreY) > LEADER_THRESHOLD;
         const lineCount = n.labelLines.length;
         return (
@@ -339,6 +339,11 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
         </Text>
       ) : null}
       <div ref={containerRef} style={{ position: "relative" }}>
+        {needsScroll ? (
+          <Text size="1" color="gray" as="p" mb="1" style={{ margin: 0, marginBottom: 4 }}>
+            Scrolls sideways to fit every account.
+          </Text>
+        ) : null}
         <div style={{ overflowX: needsScroll ? "auto" : "visible" }}>
           <svg
             viewBox={`0 0 ${layoutWidth} ${height}`}

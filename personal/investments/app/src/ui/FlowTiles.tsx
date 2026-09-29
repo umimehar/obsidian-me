@@ -34,10 +34,12 @@ function Tile({ label, value }: { label: string; value: string }) {
 /**
  * Every registered kind the period's rows contributed to, in
  * `CONTRIBUTION_KINDS` order, only when nonzero -- one kind and one figure
- * per line, a definition list rather than a comma-joined sentence, so a
+ * per entry, a definition list rather than a comma-joined sentence, so a
  * kind and its own figure stay visually paired instead of running together
  * ("Spousal RRSP (spouse's asset) $17,000.00, FHSA $8,000.00" reading as one
- * clause).
+ * clause). Entries wrap left to right rather than stacking one per line, so
+ * the block stays a couple of rows tall under the tile grid rather than a
+ * tall column beside it.
  */
 function ContributionsLine({ summary }: { summary: FlowSummary }) {
   const entries: { kind: AccountKind; amount: number }[] = [];
@@ -52,18 +54,18 @@ function ContributionsLine({ summary }: { summary: FlowSummary }) {
         <Text size="1" color="gray" weight="medium">
           Contributions
         </Text>
-        {entries.map((e) => (
-          <Flex key={e.kind} asChild justify="between" gap="2">
-            <div>
+        <Flex wrap="wrap" gap="3">
+          {entries.map((e) => (
+            <Flex key={e.kind} gap="1">
               <Text asChild size="1" color="gray">
                 <dt>{KIND_LABELS[e.kind]}</dt>
               </Text>
-              <Text asChild size="1" color="gray" style={{ whiteSpace: "nowrap" }}>
+              <Text asChild size="1" color="gray" weight="medium" style={{ whiteSpace: "nowrap" }}>
                 <dd style={{ margin: 0 }}>{formatCurrency(e.amount)}</dd>
               </Text>
-            </div>
-          </Flex>
-        ))}
+            </Flex>
+          ))}
+        </Flex>
       </dl>
     </Flex>
   );
@@ -83,16 +85,14 @@ export function FlowTiles({ summary }: FlowTilesProps) {
   return (
     <Flex direction="column" gap="3" data-flow-tiles="">
       <Grid columns={{ initial: "1", xs: "2", sm: "3", md: "6" }} gap="3">
-        <Flex direction="column" gap="2">
-          <Tile label="Paid in from outside" value={formatCurrency(summary.paidIn)} />
-          <ContributionsLine summary={summary} />
-        </Flex>
+        <Tile label="Paid in from outside" value={formatCurrency(summary.paidIn)} />
         <Tile label="Invested" value={formatCurrency(summary.invested)} />
         <Tile label="Left in cash" value={formatCurrency(summary.leftInCash)} />
         <Tile label="Income earned" value={formatCurrency(summary.income)} />
         <Tile label="Costs" value={formatCurrency(summary.costs)} />
         <Tile label="Invested rate" value={investedRateText} />
       </Grid>
+      <ContributionsLine summary={summary} />
       <Text size="2" color="gray">
         Payroll deposited here is only the part that reached Wealthsimple. Total income and spending
         are not in these statements.
