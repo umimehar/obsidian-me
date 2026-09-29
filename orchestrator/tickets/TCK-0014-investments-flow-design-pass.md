@@ -34,6 +34,15 @@ An impeccable critique and polish pass over the Flow tab in both themes at 72rem
 
 ## Context
 
+Carried from the TCK-0013 review, for this pass:
+- `bun run contrast` should fail when two `[data-flow-label]` boxes intersect: the text width factor (`CHAR_WIDTH_FACTOR` 0.525 in `sankeyLayout.ts`) can drift with no test catching it, since happy-dom has no fonts.
+- The contributions list under the Paid in tile makes the tile row tall and leaves the other tiles empty below their figure.
+- The pinned band readout sits above the chart; check it reads well with the hover readout.
+- At 800px the Sankey scrolls in its own region with no visible hint that it scrolls.
+- The expanded drill down can list 1,057 rows; the flows table has 58 to 64 rows. Both are long for a summary view.
+- The destination chart's month labels run together at 390px.
+
+
 Carried from the TCK-0012 review: column 0 leader lines start at the node's right edge (`edgeX = n.x1` in `Sankey.tsx` `NodeLabels`) and cross the node; start them at `n.x0`.
 
 

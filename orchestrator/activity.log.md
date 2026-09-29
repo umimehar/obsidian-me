@@ -67,3 +67,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-29 16:51 · mac-studio · done · TCK-0012 · sankey layout and chart, agent review PASS in round 2
 - 2026-09-29 16:51 · mac-studio · claim · TCK-0013 · the Flow tab
 - 2026-09-29 16:51 · mac-studio · start · TCK-0013 · starting Flow tab
+- 2026-09-29 18:41 · mac-studio · done · TCK-0013 · Flow tab, agent review PASS in round 3

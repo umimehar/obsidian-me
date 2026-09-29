@@ -19,7 +19,7 @@ capabilities:
   - git
 repos: []
 daemon: false
-last_heartbeat: 2026-09-29T16:51:37
+last_heartbeat: 2026-09-29T18:41:47
 ---
 
 # Device — mac-studio

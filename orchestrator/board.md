@@ -29,7 +29,6 @@ kanban-plugin: board
 
 ## In Progress
 
-- [ ] [[TCK-0013-investments-flow-tab]] #project/system #type/feature #p1
 
 
 
@@ -54,6 +53,8 @@ kanban-plugin: board
 
 
 ## Done
+
+- [x] [[TCK-0013-investments-flow-tab]] #project/system #type/feature #p1
 
 - [x] [[TCK-0012-investments-sankey-chart]] #project/system #type/feature #p1
 
