@@ -31,8 +31,16 @@ export interface SankeyLayout {
 }
 
 const COLUMNS: readonly Column[] = [0, 1, 2, 3];
-const MIN_LABEL_GAP = 28;
 const MIN_NODE_HEIGHT = 2;
+
+/** A node label is two lines -- the name, then `amount · share` -- at 11px. */
+/** Exported so `Sankey.tsx` positions its two `<tspan>`s at the same height this spacing assumes. */
+export const LABEL_LINE_HEIGHT = 13;
+const LABEL_BLOCK_HEIGHT = LABEL_LINE_HEIGHT * 2;
+const LABEL_BLOCK_GAP = 6;
+/** Two line heights plus a gap, not a single line's 28: the whole block has to clear the next one. */
+const MIN_LABEL_GAP = LABEL_BLOCK_HEIGHT + LABEL_BLOCK_GAP;
+const HALF_LABEL_BLOCK = LABEL_BLOCK_HEIGHT / 2;
 
 export const linkKey = (l: { source: string; target: string }): string =>
   `${l.source}->${l.target}`;
@@ -61,15 +69,40 @@ function byColumn(nodes: readonly FlowNode[]): Map<Column, FlowNode[]> {
   return map;
 }
 
+/**
+ * One column's own bound on `k`, with every node that would be floored to
+ * `MIN_NODE_HEIGHT` removed from the pool first: its fixed height is
+ * subtracted from the available space and its value from the total, so the
+ * `k` returned is the largest that still fits every node -- floored ones
+ * included -- inside `height`. Computing `available / total` in one shot,
+ * the way the shared scale used to, ignored the floor entirely: a column
+ * with one huge node and many tiny ones would floor the tiny ones to 2px
+ * each, and those floors alone could push the column past `height` even
+ * though the arithmetic "proved" it fit.
+ */
+function columnK(nodes: readonly FlowNode[], height: number, nodeGap: number): number {
+  let space = height - nodeGap * (nodes.length - 1);
+  let pool = nodes;
+  for (let pass = 0; pass <= nodes.length; pass++) {
+    const total = pool.reduce((s, n) => s + n.value, 0);
+    if (total <= 0) return space > 0 ? Number.POSITIVE_INFINITY : 0;
+    const k = space / total;
+    const floored = pool.filter((n) => n.value * k < MIN_NODE_HEIGHT);
+    if (floored.length === 0) return k;
+    space -= floored.length * MIN_NODE_HEIGHT;
+    pool = pool.filter((n) => n.value * k >= MIN_NODE_HEIGHT);
+    if (pool.length === 0) return 0;
+  }
+  return 0;
+}
+
 /** The one vertical scale every column shares: the tightest column's own bound. */
 function verticalScale(columns: Map<Column, FlowNode[]>, box: SankeyBox): number {
   let k = Number.POSITIVE_INFINITY;
   for (const nodes of columns.values()) {
     if (nodes.length === 0) continue;
-    const total = nodes.reduce((s, n) => s + n.value, 0);
-    if (total <= 0) continue;
-    const available = box.height - box.nodeGap * (nodes.length - 1);
-    k = Math.min(k, available / total);
+    const colK = columnK(nodes, box.height, box.nodeGap);
+    if (colK > 0 && Number.isFinite(colK)) k = Math.min(k, colK);
   }
   return Number.isFinite(k) ? k : 0;
 }
@@ -99,6 +132,13 @@ function stackColumn(
  * each label at least `MIN_LABEL_GAP` below the previous one, then pull the
  * column back inside `height` from the bottom up so no label sits below the
  * box and the minimum gap still holds.
+ *
+ * The clamp is on the whole two-line text BLOCK, not the label's own y: a
+ * label anchored at `height` still draws its second line below the box,
+ * clipped. Bounding the last label to `height − HALF_LABEL_BLOCK` keeps its
+ * block inside, and the upward pass starts from that already-clamped
+ * position rather than from the unclamped overflow, so every label above it
+ * ends up inside the box too.
  */
 function resolveLabels(nodes: PlacedNode[], height: number): void {
   for (let i = 1; i < nodes.length; i++) {
@@ -108,7 +148,8 @@ function resolveLabels(nodes: PlacedNode[], height: number): void {
     if (cur.labelY - prev.labelY < MIN_LABEL_GAP) cur.labelY = prev.labelY + MIN_LABEL_GAP;
   }
   const last = nodes[nodes.length - 1];
-  if (last !== undefined && last.labelY > height) last.labelY = height;
+  const bottomBound = height - HALF_LABEL_BLOCK;
+  if (last !== undefined && last.labelY > bottomBound) last.labelY = bottomBound;
   for (let i = nodes.length - 2; i >= 0; i--) {
     const next = nodes[i + 1];
     const cur = nodes[i];
@@ -181,13 +222,35 @@ function buildPlacedLink(
   };
 }
 
+/**
+ * Reading order for keyboard tab stops: by the source's column first (so
+ * Tab moves left to right through the chart), then the source's own
+ * vertical position, then the target's -- the same order a sighted reader's
+ * eye would scan the bands in. Without this, DOM order is whatever
+ * `aggregate`'s `Map` happened to iterate the links in, which can start a
+ * keyboard user anywhere in the chart.
+ */
+function tabOrder(nodesById: Map<string, PlacedNode>, a: FlowLink, b: FlowLink): number {
+  const as = nodesById.get(a.source);
+  const bs = nodesById.get(b.source);
+  const at = nodesById.get(a.target);
+  const bt = nodesById.get(b.target);
+  return (
+    (as?.column ?? 0) - (bs?.column ?? 0) ||
+    (as?.y0 ?? 0) - (bs?.y0 ?? 0) ||
+    (at?.y0 ?? 0) - (bt?.y0 ?? 0)
+  );
+}
+
 function placeLinks(
   nodesById: Map<string, PlacedNode>,
   links: readonly FlowLink[],
   k: number,
 ): PlacedLink[] {
   const { sy, ty } = bandCentres(nodesById, links, k);
-  return links.map((l) => buildPlacedLink(l, nodesById, sy.get(l) ?? 0, ty.get(l) ?? 0, k));
+  return links
+    .map((l) => buildPlacedLink(l, nodesById, sy.get(l) ?? 0, ty.get(l) ?? 0, k))
+    .sort((a, b) => tabOrder(nodesById, a, b));
 }
 
 /**

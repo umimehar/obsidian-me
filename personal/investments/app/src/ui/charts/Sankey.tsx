@@ -4,6 +4,7 @@ import type { FlowGraph, FlowLink, FlowNode } from "../../analytics/flows/graph"
 import { formatCurrency, formatShare } from "../format";
 import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
 import {
+  LABEL_LINE_HEIGHT,
   type PlacedLink,
   type PlacedNode,
   type SankeyBox,
@@ -19,14 +20,27 @@ export interface SankeyProps {
 }
 
 const WIDTH = 1152;
+const LABEL_GAP = 6;
+/**
+ * The longest real node name (measured against the running corpus,
+ * "Spousal RRSP (spouse's asset)" and friends) is about 267px at 11px. The
+ * amount/share line below it is always shorter, so the name line is what
+ * `labelLeft`/`labelRight` has to clear -- with room for the halo stroke
+ * and a little slack for a name this project hasn't seen yet.
+ */
+const NAME_MAX_WIDTH = 267;
+const LABEL_MARGIN = NAME_MAX_WIDTH + LABEL_GAP + 15;
 const BOX_BASE: Omit<SankeyBox, "height"> = {
   width: WIDTH,
   nodeWidth: 16,
   nodeGap: 6,
-  labelLeft: 160,
-  labelRight: 160,
+  labelLeft: LABEL_MARGIN,
+  labelRight: LABEL_MARGIN,
 };
 const TOP_FLOWS = 5;
+/** A label whose block sits more than this many units from its node's own centre gets a leader line. */
+const LEADER_THRESHOLD = 4;
+const HALO_WIDTH = 3;
 
 /** A band into any of these three is a cost or a loss to the outside, not a place money grows. */
 const RED_TARGETS = new Set(["now:costs", "now:left", "now:unreconciled"]);
@@ -46,10 +60,14 @@ function linkColor(link: FlowLink, active: boolean): string {
   return `var(--${family}-a${step})`;
 }
 
-/** A node's label: its name, its amount and its share of the period's total in, one formatter call each. */
-function nodeText(node: FlowNode, totalIn: number): string {
+/**
+ * A node's two label lines: its own name, then `amount · share` of the
+ * period's total in -- one `formatCurrency` call and one `formatShare` call
+ * for the whole node, never one per line.
+ */
+function nodeLines(node: FlowNode, totalIn: number): readonly [string, string] {
   const share = totalIn > 0 ? node.value / totalIn : 0;
-  return `${node.label} · ${formatCurrency(node.value)} · ${formatShare(share)}`;
+  return [node.label, `${formatCurrency(node.value)} · ${formatShare(share)}`];
 }
 
 /** A link's name, shared verbatim by its `aria-label` and its hover readout. */
@@ -99,24 +117,91 @@ const VISUALLY_HIDDEN: CSSProperties = {
   border: 0,
 };
 
-function NodeRects({ nodes, totalIn }: { nodes: readonly PlacedNode[]; totalIn: number }) {
+interface NodeRectsProps {
+  nodes: readonly PlacedNode[];
+  highlighted: ReadonlySet<string>;
+}
+
+/** Every node's rectangle, brightened when it is one of the active band's two endpoints. */
+function NodeRects({ nodes, highlighted }: NodeRectsProps) {
   return (
     <>
       {nodes.map((n) => (
-        <g key={n.id}>
-          <rect x={n.x0} y={n.y0} width={n.x1 - n.x0} height={n.y1 - n.y0} fill="var(--gray-a8)" />
-          <text
-            x={n.column === 3 ? n.x0 - 6 : n.x1 + 6}
-            y={n.labelY}
-            dy="0.32em"
-            textAnchor={n.column === 3 ? "end" : "start"}
-            fontSize={11}
-            fill="var(--gray-12)"
-          >
-            {nodeText(n, totalIn)}
-          </text>
-        </g>
+        <rect
+          key={n.id}
+          data-flow-node={n.id}
+          x={n.x0}
+          y={n.y0}
+          width={n.x1 - n.x0}
+          height={n.y1 - n.y0}
+          fill={highlighted.has(n.id) ? "var(--gray-a10)" : "var(--gray-a8)"}
+        />
       ))}
+    </>
+  );
+}
+
+/** Where a node's label sits: column 0 in the left margin, columns 1-3 to the node's own right. */
+function labelPosition(n: PlacedNode): { x: number; anchor: "start" | "end" } {
+  if (n.column === 0) return { x: n.x0 - LABEL_GAP, anchor: "end" };
+  return { x: n.x1 + LABEL_GAP, anchor: "start" };
+}
+
+interface NodeLabelsProps {
+  nodes: readonly PlacedNode[];
+  totalIn: number;
+}
+
+/**
+ * Every node's two-line label, painted after the bands so it reads over
+ * them, with a background-coloured halo (`paint-order: stroke`) for
+ * legibility against whatever band tone happens to sit underneath. A label
+ * `resolveLabels` pushed more than `LEADER_THRESHOLD` units from its node's
+ * own centre gets a leader line back to the node's edge, so a reader does
+ * not lose track of which rectangle a displaced label belongs to.
+ */
+function NodeLabels({ nodes, totalIn }: NodeLabelsProps) {
+  return (
+    <>
+      {nodes.map((n) => {
+        const [name, figure] = nodeLines(n, totalIn);
+        const { x, anchor } = labelPosition(n);
+        const centreY = (n.y0 + n.y1) / 2;
+        const edgeX = n.column === 3 ? n.x0 : n.x1;
+        const displaced = Math.abs(n.labelY - centreY) > LEADER_THRESHOLD;
+        return (
+          <g key={n.id}>
+            {displaced ? (
+              <line
+                data-flow-leader={n.id}
+                x1={edgeX}
+                y1={centreY}
+                x2={x}
+                y2={n.labelY}
+                stroke="var(--gray-a8)"
+                strokeWidth={1}
+              />
+            ) : null}
+            <text
+              data-flow-label={n.id}
+              textAnchor={anchor}
+              fontSize={11}
+              fill="var(--gray-12)"
+              paintOrder="stroke"
+              stroke="var(--color-background)"
+              strokeWidth={HALO_WIDTH}
+              strokeLinejoin="round"
+            >
+              <tspan x={x} y={n.labelY - LABEL_LINE_HEIGHT / 2} dy="0.32em">
+                {name}
+              </tspan>
+              <tspan x={x} y={n.labelY + LABEL_LINE_HEIGHT / 2} dy="0.32em">
+                {figure}
+              </tspan>
+            </text>
+          </g>
+        );
+      })}
     </>
   );
 }
@@ -180,10 +265,12 @@ function pathStartX(path: string): number {
   return Number(path.split(" ")[1]?.split(",")[0] ?? 0);
 }
 
+const EMPTY_HIGHLIGHT: ReadonlySet<string> = new Set();
+
 /**
  * A hand rolled Sankey of the period's money flow: four fixed columns laid
  * out by `layoutSankey`, rendered as focusable, clickable bands. Every node
- * and link label comes from `nodeText`/`linkText`, each one call to
+ * and link label comes from `nodeLines`/`linkText`, each one call to
  * `formatCurrency` and `formatShare`, so the hover readout can never say a
  * different figure than the band's own `aria-label`. d3-sankey was rejected
  * for this fixed four-column graph; see `sankeyLayout.ts`.
@@ -212,6 +299,8 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
     graph.totalIn,
   );
   const lines = activeText === null ? [] : [activeText];
+  const highlighted: ReadonlySet<string> =
+    activeLink === null ? EMPTY_HIGHLIGHT : new Set([activeLink.source, activeLink.target]);
 
   return (
     <div style={{ position: "relative" }}>
@@ -223,7 +312,7 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
         aria-describedby={summaryId}
         style={{ width: "100%", height: "auto", display: "block" }}
       >
-        <NodeRects nodes={layout.nodes} totalIn={graph.totalIn} />
+        <NodeRects nodes={layout.nodes} highlighted={highlighted} />
         <Links
           links={layout.links}
           labels={labels}
@@ -233,6 +322,7 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
           onSelect={onSelect}
           onHover={setHoverKey}
         />
+        <NodeLabels nodes={layout.nodes} totalIn={graph.totalIn} />
       </svg>
       <p id={summaryId} style={VISUALLY_HIDDEN}>
         {summary}
