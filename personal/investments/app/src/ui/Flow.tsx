@@ -199,7 +199,13 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
       ) : (
         <Sankey graph={graph} selected={selectedKey} onSelect={setSelected} />
       )}
-      <FlowRows key={selectedKey ?? "none"} flows={flows} graph={graph} selected={selectedKey} />
+      <FlowRows
+        key={selectedKey ?? "none"}
+        flows={flows}
+        graph={graph}
+        selected={selectedKey}
+        narrow={narrow}
+      />
       <DestinationChart buckets={buckets} />
       <FlowTable graph={graph} selected={selectedKey} onSelect={setSelected} narrow={narrow} />
       {notes.length === 0 ? null : (

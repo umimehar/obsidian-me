@@ -1,4 +1,5 @@
 import type { Column, FlowGraph, FlowLink, FlowNode } from "../../analytics/flows/graph";
+import { formatCurrency, formatShare } from "../format";
 
 /** The box the layout is placed into, plus the two rendering constants columns share. */
 export interface SankeyBox {
@@ -44,6 +45,121 @@ const HALF_LABEL_BLOCK = LABEL_BLOCK_HEIGHT / 2;
 
 export const linkKey = (l: { source: string; target: string }): string =>
   `${l.source}->${l.target}`;
+
+/** The gap between a node's edge and its label, shared by the layout-width floor and by `Sankey.tsx`'s own rendering. */
+export const LABEL_GAP = 6;
+const LABEL_FONT_SIZE = 12;
+/**
+ * An average character width for the app's system sans-serif at
+ * `LABEL_FONT_SIZE`, calibrated generously (rather than exactly) so it
+ * never UNDER-estimates a real label's rendered width -- there is no
+ * canvas or DOM to measure text against outside a browser, and this drives
+ * a MINIMUM layout width the actual rendered text then has to fit inside,
+ * so overestimating wastes a few pixels of margin and underestimating
+ * reintroduces the collision this exists to prevent.
+ */
+const CHAR_WIDTH_FACTOR = 0.62;
+
+function estimateTextWidth(text: string): number {
+  return text.length * LABEL_FONT_SIZE * CHAR_WIDTH_FACTOR;
+}
+
+/**
+ * A node's two label lines: its own name, then `amount · share` of the
+ * period's total in -- one `formatCurrency` call and one `formatShare` call
+ * for the whole node, never one per line. The one place this is computed,
+ * shared by `Sankey.tsx`'s own rendering and by `minChartWidth`/
+ * `labelOverlaps` below, so a label's estimated width can never drift from
+ * the text actually painted.
+ */
+export function nodeLines(node: FlowNode, totalIn: number): readonly [string, string] {
+  const share = totalIn > 0 ? node.value / totalIn : 0;
+  return [node.label, `${formatCurrency(node.value)} · ${formatShare(share)}`];
+}
+
+/** The wider of a node's two label lines, estimated. */
+function labelBlockWidth(node: FlowNode, totalIn: number): number {
+  const [name, figure] = nodeLines(node, totalIn);
+  return Math.max(estimateTextWidth(name), estimateTextWidth(figure));
+}
+
+/**
+ * The narrowest total chart width at which no column's label block can
+ * reach into the next column's own node -- the geometric floor
+ * `labelOverlaps` exists to prove holds. Computed from the graph's OWN
+ * labels, not a worst-case constant, so a period whose longest name is
+ * short lays out no wider than it needs to; a period with a name as long
+ * as "Spousal RRSP (spouse's asset)" needs a genuinely wider chart, and a
+ * fixed constant either wastes space on every other period or collides on
+ * this one.
+ */
+export function minChartWidth(
+  graph: FlowGraph,
+  box: Pick<SankeyBox, "nodeWidth" | "labelLeft" | "labelRight">,
+): number {
+  const widestByColumn = new Map<Column, number>();
+  for (const n of graph.nodes) {
+    const w = labelBlockWidth(n, graph.totalIn);
+    widestByColumn.set(n.column, Math.max(widestByColumn.get(n.column) ?? 0, w));
+  }
+  // Columns 0-2 each hand a label off toward the next column's node; the
+  // three inner gaps are laid out evenly (`columnX0`), so the tightest one
+  // sets the shared span.
+  const perGap = Math.max(
+    ...([0, 1, 2] as const).map(
+      (c) => box.nodeWidth + LABEL_GAP * 2 + (widestByColumn.get(c) ?? 0),
+    ),
+  );
+  const span = perGap * 3;
+  return box.labelLeft + span + box.nodeWidth + box.labelRight;
+}
+
+interface LabelBox {
+  id: string;
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
+}
+
+function labelBoxOf(n: PlacedNode, totalIn: number): LabelBox {
+  const width = labelBlockWidth(n, totalIn);
+  const height = LABEL_LINE_HEIGHT * 2;
+  const rightAnchored = n.column !== 0;
+  const edge = rightAnchored ? n.x1 + LABEL_GAP : n.x0 - LABEL_GAP;
+  return {
+    id: n.id,
+    x0: rightAnchored ? edge : edge - width,
+    x1: rightAnchored ? edge + width : edge,
+    y0: n.labelY - height / 2,
+    y1: n.labelY + height / 2,
+  };
+}
+
+function boxesOverlap(a: LabelBox, b: LabelBox): boolean {
+  return a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1;
+}
+
+/**
+ * Every pair of node labels whose ESTIMATED rendered boxes overlap, for a
+ * caller to assert against at a given width. `minChartWidth` is the
+ * geometric floor this is meant to always come back empty above; run
+ * directly on a layout built at a narrower width, it is exactly how the
+ * collision this whole module exists to prevent gets caught before it
+ * ships rather than after a reviewer's screenshot finds it.
+ */
+export function labelOverlaps(layout: SankeyLayout, totalIn: number): [string, string][] {
+  const boxes = layout.nodes.map((n) => labelBoxOf(n, totalIn));
+  const pairs: [string, string][] = [];
+  for (let i = 0; i < boxes.length; i++) {
+    for (let j = i + 1; j < boxes.length; j++) {
+      const a = boxes[i];
+      const b = boxes[j];
+      if (a !== undefined && b !== undefined && boxesOverlap(a, b)) pairs.push([a.id, b.id]);
+    }
+  }
+  return pairs;
+}
 
 /** `max(420, 44 × largest column's node count)`, the box height a caller passes back in. */
 export function sankeyHeight(graph: FlowGraph): number {

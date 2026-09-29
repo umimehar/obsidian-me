@@ -9,6 +9,8 @@ export interface FlowRowsProps {
   flows: FlowsData;
   graph: FlowGraph;
   selected: string | null;
+  /** Below 40rem, a five-column table clips its own last two columns rather than scrolling cleanly; see `NarrowDrillRow`. */
+  narrow?: boolean;
 }
 
 const CASH_EXPLANATION =
@@ -81,6 +83,42 @@ function DrillRow({ row, accountsById, rowsById }: DrillRowProps) {
   );
 }
 
+/**
+ * A row as two lines rather than five columns: "date · account · code",
+ * then the amount (with its USD aside) and the partner account -- right
+ * where the wide table's own Amount and Partner columns clipped at 390px.
+ * The date and the amount each keep `white-space: nowrap`, so neither the
+ * day nor a long negative figure breaks mid-token onto a third line.
+ */
+function NarrowDrillRow({ row, accountsById, rowsById }: DrillRowProps) {
+  const usd = usdAside(row);
+  const partner = partnerLabel(row, rowsById, accountsById);
+  const accountLabel = accountsById.get(row.accountId)?.label ?? row.accountId;
+  return (
+    <Flex
+      direction="column"
+      gap="1"
+      py="2"
+      data-flow-row={row.id}
+      style={{ borderBottom: "1px solid var(--gray-a4)" }}
+    >
+      <Text size="2">
+        <Text as="span" style={{ whiteSpace: "nowrap" }}>
+          {row.date}
+        </Text>{" "}
+        · {accountLabel} · {row.code}
+      </Text>
+      <Text size="2" color="gray">
+        <Text as="span" style={{ whiteSpace: "nowrap" }}>
+          {formatCurrency(row.amountCad)}
+        </Text>
+        {usd === null ? null : ` (${usd})`}
+        {partner === null ? null : ` · ${partner}`}
+      </Text>
+    </Flex>
+  );
+}
+
 /** Every row behind `link`, largest `|amountCad|` first -- the figure a reader scanning a long band cares most about. */
 function rowsFor(
   link: { rowIds: readonly string[] },
@@ -121,7 +159,7 @@ function DrillDownHeading() {
  * until the reader asks for the rest, so selecting a big band never drops
  * a thousand-row table into the page.
  */
-export function FlowRows({ flows, graph, selected }: FlowRowsProps) {
+export function FlowRows({ flows, graph, selected, narrow = false }: FlowRowsProps) {
   // A fresh selection always opens capped: `Flow` remounts this component on
   // every new `selected` key (`key={selectedKey}`), which is what resets
   // this state rather than an effect watching a value the effect body never
@@ -148,10 +186,42 @@ export function FlowRows({ flows, graph, selected }: FlowRowsProps) {
   const allRows = rowsFor(link, rowsById);
   const rows = expanded ? allRows : allRows.slice(0, ROW_CAP);
 
+  const expandButton =
+    !expanded && allRows.length > ROW_CAP ? (
+      <Button
+        size="1"
+        variant="soft"
+        color="gray"
+        data-flow-rows-expand=""
+        onClick={() => setExpanded(true)}
+      >
+        Show all {allRows.length} rows
+      </Button>
+    ) : null;
+
+  if (narrow) {
+    return (
+      <Flex direction="column" gap="2" data-flow-rows="">
+        <DrillDownHeading />
+        <Flex direction="column" data-flow-rows-table="">
+          {rows.map((row) => (
+            <NarrowDrillRow
+              key={row.id}
+              row={row}
+              accountsById={accountsById}
+              rowsById={rowsById}
+            />
+          ))}
+        </Flex>
+        {expandButton}
+      </Flex>
+    );
+  }
+
   return (
     <Flex direction="column" gap="2" data-flow-rows="">
       <DrillDownHeading />
-      <Table.Root size="1" variant="surface">
+      <Table.Root size="1" variant="surface" data-flow-rows-table="">
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeaderCell>Date</Table.ColumnHeaderCell>
@@ -167,17 +237,7 @@ export function FlowRows({ flows, graph, selected }: FlowRowsProps) {
           ))}
         </Table.Body>
       </Table.Root>
-      {!expanded && allRows.length > ROW_CAP ? (
-        <Button
-          size="1"
-          variant="soft"
-          color="gray"
-          data-flow-rows-expand=""
-          onClick={() => setExpanded(true)}
-        >
-          Show all {allRows.length} rows
-        </Button>
-      ) : null}
+      {expandButton}
     </Flex>
   );
 }

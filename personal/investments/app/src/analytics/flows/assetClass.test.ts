@@ -35,4 +35,11 @@ describe("assetClassOf", () => {
       expect(assetClassOf(symbol)).toBe("fixedIncome");
     }
   });
+
+  test("HISU.U and PSU.U are cash equivalents (owner reviewed, 2026-09-29)", () => {
+    expect(assetClassOf("HISU.U")).toBe("cashEquivalent");
+    expect(isListedSymbol("HISU.U")).toBe(true);
+    expect(assetClassOf("PSU.U")).toBe("cashEquivalent");
+    expect(isListedSymbol("PSU.U")).toBe(true);
+  });
 });

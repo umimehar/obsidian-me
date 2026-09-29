@@ -13,7 +13,9 @@ export const ASSET_CLASS_LABELS: Readonly<Record<AssetClass, string>> = {
  * tab names it so a new holding surfaces rather than hides.
  *
  * Cash equivalents seed PSA (the corpus's own money market fund, held in
- * 2318 and d77c) plus the savings ETFs the owner may buy later. Private
+ * 2318 and d77c) plus the savings ETFs the owner may buy later, and
+ * HISU.U ("U.S. High Interest Savings Account Fund") and PSU.U ("Purpose
+ * US Cash Fund"), both owner reviewed 2026-09-29. Private
  * markets is every symbol d6d9 (Private Market Fund) actually buys besides
  * PSA: WSE300P, WSE401 and WSE401P. Crypto is BTC and ETH, the only two
  * symbols e2d6 buys -- its BUY descriptions read "Purchase of ... BTC/ETH",
@@ -31,6 +33,8 @@ const CLASSES: Readonly<Record<string, AssetClass>> = {
   ZMMK: "cashEquivalent",
   CBIL: "cashEquivalent",
   HSAV: "cashEquivalent",
+  "HISU.U": "cashEquivalent",
+  "PSU.U": "cashEquivalent",
   BTC: "crypto",
   ETH: "crypto",
   WSE401: "privateMarkets",

@@ -3,6 +3,10 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { FlowGraph, FlowLink, FlowNode } from "../../analytics/flows/graph";
 import { expectNoCoarseForm } from "../testSupport/coarseForm";
 import { Sankey } from "./Sankey";
+import { minChartWidth } from "./sankeyLayout";
+
+/** The same box shape `Sankey.tsx` itself passes to `minChartWidth`. */
+const BOX_SHAPE = { nodeWidth: 16, labelLeft: 288, labelRight: 288 };
 
 type ResizeCallback = (entries: readonly { contentRect: { width: number } }[]) => void;
 
@@ -165,6 +169,33 @@ describe("link accessible names", () => {
   });
 });
 
+describe("the pinned readout", () => {
+  test("renders outside the svg, as a plain line, with the pinned band's own aria-label", () => {
+    renderChart("b1->c2a");
+    const svg = document.querySelector("svg");
+    const readout = document.querySelector("[data-flow-pinned-readout]");
+    expect(readout).not.toBeNull();
+    expect(svg?.contains(readout)).toBe(false);
+    expect(readout?.textContent).toBe(band("b1->c2a").getAttribute("aria-label") ?? undefined);
+    // The floating tooltip, which used to cover the plot, does not also render.
+    expect(document.querySelector("[data-chart-tooltip]")).toBeNull();
+  });
+
+  test("no pinned readout renders with nothing selected", () => {
+    renderChart(null);
+    expect(document.querySelector("[data-flow-pinned-readout]")).toBeNull();
+  });
+
+  test("hovering a band takes over the floating readout and hides the pinned line", () => {
+    renderChart("b1->c2a");
+    fireEvent.mouseEnter(band("c2b->now:costs"));
+    expect(document.querySelector("[data-flow-pinned-readout]")).toBeNull();
+    expect(document.querySelector("[data-chart-tooltip]")?.textContent).toBe(
+      band("c2b->now:costs").getAttribute("aria-label") ?? undefined,
+    );
+  });
+});
+
 describe("keyboard", () => {
   test("Enter on a focused band pins it", () => {
     const calls: (string | null)[] = [];
@@ -298,7 +329,7 @@ describe("the empty graph", () => {
 });
 
 describe("Sankey, measured width", () => {
-  test("the layout is laid out at the container's own measured width, not a fixed constant", () => {
+  test("the layout is laid out at the container's own measured width, when that is wide enough", () => {
     const original = window.ResizeObserver;
     FakeResizeObserver.instances = [];
     window.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
@@ -307,13 +338,15 @@ describe("Sankey, measured width", () => {
       const svg = document.querySelector("svg");
       const observer = FakeResizeObserver.instances[0];
       expect(observer).toBeDefined();
+      const wide = 5000;
+      expect(wide).toBeGreaterThan(minChartWidth(GRAPH, BOX_SHAPE));
       act(() => {
-        observer?.callback([{ contentRect: { width: 900 } }]);
+        observer?.callback([{ contentRect: { width: wide } }]);
       });
       const [minX, minY, width, height] = (svg?.getAttribute("viewBox") ?? "").split(" ");
       expect(minX).toBe("0");
       expect(minY).toBe("0");
-      expect(width).toBe("900");
+      expect(width).toBe(String(wide));
       expect(Number(height)).toBeGreaterThan(0);
     } finally {
       window.ResizeObserver = original;
@@ -324,6 +357,30 @@ describe("Sankey, measured width", () => {
     renderChart();
     const label = document.querySelector("[data-flow-label]");
     expect(label?.getAttribute("font-size")).toBe("12");
+  });
+
+  test("never lays out narrower than the graph's own labels need, and scrolls its own region rather than the page", () => {
+    const original = window.ResizeObserver;
+    FakeResizeObserver.instances = [];
+    window.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
+    try {
+      renderChart();
+      const observer = FakeResizeObserver.instances[0];
+      const needed = minChartWidth(GRAPH, BOX_SHAPE);
+      const narrow = Math.round(needed / 2);
+      act(() => {
+        observer?.callback([{ contentRect: { width: narrow } }]);
+      });
+      const svg = document.querySelector("svg");
+      const [, , width] = (svg?.getAttribute("viewBox") ?? "").split(" ");
+      expect(Number(width)).toBeCloseTo(needed, 2);
+      // The svg itself carries a fixed pixel width (not 100%) so it does not
+      // shrink back down to the narrow container; the wrapper around it is
+      // what scrolls.
+      expect(svg?.getAttribute("style")).toContain(`width: ${needed}px`);
+    } finally {
+      window.ResizeObserver = original;
+    }
   });
 });
 

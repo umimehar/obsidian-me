@@ -237,7 +237,7 @@ export function FlowControls(props: FlowControlsProps) {
           isDefault={props.isDefaultAccounts}
           onSelectedChange={onAccountsChange}
           onReset={props.onResetAccounts}
-          defaultLabel="All accounts"
+          defaultLabel={(count) => `All ${count} accounts`}
         />
       </Flex>
     </Flex>

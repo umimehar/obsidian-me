@@ -1,9 +1,16 @@
 import { describe, expect, test } from "bun:test";
 import { buildFlowGraph } from "../../analytics/flows/graph";
-import type { FlowGraph, FlowLink, FlowNode } from "../../analytics/flows/graph";
+import type { FlowGraph, FlowLink, FlowNode, GroupBy } from "../../analytics/flows/graph";
 import { yearPeriod } from "../../analytics/flows/period";
 import { loadFlows } from "../data";
-import { type SankeyBox, layoutSankey, linkKey, sankeyHeight } from "./sankeyLayout";
+import {
+  type SankeyBox,
+  labelOverlaps,
+  layoutSankey,
+  linkKey,
+  minChartWidth,
+  sankeyHeight,
+} from "./sankeyLayout";
 
 const BOX: SankeyBox = {
   width: 1152,
@@ -231,4 +238,42 @@ describe("against the real 2026 corpus", () => {
       }
     }
   });
+});
+
+/**
+ * Sankey.tsx's own rendering constants, mirrored here rather than imported:
+ * this file tests the layout module in isolation from the React component,
+ * and the two are kept honest by `minChartWidth`/`labelOverlaps` being the
+ * one place both a layout width and an overlap check are computed.
+ */
+const REAL_BOX_SHAPE = { nodeWidth: 16, nodeGap: 6, labelLeft: 288, labelRight: 288 };
+
+/**
+ * The chart never lays out narrower than `minChartWidth` -- exactly the
+ * guarantee `Sankey.tsx` itself makes by taking `max(measured, needed)`.
+ * Below that floor the widest label collides with the next column's node;
+ * at or above it, `labelOverlaps` must come back empty.
+ */
+function layoutAtLeastNeeded(g: FlowGraph, requestedWidth: number) {
+  const needed = minChartWidth(g, REAL_BOX_SHAPE);
+  const width = Math.max(requestedWidth, needed);
+  const box: SankeyBox = { ...REAL_BOX_SHAPE, width, height: sankeyHeight(g) };
+  return layoutSankey(g, box);
+}
+
+describe("Sankey label collisions, the real 2026 graph at narrow widths", () => {
+  const flows = loadFlows();
+  const accounts = new Set(flows.accounts.map((a) => a.accountId));
+
+  test.each([800, 1025, 1440] as const)(
+    "zero label overlaps at %dpx requested width, for every group by",
+    (requestedWidth) => {
+      for (const groupBy of ["accountType", "account", "holding"] as const satisfies GroupBy[]) {
+        const g = buildFlowGraph(flows, yearPeriod(2026), groupBy, accounts);
+        const layout = layoutAtLeastNeeded(g, requestedWidth);
+        const overlaps = labelOverlaps(layout, g.totalIn);
+        expect(overlaps).toEqual([]);
+      }
+    },
+  );
 });

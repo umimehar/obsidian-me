@@ -82,10 +82,10 @@ describe("FlowControls", () => {
     expect(screen.getByRole("combobox", { name: "To" })).toBeDefined();
   });
 
-  test("the account filter reads 'All accounts', never 'Portfolio', when every account is selected", () => {
+  test("the account filter reads 'All N accounts', never 'Portfolio', when every account is selected", () => {
     render(<Harness period="all" onPeriodChange={() => {}} />);
     const trigger = document.querySelector("[data-account-filter]");
-    expect(trigger?.textContent).toBe(`All accounts (${series.length} accounts)`);
+    expect(trigger?.textContent).toBe(`All ${series.length} accounts`);
     expect(trigger?.textContent).not.toContain("Portfolio");
   });
 

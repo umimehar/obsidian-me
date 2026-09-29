@@ -133,6 +133,7 @@ const PAYROLL_KEY = linkKey({ source: "src:payroll", target: "land:chequing" });
 const CASH_KEY = linkKey({ source: "grp:Chequing", target: "now:cash" });
 const USD_KEY = linkKey({ source: "src:income", target: "grp:Chequing" });
 const USD_BUY_KEY = linkKey({ source: "grp:Chequing", target: "now:invested" });
+const TRANSFER_KEY = linkKey({ source: "land:chequing", target: "grp:TFSA" });
 
 const GRAPH: FlowGraph = {
   nodes: [node("src:payroll", 0, 4100, "Payroll deposited")],
@@ -141,14 +142,15 @@ const GRAPH: FlowGraph = {
     link("grp:Chequing", "now:cash", 100, []),
     link("src:income", "grp:Chequing", 135.42, ["r4"]),
     link("grp:Chequing", "now:invested", 1625.04, ["r6"]),
+    link("land:chequing", "grp:TFSA", 500, ["r2"]),
   ],
   totalIn: 4100,
 };
 
-function renderRows(selected: string | null) {
+function renderRows(selected: string | null, narrow = false) {
   render(
     <Theme>
-      <FlowRows flows={FLOWS} graph={GRAPH} selected={selected} />
+      <FlowRows flows={FLOWS} graph={GRAPH} selected={selected} narrow={narrow} />
     </Theme>,
   );
 }
@@ -203,6 +205,46 @@ describe("FlowRows", () => {
   test("an unknown selection renders nothing rather than throwing", () => {
     expect(() => renderRows("not-a-real-key")).not.toThrow();
     expect(document.querySelector("[data-flow-rows]")).toBeNull();
+  });
+});
+
+describe("FlowRows, narrow", () => {
+  test("renders no table element at all, only rows", () => {
+    renderRows(PAYROLL_KEY, true);
+    expect(document.querySelector("table")).toBeNull();
+    expect(document.querySelectorAll("[data-flow-row]")).toHaveLength(2);
+  });
+
+  test("each row is two lines: date · account · code, then amount with any USD aside and partner", () => {
+    renderRows(USD_BUY_KEY, true);
+    const row1 = document.querySelector('[data-flow-row="r6"]');
+    expect(row1?.textContent).toContain("2026-05-15 · acct_a · BUY");
+    expect(row1?.textContent).toContain(
+      `${formatCurrency(-1625.04)} (-US${formatCurrency(1200)} at 1.3542)`,
+    );
+  });
+
+  test("a paired row's partner account still shows, after the amount", () => {
+    renderRows(TRANSFER_KEY, true);
+    const row1 = document.querySelector('[data-flow-row="r2"]');
+    expect(row1?.textContent).toContain(formatCurrency(-500));
+    expect(row1?.textContent).toContain(TFSA.label);
+  });
+
+  test("the date and amount both keep white-space: nowrap", () => {
+    renderRows(PAYROLL_KEY, true);
+    const row1 = document.querySelector('[data-flow-row="r1"]');
+    const nowrapSpans = [...(row1?.querySelectorAll("span") ?? [])].filter(
+      (el) => (el as HTMLElement).style.whiteSpace === "nowrap",
+    );
+    expect(nowrapSpans.length).toBeGreaterThanOrEqual(2);
+  });
+
+  test("the cash explanation and the expand button both still render narrow", () => {
+    renderRows(CASH_KEY, true);
+    expect(document.querySelector("[data-flow-rows]")?.textContent).toContain(
+      "Change in cash balances",
+    );
   });
 });
 

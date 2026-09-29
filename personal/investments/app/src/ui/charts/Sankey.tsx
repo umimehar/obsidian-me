@@ -1,14 +1,18 @@
+import { Text } from "@radix-ui/themes";
 import type { CSSProperties, KeyboardEvent } from "react";
 import { useMemo, useState } from "react";
 import type { FlowGraph, FlowLink, FlowNode } from "../../analytics/flows/graph";
 import { formatCurrency, formatShare } from "../format";
 import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
 import {
+  LABEL_GAP,
   LABEL_LINE_HEIGHT,
   type PlacedLink,
   type PlacedNode,
   type SankeyBox,
   layoutSankey,
+  minChartWidth,
+  nodeLines,
   sankeyHeight,
 } from "./sankeyLayout";
 import { useSvgId } from "./svgId";
@@ -27,13 +31,12 @@ export interface SankeyProps {
  * lay out any narrower than that in practice.
  */
 const FALLBACK_WIDTH = 640;
-const LABEL_GAP = 6;
 /**
- * The longest real node name (measured against the running corpus,
- * "Spousal RRSP (spouse's asset)" and friends) is about 267px at 11px. The
- * amount/share line below it is always shorter, so the name line is what
- * `labelLeft`/`labelRight` has to clear -- with room for the halo stroke
- * and a little slack for a name this project hasn't seen yet.
+ * The outer margins for column 0's and column 3's own labels. Generous
+ * enough for the longest real node name on its own ("Spousal RRSP
+ * (spouse's asset)"); the INNER spacing between columns is what
+ * `minChartWidth` sizes dynamically, because that is where a name this
+ * long collided with the next column's node below about 1100px.
  */
 const NAME_MAX_WIDTH = 267;
 const LABEL_MARGIN = NAME_MAX_WIDTH + LABEL_GAP + 15;
@@ -64,16 +67,6 @@ function linkColor(link: FlowLink, active: boolean): string {
   const family = linkFamily(link);
   const step = active ? 9 : family === "gray" ? 5 : 6;
   return `var(--${family}-a${step})`;
-}
-
-/**
- * A node's two label lines: its own name, then `amount · share` of the
- * period's total in -- one `formatCurrency` call and one `formatShare` call
- * for the whole node, never one per line.
- */
-function nodeLines(node: FlowNode, totalIn: number): readonly [string, string] {
-  const share = totalIn > 0 ? node.value / totalIn : 0;
-  return [node.label, `${formatCurrency(node.value)} · ${formatShare(share)}`];
 }
 
 /** A link's name, shared verbatim by its `aria-label` and its hover readout. */
@@ -284,9 +277,22 @@ const EMPTY_HIGHLIGHT: ReadonlySet<string> = new Set();
 export function Sankey({ graph, selected, onSelect }: SankeyProps) {
   const summaryId = useSvgId("flow-summary");
   const [hoverKey, setHoverKey] = useState<string | null>(null);
-  const { ref: containerRef, width } = useMeasuredWidth<HTMLDivElement>(FALLBACK_WIDTH);
+  const { ref: containerRef, width: measuredWidth } =
+    useMeasuredWidth<HTMLDivElement>(FALLBACK_WIDTH);
   const height = useMemo(() => sankeyHeight(graph), [graph]);
-  const box: SankeyBox = useMemo(() => ({ ...BOX_BASE, width, height }), [width, height]);
+  // Never narrower than the graph's own labels need -- see `minChartWidth`.
+  // Below that floor the chart gets its own horizontally scrollable region
+  // rather than squeezing labels back into collision, and the page itself
+  // never scrolls for it.
+  const layoutWidth = useMemo(
+    () => Math.max(measuredWidth, minChartWidth(graph, BOX_BASE)),
+    [graph, measuredWidth],
+  );
+  const needsScroll = layoutWidth > measuredWidth;
+  const box: SankeyBox = useMemo(
+    () => ({ ...BOX_BASE, width: layoutWidth, height }),
+    [layoutWidth, height],
+  );
   const layout = useMemo(() => layoutSankey(graph, box), [graph, box]);
   const labels = useMemo(() => labelsOf(graph.nodes), [graph.nodes]);
   const summary = useMemo(
@@ -308,38 +314,67 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
   const lines = activeText === null ? [] : [activeText];
   const highlighted: ReadonlySet<string> =
     activeLink === null ? EMPTY_HIGHLIGHT : new Set([activeLink.source, activeLink.target]);
+  // A hover always wins the floating readout, near the pointer, because it
+  // is transient. A PIN with nothing currently hovered gets a plain line
+  // above the chart instead: the floating box sits at the plot's own top
+  // edge, which for a pinned band with no hover in progress hid that
+  // band's own target label -- exactly the thing a reader pinned the band
+  // to keep looking at.
+  const hovering = hoverKey !== null;
+  const showPinnedLine = !hovering && selected !== null && activeText !== null;
+  const showFloatingTooltip = hovering && activeLink !== null;
 
   return (
-    <div ref={containerRef} style={{ position: "relative" }}>
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        // biome-ignore lint/a11y/useSemanticElements: an interactive chart, not a form's fieldset
-        role="group"
-        aria-label="Money flow"
-        aria-describedby={summaryId}
-        style={{ width: "100%", height: "auto", display: "block" }}
-      >
-        <NodeRects nodes={layout.nodes} highlighted={highlighted} />
-        <Links
-          links={layout.links}
-          labels={labels}
-          totalIn={graph.totalIn}
-          activeKey={activeKey}
-          selected={selected}
-          onSelect={onSelect}
-          onHover={setHoverKey}
-        />
-        <NodeLabels nodes={layout.nodes} totalIn={graph.totalIn} />
-      </svg>
-      <p id={summaryId} style={VISUALLY_HIDDEN}>
-        {summary}
-      </p>
-      <CursorAnnouncement lines={lines} />
-      {activeLink === null ? null : (
-        <div style={{ ...tooltipAnchorStyle(pathStartX(activeLink.path), width), top: 0 }}>
-          <ChartTooltip lines={lines} />
+    <div style={{ position: "relative" }}>
+      {showPinnedLine ? (
+        <Text
+          size="2"
+          color="gray"
+          as="p"
+          mb="2"
+          data-flow-pinned-readout=""
+          style={{ margin: 0, marginBottom: 8 }}
+        >
+          {activeText}
+        </Text>
+      ) : null}
+      <div ref={containerRef} style={{ position: "relative" }}>
+        <div style={{ overflowX: needsScroll ? "auto" : "visible" }}>
+          <svg
+            viewBox={`0 0 ${layoutWidth} ${height}`}
+            // biome-ignore lint/a11y/useSemanticElements: an interactive chart, not a form's fieldset
+            role="group"
+            aria-label="Money flow"
+            aria-describedby={summaryId}
+            style={{
+              width: needsScroll ? layoutWidth : "100%",
+              height: "auto",
+              display: "block",
+            }}
+          >
+            <NodeRects nodes={layout.nodes} highlighted={highlighted} />
+            <Links
+              links={layout.links}
+              labels={labels}
+              totalIn={graph.totalIn}
+              activeKey={activeKey}
+              selected={selected}
+              onSelect={onSelect}
+              onHover={setHoverKey}
+            />
+            <NodeLabels nodes={layout.nodes} totalIn={graph.totalIn} />
+          </svg>
         </div>
-      )}
+        <p id={summaryId} style={VISUALLY_HIDDEN}>
+          {summary}
+        </p>
+        <CursorAnnouncement lines={lines} />
+        {showFloatingTooltip && activeLink !== null ? (
+          <div style={{ ...tooltipAnchorStyle(pathStartX(activeLink.path), layoutWidth), top: 0 }}>
+            <ChartTooltip lines={lines} />
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
