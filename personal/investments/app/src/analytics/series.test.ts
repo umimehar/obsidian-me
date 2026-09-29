@@ -461,6 +461,30 @@ describe("buildSeries derived contributions", () => {
     expect(series?.months[0]?.contributions).toBeCloseTo(140, 6);
   });
 
+  test("a rateless statement with a zero-credit USD TRFIN row does not throw, and contributes 0", () => {
+    const jan = statement({
+      source: src("2026-01", "BROKERAGE"),
+      contributions: null,
+      fxRate: null,
+      activity: [activity("TRFIN", 0, { currency: "USD" })],
+    });
+
+    const [series] = buildSeries([jan], [account()]);
+
+    expect(series?.months[0]?.contributions).toBe(0);
+  });
+
+  test("a rateless statement with a nonzero-credit USD TRFIN row throws rather than silently converting at no rate", () => {
+    const jan = statement({
+      source: src("2026-01", "BROKERAGE"),
+      contributions: null,
+      fxRate: null,
+      activity: [activity("TRFIN", 100, { currency: "USD" })],
+    });
+
+    expect(() => buildSeries([jan], [account()])).toThrow();
+  });
+
   test("a DEP credit never reaches a wrapper with an annual room bar, whatever route derived it", () => {
     // Every statement's own legend prints "DEP - Non-contribution deposit".
     // Counting it against TFSA, RRSP, SpousalRRSP or FHSA room would put
