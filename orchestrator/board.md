@@ -18,7 +18,6 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0013-investments-flow-tab]] #project/system #type/feature #p1
 
 
 
@@ -29,6 +28,8 @@ kanban-plugin: board
 
 
 ## In Progress
+
+- [ ] [[TCK-0013-investments-flow-tab]] #project/system #type/feature #p1
 
 
 
