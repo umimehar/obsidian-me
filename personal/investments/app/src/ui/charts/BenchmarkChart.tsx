@@ -144,14 +144,11 @@ function Legend() {
 }
 
 /**
- * The caveats that apply to every figure this chart draws, stated once
+ * The caveat that applies to every figure this chart draws, stated once
  * above it. Buying at each month's own CLOSING price, rather than an
  * average price through the month, favours the portfolio somewhat in a
  * rising market, since a deposit lands at the best price already reached
- * that month rather than one paid partway through a climb. Deposits made in
- * USD cash are not yet counted as deposits here at all, a known limitation
- * of the underlying deposit series being tracked separately, not fixed by
- * this chart.
+ * that month rather than one paid partway through a climb.
  */
 function Provenance({ symbol, skipped }: { symbol: string; skipped: readonly string[] }) {
   return (
@@ -160,8 +157,7 @@ function Provenance({ symbol, skipped }: { symbol: string; skipped: readonly str
         Each month's net deposits buy {symbol} at that month's own closing price, using adjusted
         closes so {symbol}'s own distributions are treated as reinvested. Buying at the closing
         price rather than an average through the month favours the portfolio somewhat in a rising
-        market. Deposits made in USD cash are not yet counted here, which also favours the
-        portfolio, since that money never buys {symbol}; a known limitation, tracked separately.
+        market.
         {skipped.length === 0
           ? ""
           : ` ${skipped.length === 1 ? "One month" : `${skipped.length} months`} had no ${symbol} close to price and ${skipped.length === 1 ? "is" : "are"} left out: ${skipped.join(", ")}.`}

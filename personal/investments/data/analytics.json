@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-09-27T07:56:47.015Z",
+    "generated": "2026-09-29T19:15:02.902Z",
     "datastoreGenerated": "2026-09-27T02:23:09.416Z",
     "accountCount": 15
   },
@@ -680,7 +680,7 @@
           "marketValue": 2040.02,
           "bookCost": 2016.65,
           "cashBalance": 0,
-          "deposits": 0,
+          "deposits": 2001.317514,
           "withdrawals": 0,
           "grants": 0,
           "contributions": 1431.66,
@@ -694,7 +694,7 @@
           "marketValue": 3516.59,
           "bookCost": 3491.9,
           "cashBalance": 503.02,
-          "deposits": 1469.32,
+          "deposits": 1473.8566859999999,
           "withdrawals": 0,
           "grants": 0,
           "contributions": 1472.6299999999999,
@@ -3683,7 +3683,7 @@
         {
           "period": "2025-12",
           "statedMwr": null,
-          "periodReturn": 0.3553886726600831,
+          "periodReturn": 0.133004284271738,
           "reason": null,
           "source": "derived"
         },

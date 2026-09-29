@@ -4,6 +4,7 @@ import type {
   ActivityRow,
   CashSummary,
   Contributions,
+  Currency,
   PortfolioSummary,
   Statement,
 } from "../types";
@@ -57,6 +58,36 @@ function cadCash(overrides: Partial<CashSummary> = {}): CashSummary {
       other: 0,
     },
     ...overrides,
+  };
+}
+
+/** A cash block in any currency, with every field 0 except the given deposits/withdrawals. */
+function cashBlock(
+  currency: Currency,
+  flows: { deposits?: number; withdrawals?: number } = {},
+): CashSummary {
+  return {
+    currency,
+    opening: 0,
+    closing: 0,
+    totalIn: 0,
+    totalOut: 0,
+    paidIn: {
+      deposits: flows.deposits ?? 0,
+      proceedsFromSales: 0,
+      dividends: 0,
+      interestEarned: 0,
+      stockLendingIncome: 0,
+      other: 0,
+    },
+    paidOut: {
+      fees: 0,
+      taxes: 0,
+      interestPaid: 0,
+      costOfInvestments: 0,
+      withdrawals: flows.withdrawals ?? 0,
+      other: 0,
+    },
   };
 }
 
@@ -162,6 +193,23 @@ describe("buildSeries", () => {
       cashBalance: 650,
       deposits: 100,
     });
+  });
+
+  test("a USD cash deposit counts as paid in, converted at its own statement's rate", () => {
+    const nov = statement({
+      source: src("2025-11", "CASH"),
+      fxRate: 1.3979,
+      portfolio: null,
+      cash: [
+        cashBlock("CAD", { deposits: 0, withdrawals: 0 }),
+        cashBlock("USD", { deposits: 1431.66, withdrawals: 10 }),
+      ],
+    });
+
+    const [series] = buildSeries([nov], [account()]);
+
+    expect(series?.months[0]?.deposits).toBeCloseTo(1431.66 * 1.3979, 6);
+    expect(series?.months[0]?.withdrawals).toBeCloseTo(10 * 1.3979, 6);
   });
 
   test("leaves a month with no statement absent rather than zero-filled", () => {

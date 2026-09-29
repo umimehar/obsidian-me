@@ -1,6 +1,7 @@
 import type { AccountKind } from "../store/mask";
 import type { AccountRecord } from "../store/registry";
 import type { Contributions, Statement } from "../types";
+import { convertAmountToCad } from "./activity";
 import type { AccountSeries, MonthPoint } from "./types";
 
 /**
@@ -66,6 +67,25 @@ function deriveContributionFromActivity(s: Statement, codes: ReadonlySet<string>
   return total;
 }
 
+/**
+ * This statement's deposits and withdrawals summed in CAD across every cash
+ * block -- not just the CAD one -- since a USD cash deposit is still money
+ * paid in. `convertAmountToCad` throws for a nonzero USD figure with no
+ * statement `fxRate`, so a zero amount skips the call rather than risk that
+ * on a rateless statement with no USD activity either.
+ */
+function cashFlowsInCad(s: Statement): { deposits: number; withdrawals: number } {
+  let deposits = 0;
+  let withdrawals = 0;
+  for (const c of s.cash) {
+    const cDeposits = c.paidIn?.deposits ?? 0;
+    const cWithdrawals = c.paidOut?.withdrawals ?? 0;
+    if (cDeposits !== 0) deposits += convertAmountToCad(cDeposits, c.currency, s);
+    if (cWithdrawals !== 0) withdrawals += convertAmountToCad(cWithdrawals, c.currency, s);
+  }
+  return { deposits, withdrawals };
+}
+
 /** The fields every `MonthPoint` carries regardless of how contributions are sourced. */
 function baseMonthFields(
   s: Statement,
@@ -83,8 +103,7 @@ function baseMonthFields(
     marketValue: s.portfolio?.totalMarketValue ?? null,
     bookCost: s.portfolio?.totalBookCost ?? null,
     cashBalance: cadCash?.closing ?? null,
-    deposits: cadCash?.paidIn?.deposits ?? 0,
-    withdrawals: cadCash?.paidOut?.withdrawals ?? 0,
+    ...cashFlowsInCad(s),
     grants: 0, // task 3: summed from GRANT/CLB activity credits
   };
 }

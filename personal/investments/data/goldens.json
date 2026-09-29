@@ -368,14 +368,14 @@
     "accountCount": 11
   },
   "fittedRate": {
-    "rate": 0.2118697570544137,
+    "rate": 0.19725142118360206,
     "months": 39,
     "countedAccounts": 11,
     "steps": 37
   },
   "projection": {
     "defaultRateEndValue": 7594010.264405759,
-    "fittedRateEndValue": 190038322.1218859,
+    "fittedRateEndValue": 137520504.02449268,
     "seamPeriod": "2026-08",
     "uncoveredAccountCount": 3,
     "uncoveredValue": 69392.09999999999,
@@ -683,8 +683,8 @@
   },
   "benchmark": {
     "portfolioEnd": 250450.58,
-    "benchmarkEnd": 254075.97527463484,
-    "difference": -3625.3952746348514,
+    "benchmarkEnd": 256378.22957993764,
+    "difference": -5927.649579937657,
     "monthsSkipped": 0
   }
 }
