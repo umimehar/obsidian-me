@@ -375,6 +375,26 @@ describe("classifyStatement", () => {
     expect(assetClassOf(r?.symbol ?? "")).toBe("crypto");
   });
 
+  test("a crypto SELL row reads its symbol off the 'Sale of ... BTC' description", () => {
+    // The "Sale" branch of CRYPTO_SYMBOL was untested; SELL rows use the
+    // same "Sale of <qty> <TICKER> (executed at ...), FX Rate: ..." wording.
+    const s = statementFixture({
+      accountNo: "acct_e2d6",
+      activity: [
+        row("SELL", {
+          credit: 300.05,
+          description:
+            "Sale of 0.0010000000 BTC (executed at 2026-06-05), FX Rate: 1.3903 $CAD",
+        }),
+      ],
+    });
+    const [r] = classifyStatement(
+      s,
+      account({ kind: "Crypto", shortId: "e2d6", maskedId: "acct_e2d6" }),
+    );
+    expect(r?.symbol).toBe("BTC");
+  });
+
   test("an in-kind transfer in carries no cash and is excluded from movement", () => {
     const s = statementFixture({
       activity: [
