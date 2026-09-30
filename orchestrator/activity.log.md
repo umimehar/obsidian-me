@@ -74,3 +74,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-29 · mac-studio · create · TCK-0015 · flow tile explanations and breakdowns, owner request
 - 2026-09-29 20:37 · mac-studio · claim · TCK-0015 · flow tile breakdowns
 - 2026-09-29 20:37 · mac-studio · start · TCK-0015 · starting tile breakdowns
+- 2026-09-29 · mac-studio · create · TCK-0016 · taller flow chart and structured band readout, owner request
