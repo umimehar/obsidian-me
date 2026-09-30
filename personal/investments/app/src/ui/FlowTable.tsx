@@ -1,8 +1,10 @@
 import { Flex, Table, Text } from "@radix-ui/themes";
 import type { CSSProperties, KeyboardEvent } from "react";
+import { useState } from "react";
 import type { FlowGraph, FlowLink } from "../analytics/flows/graph";
 import { linkKey } from "./charts/sankeyLayout";
 import { formatCurrency, formatShare } from "./format";
+import { useScrollOverflow } from "./useScrollOverflow";
 
 export interface FlowTableProps {
   graph: FlowGraph;
@@ -101,41 +103,16 @@ function NarrowRow({ link, labels, totalIn, selected, onSelect }: RowProps) {
  * summary view to push the rest of the tab down by. The data is not
  * truncated, only the viewport: every row is still in the DOM and reachable
  * by scrolling or by keyboard.
+ *
+ * Applied as a `max-height`, never a computed `height`: a row's real
+ * rendered height (36px) does not match a Radix size-1 row's nominal 33px,
+ * and sizing the box from that estimate hid a short period's last row with
+ * no hint anything was cut off (2024-11's 6-row table hid 23px of its
+ * sixth row; 2023-06's zero-row table hid 5px of empty space). A
+ * `max-height` costs nothing when the content is shorter than it -- the box
+ * simply shrinks to fit -- so there is no estimate left to drift.
  */
 const TABLE_MAX_HEIGHT = 360;
-
-/**
- * A Radix size-1 table row and its header are both about this tall; the
- * narrow variant's two-line `NarrowRow` is about this much taller again,
- * with no header row to add. Used two ways: sizing the wide table's own
- * `height` (below) and estimating `WIDE_VISIBLE_ROWS`/`NARROW_VISIBLE_ROWS`
- * for the "scroll for more" hint. Both share one constant so the box and
- * the hint can never disagree about how many rows fit.
- */
-const ROW_HEIGHT_PX = 33;
-const NARROW_ROW_HEIGHT_PX = 52;
-
-const WIDE_VISIBLE_ROWS = Math.floor((TABLE_MAX_HEIGHT - ROW_HEIGHT_PX) / ROW_HEIGHT_PX);
-const NARROW_VISIBLE_ROWS = Math.floor(TABLE_MAX_HEIGHT / NARROW_ROW_HEIGHT_PX);
-
-/**
- * `Table.Root` always wraps its rows in Radix's own `ScrollArea`
- * (`node_modules/@radix-ui/themes/src/components/table.tsx`), which sizes
- * itself to `height: 100%` of `Table.Root`'s own box. A `max-height` on an
- * ancestor with `overflow: visible` does not give that 100% anything
- * definite to resolve against, so the header's sticky positioning ends up
- * computed against the OUTER wrapper this file used to add around
- * `Table.Root` -- a second, redundant scroll region -- rather than
- * Radix's own inner one, which is the one that actually scrolls. Verified
- * by scrolling the real rendered table: the header scrolled away with the
- * body. Giving `Table.Root` itself a definite `height`, sized to the real
- * row count and capped at `TABLE_MAX_HEIGHT`, makes Radix's own ScrollArea
- * the one true scrolling ancestor, and lets a short table stay its natural
- * height instead of always claiming the full cap.
- */
-function wideTableHeight(rowCount: number): number {
-  return Math.min(TABLE_MAX_HEIGHT, ROW_HEIGHT_PX + rowCount * ROW_HEIGHT_PX);
-}
 
 /** The caption naming the row count and sort order, shared by both variants. */
 function TableCaption({ count }: { count: number }) {
@@ -146,9 +123,16 @@ function TableCaption({ count }: { count: number }) {
   );
 }
 
-/** Shown only when the row count exceeds what the windowed region can show without scrolling. */
-function ScrollHint({ count, visibleRows }: { count: number; visibleRows: number }) {
-  if (count <= visibleRows) return null;
+/**
+ * Shown only when the region that actually scrolls measures more content
+ * than it can show -- `useScrollOverflow`'s own `scrollHeight >
+ * clientHeight` read off the real DOM, not a row count compared against an
+ * estimated capacity. The row-count estimate this replaced was exactly
+ * the class of bug the measurement can't have: right on the periods it was
+ * tuned against and wrong everywhere else.
+ */
+function ScrollHint({ overflowing }: { overflowing: boolean }) {
+  if (!overflowing) return null;
   return (
     <Text size="1" color="gray" as="p" data-flow-table-scroll-hint="" style={{ margin: 0 }}>
       Scroll for more.
@@ -164,9 +148,13 @@ function ScrollHint({ count, visibleRows }: { count: number; visibleRows: number
  * `.rt-TableRootTable { overflow: visible }` rule alongside this: without
  * it, `Table.Root`'s own `<table>` -- `overflow: hidden` by default, for
  * its rounded corners -- is the nearer scroll container a sticky cell finds
- * first, and it never moves, so the cell never does either. Both fixes were
- * verified the same way: scrolling the real rendered table and watching
- * whether the header followed.
+ * first, and it never moves, so the cell never does either. `app.css` also
+ * gives `.rt-ScrollAreaViewport` the actual `max-height` that windows this
+ * table: setting it there, directly on the element `overflow: hidden`
+ * naturally already applies to, needs no definite height flowing down from
+ * `Table.Root` the way an estimated inline `height` used to. All three
+ * fixes were verified the same way: scrolling the real rendered table and
+ * watching whether the header followed.
  */
 const STICKY_HEADER_CELL: CSSProperties = {
   position: "sticky",
@@ -191,6 +179,22 @@ export function FlowTable({ graph, selected, onSelect, narrow = false }: FlowTab
   const links = [...graph.links].sort((a, b) => b.value - a.value);
   const Row = narrow ? NarrowRow : WideRow;
 
+  // Narrow: the `Flex` itself is the scrolling element, and its own box
+  // never changes size once capped, so `useScrollOverflow` watches the
+  // inner content `div` -- whose natural height does grow and shrink with
+  // the row count -- instead. Wide: `Table.Root` exposes no ref into
+  // Radix's own internals, so `rootEl`'s children are found by selector
+  // once it mounts; see `STICKY_HEADER_CELL`'s comment for why those two
+  // selectors are the real scrolling and content elements.
+  const [scrollEl, setScrollEl] = useState<HTMLDivElement | null>(null);
+  const [contentEl, setContentEl] = useState<HTMLDivElement | null>(null);
+  const [rootEl, setRootEl] = useState<HTMLDivElement | null>(null);
+  const narrowOverflowing = useScrollOverflow(scrollEl, contentEl);
+  const wideOverflowing = useScrollOverflow(
+    rootEl?.querySelector<HTMLElement>(".rt-ScrollAreaViewport") ?? null,
+    rootEl?.querySelector<HTMLElement>("table") ?? null,
+  );
+
   if (narrow) {
     return (
       <Flex direction="column" gap="1" data-flow-table-wrap="">
@@ -198,20 +202,23 @@ export function FlowTable({ graph, selected, onSelect, narrow = false }: FlowTab
         <Flex
           direction="column"
           data-flow-table=""
+          ref={setScrollEl}
           style={{ maxHeight: TABLE_MAX_HEIGHT, overflowY: "auto" }}
         >
-          {links.map((link) => (
-            <Row
-              key={linkKey(link)}
-              link={link}
-              labels={labels}
-              totalIn={graph.totalIn}
-              selected={selected}
-              onSelect={onSelect}
-            />
-          ))}
+          <div ref={setContentEl}>
+            {links.map((link) => (
+              <Row
+                key={linkKey(link)}
+                link={link}
+                labels={labels}
+                totalIn={graph.totalIn}
+                selected={selected}
+                onSelect={onSelect}
+              />
+            ))}
+          </div>
         </Flex>
-        <ScrollHint count={links.length} visibleRows={NARROW_VISIBLE_ROWS} />
+        <ScrollHint overflowing={narrowOverflowing} />
       </Flex>
     );
   }
@@ -219,12 +226,7 @@ export function FlowTable({ graph, selected, onSelect, narrow = false }: FlowTab
   return (
     <Flex direction="column" gap="1" data-flow-table-wrap="">
       <TableCaption count={links.length} />
-      <Table.Root
-        size="1"
-        variant="surface"
-        data-flow-table=""
-        style={{ height: wideTableHeight(links.length) }}
-      >
+      <Table.Root size="1" variant="surface" data-flow-table="" ref={setRootEl}>
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeaderCell style={STICKY_HEADER_CELL}>From</Table.ColumnHeaderCell>
@@ -250,7 +252,7 @@ export function FlowTable({ graph, selected, onSelect, narrow = false }: FlowTab
           ))}
         </Table.Body>
       </Table.Root>
-      <ScrollHint count={links.length} visibleRows={WIDE_VISIBLE_ROWS} />
+      <ScrollHint overflowing={wideOverflowing} />
     </Flex>
   );
 }

@@ -1,12 +1,63 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { FlowGraph, FlowLink, FlowNode } from "../analytics/flows/graph";
 import { FlowTable } from "./FlowTable";
 import { linkKey } from "./charts/sankeyLayout";
 import { formatCurrency, formatShare } from "./format";
 
 afterEach(cleanup);
+
+type ResizeCallback = () => void;
+
+/**
+ * A minimal stand-in for the real `ResizeObserver`, which happy-dom does not
+ * implement -- the same pattern `DestinationChart.test.tsx` and
+ * `Sankey.test.tsx` already use. `useScrollOverflow` never reads the
+ * callback's own entries, only re-measures `scrollHeight`/`clientHeight` off
+ * the DOM when it fires, so this fake need not fabricate any.
+ */
+class FakeResizeObserver {
+  static instances: FakeResizeObserver[] = [];
+  callback: ResizeCallback;
+  constructor(callback: ResizeCallback) {
+    this.callback = callback;
+    FakeResizeObserver.instances.push(this);
+  }
+  observe(): void {}
+  disconnect(): void {}
+}
+
+/**
+ * happy-dom's `scrollHeight`/`clientHeight` are always 0, so a real overflow
+ * is stubbed by hand: `scrollHeight` above `clientHeight` is what
+ * `useScrollOverflow` treats as "this region scrolls", the same real
+ * measurement a browser makes, not a row count compared against a guessed
+ * capacity.
+ */
+function stubScrollMetrics(el: Element, scrollHeight: number, clientHeight: number): void {
+  Object.defineProperty(el, "scrollHeight", { value: scrollHeight, configurable: true });
+  Object.defineProperty(el, "clientHeight", { value: clientHeight, configurable: true });
+}
+
+/**
+ * Stubs the scroll metrics of whichever element is the real scrolling one
+ * for the rendered variant -- `[data-flow-table]` itself in the narrow
+ * case, `.rt-ScrollAreaViewport` inside it in the wide one, per
+ * `useScrollOverflow`'s own comment on `contentEl` versus `scrollEl` -- then
+ * fires every pending fake observer inside `act` so the resulting
+ * `setOverflowing` call is flushed before the caller's own assertions run.
+ */
+function triggerOverflowMeasurement(scrollHeight: number, clientHeight: number): void {
+  const root = document.querySelector("[data-flow-table]");
+  const scrollEl = root?.querySelector(".rt-ScrollAreaViewport") ?? root;
+  if (scrollEl !== null && scrollEl !== undefined) {
+    stubScrollMetrics(scrollEl, scrollHeight, clientHeight);
+  }
+  act(() => {
+    for (const observer of FakeResizeObserver.instances) observer.callback();
+  });
+}
 
 function node(id: string, column: 0 | 1 | 2 | 3, value: number, label: string): FlowNode {
   return { id, column, label, value };
@@ -104,22 +155,47 @@ describe("FlowTable", () => {
     }
   });
 
-  test("no scroll hint when every row already fits", () => {
-    renderTable();
-    expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+  test("a 6-row period shows every row and no hint once measured as fitting", () => {
+    const original = window.ResizeObserver;
+    FakeResizeObserver.instances = [];
+    window.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
+    try {
+      render(
+        <Theme>
+          <FlowTable graph={longGraph(6)} selected={null} onSelect={() => {}} />
+        </Theme>,
+      );
+      expect(document.querySelectorAll("[data-flow-table-row]")).toHaveLength(6);
+      // scrollHeight <= clientHeight: the real measurement a short table
+      // gets once its box has room for every row.
+      triggerOverflowMeasurement(200, 300);
+      expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+    } finally {
+      window.ResizeObserver = original;
+    }
   });
 
-  test("a scroll hint appears once there are more rows than the window shows", () => {
-    render(
-      <Theme>
-        <FlowTable graph={longGraph(40)} selected={null} onSelect={() => {}} />
-      </Theme>,
-    );
-    const caption = document.querySelector("[data-flow-table-caption]");
-    expect(caption?.textContent).toBe("40 flows, largest first");
-    expect(document.querySelector("[data-flow-table-scroll-hint]")?.textContent).toBe(
-      "Scroll for more.",
-    );
+  test("a scroll hint appears once the region is measured as overflowing", () => {
+    const original = window.ResizeObserver;
+    FakeResizeObserver.instances = [];
+    window.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
+    try {
+      render(
+        <Theme>
+          <FlowTable graph={longGraph(40)} selected={null} onSelect={() => {}} />
+        </Theme>,
+      );
+      const caption = document.querySelector("[data-flow-table-caption]");
+      expect(caption?.textContent).toBe("40 flows, largest first");
+      expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+      // scrollHeight > clientHeight: real content taller than the capped box.
+      triggerOverflowMeasurement(1400, 360);
+      expect(document.querySelector("[data-flow-table-scroll-hint]")?.textContent).toBe(
+        "Scroll for more.",
+      );
+    } finally {
+      window.ResizeObserver = original;
+    }
   });
 });
 
@@ -159,22 +235,48 @@ describe("FlowTable, narrow", () => {
     expect(picked.key).toBe(linkKey({ source: "a0", target: "b1" }));
   });
 
-  test("a caption states the row count, and no scroll hint when every row fits", () => {
+  test("a caption states the row count", () => {
     renderNarrow();
     expect(document.querySelector("[data-flow-table-caption]")?.textContent).toBe(
       "3 flows, largest first",
     );
-    expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
   });
 
-  test("a scroll hint appears once there are more rows than the narrow window shows", () => {
-    render(
-      <Theme>
-        <FlowTable graph={longGraph(40)} selected={null} onSelect={() => {}} narrow={true} />
-      </Theme>,
-    );
-    expect(document.querySelector("[data-flow-table-scroll-hint]")?.textContent).toBe(
-      "Scroll for more.",
-    );
+  test("a 6-row period shows every row and no hint once measured as fitting", () => {
+    const original = window.ResizeObserver;
+    FakeResizeObserver.instances = [];
+    window.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
+    try {
+      render(
+        <Theme>
+          <FlowTable graph={longGraph(6)} selected={null} onSelect={() => {}} narrow={true} />
+        </Theme>,
+      );
+      expect(document.querySelectorAll("[data-flow-table-row]")).toHaveLength(6);
+      triggerOverflowMeasurement(200, 300);
+      expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+    } finally {
+      window.ResizeObserver = original;
+    }
+  });
+
+  test("a scroll hint appears once the narrow region is measured as overflowing", () => {
+    const original = window.ResizeObserver;
+    FakeResizeObserver.instances = [];
+    window.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
+    try {
+      render(
+        <Theme>
+          <FlowTable graph={longGraph(40)} selected={null} onSelect={() => {}} narrow={true} />
+        </Theme>,
+      );
+      expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+      triggerOverflowMeasurement(1400, 360);
+      expect(document.querySelector("[data-flow-table-scroll-hint]")?.textContent).toBe(
+        "Scroll for more.",
+      );
+    } finally {
+      window.ResizeObserver = original;
+    }
   });
 });

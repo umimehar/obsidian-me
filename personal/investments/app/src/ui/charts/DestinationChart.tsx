@@ -21,7 +21,11 @@ const BAND_FRACTION = 0.7;
 /**
  * Radix step 9, cycling if a group by ever draws more than eight series.
  * Jade and red are kept out: jade already means a flow on this tab's own
- * Sankey, and red means a loss everywhere else in the app.
+ * Sankey, and red means a loss everywhere else in the app. The gray scales
+ * (gray, mauve, slate, sage, olive, sand) are kept out too: this tab's own
+ * Sankey draws recycled money -- sale proceeds and portfolio income, fed
+ * back in rather than paid in from outside -- in gray, so a gray series
+ * here would read as the same thing.
  *
  * Chosen by exhaustively searching every 8-colour subset of the Radix step 9
  * scales that clears 3:1 contrast against both this project's light

@@ -83,3 +83,22 @@ summary {
 [data-flow-rows-table] .rt-TableRootTable {
   overflow: visible;
 }
+
+/*
+ * The same two tables' actual window: a `max-height` on the element that
+ * really scrolls, `.rt-ScrollAreaViewport`, rather than a `height` computed
+ * in JS from an assumed row height. That estimate (33px) drifted from the
+ * real rendered row (36px) and silently hid a short period's last row with
+ * no "Scroll for more" hint -- `FlowTable.tsx`'s own `TABLE_MAX_HEIGHT`
+ * comment has the measurements. A `max-height` set directly here needs no
+ * definite height flowing down from `Table.Root`, the thing an estimated
+ * inline `height` was working around, and costs nothing when a table is
+ * shorter than it: the box just shrinks to fit. Keep this in sync with
+ * `TABLE_MAX_HEIGHT` in `FlowTable.tsx` and `FlowRows.tsx`, the same 360px
+ * the narrow variant's own inline style still uses (a plain `<div>`, not a
+ * Radix `ScrollArea`, so no CSS override is needed there).
+ */
+[data-flow-table] .rt-ScrollAreaViewport,
+[data-flow-rows-table] .rt-ScrollAreaViewport {
+  max-height: 360px;
+}

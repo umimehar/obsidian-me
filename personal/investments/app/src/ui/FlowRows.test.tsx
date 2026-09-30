@@ -319,12 +319,11 @@ describe("FlowRows, the row cap", () => {
     if (expand === null) throw new Error("expected the expand button to render");
     fireEvent.click(expand);
     expect(document.querySelectorAll("[data-flow-row]")).toHaveLength(60);
-    // `Table.Root` gets a definite `height`, capped at the same 360px the
-    // narrow variant's own region caps at -- see `wideTableHeight`'s own
-    // comment for why that has to be a real height rather than a
-    // `max-height` on a wrapper div for the sticky header below to work.
-    const table = document.querySelector("[data-flow-rows-table]") as HTMLElement | null;
-    expect(table?.style.height).toBe("360px");
+    // The 360px window itself is a `max-height` in `app.css`, on the real
+    // scrolling element (`.rt-ScrollAreaViewport`) rather than an inline
+    // `height` computed here -- untestable in happy-dom, which resolves no
+    // stylesheet, and verified instead in a real browser. What IS testable
+    // without one is the sticky header, still an inline style:
     const headerCells = [...document.querySelectorAll("thead th")];
     expect(headerCells.length).toBeGreaterThan(0);
     for (const cell of headerCells) {
