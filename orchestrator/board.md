@@ -33,7 +33,6 @@ kanban-plugin: board
 
 ## In Progress
 
-- [ ] [[TCK-0015-investments-flow-tile-breakdowns]] #project/system #type/feature #p1
 
 
 
@@ -60,6 +59,8 @@ kanban-plugin: board
 
 
 ## Done
+
+- [x] [[TCK-0015-investments-flow-tile-breakdowns]] #project/system #type/feature #p1
 
 - [x] [[TCK-0014-investments-flow-design-pass]] #project/system #type/feature #p1
 

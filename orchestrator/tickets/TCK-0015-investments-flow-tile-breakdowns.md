@@ -5,7 +5,7 @@ created: 2026-09-29
 updated: 2026-09-29
 type: ticket
 id: TCK-0015
-status: in-progress
+status: done
 project: system
 ticket_type: feature
 assigned_device: any
@@ -27,14 +27,14 @@ Every summary tile on the Flow tab says in one line what it means, and clicking 
 
 ## Acceptance criteria
 
-- [ ] Each tile carries a one line explanation beneath its figure (owner approved wording below, sentence case, no hyphens), also in its accessible name
-- [ ] Clicking or pressing Enter on a tile opens a Radix popover with its parts: label, amount, share of the tile; the parts sum exactly to the tile (test on every month, year and all time of the corpus)
-- [ ] Each part with rows has "Show rows", which opens the existing drill down with exactly those rows and a title naming the tile and part
-- [ ] A "How the tiles fit" line: paid in + CESG + income − costs − left Wealthsimple − currency conversion = invested + left in cash, each term from one formatter call, equal to the cent
-- [ ] Breakdown figures for 2026 pinned in goldens, computed by the production function
-- [ ] Works at 72rem and 390px in both themes; popover inside the viewport; keyboard: focus moves into the popover and Escape returns it to the tile
-- [ ] `bun run check`, `bun run build:ui`, `bun run contrast` (popover opened and swept) clean
-- [ ] Reviewed by an Opus subagent that recomputes every breakdown from `data/flows.json` and the datastore and mutation tests the code; up to 3 review rounds, then human review
+- [x] Each tile carries a one line explanation beneath its figure (owner approved wording below, sentence case, no hyphens), also in its accessible name
+- [x] Clicking or pressing Enter on a tile opens a Radix popover with its parts: label, amount, share of the tile; the parts sum exactly to the tile (test on every month, year and all time of the corpus)
+- [x] Each part with rows has "Show rows", which opens the existing drill down with exactly those rows and a title naming the tile and part
+- [x] A "How the tiles fit" line: paid in + CESG + income − costs − left Wealthsimple − currency conversion = invested + left in cash, each term from one formatter call, equal to the cent
+- [x] Breakdown figures for 2026 pinned in goldens, computed by the production function
+- [x] Works at 72rem and 390px in both themes; popover inside the viewport; keyboard: focus moves into the popover and Escape returns it to the tile
+- [x] `bun run check`, `bun run build:ui`, `bun run contrast` (popover opened and swept) clean
+- [x] Reviewed by an Opus subagent that recomputes every breakdown from `data/flows.json` and the datastore and mutation tests the code; up to 3 review rounds, then human review
 
 ## Context
 
@@ -52,3 +52,6 @@ Owner request 2026-09-29, with the popover chosen over a panel. Definitions come
 ## Worklog
 
 - 2026-09-29 — Created at the owner's request after the Flow tab shipped.
+- 2026-09-29 — Implemented by a Sonnet subagent in `d9172d3`, `4d33332`, `4c71a45`, `b96526a`. Seven tiles (Left Wealthsimple added), each a popover button with the owner's explanation, parts with amounts and shares, and Show rows into the shared drill down. A "How the tiles fit" line closes the identity, with moved in and moved out terms when the account filter or the period cuts a pair.
+- 2026-09-29 — Review round 1 FAIL: the fit line stated a false equation under an account filter (2026 without chequing: 57,028.73 against 160,307.71, the gap being $103,278.98 moved in from unselected accounts); tile titles missing from accessible names; a stale drill down after a period change; tiles lost their card styling; a golden no test read; the fit line test checked half its terms. Round 2 FAIL: a part with no rows in the new period showed the cash balances sentence. Round 3 PASS: 168 cases (every single month, 2025, 2026 and all time under four selections) close to $0.000000 in an independent Decimal recompute.
+- 2026-09-29 — Gates: `bun run check` 1933 pass, 0 fail; `bun run build:ui` clean; `bun run contrast` AA pass with a tile popover swept in both themes. Goldens: only `flows.breakdown2026` added.

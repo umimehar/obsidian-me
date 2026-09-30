@@ -39,6 +39,8 @@ The Flow Sankey is about 640px tall at desktop width, and hovering or focusing a
 
 Owner request 2026-09-29 after seeing the live tab: the chart felt short (420px) and the readout plain. Owner chose the structured card over a compact two line box, and about 640px over 800px or a node count formula. Share of source is the band's value over its source node's value; share of destination is over the destination node's value.
 
+Also carried from the TCK-0015 review: a failing `toBeNull()` on a rendered Flow tab dumps the whole page (a 105 MB log that looks like a hang) despite `DEBUG_PRINT_LIMIT`; make such assertions readable (for example `expect(el === null).toBe(true)`) or fix the limit so failures stay short.
+
 ## Worklog
 
 - 2026-09-29 — Created at the owner's request; queued after TCK-0015, which touches the same tab.
