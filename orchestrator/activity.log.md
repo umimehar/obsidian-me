@@ -77,3 +77,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-29 · mac-studio · create · TCK-0016 · taller flow chart and structured band readout, owner request
 - 2026-09-29 21:45 · mac-studio · done · TCK-0015 · tile explanations and breakdowns, agent review PASS in round 3
 - 2026-09-29 21:45 · mac-studio · claim · TCK-0016 · taller flow chart and structured readout
+- 2026-09-29 21:45 · mac-studio · start · TCK-0016 · starting chart height and readout
