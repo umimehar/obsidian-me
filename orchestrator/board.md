@@ -11,7 +11,6 @@ kanban-plugin: board
 
 ## Ready
 
-- [ ] [[TCK-0016-investments-flow-chart-readout]] #project/system #type/feature #p1
 
 
 
@@ -19,6 +18,8 @@ kanban-plugin: board
 
 
 ## Claimed
+
+- [ ] [[TCK-0016-investments-flow-chart-readout]] #project/system #type/feature #p1
 
 
 
