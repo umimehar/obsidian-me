@@ -41,13 +41,27 @@ export interface TileBreakdown {
   sections: readonly BreakdownSection[];
 }
 
-/** "How the tiles fit": every term of `paidIn + cesg + income - costs - left - currencyConversion = invested + leftInCash`. */
+/**
+ * "How the tiles fit": every term of `paidIn + cesg + income + movedIn -
+ * costs - left - movedOut - currencyConversion = invested + leftInCash`.
+ *
+ * `movedIn`/`movedOut` exist because a paired row's OTHER leg can sit in an
+ * account the reader filtered out: a TFSA contribution paired with a
+ * chequing debit is invisible to `paidIn` (it is a paired row, not an
+ * unpaired credit) and invisible to `left` on the chequing side (chequing
+ * itself is unselected), so with chequing excluded the identity would be
+ * short by exactly that amount. Both are zero under the default
+ * all-accounts selection, since no pair's partner is ever outside "every
+ * account".
+ */
 export interface IdentityCheck {
   paidIn: number;
   cesg: number;
   income: number;
+  movedIn: number;
   costs: number;
   left: number;
+  movedOut: number;
   currencyConversion: number;
   invested: number;
   leftInCash: number;
@@ -348,6 +362,57 @@ function buildInvestedRate(
 }
 
 /**
+ * The other leg's `accountId` for a paired row, or `null` when unpaired or
+ * the partner row is missing -- the same lookup `FlowRows.tsx`'s
+ * `partnerLabel` does, kept independent since that module reaches UI code
+ * this one must stay free of.
+ */
+function partnerAccountId(row: FlowRow, rowsById: ReadonlyMap<string, FlowRow>): string | null {
+  if (row.pairId === null) return null;
+  const [outId, inId] = row.pairId.split(">");
+  const partnerId = row.id === outId ? inId : outId;
+  const partner = partnerId === undefined ? undefined : rowsById.get(partnerId);
+  return partner?.accountId ?? null;
+}
+
+/**
+ * The two "How the tiles fit" terms a filtered account selection can hide:
+ * money that arrived in a selected account from a paired leg whose partner
+ * sits OUTSIDE the selection (`movedIn`), and money that left a selected
+ * account to a partner outside it (`movedOut`). `rowsById` is built from
+ * the WHOLE corpus, not just `rows`, because the partner leg the reader
+ * filtered out is exactly the row this looks up.
+ */
+function movedAcrossSelection(
+  rows: readonly FlowRow[],
+  rowsById: ReadonlyMap<string, FlowRow>,
+  accounts: ReadonlySet<string>,
+): { movedIn: number; movedOut: number } {
+  let movedIn = 0;
+  let movedOut = 0;
+  for (const r of rows) {
+    const partnerAccount = partnerAccountId(r, rowsById);
+    if (partnerAccount === null || accounts.has(partnerAccount)) continue;
+    if (r.amountCad > 0) movedIn += r.amountCad;
+    else if (r.amountCad < 0) movedOut += -r.amountCad;
+  }
+  return { movedIn, movedOut };
+}
+
+/** The part named by `sectionTitle`/`partKey` in a breakdown, or `undefined` once it no longer exists -- a period or account change can remove it. */
+export function findBreakdownPart(
+  breakdown: TileBreakdown,
+  sectionTitle: string | null,
+  partKey: string,
+): BreakdownPart | undefined {
+  const parts =
+    sectionTitle === null
+      ? breakdown.parts
+      : breakdown.sections.find((s) => s.title === sectionTitle)?.parts;
+  return parts?.find((p) => p.key === partKey);
+}
+
+/**
  * Every part and section behind the Flow tab's summary tiles, plus the
  * identity that ties them together, for one period and account selection.
  * Every part is filtered from the exact rows `flowSummary` itself reads
@@ -363,6 +428,9 @@ export function tileBreakdowns(
   const kindOf = new Map(data.accounts.map((a) => [a.accountId, a.kind]));
   const accountsById = new Map(data.accounts.map((a) => [a.accountId, a]));
   const s = flowSummary(data, p, accounts);
+
+  const rowsById = new Map(data.rows.map((r) => [r.id, r]));
+  const { movedIn, movedOut } = movedAcrossSelection(rows, rowsById, accounts);
 
   // "Currency conversion" is the spread Wealthsimple charges converting
   // currency, classified `fxConversion` and otherwise counted nowhere on
@@ -390,8 +458,10 @@ export function tileBreakdowns(
       paidIn: s.paidIn,
       cesg: s.grants,
       income: s.income,
+      movedIn,
       costs: s.costs,
       left: s.left,
+      movedOut,
       currencyConversion,
       invested: s.invested,
       leftInCash: s.leftInCash,

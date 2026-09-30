@@ -1,4 +1,5 @@
 import { Button, Card, Flex, Grid, Popover, Text } from "@radix-ui/themes";
+import type { CSSProperties } from "react";
 import type {
   BreakdownPart,
   TileBreakdown,
@@ -10,60 +11,48 @@ import { CONTRIBUTION_KINDS, type FlowSummary } from "../analytics/flows/summary
 import type { AccountKind } from "../store/mask";
 import { formatCurrency, formatShare } from "./format";
 
+/** A tile's own key, the section title naming the part's home (`null` for the primary parts), and the part's own key. */
+export type PartSelector = { tileKey: TileKey; sectionTitle: string | null; partKey: string };
+
 export interface FlowTilesProps {
   summary: FlowSummary;
   breakdowns: TileBreakdowns;
-  onShowRows: (title: string, rowIds: readonly string[]) => void;
+  onShowRows: (selector: PartSelector) => void;
 }
 
-interface TileMeta {
-  key: TileKey;
-  label: string;
-  /** Owner approved wording, sentence case, no hyphens. Shown beneath the figure and folded into the accessible name. */
-  explanation: string;
-}
+/** Shared with `Flow.tsx`, so a tile's own title and the drill down's title can never name it two different ways. */
+export const TILE_LABEL: Readonly<Record<TileKey, string>> = {
+  paidIn: "Paid in from outside",
+  invested: "Invested",
+  leftInCash: "Left in cash",
+  income: "Income earned",
+  costs: "Costs",
+  left: "Left Wealthsimple",
+  investedRate: "Invested rate",
+};
 
-const TILES: readonly TileMeta[] = [
-  {
-    key: "paidIn",
-    label: "Paid in from outside",
-    explanation:
-      "New money that arrived from outside Wealthsimple. Moves between your own accounts are not counted.",
-  },
-  {
-    key: "invested",
-    label: "Invested",
-    explanation: "What you bought, minus what you sold. Cash like funds are not counted.",
-  },
-  {
-    key: "leftInCash",
-    label: "Left in cash",
-    explanation:
-      "The change in money not invested: cash balances plus cash like funds such as PSA.",
-  },
-  {
-    key: "income",
-    label: "Income earned",
-    explanation: "What your money earned inside Wealthsimple. Not salary, and not price gains.",
-  },
-  {
-    key: "costs",
-    label: "Costs",
-    explanation:
-      "Management fees and foreign withholding tax, less fee rebates. The currency conversion spread is not in the statements.",
-  },
-  {
-    key: "left",
-    label: "Left Wealthsimple",
-    explanation:
-      "Money that went to somewhere outside Wealthsimple, such as bill and card payments.",
-  },
-  {
-    key: "investedRate",
-    label: "Invested rate",
-    explanation:
-      "Invested divided by what came in (paid in, CESG and income). Over 100% means earlier cash was invested.",
-  },
+/** Owner approved wording, sentence case, no hyphens. Shown beneath each tile's figure and folded into its accessible name. */
+const TILE_EXPLANATION: Readonly<Record<TileKey, string>> = {
+  paidIn:
+    "New money that arrived from outside Wealthsimple. Moves between your own accounts are not counted.",
+  invested: "What you bought, minus what you sold. Cash like funds are not counted.",
+  leftInCash: "The change in money not invested: cash balances plus cash like funds such as PSA.",
+  income: "What your money earned inside Wealthsimple. Not salary, and not price gains.",
+  costs:
+    "Management fees and foreign withholding tax, less fee rebates. The currency conversion spread is not in the statements.",
+  left: "Money that went to somewhere outside Wealthsimple, such as bill and card payments.",
+  investedRate:
+    "Invested divided by what came in (paid in, CESG and income). Over 100% means earlier cash was invested.",
+};
+
+const TILE_ORDER: readonly TileKey[] = [
+  "paidIn",
+  "invested",
+  "leftInCash",
+  "income",
+  "costs",
+  "left",
+  "investedRate",
 ];
 
 /**
@@ -102,14 +91,16 @@ function PartRow({
   part,
   total,
   showShare,
-  tileLabel,
+  tileKey,
+  sectionTitle,
   onShowRows,
 }: {
   part: BreakdownPart;
   total: number;
   showShare: boolean;
-  tileLabel: string;
-  onShowRows: (title: string, rowIds: readonly string[]) => void;
+  tileKey: TileKey;
+  sectionTitle: string | null;
+  onShowRows: (selector: PartSelector) => void;
 }) {
   const share = showShare && total !== 0 ? formatShare(part.amount / total) : null;
   return (
@@ -127,7 +118,7 @@ function PartRow({
               variant="soft"
               color="gray"
               data-flow-tile-show-rows=""
-              onClick={() => onShowRows(`${tileLabel}: ${part.label}`, part.rowIds)}
+              onClick={() => onShowRows({ tileKey, sectionTitle, partKey: part.key })}
             >
               Show rows
             </Button>
@@ -139,13 +130,13 @@ function PartRow({
 }
 
 function TileBreakdownPopover({
-  tileLabel,
+  tileKey,
   breakdown,
   onShowRows,
 }: {
-  tileLabel: string;
+  tileKey: TileKey;
   breakdown: TileBreakdown;
-  onShowRows: (title: string, rowIds: readonly string[]) => void;
+  onShowRows: (selector: PartSelector) => void;
 }) {
   const { show, reason } = shareInfo(breakdown);
   return (
@@ -157,7 +148,8 @@ function TileBreakdownPopover({
             part={part}
             total={breakdown.total}
             showShare={show}
-            tileLabel={tileLabel}
+            tileKey={tileKey}
+            sectionTitle={null}
             onShowRows={onShowRows}
           />
         ))}
@@ -178,7 +170,8 @@ function TileBreakdownPopover({
               part={part}
               total={breakdown.total}
               showShare={false}
-              tileLabel={tileLabel}
+              tileKey={tileKey}
+              sectionTitle={section.title}
               onShowRows={onShowRows}
             />
           ))}
@@ -189,57 +182,71 @@ function TileBreakdownPopover({
 }
 
 /**
+ * The inner trigger button's own reset. Deliberately NOT `all: "unset"`:
+ * that shorthand also wipes every longhand `.rt-BaseCard` sets directly on
+ * this same element once `Card asChild` merges its class here -- padding,
+ * border-radius, the surface's own box-shadow border -- since an inline
+ * style always outranks a CSS class regardless of specificity. Only the
+ * native `<button>` chrome Card's CSS does not already override (its own
+ * background sits behind on a `::before` at `z-index: -1`, so a UA button
+ * background would otherwise paint over it) needs resetting here; padding
+ * and border-radius are left alone so Card's own class values apply.
+ */
+const TILE_BUTTON_RESET: CSSProperties = {
+  display: "block",
+  width: "100%",
+  textAlign: "left",
+  cursor: "pointer",
+  background: "transparent",
+  border: "none",
+  color: "inherit",
+};
+
+/**
  * One tile: a figure, a one line explanation beneath it, and a popover with
- * the parts behind the figure. The accessible name is the figure plus the
- * explanation -- one `formatCurrency`/`formatShare` call already produced
- * `value`, so the name and the visible text can never disagree.
+ * the parts behind the figure. The accessible name leads with the tile's
+ * own title, then the figure, then the explanation -- `formatCurrency`/
+ * `formatShare` already produced `value`, so the name and the visible text
+ * can never disagree on the figure itself.
  */
 function Tile({
-  meta,
+  tileKey,
   value,
   breakdown,
   onShowRows,
 }: {
-  meta: TileMeta;
+  tileKey: TileKey;
   value: string;
   breakdown: TileBreakdown;
-  onShowRows: (title: string, rowIds: readonly string[]) => void;
+  onShowRows: (selector: PartSelector) => void;
 }) {
+  const label = TILE_LABEL[tileKey];
+  const explanation = TILE_EXPLANATION[tileKey];
   return (
     <Popover.Root>
       <Popover.Trigger>
-        <Card asChild size="1" data-flow-tile={meta.label}>
+        <Card asChild size="1" data-flow-tile={label}>
           <button
             type="button"
-            aria-label={`${value} ${meta.explanation}`}
-            style={{
-              all: "unset",
-              display: "block",
-              width: "100%",
-              cursor: "pointer",
-              boxSizing: "border-box",
-            }}
+            aria-label={`${label}, ${value}, ${explanation}`}
+            style={TILE_BUTTON_RESET}
           >
             <Flex direction="column" gap="1">
               <Text size="1" color="gray">
-                {meta.label}
+                {label}
               </Text>
               <Text size="5" weight="bold" style={{ whiteSpace: "nowrap" }}>
                 {value}
               </Text>
               <Text size="1" color="gray">
-                {meta.explanation}
+                {explanation}
               </Text>
             </Flex>
           </button>
         </Card>
       </Popover.Trigger>
-      <Popover.Content data-flow-tile-popover={meta.label}>
-        <TileBreakdownPopover
-          tileLabel={meta.label}
-          breakdown={breakdown}
-          onShowRows={onShowRows}
-        />
+      <Popover.Content data-flow-tile-popover={label}>
+        <TileBreakdownPopover tileKey={tileKey} breakdown={breakdown} onShowRows={onShowRows} />
       </Popover.Content>
     </Popover.Root>
   );
@@ -287,6 +294,9 @@ function ContributionsLine({ summary }: { summary: FlowSummary }) {
 
 const NOT_ENOUGH_IN = "Not enough money in";
 
+/** Half a cent: below this a "moved" term is float noise, not a real crossing, and stays out of the sentence entirely. */
+const MOVED_EPSILON = 0.005;
+
 /**
  * "How the tiles fit": the identity that ties every tile together, each
  * term from one `formatCurrency` call on `breakdowns.identity`'s own
@@ -295,13 +305,17 @@ const NOT_ENOUGH_IN = "Not enough money in";
  */
 function IdentityLine({ breakdowns }: { breakdowns: TileBreakdowns }) {
   const i = breakdowns.identity;
+  const movedIn = Math.abs(i.movedIn) > MOVED_EPSILON ? formatCurrency(i.movedIn) : null;
+  const movedOut = Math.abs(i.movedOut) > MOVED_EPSILON ? formatCurrency(i.movedOut) : null;
   return (
     <Text size="2" color="gray" data-flow-identity="">
       How the tiles fit: {formatCurrency(i.paidIn)} paid in plus {formatCurrency(i.cesg)} CESG plus{" "}
-      {formatCurrency(i.income)} income, minus {formatCurrency(i.costs)} costs, minus{" "}
-      {formatCurrency(i.left)} left Wealthsimple, minus {formatCurrency(i.currencyConversion)}{" "}
-      currency conversion, equals {formatCurrency(i.invested)} invested plus{" "}
-      {formatCurrency(i.leftInCash)} left in cash.
+      {formatCurrency(i.income)} income
+      {movedIn === null ? "" : ` plus ${movedIn} moved in from other accounts`}, minus{" "}
+      {formatCurrency(i.costs)} costs, minus {formatCurrency(i.left)} left Wealthsimple
+      {movedOut === null ? "" : `, minus ${movedOut} moved out to other accounts`}, minus{" "}
+      {formatCurrency(i.currencyConversion)} currency conversion, equals{" "}
+      {formatCurrency(i.invested)} invested plus {formatCurrency(i.leftInCash)} left in cash.
     </Text>
   );
 }
@@ -329,12 +343,12 @@ export function FlowTiles({ summary, breakdowns, onShowRows }: FlowTilesProps) {
   return (
     <Flex direction="column" gap="3" data-flow-tiles="">
       <Grid columns={{ initial: "1", xs: "2", sm: "3", md: "4" }} gap="3">
-        {TILES.map((meta) => (
+        {TILE_ORDER.map((key) => (
           <Tile
-            key={meta.key}
-            meta={meta}
-            value={valueFor(meta.key)}
-            breakdown={breakdowns[meta.key]}
+            key={key}
+            tileKey={key}
+            value={valueFor(key)}
+            breakdown={breakdowns[key]}
             onShowRows={onShowRows}
           />
         ))}

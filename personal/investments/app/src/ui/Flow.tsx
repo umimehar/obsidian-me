@@ -1,6 +1,6 @@
 import { Callout, Flex, Heading, Text } from "@radix-ui/themes";
 import { useEffect, useMemo, useState } from "react";
-import { tileBreakdowns } from "../analytics/flows/breakdown";
+import { findBreakdownPart, tileBreakdowns } from "../analytics/flows/breakdown";
 import { type GroupBy, buildFlowGraph, depositsByDestination } from "../analytics/flows/graph";
 import { type FlowPeriod, inPeriod, missingAccounts } from "../analytics/flows/period";
 import { flowSummary } from "../analytics/flows/summary";
@@ -9,7 +9,7 @@ import type { AccountSeries } from "../analytics/types";
 import { FlowControls } from "./FlowControls";
 import { DRILL_DOWN_HEADING_ID, FlowRows, type FlowRowsSelection } from "./FlowRows";
 import { FlowTable } from "./FlowTable";
-import { FlowTiles } from "./FlowTiles";
+import { FlowTiles, type PartSelector, TILE_LABEL } from "./FlowTiles";
 import { ShareBar } from "./ShareBar";
 import { DestinationChart } from "./charts/DestinationChart";
 import { Sankey } from "./charts/Sankey";
@@ -134,7 +134,13 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
   const [groupBy, setGroupBy] = useState<GroupBy>("accountType");
   const [accounts, setAccounts] = useState<Set<string>>(() => allAccountIds(flows));
   const [selected, setSelected] = useState<string | null>(null);
-  const [tileSelection, setTileSelection] = useState<FlowRowsSelection | null>(null);
+  const [tileSelection, setTileSelection] = useState<PartSelector | null>(null);
+  // Bumped on every new choice, band or tile part alike, and folded into the
+  // scroll effect's own key below: choosing the SAME part or band twice in a
+  // row leaves `selectedKey`/`tileSelection` unchanged, and a key that does
+  // not change never re-runs the effect that scrolls and focuses the drill
+  // down.
+  const [selectionSeq, setSelectionSeq] = useState(0);
   const narrow = useNarrowFlow();
 
   const accountOptions = useMemo(() => flowAccountOptions(series), [series]);
@@ -186,23 +192,55 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
   // A band picked in the Sankey or table takes over from whatever tile
   // part was showing, and vice versa: `Flow` renders one drill down at a
   // time, so choosing one clears the other rather than leaving a stale
-  // selection the reader never asked to see beside the new one.
+  // selection the reader never asked to see beside the new one. Both bump
+  // `selectionSeq`, even for a key that is unchanged from the current
+  // selection, so a repeat choice still scrolls and focuses.
   const selectBand = (key: string | null) => {
     setTileSelection(null);
     setSelected(key);
+    if (key !== null) setSelectionSeq((n) => n + 1);
   };
-  const showTileRows = (title: string, rowIds: readonly string[]) => {
+  const showTileRows = (selector: PartSelector) => {
     setSelected(null);
-    setTileSelection({ title, rowIds });
+    setTileSelection(selector);
+    setSelectionSeq((n) => n + 1);
   };
 
+  // Derived fresh from the CURRENT graph and breakdowns on every render,
+  // never captured at click time: `breakdowns` and `graph` change under a
+  // selection that survives a period or account change (nothing clears
+  // `tileSelection`/`selected` on its own), and a stale capture is exactly
+  // how 2026's rows kept showing after switching to 2025. A part or band
+  // that no longer exists resolves to `null` here, which reads as cleared.
   const bandSelection: FlowRowsSelection | null = useMemo(() => {
     if (selectedKey === null) return null;
     const link = graph.links.find((l) => linkKey(l) === selectedKey);
     return link === undefined ? null : { title: "Selected flow", rowIds: link.rowIds };
   }, [graph, selectedKey]);
-  const rowsSelection = tileSelection ?? bandSelection;
-  const activeKey = tileSelection !== null ? `tile:${tileSelection.title}` : selectedKey;
+  const tileRowsSelection: FlowRowsSelection | null = useMemo(() => {
+    if (tileSelection === null) return null;
+    const part = findBreakdownPart(
+      breakdowns[tileSelection.tileKey],
+      tileSelection.sectionTitle,
+      tileSelection.partKey,
+    );
+    if (part === undefined) return null;
+    return { title: `${TILE_LABEL[tileSelection.tileKey]}: ${part.label}`, rowIds: part.rowIds };
+  }, [breakdowns, tileSelection]);
+  // Tidies the state once its own part has gone stale, rather than leaving
+  // `tileSelection` naming a part that could reappear (a different period
+  // sharing a part key) and read as a selection the reader never re-chose.
+  useEffect(() => {
+    if (tileSelection !== null && tileRowsSelection === null) setTileSelection(null);
+  }, [tileSelection, tileRowsSelection]);
+
+  const rowsSelection = tileRowsSelection ?? bandSelection;
+  const activeKey =
+    tileSelection !== null
+      ? `tile:${tileSelection.tileKey}:${tileSelection.sectionTitle ?? ""}:${tileSelection.partKey}:${selectionSeq}`
+      : selectedKey !== null
+        ? `${selectedKey}:${selectionSeq}`
+        : null;
   useScrollDrillDownIntoView(activeKey);
 
   return (

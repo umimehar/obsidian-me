@@ -298,3 +298,232 @@ describe("Flow, the drill down's scroll and focus", () => {
     expect(document.activeElement).toBe(heading);
   });
 });
+
+/**
+ * One payroll row per year, same part key ("payroll"), different rowIds --
+ * the fixture the staleness tests need -- plus a TFSA contribution row
+ * present only in 2026, whose whole "Of which contributions" section
+ * therefore does not exist at all in 2024 or 2025.
+ */
+const TWO_YEAR_FLOWS: FlowsData = {
+  generated: "2026-01-01",
+  accounts: [CHEQUING, TFSA],
+  rows: [
+    row({
+      id: "pay25",
+      accountId: "acct_a",
+      period: "2025-06",
+      date: "2025-06-15",
+      code: "AFT_IN",
+      category: "payroll",
+      movement: true,
+      amountCad: 100,
+      amount: 100,
+    }),
+    row({
+      id: "pay26",
+      accountId: "acct_a",
+      period: "2026-06",
+      date: "2026-06-15",
+      code: "AFT_IN",
+      category: "payroll",
+      movement: true,
+      amountCad: 200,
+      amount: 200,
+    }),
+    row({
+      id: "tfsaCont26",
+      accountId: "acct_b",
+      period: "2026-06",
+      date: "2026-06-20",
+      code: "CONT",
+      category: "outsideBank",
+      movement: true,
+      amountCad: 50,
+      amount: 50,
+    }),
+  ],
+  blocks: [
+    {
+      accountId: "acct_a",
+      period: "2024-06",
+      currency: "CAD",
+      opening: 0,
+      closing: 0,
+      fxRate: null,
+      rowsNet: 0,
+      residual: 0,
+    },
+    {
+      accountId: "acct_a",
+      period: "2025-06",
+      currency: "CAD",
+      opening: 0,
+      closing: 100,
+      fxRate: null,
+      rowsNet: 100,
+      residual: 0,
+    },
+    {
+      accountId: "acct_a",
+      period: "2026-06",
+      currency: "CAD",
+      opening: 0,
+      closing: 200,
+      fxRate: null,
+      rowsNet: 200,
+      residual: 0,
+    },
+    {
+      accountId: "acct_b",
+      period: "2026-06",
+      currency: "CAD",
+      opening: 0,
+      closing: 50,
+      fxRate: null,
+      rowsNet: 50,
+      residual: 0,
+    },
+  ],
+  suspectSymbols: [],
+};
+
+async function openPaidInTile(): Promise<void> {
+  const trigger = document.querySelector('[data-flow-tile="Paid in from outside"]');
+  if (trigger === null) throw new Error("expected the paid-in tile");
+  await act(async () => {
+    fireEvent.click(trigger);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+}
+
+/** Opens the paid-in tile and clicks the payroll source part's own "Show rows". */
+async function openPaidInShowRows(): Promise<void> {
+  await openPaidInTile();
+  const button = document.querySelector("[data-flow-tile-show-rows]");
+  if (button === null) throw new Error("expected a Show rows button");
+  await act(async () => {
+    fireEvent.click(button);
+  });
+}
+
+/**
+ * Opens the paid-in tile and clicks the TFSA contribution part's own
+ * "Show rows", inside the "Of which contributions" section -- the section
+ * `TWO_YEAR_FLOWS` only ever populates for 2026, so choosing it there and
+ * switching away is what genuinely exercises a part that stops existing.
+ */
+async function openPaidInTfsaContribShowRows(): Promise<void> {
+  await openPaidInTile();
+  const button = document.querySelector("[data-flow-tile-section] [data-flow-tile-show-rows]");
+  if (button === null) throw new Error("expected the TFSA contribution's Show rows button");
+  await act(async () => {
+    fireEvent.click(button);
+  });
+}
+
+describe("Flow, the drill down survives a period change", () => {
+  test("switching period after Show rows re-derives the rows instead of keeping the old period's", async () => {
+    const { rerender } = render(
+      <Theme>
+        <Flow
+          flows={TWO_YEAR_FLOWS}
+          series={MOVE_SERIES}
+          period={{ from: "2026-01", to: "2026-12" }}
+          onPeriodChange={() => {}}
+        />
+      </Theme>,
+    );
+    await openPaidInShowRows();
+    expect(document.querySelector('[data-flow-row="pay26"]')).not.toBeNull();
+    expect(document.querySelector('[data-flow-row="pay25"]')).toBeNull();
+
+    rerender(
+      <Theme>
+        <Flow
+          flows={TWO_YEAR_FLOWS}
+          series={MOVE_SERIES}
+          period={{ from: "2025-01", to: "2025-12" }}
+          onPeriodChange={() => {}}
+        />
+      </Theme>,
+    );
+    expect(document.querySelector('[data-flow-row="pay25"]')).not.toBeNull();
+    expect(document.querySelector('[data-flow-row="pay26"]')).toBeNull();
+  });
+
+  test("switching to a period where the part no longer exists clears the drill down rather than showing stale rows", async () => {
+    const { rerender } = render(
+      <Theme>
+        <Flow
+          flows={TWO_YEAR_FLOWS}
+          series={MOVE_SERIES}
+          period={{ from: "2026-01", to: "2026-12" }}
+          onPeriodChange={() => {}}
+        />
+      </Theme>,
+    );
+    await openPaidInTfsaContribShowRows();
+    expect(document.querySelector('[data-flow-row="tfsaCont26"]')).not.toBeNull();
+
+    rerender(
+      <Theme>
+        <Flow
+          flows={TWO_YEAR_FLOWS}
+          series={MOVE_SERIES}
+          period={{ from: "2024-01", to: "2024-12" }}
+          onPeriodChange={() => {}}
+        />
+      </Theme>,
+    );
+    expect(document.querySelector("[data-flow-rows]")).toBeNull();
+  });
+});
+
+describe("Flow, choosing the same tile part twice", () => {
+  const originalScrollIntoView = Element.prototype.scrollIntoView;
+  let scrolled: Element[] = [];
+
+  function stubScroll() {
+    scrolled = [];
+    Element.prototype.scrollIntoView = function scrollIntoViewStub(this: Element) {
+      scrolled.push(this);
+    };
+  }
+
+  afterEach(() => {
+    Element.prototype.scrollIntoView = originalScrollIntoView;
+  });
+
+  test("re-choosing the same part scrolls and focuses again rather than leaving focus wherever it drifted", async () => {
+    render(
+      <Theme>
+        <Flow
+          flows={TWO_YEAR_FLOWS}
+          series={MOVE_SERIES}
+          period={{ from: "2026-01", to: "2026-12" }}
+          onPeriodChange={() => {}}
+        />
+      </Theme>,
+    );
+    await openPaidInShowRows();
+    expect(document.getElementById("flow-drilldown-heading")).not.toBeNull();
+
+    stubScroll();
+    // Move focus elsewhere first, so a second focus-to-heading is provable
+    // rather than assumed to have "never left".
+    (document.body as HTMLElement).focus();
+    expect(document.activeElement).toBe(document.body);
+
+    await openPaidInShowRows();
+    // `FlowRows` remounts on every new selection (`key={activeKey}`), so the
+    // heading fetched before this second choice is a DIFFERENT, now
+    // disconnected DOM node from the one this choice actually scrolls and
+    // focuses -- re-querying by id is what proves the SECOND choice, not
+    // stale identity from the first.
+    const heading = document.getElementById("flow-drilldown-heading");
+    if (heading === null) throw new Error("expected the drill down heading");
+    expect(scrolled).toContain(heading);
+    expect(document.activeElement).toBe(heading);
+  });
+});

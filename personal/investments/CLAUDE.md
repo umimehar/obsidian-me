@@ -191,7 +191,7 @@ Two traps, both hit during the build:
 - **Every Sankey balances by construction.** Per account, month and currency, the rows reproduce the statement's cash change exactly on all 255 blocks. The Cash node is the statements' own change in cash; any gap is an Unreconciled node inside the balance check, never left out of it. The check runs on unrounded sums before sub-cent links are dropped for display.
 - **Closure is declared, never inferred.** `CLOSED_ACCOUNTS` in `registry.ts` is empty. A $0 balance is not closure: 8cd3 sits at $0 between movements, and inferring closure from it would hide its missing statement.
 - **Cash equivalents** are listed in `flows/assetClass.ts` and stay out of the invested rate: PSA, HISU.U, PSU.U and the savings ETFs. A new savings or bond fund bought later lands under equities until it is added; the build lists suspects by fund name in the tab's notes.
-- **The UI imports only** `flows/types`, `graph`, `summary`, `period` and `assetClass`. `classify.ts` and `flows/build.ts` reach `registry.ts`, which loads `node:crypto`.
+- **The UI imports only** `flows/types`, `graph`, `summary`, `period`, `assetClass` and `breakdown`. `classify.ts` and `flows/build.ts` reach `registry.ts`, which loads `node:crypto`.
 - **`bun run contrast` fails when two Sankey labels overlap**, measured with real text boxes, because the layout sizes margins from a character width factor (0.525 at 12px) that no test in happy-dom can check.
 
 Known and by design: left in cash differs from the statements' closing cash by $44.70 over all time, the revaluation of held USD cash, since each month's change converts at that month's rate.

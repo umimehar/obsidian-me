@@ -3,7 +3,7 @@ import { Theme } from "@radix-ui/themes";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import type { TileBreakdown, TileBreakdowns, TileKey } from "../analytics/flows/breakdown";
 import type { FlowSummary } from "../analytics/flows/summary";
-import { FlowTiles } from "./FlowTiles";
+import { FlowTiles, type PartSelector } from "./FlowTiles";
 import { formatCurrency, formatShare } from "./format";
 import { expectNoCoarseForm } from "./testSupport/coarseForm";
 
@@ -85,8 +85,10 @@ function breakdowns(s: FlowSummary, overrides: Partial<TileBreakdowns> = {}): Ti
       paidIn: s.paidIn,
       cesg: s.grants,
       income: s.income,
+      movedIn: 0,
       costs: s.costs,
       left: s.left,
+      movedOut: 0,
       currencyConversion: 285.57,
       invested: s.invested,
       leftInCash: s.leftInCash,
@@ -113,11 +115,12 @@ afterEach(cleanup);
 
 function renderTiles(
   s: FlowSummary,
-  onShowRows: (title: string, rowIds: readonly string[]) => void = () => {},
+  onShowRows: (selector: PartSelector) => void = () => {},
+  ov: Partial<TileBreakdowns> = {},
 ) {
   render(
     <Theme>
-      <FlowTiles summary={s} breakdowns={breakdowns(s)} onShowRows={onShowRows} />
+      <FlowTiles summary={s} breakdowns={breakdowns(s, ov)} onShowRows={onShowRows} />
     </Theme>,
   );
 }
@@ -135,7 +138,7 @@ describe("FlowTiles", () => {
     expect(tile("Invested rate").textContent).toContain(formatShare(s.investedRate as number));
   });
 
-  test("every tile's aria-label is the figure plus its one line explanation", () => {
+  test("every tile's aria-label leads with its title, then the figure, then its one line explanation", () => {
     const s = summary();
     renderTiles(s);
     const cases: readonly [string, string, string][] = [
@@ -161,7 +164,7 @@ describe("FlowTiles", () => {
       ],
     ];
     for (const [label, value, explanation] of cases) {
-      expect(tile(label).getAttribute("aria-label")).toBe(`${value} ${explanation}`);
+      expect(tile(label).getAttribute("aria-label")).toBe(`${label}, ${value}, ${explanation}`);
       expect(tile(label).textContent).toContain(value);
       expect(tile(label).textContent).toContain(explanation);
     }
@@ -209,15 +212,69 @@ describe("FlowTiles", () => {
     );
   });
 
-  test("the how the tiles fit line states every identity term from its own formatter call", () => {
+  test("the how the tiles fit line states every identity term, from its own formatter call, when zero moved terms", () => {
     const s = summary();
     renderTiles(s);
     const line = document.querySelector("[data-flow-identity]");
-    expect(line?.textContent).toContain("How the tiles fit");
-    expect(line?.textContent).toContain(formatCurrency(s.paidIn));
-    expect(line?.textContent).toContain(formatCurrency(285.57));
-    expect(line?.textContent).toContain(formatCurrency(s.invested));
-    expect(line?.textContent).toContain(formatCurrency(s.leftInCash));
+    const text = line?.textContent ?? "";
+    expect(text).toContain("How the tiles fit");
+    expect(text).toContain(formatCurrency(s.paidIn));
+    expect(text).toContain(formatCurrency(s.grants));
+    expect(text).toContain(formatCurrency(s.income));
+    expect(text).toContain(formatCurrency(s.costs));
+    expect(text).toContain(formatCurrency(s.left));
+    expect(text).toContain(formatCurrency(285.57));
+    expect(text).toContain(formatCurrency(s.invested));
+    expect(text).toContain(formatCurrency(s.leftInCash));
+    expect(text).not.toContain("moved in");
+    expect(text).not.toContain("moved out");
+  });
+
+  test("the how the tiles fit line adds the moved terms only when nonzero", () => {
+    const s = summary();
+    renderTiles(s, undefined, {
+      identity: {
+        paidIn: s.paidIn,
+        cesg: s.grants,
+        income: s.income,
+        movedIn: 103278.98,
+        costs: s.costs,
+        left: s.left,
+        movedOut: 47.5,
+        currencyConversion: 285.57,
+        invested: s.invested,
+        leftInCash: s.leftInCash,
+      },
+    });
+    const text = document.querySelector("[data-flow-identity]")?.textContent ?? "";
+    expect(text).toContain(`${formatCurrency(103278.98)} moved in from other accounts`);
+    expect(text).toContain(`${formatCurrency(47.5)} moved out to other accounts`);
+  });
+
+  test("a nonzero residual sign is stated correctly in the currency conversion term", () => {
+    const s = summary();
+    renderTiles(s, undefined, {
+      identity: {
+        paidIn: s.paidIn,
+        cesg: s.grants,
+        income: s.income,
+        movedIn: 0,
+        costs: s.costs,
+        left: s.left,
+        movedOut: 0,
+        currencyConversion: -44.7,
+        invested: s.invested,
+        leftInCash: s.leftInCash,
+      },
+    });
+    const text = document.querySelector("[data-flow-identity]")?.textContent ?? "";
+    // A substring check alone is not enough here: `formatCurrency(44.7)` is
+    // itself a substring of `formatCurrency(-44.7)`, so a flipped sign would
+    // still "contain" the positive figure. Anchoring on the surrounding
+    // "minus <figure> currency conversion" phrase is what actually proves
+    // which sign rendered.
+    expect(text).toContain(`minus ${formatCurrency(-44.7)} currency conversion`);
+    expect(text).not.toContain(`minus ${formatCurrency(44.7)} currency conversion`);
   });
 
   test("a tile's figure never wraps, even a long negative one in the single narrow column", () => {
@@ -226,6 +283,14 @@ describe("FlowTiles", () => {
       (el) => (el as HTMLElement).style.whiteSpace === "nowrap",
     );
     expect(wrapped).toBe(true);
+  });
+
+  test("a tile keeps its card styling: no inline all:unset or padding override wiping Card's own CSS", () => {
+    renderTiles(summary());
+    const button = tile("Paid in from outside").querySelector("button");
+    expect(button?.style.all).toBeFalsy();
+    expect(button?.style.padding).toBeFalsy();
+    expect(button?.style.borderRadius).toBeFalsy();
   });
 
   test("clicking a tile opens a popover listing its parts with label, amount and share", async () => {
@@ -238,16 +303,16 @@ describe("FlowTiles", () => {
     expect(payrollPart?.textContent).toContain(formatShare(46464.63 / 134880.63));
   });
 
-  test("a part with rows offers Show rows, which closes the popover and reports the exact part", async () => {
-    const seen: [string, readonly string[]][] = [];
-    renderTiles(summary(), (title, rowIds) => seen.push([title, rowIds]));
+  test("a part with rows offers Show rows, which closes the popover and reports the exact selector", async () => {
+    const seen: PartSelector[] = [];
+    renderTiles(summary(), (selector) => seen.push(selector));
     await openTile("Paid in from outside");
     const button = document.querySelector("[data-flow-tile-show-rows]");
     if (button === null) throw new Error("expected a Show rows button");
     await act(async () => {
       fireEvent.click(button);
     });
-    expect(seen).toEqual([["Paid in from outside: Payroll deposited", ["r1"]]]);
+    expect(seen).toEqual([{ tileKey: "paidIn", sectionTitle: null, partKey: "payroll" }]);
     expect(document.querySelector('[data-flow-tile-popover="Paid in from outside"]')).toBeNull();
   });
 
