@@ -749,6 +749,76 @@
       "Crypto": 100,
       "RESP": 1050,
       "Corporate": 2000
+    },
+    "breakdown2026": {
+      "tiles": {
+        "paidIn": {
+          "payroll": 46464.630000000005,
+          "outsideBank": 20816,
+          "interacIn": 12600,
+          "business": 55000
+        },
+        "invested": {
+          "purchases": 259942.16597199958,
+          "sales": -115521.93114799997
+        },
+        "leftInCash": {
+          "acct_2c620d2b": 1846.8982990000002,
+          "acct_c2e9345e": 1200,
+          "acct_97ab4cb2": 1038.94,
+          "acct_18a334f1": 700,
+          "acct_231879ac": 521.2778599999997,
+          "acct_91b82482": 123.14000000000148,
+          "acct_8297de15": 53.37,
+          "acct_e2ec057d": 7.125458999999978,
+          "acct_97100dd9": -13.190000000000001,
+          "acct_d77c33c7": -26.403912000000673,
+          "acct_d6d9fb4a": -33.61999999999989,
+          "acct_1f9a1df3": -42.73999999999995,
+          "acct_2b743dc7": -8165.82,
+          "acct_8cd3372e": -26618.769999999997,
+          "PSA": 11127.589999999995,
+          "PSU.U": 88.19652099999985,
+          "HISU.U": 0.3836700000001656,
+          "HISA": -3.490000000001828
+        },
+        "income": {
+          "dividends": 1745.690041999999,
+          "interest": 65.64,
+          "securitiesLending": 1.7252010000000004,
+          "cashBack": 142.2,
+          "rewards": 80,
+          "otherRefunds": 0
+        },
+        "costs": {
+          "managementFees": 234.25,
+          "withholdingTax": 97.86595400000006,
+          "feeRebates": -10.77
+        },
+        "left": {
+          "transfersOut": 10146.36,
+          "interacSent": 0,
+          "withdrawals": 700,
+          "cardPurchases": 38.49,
+          "sentToPerson": 1
+        },
+        "investedRate": {
+          "invested": 144420.23482400004,
+          "paidIn": 134880.63,
+          "cesg": 800,
+          "income": 2035.255242999998
+        }
+      },
+      "identity": {
+        "paidIn": 134880.63,
+        "cesg": 800,
+        "income": 2035.255242999998,
+        "costs": 321.3459540000001,
+        "left": 10885.850000000002,
+        "currencyConversion": 285.5665680000041,
+        "invested": 144420.23482400004,
+        "leftInCash": -18197.11210300001
+      }
     }
   }
 }

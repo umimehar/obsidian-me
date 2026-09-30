@@ -1,4 +1,5 @@
 import raw from "@data/goldens.json";
+import type { IdentityCheck } from "./analytics/flows/breakdown";
 import type { SourceCategory } from "./analytics/flows/types";
 
 /**
@@ -336,6 +337,16 @@ export interface Goldens {
      * $33,594.70, of which $24,366.16 was sale proceeds and $178.54 income.
      */
     destinationSample202607: Record<string, number>;
+    /**
+     * `tileBreakdowns` for calendar year 2026, group by account, reshaped to
+     * a compact key/amount map per tile plus the identity check -- the
+     * ticket's own reviewer-computed figures, computed here by the SAME
+     * production function the popover calls, never re-typed.
+     */
+    breakdown2026: {
+      tiles: Record<string, Record<string, number>>;
+      identity: IdentityCheck;
+    };
   };
 }
 

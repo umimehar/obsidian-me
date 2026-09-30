@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 
 /**
- * `graph.ts`, `summary.ts` and `period.ts` are imported by the UI, which
- * runs in the browser. They may import only `flows/types.ts`,
+ * `graph.ts`, `summary.ts`, `period.ts` and `breakdown.ts` are imported by
+ * the UI, which runs in the browser. They may import only `flows/types.ts`,
  * `flows/assetClass.ts`, each other, and type-only imports -- never
  * `classify.ts`, `build.ts` or `store/registry.ts` (which loads `mask.ts`,
  * which imports `node:crypto`). A source-text check catches a bad import
@@ -10,7 +10,7 @@ import { describe, expect, test } from "bun:test";
  */
 const FORBIDDEN =
   /from\s+["'][^"']*\b(classify|registry|build|ingest)\b[^"']*["']|from\s+["']node:/;
-const FILES = ["graph.ts", "summary.ts", "period.ts"];
+const FILES = ["graph.ts", "summary.ts", "period.ts", "breakdown.ts"];
 
 describe("browser-safe flow modules", () => {
   for (const file of FILES) {

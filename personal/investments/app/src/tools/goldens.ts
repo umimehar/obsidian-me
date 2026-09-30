@@ -4,6 +4,7 @@ import { simulateBenchmark, skippedPeriods } from "../analytics/benchmark";
 import type { AnalyticsOutput } from "../analytics/build";
 import { buildCashflowSeries } from "../analytics/cashflowSeries";
 import { feeReconciliationGaps } from "../analytics/feeReconciliation";
+import { type TileBreakdown, tileBreakdowns } from "../analytics/flows/breakdown";
 import { buildFlows } from "../analytics/flows/build";
 import { buildFlowGraph, depositsByDestination } from "../analytics/flows/graph";
 import { type FlowPeriod, allTime, yearPeriod } from "../analytics/flows/period";
@@ -279,6 +280,31 @@ function flowHeadline(
   };
 }
 
+/** One tile's parts, reshaped `key -> amount` -- `tileBreakdowns`'s own output, never re-typed. */
+function tileAmounts(breakdown: TileBreakdown): Record<string, number> {
+  return Object.fromEntries(breakdown.parts.map((p) => [p.key, p.amount]));
+}
+
+/** `tileBreakdowns` for calendar year 2026, group by account, reshaped into the goldens' pinned shape. */
+function flowBreakdown2026(
+  flows: FlowsData,
+  allAccounts: ReadonlySet<string>,
+): Goldens["flows"]["breakdown2026"] {
+  const b = tileBreakdowns(flows, yearPeriod(2026), allAccounts);
+  return {
+    tiles: {
+      paidIn: tileAmounts(b.paidIn),
+      invested: tileAmounts(b.invested),
+      leftInCash: tileAmounts(b.leftInCash),
+      income: tileAmounts(b.income),
+      costs: tileAmounts(b.costs),
+      left: tileAmounts(b.left),
+      investedRate: tileAmounts(b.investedRate),
+    },
+    identity: b.identity,
+  };
+}
+
 /** `depositsByDestination` for 2026-07 alone, group by account type, keyed by destination label. */
 function destinationSample202607(
   flows: FlowsData,
@@ -308,6 +334,7 @@ function buildFlowGoldens(datastore: Datastore): Goldens["flows"] {
       all: flowHeadline(flows, allTime(flows), allAccounts),
     },
     destinationSample202607: destinationSample202607(flows, allAccounts),
+    breakdown2026: flowBreakdown2026(flows, allAccounts),
   };
 }
 

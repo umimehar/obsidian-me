@@ -29,7 +29,8 @@ export interface FlowSummary {
   unlistedSymbols: string[];
 }
 
-const SOURCE_CATEGORIES: readonly SourceCategory[] = [
+/** Shared with `breakdown.ts`, so a part's own row filter can never read a different set of source codes than the tile total does. */
+export const SOURCE_CATEGORIES: readonly SourceCategory[] = [
   "payroll",
   "outsideBank",
   "interacIn",
@@ -44,7 +45,12 @@ export const CONTRIBUTION_KINDS: readonly AccountKind[] = [
   "RESP",
 ];
 
-function selectedRows(data: FlowsData, p: FlowPeriod, accounts: ReadonlySet<string>): FlowRow[] {
+/** Shared with `breakdown.ts`, so a tile's parts are filtered from the exact same row set the tile's own total is. */
+export function selectedRows(
+  data: FlowsData,
+  p: FlowPeriod,
+  accounts: ReadonlySet<string>,
+): FlowRow[] {
   return data.rows.filter((r) => accounts.has(r.accountId) && inPeriod(r.period, p));
 }
 
@@ -98,12 +104,47 @@ function sumTraded(rows: readonly FlowRow[], wantCashEquivalent: boolean): numbe
 }
 
 /**
- * `cashChange` is the raw `closing - opening`, matching `graph.ts`'s cash
- * link exactly -- both figures have to describe the same money. A USD
- * block with no fx rate throws naming the account and period, the same as
- * `graph.ts`'s cash link, rather than silently dropping a real change: a
- * summary tile that quietly reads $0 lower than the Sankey it sits beside
- * is worse than a loud failure.
+ * Each selected account's own `(closing - opening) * rate` for the period,
+ * matching `graph.ts`'s cash link exactly. A USD block with no fx rate
+ * throws naming the account and period, the same as `graph.ts`'s cash link,
+ * rather than silently dropping a real change: a summary tile that quietly
+ * reads $0 lower than the Sankey it sits beside is worse than a loud
+ * failure. Exported so `breakdown.ts`'s "change in cash per account" part
+ * and this function's own total can never drift apart.
+ */
+export function cashChangeByAccount(
+  data: FlowsData,
+  p: FlowPeriod,
+  accounts: ReadonlySet<string>,
+): Map<string, number> {
+  const byAccount = new Map<string, number>();
+  for (const b of data.blocks) {
+    if (!accounts.has(b.accountId) || !inPeriod(b.period, p)) continue;
+    const changed = Math.abs(b.closing - b.opening) > 1e-7 || Math.abs(b.residual) > 1e-7;
+    const rate = b.currency === "USD" ? b.fxRate : 1;
+    if (rate === null) {
+      if (changed) {
+        throw new Error(
+          `flow summary: ${b.accountId} ${b.period} has a USD cash change with no fx rate`,
+        );
+      }
+      continue;
+    }
+    const delta = (b.closing - b.opening) * rate;
+    byAccount.set(b.accountId, (byAccount.get(b.accountId) ?? 0) + delta);
+  }
+  return byAccount;
+}
+
+/**
+ * `cashChange` and `residual`, in the SAME single flat pass over
+ * `data.blocks` this function has always used -- kept separate from
+ * `cashChangeByAccount` above rather than built by summing its per-account
+ * map, because floating-point addition is not associative and grouping by
+ * account first before summing shifts a total's last bits. `bun run
+ * goldens` must diff nothing but the new breakdown section it adds, so the
+ * two figures this function has always produced cannot move even by a
+ * cent's hundred-thousandth.
  */
 function sumCash(
   data: FlowsData,

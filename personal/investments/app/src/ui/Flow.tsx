@@ -1,12 +1,13 @@
 import { Callout, Flex, Heading, Text } from "@radix-ui/themes";
 import { useEffect, useMemo, useState } from "react";
+import { tileBreakdowns } from "../analytics/flows/breakdown";
 import { type GroupBy, buildFlowGraph, depositsByDestination } from "../analytics/flows/graph";
 import { type FlowPeriod, inPeriod, missingAccounts } from "../analytics/flows/period";
 import { flowSummary } from "../analytics/flows/summary";
 import type { FlowAccount, FlowsData } from "../analytics/flows/types";
 import type { AccountSeries } from "../analytics/types";
 import { FlowControls } from "./FlowControls";
-import { DRILL_DOWN_HEADING_ID, FlowRows } from "./FlowRows";
+import { DRILL_DOWN_HEADING_ID, FlowRows, type FlowRowsSelection } from "./FlowRows";
 import { FlowTable } from "./FlowTable";
 import { FlowTiles } from "./FlowTiles";
 import { ShareBar } from "./ShareBar";
@@ -27,19 +28,19 @@ export interface FlowProps {
 
 /**
  * Scrolls the drill down's own heading into view and moves focus to it,
- * whenever `selectedKey` names a real selection -- a band or a table row
- * chosen while the drill down sits well below the fold otherwise leaves the
- * reader looking at wherever they already were, with no visible sign
- * anything happened.
+ * whenever `activeKey` names a real selection -- a band, a table row or a
+ * tile part's "Show rows" -- chosen while the drill down sits well below
+ * the fold otherwise leaves the reader looking at wherever they already
+ * were, with no visible sign anything happened.
  */
-function useScrollDrillDownIntoView(selectedKey: string | null): void {
+function useScrollDrillDownIntoView(activeKey: string | null): void {
   useEffect(() => {
-    if (selectedKey === null) return;
+    if (activeKey === null) return;
     const heading = document.getElementById(DRILL_DOWN_HEADING_ID);
     if (heading === null) return;
     heading.scrollIntoView({ block: "nearest" });
     heading.focus();
-  }, [selectedKey]);
+  }, [activeKey]);
 }
 
 /** Every selected account with no statement yet at the period's end, named -- never read as a silent $0. */
@@ -133,6 +134,7 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
   const [groupBy, setGroupBy] = useState<GroupBy>("accountType");
   const [accounts, setAccounts] = useState<Set<string>>(() => allAccountIds(flows));
   const [selected, setSelected] = useState<string | null>(null);
+  const [tileSelection, setTileSelection] = useState<FlowRowsSelection | null>(null);
   const narrow = useNarrowFlow();
 
   const accountOptions = useMemo(() => flowAccountOptions(series), [series]);
@@ -161,6 +163,10 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
     () => flowSummary(flows, resolved, accounts),
     [flows, resolved, accounts],
   );
+  const breakdowns = useMemo(
+    () => tileBreakdowns(flows, resolved, accounts),
+    [flows, resolved, accounts],
+  );
   const buckets = useMemo(
     () => depositsByDestination(flows, resolved, groupBy, accounts),
     [flows, resolved, groupBy, accounts],
@@ -176,7 +182,28 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
 
   const selectedKey =
     selected !== null && graph.links.some((l) => linkKey(l) === selected) ? selected : null;
-  useScrollDrillDownIntoView(selectedKey);
+
+  // A band picked in the Sankey or table takes over from whatever tile
+  // part was showing, and vice versa: `Flow` renders one drill down at a
+  // time, so choosing one clears the other rather than leaving a stale
+  // selection the reader never asked to see beside the new one.
+  const selectBand = (key: string | null) => {
+    setTileSelection(null);
+    setSelected(key);
+  };
+  const showTileRows = (title: string, rowIds: readonly string[]) => {
+    setSelected(null);
+    setTileSelection({ title, rowIds });
+  };
+
+  const bandSelection: FlowRowsSelection | null = useMemo(() => {
+    if (selectedKey === null) return null;
+    const link = graph.links.find((l) => linkKey(l) === selectedKey);
+    return link === undefined ? null : { title: "Selected flow", rowIds: link.rowIds };
+  }, [graph, selectedKey]);
+  const rowsSelection = tileSelection ?? bandSelection;
+  const activeKey = tileSelection !== null ? `tile:${tileSelection.title}` : selectedKey;
+  useScrollDrillDownIntoView(activeKey);
 
   return (
     <Flex direction="column" gap="5" data-flow-tab="">
@@ -193,21 +220,15 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
         onResetAccounts={() => setAccounts(allAccountIds(flows))}
       />
       <MissingCallout period={resolved} accounts={missing} />
-      <FlowTiles summary={summary} />
+      <FlowTiles summary={summary} breakdowns={breakdowns} onShowRows={showTileRows} />
       {narrow ? (
         <NarrowFlowLists graph={graph} />
       ) : (
-        <Sankey graph={graph} selected={selectedKey} onSelect={setSelected} />
+        <Sankey graph={graph} selected={selectedKey} onSelect={selectBand} />
       )}
-      <FlowRows
-        key={selectedKey ?? "none"}
-        flows={flows}
-        graph={graph}
-        selected={selectedKey}
-        narrow={narrow}
-      />
+      <FlowRows key={activeKey ?? "none"} flows={flows} selection={rowsSelection} narrow={narrow} />
       <DestinationChart buckets={buckets} />
-      <FlowTable graph={graph} selected={selectedKey} onSelect={setSelected} narrow={narrow} />
+      <FlowTable graph={graph} selected={selectedKey} onSelect={selectBand} narrow={narrow} />
       {notes.length === 0 ? null : (
         <Flex direction="column" gap="1" data-flow-notes="">
           {notes.map((note) => (

@@ -373,6 +373,36 @@ async function sweepChartHovers(
 const FLOW_LINK = "[data-flow-link]";
 
 /**
+ * Opens the first summary tile's popover on the Flow tab and measures it,
+ * closing it again with Escape afterwards. Returns false when no tile could
+ * be found or clicked, so the caller can fail the run outright: a popover
+ * that never opens is exactly the kind of silent hole this gate's own
+ * history warns against, and it is the one surface `App.a11y.test.tsx`
+ * cannot see at all, since happy-dom resolves no stylesheet for the text
+ * inside it.
+ */
+async function sweepFlowTilePopover(
+  page: Page,
+  at: { tab: string; theme: Theme },
+  samples: Sample[],
+): Promise<boolean> {
+  const trigger = page.locator("[data-flow-tile]").first();
+  if ((await trigger.count()) === 0) return false;
+  await trigger.scrollIntoViewIfNeeded().catch(() => undefined);
+  await trigger.click();
+  const popover = page.locator("[data-flow-tile-popover]").first();
+  const opened = await popover
+    .waitFor({ state: "visible", timeout: 2000 })
+    .then(() => true)
+    .catch(() => false);
+  if (!opened) return false;
+  const swept = await sweepState(page, { ...at, state: "tile popover" }, samples);
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(50);
+  return swept > 0;
+}
+
+/**
  * The Flow tab's Sankey is `role="group"`, not `role="img"`: its bands are
  * individually interactive, so the generic `sweepHovers` loop above -- which
  * only ever looks at `svg[role="img"]` -- never reaches it. This scrolls the
@@ -602,6 +632,8 @@ async function sweepTab(
     const swept = await sweepFlowSankey(page, { tab, theme }, samples);
     if (!swept) problems.push(`${theme}/${tab} no [data-flow-link] band was hovered`);
     state.hovered += swept ? 1 : 0;
+    const popoverSwept = await sweepFlowTilePopover(page, { tab, theme }, samples);
+    if (!popoverSwept) problems.push(`${theme}/${tab} no tile popover was opened`);
     await sweepFlowLabelOverlaps(page, { tab, theme }, problems);
     await sweepFlowDenseGrouping(page, { tab, theme }, problems);
   }

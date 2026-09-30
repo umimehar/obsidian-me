@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import { Theme } from "@radix-ui/themes";
-import { cleanup, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render } from "@testing-library/react";
+import type { TileBreakdown, TileBreakdowns, TileKey } from "../analytics/flows/breakdown";
 import type { FlowSummary } from "../analytics/flows/summary";
 import { FlowTiles } from "./FlowTiles";
 import { formatCurrency, formatShare } from "./format";
@@ -28,18 +29,95 @@ function summary(overrides: Partial<FlowSummary> = {}): FlowSummary {
   };
 }
 
+function breakdown(
+  tile: TileKey,
+  total: number,
+  parts: TileBreakdown["parts"] = [],
+  sections: TileBreakdown["sections"] = [],
+): TileBreakdown {
+  return { tile, total, parts, sections };
+}
+
+function breakdowns(s: FlowSummary, overrides: Partial<TileBreakdowns> = {}): TileBreakdowns {
+  return {
+    paidIn: breakdown("paidIn", s.paidIn, [
+      {
+        key: "payroll",
+        label: "Payroll deposited",
+        amount: s.paidInBySource.payroll,
+        rowIds: ["r1"],
+      },
+      {
+        key: "outsideBank",
+        label: "Outside bank",
+        amount: s.paidInBySource.outsideBank,
+        rowIds: ["r2"],
+      },
+      {
+        key: "interacIn",
+        label: "Interac received",
+        amount: s.paidInBySource.interacIn,
+        rowIds: [],
+      },
+      { key: "business", label: "Business", amount: s.paidInBySource.business, rowIds: [] },
+    ]),
+    invested: breakdown("invested", s.invested, [
+      { key: "purchases", label: "Purchases", amount: s.invested + 100, rowIds: ["r3"] },
+      { key: "sales", label: "Sales", amount: -100, rowIds: ["r4"] },
+    ]),
+    leftInCash: breakdown("leftInCash", s.leftInCash, [
+      { key: "acct_a", label: "Chequing a", amount: s.leftInCash, rowIds: [] },
+    ]),
+    income: breakdown("income", s.income, [
+      { key: "dividends", label: "Dividends", amount: s.income, rowIds: ["r5"] },
+    ]),
+    costs: breakdown("costs", s.costs, [
+      { key: "managementFees", label: "Management fees", amount: s.costs, rowIds: ["r6"] },
+    ]),
+    left: breakdown("left", s.left, [
+      { key: "withdrawals", label: "Withdrawals", amount: s.left, rowIds: ["r7"] },
+    ]),
+    investedRate: breakdown("investedRate", s.investedRate ?? 0, [
+      { key: "invested", label: "Invested", amount: s.invested, rowIds: ["r3", "r4"] },
+      { key: "paidIn", label: "Paid in from outside", amount: s.paidIn, rowIds: ["r1", "r2"] },
+    ]),
+    identity: {
+      paidIn: s.paidIn,
+      cesg: s.grants,
+      income: s.income,
+      costs: s.costs,
+      left: s.left,
+      currencyConversion: 285.57,
+      invested: s.invested,
+      leftInCash: s.leftInCash,
+    },
+    ...overrides,
+  };
+}
+
 function tile(label: string): HTMLElement {
   const node = document.querySelector(`[data-flow-tile="${label}"]`);
   if (node === null) throw new Error(`expected a ${label} tile to render`);
   return node as HTMLElement;
 }
 
+/** Opens a tile's popover, letting the Popper's own async position update settle before the assertions run. */
+async function openTile(label: string): Promise<void> {
+  await act(async () => {
+    fireEvent.click(tile(label));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+}
+
 afterEach(cleanup);
 
-function renderTiles(s: FlowSummary) {
+function renderTiles(
+  s: FlowSummary,
+  onShowRows: (title: string, rowIds: readonly string[]) => void = () => {},
+) {
   render(
     <Theme>
-      <FlowTiles summary={s} />
+      <FlowTiles summary={s} breakdowns={breakdowns(s)} onShowRows={onShowRows} />
     </Theme>,
   );
 }
@@ -53,31 +131,46 @@ describe("FlowTiles", () => {
     expect(tile("Left in cash").textContent).toContain(formatCurrency(s.leftInCash));
     expect(tile("Income earned").textContent).toContain(formatCurrency(s.income));
     expect(tile("Costs").textContent).toContain(formatCurrency(s.costs));
+    expect(tile("Left Wealthsimple").textContent).toContain(formatCurrency(s.left));
     expect(tile("Invested rate").textContent).toContain(formatShare(s.investedRate as number));
   });
 
-  test("every tile's aria-label states the same figure as its visible text", () => {
+  test("every tile's aria-label is the figure plus its one line explanation", () => {
     const s = summary();
     renderTiles(s);
-    const cases: readonly [string, string][] = [
-      ["Paid in from outside", formatCurrency(s.paidIn)],
-      ["Invested", formatCurrency(s.invested)],
-      ["Left in cash", formatCurrency(s.leftInCash)],
-      ["Income earned", formatCurrency(s.income)],
-      ["Costs", formatCurrency(s.costs)],
+    const cases: readonly [string, string, string][] = [
+      [
+        "Paid in from outside",
+        formatCurrency(s.paidIn),
+        "New money that arrived from outside Wealthsimple. Moves between your own accounts are not counted.",
+      ],
+      [
+        "Invested",
+        formatCurrency(s.invested),
+        "What you bought, minus what you sold. Cash like funds are not counted.",
+      ],
+      [
+        "Left in cash",
+        formatCurrency(s.leftInCash),
+        "The change in money not invested: cash balances plus cash like funds such as PSA.",
+      ],
+      [
+        "Income earned",
+        formatCurrency(s.income),
+        "What your money earned inside Wealthsimple. Not salary, and not price gains.",
+      ],
     ];
-    for (const [label, value] of cases) {
-      expect(tile(label).getAttribute("aria-label")).toBe(`${label} ${value}`);
+    for (const [label, value, explanation] of cases) {
+      expect(tile(label).getAttribute("aria-label")).toBe(`${value} ${explanation}`);
       expect(tile(label).textContent).toContain(value);
+      expect(tile(label).textContent).toContain(explanation);
     }
   });
 
   test("a null invested rate reads as 'Not enough money in', not a figure", () => {
     renderTiles(summary({ investedRate: null }));
     expect(tile("Invested rate").textContent).toContain("Not enough money in");
-    expect(tile("Invested rate").getAttribute("aria-label")).toBe(
-      "Invested rate Not enough money in",
-    );
+    expect(tile("Invested rate").getAttribute("aria-label")).toContain("Not enough money in");
   });
 
   test("no tile's text or aria-label ever states a coarser figure than its own", () => {
@@ -89,6 +182,7 @@ describe("FlowTiles", () => {
       ["Left in cash", s.leftInCash],
       ["Income earned", s.income],
       ["Costs", s.costs],
+      ["Left Wealthsimple", s.left],
     ] as const) {
       expectNoCoarseForm(tile(label).textContent ?? "", amount);
       expectNoCoarseForm(tile(label).getAttribute("aria-label") ?? "", amount);
@@ -115,11 +209,62 @@ describe("FlowTiles", () => {
     );
   });
 
+  test("the how the tiles fit line states every identity term from its own formatter call", () => {
+    const s = summary();
+    renderTiles(s);
+    const line = document.querySelector("[data-flow-identity]");
+    expect(line?.textContent).toContain("How the tiles fit");
+    expect(line?.textContent).toContain(formatCurrency(s.paidIn));
+    expect(line?.textContent).toContain(formatCurrency(285.57));
+    expect(line?.textContent).toContain(formatCurrency(s.invested));
+    expect(line?.textContent).toContain(formatCurrency(s.leftInCash));
+  });
+
   test("a tile's figure never wraps, even a long negative one in the single narrow column", () => {
     renderTiles(summary());
     const wrapped = [...tile("Left in cash").querySelectorAll("*")].some(
       (el) => (el as HTMLElement).style.whiteSpace === "nowrap",
     );
     expect(wrapped).toBe(true);
+  });
+
+  test("clicking a tile opens a popover listing its parts with label, amount and share", async () => {
+    renderTiles(summary());
+    await openTile("Paid in from outside");
+    const popover = document.querySelector('[data-flow-tile-popover="Paid in from outside"]');
+    expect(popover).not.toBeNull();
+    const payrollPart = popover?.querySelector('[data-flow-tile-part="payroll"]');
+    expect(payrollPart?.textContent).toContain(formatCurrency(46464.63));
+    expect(payrollPart?.textContent).toContain(formatShare(46464.63 / 134880.63));
+  });
+
+  test("a part with rows offers Show rows, which closes the popover and reports the exact part", async () => {
+    const seen: [string, readonly string[]][] = [];
+    renderTiles(summary(), (title, rowIds) => seen.push([title, rowIds]));
+    await openTile("Paid in from outside");
+    const button = document.querySelector("[data-flow-tile-show-rows]");
+    if (button === null) throw new Error("expected a Show rows button");
+    await act(async () => {
+      fireEvent.click(button);
+    });
+    expect(seen).toEqual([["Paid in from outside: Payroll deposited", ["r1"]]]);
+    expect(document.querySelector('[data-flow-tile-popover="Paid in from outside"]')).toBeNull();
+  });
+
+  test("left in cash never shows a share, and says why", async () => {
+    renderTiles(summary());
+    await openTile("Left in cash");
+    const popover = document.querySelector('[data-flow-tile-popover="Left in cash"]');
+    expect(popover?.textContent).toContain("Shares are not shown");
+    expect(popover?.textContent).not.toContain("%");
+  });
+
+  test("the invested rate popover shows the numerator and denominator terms, never a share", async () => {
+    renderTiles(summary());
+    await openTile("Invested rate");
+    const popover = document.querySelector('[data-flow-tile-popover="Invested rate"]');
+    expect(popover?.textContent).toContain("Invested");
+    expect(popover?.textContent).toContain("Paid in from outside");
+    expect(popover?.textContent).not.toContain("%");
   });
 });

@@ -1,15 +1,24 @@
 import { Button, Flex, Heading, Table, Text } from "@radix-ui/themes";
 import type { CSSProperties } from "react";
 import { useState } from "react";
-import type { FlowGraph } from "../analytics/flows/graph";
 import type { FlowAccount, FlowRow, FlowsData } from "../analytics/flows/types";
-import { linkKey } from "./charts/sankeyLayout";
 import { formatCurrency } from "./format";
+
+/**
+ * What the drill down shows: a heading naming the selection, and either the
+ * row ids behind it or an empty list, which reads as the cash-change
+ * explanation instead of a table. A Sankey band and a tile's "Show rows"
+ * both resolve to this same shape before reaching `FlowRows`, so the
+ * component itself never needs to know which one it came from.
+ */
+export interface FlowRowsSelection {
+  title: string;
+  rowIds: readonly string[];
+}
 
 export interface FlowRowsProps {
   flows: FlowsData;
-  graph: FlowGraph;
-  selected: string | null;
+  selection: FlowRowsSelection | null;
   /** Below 40rem, a five-column table clips its own last two columns rather than scrolling cleanly; see `NarrowDrillRow`. */
   narrow?: boolean;
 }
@@ -146,19 +155,16 @@ function NarrowDrillRow({ row, accountsById, rowsById }: DrillRowProps) {
   );
 }
 
-/** Every row behind `link`, largest `|amountCad|` first -- the figure a reader scanning a long band cares most about. */
-function rowsFor(
-  link: { rowIds: readonly string[] },
-  rowsById: ReadonlyMap<string, FlowRow>,
-): FlowRow[] {
-  return link.rowIds
+/** Every row behind `rowIds`, largest `|amountCad|` first -- the figure a reader scanning a long selection cares most about. */
+function rowsFor(rowIds: readonly string[], rowsById: ReadonlyMap<string, FlowRow>): FlowRow[] {
+  return rowIds
     .map((id) => rowsById.get(id))
     .filter((r): r is FlowRow => r !== undefined)
     .sort((a, b) => Math.abs(b.amountCad) - Math.abs(a.amountCad));
 }
 
 /** The drill down's own heading, the scroll and focus target `Flow` uses on every new selection. */
-function DrillDownHeading() {
+function DrillDownHeading({ title }: { title: string }) {
   return (
     <Heading
       id={DRILL_DOWN_HEADING_ID}
@@ -168,39 +174,39 @@ function DrillDownHeading() {
       style={{ outline: "none" }}
       data-flow-rows-heading=""
     >
-      Selected flow
+      {title}
     </Heading>
   );
 }
 
 /**
- * The statement rows behind the selected band. A cash-change or
- * unreconciled link carries no `rowIds` at all -- it comes from a
- * statement's own opening/closing cash, not from individual activity rows
- * -- and explains itself in one sentence instead of an empty table. No row
- * here ever carries a statement description, only its code: `FlowRow`
- * itself has no description field.
+ * The statement rows behind the selection -- a Sankey band or a tile
+ * part's "Show rows". A cash-change or unreconciled band, or a tile part
+ * that says so itself (`leftInCash`'s per-account parts), carries no
+ * `rowIds` at all -- it comes from a statement's own opening/closing cash,
+ * not from individual activity rows -- and explains itself in one sentence
+ * instead of an empty table. No row here ever carries a statement
+ * description, only its code: `FlowRow` itself has no description field.
  *
- * A band with more than `ROW_CAP` rows -- Non registered to Invested alone
- * carries 1,057 on the real corpus -- shows only the largest `ROW_CAP`
- * until the reader asks for the rest, so selecting a big band never drops
- * a thousand-row table into the page.
+ * A selection with more than `ROW_CAP` rows -- Non registered to Invested
+ * alone carries 1,057 on the real corpus -- shows only the largest
+ * `ROW_CAP` until the reader asks for the rest, so selecting a big band or
+ * part never drops a thousand-row table into the page.
  */
-export function FlowRows({ flows, graph, selected, narrow = false }: FlowRowsProps) {
+export function FlowRows({ flows, selection, narrow = false }: FlowRowsProps) {
   // A fresh selection always opens capped: `Flow` remounts this component on
-  // every new `selected` key (`key={selectedKey}`), which is what resets
-  // this state rather than an effect watching a value the effect body never
+  // every new selection (`key={selectedKey}`), which is what resets this
+  // state rather than an effect watching a value the effect body never
   // reads.
   const [expanded, setExpanded] = useState(false);
 
-  if (selected === null) return null;
-  const link = graph.links.find((l) => linkKey(l) === selected);
-  if (link === undefined) return null;
+  if (selection === null) return null;
+  const { title, rowIds } = selection;
 
-  if (link.rowIds.length === 0) {
+  if (rowIds.length === 0) {
     return (
       <Flex direction="column" gap="2" data-flow-rows="">
-        <DrillDownHeading />
+        <DrillDownHeading title={title} />
         <Text size="2" color="gray">
           {CASH_EXPLANATION}
         </Text>
@@ -210,7 +216,7 @@ export function FlowRows({ flows, graph, selected, narrow = false }: FlowRowsPro
 
   const rowsById = new Map(flows.rows.map((r) => [r.id, r]));
   const accountsById = new Map(flows.accounts.map((a) => [a.accountId, a]));
-  const allRows = rowsFor(link, rowsById);
+  const allRows = rowsFor(rowIds, rowsById);
   const rows = expanded ? allRows : allRows.slice(0, ROW_CAP);
 
   const expandButton =
@@ -229,7 +235,7 @@ export function FlowRows({ flows, graph, selected, narrow = false }: FlowRowsPro
   if (narrow) {
     return (
       <Flex direction="column" gap="2" data-flow-rows="">
-        <DrillDownHeading />
+        <DrillDownHeading title={title} />
         <Flex
           direction="column"
           data-flow-rows-table=""
@@ -251,7 +257,7 @@ export function FlowRows({ flows, graph, selected, narrow = false }: FlowRowsPro
 
   return (
     <Flex direction="column" gap="2" data-flow-rows="">
-      <DrillDownHeading />
+      <DrillDownHeading title={title} />
       <Table.Root size="1" variant="surface" data-flow-rows-table="">
         <Table.Header>
           <Table.Row>

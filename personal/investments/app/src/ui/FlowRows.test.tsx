@@ -6,7 +6,7 @@ import type { FlowAccount, FlowRow, FlowsData } from "../analytics/flows/types";
 import type { AccountKind } from "../store/mask";
 import type { Purpose } from "../store/registry";
 import type { Currency } from "../types";
-import { FlowRows } from "./FlowRows";
+import { FlowRows, type FlowRowsSelection } from "./FlowRows";
 import { linkKey } from "./charts/sankeyLayout";
 import { formatCurrency } from "./format";
 
@@ -147,10 +147,17 @@ const GRAPH: FlowGraph = {
   totalIn: 4100,
 };
 
+/** Mirrors `Flow.tsx`'s own `bandSelection` derivation, for a `FlowLink`-keyed selection. */
+function selectionFor(graph: FlowGraph, selected: string | null): FlowRowsSelection | null {
+  if (selected === null) return null;
+  const link = graph.links.find((l) => linkKey(l) === selected);
+  return link === undefined ? null : { title: "Selected flow", rowIds: link.rowIds };
+}
+
 function renderRows(selected: string | null, narrow = false) {
   render(
     <Theme>
-      <FlowRows flows={FLOWS} graph={GRAPH} selected={selected} narrow={narrow} />
+      <FlowRows flows={FLOWS} selection={selectionFor(GRAPH, selected)} narrow={narrow} />
     </Theme>,
   );
 }
@@ -284,7 +291,7 @@ describe("FlowRows, the row cap", () => {
   function renderBig() {
     render(
       <Theme>
-        <FlowRows flows={BIG_FLOWS} graph={BIG_GRAPH} selected={BIG_KEY} />
+        <FlowRows flows={BIG_FLOWS} selection={selectionFor(BIG_GRAPH, BIG_KEY)} />
       </Theme>,
     );
   }
