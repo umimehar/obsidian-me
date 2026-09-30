@@ -56,7 +56,7 @@ The CSV pipeline that preceded this lived in `scripts/` and rendered `notes/inde
 Two commands, and they are deliberately not one.
 
 - `bun run check` — biome, `tsc --noEmit`, `bun test`. The per-commit gate. It must stay clean and it runs in about twelve seconds over 1264 tests.
-- `bun run contrast` — renders the dashboard in Chromium on all eight tabs in both themes and **measures** the WCAG AA contrast of every rendered run of text against the opaque colour actually painted behind it. About fourteen seconds, and it needs a browser: `bunx playwright install chromium` once, then `bun run contrast`. Run it before shipping anything that changes a colour, a font size, a font weight, or adds a badge, a callout or a chart label.
+- `bun run contrast` — renders the dashboard in Chromium on all nine tabs in both themes and **measures** the WCAG AA contrast of every rendered run of text against the opaque colour actually painted behind it. About fourteen seconds, and it needs a browser: `bunx playwright install chromium` once, then `bun run contrast`. Run it before shipping anything that changes a colour, a font size, a font weight, or adds a badge, a callout or a chart label.
 
 It is out of `bun run check` on purpose. Folding a browser launch and a dev server into the gate that runs on every commit trades ten seconds for twenty-five, on every commit, to catch a class of regression that only a colour change can cause. The cost is that a colour change with no `bun run contrast` behind it can land green; that is what the line above exists to prevent.
 
@@ -179,6 +179,22 @@ Two traps, both hit during the build:
 - **A return axis is signed.** `buildScales` anchors at zero and reads only the maximum, which is right for a currency chart and wrong here. 2025 fell to -3.68% in April and the line vanished under the axis floor, on the one chart whose purpose is showing when you were down. Use `buildSignedScales`.
 
 `bun run contrast` now visits the return chart, because it is behind a toggle and an unvisited state yields no sample, no sample yields no failure, and no failure reads exactly like a pass. It fails the run if that mode is never swept.
+
+## The Flow tab, and the rules its figures rest on
+
+`src/analytics/flows/` classifies every statement row that moves cash into `data/flows.json`, and `graph.ts` turns it into the Sankey for any period, group by and account selection. Spec and plan: `docs/superpowers/specs/2026-09-29-money-flow-design.md` and `docs/superpowers/plans/2026-09-29-money-flow.md`. Tickets TCK-0009 to TCK-0014 carry the review history.
+
+- **Chequing arrives twice through 2026-06.** Each month has a BROKERAGE and a CASH statement with identical rows. `select.ts` takes BROKERAGE where it exists and CASH only where it does not; taking both counts every chequing dollar twice. From 2026-07 only CASH arrives, its rows coded `""`, so `resolveCashCode` reads the code off the description.
+- **Descriptions never leave the build.** They name people. `flows.json` carries codes, categories and amounts only, and a test fails if the word description appears in it.
+- **A pair is one debit and one credit** in two different accounts, same currency, same amount to the cent, exact date first and then up to three days. On the corpus all 249 pairs match on the exact date. An unpaired leg crosses the boundary: a credit is outside money, a debit left Wealthsimple. Cross currency legs never pair.
+- **Codes mean different things by account.** Chequing `CONT` is an outside bank; corporate `CONT` and `EFT` are the business; 2b74's biweekly `DEP` is payroll by an owner override in `registry.ts` (`isPayrollDeposit`), never inferred from regularity.
+- **Every Sankey balances by construction.** Per account, month and currency, the rows reproduce the statement's cash change exactly on all 255 blocks. The Cash node is the statements' own change in cash; any gap is an Unreconciled node inside the balance check, never left out of it. The check runs on unrounded sums before sub-cent links are dropped for display.
+- **Closure is declared, never inferred.** `CLOSED_ACCOUNTS` in `registry.ts` is empty. A $0 balance is not closure: 8cd3 sits at $0 between movements, and inferring closure from it would hide its missing statement.
+- **Cash equivalents** are listed in `flows/assetClass.ts` and stay out of the invested rate: PSA, HISU.U, PSU.U and the savings ETFs. A new savings or bond fund bought later lands under equities until it is added; the build lists suspects by fund name in the tab's notes.
+- **The UI imports only** `flows/types`, `graph`, `summary`, `period` and `assetClass`. `classify.ts` and `flows/build.ts` reach `registry.ts`, which loads `node:crypto`.
+- **`bun run contrast` fails when two Sankey labels overlap**, measured with real text boxes, because the layout sizes margins from a character width factor (0.525 at 12px) that no test in happy-dom can check.
+
+Known and by design: left in cash differs from the statements' closing cash by $44.70 over all time, the revaluation of held USD cash, since each month's change converts at that month's rate.
 
 ## Checkpoints are the outside number
 

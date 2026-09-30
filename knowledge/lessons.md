@@ -2,7 +2,7 @@
 title: Lessons
 tags: [knowledge, lessons]
 created: 2026-07-13
-updated: 2026-08-24
+updated: 2026-09-29
 status: active
 type: permanent
 ---
@@ -101,6 +101,16 @@ NEVER use `\b` in a `git grep` pattern. Use `grep -E` over `git show <rev>:<path
 
 ALWAYS prove a search tool can find the thing before trusting it to report absence: run it once against known-present content. A grep that has never returned a hit is not evidence of a clean tree.
 
+### subagents add attribution trailers the owner forbids (2026-09-29)
+
+Why:
+- Four Sonnet implementer commits on 2026-09-29 ended with `Co-Authored-By: Claude Sonnet 5`. The harness tells every agent to add the trailer, and the owner's global rule forbids any AI attribution, so a subagent briefed only on the task follows the harness.
+- It was caught by the Opus reviewer before any push, so rewording was safe. After a push it would have meant rewriting shared history.
+
+ALWAYS state in every implementer brief: `git commit -m "<subject>"` only, no Co-Authored-By or other attribution line, then check `git log -1 --format=%B`.
+
+ALWAYS scan before pushing: `git log --format=%B origin/main..HEAD | grep -ci co-authored` must print 0. Unpushed trailers come off with `git filter-branch -f --msg-filter 'grep -v "^Co-Authored-By:"' origin/main..HEAD`.
+
 ## Testing
 
 ### key a coarse-form absence assertion to the computed rounding, never to a truncation (2026-08-17)
@@ -125,7 +135,7 @@ ALWAYS mutate each rendering path independently when a figure is rendered twice 
 
 NEVER report a figure audit as complete without stating which paths it mutated. "N of N figures" hides whether N counted variables or renderings.
 
-### git checkout -- is not an undo for a mutation, it is a reset to HEAD (2026-08-19)
+### git checkout -- is not an undo for a mutation, it is a reset to HEAD (2026-09-29)
 
 Why:
 - Mid-audit, an agent applied a real fix on top of an uncommitted state, then ran `git checkout -- <file>` to revert a test mutation. That silently discarded the real fix too, because checkout restores the file to the last COMMIT, not to "how it looked a moment ago". The mutation and the improvement went together.
@@ -133,6 +143,8 @@ Why:
 - The same shape as the mutation traps on this project: a step that reports success while doing something other than what was intended.
 
 ALWAYS commit real work BEFORE starting a mutation audit, so `git checkout -- <file>` has a correct target. If that is not possible, snapshot with the Write tool and restore from that snapshot instead.
+
+Recurred twice on 2026-09-29 (TCK-0010 and TCK-0013 implementers each wiped an uncommitted fix this way and had to reapply it). Put "commit or stage before any mutation; never `git checkout --` a file with work you want to keep" in every implementer brief, and have the reviewer verify the committed code rather than the implementer's report.
 
 NEVER verify a restore by exit code. Compare `shasum` against the known pre-mutation hash, or use `git diff --quiet`. On macOS with `cp` aliased to `cp -i` and zsh `noclobber` set, a failed restore is SILENT: both refuse rather than erroring, so the tree keeps the mutation while the command reports success and later mutations stack on top of it.
 
@@ -146,7 +158,7 @@ ALWAYS use `cat >| file` when rewriting an existing file from a heredoc on this 
 
 NEVER read a passing typecheck or test run as evidence that the preceding write landed. Chain the write and its verification in separate calls, or grep the file for a string only the new version contains.
 
-### a symlinked .mjs never runs its own CLI entrypoint (2026-08-19)
+### a symlinked .mjs never runs its own CLI entrypoint (2026-09-29)
 
 Why:
 - `node ~/.claude/skills/obsidian-loop/select-tickets.mjs --device mac-studio` printed nothing at all and exited 0. Not an empty JSON array, no output, no error. It looked like "no claimable tickets" and would have been read that way.
@@ -156,6 +168,8 @@ Why:
 ALWAYS invoke skill scripts through the resolved real path: `node "$(readlink -f ~/.claude/skills/<skill>)/<script>.mjs"`.
 
 NEVER treat empty stdout from one of these scripts as a real empty result. A genuine empty result prints `[]`. No output at all means the entrypoint guard did not fire.
+
+Recurred 2026-09-29 in the money flow loop: the obsidian-loop skill still documents `node "$VAULT/config/claude/skills/..."`, a path that does not exist in this vault, and `node ~/.claude/skills/...` printed nothing for both the selector and the git guard. `bun <symlink path>` runs them correctly, as does the `readlink -f` form above. The skill's own instructions need the fix in the dev vault.
 
 ### commit before mutating when other sessions share the branch (2026-08-20)
 

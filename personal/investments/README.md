@@ -2,7 +2,7 @@
 title: Investments
 tags: [personal/investments]
 created: 2026-07-13
-updated: 2026-09-26
+updated: 2026-09-29
 status: active
 type: personal
 personal: investments
@@ -27,11 +27,13 @@ Summing the eleven investment accounts from their June 2026 statements gives $24
 
 ## The dashboard
 
-`app/` is a Vite + React + TypeScript app, run locally, read only. Eight tabs synced to the hash, in order: this month, portfolio, holdings, growth, income, contributions, future, data. The Holdings tab combines every account down to one symbol at a time, with an S&P 500 exposure line and a currency and asset class split. The Growth tab opens with two market value lines, the portfolio against the same deposits invested in XEQT, the single fund benchmark, ahead of the per account returns grid. Charts are hand built SVG on `d3-scale` rather than a chart library.
+`app/` is a Vite + React + TypeScript app, run locally, read only. Nine tabs synced to the hash, in order: this month, flow, portfolio, holdings, growth, income, contributions, future, data. The Holdings tab combines every account down to one symbol at a time, with an S&P 500 exposure line and a currency and asset class split. The Growth tab opens with two market value lines, the portfolio against the same deposits invested in XEQT, the single fund benchmark, ahead of the per account returns grid. Charts are hand built SVG on `d3-scale` rather than a chart library.
 
 Every figure is stated at market value and at book cost, both from the statements. Gain or loss is the difference, and it appears on every group card in all three lenses and on the portfolio headline: $241,739.67 against a book cost of $223,675.08, a gain of $18,064.59.
 
 The projections tab runs thirty years forward over a ported copy of the old engine, with goal cards and a room runway table beside it. It is a scenario, not a forecast, and it says so on the page. The statutory endings are known, so the lines terminate for a stated reason: the FHSA stops at its $40,000 lifetime cap in 2028 and the account closes in 2039, the RESP fills $50,000 in 2044, and the CESG tops out at $6,650 of its $7,200 cap because the beneficiary ages out before the contributions that would claim the rest.
+
+The Flow tab answers where the money came from, where it went and where it sits now, as a four column Sankey: sources (payroll deposited, outside bank, Interac, business, the CESG, portfolio income, sale proceeds), where it landed first (chequing or straight into an account), the accounts grouped by type, account or purpose, and where it is now (invested, cash equivalents, cash, fees and withholding, left Wealthsimple). Transfers between the owner's own accounts are paired leg to leg and never counted as new money. Over all time, $253,609.43 came in from outside, $226,113.40 went into securities net of sales, and $15,126.57 left Wealthsimple. Every band opens the statement rows behind it. The rows live in `data/flows.json`, built by `bun run analytics` with no statement descriptions in it.
 
 Reconciliation is a tab rather than a build failure. A wrong number that is visible beats a clean dashboard that is off with no way to find out why.
 
