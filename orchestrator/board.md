@@ -29,7 +29,6 @@ kanban-plugin: board
 
 ## In Progress
 
-- [ ] [[TCK-0014-investments-flow-design-pass]] #project/system #type/feature #p1
 
 
 
@@ -55,6 +54,8 @@ kanban-plugin: board
 
 
 ## Done
+
+- [x] [[TCK-0014-investments-flow-design-pass]] #project/system #type/feature #p1
 
 - [x] [[TCK-0013-investments-flow-tab]] #project/system #type/feature #p1
 

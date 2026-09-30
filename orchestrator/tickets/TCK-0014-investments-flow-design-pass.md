@@ -5,7 +5,7 @@ created: 2026-09-29
 updated: 2026-09-29
 type: ticket
 id: TCK-0014
-status: in-progress
+status: done
 project: system
 ticket_type: feature
 assigned_device: any
@@ -27,10 +27,10 @@ An impeccable critique and polish pass over the Flow tab in both themes at 72rem
 
 ## Acceptance criteria
 
-- [ ] `/impeccable critique` findings recorded in the worklog and each addressed or explicitly declined with a reason
-- [ ] Radix Themes, jade accent, slate gray kept; no gradient, no new font; prose sentence case with no hyphens
-- [ ] `bun run check`, `bun run build:ui`, `bun run contrast` clean
-- [ ] Reviewed by an Opus subagent that recomputes the flows it touches from `data/datastore.json` independently and mutation tests the code; up to 3 review rounds, then human review
+- [x] `/impeccable critique` findings recorded in the worklog and each addressed or explicitly declined with a reason
+- [x] Radix Themes, jade accent, slate gray kept; no gradient, no new font; prose sentence case with no hyphens
+- [x] `bun run check`, `bun run build:ui`, `bun run contrast` clean
+- [x] Reviewed by an Opus subagent that recomputes the flows it touches from `data/datastore.json` independently and mutation tests the code; up to 3 review rounds, then human review
 
 ## Context
 
@@ -51,3 +51,7 @@ Plan: `personal/investments/docs/superpowers/plans/2026-09-29-money-flow.md`, Ti
 ## Worklog
 
 - 2026-09-29 — Created from the money flow plan; owner asked to run it end to end with `/obsidian-loop`.
+- 2026-09-29 — Implemented by a Sonnet subagent in `108b528`, `f070548`, `be8170c`. The critique was done by hand against screenshots in both themes at 1152, 800 and 390px; the impeccable skill itself was not run interactively. Fixed: column 0 leader lines crossing their node, the tall contributions list (now one row below the tiles), a scroll hint when the Sankey scrolls in its own region, a windowed flows table and drill down with sticky headers and a measured "Scroll for more." hint, thinned month labels at 390px, and a destination chart palette whose closest pair is CIEDE2000 16.83 (an exhaustive search over every 8 colour set of the 17 Radix scales, jade, red and grays excluded because they carry meaning on this tab, found nothing better). `bun run contrast` now fails on any two intersecting Sankey labels, and on zero labels measured, at 1152, 800 and 660px plus 2026 by account at 800px.
+- 2026-09-29 — Review round 1 FAIL (palette too close, table gave no sign it scrolled, expanded drill down untouched, `Sankey()` 114 lines, overlap guard could pass on nothing). Round 2 FAIL (the table estimated 33px rows against real 36px ones and hid the last row on short periods). Round 3 PASS: 12 periods at two widths, hint matched real overflow in every case.
+- 2026-09-29 — Later, not blocking: uneven month label spacing after thinning; a gap when the contributions row wraps at 800px; no empty state message for a period with no flows (2023-06).
+- 2026-09-29 — Gates: `bun run check` 1921 tests, 0 fail; `bun run build:ui` clean; `bun run contrast` AA pass, worst light 4.61, dark 7.50. No data or goldens changed.
