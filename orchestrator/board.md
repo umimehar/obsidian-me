@@ -11,6 +11,8 @@ kanban-plugin: board
 
 ## Ready
 
+- [ ] [[TCK-0015-investments-flow-tile-breakdowns]] #project/system #type/feature #p1
+
 
 
 
