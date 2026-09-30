@@ -73,3 +73,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-29 20:14 · mac-studio · done · TCK-0014 · flow tab design pass, agent review PASS in round 3
 - 2026-09-29 · mac-studio · create · TCK-0015 · flow tile explanations and breakdowns, owner request
 - 2026-09-29 20:37 · mac-studio · claim · TCK-0015 · flow tile breakdowns
+- 2026-09-29 20:37 · mac-studio · start · TCK-0015 · starting tile breakdowns

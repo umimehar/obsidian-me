@@ -18,7 +18,6 @@ kanban-plugin: board
 
 ## Claimed
 
-- [ ] [[TCK-0015-investments-flow-tile-breakdowns]] #project/system #type/feature #p1
 
 
 
@@ -31,6 +30,8 @@ kanban-plugin: board
 
 
 ## In Progress
+
+- [ ] [[TCK-0015-investments-flow-tile-breakdowns]] #project/system #type/feature #p1
 
 
 

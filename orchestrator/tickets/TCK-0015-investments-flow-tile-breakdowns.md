@@ -5,7 +5,7 @@ created: 2026-09-29
 updated: 2026-09-29
 type: ticket
 id: TCK-0015
-status: claimed
+status: in-progress
 project: system
 ticket_type: feature
 assigned_device: any
