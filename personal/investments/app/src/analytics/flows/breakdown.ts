@@ -1,6 +1,6 @@
 import type { AccountKind } from "../../store/mask";
 import { assetClassOf } from "./assetClass";
-import type { FlowPeriod } from "./period";
+import { type FlowPeriod, inPeriod } from "./period";
 import {
   CONTRIBUTION_KINDS,
   SOURCE_CATEGORIES,
@@ -362,37 +362,46 @@ function buildInvestedRate(
 }
 
 /**
- * The other leg's `accountId` for a paired row, or `null` when unpaired or
- * the partner row is missing -- the same lookup `FlowRows.tsx`'s
- * `partnerLabel` does, kept independent since that module reaches UI code
- * this one must stay free of.
+ * The other leg for a paired row, or `null` when unpaired or the partner
+ * row is missing -- the same lookup `FlowRows.tsx`'s `partnerLabel` does,
+ * kept independent since that module reaches UI code this one must stay
+ * free of.
  */
-function partnerAccountId(row: FlowRow, rowsById: ReadonlyMap<string, FlowRow>): string | null {
+function partnerRow(row: FlowRow, rowsById: ReadonlyMap<string, FlowRow>): FlowRow | null {
   if (row.pairId === null) return null;
   const [outId, inId] = row.pairId.split(">");
   const partnerId = row.id === outId ? inId : outId;
   const partner = partnerId === undefined ? undefined : rowsById.get(partnerId);
-  return partner?.accountId ?? null;
+  return partner ?? null;
 }
 
 /**
- * The two "How the tiles fit" terms a filtered account selection can hide:
- * money that arrived in a selected account from a paired leg whose partner
- * sits OUTSIDE the selection (`movedIn`), and money that left a selected
- * account to a partner outside it (`movedOut`). `rowsById` is built from
- * the WHOLE corpus, not just `rows`, because the partner leg the reader
- * filtered out is exactly the row this looks up.
+ * The two "How the tiles fit" terms a filtered selection can hide: money
+ * that arrived in a selected account from a paired leg whose partner sits
+ * OUTSIDE the selection (`movedIn`), and money that left a selected
+ * account to a partner outside it (`movedOut`). "Outside" means outside
+ * the account selection OR outside the period -- a pair lagged across a
+ * month boundary (all 249 pairs on the real corpus match same-day, but
+ * `select.ts`'s own pairing allows up to three) has its partner leg in a
+ * different month, and a single month's own identity would otherwise be
+ * short by that leg even with every account selected. `rowsById` is built
+ * from the WHOLE corpus, not just `rows`, because the partner leg the
+ * reader filtered out -- by account or by period -- is exactly the row
+ * this looks up.
  */
 function movedAcrossSelection(
   rows: readonly FlowRow[],
   rowsById: ReadonlyMap<string, FlowRow>,
   accounts: ReadonlySet<string>,
+  p: FlowPeriod,
 ): { movedIn: number; movedOut: number } {
   let movedIn = 0;
   let movedOut = 0;
   for (const r of rows) {
-    const partnerAccount = partnerAccountId(r, rowsById);
-    if (partnerAccount === null || accounts.has(partnerAccount)) continue;
+    const partner = partnerRow(r, rowsById);
+    if (partner === null) continue;
+    const crossesBoundary = !accounts.has(partner.accountId) || !inPeriod(partner.period, p);
+    if (!crossesBoundary) continue;
     if (r.amountCad > 0) movedIn += r.amountCad;
     else if (r.amountCad < 0) movedOut += -r.amountCad;
   }
@@ -430,7 +439,7 @@ export function tileBreakdowns(
   const s = flowSummary(data, p, accounts);
 
   const rowsById = new Map(data.rows.map((r) => [r.id, r]));
-  const { movedIn, movedOut } = movedAcrossSelection(rows, rowsById, accounts);
+  const { movedIn, movedOut } = movedAcrossSelection(rows, rowsById, accounts, p);
 
   // "Currency conversion" is the spread Wealthsimple charges converting
   // currency, classified `fxConversion` and otherwise counted nowhere on

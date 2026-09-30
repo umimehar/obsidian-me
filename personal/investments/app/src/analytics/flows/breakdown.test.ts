@@ -373,4 +373,90 @@ describe("tileBreakdowns", () => {
     const rhs = b.identity.invested + b.identity.leftInCash;
     expect(lhs).toBeCloseTo(rhs, 6);
   });
+
+  test("a pair lagged across a month boundary counts as moved, in EITHER single month, even with both accounts selected", () => {
+    const cheq = account({ accountId: "acct_cheq", kind: "Chequing" });
+    const tfsa = account({ accountId: "acct_tfsa", kind: "TFSA" });
+    const rows = [
+      row({
+        id: "o",
+        accountId: "acct_cheq",
+        period: "2026-01",
+        date: "2026-01-31",
+        code: "TRFOUT",
+        category: "leftWealthsimple",
+        movement: true,
+        amountCad: -500,
+        amount: -500,
+        pairId: "o>i",
+      }),
+      row({
+        id: "i",
+        accountId: "acct_tfsa",
+        period: "2026-02",
+        date: "2026-02-02",
+        code: "CONT",
+        category: "outsideBank",
+        movement: true,
+        amountCad: 500,
+        amount: 500,
+        pairId: "o>i",
+      }),
+    ];
+    const blocks: CashBlock[] = [
+      {
+        accountId: "acct_cheq",
+        period: "2026-01",
+        currency: "CAD",
+        opening: 0,
+        closing: -500,
+        fxRate: null,
+        rowsNet: -500,
+        residual: 0,
+      },
+      {
+        accountId: "acct_tfsa",
+        period: "2026-02",
+        currency: "CAD",
+        opening: 0,
+        closing: 500,
+        fxRate: null,
+        rowsNet: 500,
+        residual: 0,
+      },
+    ];
+    const accounts = new Set(["acct_cheq", "acct_tfsa"]);
+    const flows = data(rows, [cheq, tfsa], blocks);
+
+    // January alone sees only the debit leg; its partner's credit sits in
+    // February, outside the period, so it is `movedOut` even though its
+    // account IS selected -- the exact case the account-only check missed.
+    const jan = tileBreakdowns(flows, { from: "2026-01", to: "2026-01" }, accounts);
+    expect(jan.identity.movedOut).toBeCloseTo(500, 6);
+    const janLhs =
+      jan.identity.paidIn +
+      jan.identity.cesg +
+      jan.identity.income +
+      jan.identity.movedIn -
+      jan.identity.costs -
+      jan.identity.left -
+      jan.identity.movedOut -
+      jan.identity.currencyConversion;
+    expect(janLhs).toBeCloseTo(jan.identity.invested + jan.identity.leftInCash, 6);
+
+    // February alone sees only the credit leg; its partner sits in
+    // January, so it is `movedIn`.
+    const feb = tileBreakdowns(flows, { from: "2026-02", to: "2026-02" }, accounts);
+    expect(feb.identity.movedIn).toBeCloseTo(500, 6);
+    const febLhs =
+      feb.identity.paidIn +
+      feb.identity.cesg +
+      feb.identity.income +
+      feb.identity.movedIn -
+      feb.identity.costs -
+      feb.identity.left -
+      feb.identity.movedOut -
+      feb.identity.currencyConversion;
+    expect(febLhs).toBeCloseTo(feb.identity.invested + feb.identity.leftInCash, 6);
+  });
 });

@@ -342,6 +342,20 @@ const TWO_YEAR_FLOWS: FlowsData = {
       amountCad: 50,
       amount: 50,
     }),
+    // Present only in 2026, so the Costs tile's "Fee rebates" part has real
+    // rows there and the always-present, always-$0 placeholder everywhere
+    // else -- the fixture the stale-empty-part test needs.
+    row({
+      id: "feeRebate26",
+      accountId: "acct_a",
+      period: "2026-06",
+      date: "2026-06-18",
+      code: "REIMB",
+      category: "fee",
+      movement: false,
+      amountCad: 10,
+      amount: 10,
+    }),
   ],
   blocks: [
     {
@@ -369,9 +383,9 @@ const TWO_YEAR_FLOWS: FlowsData = {
       period: "2026-06",
       currency: "CAD",
       opening: 0,
-      closing: 200,
+      closing: 210,
       fxRate: null,
-      rowsNet: 200,
+      rowsNet: 210,
       residual: 0,
     },
     {
@@ -421,6 +435,76 @@ async function openPaidInTfsaContribShowRows(): Promise<void> {
     fireEvent.click(button);
   });
 }
+
+/**
+ * Opens the Costs tile and clicks the fee rebates part's own "Show rows" --
+ * a part that, unlike a contributions-section entry, ALWAYS exists
+ * (`COST_GROUPS` renders every group every period) but carries no rows in
+ * a period with no fee rebate.
+ */
+async function openCostsFeeRebatesShowRows(): Promise<void> {
+  const trigger = document.querySelector('[data-flow-tile="Costs"]');
+  if (trigger === null) throw new Error("expected the Costs tile");
+  await act(async () => {
+    fireEvent.click(trigger);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  const part = document.querySelector('[data-flow-tile-part="feeRebates"]');
+  const button = part?.querySelector("[data-flow-tile-show-rows]");
+  if (button === null || button === undefined) {
+    throw new Error("expected the fee rebates part's Show rows button");
+  }
+  await act(async () => {
+    fireEvent.click(button);
+  });
+}
+
+describe("Flow, a tile part with $0 and no rows never opens a drill down", () => {
+  test("choosing fee rebates in 2026, switching to 2025 clears the drill down rather than showing the cash explanation, and switching back does not revive it", async () => {
+    const { rerender } = render(
+      <Theme>
+        <Flow
+          flows={TWO_YEAR_FLOWS}
+          series={MOVE_SERIES}
+          period={{ from: "2026-01", to: "2026-12" }}
+          onPeriodChange={() => {}}
+        />
+      </Theme>,
+    );
+    await openCostsFeeRebatesShowRows();
+    expect(document.getElementById("flow-drilldown-heading")?.textContent).toBe(
+      "Costs: Fee rebates",
+    );
+    expect(document.querySelector('[data-flow-row="feeRebate26"]')).not.toBeNull();
+
+    rerender(
+      <Theme>
+        <Flow
+          flows={TWO_YEAR_FLOWS}
+          series={MOVE_SERIES}
+          period={{ from: "2025-01", to: "2025-12" }}
+          onPeriodChange={() => {}}
+        />
+      </Theme>,
+    );
+    // The false reading this guards against: "Costs: Fee rebates" still as
+    // the heading, followed by CASH_EXPLANATION's cash-balance sentence --
+    // a sentence that has nothing to do with a fee rebate.
+    expect(document.querySelector("[data-flow-rows]")).toBeNull();
+
+    rerender(
+      <Theme>
+        <Flow
+          flows={TWO_YEAR_FLOWS}
+          series={MOVE_SERIES}
+          period={{ from: "2026-01", to: "2026-12" }}
+          onPeriodChange={() => {}}
+        />
+      </Theme>,
+    );
+    expect(document.querySelector("[data-flow-rows]")).toBeNull();
+  });
+});
 
 describe("Flow, the drill down survives a period change", () => {
   test("switching period after Show rows re-derives the rows instead of keeping the old period's", async () => {

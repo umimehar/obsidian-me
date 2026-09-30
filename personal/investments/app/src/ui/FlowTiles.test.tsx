@@ -249,6 +249,13 @@ describe("FlowTiles", () => {
     const text = document.querySelector("[data-flow-identity]")?.textContent ?? "";
     expect(text).toContain(`${formatCurrency(103278.98)} moved in from other accounts`);
     expect(text).toContain(`${formatCurrency(47.5)} moved out to other accounts`);
+    // The invested and left in cash terms have to stay each other's own
+    // figure -- a term that silently folded `movedIn` (or `movedOut`) into
+    // one of them would still pass the two assertions above while stating
+    // a false equation, exactly the "equals X invested plus Y left in
+    // cash" clause this ties down.
+    expect(text).toContain(`equals ${formatCurrency(s.invested)} invested`);
+    expect(text).toContain(`plus ${formatCurrency(s.leftInCash)} left in cash.`);
   });
 
   test("a nonzero residual sign is stated correctly in the currency conversion term", () => {

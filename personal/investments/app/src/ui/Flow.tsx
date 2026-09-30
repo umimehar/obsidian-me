@@ -224,7 +224,16 @@ export function Flow({ flows, series, period, onPeriodChange }: FlowProps) {
       tileSelection.sectionTitle,
       tileSelection.partKey,
     );
-    if (part === undefined) return null;
+    // A tile part is never a cash-block explanation the way a Sankey band
+    // can be: `Costs`, `Income earned` and `Left Wealthsimple` always carry
+    // every one of their parts, at $0 with no rows, in a period with no
+    // matching activity. Resolving that placeholder as a real selection
+    // read as "Costs: Fee rebates" followed by the CASH_EXPLANATION
+    // sentence in a year with no fee rebates at all -- false on its face,
+    // and it revived the ORIGINAL period's rows the moment the reader
+    // switched back. A part with no rows is cleared the same as a part
+    // that no longer exists.
+    if (part === undefined || part.rowIds.length === 0) return null;
     return { title: `${TILE_LABEL[tileSelection.tileKey]}: ${part.label}`, rowIds: part.rowIds };
   }, [breakdowns, tileSelection]);
   // Tidies the state once its own part has gone stale, rather than leaving
