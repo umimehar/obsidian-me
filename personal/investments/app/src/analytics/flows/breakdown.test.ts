@@ -319,9 +319,56 @@ describe("tileBreakdowns", () => {
     const lhs =
       b.identity.paidIn +
       b.identity.cesg +
-      b.identity.income -
+      b.identity.income +
+      b.identity.movedIn -
       b.identity.costs -
       b.identity.left -
+      b.identity.movedOut -
+      b.identity.currencyConversion;
+    const rhs = b.identity.invested + b.identity.leftInCash;
+    expect(lhs).toBeCloseTo(rhs, 6);
+  });
+
+  test("a nonzero block residual sets the currency conversion term's own sign, and the identity still holds", () => {
+    const cheq = account({ accountId: "acct_cheq", kind: "Chequing" });
+    // The block's own closing has to reflect the SAME $1000 the payroll row
+    // credits, plus the $5.25 residual -- an arbitrary closing here would
+    // break the identity for a reason that has nothing to do with the sign
+    // this test exists to catch.
+    const block: CashBlock = {
+      accountId: "acct_cheq",
+      period: "2026-05",
+      currency: "CAD",
+      opening: 0,
+      closing: 1005.25,
+      fxRate: null,
+      rowsNet: 1000,
+      residual: 5.25,
+    };
+    const rows = [
+      row({
+        accountId: "acct_cheq",
+        category: "payroll",
+        movement: true,
+        amountCad: 1000,
+        amount: 1000,
+      }),
+    ];
+    const b = tileBreakdowns(data(rows, [cheq], [block]), PERIOD, new Set(["acct_cheq"]));
+
+    // `currencyConversion = fxConversionNegated - residual`: no fxConversion
+    // rows here, so the term is exactly `-residual`. A flipped sign would
+    // report +5.25 instead.
+    expect(b.identity.currencyConversion).toBeCloseTo(-5.25, 6);
+
+    const lhs =
+      b.identity.paidIn +
+      b.identity.cesg +
+      b.identity.income +
+      b.identity.movedIn -
+      b.identity.costs -
+      b.identity.left -
+      b.identity.movedOut -
       b.identity.currencyConversion;
     const rhs = b.identity.invested + b.identity.leftInCash;
     expect(lhs).toBeCloseTo(rhs, 6);
