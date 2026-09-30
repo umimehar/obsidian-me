@@ -30,8 +30,15 @@ function node(id: string, column: 0 | 1 | 2 | 3, value: number, label: string): 
   return { id, column, label, value };
 }
 
-function link(source: string, target: string, value: number, recycled = false): FlowLink {
-  return { source, target, value, recycled, rowIds: [] };
+/** `rowIds` defaults to three ids -- a plausible ordinary band -- since an empty array reads as a cash/unreconciled band with no statement rows behind it (`linkReadout`). */
+function link(
+  source: string,
+  target: string,
+  value: number,
+  recycled = false,
+  rowIds: readonly string[] = ["r1", "r2", "r3"],
+): FlowLink {
+  return { source, target, value, recycled, rowIds: [...rowIds] };
 }
 
 /**
@@ -151,36 +158,69 @@ describe("leader lines", () => {
   });
 });
 
+/** `b1->c2a`'s own full readout, in the order `linkReadout` states it: `GRAPH`'s Chequing to TFSA band, $3,000.00 of Chequing's $5,000.00 and 100.0% of TFSA's $3,000.00, three statement rows. */
+const CHEQUING_TO_TFSA_READOUT =
+  "Chequing → TFSA. $3,000.00. 60.0% of all money in. 60.0% of Chequing. " +
+  "100.0% of what reached TFSA. 3 statement rows · click to see them.";
+
 describe("link accessible names", () => {
-  test("a band's aria-label states source, target, amount and share of money in", () => {
+  test("a band's aria-label states source, destination, amount and every share, in order", () => {
     renderChart();
-    expect(band("b1->c2a").getAttribute("aria-label")).toBe(
-      "Chequing to TFSA, $3,000.00, 60.0% of money in",
-    );
+    expect(band("b1->c2a").getAttribute("aria-label")).toBe(CHEQUING_TO_TFSA_READOUT);
   });
 
-  test("the hover readout is exactly the band's own aria-label, at full precision", () => {
+  test("the hover readout card states exactly the band's own aria-label, at full precision", () => {
     renderChart();
     const el = band("b1->c2a");
     fireEvent.mouseEnter(el);
-    const tooltip = document.querySelector("[data-chart-tooltip]")?.textContent ?? "";
+    const card = document.querySelector("[data-flow-readout-card]")?.textContent ?? "";
     const ariaLabel = el.getAttribute("aria-label") ?? "";
-    expect(tooltip).toBe(ariaLabel);
-    expectNoCoarseForm(tooltip, 3000);
+    // The card renders each line as its own element with no separator, so
+    // its concatenated textContent has none either; the aria-label joins
+    // the same lines with ". " and a trailing ".", so splitting it back
+    // apart and re-joining with nothing proves the card states exactly
+    // those same lines.
+    const rejoined = ariaLabel.replace(/\.$/, "").split(". ").join("");
+    expect(card).toBe(rejoined);
+    expectNoCoarseForm(card, 3000);
     expectNoCoarseForm(ariaLabel, 3000);
+  });
+
+  test("a band with no rowIds reads as a cash/unreconciled band with no statement rows", () => {
+    const graph: FlowGraph = {
+      nodes: [node("acct", 1, 500, "TFSA"), node("now:cash", 3, 500, "Cash")],
+      links: [link("acct", "now:cash", 500, false, [])],
+      totalIn: 500,
+    };
+    renderChart(null, () => {}, graph);
+    expect(band("acct->now:cash").getAttribute("aria-label")).toContain(
+      "From the statements' cash balances.",
+    );
+  });
+
+  test("share of source and destination are each omitted when that node's own value is zero", () => {
+    const graph: FlowGraph = {
+      nodes: [node("acct", 1, 0, "TFSA"), node("now:cash", 3, 0, "Cash")],
+      links: [link("acct", "now:cash", 0)],
+      totalIn: 0,
+    };
+    renderChart(null, () => {}, graph);
+    const label = band("acct->now:cash").getAttribute("aria-label") ?? "";
+    expect(label).not.toContain("of TFSA");
+    expect(label).not.toContain("of what reached Cash");
   });
 });
 
 describe("the pinned readout", () => {
-  test("renders outside the svg, as a plain line, with the pinned band's own aria-label", () => {
+  test("renders outside the svg, as a plain line, from the readout's own first lines", () => {
     renderChart("b1->c2a");
     const svg = document.querySelector("svg");
     const readout = document.querySelector("[data-flow-pinned-readout]");
     expect(readout === null).toBe(false);
     expect(svg?.contains(readout)).toBe(false);
-    expect(readout?.textContent).toBe(band("b1->c2a").getAttribute("aria-label") ?? undefined);
-    // The floating tooltip, which used to cover the plot, does not also render.
-    expect(document.querySelector("[data-chart-tooltip]") === null).toBe(true);
+    expect(readout?.textContent).toBe("Chequing → TFSA, $3,000.00, 60.0% of all money in");
+    // The floating card, which used to cover the plot, does not also render.
+    expect(document.querySelector("[data-flow-readout-card]") === null).toBe(true);
   });
 
   test("no pinned readout renders with nothing selected", () => {
@@ -188,13 +228,41 @@ describe("the pinned readout", () => {
     expect(document.querySelector("[data-flow-pinned-readout]") === null).toBe(true);
   });
 
-  test("hovering a band takes over the floating readout and hides the pinned line", () => {
+  test("hovering a band takes over the floating card and hides the pinned line", () => {
     renderChart("b1->c2a");
     fireEvent.mouseEnter(band("c2b->now:costs"));
     expect(document.querySelector("[data-flow-pinned-readout]") === null).toBe(true);
-    expect(document.querySelector("[data-chart-tooltip]")?.textContent).toBe(
-      band("c2b->now:costs").getAttribute("aria-label") ?? undefined,
-    );
+    const card = document.querySelector("[data-flow-readout-card]")?.textContent ?? "";
+    expect(card).toContain("RRSP");
+    expect(card).toContain("Fees and withholding");
+  });
+});
+
+describe("the readout card", () => {
+  test("states a header row, the amount, three shares and a rows line, each once", () => {
+    renderChart();
+    fireEvent.mouseEnter(band("b1->c2a"));
+    const card = document.querySelector("[data-flow-readout-card]")?.textContent ?? "";
+    expect(card).toContain("Chequing → TFSA");
+    expect(card).toContain("$3,000.00");
+    expect(card).toContain("60.0% of all money in");
+    expect(card).toContain("60.0% of Chequing");
+    expect(card).toContain("100.0% of what reached TFSA");
+    expect(card).toContain("3 statement rows · click to see them");
+  });
+
+  test("the swatch is coloured by the band's own family: red for a cost, gray for recycled", () => {
+    renderChart();
+    fireEvent.mouseEnter(band("c2b->now:costs"));
+    const swatch = document.querySelector("[data-flow-readout-card] span");
+    expect((swatch as HTMLElement | null)?.style.background).toBe("var(--red-9)");
+  });
+
+  test("keyboard focus on a band shows the same card", () => {
+    renderChart();
+    fireEvent.focus(band("b1->c2a"));
+    const card = document.querySelector("[data-flow-readout-card]")?.textContent ?? "";
+    expect(card).toContain("Chequing → TFSA");
   });
 });
 
@@ -312,11 +380,11 @@ describe("aria-pressed", () => {
 });
 
 describe("the live readout", () => {
-  test("hovering a band gives CursorAnnouncement the band's own text", () => {
+  test("hovering a band gives CursorAnnouncement the exact same text as the band's aria-label", () => {
     renderChart();
     fireEvent.mouseEnter(band("b1->c2a"));
     expect(document.querySelector("[data-cursor-announcement]")?.textContent).toBe(
-      "Chequing to TFSA, $3,000.00, 60.0% of money in.",
+      band("b1->c2a").getAttribute("aria-label") ?? undefined,
     );
   });
 });

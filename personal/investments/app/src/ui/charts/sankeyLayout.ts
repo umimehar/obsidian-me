@@ -29,6 +29,9 @@ export interface PlacedLink extends FlowLink {
   key: string;
   path: string;
   width: number;
+  /** The band's own midpoint -- the same point `path`'s bezier control points straddle -- the anchor the readout card is placed from. */
+  midX: number;
+  midY: number;
 }
 
 export interface SankeyLayout {
@@ -181,7 +184,7 @@ export function minChartWidth(
   return box.labelLeft + span + box.nodeWidth + box.labelRight;
 }
 
-interface LabelBox {
+export interface LabelBox {
   id: string;
   x0: number;
   x1: number;
@@ -189,7 +192,8 @@ interface LabelBox {
   y1: number;
 }
 
-function labelBoxOf(n: PlacedNode): LabelBox {
+/** A node's ESTIMATED rendered label box, in the same units as `PlacedNode`'s own coordinates -- what `labelOverlaps` checks pairs of against each other, and what the band readout card's own placement (`readoutPlacement.ts`) checks itself against so it never covers the label it names. */
+export function labelBoxOf(n: PlacedNode): LabelBox {
   const rightAnchored = n.column !== 0;
   const edge = rightAnchored ? n.x1 + LABEL_GAP : n.x0 - LABEL_GAP;
   return {
@@ -226,12 +230,18 @@ export function labelOverlaps(layout: SankeyLayout): [string, string][] {
   return pairs;
 }
 
-/** `max(420, 44 × largest column's node count)`, the box height a caller passes back in. */
+/**
+ * `max(640, 44 × largest column's node count)`, the box height a caller
+ * passes back in. 640 (TCK-0016) is the floor for the default view -- the
+ * owner's own call over 800 or a node-count formula, made because the
+ * shorter 420px floor this replaced read as a cramped chart next to the
+ * rest of the tab. A dense group by still grows past it exactly as before.
+ */
 export function sankeyHeight(graph: FlowGraph): number {
   const counts = new Map<Column, number>();
   for (const n of graph.nodes) counts.set(n.column, (counts.get(n.column) ?? 0) + 1);
   const largest = Math.max(0, ...counts.values());
-  return Math.max(420, 44 * largest);
+  return Math.max(640, 44 * largest);
 }
 
 /** A column's left edge, evenly spaced between `labelLeft` and `width − labelRight − nodeWidth`. */
@@ -421,6 +431,8 @@ function buildPlacedLink(
     key: linkKey(l),
     width: l.value * k,
     path: `M ${x1},${sy} C ${mx},${sy} ${mx},${ty} ${x0},${ty}`,
+    midX: mx,
+    midY: (sy + ty) / 2,
   };
 }
 

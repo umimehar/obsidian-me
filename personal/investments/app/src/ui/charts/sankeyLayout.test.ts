@@ -246,6 +246,30 @@ describe("linkKey", () => {
   });
 });
 
+describe("sankeyHeight", () => {
+  test("floors at 640, the default view's own minimum (TCK-0016)", () => {
+    const g = graph([node("a", 0, 1), node("b", 3, 1)], [link("a", "b", 1)]);
+    expect(sankeyHeight(g)).toBe(640);
+  });
+
+  test("the real 2026 corpus grouped by account type is at least 640 tall", () => {
+    const flows = loadFlows();
+    const accounts = new Set(flows.accounts.map((a) => a.accountId));
+    const g = buildFlowGraph(flows, yearPeriod(2026), "accountType", accounts);
+    expect(sankeyHeight(g)).toBeGreaterThanOrEqual(640);
+  });
+
+  test("still grows past 640 for a dense group by, same as before the floor was raised", () => {
+    const dense = Array.from({ length: 20 }, (_, i) => node(`n${i}`, 2, 1));
+    const g = graph(
+      dense,
+      dense.map((n) => link("src", n.id, 1)),
+    );
+    expect(sankeyHeight(g)).toBe(44 * 20);
+    expect(sankeyHeight(g)).toBeGreaterThan(640);
+  });
+});
+
 describe("against the real 2026 corpus", () => {
   test("labels do not overlap for every column of the real graph, grouped by account type", () => {
     const flows = loadFlows();

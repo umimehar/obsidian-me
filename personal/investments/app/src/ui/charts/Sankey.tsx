@@ -3,13 +3,23 @@ import type { CSSProperties, KeyboardEvent } from "react";
 import { useMemo, useState } from "react";
 import type { FlowGraph, FlowLink, FlowNode } from "../../analytics/flows/graph";
 import { formatCurrency, formatShare } from "../format";
-import { ChartTooltip, CursorAnnouncement, tooltipAnchorStyle } from "./Tooltip";
+import { CARD_HEIGHT, CARD_WIDTH, ReadoutCard } from "./ReadoutCard";
+import { CursorAnnouncement } from "./Tooltip";
+import {
+  firstLinesText,
+  linkColor,
+  linkReadout,
+  linkSwatchColor,
+  readoutText,
+} from "./linkReadout";
+import { placeReadoutCard } from "./readoutPlacement";
 import {
   LABEL_GAP,
   LABEL_LINE_HEIGHT,
   type PlacedLink,
   type PlacedNode,
   type SankeyBox,
+  labelBoxOf,
   layoutSankey,
   minChartWidth,
   outerMargins,
@@ -37,25 +47,12 @@ const TOP_FLOWS = 5;
 const LEADER_THRESHOLD = 4;
 const HALO_WIDTH = 3;
 
-/** A band into any of these three is a cost or a loss to the outside, not a place money grows. */
-const RED_TARGETS = new Set(["now:costs", "now:left", "now:unreconciled"]);
-
-type Family = "jade" | "red" | "gray";
-
-function linkFamily(link: FlowLink): Family {
-  if (link.recycled) return "gray";
-  if (RED_TARGETS.has(link.target)) return "red";
-  return "jade";
-}
-
-/** Base step for a link's own tone, or the `a9` step once it is hovered, focused or pinned. */
-function linkColor(link: FlowLink, active: boolean): string {
-  const family = linkFamily(link);
-  const step = active ? 9 : family === "gray" ? 5 : 6;
-  return `var(--${family}-a${step})`;
-}
-
-/** A link's name, shared verbatim by its `aria-label` and its hover readout. */
+/**
+ * A link's short name, used only for the chart's own accessible summary
+ * (`summaryText`, the five largest flows) -- the hovered or focused band's
+ * own `aria-label` and readout come from `linkReadout` instead, see
+ * `activeLinkReadout` below.
+ */
 function linkText(link: FlowLink, labels: Map<string, string>, totalIn: number): string {
   const source = labels.get(link.source) ?? link.source;
   const target = labels.get(link.target) ?? link.target;
@@ -202,8 +199,7 @@ function NodeLabels({ nodes }: NodeLabelsProps) {
 
 interface LinksProps {
   links: readonly PlacedLink[];
-  labels: Map<string, string>;
-  totalIn: number;
+  graph: FlowGraph;
   activeKey: string | null;
   selected: string | null;
   onSelect: (key: string | null) => void;
@@ -211,7 +207,7 @@ interface LinksProps {
 }
 
 /** Every band: a stroke coloured and dimmed by hover/selection state, focusable and clickable. */
-function Links({ links, labels, totalIn, activeKey, selected, onSelect, onHover }: LinksProps) {
+function Links({ links, graph, activeKey, selected, onSelect, onHover }: LinksProps) {
   return (
     <>
       {links.map((l) => {
@@ -228,7 +224,7 @@ function Links({ links, labels, totalIn, activeKey, selected, onSelect, onHover 
             tabIndex={0}
             role="button"
             aria-pressed={selected === l.key}
-            aria-label={linkText(l, labels, totalIn)}
+            aria-label={readoutText(linkReadout(l, graph))}
             onMouseEnter={() => onHover(l.key)}
             onMouseLeave={() => onHover(null)}
             onFocus={() => onHover(l.key)}
@@ -242,21 +238,15 @@ function Links({ links, labels, totalIn, activeKey, selected, onSelect, onHover 
   );
 }
 
-/** The band a caller's hover or pinned selection points at, and its readout string. */
-function activeLinkText(
+/** The band a caller's hover or pinned selection points at, and its readout lines (`linkReadout`). */
+function activeLinkReadout(
   layout: { links: readonly PlacedLink[] },
   activeKey: string | null,
-  labels: Map<string, string>,
-  totalIn: number,
-): { link: PlacedLink | null; text: string | null } {
-  if (activeKey === null) return { link: null, text: null };
+  graph: FlowGraph,
+): { link: PlacedLink | null; lines: ReturnType<typeof linkReadout> } {
+  if (activeKey === null) return { link: null, lines: [] };
   const link = layout.links.find((l) => l.key === activeKey) ?? null;
-  return { link, text: link === null ? null : linkText(link, labels, totalIn) };
-}
-
-/** The path's starting x, `M x1,sy ...`, for the tooltip's horizontal anchor. */
-function pathStartX(path: string): number {
-  return Number(path.split(" ")[1]?.split(",")[0] ?? 0);
+  return { link, lines: link === null ? [] : linkReadout(link, graph) };
 }
 
 const EMPTY_HIGHLIGHT: ReadonlySet<string> = new Set();
@@ -264,7 +254,7 @@ const EMPTY_HIGHLIGHT: ReadonlySet<string> = new Set();
 /**
  * The plain-text readout for a PIN with nothing currently hovered, above
  * the chart. See `Sankey`'s own comment on `showPinnedLine` for why this
- * exists separately from the floating tooltip.
+ * exists separately from the floating card.
  */
 function PinnedReadout({ text }: { text: string }) {
   return (
@@ -293,11 +283,11 @@ function ScrollHint({ shown }: { shown: boolean }) {
 
 /**
  * A hand rolled Sankey of the period's money flow: four fixed columns laid
- * out by `layoutSankey`, rendered as focusable, clickable bands. Every node
- * and link label comes from `nodeLines`/`linkText`, each one call to
- * `formatCurrency` and `formatShare`, so the hover readout can never say a
- * different figure than the band's own `aria-label`. d3-sankey was rejected
- * for this fixed four-column graph; see `sankeyLayout.ts`.
+ * out by `layoutSankey`, rendered as focusable, clickable bands. A hovered
+ * or focused band's readout card, its `aria-label` and its live
+ * announcement all render `linkReadout`'s one array of lines, so none of
+ * the three can say a different figure than another. d3-sankey was
+ * rejected for this fixed four-column graph; see `sankeyLayout.ts`.
  */
 export function Sankey({ graph, selected, onSelect }: SankeyProps) {
   const summaryId = useSvgId("flow-summary");
@@ -335,31 +325,39 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
   }
 
   const activeKey = hoverKey ?? selected;
-  const { link: activeLink, text: activeText } = activeLinkText(
-    layout,
-    activeKey,
-    labels,
-    graph.totalIn,
-  );
-  const lines = activeText === null ? [] : [activeText];
+  const { link: activeLink, lines: activeLines } = activeLinkReadout(layout, activeKey, graph);
+  const announcementLines = activeLines.map((l) => l.text);
   const highlighted: ReadonlySet<string> =
     activeLink === null ? EMPTY_HIGHLIGHT : new Set([activeLink.source, activeLink.target]);
-  // A hover always wins the floating readout, near the pointer, because it
-  // is transient. A PIN with nothing currently hovered gets a plain line
-  // above the chart instead: the floating box sits at the plot's own top
-  // edge, which for a pinned band with no hover in progress hid that
-  // band's own target label -- exactly the thing a reader pinned the band
-  // to keep looking at.
+  // A hover always wins the floating card, near the band, because it is
+  // transient. A PIN with nothing currently hovered gets a plain line
+  // above the chart instead: the floating card sits over the plot itself,
+  // which for a pinned band with no hover in progress hid that band's own
+  // target label -- exactly the thing a reader pinned the band to keep
+  // looking at.
   const hovering = hoverKey !== null;
-  const showPinnedLine = !hovering && selected !== null && activeText !== null;
-  const showFloatingTooltip = hovering && activeLink !== null;
+  const showPinnedLine = !hovering && selected !== null && activeLines.length > 0;
+  const showCard = hovering && activeLink !== null;
+  const nodesById = new Map(layout.nodes.map((n) => [n.id, n]));
+  const cardPlacement =
+    showCard && activeLink !== null
+      ? placeReadoutCard({
+          anchor: { x: activeLink.midX, y: activeLink.midY },
+          cardSize: { width: CARD_WIDTH, height: CARD_HEIGHT },
+          bounds: { width: layoutWidth, height },
+          avoid: [activeLink.source, activeLink.target]
+            .map((id) => nodesById.get(id))
+            .filter((n): n is PlacedNode => n !== undefined)
+            .map(labelBoxOf),
+        })
+      : null;
 
   return (
     <div style={{ position: "relative" }}>
-      {showPinnedLine && activeText !== null ? <PinnedReadout text={activeText} /> : null}
+      {showPinnedLine ? <PinnedReadout text={firstLinesText(activeLines)} /> : null}
       <div ref={containerRef} style={{ position: "relative" }}>
         <ScrollHint shown={needsScroll} />
-        <div style={{ overflowX: needsScroll ? "auto" : "visible" }}>
+        <div style={{ position: "relative", overflowX: needsScroll ? "auto" : "visible" }}>
           <svg
             viewBox={`0 0 ${layoutWidth} ${height}`}
             // biome-ignore lint/a11y/useSemanticElements: an interactive chart, not a form's fieldset
@@ -375,8 +373,7 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
             <NodeRects nodes={layout.nodes} highlighted={highlighted} />
             <Links
               links={layout.links}
-              labels={labels}
-              totalIn={graph.totalIn}
+              graph={graph}
               activeKey={activeKey}
               selected={selected}
               onSelect={onSelect}
@@ -384,16 +381,24 @@ export function Sankey({ graph, selected, onSelect }: SankeyProps) {
             />
             <NodeLabels nodes={layout.nodes} />
           </svg>
+          {cardPlacement !== null && activeLink !== null ? (
+            <div
+              style={{
+                position: "absolute",
+                left: cardPlacement.left,
+                top: cardPlacement.top,
+                pointerEvents: "none",
+                zIndex: 5,
+              }}
+            >
+              <ReadoutCard lines={activeLines} swatchColor={linkSwatchColor(activeLink)} />
+            </div>
+          ) : null}
         </div>
         <p id={summaryId} style={VISUALLY_HIDDEN}>
           {summary}
         </p>
-        <CursorAnnouncement lines={lines} />
-        {showFloatingTooltip && activeLink !== null ? (
-          <div style={{ ...tooltipAnchorStyle(pathStartX(activeLink.path), layoutWidth), top: 0 }}>
-            <ChartTooltip lines={lines} />
-          </div>
-        ) : null}
+        <CursorAnnouncement lines={announcementLines} />
       </div>
     </div>
   );
