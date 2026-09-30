@@ -74,8 +74,8 @@ describe("FlowControls", () => {
 
   test("no dependent select renders for This month or All time", () => {
     const { rerender } = render(<Harness period="all" onPeriodChange={() => {}} />);
-    expect(screen.queryByRole("combobox", { name: "Year" })).toBeNull();
-    expect(screen.queryByRole("combobox", { name: "Month" })).toBeNull();
+    expect(screen.queryByRole("combobox", { name: "Year" }) === null).toBe(true);
+    expect(screen.queryByRole("combobox", { name: "Month" }) === null).toBe(true);
 
     rerender(<Harness period={{ from: "2026-01", to: "2026-06" }} onPeriodChange={() => {}} />);
     expect(screen.getByRole("combobox", { name: "From" })).toBeDefined();

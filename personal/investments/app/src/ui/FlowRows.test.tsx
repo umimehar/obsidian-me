@@ -165,7 +165,7 @@ function renderRows(selected: string | null, narrow = false) {
 describe("FlowRows", () => {
   test("nothing renders with no selection", () => {
     renderRows(null);
-    expect(document.querySelector("[data-flow-rows]")).toBeNull();
+    expect(document.querySelector("[data-flow-rows]") === null).toBe(true);
   });
 
   test("a payroll band lists every one of its rows, largest amount first, with no description anywhere", () => {
@@ -192,7 +192,7 @@ describe("FlowRows", () => {
   test("the drill down carries a focusable heading, the scroll and focus target for a new selection", () => {
     renderRows(PAYROLL_KEY);
     const heading = document.querySelector("[data-flow-rows-heading]");
-    expect(heading).not.toBeNull();
+    expect(heading === null).toBe(false);
     expect(heading?.getAttribute("tabindex")).toBe("-1");
   });
 
@@ -211,14 +211,14 @@ describe("FlowRows", () => {
 
   test("an unknown selection renders nothing rather than throwing", () => {
     expect(() => renderRows("not-a-real-key")).not.toThrow();
-    expect(document.querySelector("[data-flow-rows]")).toBeNull();
+    expect(document.querySelector("[data-flow-rows]") === null).toBe(true);
   });
 });
 
 describe("FlowRows, narrow", () => {
   test("renders no table element at all, only rows", () => {
     renderRows(PAYROLL_KEY, true);
-    expect(document.querySelector("table")).toBeNull();
+    expect(document.querySelector("table") === null).toBe(true);
     expect(document.querySelectorAll("[data-flow-row]")).toHaveLength(2);
   });
 
@@ -312,12 +312,12 @@ describe("FlowRows, the row cap", () => {
     if (expand === null) throw new Error("expected the expand button to render");
     fireEvent.click(expand);
     expect(document.querySelectorAll("[data-flow-row]")).toHaveLength(60);
-    expect(document.querySelector("[data-flow-rows-expand]")).toBeNull();
+    expect(document.querySelector("[data-flow-rows-expand]") === null).toBe(true);
   });
 
   test("a band with 50 rows or fewer never shows the expand button", () => {
     renderRows(PAYROLL_KEY);
-    expect(document.querySelector("[data-flow-rows-expand]")).toBeNull();
+    expect(document.querySelector("[data-flow-rows-expand]") === null).toBe(true);
   });
 
   test("the expanded 60-row table windows in a scrollable region with a pinned header", () => {

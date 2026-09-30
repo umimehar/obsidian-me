@@ -79,7 +79,7 @@ describe("Flow", () => {
 
   test("no callout renders once every selected account has reported", () => {
     renderFlow({ ...MISSING_FLOWS, accounts: [MISSING_FLOWS.accounts[0] as FlowAccount] });
-    expect(document.querySelector("[data-flow-missing]")).toBeNull();
+    expect(document.querySelector("[data-flow-missing]") === null).toBe(true);
   });
 
   test("below 40rem the Sankey gives way to two ranked lists and draws no svg[role=group]", () => {
@@ -96,10 +96,10 @@ describe("Flow", () => {
     })) as typeof window.matchMedia;
     try {
       renderFlow(loadFlows());
-      expect(document.querySelector("svg[role='group']")).toBeNull();
-      expect(document.querySelector("[data-flow-narrow]")).not.toBeNull();
-      expect(document.querySelector('[data-flow-ranked-list="Came from"]')).not.toBeNull();
-      expect(document.querySelector('[data-flow-ranked-list="Where it is now"]')).not.toBeNull();
+      expect(document.querySelector("svg[role='group']") === null).toBe(true);
+      expect(document.querySelector("[data-flow-narrow]") === null).toBe(false);
+      expect(document.querySelector('[data-flow-ranked-list="Came from"]') === null).toBe(false);
+      expect(document.querySelector('[data-flow-ranked-list="Where it is now"]') === null).toBe(false);
     } finally {
       window.matchMedia = original;
     }
@@ -107,8 +107,8 @@ describe("Flow", () => {
 
   test("at the default wide layout the Sankey renders and no ranked lists do", () => {
     renderFlow(loadFlows());
-    expect(document.querySelector("svg[role='group']")).not.toBeNull();
-    expect(document.querySelector("[data-flow-narrow]")).toBeNull();
+    expect(document.querySelector("svg[role='group']") === null).toBe(false);
+    expect(document.querySelector("[data-flow-narrow]") === null).toBe(true);
   });
 });
 
@@ -256,7 +256,7 @@ describe("Flow, an out-of-corpus period", () => {
     renderFlow(MOVE_FLOWS, MOVE_SERIES, { from: "2026-06", to: "2026-06" }, (p) => {
       picked.period = p;
     });
-    expect(picked.period).toBeNull();
+    expect(picked.period === null).toBe(true);
   });
 });
 
@@ -282,7 +282,7 @@ describe("Flow, the drill down's scroll and focus", () => {
     if (band === null) throw new Error("expected at least one Sankey band");
     fireEvent.click(band);
     const heading = document.getElementById("flow-drilldown-heading");
-    expect(heading).not.toBeNull();
+    expect(heading === null).toBe(false);
     expect(scrolled).toContain(heading as Element);
     expect(document.activeElement).toBe(heading);
   });
@@ -475,7 +475,7 @@ describe("Flow, a tile part with $0 and no rows never opens a drill down", () =>
     expect(document.getElementById("flow-drilldown-heading")?.textContent).toBe(
       "Costs: Fee rebates",
     );
-    expect(document.querySelector('[data-flow-row="feeRebate26"]')).not.toBeNull();
+    expect(document.querySelector('[data-flow-row="feeRebate26"]') === null).toBe(false);
 
     rerender(
       <Theme>
@@ -490,7 +490,7 @@ describe("Flow, a tile part with $0 and no rows never opens a drill down", () =>
     // The false reading this guards against: "Costs: Fee rebates" still as
     // the heading, followed by CASH_EXPLANATION's cash-balance sentence --
     // a sentence that has nothing to do with a fee rebate.
-    expect(document.querySelector("[data-flow-rows]")).toBeNull();
+    expect(document.querySelector("[data-flow-rows]") === null).toBe(true);
 
     rerender(
       <Theme>
@@ -502,7 +502,7 @@ describe("Flow, a tile part with $0 and no rows never opens a drill down", () =>
         />
       </Theme>,
     );
-    expect(document.querySelector("[data-flow-rows]")).toBeNull();
+    expect(document.querySelector("[data-flow-rows]") === null).toBe(true);
   });
 });
 
@@ -519,8 +519,8 @@ describe("Flow, the drill down survives a period change", () => {
       </Theme>,
     );
     await openPaidInShowRows();
-    expect(document.querySelector('[data-flow-row="pay26"]')).not.toBeNull();
-    expect(document.querySelector('[data-flow-row="pay25"]')).toBeNull();
+    expect(document.querySelector('[data-flow-row="pay26"]') === null).toBe(false);
+    expect(document.querySelector('[data-flow-row="pay25"]') === null).toBe(true);
 
     rerender(
       <Theme>
@@ -532,8 +532,8 @@ describe("Flow, the drill down survives a period change", () => {
         />
       </Theme>,
     );
-    expect(document.querySelector('[data-flow-row="pay25"]')).not.toBeNull();
-    expect(document.querySelector('[data-flow-row="pay26"]')).toBeNull();
+    expect(document.querySelector('[data-flow-row="pay25"]') === null).toBe(false);
+    expect(document.querySelector('[data-flow-row="pay26"]') === null).toBe(true);
   });
 
   test("switching to a period where the part no longer exists clears the drill down rather than showing stale rows", async () => {
@@ -548,7 +548,7 @@ describe("Flow, the drill down survives a period change", () => {
       </Theme>,
     );
     await openPaidInTfsaContribShowRows();
-    expect(document.querySelector('[data-flow-row="tfsaCont26"]')).not.toBeNull();
+    expect(document.querySelector('[data-flow-row="tfsaCont26"]') === null).toBe(false);
 
     rerender(
       <Theme>
@@ -560,7 +560,7 @@ describe("Flow, the drill down survives a period change", () => {
         />
       </Theme>,
     );
-    expect(document.querySelector("[data-flow-rows]")).toBeNull();
+    expect(document.querySelector("[data-flow-rows]") === null).toBe(true);
   });
 });
 
@@ -591,7 +591,7 @@ describe("Flow, choosing the same tile part twice", () => {
       </Theme>,
     );
     await openPaidInShowRows();
-    expect(document.getElementById("flow-drilldown-heading")).not.toBeNull();
+    expect(document.getElementById("flow-drilldown-heading") === null).toBe(false);
 
     stubScroll();
     // Move focus elsewhere first, so a second focus-to-heading is provable

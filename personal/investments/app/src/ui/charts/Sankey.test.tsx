@@ -147,7 +147,7 @@ describe("leader lines", () => {
 
   test("an isolated node with room to itself gets no leader line", () => {
     renderChart();
-    expect(document.querySelector('[data-flow-leader="a0"]')).toBeNull();
+    expect(document.querySelector('[data-flow-leader="a0"]') === null).toBe(true);
   });
 });
 
@@ -176,22 +176,22 @@ describe("the pinned readout", () => {
     renderChart("b1->c2a");
     const svg = document.querySelector("svg");
     const readout = document.querySelector("[data-flow-pinned-readout]");
-    expect(readout).not.toBeNull();
+    expect(readout === null).toBe(false);
     expect(svg?.contains(readout)).toBe(false);
     expect(readout?.textContent).toBe(band("b1->c2a").getAttribute("aria-label") ?? undefined);
     // The floating tooltip, which used to cover the plot, does not also render.
-    expect(document.querySelector("[data-chart-tooltip]")).toBeNull();
+    expect(document.querySelector("[data-chart-tooltip]") === null).toBe(true);
   });
 
   test("no pinned readout renders with nothing selected", () => {
     renderChart(null);
-    expect(document.querySelector("[data-flow-pinned-readout]")).toBeNull();
+    expect(document.querySelector("[data-flow-pinned-readout]") === null).toBe(true);
   });
 
   test("hovering a band takes over the floating readout and hides the pinned line", () => {
     renderChart("b1->c2a");
     fireEvent.mouseEnter(band("c2b->now:costs"));
-    expect(document.querySelector("[data-flow-pinned-readout]")).toBeNull();
+    expect(document.querySelector("[data-flow-pinned-readout]") === null).toBe(true);
     expect(document.querySelector("[data-chart-tooltip]")?.textContent).toBe(
       band("c2b->now:costs").getAttribute("aria-label") ?? undefined,
     );
@@ -217,7 +217,7 @@ describe("keyboard", () => {
     const calls: (string | null)[] = [];
     renderChart("pinned", (key) => calls.push(key));
     fireEvent.keyDown(band("a0->b1"), { key: "Escape" });
-    expect(calls.at(-1)).toBeNull();
+    expect(calls.at(-1) === null).toBe(true);
   });
 });
 
@@ -326,7 +326,7 @@ describe("the empty graph", () => {
     render(
       <Sankey graph={{ nodes: [], links: [], totalIn: 0 }} selected={null} onSelect={() => {}} />,
     );
-    expect(document.querySelector("svg")).toBeNull();
+    expect(document.querySelector("svg") === null).toBe(true);
   });
 });
 

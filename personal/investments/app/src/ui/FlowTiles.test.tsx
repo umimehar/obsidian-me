@@ -202,7 +202,7 @@ describe("FlowTiles", () => {
 
     cleanup();
     renderTiles(summary({ contributionsByKind: {} }));
-    expect(document.querySelector("[data-flow-contributions]")).toBeNull();
+    expect(document.querySelector("[data-flow-contributions]") === null).toBe(true);
   });
 
   test("the payroll/spending caveat sentence is always present", () => {
@@ -304,7 +304,7 @@ describe("FlowTiles", () => {
     renderTiles(summary());
     await openTile("Paid in from outside");
     const popover = document.querySelector('[data-flow-tile-popover="Paid in from outside"]');
-    expect(popover).not.toBeNull();
+    expect(popover === null).toBe(false);
     const payrollPart = popover?.querySelector('[data-flow-tile-part="payroll"]');
     expect(payrollPart?.textContent).toContain(formatCurrency(46464.63));
     expect(payrollPart?.textContent).toContain(formatShare(46464.63 / 134880.63));
@@ -320,7 +320,7 @@ describe("FlowTiles", () => {
       fireEvent.click(button);
     });
     expect(seen).toEqual([{ tileKey: "paidIn", sectionTitle: null, partKey: "payroll" }]);
-    expect(document.querySelector('[data-flow-tile-popover="Paid in from outside"]')).toBeNull();
+    expect(document.querySelector('[data-flow-tile-popover="Paid in from outside"]') === null).toBe(true);
   });
 
   test("left in cash never shows a share, and says why", async () => {

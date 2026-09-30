@@ -169,7 +169,7 @@ describe("FlowTable", () => {
       // scrollHeight <= clientHeight: the real measurement a short table
       // gets once its box has room for every row.
       triggerOverflowMeasurement(200, 300);
-      expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+      expect(document.querySelector("[data-flow-table-scroll-hint]") === null).toBe(true);
     } finally {
       window.ResizeObserver = original;
     }
@@ -187,7 +187,7 @@ describe("FlowTable", () => {
       );
       const caption = document.querySelector("[data-flow-table-caption]");
       expect(caption?.textContent).toBe("40 flows, largest first");
-      expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+      expect(document.querySelector("[data-flow-table-scroll-hint]") === null).toBe(true);
       // scrollHeight > clientHeight: real content taller than the capped box.
       triggerOverflowMeasurement(1400, 360);
       expect(document.querySelector("[data-flow-table-scroll-hint]")?.textContent).toBe(
@@ -213,7 +213,7 @@ describe("FlowTable, narrow", () => {
 
   test("renders no table element at all, only rows", () => {
     renderNarrow();
-    expect(document.querySelector("table")).toBeNull();
+    expect(document.querySelector("table") === null).toBe(true);
     expect(document.querySelectorAll("[data-flow-table-row]")).toHaveLength(3);
   });
 
@@ -254,7 +254,7 @@ describe("FlowTable, narrow", () => {
       );
       expect(document.querySelectorAll("[data-flow-table-row]")).toHaveLength(6);
       triggerOverflowMeasurement(200, 300);
-      expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+      expect(document.querySelector("[data-flow-table-scroll-hint]") === null).toBe(true);
     } finally {
       window.ResizeObserver = original;
     }
@@ -270,7 +270,7 @@ describe("FlowTable, narrow", () => {
           <FlowTable graph={longGraph(40)} selected={null} onSelect={() => {}} narrow={true} />
         </Theme>,
       );
-      expect(document.querySelector("[data-flow-table-scroll-hint]")).toBeNull();
+      expect(document.querySelector("[data-flow-table-scroll-hint]") === null).toBe(true);
       triggerOverflowMeasurement(1400, 360);
       expect(document.querySelector("[data-flow-table-scroll-hint]")?.textContent).toBe(
         "Scroll for more.",
