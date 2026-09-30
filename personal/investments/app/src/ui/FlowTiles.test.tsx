@@ -320,7 +320,9 @@ describe("FlowTiles", () => {
       fireEvent.click(button);
     });
     expect(seen).toEqual([{ tileKey: "paidIn", sectionTitle: null, partKey: "payroll" }]);
-    expect(document.querySelector('[data-flow-tile-popover="Paid in from outside"]') === null).toBe(true);
+    expect(document.querySelector('[data-flow-tile-popover="Paid in from outside"]') === null).toBe(
+      true,
+    );
   });
 
   test("left in cash never shows a share, and says why", async () => {

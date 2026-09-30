@@ -99,7 +99,9 @@ describe("Flow", () => {
       expect(document.querySelector("svg[role='group']") === null).toBe(true);
       expect(document.querySelector("[data-flow-narrow]") === null).toBe(false);
       expect(document.querySelector('[data-flow-ranked-list="Came from"]') === null).toBe(false);
-      expect(document.querySelector('[data-flow-ranked-list="Where it is now"]') === null).toBe(false);
+      expect(document.querySelector('[data-flow-ranked-list="Where it is now"]') === null).toBe(
+        false,
+      );
     } finally {
       window.matchMedia = original;
     }
