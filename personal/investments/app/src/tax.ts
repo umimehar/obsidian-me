@@ -69,12 +69,7 @@ function requireRange(value: number, field: string, min: number, max: number): n
 }
 
 /** A sourced rate/value: `{ value, source }`, value bounded to a plausibility range so a typo (e.g. `4.826` for `0.4826`) fails loudly. */
-function parseSourcedValue(
-  value: unknown,
-  field: string,
-  min: number,
-  max: number,
-): SourcedValue {
+function parseSourcedValue(value: unknown, field: string, min: number, max: number): SourcedValue {
   if (typeof value !== "object" || value === null) {
     throw new Error(`tax.json: ${field} must be an object`);
   }
@@ -151,16 +146,16 @@ function parseCorporate(value: unknown): CorporateTaxYear {
   }
   return {
     fiscalYearEnd,
-    passiveIncomeRate: parseSourcedValue(
-      c.passiveIncomeRate,
-      "corporate.passiveIncomeRate",
-      0,
-      1,
-    ),
+    passiveIncomeRate: parseSourcedValue(c.passiveIncomeRate, "corporate.passiveIncomeRate", 0, 1),
     partIVRate: parseSourcedValue(c.partIVRate, "corporate.partIVRate", 0, 1),
     aaiiThresholds: parseAaiiThresholds(c.aaiiThresholds),
     nerdtohRate: parseSourcedValue(c.nerdtohRate, "corporate.nerdtohRate", 0, 1),
-    dividendRefundRate: parseSourcedValue(c.dividendRefundRate, "corporate.dividendRefundRate", 0, 1),
+    dividendRefundRate: parseSourcedValue(
+      c.dividendRefundRate,
+      "corporate.dividendRefundRate",
+      0,
+      1,
+    ),
   };
 }
 

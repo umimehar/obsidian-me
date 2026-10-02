@@ -126,8 +126,23 @@ export interface ForeignPropertySummary {
   cryptoCostAtYearEnd: number;
   /** Unclassified holdings' book cost at year end -- never folded into the foreign total, since classifying it would be a guess. */
   unclassifiedCostAtYearEnd: number;
-  filingThresholdExceeded: boolean;
-  detailedThresholdExceeded: boolean;
+}
+
+/**
+ * Whether a cost amount reaches the T1135 filing and detailed-method
+ * thresholds. Separated from `foreignPropertySummary` so the comparison --
+ * a cheap read of two numbers from `tax.json` -- can run in the browser
+ * against a cost already baked into `analytics.json`, without the browser
+ * ever touching a raw statement.
+ */
+export function t1135ThresholdStatus(
+  maxForeignCost: number,
+  thresholds: { filingThreshold: number; detailedThreshold: number },
+): { filingThresholdExceeded: boolean; detailedThresholdExceeded: boolean } {
+  return {
+    filingThresholdExceeded: maxForeignCost >= thresholds.filingThreshold,
+    detailedThresholdExceeded: maxForeignCost >= thresholds.detailedThreshold,
+  };
 }
 
 /**
@@ -136,19 +151,20 @@ export interface ForeignPropertySummary {
  * Chequing are never in scope, since T1135 excludes registered accounts
  * and cash is not a specified foreign property). Cost amount, never market
  * value: the statement's own `bookCost`, converted to CAD, the figure the
- * form actually asks for.
+ * form actually asks for. Computed at the build step, over raw statements
+ * -- never in the browser -- the same rule every other statement-derived
+ * figure in this project follows.
  */
 export function foreignPropertySummary(
   statements: readonly Statement[],
   series: readonly AccountSeries[],
   year: number,
   scopeKinds: ReadonlySet<AccountKind>,
-  thresholds: { filingThreshold: number; detailedThreshold: number },
 ): ForeignPropertySummary {
   const kindByAccount = new Map(series.map((a) => [a.maskedId, a.kind]));
   const scopedIds = new Set(
     series
-      .filter((a) => scopeKinds.has(a.kind) || a.kind === "Crypto")
+      .filter((a) => scopeKinds.has(a.kind))
       .filter((a) => !REGISTERED_KINDS.has(a.kind))
       .map((a) => a.maskedId),
   );
@@ -191,7 +207,5 @@ export function foreignPropertySummary(
     monthsConsidered: sorted.length,
     cryptoCostAtYearEnd: last?.crypto ?? 0,
     unclassifiedCostAtYearEnd: last?.unclassified ?? 0,
-    filingThresholdExceeded: maxForeignCost >= thresholds.filingThreshold,
-    detailedThresholdExceeded: maxForeignCost >= thresholds.detailedThreshold,
   };
 }

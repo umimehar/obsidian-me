@@ -173,7 +173,15 @@ describe("App", () => {
     render(<App />);
     const gainText = formatGainWithShare(GOLDENS.portfolio.gain, GOLDENS.portfolio.bookCost);
 
-    for (const label of ["Growth", "Income", "Contributions", "Future", "Data"]) {
+    for (const label of [
+      "Growth",
+      "Income",
+      "Contributions",
+      "Non-registered",
+      "Corporate",
+      "Future",
+      "Data",
+    ]) {
       clickTab(label);
       const strip = document.querySelector("[data-summary-strip]");
       expect(strip).not.toBeNull();
@@ -253,7 +261,16 @@ describe("the headline book value and gain", () => {
     // every group card -- eight or nine repeats of the same caveat on one
     // tab. It now lives once, in the tab's own AboutNumbers disclosure.
     render(<App />);
-    for (const tab of ["Portfolio", "Growth", "Income", "Contributions", "Future", "Data"]) {
+    for (const tab of [
+      "Portfolio",
+      "Growth",
+      "Income",
+      "Contributions",
+      "Non-registered",
+      "Corporate",
+      "Future",
+      "Data",
+    ]) {
       clickTab(tab);
       const matches = screen.getAllByText(/An estimate: book cost for USD holdings/);
       expect(matches).toHaveLength(1);
@@ -286,7 +303,15 @@ describe("the headline book value and gain", () => {
     // and its chart test above); this pins that leaving and coming back
     // does not drift the figures it shows.
     render(<App />);
-    for (const label of ["Growth", "Income", "Contributions", "Future", "Data"]) {
+    for (const label of [
+      "Growth",
+      "Income",
+      "Contributions",
+      "Non-registered",
+      "Corporate",
+      "Future",
+      "Data",
+    ]) {
       fireEvent.mouseDown(screen.getByRole("tab", { name: new RegExp(`^${label}\\b`) }), {
         button: 0,
       });
@@ -351,6 +376,9 @@ function feeGapFixture(statedFee: number, derivedFee: number): AnalyticsOutput {
     rooms: {},
     income: {},
     corporateIncome: {},
+    superficialLoss: {},
+    foreignPropertyPersonal: {},
+    foreignPropertyCorporate: {},
     returns: [],
     rollups: { registration: [], account: [], purpose: [] },
     activity: { "2026-01": { acct_gap: { ...ZERO_ACTIVITY, fees: derivedFee } } },

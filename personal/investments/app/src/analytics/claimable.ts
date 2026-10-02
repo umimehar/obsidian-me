@@ -109,7 +109,11 @@ function foreignTaxLine(
 }
 
 /** Commissions, FX conversion costs and spreads: already inside realized gains (ACB/proceeds), never a separate deduction, shown with that label. */
-function commissionsLine(maskedId: string, label: string, fxConversionAmount: number): ClaimableLine | null {
+function commissionsLine(
+  maskedId: string,
+  label: string,
+  fxConversionAmount: number,
+): ClaimableLine | null {
   if (fxConversionAmount <= 0.005) return null;
   return {
     maskedId,
@@ -143,6 +147,40 @@ export interface ClaimableYear {
  * `ask-accountant` -- this function itself never emits that treatment,
  * since every line it builds is already classified by rule.
  */
+/** One account's FX conversion amount for the year, summed off `analytics.activity`. */
+function fxConversionForAccount(
+  activity: AnalyticsOutput["activity"],
+  maskedId: string,
+  year: number,
+): number {
+  let total = 0;
+  for (const [period, byAccount] of Object.entries(activity)) {
+    if (periodYear(period) !== year) continue;
+    total += byAccount[maskedId]?.fxConversionAmount ?? 0;
+  }
+  return total;
+}
+
+/** Every claimable line for one account -- the three rules `claimableYear` applies, for one account at a time. */
+function linesForAccount(
+  analytics: AnalyticsOutput,
+  account: AnalyticsOutput["series"][number],
+  year: number,
+  marginalRate: number,
+  isCorporate: boolean,
+  foreignTaxWithheldByAccount: ReadonlyMap<string, number>,
+): ClaimableLine[] {
+  const fee = statedFeesForAccount(analytics.statedFees, account.maskedId, year);
+  const foreignTax = foreignTaxWithheldByAccount.get(account.maskedId) ?? 0;
+  const fxConversionAmount = fxConversionForAccount(analytics.activity, account.maskedId, year);
+
+  return [
+    feeLine(account.maskedId, account.label, account.kind, fee, marginalRate, isCorporate),
+    foreignTaxLine(account.maskedId, account.label, foreignTax, isCorporate),
+    commissionsLine(account.maskedId, account.label, fxConversionAmount),
+  ].filter((line): line is ClaimableLine => line !== null);
+}
+
 export function claimableYear(
   analytics: AnalyticsOutput,
   year: number,
@@ -154,21 +192,16 @@ export function claimableYear(
   const lines: ClaimableLine[] = [];
   for (const account of analytics.series) {
     if (!accountIds.has(account.maskedId)) continue;
-    const fee = statedFeesForAccount(analytics.statedFees, account.maskedId, year);
-    const feeRow = feeLine(account.maskedId, account.label, account.kind, fee, marginalRate, isCorporate);
-    if (feeRow) lines.push(feeRow);
-
-    const foreignTax = foreignTaxWithheldByAccount.get(account.maskedId) ?? 0;
-    const foreignRow = foreignTaxLine(account.maskedId, account.label, foreignTax, isCorporate);
-    if (foreignRow) lines.push(foreignRow);
-
-    let fxConversionAmount = 0;
-    for (const [period, byAccount] of Object.entries(analytics.activity)) {
-      if (periodYear(period) !== year) continue;
-      fxConversionAmount += byAccount[account.maskedId]?.fxConversionAmount ?? 0;
-    }
-    const commissionsRow = commissionsLine(account.maskedId, account.label, fxConversionAmount);
-    if (commissionsRow) lines.push(commissionsRow);
+    lines.push(
+      ...linesForAccount(
+        analytics,
+        account,
+        year,
+        marginalRate,
+        isCorporate,
+        foreignTaxWithheldByAccount,
+      ),
+    );
   }
 
   const deductionsTotal = lines

@@ -8,6 +8,8 @@ export type TabId =
   | "growth"
   | "income"
   | "contributions"
+  | "nonRegistered"
+  | "corporate"
   | "future"
   | "data";
 
@@ -18,6 +20,8 @@ export const TABS: readonly TabId[] = [
   "growth",
   "income",
   "contributions",
+  "nonRegistered",
+  "corporate",
   "future",
   "data",
 ];

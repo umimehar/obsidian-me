@@ -34,7 +34,13 @@ function isAnalyticsOutput(value: unknown): value is AnalyticsOutput {
     typeof candidate.rollups === "object" &&
     typeof candidate.activity === "object" &&
     typeof candidate.statedFees === "object" &&
-    typeof candidate.holdings === "object"
+    typeof candidate.holdings === "object" &&
+    typeof candidate.corporateIncome === "object" &&
+    typeof candidate.personalHoldings === "object" &&
+    typeof candidate.corporateHoldings === "object" &&
+    typeof candidate.superficialLoss === "object" &&
+    typeof candidate.foreignPropertyPersonal === "object" &&
+    typeof candidate.foreignPropertyCorporate === "object"
   );
 }
 

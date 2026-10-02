@@ -99,7 +99,19 @@ describe("claimableYear", () => {
   test("FX conversion spread is flagged not-deductible, already inside realized gains", () => {
     const data = analytics({
       series: [nrAccount()],
-      activity: { "2026-01": { acct_nr: { dividends: 0, interest: 0, lendingIncome: 0, withholdingTax: 0, fees: 0, fxConversions: 1, fxConversionAmount: 15 } } },
+      activity: {
+        "2026-01": {
+          acct_nr: {
+            dividends: 0,
+            interest: 0,
+            lendingIncome: 0,
+            withholdingTax: 0,
+            fees: 0,
+            fxConversions: 1,
+            fxConversionAmount: 15,
+          },
+        },
+      },
     });
     const result = claimableYear(data, 2026, new Set(["acct_nr"]), 0.4826, false, new Map());
     const row = result.lines.find((l) => l.treatment === "not-deductible");

@@ -1,8 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import type { AccountKind, ManagementStyle } from "../store/mask";
 import type { Holding, Statement } from "../types";
+import {
+  classifyForeignProperty,
+  foreignPropertySummary,
+  t1135ThresholdStatus,
+} from "./foreignProperty";
 import type { AccountSeries } from "./types";
-import { classifyForeignProperty, foreignPropertySummary } from "./foreignProperty";
 
 function holding(over: Partial<Holding> = {}): Holding {
   return {
@@ -38,7 +42,13 @@ function series(over: Partial<AccountSeries> = {}): AccountSeries {
 }
 
 function src(accountNo: string, period: string) {
-  return { file: `${accountNo}_${period}.pdf`, accountNo, period, template: "BROKERAGE" as const, version: 0 };
+  return {
+    file: `${accountNo}_${period}.pdf`,
+    accountNo,
+    period,
+    template: "BROKERAGE" as const,
+    version: 0,
+  };
 }
 
 function statement(over: Partial<Statement> = {}): Statement {
@@ -90,6 +100,22 @@ describe("classifyForeignProperty", () => {
 
 const THRESHOLDS = { filingThreshold: 100000, detailedThreshold: 250000 };
 
+describe("t1135ThresholdStatus", () => {
+  test("flags both thresholds once the cost amount reaches them", () => {
+    expect(t1135ThresholdStatus(300000, THRESHOLDS)).toEqual({
+      filingThresholdExceeded: true,
+      detailedThresholdExceeded: true,
+    });
+  });
+
+  test("flags neither below the filing threshold", () => {
+    expect(t1135ThresholdStatus(50000, THRESHOLDS)).toEqual({
+      filingThresholdExceeded: false,
+      detailedThresholdExceeded: false,
+    });
+  });
+});
+
 describe("foreignPropertySummary", () => {
   test("registered accounts are excluded from the scope entirely", () => {
     const tfsa = series({ maskedId: "acct_tfsa", kind: "TFSA" as AccountKind });
@@ -99,13 +125,7 @@ describe("foreignPropertySummary", () => {
         holdings: [holding({ symbol: "CHPX", bookCost: 200000 })],
       }),
     ];
-    const summary = foreignPropertySummary(
-      statements,
-      [tfsa],
-      2026,
-      new Set(["NonRegistered"]),
-      THRESHOLDS,
-    );
+    const summary = foreignPropertySummary(statements, [tfsa], 2026, new Set(["NonRegistered"]));
     expect(summary.maxForeignCost).toBe(0);
     expect(summary.monthsConsidered).toBe(0);
   });
@@ -130,12 +150,10 @@ describe("foreignPropertySummary", () => {
       [series()],
       2026,
       new Set(["NonRegistered"]),
-      THRESHOLDS,
     );
     expect(summary.maxForeignCost).toBe(300000);
     expect(summary.yearEndForeignCost).toBe(180000);
     expect(summary.monthsConsidered).toBe(3);
-    expect(summary.detailedThresholdExceeded).toBe(true);
   });
 
   test("Canadian-listed holdings never count toward the foreign total, even in USD units", () => {
@@ -150,10 +168,8 @@ describe("foreignPropertySummary", () => {
       [series()],
       2026,
       new Set(["NonRegistered"]),
-      THRESHOLDS,
     );
     expect(summary.maxForeignCost).toBe(0);
-    expect(summary.filingThresholdExceeded).toBe(false);
   });
 
   test("Crypto holdings are reported apart from the foreign total, never folded in either way", () => {
@@ -168,8 +184,7 @@ describe("foreignPropertySummary", () => {
       statements,
       [crypto],
       2026,
-      new Set(["NonRegistered"]),
-      THRESHOLDS,
+      new Set(["NonRegistered", "Crypto"]),
     );
     expect(summary.maxForeignCost).toBe(0);
     expect(summary.cryptoCostAtYearEnd).toBe(60000);
@@ -184,7 +199,6 @@ describe("foreignPropertySummary", () => {
       [series()],
       2026,
       new Set(["NonRegistered"]),
-      THRESHOLDS,
     );
     expect(summary.maxForeignCost).toBe(0);
     expect(summary.unclassifiedCostAtYearEnd).toBe(999999);

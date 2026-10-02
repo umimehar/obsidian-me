@@ -300,6 +300,40 @@ export interface Goldens {
     difference: number;
     monthsSkipped: number;
   };
+  /**
+   * The Non-registered and Corporate tabs' own figures for the start year,
+   * each computed by calling the SAME production function (`claimableYear`,
+   * `passiveIncomeYear`, `superficialLossWatch`'s own baked output,
+   * `t1135ThresholdStatus`) the tab itself calls, over the committed
+   * `analytics.json` and `tax.json`.
+   */
+  taxableTabs: {
+    personal: {
+      realizedGains: number;
+      foreignDividends: number;
+      foreignTaxWithheld: number;
+      interest: number;
+      canadianDistributions: number;
+      salesCount: number;
+      superficialLossFlaggedCount: number;
+      claimableDeductionsTotal: number;
+      claimableCreditsTotal: number;
+      t1135MaxForeignCost: number;
+    };
+    corporate: {
+      realizedGains: number;
+      foreignDividends: number;
+      foreignTaxWithheld: number;
+      interest: number;
+      canadianDistributions: number;
+      aaii: number;
+      cdaAddition: number;
+      nerdtohAdded: number;
+      partIVTax: number;
+      claimableDeductionsTotal: number;
+      t1135MaxForeignCost: number;
+    };
+  };
 }
 
 function isGoldens(value: unknown): value is Goldens {
@@ -328,7 +362,8 @@ function isGoldens(value: unknown): value is Goldens {
     typeof c.incomeCosts === "object" &&
     typeof c.month === "object" &&
     typeof c.holdings === "object" &&
-    typeof c.benchmark === "object"
+    typeof c.benchmark === "object" &&
+    typeof c.taxableTabs === "object"
   );
 }
 

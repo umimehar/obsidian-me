@@ -1,7 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import type { IncomeSummary } from "./income";
 import type { CorporateTaxYear } from "../tax";
-import { aaii, passiveIncomeYear, runningCapitalAccounts, sbdGrind } from "./corporatePassiveIncome";
+import {
+  aaii,
+  passiveIncomeYear,
+  runningCapitalAccounts,
+  sbdGrind,
+} from "./corporatePassiveIncome";
+import type { IncomeSummary } from "./income";
 
 function income(over: Partial<IncomeSummary> = {}): IncomeSummary {
   return {
@@ -32,7 +37,12 @@ function rates(over: Partial<CorporateTaxYear> = {}): CorporateTaxYear {
 describe("aaii", () => {
   test("sums interest, foreign dividends, taxable capital gains and eligible dividends", () => {
     const value = aaii(
-      income({ interest: 1000, foreignDividends: 500, realizedGains: 2000, canadianDistributions: 300 }),
+      income({
+        interest: 1000,
+        foreignDividends: 500,
+        realizedGains: 2000,
+        canadianDistributions: 300,
+      }),
       0.5,
     );
     expect(value).toBe(1000 + 500 + 1000 + 300);

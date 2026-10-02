@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import type { ActivityRow, Statement } from "../types";
-import type { AccountSeries } from "./types";
-import { latestStatementDate, superficialLossWatch } from "./superficialLoss";
-import type { SaleDetail } from "./income";
 import type { AccountKind, ManagementStyle } from "../store/mask";
+import type { ActivityRow, Statement } from "../types";
+import type { SaleDetail } from "./income";
+import { latestStatementDate, superficialLossWatch } from "./superficialLoss";
+import type { AccountSeries } from "./types";
 
 function series(over: Partial<AccountSeries> = {}): AccountSeries {
   return {
@@ -21,7 +21,13 @@ function series(over: Partial<AccountSeries> = {}): AccountSeries {
 }
 
 function src(accountNo: string, period: string) {
-  return { file: `${accountNo}_${period}.pdf`, accountNo, period, template: "BROKERAGE" as const, version: 0 };
+  return {
+    file: `${accountNo}_${period}.pdf`,
+    accountNo,
+    period,
+    template: "BROKERAGE" as const,
+    version: 0,
+  };
 }
 
 function activityRow(over: Partial<ActivityRow> = {}): ActivityRow {
@@ -101,17 +107,17 @@ describe("superficialLossWatch", () => {
   test("a sale not from a personal non-registered or Crypto account is never flagged", () => {
     const corp = series({ maskedId: "acct_corp", kind: "Corporate" as AccountKind });
     const statements = [statement({ activity: [activityRow({ date: "2026-01-10" })] })];
-    const candidates = superficialLossWatch(
-      statements,
-      [corp],
-      [sale({ maskedId: "acct_corp" })],
-    );
+    const candidates = superficialLossWatch(statements, [corp], [sale({ maskedId: "acct_corp" })]);
     expect(candidates).toHaveLength(0);
   });
 
   test("is still open when the window has not elapsed as of the latest statement", () => {
     const statements = [statement({ activity: [activityRow({ date: "2026-01-20" })] })];
-    const [candidate] = superficialLossWatch(statements, [series()], [sale({ date: "2026-01-10" })]);
+    const [candidate] = superficialLossWatch(
+      statements,
+      [series()],
+      [sale({ date: "2026-01-10" })],
+    );
     expect(candidate?.stillOpen).toBe(true);
     expect(candidate?.matchedBuy).toBeNull();
   });
@@ -146,7 +152,8 @@ describe("superficialLossWatch", () => {
           activityRow({
             date: "2026-01-20",
             code: "BUY",
-            description: "SLV - iShares Silver Trust: Bought 5.0000 shares (executed at 2026-01-20)",
+            description:
+              "SLV - iShares Silver Trust: Bought 5.0000 shares (executed at 2026-01-20)",
           }),
         ],
       }),

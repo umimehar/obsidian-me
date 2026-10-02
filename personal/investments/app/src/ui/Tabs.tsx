@@ -15,6 +15,8 @@ const LABELS: Record<TabId, string> = {
   growth: "Growth",
   income: "Income",
   contributions: "Contributions",
+  nonRegistered: "Non-registered",
+  corporate: "Corporate",
   future: "Future",
   data: "Data",
 };

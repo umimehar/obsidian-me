@@ -1,7 +1,7 @@
 import type { AccountKind } from "../store/mask";
 import type { ActivityRow, Holding, Statement } from "../types";
-import { type ActivityByPeriod, buildActivity, convertToCad, netCreditDebit } from "./activity";
 import { PERSONAL_NONREG_KINDS } from "./accountScopes";
+import { type ActivityByPeriod, buildActivity, convertToCad, netCreditDebit } from "./activity";
 import type { AccountSeries } from "./types";
 
 /**
@@ -406,11 +406,7 @@ const NO_GAIN: RowGain = { gain: 0, costUnknown: false, symbol: null, proceedsCa
  * sale even when the quantity behind it (sold or bought) was never
  * readable at all.
  */
-function closeOutRemainingCost(
-  entry: LedgerEntry,
-  symbol: string,
-  proceedsCad: number,
-): RowGain {
+function closeOutRemainingCost(entry: LedgerEntry, symbol: string, proceedsCad: number): RowGain {
   const gain = proceedsCad - entry.cost;
   entry.cost = 0;
   entry.quantity = 0;
@@ -658,11 +654,7 @@ export function buildIncome(
   const activity = buildActivity(statements);
   const { interest, foreignTaxWithheld } = sumInterestAndWithholding(activity, taxableIds, year);
   const { canadianDistributions, foreignDividends } = sumDividends(statements, taxableIds, year);
-  const { realizedGains, costUnknownSales, sales } = sumRealizedGains(
-    statements,
-    taxableIds,
-    year,
-  );
+  const { realizedGains, costUnknownSales, sales } = sumRealizedGains(statements, taxableIds, year);
   const corporateActions = collectCorporateActions(statements, taxableIds, year);
   return {
     interest,

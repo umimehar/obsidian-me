@@ -11,13 +11,14 @@ import type { IncomeSummary } from "./income";
  */
 export function aaii(income: IncomeSummary, capitalGainsInclusion: number): number {
   const taxableGains = Math.max(income.realizedGains, 0) * capitalGainsInclusion;
-  return (
-    income.interest + income.foreignDividends + taxableGains + income.canadianDistributions
-  );
+  return income.interest + income.foreignDividends + taxableGains + income.canadianDistributions;
 }
 
 /** The small business deduction's passive-income grind: $5 of SBD limit lost per $1 of AAII over the lower threshold, never below zero. */
-export function sbdGrind(aaiiValue: number, thresholds: CorporateTaxYear["aaiiThresholds"]): number {
+export function sbdGrind(
+  aaiiValue: number,
+  thresholds: CorporateTaxYear["aaiiThresholds"],
+): number {
   if (aaiiValue <= thresholds.lower) return 0;
   return (aaiiValue - thresholds.lower) * thresholds.gradePerDollar;
 }
@@ -94,7 +95,12 @@ export function runningCapitalAccounts(
     cda += y.cdaAddition;
     nerdtoh += y.nerdtohAdded;
     eligibleRdtoh += y.partIVTax;
-    rows.push({ year: y.year, cdaBalance: cda, nerdtohBalance: nerdtoh, eligibleRdtohBalance: eligibleRdtoh });
+    rows.push({
+      year: y.year,
+      cdaBalance: cda,
+      nerdtohBalance: nerdtoh,
+      eligibleRdtohBalance: eligibleRdtoh,
+    });
   }
   return rows;
 }
