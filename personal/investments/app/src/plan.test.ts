@@ -175,7 +175,10 @@ describe("parsePlan, strategy", () => {
   test("throws when directIndexing targets is empty", () => {
     const bad = {
       ...VALID,
-      strategy: { ...VALID_STRATEGY, directIndexing: { ...VALID_STRATEGY.directIndexing, targets: [] } },
+      strategy: {
+        ...VALID_STRATEGY,
+        directIndexing: { ...VALID_STRATEGY.directIndexing, targets: [] },
+      },
     };
     expect(() => parsePlan(bad)).toThrow(/strategy\.directIndexing\.targets/);
   });
@@ -201,7 +204,10 @@ describe("parsePlan, strategy", () => {
         ...VALID_STRATEGY,
         directIndexing: {
           ...VALID_STRATEGY.directIndexing,
-          targets: [{ sleeve: "A", share: 0 }, { sleeve: "B", share: 1 }],
+          targets: [
+            { sleeve: "A", share: 0 },
+            { sleeve: "B", share: 1 },
+          ],
         },
       },
     };
@@ -211,7 +217,10 @@ describe("parsePlan, strategy", () => {
   test("throws naming a negative fillTarget", () => {
     const bad = {
       ...VALID,
-      strategy: { ...VALID_STRATEGY, directIndexing: { ...VALID_STRATEGY.directIndexing, fillTarget: -1 } },
+      strategy: {
+        ...VALID_STRATEGY,
+        directIndexing: { ...VALID_STRATEGY.directIndexing, fillTarget: -1 },
+      },
     };
     expect(() => parsePlan(bad)).toThrow(/strategy\.directIndexing\.fillTarget/);
   });
@@ -237,7 +246,9 @@ describe("parsePlan, strategy", () => {
       ...VALID,
       strategy: {
         ...VALID_STRATEGY,
-        payroll: [{ ...VALID_STRATEGY.payroll[0], automations: [{ target: "Savings", amount: 0 }] }],
+        payroll: [
+          { ...VALID_STRATEGY.payroll[0], automations: [{ target: "Savings", amount: 0 }] },
+        ],
       },
     };
     expect(() => parsePlan(bad)).toThrow(/strategy\.payroll\[0\]\.automations\[0\]\.amount/);
@@ -259,10 +270,7 @@ describe("parsePlan, strategy", () => {
       ...VALID,
       strategy: {
         ...VALID_STRATEGY,
-        payroll: [
-          { ...VALID_STRATEGY.payroll[0], to: "2026-11-15" },
-          VALID_STRATEGY.payroll[1],
-        ],
+        payroll: [{ ...VALID_STRATEGY.payroll[0], to: "2026-11-15" }, VALID_STRATEGY.payroll[1]],
       },
     };
     expect(() => parsePlan(bad)).toThrow(/strategy\.payroll\[0\]\.to/);
@@ -273,10 +281,7 @@ describe("parsePlan, strategy", () => {
       ...VALID,
       strategy: {
         ...VALID_STRATEGY,
-        payroll: [
-          { ...VALID_STRATEGY.payroll[0], to: null },
-          VALID_STRATEGY.payroll[1],
-        ],
+        payroll: [{ ...VALID_STRATEGY.payroll[0], to: null }, VALID_STRATEGY.payroll[1]],
       },
     };
     expect(() => parsePlan(bad)).toThrow(/strategy\.payroll\[0\]\.to/);
@@ -301,7 +306,10 @@ describe("parsePlan, strategy", () => {
   test("throws naming a badly formed rrsp contributedAsOf date", () => {
     const bad = {
       ...VALID,
-      strategy: { ...VALID_STRATEGY, rrsp: { ...VALID_STRATEGY.rrsp, contributedAsOf: "not a date" } },
+      strategy: {
+        ...VALID_STRATEGY,
+        rrsp: { ...VALID_STRATEGY.rrsp, contributedAsOf: "not a date" },
+      },
     };
     expect(() => parsePlan(bad)).toThrow(/strategy\.rrsp\.contributedAsOf/);
   });

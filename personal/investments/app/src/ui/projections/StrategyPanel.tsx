@@ -1,5 +1,12 @@
 import { Badge, Card, Flex, Heading, Text } from "@radix-ui/themes";
-import type { Automation, DirectIndexing, PayrollPhase, RrspPlan, Strategy, WatchItem } from "../../plan";
+import type {
+  Automation,
+  DirectIndexing,
+  PayrollPhase,
+  RrspPlan,
+  Strategy,
+  WatchItem,
+} from "../../plan";
 import { formatCurrency, formatShare } from "../format";
 
 export interface StrategyPanelProps {
@@ -100,8 +107,8 @@ function RrspSection({ rrsp }: { rrsp: RrspPlan }) {
         <Text size="2">Remaining to target: {formatCurrency(remaining)}</Text>
         <Text size="2">Estimated income: {formatCurrency(rrsp.estimatedIncome)}</Text>
         <Text size="2">
-          Estimated taxable income after the deduction: {formatCurrency(taxableAfterDeduction)}, beside
-          bracket top {formatCurrency(rrsp.bracketTop)}
+          Estimated taxable income after the deduction: {formatCurrency(taxableAfterDeduction)},
+          beside bracket top {formatCurrency(rrsp.bracketTop)}
         </Text>
         <Text size="2" color="gray">
           {rrsp.note}

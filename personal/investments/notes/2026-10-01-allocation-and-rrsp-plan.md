@@ -46,6 +46,14 @@ HXQ ($350) and CHPS ($150) were removed in phase 1: the Innovation sleeve holds 
 
 With phase 2's $2,400, the Innovation sleeve reaches 30% around the Dec 15 pay.
 
+## Corporate (self) 8297: HXS and HXQ only
+
+On 2026-10-01 the account held XEQT (96.4742 units, $4,385.72, down $15.90) and HXQ (48 units, $5,990.88). XEQT paid a $9.84 distribution on 2026-09-29. Planned for 2026-10-02: sell all XEQT, put the proceeds and the cash into HXS, then buy $500 HXS and $500 HXQ every two weeks.
+
+XEQT's distributions are mostly foreign dividends, which a CCPC pays about 50% passive tax on. HXS and HXQ are Global X corporate class funds that pay no distributions, so growth arrives as a capital gain whose non taxable half goes to the capital dividend account. HXS sits beside HXQ so the corporate money is not Nasdaq 100 alone. International and Canadian exposure stays in Corporate 91b8.
+
+The $15.90 XEQT loss is suspended rather than claimable: the corporation is affiliated with the owner, who keeps buying XEQT personally. About $4 of tax, ignored.
+
 ## RRSP: deduct $53,500 for 2026
 
 2026 income is about $235,000: $170,275 year to date on the Sep 30 stub, six more $9,375 pays, and early 2026 EI parental benefits. Province is Ontario.

@@ -368,6 +368,7 @@ describe("heading structure", () => {
       /^Monthly income at [\d.]+% a year$/,
       "Milestones, today's dollars",
       ...plan.goals.map((goal) => goal.label),
+      "Plan",
       "Room runway",
     ];
     // A demoted or promoted tile heading shifts every name after it by one
