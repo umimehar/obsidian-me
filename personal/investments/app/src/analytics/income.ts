@@ -1,20 +1,24 @@
 import type { AccountKind } from "../store/mask";
 import type { ActivityRow, Holding, Statement } from "../types";
 import { type ActivityByPeriod, buildActivity, convertToCad, netCreditDebit } from "./activity";
+import { PERSONAL_NONREG_KINDS } from "./accountScopes";
 import type { AccountSeries } from "./types";
 
 /**
- * The only kinds whose investment income is taxed in the owner's personal
- * hands. `Corporate` is deliberately absent: investment income inside a
- * corporation is taxed in the corporation and only reaches the owner when
- * dividended out, so it must never feed the personal estimate -- getting
- * this wrong once inflated 2026 eligible dividends from $202 to $645 (see
+ * The default kinds whose investment income is taxed in the owner's
+ * personal hands, when a caller passes no explicit `kinds`. `Corporate` is
+ * deliberately absent: investment income inside a corporation is taxed in
+ * the corporation and only reaches the owner when dividended out, so it
+ * must never feed the personal estimate by default -- getting this wrong
+ * once inflated 2026 eligible dividends from $202 to $645 (see
  * `KIND_OVERRIDES` in `../store/registry.ts`). Registered wrappers (TFSA,
  * RRSP, SpousalRRSP, FHSA, RESP) are absent too: income earned inside them
  * is not taxable as earned. `Chequing` is absent because it holds no
- * investments.
+ * investments. A caller that wants the corporation's own passive income
+ * (taxed in the corporation's hands, not the owner's) passes `CORPORATE_KINDS`
+ * explicitly -- see `corporatePassiveIncome.ts`.
  */
-const TAXABLE_KINDS: ReadonlySet<AccountKind> = new Set(["NonRegistered", "Crypto"]);
+const TAXABLE_KINDS: ReadonlySet<AccountKind> = PERSONAL_NONREG_KINDS;
 
 /**
  * The caller's account selection -- masked ids, mirroring the UI's
@@ -28,6 +32,23 @@ export type IncomeScope = ReadonlySet<string>;
 export interface CorporateAction {
   symbol: string;
   date: string;
+}
+
+/**
+ * One `SELL` row's realized result, for the per-sale tax table: date,
+ * symbol, which account, proceeds and gain in CAD, and whether the cost
+ * side is known. `acb` is `proceeds - gain` when the cost is known, and
+ * null when `costUnknown` -- stating an invented ACB for a sale this
+ * project cannot cost would be worse than leaving it blank.
+ */
+export interface SaleDetail {
+  date: string;
+  symbol: string;
+  maskedId: string;
+  proceeds: number;
+  acb: number | null;
+  gain: number;
+  costUnknown: boolean;
 }
 
 export interface IncomeSummary {
@@ -45,17 +66,23 @@ export interface IncomeSummary {
   costUnknownSales: number;
   /** Stock dividends and spin-off distributions in the year, oldest first -- see `CorporateAction`. */
   corporateActions: readonly CorporateAction[];
+  /** Every `SELL` row realized in the year, oldest first -- see `SaleDetail`. */
+  sales: readonly SaleDetail[];
 }
 
 function periodYear(period: string): number {
   return Number(period.slice(0, 4));
 }
 
-/** The taxable accounts (see `TAXABLE_KINDS`) that are also in the caller's `scope`. */
-function taxableAccountIds(series: readonly AccountSeries[], scope: IncomeScope): Set<string> {
+/** The accounts of `kinds` that are also in the caller's `scope`. */
+function taxableAccountIds(
+  series: readonly AccountSeries[],
+  scope: IncomeScope,
+  kinds: ReadonlySet<AccountKind>,
+): Set<string> {
   const ids = new Set<string>();
   for (const account of series) {
-    if (scope.has(account.maskedId) && TAXABLE_KINDS.has(account.kind)) {
+    if (scope.has(account.maskedId) && kinds.has(account.kind)) {
       ids.add(account.maskedId);
     }
   }
@@ -365,9 +392,12 @@ function orderedRows(s: Statement): readonly ActivityRow[] {
 interface RowGain {
   gain: number;
   costUnknown: boolean;
+  /** The row's own symbol and CAD proceeds, present only for a `SELL` row -- see `SaleDetail`. */
+  symbol: string | null;
+  proceedsCad: number | null;
 }
 
-const NO_GAIN: RowGain = { gain: 0, costUnknown: false };
+const NO_GAIN: RowGain = { gain: 0, costUnknown: false, symbol: null, proceedsCad: null };
 
 /**
  * A full close: the position is absent from this statement's own closing
@@ -376,12 +406,16 @@ const NO_GAIN: RowGain = { gain: 0, costUnknown: false };
  * sale even when the quantity behind it (sold or bought) was never
  * readable at all.
  */
-function closeOutRemainingCost(entry: LedgerEntry, proceedsCad: number): RowGain {
+function closeOutRemainingCost(
+  entry: LedgerEntry,
+  symbol: string,
+  proceedsCad: number,
+): RowGain {
   const gain = proceedsCad - entry.cost;
   entry.cost = 0;
   entry.quantity = 0;
   entry.quantityUncertain = false;
-  return { gain, costUnknown: false };
+  return { gain, costUnknown: false, symbol, proceedsCad };
 }
 
 /**
@@ -393,13 +427,18 @@ function closeOutRemainingCost(entry: LedgerEntry, proceedsCad: number): RowGain
  * could drive the ledger negative for every row that followed it this
  * statement (see ADI 2025-11, HD 2026-03).
  */
-function oversell(entry: LedgerEntry, soldQuantity: number, proceedsCad: number): RowGain {
+function oversell(
+  entry: LedgerEntry,
+  symbol: string,
+  soldQuantity: number,
+  proceedsCad: number,
+): RowGain {
   const coveredFraction = entry.quantity > 0 ? entry.quantity / soldQuantity : 0;
   const coveredProceeds = proceedsCad * coveredFraction;
   const coveredCost = entry.cost;
   entry.cost = 0;
   entry.quantity = 0;
-  return { gain: coveredProceeds - coveredCost, costUnknown: true };
+  return { gain: coveredProceeds - coveredCost, costUnknown: true, symbol, proceedsCad };
 }
 
 /**
