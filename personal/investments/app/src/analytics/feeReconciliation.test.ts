@@ -54,6 +54,7 @@ function analyticsFixture(overrides: Partial<AnalyticsOutput> = {}): AnalyticsOu
       currency: { CAD: 0, USD: 0 },
       assetClasses: [],
       behind: [],
+      cashByAccount: {},
     },
     personalHoldings: {
       period: "",
@@ -63,6 +64,7 @@ function analyticsFixture(overrides: Partial<AnalyticsOutput> = {}): AnalyticsOu
       currency: { CAD: 0, USD: 0 },
       assetClasses: [],
       behind: [],
+      cashByAccount: {},
     },
     corporateHoldings: {
       period: "",
@@ -72,6 +74,7 @@ function analyticsFixture(overrides: Partial<AnalyticsOutput> = {}): AnalyticsOu
       currency: { CAD: 0, USD: 0 },
       assetClasses: [],
       behind: [],
+      cashByAccount: {},
     },
     ...overrides,
   };

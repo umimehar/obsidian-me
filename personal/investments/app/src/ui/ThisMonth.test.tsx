@@ -196,6 +196,7 @@ describe("ThisMonth", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       personalHoldings: {
         period: "",
@@ -205,6 +206,7 @@ describe("ThisMonth", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       corporateHoldings: {
         period: "",
@@ -214,6 +216,7 @@ describe("ThisMonth", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
     };
 

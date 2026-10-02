@@ -1,4 +1,5 @@
 import type { AccountKind } from "../store/mask";
+import { REGISTERED_KINDS } from "./accountScopes";
 import type { AnalyticsOutput } from "./build";
 
 export type ClaimableTreatment =
@@ -13,13 +14,32 @@ export interface ClaimableLine {
   maskedId: string;
   label: string;
   what: string;
+  /**
+   * A dollar amount this line claims or is credited, `0` when the line
+   * carries no claimable amount at all -- see `conversionVolume` for the
+   * one case (`"not-deductible"`) where that is true.
+   */
   amount: number;
   /** The form/line it belongs to, or `null` for a line that belongs on no form (an excluded registered fee, or an unclassifiable amount). */
   form: string | null;
   treatment: ClaimableTreatment;
   /** The tax effect at the year's marginal/passive rate, estimate labelled by the caller -- null when the treatment carries no rate (a credit's effect is the amount itself, an excluded fee has no effect at all). */
   taxEffectEstimate: number | null;
+  /**
+   * The CAD principal converted between currencies this year, for the one
+   * `"not-deductible"` line `commissionsLine` emits. Informational only: it
+   * is never a cost, never deductible and never summed into `amount` or any
+   * subtotal -- a conversion moves money between currencies, it does not
+   * spend it. Null for every other line.
+   */
+  conversionVolume: number | null;
 }
+
+/** The corporate deduction's own form/line -- also the words `tiles.ts`'s "Deductions" tile prints, so the tile and this table can never disagree. */
+export const CORPORATE_DEDUCTION_FORM = "T2 Schedule 1 deduction against property income";
+
+/** The corporate credit's own form/line -- also the words `tiles.ts`'s "Foreign tax credit" tile prints. */
+export const CORPORATE_CREDIT_FORM = "Foreign non-business income tax credit, T2";
 
 function periodYear(period: string): number {
   return Number(period.slice(0, 4));
@@ -38,14 +58,6 @@ function statedFeesForAccount(
   }
   return total;
 }
-
-const REGISTERED_KINDS: ReadonlySet<AccountKind> = new Set([
-  "TFSA",
-  "RRSP",
-  "SpousalRRSP",
-  "FHSA",
-  "RESP",
-]);
 
 /**
  * The carrying-charge (personal, line 22100) and investment-management-fee
@@ -72,6 +84,7 @@ function feeLine(
       form: null,
       treatment: "excluded-registered",
       taxEffectEstimate: null,
+      conversionVolume: null,
     };
   }
   return {
@@ -81,9 +94,10 @@ function feeLine(
       ? "Investment management fee, deductible against property income"
       : "Account management / service fee",
     amount: fee,
-    form: isCorporate ? null : "Line 22100 (Schedule 4), carrying charge",
+    form: isCorporate ? CORPORATE_DEDUCTION_FORM : "Line 22100 (Schedule 4), carrying charge",
     treatment: "carrying-charge",
     taxEffectEstimate: fee * marginalRate,
+    conversionVolume: null,
   };
 }
 
@@ -99,16 +113,23 @@ function foreignTaxLine(
     maskedId,
     label,
     what: isCorporate
-      ? "Foreign tax withheld -- foreign non-business income tax credit (reduces but does not refund)"
-      : "Foreign tax withheld on dividends -- foreign tax credit (15% US treaty rate)",
+      ? "Foreign tax withheld: foreign non-business income tax credit, reduces but does not refund"
+      : "Foreign tax withheld on dividends: foreign tax credit, 15% US treaty rate",
     amount: foreignTaxWithheld,
-    form: isCorporate ? null : "T2209 / line 40500",
+    form: isCorporate ? CORPORATE_CREDIT_FORM : "T2209 / line 40500",
     treatment: "foreign-tax-credit",
     taxEffectEstimate: foreignTaxWithheld,
+    conversionVolume: null,
   };
 }
 
-/** Commissions, FX conversion costs and spreads: already inside realized gains (ACB/proceeds), never a separate deduction, shown with that label. */
+/**
+ * Currency conversion and trading spreads: `fxConversionAmount` is the
+ * PRINCIPAL converted between currencies this year, not a cost, so it is
+ * never presented as one. `amount` is `0` for that reason -- it is not a
+ * claimable or excluded dollar figure -- and the real figure is carried
+ * only in `conversionVolume`, which no subtotal ever reads.
+ */
 function commissionsLine(
   maskedId: string,
   label: string,
@@ -118,11 +139,12 @@ function commissionsLine(
   return {
     maskedId,
     label,
-    what: "Commissions, FX conversion costs and spreads -- already adjust ACB/proceeds inside realized gains, not a separate deduction",
-    amount: fxConversionAmount,
+    what: "Currency conversion and trading spreads",
+    amount: 0,
     form: null,
     treatment: "not-deductible",
     taxEffectEstimate: null,
+    conversionVolume: fxConversionAmount,
   };
 }
 

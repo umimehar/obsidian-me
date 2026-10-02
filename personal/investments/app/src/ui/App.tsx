@@ -10,11 +10,11 @@ import { loadTaxTable } from "../tax";
 import { AboutNumbers } from "./AboutNumbers";
 import { AccountFilter } from "./AccountFilter";
 import { Cards } from "./Cards";
-import { Corporate } from "./Corporate";
+import { CORPORATE_NOTES, Corporate } from "./Corporate";
 import { DataStatus } from "./DataStatus";
 import { Holdings } from "./Holdings";
 import { IncomeCosts } from "./IncomeCosts";
-import { NonRegistered } from "./NonRegistered";
+import { NON_REGISTERED_NOTES, NonRegistered } from "./NonRegistered";
 import { GroupGainLine, Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
 import { SummaryStrip } from "./SummaryStrip";
@@ -549,12 +549,12 @@ function Dashboard() {
     // silently cut away on "All time" the same way Income's own tax view
     // reads `all` rather than the clipped `analytics`.
     nonRegistered: (
-      <WithSummary {...summary}>
+      <WithSummary {...summary} extraNotes={NON_REGISTERED_NOTES}>
         <NonRegistered analytics={all} year={year} scope={scope} taxTable={taxTable} />
       </WithSummary>
     ),
     corporate: (
-      <WithSummary {...summary}>
+      <WithSummary {...summary} extraNotes={CORPORATE_NOTES}>
         <Corporate analytics={all} year={year} scope={scope} taxTable={taxTable} />
       </WithSummary>
     ),

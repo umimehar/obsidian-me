@@ -187,6 +187,7 @@ describe("data.ts against the real committed analytics.json", () => {
           currency: { CAD: 0, USD: 0 },
           assetClasses: [],
           behind: [],
+          cashByAccount: {},
         },
         personalHoldings: {
           period: "",
@@ -196,6 +197,7 @@ describe("data.ts against the real committed analytics.json", () => {
           currency: { CAD: 0, USD: 0 },
           assetClasses: [],
           behind: [],
+          cashByAccount: {},
         },
         corporateHoldings: {
           period: "",
@@ -205,6 +207,7 @@ describe("data.ts against the real committed analytics.json", () => {
           currency: { CAD: 0, USD: 0 },
           assetClasses: [],
           behind: [],
+          cashByAccount: {},
         },
       }),
     ).toBeNull();

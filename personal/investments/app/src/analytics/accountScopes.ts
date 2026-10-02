@@ -17,6 +17,22 @@ export const PERSONAL_NONREG_KINDS: ReadonlySet<AccountKind> = new Set(["NonRegi
  */
 export const CORPORATE_KINDS: ReadonlySet<AccountKind> = new Set(["Corporate"]);
 
+/**
+ * Every registered wrapper: income earned inside one is not taxable as
+ * earned, a replacement buy inside one permanently denies a superficial
+ * loss (there is no cost base left to add it to), and a fee paid inside one
+ * is never deductible. Shared by `claimable.ts`, `foreignProperty.ts` and
+ * the tax tabs' "Needs attention" summaries, so this one list decides
+ * "registered" everywhere rather than three copies that can drift apart.
+ */
+export const REGISTERED_KINDS: ReadonlySet<AccountKind> = new Set([
+  "TFSA",
+  "RRSP",
+  "SpousalRRSP",
+  "FHSA",
+  "RESP",
+]);
+
 /** Every account in `series` whose kind is one of `kinds`, by masked id. */
 export function accountIdsOfKind(
   series: readonly AccountSeries[],

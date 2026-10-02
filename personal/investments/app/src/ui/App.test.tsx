@@ -391,6 +391,7 @@ function feeGapFixture(statedFee: number, derivedFee: number): AnalyticsOutput {
       currency: { CAD: 0, USD: 0 },
       assetClasses: [],
       behind: [],
+      cashByAccount: {},
     },
     personalHoldings: {
       period: "",
@@ -400,6 +401,7 @@ function feeGapFixture(statedFee: number, derivedFee: number): AnalyticsOutput {
       currency: { CAD: 0, USD: 0 },
       assetClasses: [],
       behind: [],
+      cashByAccount: {},
     },
     corporateHoldings: {
       period: "",
@@ -409,6 +411,7 @@ function feeGapFixture(statedFee: number, derivedFee: number): AnalyticsOutput {
       currency: { CAD: 0, USD: 0 },
       assetClasses: [],
       behind: [],
+      cashByAccount: {},
     },
   };
 }

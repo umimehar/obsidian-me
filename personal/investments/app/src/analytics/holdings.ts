@@ -41,6 +41,17 @@ export interface HoldingsOutput {
   assetClasses: { name: string; value: number }[];
   /** Counted account labels with no BROKERAGE statement at `period`, sorted -- named, never silently dropped. */
   behind: string[];
+  /**
+   * Each account's own cash balance at `period`, CAD, keyed by `maskedId` --
+   * unlike `holdings`, which pools cash by currency across every account
+   * (so a shared-currency balance cannot be read back per account), this is
+   * that account's own statement, never summed with another account's. Read
+   * straight off a BROKERAGE statement's `portfolio.cashMarketValue`
+   * (already CAD, the same figure the statement's own portfolio section
+   * totals), or summed from `cash[]` converted at that statement's own rate
+   * on a CASH-template statement, which carries no `portfolio` block.
+   */
+  cashByAccount: Record<string, number>;
 }
 
 /**
@@ -274,6 +285,20 @@ function addCashHoldings(totals: Totals, statement: Statement, label: string): v
   }
 }
 
+/**
+ * One statement's own cash total, CAD. `buildHoldings` only ever calls this
+ * on a BROKERAGE statement (the CASH template never enters its `atPeriod`
+ * map, the same restriction `latestCountedPeriod`/`statementsAtPeriod`
+ * apply), so `portfolio.cashMarketValue` -- already the CAD cash component
+ * the statement's own totals are built from -- is read directly rather than
+ * re-summed from `cash[]`. The `?? 0` guards only the parser-bug case the
+ * `Statement.portfolio` field's own doc names (null on a BROKERAGE
+ * statement), never a real CASH-template statement reaching this call.
+ */
+function accountCashTotal(statement: Statement): number {
+  return statement.portfolio?.cashMarketValue ?? 0;
+}
+
 function toHoldingSummaries(totals: Totals): HoldingSummary[] {
   return [...totals.bySymbol.values()]
     .map((e) => ({
@@ -347,12 +372,14 @@ export function buildHoldings(
     .sort();
 
   const totals = emptyTotals();
+  const cashByAccount: Record<string, number> = {};
   for (const [accountId, statement] of atPeriod) {
     const label = labelById.get(accountId) ?? accountId;
     for (const holding of statement.holdings) {
       addHolding(totals, holding, label, accountId, period, sightings);
     }
     addCashHoldings(totals, statement, label);
+    cashByAccount[accountId] = accountCashTotal(statement);
   }
 
   const holdings = toHoldingSummaries(totals);
@@ -369,5 +396,6 @@ export function buildHoldings(
     currency: totals.currency,
     assetClasses,
     behind,
+    cashByAccount,
   };
 }

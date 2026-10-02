@@ -1,6 +1,7 @@
 import { dedupeToLatestVersion } from "../statementVersion";
 import type { AccountKind } from "../store/mask";
 import type { Currency, Statement } from "../types";
+import { REGISTERED_KINDS } from "./accountScopes";
 import { type PricedSighting, pricedSightingsBySymbol, resolveCurrency } from "./holdings";
 import type { AccountSeries } from "./types";
 
@@ -71,14 +72,6 @@ export function classifyForeignProperty(
       return "unclassified";
   }
 }
-
-const REGISTERED_KINDS: ReadonlySet<AccountKind> = new Set([
-  "TFSA",
-  "RRSP",
-  "SpousalRRSP",
-  "FHSA",
-  "RESP",
-]);
 
 function periodYear(period: string): number {
   return Number(period.slice(0, 4));

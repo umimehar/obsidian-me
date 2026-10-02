@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import type { AnalyticsOutput } from "./build";
-import { claimableYear } from "./claimable";
+import { CORPORATE_CREDIT_FORM, CORPORATE_DEDUCTION_FORM, claimableYear } from "./claimable";
 
 function analytics(over: Partial<AnalyticsOutput> = {}): AnalyticsOutput {
   return {
@@ -42,6 +42,10 @@ function nrAccount() {
 
 function tfsaAccount() {
   return { ...nrAccount(), maskedId: "acct_tfsa", shortId: "0002", kind: "TFSA" as const };
+}
+
+function corpAccount() {
+  return { ...nrAccount(), maskedId: "acct_corp", shortId: "0003", kind: "Corporate" as const };
 }
 
 describe("claimableYear", () => {
@@ -96,7 +100,7 @@ describe("claimableYear", () => {
     expect(result.creditsTotal).toBe(0);
   });
 
-  test("FX conversion spread is flagged not-deductible, already inside realized gains", () => {
+  test("FX conversion volume is never presented as a cost: amount 0, the real figure only in conversionVolume", () => {
     const data = analytics({
       series: [nrAccount()],
       activity: {
@@ -115,6 +119,58 @@ describe("claimableYear", () => {
     });
     const result = claimableYear(data, 2026, new Set(["acct_nr"]), 0.4826, false, new Map());
     const row = result.lines.find((l) => l.treatment === "not-deductible");
-    expect(row?.amount).toBe(15);
+    expect(row?.amount).toBe(0);
+    expect(row?.conversionVolume).toBe(15);
+  });
+
+  test("the FX conversion volume never reaches any subtotal", () => {
+    const data = analytics({
+      series: [nrAccount()],
+      statedFees: { "2026-01": { acct_nr: 10 } },
+      activity: {
+        "2026-01": {
+          acct_nr: {
+            dividends: 0,
+            interest: 0,
+            lendingIncome: 0,
+            withholdingTax: 0,
+            fees: 0,
+            fxConversions: 1,
+            fxConversionAmount: 5590.06,
+          },
+        },
+      },
+    });
+    const result = claimableYear(
+      data,
+      2026,
+      new Set(["acct_nr"]),
+      0.4826,
+      false,
+      new Map([["acct_nr", 27.95]]),
+    );
+    expect(result.deductionsTotal).toBe(10);
+    expect(result.creditsTotal).toBe(27.95);
+    const totalOfAllLines = result.lines.reduce((sum, l) => sum + l.amount, 0);
+    expect(totalOfAllLines).toBeCloseTo(10 + 27.95, 6);
+  });
+
+  test("corporate deduction and credit lines read their form/line off the same constants the tax-picture tiles use", () => {
+    const data = analytics({
+      series: [corpAccount()],
+      statedFees: { "2026-01": { acct_corp: 115.84 } },
+    });
+    const result = claimableYear(
+      data,
+      2026,
+      new Set(["acct_corp"]),
+      0.5017,
+      true,
+      new Map([["acct_corp", 48]]),
+    );
+    const deduction = result.lines.find((l) => l.treatment === "carrying-charge");
+    const credit = result.lines.find((l) => l.treatment === "foreign-tax-credit");
+    expect(deduction?.form).toBe(CORPORATE_DEDUCTION_FORM);
+    expect(credit?.form).toBe(CORPORATE_CREDIT_FORM);
   });
 });

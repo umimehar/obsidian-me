@@ -153,6 +153,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       personalHoldings: {
         period: "",
@@ -162,6 +163,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       corporateHoldings: {
         period: "",
@@ -171,6 +173,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
     };
 
@@ -219,6 +222,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       personalHoldings: {
         period: "",
@@ -228,6 +232,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       corporateHoldings: {
         period: "",
@@ -237,6 +242,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
     };
 
@@ -293,6 +299,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       personalHoldings: {
         period: "",
@@ -302,6 +309,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       corporateHoldings: {
         period: "",
@@ -311,6 +319,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
     };
 
@@ -368,6 +377,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       personalHoldings: {
         period: "",
@@ -377,6 +387,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       corporateHoldings: {
         period: "",
@@ -386,6 +397,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
     };
 
@@ -422,6 +434,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       personalHoldings: {
         period: "",
@@ -431,6 +444,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
       corporateHoldings: {
         period: "",
@@ -440,6 +454,7 @@ describe("monthReview, over a fixture", () => {
         currency: { CAD: 0, USD: 0 },
         assetClasses: [],
         behind: [],
+        cashByAccount: {},
       },
     };
     expect(reviewPeriods(analytics)).toEqual(["2026-07", "2026-06"]);

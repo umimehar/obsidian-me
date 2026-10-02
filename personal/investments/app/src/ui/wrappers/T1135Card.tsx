@@ -2,7 +2,8 @@ import { Badge, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import type { ForeignPropertySummary } from "../../analytics/foreignProperty";
 import { t1135ThresholdStatus } from "../../analytics/foreignProperty";
 import type { T1135Thresholds } from "../../tax";
-import { formatCurrency } from "../format";
+import { ShareBar } from "../ShareBar";
+import { formatCurrency, formatShare } from "../format";
 
 export interface T1135CardProps {
   summary: ForeignPropertySummary;
@@ -18,8 +19,9 @@ export interface T1135CardProps {
  */
 export function T1135Card({ summary, thresholds }: T1135CardProps) {
   const status = t1135ThresholdStatus(summary.maxForeignCost, thresholds);
+  const share = summary.maxForeignCost / thresholds.filingThreshold;
   return (
-    <Card data-t1135-card="">
+    <Card data-t1135-card="" id="t1135-foreign-property">
       <Flex direction="column" gap="2">
         <Heading size="4" as="h3">
           T1135 foreign property
@@ -37,6 +39,10 @@ export function T1135Card({ summary, thresholds }: T1135CardProps) {
         <Text size="2" data-t1135-year-end="">
           At year end: <Text weight="bold">{formatCurrency(summary.yearEndForeignCost)}</Text>
         </Text>
+        <Text size="2" data-t1135-share="">
+          {formatShare(share)} of the {formatCurrency(thresholds.filingThreshold)} filing threshold.
+        </Text>
+        <ShareBar label="Foreign property against the filing threshold" share={share} />
         <Flex gap="2" wrap="wrap">
           <Badge
             color={status.filingThresholdExceeded ? "red" : "jade"}
@@ -59,14 +65,14 @@ export function T1135Card({ summary, thresholds }: T1135CardProps) {
         </Flex>
         {summary.cryptoCostAtYearEnd > 0 ? (
           <Text size="2" color="gray" data-t1135-crypto="">
-            Crypto cost at year end {formatCurrency(summary.cryptoCostAtYearEnd)} -- unclear, ask
-            the accountant whether this counts as specified foreign property.
+            Crypto cost at year end {formatCurrency(summary.cryptoCostAtYearEnd)}: unclear, ask the
+            accountant whether this counts as specified foreign property.
           </Text>
         ) : null}
         {summary.unclassifiedCostAtYearEnd > 0 ? (
           <Text size="2" color="gray" data-t1135-unclassified="">
             {formatCurrency(summary.unclassifiedCostAtYearEnd)} of holdings at year end are not yet
-            classified Canadian or foreign -- never guessed, excluded from the figures above until
+            classified Canadian or foreign: never guessed, excluded from the figures above until
             reviewed.
           </Text>
         ) : null}

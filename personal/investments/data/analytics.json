@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-10-02T04:28:36.319Z",
+    "generated": "2026-10-02T05:20:48.276Z",
     "datastoreGenerated": "2026-09-27T02:23:09.416Z",
     "accountCount": 15
   },
@@ -17534,7 +17534,20 @@
         "value": 1707.52
       }
     ],
-    "behind": []
+    "behind": [],
+    "cashByAccount": {
+      "acct_1f9a1df3": 481.54,
+      "acct_231879ac": 500.01,
+      "acct_2c620d2b": 2334.07,
+      "acct_8297de15": 53.37,
+      "acct_91b82482": 123.14,
+      "acct_97100dd9": 19.12,
+      "acct_c2e9345e": 1200,
+      "acct_d6d9fb4a": 28.72,
+      "acct_d77c33c7": 0.08,
+      "acct_e2d627ff": 0,
+      "acct_e2ec057d": 0.01
+    }
   },
   "personalHoldings": {
     "period": "2026-08",
@@ -22310,7 +22323,12 @@
         "value": 1707.52
       }
     ],
-    "behind": []
+    "behind": [],
+    "cashByAccount": {
+      "acct_1f9a1df3": 481.54,
+      "acct_2c620d2b": 2334.07,
+      "acct_e2d627ff": 0
+    }
   },
   "corporateHoldings": {
     "period": "2026-08",
@@ -22461,7 +22479,11 @@
         "value": 176.51
       }
     ],
-    "behind": []
+    "behind": [],
+    "cashByAccount": {
+      "acct_8297de15": 53.37,
+      "acct_91b82482": 123.14
+    }
   },
   "superficialLoss": {
     "2023": [],

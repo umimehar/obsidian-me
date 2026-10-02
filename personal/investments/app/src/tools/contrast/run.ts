@@ -348,56 +348,144 @@ async function sweepLenses(
   }
 }
 
-async function sweepTheme(
-  browser: Browser,
-  url: string,
-  theme: Theme,
-): Promise<{
+/**
+ * The Non-registered and Corporate tabs' own holdings groups, realized-gains
+ * ledger and superficial-loss "rest" disclosure all render as native
+ * `<details>`, closed by default -- exactly the state a sighted reader opens
+ * by clicking, and exactly the state a sweep that only ever reads the
+ * closed page never reaches. An unopened `<details>` yields no sample, no
+ * sample yields no failure, and that is indistinguishable from a pass.
+ *
+ * Opens every closed `<details>` on the current tab via its own `open`
+ * property -- the same effect a click on `<summary>` has -- and sweeps the
+ * result as one state. Returns how many were opened, so the caller can tell
+ * a tab with no disclosures at all from one whose disclosures silently
+ * stopped rendering.
+ */
+async function sweepExpanders(
+  page: Page,
+  at: { tab: string; theme: Theme },
+  samples: Sample[],
+): Promise<number> {
+  const opened = await page.evaluate(() => {
+    const closed = [...document.querySelectorAll("details:not([open])")] as HTMLDetailsElement[];
+    for (const details of closed) details.open = true;
+    return closed.length;
+  });
+  if (opened > 0) {
+    await page.waitForTimeout(50);
+    await sweepState(page, { ...at, state: "expanded" }, samples);
+  }
+  return opened;
+}
+
+const EXPANDER_TABS: readonly string[] = ["nonRegistered", "corporate"];
+
+interface SweepAccumulators {
   samples: Sample[];
   problems: string[];
-  hovered: number;
   lensesSwept: Set<string>;
   tonesSwept: Set<string>;
   chartModesSwept: Set<string>;
-}> {
+  expandersSwept: Set<string>;
+  hovered: number;
+}
+
+/** One tab's full sweep: default state, lenses/return chart (portfolio only), expanders, and hovers. */
+async function sweepOneTab(
+  page: Page,
+  tab: string,
+  theme: Theme,
+  acc: SweepAccumulators,
+): Promise<void> {
+  await showTab(page, tab);
+  const found = await sweepState(page, { tab, theme, state: "default" }, acc.samples);
+  if (found < MIN_RUNS_PER_TAB) {
+    acc.problems.push(`${theme}/${tab} swept only ${found} runs of text; the tab is empty`);
+  }
+
+  if (tab === "portfolio") {
+    await sweepLenses(page, { tab, theme }, acc.samples, acc.problems, acc.lensesSwept);
+  }
+
+  const expanded = await sweepExpanders(page, { tab, theme }, acc.samples);
+  if (expanded > 0) acc.expandersSwept.add(tab);
+
+  acc.hovered += await sweepHovers(page, { tab, theme }, acc.samples, acc.problems, acc.tonesSwept);
+
+  if (tab === "portfolio") {
+    const swept = await sweepReturnChart(page, { tab, theme }, acc.samples, acc.tonesSwept);
+    if (swept) acc.chartModesSwept.add(RETURN_MODE);
+    else
+      acc.problems.push(`${theme}/${tab} the ${RETURN_MODE} chart never became the selected one`);
+    acc.hovered += swept ? 1 : 0;
+  }
+}
+
+async function sweepTheme(browser: Browser, url: string, theme: Theme): Promise<SweepAccumulators> {
   // Always a light OS preference, so `inherit` and the toggle behave the same
   // way in both passes and `applyTheme` needs at most one click.
   const context = await browser.newContext({ colorScheme: "light", reducedMotion: "reduce" });
-  const samples: Sample[] = [];
-  const problems: string[] = [];
-  const lensesSwept = new Set<string>();
-  const tonesSwept = new Set<string>();
-  const chartModesSwept = new Set<string>();
-  let hovered = 0;
+  const acc: SweepAccumulators = {
+    samples: [],
+    problems: [],
+    lensesSwept: new Set<string>(),
+    tonesSwept: new Set<string>(),
+    chartModesSwept: new Set<string>(),
+    expandersSwept: new Set<string>(),
+    hovered: 0,
+  };
   try {
     const page = await context.newPage();
     await page.goto(url, { waitUntil: "networkidle" });
     await applyTheme(page, theme);
-    for (const tab of TABS) {
-      await showTab(page, tab);
-      const found = await sweepState(page, { tab, theme, state: "default" }, samples);
-      if (found < MIN_RUNS_PER_TAB) {
-        problems.push(`${theme}/${tab} swept only ${found} runs of text; the tab is empty`);
-      }
-
-      if (tab === "portfolio") {
-        await sweepLenses(page, { tab, theme }, samples, problems, lensesSwept);
-      }
-
-      hovered += await sweepHovers(page, { tab, theme }, samples, problems, tonesSwept);
-
-      if (tab === "portfolio") {
-        const swept = await sweepReturnChart(page, { tab, theme }, samples, tonesSwept);
-        if (swept) chartModesSwept.add(RETURN_MODE);
-        else
-          problems.push(`${theme}/${tab} the ${RETURN_MODE} chart never became the selected one`);
-        hovered += swept ? 1 : 0;
-      }
-    }
+    for (const tab of TABS) await sweepOneTab(page, tab, theme, acc);
   } finally {
     await context.close();
   }
-  return { samples, problems, hovered, lensesSwept, tonesSwept, chartModesSwept };
+  return acc;
+}
+
+/**
+ * The guards against this gate going blind again: each checks one state that
+ * yields no sample (and so no failure) when the thing driving it silently
+ * stops working -- a hover path, a lens, a chart mode, a tone, an expander.
+ */
+function coverageProblems(totals: {
+  hovered: number;
+  lensesSwept: ReadonlySet<string>;
+  chartModesSwept: ReadonlySet<string>;
+  tonesSwept: ReadonlySet<string>;
+  expandersSwept: ReadonlySet<string>;
+}): string[] {
+  const problems: string[] = [];
+  if (totals.hovered === 0) {
+    problems.push(
+      "no chart readout was measured anywhere in the run; the hover sweep reached nothing",
+    );
+  }
+  const missedLenses = EXTRA_LENSES.filter((lens) => !totals.lensesSwept.has(lens));
+  if (missedLenses.length > 0) {
+    problems.push(`overview lenses never swept: ${missedLenses.join(", ")}`);
+  }
+  if (!totals.chartModesSwept.has(RETURN_MODE)) {
+    problems.push(
+      `the ${RETURN_MODE} chart was never swept, so its axis, line and readout are unmeasured`,
+    );
+  }
+  const untoned = TONES.filter((tone) => !totals.tonesSwept.has(tone));
+  if (untoned.length > 0) {
+    problems.push(
+      `readout tones never rendered, so their contrast is unmeasured: ${untoned.join(", ")}`,
+    );
+  }
+  const missedExpanders = EXPANDER_TABS.filter((tab) => !totals.expandersSwept.has(tab));
+  if (missedExpanders.length > 0) {
+    problems.push(
+      `no expander was ever opened on: ${missedExpanders.join(", ")}; their disclosed content is unmeasured`,
+    );
+  }
+  return problems;
 }
 
 async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
@@ -410,6 +498,7 @@ async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
   const lensesSwept = new Set<string>();
   const tonesSwept = new Set<string>();
   const chartModesSwept = new Set<string>();
+  const expandersSwept = new Set<string>();
   let hovered = 0;
   try {
     const url = server.resolvedUrls?.local[0];
@@ -422,43 +511,16 @@ async function sweep(): Promise<{ samples: Sample[]; problems: string[] }> {
       for (const lens of swept.lensesSwept) lensesSwept.add(lens);
       for (const tone of swept.tonesSwept) tonesSwept.add(tone);
       for (const mode of swept.chartModesSwept) chartModesSwept.add(mode);
+      for (const tab of swept.expandersSwept) expandersSwept.add(tab);
     }
   } finally {
     await browser.close();
     await server.close();
   }
 
-  // The guard against this gate going blind again. It reported AA pass for a
-  // whole build phase while never once measuring a tooltip, because it never
-  // hovered: an unvisited state yields no sample, no sample yields no failure,
-  // and no failure reads exactly like a pass. If the hover path silently stops
-  // working -- a renamed hook, a changed selector, a chart that no longer
-  // takes a cursor -- this says so instead of quietly passing.
-  if (hovered === 0) {
-    problems.push(
-      "no chart readout was measured anywhere in the run; the hover sweep reached nothing",
-    );
-  }
-  const missed = EXTRA_LENSES.filter((lens) => !lensesSwept.has(lens));
-  if (missed.length > 0) {
-    problems.push(`overview lenses never swept: ${missed.join(", ")}`);
-  }
-  // The same failure the lens guard catches, one level down. A readout paints
-  // a gain green and a loss red, and a run that hovered only gaining months
-  // measured one of those two colours and called the sweep clean. The corpus
-  // holds both, so both must appear; if a future corpus genuinely holds no
-  // loss, this fails loudly and says so rather than going quietly unmeasured.
-  if (!chartModesSwept.has(RETURN_MODE)) {
-    problems.push(
-      `the ${RETURN_MODE} chart was never swept, so its axis, line and readout are unmeasured`,
-    );
-  }
-  const untoned = TONES.filter((tone) => !tonesSwept.has(tone));
-  if (untoned.length > 0) {
-    problems.push(
-      `readout tones never rendered, so their contrast is unmeasured: ${untoned.join(", ")}`,
-    );
-  }
+  problems.push(
+    ...coverageProblems({ hovered, lensesSwept, chartModesSwept, tonesSwept, expandersSwept }),
+  );
   return { samples, problems };
 }
 

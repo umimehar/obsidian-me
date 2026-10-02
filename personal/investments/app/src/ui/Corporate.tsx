@@ -1,4 +1,4 @@
-import { Badge, Card, Flex, Heading, Table, Text } from "@radix-ui/themes";
+import { Flex } from "@radix-ui/themes";
 import { CORPORATE_KINDS, accountIdsOfKind } from "../analytics/accountScopes";
 import type { AnalyticsOutput } from "../analytics/build";
 import { claimableYear } from "../analytics/claimable";
@@ -8,6 +8,13 @@ import type { TaxTable } from "../tax";
 import { taxYear } from "../tax";
 import { formatCurrency } from "./format";
 import type { YearScope } from "./scope";
+import { AccountsSummary } from "./tax/AccountsSummary";
+import { TaxHeader } from "./tax/Header";
+import { CorporateHistory } from "./tax/History";
+import { NeedsAttention } from "./tax/NeedsAttention";
+import { CorporateTaxPicture } from "./tax/TaxPicture";
+import { attentionItems } from "./tax/summaries";
+import { corporateTaxTiles } from "./tax/tiles";
 import { Claimable } from "./wrappers/Claimable";
 import { T1135Card } from "./wrappers/T1135Card";
 import { TaxableHoldings } from "./wrappers/TaxableHoldings";
@@ -19,149 +26,17 @@ export interface CorporateProps {
   taxTable: TaxTable;
 }
 
-/** Holdings that paid no distributions over the year -- derived from the year's activity, never a hardcoded list (e.g. HXQ, HXS are corporate-class funds that accrue internally rather than distribute). */
-function noDistributionSymbols(analytics: AnalyticsOutput, year: number): Set<string> {
-  const held = new Set(analytics.corporateHoldings.holdings.map((h) => h.symbol));
-  const dividendPayers = new Set<string>();
-  for (const [period, byAccount] of Object.entries(analytics.activity)) {
-    if (Number(period.slice(0, 4)) !== year) continue;
-    for (const totals of Object.values(byAccount)) {
-      if (totals.dividends !== 0) dividendPayers.add(period);
-    }
-  }
-  // Activity totals do not carry per-symbol dividends, so this can only
-  // name an account-month, not a symbol -- the per-row dividend/holding
-  // join `income.ts` does internally is not exposed at this grain. Flagging
-  // a held symbol as "no distributions" is therefore limited to the case
-  // where the whole corpus paid nothing at all this year.
-  return dividendPayers.size === 0 ? held : new Set();
-}
-
-function PassiveIncomeCard({
-  year,
-  passive,
-}: {
-  year: number;
-  passive: ReturnType<typeof passiveIncomeYear>;
-}) {
-  return (
-    <Card data-passive-income="">
-      <Flex direction="column" gap="2">
-        <Heading size="4" as="h3">
-          Passive income, fiscal {year}
-        </Heading>
-        <Text size="2" data-aaii="">
-          Adjusted aggregate investment income:{" "}
-          <Text weight="bold">{formatCurrency(passive.aaii)}</Text>
-        </Text>
-        <Flex gap="2" wrap="wrap">
-          <Badge color={passive.aaii > 50000 ? "amber" : "jade"} variant="soft" highContrast>
-            {passive.aaii > 50000 ? "Over" : "Under"} $50,000
-          </Badge>
-          <Badge color={passive.sbdEliminated ? "red" : "jade"} variant="soft" highContrast>
-            {passive.sbdEliminated ? "Over" : "Under"} $150,000
-          </Badge>
-        </Flex>
-        <Text size="2" data-sbd-grind="">
-          Small business deduction grind: {formatCurrency(passive.grind)} of the $500,000 limit
-          (estimate, from statements, not the T2)
-        </Text>
-        <Text size="1" color="gray">
-          Interest and foreign income {formatCurrency(passive.interestAndForeignTaxable)} taxed at
-          the passive rate; Canadian eligible dividends route through Part IV tax instead.
-        </Text>
-      </Flex>
-    </Card>
-  );
-}
-
-function TreatmentCard({
-  year,
-  passive,
-}: {
-  year: number;
-  passive: ReturnType<typeof passiveIncomeYear>;
-}) {
-  return (
-    <Card data-treatment-lines="">
-      <Flex direction="column" gap="2">
-        <Heading size="4" as="h3">
-          Treatment, fiscal {year} (estimates from statements, not the T2)
-        </Heading>
-        <Text size="2" data-nerdtoh-added="">
-          Interest and foreign income added to non-eligible RDTOH:{" "}
-          {formatCurrency(passive.nerdtohAdded)}
-        </Text>
-        <Text size="2" data-part-iv-tax="">
-          Canadian eligible dividends, Part IV tax (38.33%): {formatCurrency(passive.partIVTax)},
-          added to eligible RDTOH
-        </Text>
-        <Text size="2" data-cda-addition="">
-          Capital dividend account addition (non-taxable half of net realized gains, net of losses):{" "}
-          {formatCurrency(passive.cdaAddition)}
-        </Text>
-      </Flex>
-    </Card>
-  );
-}
-
-function RunningAccountsTable({
-  rows,
-}: {
-  rows: ReturnType<typeof runningCapitalAccounts>;
-}) {
-  return (
-    <Flex direction="column" gap="2">
-      <Heading size="4" as="h3">
-        Running CDA and RDTOH (estimates)
-      </Heading>
-      <Table.Root data-running-accounts-table="" variant="surface">
-        <Table.Header>
-          <Table.Row>
-            <Table.ColumnHeaderCell>Fiscal year</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>CDA balance</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Non-eligible RDTOH</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Eligible RDTOH</Table.ColumnHeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {rows.map((row) => (
-            <Table.Row key={row.year} data-running-accounts-row={row.year}>
-              <Table.RowHeaderCell>{row.year}</Table.RowHeaderCell>
-              <Table.Cell>{formatCurrency(row.cdaBalance)}</Table.Cell>
-              <Table.Cell>{formatCurrency(row.nerdtohBalance)}</Table.Cell>
-              <Table.Cell>{formatCurrency(row.eligibleRdtohBalance)}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
-    </Flex>
-  );
-}
-
-function NoDistributionsNote({ symbols }: { symbols: ReadonlySet<string> }) {
-  if (symbols.size === 0) return null;
-  return (
-    <Text size="2" color="gray" data-no-distributions="">
-      No distributions this year from: {[...symbols].filter(Boolean).sort().join(", ")}
-    </Text>
-  );
-}
-
-function headingFor(year: number, scope: YearScope): string {
-  return scope === "all" ? `Corporate, latest year ${year}` : `Corporate, ${year}`;
-}
-
 /**
- * The corporation's own tab: holdings, passive income against the AAII
- * thresholds, treatment lines (nERDTOH, Part IV tax, CDA addition), running
- * CDA/RDTOH estimates across years, claimable items and the corporation's
- * own T1135 -- a separate taxpayer from the owner, so a separate summary.
+ * The corporation's own tax tab -- a separate taxpayer from the owner, same
+ * four-question ordering as `NonRegistered`: what to report, what needs
+ * action, how the accounts are doing, and the detail behind any number.
  */
 export function Corporate({ analytics, year, scope, taxTable }: CorporateProps) {
   const income = analytics.corporateIncome[String(year)];
   const rates = taxYear(taxTable, year);
+  const corporateAccounts = analytics.series.filter((a) => CORPORATE_KINDS.has(a.kind));
   const corporateIds = accountIdsOfKind(analytics.series, CORPORATE_KINDS);
+  const labelById = new Map(corporateAccounts.map((a) => [a.maskedId, a.label]));
   const foreignTaxByAccount = new Map(
     withholdingByAccount(analytics, year)
       .filter((w) => corporateIds.has(w.maskedId))
@@ -194,40 +69,70 @@ export function Corporate({ analytics, year, scope, taxTable }: CorporateProps) 
   const runningRows = runningCapitalAccounts(validPassiveYears);
   const thisYearPassive = validPassiveYears.find((p) => p.year === year) ?? null;
 
+  const kindById = new Map(analytics.series.map((a) => [a.maskedId, a.kind]));
+  const attention = attentionItems({
+    superficialLoss: [],
+    harvest: [],
+    t1135MaxCost: foreignProperty?.maxForeignCost ?? null,
+    t1135FilingThreshold: rates?.t1135.filingThreshold ?? null,
+    labelById,
+    kindById,
+    formatCurrency,
+  });
+
   return (
-    <Flex direction="column" gap="6">
-      <Heading size="5" as="h2">
-        {headingFor(year, scope)}
-      </Heading>
-
-      <TaxableHoldings holdings={analytics.corporateHoldings} harvestRates={null} />
-      <NoDistributionsNote symbols={noDistributionSymbols(analytics, year)} />
-
-      {income === undefined ? (
-        <Text size="2" color="gray" data-no-income="">
-          No income data for {year}.
-        </Text>
-      ) : rates === null ? (
-        <Text size="2" color="gray" data-rates-not-entered="">
-          Tax rates for {year} are not entered yet in data/tax.json. Income figures still show;
-          AAII, passive-rate and CDA/RDTOH figures do not.
-        </Text>
-      ) : null}
+    <Flex direction="column" gap="5">
+      <TaxHeader
+        title="Corporate"
+        year={year}
+        scope={scope}
+        accountLabels={corporateAccounts.map((a) => a.label)}
+        latestPeriod={analytics.corporateHoldings.period}
+      />
 
       {thisYearPassive !== null ? (
-        <>
-          <PassiveIncomeCard year={year} passive={thisYearPassive} />
-          <TreatmentCard year={year} passive={thisYearPassive} />
-        </>
+        <CorporateTaxPicture
+          year={year}
+          tiles={corporateTaxTiles(thisYearPassive, claimable)}
+          aaii={thisYearPassive.aaii}
+          sbdEliminated={thisYearPassive.sbdEliminated}
+        />
       ) : null}
 
-      {runningRows.length > 0 ? <RunningAccountsTable rows={runningRows} /> : null}
+      {income === undefined ? (
+        <p data-no-income="" style={{ color: "var(--gray-11)" }}>
+          No income data for {year}.
+        </p>
+      ) : rates === null ? (
+        <p data-rates-not-entered="" style={{ color: "var(--gray-11)" }}>
+          Tax rates for {year} are not entered yet in data/tax.json. Income figures still show;
+          AAII, passive-rate and CDA/RDTOH figures do not.
+        </p>
+      ) : null}
+
+      <NeedsAttention items={attention} year={year} />
+
+      <AccountsSummary accounts={corporateAccounts} holdings={analytics.corporateHoldings} />
+
+      <TaxableHoldings
+        holdings={analytics.corporateHoldings}
+        accounts={corporateAccounts}
+        harvestRates={null}
+      />
 
       {claimable !== null ? <Claimable year={claimable} /> : null}
 
       {foreignProperty !== undefined && rates !== null ? (
         <T1135Card summary={foreignProperty} thresholds={rates.t1135} />
       ) : null}
+
+      <CorporateHistory rows={runningRows} />
     </Flex>
   );
 }
+
+/** The two caveats this tab needs beyond the shared USD book-cost note -- passed to `App`'s `WithSummary` as `extraNotes`, so "About these numbers" renders once at the bottom rather than twice. */
+export const CORPORATE_NOTES: readonly string[] = [
+  'In Canada, identical property held in more than one of the corporation\'s own non-registered accounts shares one ACB pool across all of them: flagged as "pooled ACB" on its symbol.',
+  "AAII, the small business deduction grind, Part IV tax, RDTOH and the capital dividend account are all estimates built from statements, never the T2 filing figures.",
+];
