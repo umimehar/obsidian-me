@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated": "2026-10-02T03:42:27.948Z",
+    "generated": "2026-10-02T04:28:36.319Z",
     "datastoreGenerated": "2026-09-27T02:23:09.416Z",
     "accountCount": 15
   },
@@ -22479,9 +22479,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-04",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22497,9 +22497,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22515,9 +22515,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22533,11 +22533,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -22551,9 +22548,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22569,9 +22566,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22587,10 +22584,10 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
+          "date": "2025-11-19",
+          "maskedId": "acct_231879ac"
         }
       },
       {
@@ -22605,9 +22602,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22623,9 +22620,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22641,11 +22638,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -22659,9 +22653,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22677,9 +22671,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22695,9 +22689,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-04",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22713,9 +22707,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22731,11 +22725,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -22749,9 +22740,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22767,11 +22758,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -22785,9 +22773,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22803,9 +22791,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-04",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22821,11 +22809,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -22839,9 +22824,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22857,9 +22842,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-10",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22875,9 +22860,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22893,9 +22878,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-10",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22911,9 +22896,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-04",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22929,9 +22914,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22947,9 +22932,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -22965,11 +22950,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -22983,11 +22965,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23001,7 +22980,7 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2025-11-04",
           "maskedId": "acct_1f9a1df3"
@@ -23019,9 +22998,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23037,11 +23016,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23055,11 +23031,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23073,9 +23046,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23091,11 +23064,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23109,9 +23079,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23127,9 +23097,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-04",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23145,9 +23115,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23163,9 +23133,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23181,9 +23151,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23199,9 +23169,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23217,7 +23187,7 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
@@ -23235,9 +23205,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23253,9 +23223,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23271,11 +23241,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23289,9 +23256,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23307,9 +23274,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23325,9 +23292,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23343,9 +23310,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23361,9 +23328,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-04",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23379,11 +23346,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23397,7 +23361,7 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
@@ -23415,9 +23379,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-04",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23433,9 +23397,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23451,11 +23415,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23469,9 +23430,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23487,9 +23448,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23505,7 +23466,7 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -23520,9 +23481,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23538,9 +23499,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23556,11 +23517,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23574,9 +23532,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-04",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23592,9 +23550,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23610,7 +23568,7 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -23625,11 +23583,8 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23643,9 +23598,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23661,9 +23616,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-04",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23679,9 +23634,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23697,9 +23652,9 @@
         },
         "windowStart": "2025-10-04",
         "windowEnd": "2025-12-03",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23715,9 +23670,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23733,7 +23688,7 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-03",
           "maskedId": "acct_1f9a1df3"
@@ -23751,7 +23706,7 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-03",
           "maskedId": "acct_1f9a1df3"
@@ -23769,9 +23724,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23787,9 +23742,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23805,9 +23760,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23823,9 +23778,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-11-03",
+          "date": "2025-11-10",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23841,11 +23796,8 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23859,9 +23811,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23877,11 +23829,8 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23895,7 +23844,7 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-03",
           "maskedId": "acct_1f9a1df3"
@@ -23913,11 +23862,8 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -23931,9 +23877,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23949,9 +23895,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23967,9 +23913,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -23985,9 +23931,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24003,9 +23949,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24021,9 +23967,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24039,11 +23985,8 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24057,9 +24000,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-05",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24075,9 +24018,9 @@
         },
         "windowStart": "2025-10-05",
         "windowEnd": "2025-12-04",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-11-03",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24093,9 +24036,9 @@
         },
         "windowStart": "2025-10-06",
         "windowEnd": "2025-12-05",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-10",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24111,7 +24054,7 @@
         },
         "windowStart": "2025-10-06",
         "windowEnd": "2025-12-05",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-10-24",
           "maskedId": "acct_1f9a1df3"
@@ -24129,9 +24072,9 @@
         },
         "windowStart": "2025-10-06",
         "windowEnd": "2025-12-05",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-10",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24147,9 +24090,9 @@
         },
         "windowStart": "2025-10-06",
         "windowEnd": "2025-12-05",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24165,11 +24108,8 @@
         },
         "windowStart": "2025-10-06",
         "windowEnd": "2025-12-05",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24183,9 +24123,9 @@
         },
         "windowStart": "2025-10-06",
         "windowEnd": "2025-12-05",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-11-03",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24201,9 +24141,9 @@
         },
         "windowStart": "2025-10-06",
         "windowEnd": "2025-12-05",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24219,9 +24159,9 @@
         },
         "windowStart": "2025-10-06",
         "windowEnd": "2025-12-05",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2025-10-24",
+          "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24237,9 +24177,9 @@
         },
         "windowStart": "2025-10-07",
         "windowEnd": "2025-12-06",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-11-03",
+          "date": "2025-11-10",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24255,11 +24195,8 @@
         },
         "windowStart": "2025-10-07",
         "windowEnd": "2025-12-06",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24273,11 +24210,8 @@
         },
         "windowStart": "2025-10-07",
         "windowEnd": "2025-12-06",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24291,11 +24225,8 @@
         },
         "windowStart": "2025-10-07",
         "windowEnd": "2025-12-06",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24309,11 +24240,8 @@
         },
         "windowStart": "2025-10-07",
         "windowEnd": "2025-12-06",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24327,9 +24255,9 @@
         },
         "windowStart": "2025-10-07",
         "windowEnd": "2025-12-06",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-11-03",
+          "date": "2025-11-10",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -24345,11 +24273,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24363,11 +24288,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24381,11 +24303,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24399,11 +24318,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24417,11 +24333,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24435,11 +24348,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-05",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24453,11 +24363,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24471,11 +24378,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24489,11 +24393,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24507,11 +24408,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24525,11 +24423,8 @@
         },
         "windowStart": "2025-10-11",
         "windowEnd": "2025-12-10",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24543,7 +24438,7 @@
         },
         "windowStart": "2025-10-18",
         "windowEnd": "2025-12-17",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-10-24",
           "maskedId": "acct_1f9a1df3"
@@ -24561,7 +24456,7 @@
         },
         "windowStart": "2025-10-18",
         "windowEnd": "2025-12-17",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-10-24",
           "maskedId": "acct_1f9a1df3"
@@ -24579,11 +24474,8 @@
         },
         "windowStart": "2025-10-18",
         "windowEnd": "2025-12-17",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24597,7 +24489,7 @@
         },
         "windowStart": "2025-10-18",
         "windowEnd": "2025-12-17",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-10",
           "maskedId": "acct_1f9a1df3"
@@ -24615,7 +24507,7 @@
         },
         "windowStart": "2025-10-18",
         "windowEnd": "2025-12-17",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-10",
           "maskedId": "acct_1f9a1df3"
@@ -24633,11 +24525,8 @@
         },
         "windowStart": "2025-10-18",
         "windowEnd": "2025-12-17",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-10",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24651,11 +24540,8 @@
         },
         "windowStart": "2025-10-18",
         "windowEnd": "2025-12-17",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24669,11 +24555,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24687,11 +24570,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24705,11 +24585,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24723,11 +24600,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24741,11 +24615,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24759,11 +24630,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24777,11 +24645,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24795,11 +24660,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24813,11 +24675,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24831,11 +24690,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24849,11 +24705,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24867,11 +24720,8 @@
         },
         "windowStart": "2025-10-20",
         "windowEnd": "2025-12-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24885,11 +24735,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24903,11 +24750,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24921,11 +24765,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24939,11 +24780,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24957,11 +24795,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24975,11 +24810,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -24993,11 +24825,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25011,11 +24840,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25029,11 +24855,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25047,11 +24870,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25065,11 +24885,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25083,11 +24900,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25101,7 +24915,7 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-10",
           "maskedId": "acct_1f9a1df3"
@@ -25119,11 +24933,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25137,7 +24948,7 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-10-24",
           "maskedId": "acct_1f9a1df3"
@@ -25155,11 +24966,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25173,11 +24981,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25191,11 +24996,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25209,11 +25011,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25227,11 +25026,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25245,11 +25041,8 @@
         },
         "windowStart": "2025-10-21",
         "windowEnd": "2025-12-20",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25263,11 +25056,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25281,11 +25071,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25299,11 +25086,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25317,11 +25101,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25335,11 +25116,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-19",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25353,11 +25131,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25371,11 +25146,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25389,7 +25161,7 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-10-24",
           "maskedId": "acct_1f9a1df3"
@@ -25407,11 +25179,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25425,11 +25194,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25443,11 +25209,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25461,7 +25224,7 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-20",
           "maskedId": "acct_1f9a1df3"
@@ -25479,10 +25242,10 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
+          "date": "2025-11-24",
+          "maskedId": "acct_d6d9fb4a"
         }
       },
       {
@@ -25497,11 +25260,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25515,11 +25275,8 @@
         },
         "windowStart": "2025-10-22",
         "windowEnd": "2025-12-21",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-10-24",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25533,11 +25290,8 @@
         },
         "windowStart": "2025-10-25",
         "windowEnd": "2025-12-24",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25551,11 +25305,8 @@
         },
         "windowStart": "2025-10-25",
         "windowEnd": "2025-12-24",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25569,11 +25320,8 @@
         },
         "windowStart": "2025-10-25",
         "windowEnd": "2025-12-24",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-21",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25587,11 +25335,8 @@
         },
         "windowStart": "2025-10-25",
         "windowEnd": "2025-12-24",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-21",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25605,11 +25350,8 @@
         },
         "windowStart": "2025-10-25",
         "windowEnd": "2025-12-24",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-10",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25623,11 +25365,8 @@
         },
         "windowStart": "2025-10-25",
         "windowEnd": "2025-12-24",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25641,11 +25380,8 @@
         },
         "windowStart": "2025-10-25",
         "windowEnd": "2025-12-24",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25659,11 +25395,8 @@
         },
         "windowStart": "2025-10-25",
         "windowEnd": "2025-12-24",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25677,7 +25410,7 @@
         },
         "windowStart": "2025-10-25",
         "windowEnd": "2025-12-24",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-21",
           "maskedId": "acct_1f9a1df3"
@@ -25695,11 +25428,8 @@
         },
         "windowStart": "2025-10-26",
         "windowEnd": "2025-12-25",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-10",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25713,11 +25443,8 @@
         },
         "windowStart": "2025-10-26",
         "windowEnd": "2025-12-25",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25731,11 +25458,8 @@
         },
         "windowStart": "2025-10-26",
         "windowEnd": "2025-12-25",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-21",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25749,11 +25473,8 @@
         },
         "windowStart": "2025-10-26",
         "windowEnd": "2025-12-25",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-04",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25767,11 +25488,8 @@
         },
         "windowStart": "2025-10-26",
         "windowEnd": "2025-12-25",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25785,11 +25503,8 @@
         },
         "windowStart": "2025-10-26",
         "windowEnd": "2025-12-25",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25803,11 +25518,8 @@
         },
         "windowStart": "2025-10-26",
         "windowEnd": "2025-12-25",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25821,7 +25533,7 @@
         },
         "windowStart": "2025-10-27",
         "windowEnd": "2025-12-26",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-20",
           "maskedId": "acct_1f9a1df3"
@@ -25839,7 +25551,7 @@
         },
         "windowStart": "2025-10-27",
         "windowEnd": "2025-12-26",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-03",
           "maskedId": "acct_1f9a1df3"
@@ -25857,7 +25569,7 @@
         },
         "windowStart": "2025-10-27",
         "windowEnd": "2025-12-26",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
@@ -25875,11 +25587,8 @@
         },
         "windowStart": "2025-10-27",
         "windowEnd": "2025-12-26",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25893,11 +25602,8 @@
         },
         "windowStart": "2025-10-27",
         "windowEnd": "2025-12-26",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -25911,7 +25617,7 @@
         },
         "windowStart": "2025-10-27",
         "windowEnd": "2025-12-26",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-25",
           "maskedId": "acct_1f9a1df3"
@@ -25929,7 +25635,7 @@
         },
         "windowStart": "2025-10-27",
         "windowEnd": "2025-12-26",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-17",
           "maskedId": "acct_1f9a1df3"
@@ -25947,7 +25653,7 @@
         },
         "windowStart": "2025-10-27",
         "windowEnd": "2025-12-26",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2025-11-06",
           "maskedId": "acct_1f9a1df3"
@@ -25965,7 +25671,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-20",
           "maskedId": "acct_1f9a1df3"
@@ -25983,7 +25689,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-26",
           "maskedId": "acct_1f9a1df3"
@@ -26001,11 +25707,8 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-12-01",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26019,7 +25722,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-12-01",
           "maskedId": "acct_1f9a1df3"
@@ -26037,11 +25740,8 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-25",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26055,7 +25755,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26070,7 +25770,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-25",
           "maskedId": "acct_1f9a1df3"
@@ -26088,7 +25788,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-21",
           "maskedId": "acct_1f9a1df3"
@@ -26106,11 +25806,8 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-11-17",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26124,11 +25821,8 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-12-01",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26142,7 +25836,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26157,7 +25851,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26172,7 +25866,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26187,7 +25881,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26202,7 +25896,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26217,7 +25911,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2025-11-19",
           "maskedId": "acct_1f9a1df3"
@@ -26235,11 +25929,8 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2025-12-01",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26253,7 +25944,7 @@
         },
         "windowStart": "2025-11-15",
         "windowEnd": "2026-01-14",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       }
     ],
@@ -26270,7 +25961,7 @@
         },
         "windowStart": "2025-12-17",
         "windowEnd": "2026-02-15",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26285,7 +25976,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-16",
           "maskedId": "acct_1f9a1df3"
@@ -26303,7 +25994,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -26321,11 +26012,8 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26339,11 +26027,8 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26357,7 +26042,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -26375,7 +26060,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26390,7 +26075,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -26408,7 +26093,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26423,7 +26108,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-02-25",
           "maskedId": "acct_231879ac"
@@ -26441,11 +26126,8 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26459,11 +26141,8 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26477,7 +26156,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -26495,7 +26174,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -26513,7 +26192,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26528,7 +26207,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26543,7 +26222,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26558,11 +26237,8 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-02",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26576,11 +26252,8 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26594,7 +26267,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26609,11 +26282,8 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-02",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26627,11 +26297,8 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26645,7 +26312,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26660,11 +26327,8 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26678,7 +26342,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -26696,11 +26360,8 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26714,7 +26375,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26729,7 +26390,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26744,7 +26405,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26759,7 +26420,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26774,7 +26435,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-21",
           "maskedId": "acct_1f9a1df3"
@@ -26792,7 +26453,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -26810,7 +26471,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -26828,7 +26489,7 @@
         },
         "windowStart": "2025-12-31",
         "windowEnd": "2026-03-01",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -26846,11 +26507,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-16",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26864,11 +26522,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26882,11 +26537,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26900,7 +26552,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -26915,11 +26567,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-30",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26933,11 +26582,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-30",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26951,11 +26597,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26969,11 +26612,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -26987,7 +26627,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27002,7 +26642,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27017,7 +26657,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27032,11 +26672,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27050,11 +26687,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27068,7 +26702,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27083,11 +26717,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27101,7 +26732,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27116,7 +26747,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -27134,11 +26765,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27152,7 +26780,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27167,7 +26795,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -27185,11 +26813,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-03",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27203,11 +26828,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-30",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27221,7 +26843,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27236,11 +26858,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27254,7 +26873,7 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-14",
           "maskedId": "acct_d77c33c7"
@@ -27272,11 +26891,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27290,11 +26906,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27308,11 +26921,8 @@
         },
         "windowStart": "2026-01-06",
         "windowEnd": "2026-03-07",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27326,7 +26936,7 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -27344,7 +26954,7 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -27362,11 +26972,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27380,7 +26987,7 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2026-01-07",
           "maskedId": "acct_1f9a1df3"
@@ -27398,11 +27005,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27416,11 +27020,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27434,7 +27035,7 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-30",
           "maskedId": "acct_1f9a1df3"
@@ -27452,11 +27053,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27470,7 +27068,7 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27485,11 +27083,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27503,11 +27098,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27521,11 +27113,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27539,9 +27128,9 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2026-02-03",
+          "date": "2026-02-09",
           "maskedId": "acct_2c620d2b"
         }
       },
@@ -27557,11 +27146,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27575,7 +27161,7 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27590,11 +27176,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27608,7 +27191,7 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27623,11 +27206,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27641,11 +27221,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27659,11 +27236,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-05",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27677,7 +27251,7 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-14",
           "maskedId": "acct_d77c33c7"
@@ -27695,11 +27269,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-05",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27713,11 +27284,8 @@
         },
         "windowStart": "2026-01-07",
         "windowEnd": "2026-03-08",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-07",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27731,7 +27299,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2026-02-06",
           "maskedId": "acct_1f9a1df3"
@@ -27749,7 +27317,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27764,7 +27332,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27779,11 +27347,8 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-09",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27797,11 +27362,8 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27815,9 +27377,9 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2026-01-21",
+          "date": "2026-03-17",
           "maskedId": "acct_1f9a1df3"
         }
       },
@@ -27833,7 +27395,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-03-17",
           "maskedId": "acct_1f9a1df3"
@@ -27851,7 +27413,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27866,11 +27428,8 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27884,11 +27443,8 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-30",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -27902,7 +27458,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27917,7 +27473,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27932,7 +27488,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-02-05",
           "maskedId": "acct_1f9a1df3"
@@ -27950,7 +27506,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2026-02-05",
           "maskedId": "acct_1f9a1df3"
@@ -27968,7 +27524,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -27983,7 +27539,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": {
           "date": "2026-02-06",
           "maskedId": "acct_1f9a1df3"
@@ -28001,7 +27557,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-01-30",
           "maskedId": "acct_1f9a1df3"
@@ -28019,11 +27575,8 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-06",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28037,7 +27590,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-03-17",
           "maskedId": "acct_1f9a1df3"
@@ -28055,11 +27608,8 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-09",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28073,7 +27623,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28088,11 +27638,8 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-01-21",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28106,7 +27653,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-03-17",
           "maskedId": "acct_1f9a1df3"
@@ -28124,11 +27671,8 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-05",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28142,7 +27686,7 @@
         },
         "windowStart": "2026-01-18",
         "windowEnd": "2026-03-19",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-03-17",
           "maskedId": "acct_1f9a1df3"
@@ -28160,7 +27704,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28175,7 +27719,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28190,11 +27734,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-02",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28208,11 +27749,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-18",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28226,7 +27764,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28241,7 +27779,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28256,11 +27794,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-17",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28274,7 +27809,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28289,7 +27824,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28304,11 +27839,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-02",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28322,7 +27854,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28337,7 +27869,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-02-17",
           "maskedId": "acct_1f9a1df3"
@@ -28355,11 +27887,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-05",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28373,11 +27902,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-18",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28391,11 +27917,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-18",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28409,11 +27932,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-02",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28427,7 +27947,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28442,7 +27962,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28457,7 +27977,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28472,11 +27992,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-18",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28490,7 +28007,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28505,7 +28022,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28520,7 +28037,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28535,11 +28052,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-02",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28553,7 +28067,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28568,7 +28082,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28583,7 +28097,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28598,7 +28112,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28613,11 +28127,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-02-17",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28631,7 +28142,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28646,11 +28157,8 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-10",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28664,7 +28172,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28679,7 +28187,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28694,7 +28202,7 @@
         },
         "windowStart": "2026-02-11",
         "windowEnd": "2026-04-12",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28709,11 +28217,8 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-13",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28727,11 +28232,8 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-10",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28745,7 +28247,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28760,11 +28262,8 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-02",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28778,7 +28277,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28793,7 +28292,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28808,11 +28307,8 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-13",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28826,7 +28322,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28841,7 +28337,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28856,7 +28352,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28871,7 +28367,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28886,7 +28382,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28901,7 +28397,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28916,7 +28412,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28931,7 +28427,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28946,7 +28442,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -28961,11 +28457,8 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-02",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -28979,7 +28472,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-03-02",
           "maskedId": "acct_1f9a1df3"
@@ -28997,7 +28490,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29012,7 +28505,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29027,7 +28520,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-03-13",
           "maskedId": "acct_1f9a1df3"
@@ -29045,7 +28538,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29060,7 +28553,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29075,7 +28568,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29090,7 +28583,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29105,7 +28598,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-03-13",
           "maskedId": "acct_1f9a1df3"
@@ -29123,7 +28616,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-03-10",
           "maskedId": "acct_1f9a1df3"
@@ -29141,7 +28634,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29156,7 +28649,7 @@
         },
         "windowStart": "2026-02-21",
         "windowEnd": "2026-04-22",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29171,7 +28664,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29186,11 +28679,8 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-05",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -29204,7 +28694,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29219,7 +28709,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29234,7 +28724,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29249,11 +28739,8 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-23",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -29267,7 +28754,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29282,7 +28769,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29297,7 +28784,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29312,7 +28799,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29327,7 +28814,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29342,7 +28829,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29357,7 +28844,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29372,11 +28859,8 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-13",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -29390,7 +28874,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29405,11 +28889,8 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-23",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -29423,7 +28904,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-03-13",
           "maskedId": "acct_1f9a1df3"
@@ -29441,7 +28922,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29456,7 +28937,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29471,7 +28952,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29486,11 +28967,8 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-02",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -29504,7 +28982,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29519,7 +28997,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-03-23",
           "maskedId": "acct_1f9a1df3"
@@ -29537,7 +29015,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29552,10 +29030,10 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
-          "date": "2026-03-13",
-          "maskedId": "acct_1f9a1df3"
+          "date": "2026-04-13",
+          "maskedId": "acct_2c620d2b"
         }
       },
       {
@@ -29570,7 +29048,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29585,7 +29063,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29600,7 +29078,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29615,11 +29093,8 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
-        "matchedBuy": {
-          "date": "2026-03-23",
-          "maskedId": "acct_1f9a1df3"
-        }
+        "status": "clear",
+        "matchedBuy": null
       },
       {
         "sale": {
@@ -29633,7 +29108,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29648,7 +29123,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29663,7 +29138,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29678,7 +29153,7 @@
         },
         "windowStart": "2026-02-28",
         "windowEnd": "2026-04-29",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29693,7 +29168,7 @@
         },
         "windowStart": "2026-04-05",
         "windowEnd": "2026-06-04",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29708,7 +29183,7 @@
         },
         "windowStart": "2026-04-05",
         "windowEnd": "2026-06-04",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29723,7 +29198,7 @@
         },
         "windowStart": "2026-05-24",
         "windowEnd": "2026-07-23",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29738,7 +29213,7 @@
         },
         "windowStart": "2026-05-24",
         "windowEnd": "2026-07-23",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29753,7 +29228,7 @@
         },
         "windowStart": "2026-05-24",
         "windowEnd": "2026-07-23",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29768,7 +29243,7 @@
         },
         "windowStart": "2026-05-24",
         "windowEnd": "2026-07-23",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29783,7 +29258,7 @@
         },
         "windowStart": "2026-05-24",
         "windowEnd": "2026-07-23",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29798,7 +29273,7 @@
         },
         "windowStart": "2026-05-24",
         "windowEnd": "2026-07-23",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29813,7 +29288,7 @@
         },
         "windowStart": "2026-05-24",
         "windowEnd": "2026-07-23",
-        "stillOpen": false,
+        "status": "clear",
         "matchedBuy": null
       },
       {
@@ -29828,7 +29303,7 @@
         },
         "windowStart": "2026-06-08",
         "windowEnd": "2026-08-07",
-        "stillOpen": false,
+        "status": "confirmed",
         "matchedBuy": {
           "date": "2026-07-16",
           "maskedId": "acct_1f9a1df3"
@@ -29855,19 +29330,19 @@
     },
     "2025": {
       "year": 2025,
-      "maxForeignCost": 20873.450806854802,
-      "yearEndForeignCost": 20873.450806854802,
+      "maxForeignCost": 15229.425657999998,
+      "yearEndForeignCost": 15229.425657999998,
       "monthsConsidered": 3,
       "cryptoCostAtYearEnd": 0,
       "unclassifiedCostAtYearEnd": 0
     },
     "2026": {
       "year": 2026,
-      "maxForeignCost": 49076.44265707999,
-      "yearEndForeignCost": 47281.12062239078,
+      "maxForeignCost": 34661.59740999999,
+      "yearEndForeignCost": 34165.69453799999,
       "monthsConsidered": 8,
-      "cryptoCostAtYearEnd": 1632.8110000000001,
-      "unclassifiedCostAtYearEnd": 8658.99
+      "cryptoCostAtYearEnd": 1310,
+      "unclassifiedCostAtYearEnd": 0
     }
   },
   "foreignPropertyCorporate": {
@@ -29897,11 +29372,11 @@
     },
     "2026": {
       "year": 2026,
-      "maxForeignCost": 52365.65616600001,
-      "yearEndForeignCost": 52365.65616600001,
+      "maxForeignCost": 37765.51,
+      "yearEndForeignCost": 37765.51,
       "monthsConsidered": 8,
       "cryptoCostAtYearEnd": 0,
-      "unclassifiedCostAtYearEnd": 12493.62
+      "unclassifiedCostAtYearEnd": 0
     }
   }
 }

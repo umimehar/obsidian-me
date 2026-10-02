@@ -55,7 +55,7 @@ describe("the taxable tabs' goldens", () => {
 
   test("the superficial-loss watch's flagged count matches the golden", () => {
     const candidates = analytics.superficialLoss[String(year)] ?? [];
-    const flagged = candidates.filter((c) => c.stillOpen || c.matchedBuy !== null);
+    const flagged = candidates.filter((c) => c.status !== "clear");
     expect(flagged.length).toBe(GOLDENS.taxableTabs.personal.superficialLossFlaggedCount);
   });
 

@@ -1,36 +1,32 @@
 import { dedupeToLatestVersion } from "../statementVersion";
 import type { AccountKind } from "../store/mask";
-import type { Holding, Statement } from "../types";
-import { convertAmountToCad } from "./activity";
+import type { Currency, Statement } from "../types";
+import { type PricedSighting, pricedSightingsBySymbol, resolveCurrency } from "./holdings";
 import type { AccountSeries } from "./types";
 
 /**
- * Nothing this project parses carries a holding's listing exchange: the PDF
- * discloses a security's name, symbol, asset class and price currency, none
- * of which says where it trades. `HXQ.U` is the clearest proof a currency
- * cannot stand in for it -- a Canadian listed fund trading in USD units.
- *
- * So this is an owner-reviewed table, the same shape as `registry.ts`'s
- * `LABELS`/`PURPOSES`/`KIND_OVERRIDES`: a symbol the owner has actually
- * checked goes in one of the two sets below, and a symbol not reviewed
- * falls to `"unclassified"` in `classifyForeignProperty` rather than being
- * guessed from its price currency or asset class.
+ * Owner-confirmed overrides on top of the currency rule below -- a symbol
+ * that is Canadian or foreign REGARDLESS of its resolved price currency.
+ * `.U`-suffixed symbols never need listing here: the suffix check in
+ * `classifyForeignProperty` already covers every one of them (`HXQ.U`,
+ * `HXS.U`), the same rule `income.ts`'s `isUsdUnitClassOfCanadianEtf`
+ * encodes for dividend sourcing.
  */
 const CANADIAN_LISTED_SYMBOLS: ReadonlySet<string> = new Set([
   "VFV",
   "XEQT",
   "HXQ",
-  "HXQ.U",
   "HXS",
   "QQC",
   "CHPS",
 ]);
 
 /**
- * Securities the owner has confirmed trade on a foreign exchange, even
- * though the account holding them is at a Canadian broker. `CHPX` is the
- * US listed Global X Funds ETF, distinct from `CHPS` above (the Canadian
- * listed one) despite the one-letter difference in ticker.
+ * Securities the owner has confirmed trade on a foreign exchange even
+ * though their resolved price currency might otherwise mislead (or simply
+ * to record the fact explicitly). `CHPX` is the US listed Global X Funds
+ * ETF, distinct from `CHPS` above (the Canadian listed one) despite the
+ * one-letter difference in ticker.
  */
 const FOREIGN_LISTED_SYMBOLS: ReadonlySet<string> = new Set([
   "META",
@@ -45,25 +41,35 @@ const FOREIGN_LISTED_SYMBOLS: ReadonlySet<string> = new Set([
 export type ForeignPropertyClass = "canadian" | "foreign" | "unclassified";
 
 /**
- * One holding's T1135 classification. `"foreign"` for a symbol on
- * `FOREIGN_LISTED_SYMBOLS` or carrying a `.U`-suffixed Canadian unit class's
- * opposite -- a real US Equities asset class the statement itself states,
- * which direct indexing's many individual US tickers rely on since they
- * cannot practically be enumerated by symbol one at a time.
+ * One holding's T1135 classification: a CAD-priced security trades on a
+ * Canadian exchange and is Canadian property; a USD-priced one is foreign
+ * property -- that is the rule, not a guess, and it is why this project's
+ * long list of individual direct-indexing US tickers needs no per-symbol
+ * review at all. The owner tables above sit on top of it as overrides for
+ * the handful of symbols where the currency alone would mislead (a
+ * Canadian-listed USD unit class, or a US-exchange fund the owner has
+ * separately confirmed).
  *
- * `.U`-suffixed symbols are Canadian regardless of every other signal: the
- * fund itself is Canadian listed, trading in USD units, so `HXQ.U` lands
- * `"canadian"` even though its price currency is USD -- the same rule
- * `income.ts`'s `isUsdUnitClassOfCanadianEtf` already encodes for dividend
- * sourcing, applied here for the same reason.
+ * `resolvedCurrency` must be the CORRECTED currency `holdings.ts` already
+ * resolves (see `resolveCurrency`), never the raw `priceCurrency` field:
+ * some statements omit a holding's price and the parser defaults that row
+ * to `marketPrice: 0, priceCurrency: "CAD"`, which is not evidence the
+ * security is actually Canadian.
  */
-export function classifyForeignProperty(holding: Holding): ForeignPropertyClass {
-  if (holding.symbol.endsWith(".U") || CANADIAN_LISTED_SYMBOLS.has(holding.symbol)) {
-    return "canadian";
+export function classifyForeignProperty(
+  symbol: string,
+  resolvedCurrency: Currency,
+): ForeignPropertyClass {
+  if (symbol.endsWith(".U") || CANADIAN_LISTED_SYMBOLS.has(symbol)) return "canadian";
+  if (FOREIGN_LISTED_SYMBOLS.has(symbol)) return "foreign";
+  switch (resolvedCurrency) {
+    case "CAD":
+      return "canadian";
+    case "USD":
+      return "foreign";
+    default:
+      return "unclassified";
   }
-  if (FOREIGN_LISTED_SYMBOLS.has(holding.symbol)) return "foreign";
-  if (holding.assetClass.startsWith("US Equities")) return "foreign";
-  return "unclassified";
 }
 
 const REGISTERED_KINDS: ReadonlySet<AccountKind> = new Set([
@@ -87,29 +93,58 @@ interface MonthCost {
   unclassified: number;
 }
 
+/** A holding's resolved currency: the raw `priceCurrency`, corrected for the $0-price/CAD-default parser quirk via `resolveCurrency`, the same correction `holdings.ts` applies before it ever compares a currency. */
+function resolvedHoldingCurrency(
+  holding: { symbol: string; priceCurrency: Currency; marketPrice: number },
+  accountId: string,
+  period: string,
+  sightings: ReadonlyMap<string, readonly PricedSighting[]>,
+): Currency {
+  if (holding.marketPrice !== 0 || holding.priceCurrency !== "CAD") return holding.priceCurrency;
+  return resolveCurrency(sightings, holding.symbol, accountId, period, holding.priceCurrency);
+}
+
 /**
  * One statement's book cost, by `classifyForeignProperty` bucket, except a
  * `Crypto`-kind account's holdings, which are all routed to `crypto`
  * regardless of symbol -- CRA's treatment of cryptocurrency as specified
  * foreign property is genuinely unsettled, so this project never guesses
  * either way and surfaces it for the accountant instead.
+ *
+ * `Holding.bookCost` is read AS IS, never run through a further currency
+ * conversion: the parser already expresses it in CAD, converting at the
+ * statement's rate itself when the printed figure was tagged USD
+ * (`bookCostConverted`) and leaving it untouched when it was already
+ * printed in CAD. `priceCurrency` describes the PRICE, a separate fact
+ * from which currency the book-cost column itself was printed in, and
+ * converting `bookCost` a second time off `priceCurrency` double-converts
+ * every USD-priced holding whose cost column was already in CAD.
  */
-function statementCost(s: Statement, kind: AccountKind): MonthCost {
+function statementCost(
+  s: Statement,
+  kind: AccountKind,
+  sightings: ReadonlyMap<string, readonly PricedSighting[]>,
+): MonthCost {
   let canadian = 0;
   let foreign = 0;
   let crypto = 0;
   let unclassified = 0;
   for (const h of s.holdings) {
     if (h.bookCost === 0) continue;
-    const costCad = convertAmountToCad(h.bookCost, h.priceCurrency, s);
     if (kind === "Crypto") {
-      crypto += costCad;
+      crypto += h.bookCost;
       continue;
     }
-    const bucket = classifyForeignProperty(h);
-    if (bucket === "canadian") canadian += costCad;
-    else if (bucket === "foreign") foreign += costCad;
-    else unclassified += costCad;
+    const resolvedCurrency = resolvedHoldingCurrency(
+      h,
+      s.source.accountNo,
+      s.source.period,
+      sightings,
+    );
+    const bucket = classifyForeignProperty(h.symbol, resolvedCurrency);
+    if (bucket === "canadian") canadian += h.bookCost;
+    else if (bucket === "foreign") foreign += h.bookCost;
+    else unclassified += h.bookCost;
   }
   return { period: s.source.period, canadian, foreign, crypto, unclassified };
 }
@@ -150,10 +185,16 @@ export function t1135ThresholdStatus(
  * (personal non-registered, or `Corporate` -- registered wrappers and
  * Chequing are never in scope, since T1135 excludes registered accounts
  * and cash is not a specified foreign property). Cost amount, never market
- * value: the statement's own `bookCost`, converted to CAD, the figure the
- * form actually asks for. Computed at the build step, over raw statements
- * -- never in the browser -- the same rule every other statement-derived
- * figure in this project follows.
+ * value: the statement's own `bookCost`, already in CAD -- see
+ * `statementCost`'s own doc for why it is never converted a second time.
+ * Computed at the build step, over raw statements -- never in the browser
+ * -- the same rule every other statement-derived figure in this project
+ * follows.
+ *
+ * `sightings` is built over EVERY statement in the corpus, not only the
+ * scoped accounts: a symbol's true currency is a fact about the security,
+ * which a sighting in a different account or a different year can resolve
+ * exactly as well as one inside this call's own scope.
  */
 export function foreignPropertySummary(
   statements: readonly Statement[],
@@ -170,6 +211,7 @@ export function foreignPropertySummary(
   );
 
   const deduped = dedupeToLatestVersion(statements);
+  const sightings = pricedSightingsBySymbol(deduped);
   const months: MonthCost[] = [];
   for (const s of deduped) {
     if (s.source.template !== "BROKERAGE") continue;
@@ -177,7 +219,7 @@ export function foreignPropertySummary(
     if (periodYear(s.source.period) !== year) continue;
     const kind = kindByAccount.get(s.source.accountNo);
     if (kind === undefined) continue;
-    months.push(statementCost(s, kind));
+    months.push(statementCost(s, kind, sightings));
   }
 
   const byPeriod = new Map<string, MonthCost>();

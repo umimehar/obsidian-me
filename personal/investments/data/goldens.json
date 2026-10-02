@@ -695,10 +695,10 @@
       "interest": 0.02,
       "canadianDistributions": 90.82000000000001,
       "salesCount": 265,
-      "superficialLossFlaggedCount": 112,
+      "superficialLossFlaggedCount": 31,
       "claimableDeductionsTotal": 65.68,
       "claimableCreditsTotal": 27.953969999999995,
-      "t1135MaxForeignCost": 49076.44265707999
+      "t1135MaxForeignCost": 34661.59740999999
     },
     "corporate": {
       "realizedGains": 102.72368732516897,
@@ -711,7 +711,7 @@
       "nerdtohAdded": 151.74652445131466,
       "partIVTax": 47.264723,
       "claimableDeductionsTotal": 115.83999999999999,
-      "t1135MaxForeignCost": 52365.65616600001
+      "t1135MaxForeignCost": 37765.51
     }
   }
 }

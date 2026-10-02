@@ -2,8 +2,31 @@ import { Badge, Flex, Heading, Table, Text } from "@radix-ui/themes";
 import type { SuperficialLossCandidate } from "../../analytics/superficialLoss";
 import { formatCurrency } from "../format";
 
+function StatusBadge({ candidate }: { candidate: SuperficialLossCandidate }) {
+  const { status, matchedBuy } = candidate;
+  if (status === "confirmed") {
+    return (
+      <Badge color="red" variant="soft" highContrast data-superficial-loss-confirmed="">
+        Superficial -- replacement buy {matchedBuy?.date}
+      </Badge>
+    );
+  }
+  if (status === "pending") {
+    return (
+      <Badge color="amber" variant="soft" highContrast data-superficial-loss-pending="">
+        Pending -- window not settled yet
+      </Badge>
+    );
+  }
+  return (
+    <Text size="2" color="gray">
+      Clear
+    </Text>
+  );
+}
+
 function CandidateRow({ candidate }: { candidate: SuperficialLossCandidate }) {
-  const { sale, windowEnd, stillOpen, matchedBuy } = candidate;
+  const { sale, windowEnd } = candidate;
   return (
     <Table.Row data-superficial-loss-row={`${sale.maskedId}:${sale.symbol}:${sale.date}`}>
       <Table.RowHeaderCell>{sale.date}</Table.RowHeaderCell>
@@ -13,42 +36,36 @@ function CandidateRow({ candidate }: { candidate: SuperficialLossCandidate }) {
       </Table.Cell>
       <Table.Cell>{windowEnd}</Table.Cell>
       <Table.Cell>
-        {matchedBuy ? (
-          <Badge color="red" variant="soft" highContrast data-superficial-loss-matched="">
-            Replacement buy {matchedBuy.date}
-          </Badge>
-        ) : stillOpen ? (
-          <Badge color="amber" variant="soft" highContrast data-superficial-loss-open="">
-            Window still open
-          </Badge>
-        ) : (
-          <Text size="2" color="gray">
-            No replacement buy found
-          </Text>
-        )}
+        <StatusBadge candidate={candidate} />
       </Table.Cell>
     </Table.Row>
   );
 }
 
 /**
- * Every loss sale whose 30-day superficial-loss window is either still open
- * or matched a replacement buy -- see `superficialLoss.ts`. The denied
- * amount is never computed here: CRA's formula needs the replacement
- * shares still held at the window's end, which this project's statement
- * ledger cannot state as a filing figure, so this flags the sale and the
- * window and leaves the amount to the owner.
+ * Every loss sale the superficial-loss rule's two conditions have not yet
+ * cleared -- `"confirmed"` (a replacement acquisition landed in the
+ * window and identical property was still held at its end) or
+ * `"pending"` (a statement needed to settle one of the two conditions is
+ * not in the corpus yet) -- see `superficialLoss.ts`. A `"clear"` sale is
+ * left out entirely: the corpus has enough statements to rule it out, and
+ * showing it would just be noise.
+ *
+ * The denied amount is never computed here: CRA's formula needs the exact
+ * replacement shares still held, which a monthly statement cannot state
+ * precisely. This settles whether the loss is superficial at all and
+ * leaves the amount to the owner.
  */
 export function SuperficialLossWatch({
   candidates,
 }: {
   candidates: readonly SuperficialLossCandidate[];
 }) {
-  const flagged = candidates.filter((c) => c.stillOpen || c.matchedBuy !== null);
+  const flagged = candidates.filter((c) => c.status !== "clear");
   if (flagged.length === 0) {
     return (
       <Text size="2" color="gray" data-superficial-loss-empty="">
-        No loss sale this year has an open or matched 30-day window.
+        No loss sale this year is confirmed or pending superficial.
       </Text>
     );
   }

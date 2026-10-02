@@ -124,7 +124,7 @@ function addEntry(totals: Totals, input: EntryInput): void {
 }
 
 /** One symbol priced properly (`marketPrice > 0`) somewhere in the corpus: which account, which period, in which currency. */
-interface PricedSighting {
+export interface PricedSighting {
   accountId: string;
   period: string;
   currency: Currency;
@@ -136,7 +136,9 @@ interface PricedSighting {
  * symbol's true currency is a fact about the security, not about the one
  * statement that happened to omit its price.
  */
-function pricedSightingsBySymbol(statements: readonly Statement[]): Map<string, PricedSighting[]> {
+export function pricedSightingsBySymbol(
+  statements: readonly Statement[],
+): Map<string, PricedSighting[]> {
   const bySymbol = new Map<string, PricedSighting[]>();
   for (const statement of statements) {
     if (statement.source.template !== "BROKERAGE") continue;
@@ -168,7 +170,7 @@ function monthIndex(period: string): number {
  * different account regardless of period, and only ties are broken by
  * period: the same period first, then whichever is closest in time.
  */
-function resolveCurrency(
+export function resolveCurrency(
   sightings: ReadonlyMap<string, readonly PricedSighting[]>,
   symbol: string,
   accountId: string,

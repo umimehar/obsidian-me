@@ -347,9 +347,7 @@ function buildTaxableTabsGoldens(
       interest: personalIncome.interest,
       canadianDistributions: personalIncome.canadianDistributions,
       salesCount: personalIncome.sales.length,
-      superficialLossFlaggedCount: superficialLoss.filter(
-        (c) => c.stillOpen || c.matchedBuy !== null,
-      ).length,
+      superficialLossFlaggedCount: superficialLoss.filter((c) => c.status !== "clear").length,
       claimableDeductionsTotal: personalClaimable.deductionsTotal,
       claimableCreditsTotal: personalClaimable.creditsTotal,
       t1135MaxForeignCost: personalForeignProperty.maxForeignCost,
