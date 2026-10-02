@@ -20,5 +20,75 @@
       "by": "2042",
       "source": "Target is the RESP's $50,000 lifetime contribution cap. The 2042 year is cesgLastYear, DEFAULT_RESP_BIRTH_YEAR (2025) plus 17, a documented default rather than a confirmed beneficiary birth year."
     }
-  ]
+  ],
+  "strategy": {
+    "decided": "2026-10-01",
+    "directIndexing": {
+      "account": "Non-registered 1f9a",
+      "targets": [
+        { "sleeve": "U.S. Market Index", "share": 0.7 },
+        { "sleeve": "U.S. Innovation Index", "share": 0.3 }
+      ],
+      "fillTarget": 15250,
+      "note": "Filled by deposits only, never Rebalance now, so no gains are realized. A deposit buys the underweight sleeve first. The Innovation Index is the top 100 Nasdaq stocks, so HXQ, HXQ.U and CHPS in Non-registered 2c62 are held but no longer added to. fillTarget is the Innovation sleeve's 30% of the account at 2026-10-01 ($35,583 Market sleeve), before market moves."
+    },
+    "payroll": [
+      {
+        "id": "phase-1",
+        "label": "Now",
+        "from": "2026-10-01",
+        "to": "2026-10-31",
+        "automations": [
+          { "target": "Spousal RRSP", "amount": 1000 },
+          { "target": "RRSP (self-directed)", "amount": 500 },
+          { "target": "Savings", "amount": 500 },
+          { "target": "Direct Indexing", "amount": 900 },
+          { "target": "XEQT, Non-registered 2c62", "amount": 100 }
+        ],
+        "note": "Set 2026-10-01. HXQ $350 and CHPS $150 removed, Direct Indexing raised from $400. BTC stays paused."
+      },
+      {
+        "id": "phase-2",
+        "label": "RRSP paused",
+        "from": "2026-11-02",
+        "to": "2026-12-31",
+        "automations": [
+          { "target": "Savings", "amount": 500 },
+          { "target": "Direct Indexing", "amount": 2400 },
+          { "target": "XEQT, Non-registered 2c62", "amount": 100 }
+        ],
+        "note": "Both RRSP transfers paused once 2026 contributions reach the deduction target. The freed $1,500 fills the Innovation sleeve, reaching 30% around mid December."
+      },
+      {
+        "id": "phase-3",
+        "label": "2027",
+        "from": "2027-01-04",
+        "to": null,
+        "automations": [
+          { "target": "Spousal RRSP", "amount": 1000 },
+          { "target": "RRSP (self-directed)", "amount": 500 },
+          { "target": "Savings", "amount": 500 },
+          { "target": "Direct Indexing", "amount": 900 },
+          { "target": "XEQT, Non-registered 2c62", "amount": 100 }
+        ],
+        "note": "RRSP transfers resume. File a T1213 for the $36,000 of 2027 contributions so payroll withholds less each pay."
+      }
+    ],
+    "rrsp": {
+      "year": 2026,
+      "estimatedIncome": 235000,
+      "contributedToDate": 42000,
+      "contributedAsOf": "2026-10-01",
+      "deductionTarget": 53500,
+      "bracketTop": 181440,
+      "note": "Income is the Sep 30 pay stub's $170,275 year to date plus six semi-monthly $9,375 pays, plus early 2026 EI parental benefits. Deducting $53,500 brings taxable income to the top of the 44.97% Ontario bracket, so every dollar saves 48.26% to 49.82%. Contributions beyond the target carry forward undeducted to 2027, when the same salary puts them back in the 48% band. $45,000 by the Oct 31 pay plus an $8,000 lump sum."
+    },
+    "watch": [
+      {
+        "label": "No Wealthsimple GOLD purchases, any account, spouse or corporation",
+        "through": "2026-11-01",
+        "note": "GOLD sold in Non-registered 2c62 on 2026-10-01 for $4,432.45 against about $4,890 of cost, a capital loss of about $458. A purchase inside the 30 day window makes it a superficial loss."
+      }
+    ]
+  }
 }
