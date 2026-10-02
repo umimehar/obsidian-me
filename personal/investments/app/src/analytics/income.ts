@@ -461,29 +461,31 @@ function processSell(
   closingHoldings: ReadonlyMap<string, HoldingLookup>,
 ): RowGain {
   const symbol = parseRowSymbol(row.description);
-  if (symbol === null) return { gain: 0, costUnknown: true };
+  if (symbol === null) return { gain: 0, costUnknown: true, symbol: null, proceedsCad: null };
 
   const entry = ledgerEntryFor(ledger, symbol);
-  if (entry.unknown) return { gain: 0, costUnknown: true };
+  if (entry.unknown) return { gain: 0, costUnknown: true, symbol, proceedsCad: null };
 
   const proceedsCad = convertToCad(row.credit, row, s);
   const lot = parseTradeLot(row, "Sold");
   const stillOpen = closingHoldings.get(symbol) !== undefined;
 
   if (lot === null || entry.quantityUncertain) {
-    if (!stillOpen) return closeOutRemainingCost(entry, proceedsCad);
+    if (!stillOpen) return closeOutRemainingCost(entry, symbol, proceedsCad);
     entry.unknown = true;
-    return { gain: 0, costUnknown: true };
+    return { gain: 0, costUnknown: true, symbol, proceedsCad };
   }
 
-  if (entry.quantity <= 1e-9) return { gain: 0, costUnknown: true };
-  if (lot.quantity > entry.quantity + 1e-9) return oversell(entry, lot.quantity, proceedsCad);
+  if (entry.quantity <= 1e-9) return { gain: 0, costUnknown: true, symbol, proceedsCad };
+  if (lot.quantity > entry.quantity + 1e-9) {
+    return oversell(entry, symbol, lot.quantity, proceedsCad);
+  }
 
   const costPerShare = entry.cost / entry.quantity;
   const cost = costPerShare * lot.quantity;
   entry.cost -= cost;
   entry.quantity -= lot.quantity;
-  return { gain: proceedsCad - cost, costUnknown: false };
+  return { gain: proceedsCad - cost, costUnknown: false, symbol, proceedsCad };
 }
 
 /**
@@ -555,28 +557,42 @@ function applyRowToLedger(
 interface StatementGain {
   gain: number;
   costUnknownCount: number;
+  sales: SaleDetail[];
 }
 
 function realizedGainForStatement(
   s: Statement,
   priorHoldings: ReadonlyMap<string, HoldingLookup>,
+  maskedId: string,
 ): StatementGain {
   const ledger = seedLedger(priorHoldings);
   const closingHoldings = holdingsBySymbol(s.holdings);
   let gain = 0;
   let costUnknownCount = 0;
+  const sales: SaleDetail[] = [];
   for (const row of orderedRows(s)) {
     const result = applyRowToLedger(row, s, ledger, closingHoldings);
     gain += result.gain;
     if (result.costUnknown) costUnknownCount += 1;
+    if (row.code === "SELL" && result.symbol !== null) {
+      sales.push({
+        date: row.date,
+        symbol: result.symbol,
+        maskedId,
+        proceeds: result.proceedsCad ?? 0,
+        acb: result.costUnknown ? null : (result.proceedsCad ?? 0) - result.gain,
+        gain: result.gain,
+        costUnknown: result.costUnknown,
+      });
+    }
   }
-  return { gain, costUnknownCount };
+  return { gain, costUnknownCount, sales };
 }
 
 /**
- * One account's realized gains and cost unknown count for `year`, walking
- * every BROKERAGE statement in order so the ledger always seeds from the
- * immediately preceding one -- see `realizedGainForStatement`.
+ * One account's realized gains, cost unknown count and per-sale detail for
+ * `year`, walking every BROKERAGE statement in order so the ledger always
+ * seeds from the immediately preceding one -- see `realizedGainForStatement`.
  */
 function realizedGainForAccount(
   statements: readonly Statement[],
@@ -589,52 +605,64 @@ function realizedGainForAccount(
 
   let gain = 0;
   let costUnknownCount = 0;
+  const sales: SaleDetail[] = [];
   let priorHoldings = new Map<string, HoldingLookup>();
 
   for (const s of brokerage) {
     if (periodYear(s.source.period) === year) {
-      const result = realizedGainForStatement(s, priorHoldings);
+      const result = realizedGainForStatement(s, priorHoldings, accountId);
       gain += result.gain;
       costUnknownCount += result.costUnknownCount;
+      sales.push(...result.sales);
     }
     priorHoldings = holdingsBySymbol(s.holdings);
   }
 
-  return { gain, costUnknownCount };
+  return { gain, costUnknownCount, sales };
 }
 
 function sumRealizedGains(
   statements: readonly Statement[],
   taxableIds: ReadonlySet<string>,
   year: number,
-): { realizedGains: number; costUnknownSales: number } {
+): { realizedGains: number; costUnknownSales: number; sales: SaleDetail[] } {
   let realizedGains = 0;
   let costUnknownSales = 0;
+  const sales: SaleDetail[] = [];
   for (const accountId of taxableIds) {
     const result = realizedGainForAccount(statements, accountId, year);
     realizedGains += result.gain;
     costUnknownSales += result.costUnknownCount;
+    sales.push(...result.sales);
   }
-  return { realizedGains, costUnknownSales };
+  sales.sort((a, b) => a.date.localeCompare(b.date) || a.symbol.localeCompare(b.symbol));
+  return { realizedGains, costUnknownSales, sales };
 }
 
 /**
  * Income by type and realized gains for one calendar year, over the
- * accounts that are both in `scope` and one of `TAXABLE_KINDS`. `Corporate`
- * and every registered wrapper are excluded regardless of `scope` -- see
- * `TAXABLE_KINDS`.
+ * accounts that are both in `scope` and one of `kinds` (default
+ * `TAXABLE_KINDS`, the personal non-registered scope). A caller computing
+ * the corporation's own passive income passes `CORPORATE_KINDS` from
+ * `accountScopes.ts` -- the same function, a different kind filter, so the
+ * two scopes can never compute a figure two different ways.
  */
 export function buildIncome(
   series: readonly AccountSeries[],
   statements: readonly Statement[],
   year: number,
   scope: IncomeScope,
+  kinds: ReadonlySet<AccountKind> = TAXABLE_KINDS,
 ): IncomeSummary {
-  const taxableIds = taxableAccountIds(series, scope);
+  const taxableIds = taxableAccountIds(series, scope, kinds);
   const activity = buildActivity(statements);
   const { interest, foreignTaxWithheld } = sumInterestAndWithholding(activity, taxableIds, year);
   const { canadianDistributions, foreignDividends } = sumDividends(statements, taxableIds, year);
-  const { realizedGains, costUnknownSales } = sumRealizedGains(statements, taxableIds, year);
+  const { realizedGains, costUnknownSales, sales } = sumRealizedGains(
+    statements,
+    taxableIds,
+    year,
+  );
   const corporateActions = collectCorporateActions(statements, taxableIds, year);
   return {
     interest,
@@ -644,5 +672,6 @@ export function buildIncome(
     realizedGains,
     costUnknownSales,
     corporateActions,
+    sales,
   };
 }
