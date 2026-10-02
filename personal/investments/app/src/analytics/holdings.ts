@@ -16,6 +16,10 @@ export interface HoldingSummary {
   assetClass: string;
   /** True when the statement flags this symbol's pricing as not yet final. */
   pendingValuation: boolean;
+  /** Summed book cost, CAD -- already converted per-holding where `Holding.bookCostConverted` says so, the same convention `value` follows for market value. */
+  bookCost: number;
+  /** True when any contributing holding's book cost was a converted USD approximation -- see `Holding.bookCostConverted`'s own doc. */
+  bookCostConverted: boolean;
 }
 
 export interface HoldingsGroup {
@@ -57,6 +61,8 @@ interface Entry {
   priceCurrency: Currency;
   assetClass: string;
   pendingValuation: boolean;
+  bookCost: number;
+  bookCostConverted: boolean;
 }
 
 /** The running totals `buildHoldings` folds every account's statement into. */
@@ -80,6 +86,8 @@ interface EntryInput {
   priceCurrency: Currency;
   assetClass: string;
   pendingValuation: boolean;
+  bookCost: number;
+  bookCostConverted: boolean;
 }
 
 /**
@@ -98,8 +106,12 @@ function addEntry(totals: Totals, input: EntryInput): void {
     priceCurrency: input.priceCurrency,
     assetClass: input.assetClass,
     pendingValuation: false,
+    bookCost: 0,
+    bookCostConverted: false,
   };
   entry.value += input.value;
+  entry.bookCost += input.bookCost;
+  entry.bookCostConverted = entry.bookCostConverted || input.bookCostConverted;
   entry.accounts.add(input.accountLabel);
   entry.pendingValuation = entry.pendingValuation || input.pendingValuation;
   totals.bySymbol.set(input.key, entry);
@@ -235,6 +247,8 @@ function addHolding(
     priceCurrency,
     assetClass: holding.assetClass,
     pendingValuation: holding.pendingValuation,
+    bookCost: holding.bookCost,
+    bookCostConverted: holding.bookCostConverted,
   });
 }
 
@@ -252,6 +266,8 @@ function addCashHoldings(totals: Totals, statement: Statement, label: string): v
       priceCurrency: cash.currency,
       assetClass: "Cash",
       pendingValuation: false,
+      bookCost: 0,
+      bookCostConverted: false,
     });
   }
 }
@@ -267,6 +283,8 @@ function toHoldingSummaries(totals: Totals): HoldingSummary[] {
       priceCurrency: e.priceCurrency,
       assetClass: e.assetClass,
       pendingValuation: e.pendingValuation,
+      bookCost: e.bookCost,
+      bookCostConverted: e.bookCostConverted,
     }))
     .sort((a, b) => b.value - a.value);
 }

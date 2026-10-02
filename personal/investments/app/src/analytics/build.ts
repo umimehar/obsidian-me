@@ -2,6 +2,7 @@ import { join } from "node:path";
 import type { Datastore } from "../store/datastore";
 import type { Statement } from "../types";
 import { type ActivityByPeriod, buildActivity } from "./activity";
+import { CORPORATE_KINDS, PERSONAL_NONREG_KINDS } from "./accountScopes";
 import { buildFlows } from "./flows/build";
 import { type HoldingsOutput, buildHoldings } from "./holdings";
 import { type IncomeScope, type IncomeSummary, buildIncome } from "./income";
@@ -38,6 +39,14 @@ export interface AnalyticsOutput {
   rooms: Record<string, RoomLine[]>;
   /** Keyed the same way as `rooms`, over every account in the corpus -- `buildIncome`'s own `TAXABLE_KINDS` filter, not this scope, is what excludes Corporate and registered wrappers. */
   income: Record<string, IncomeSummary>;
+  /**
+   * The corporation's own passive investment income per fiscal year, the
+   * SAME `buildIncome` function as `income` above but scoped to
+   * `CORPORATE_KINDS` instead -- interest, foreign dividends, Canadian
+   * eligible dividends and realized gains earned inside the corporation,
+   * taxed in the corporation's hands, never the owner's personal estimate.
+   */
+  corporateIncome: Record<string, IncomeSummary>;
   returns: ReturnSeries[];
   rollups: Record<Lens, Rollup[]>;
   /** Dividends, interest, lending income, withholding tax and fees, per period per account. */
@@ -46,6 +55,10 @@ export interface AnalyticsOutput {
   statedFees: StatedFeesByPeriod;
   /** What is actually owned, combined across accounts, at the latest period -- see `holdings.ts`. */
   holdings: HoldingsOutput;
+  /** `holdings`, restricted to the personal non-registered scope (`NonRegistered` and `Crypto`) -- the Non-registered tab's own holdings table. */
+  personalHoldings: HoldingsOutput;
+  /** `holdings`, restricted to the `Corporate` kind -- the Corporate tab's own holdings table. */
+  corporateHoldings: HoldingsOutput;
 }
 
 /**
@@ -60,9 +73,17 @@ export function buildAnalytics(datastore: Datastore, generated: string): Analyti
 
   const rooms: Record<string, RoomLine[]> = {};
   const income: Record<string, IncomeSummary> = {};
+  const corporateIncome: Record<string, IncomeSummary> = {};
   for (const year of years) {
     rooms[String(year)] = buildRoomLines(series, datastore.statements, year);
     income[String(year)] = buildIncome(series, datastore.statements, year, allAccountIds);
+    corporateIncome[String(year)] = buildIncome(
+      series,
+      datastore.statements,
+      year,
+      allAccountIds,
+      CORPORATE_KINDS,
+    );
   }
 
   const returns = buildReturns(series, datastore.statements);
@@ -73,6 +94,14 @@ export function buildAnalytics(datastore: Datastore, generated: string): Analyti
   const activity = buildActivity(datastore.statements);
   const statedFees = buildStatedFees(datastore.statements);
   const holdings = buildHoldings(datastore.statements, datastore.accounts);
+  const personalHoldings = buildHoldings(
+    datastore.statements,
+    datastore.accounts.filter((a) => PERSONAL_NONREG_KINDS.has(a.kind)),
+  );
+  const corporateHoldings = buildHoldings(
+    datastore.statements,
+    datastore.accounts.filter((a) => CORPORATE_KINDS.has(a.kind)),
+  );
 
   return {
     meta: {
@@ -83,11 +112,14 @@ export function buildAnalytics(datastore: Datastore, generated: string): Analyti
     series,
     rooms,
     income,
+    corporateIncome,
     returns,
     rollups,
     activity,
     statedFees,
     holdings,
+    personalHoldings,
+    corporateHoldings,
   };
 }
 

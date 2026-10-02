@@ -2,7 +2,7 @@
 title: App checkpoints, and what they are for
 tags: [personal/investments, reference]
 created: 2026-08-31
-updated: 2026-09-26
+updated: 2026-10-01
 status: active
 type: reference
 personal: investments
@@ -56,3 +56,13 @@ The RRSP group only: $39,738.35 across three accounts, at the Friday 2026-09-25 
 It settles what the app's three RRSP accounts are. The owner's RRSP ($18,743.25) and the Private Market Fund ($20,995.10) make up the group total to the cent. The spouse's RRSP ($19,109.65) is listed beside them and left out of the total, which is how this project treats `97ab`. There is no empty third account.
 
 The Private Market Fund is `d6d9`. Its statements call it "Managed RRSP Account", which is why it was labelled "RRSP (managed)" until 2026-09-26; it is labelled after the app now.
+
+## 2026-10-01, evening
+
+The app's own headline this time, $268,461.48 (+$29,516.10, +12.35% this year; +$34,328.33, +14.66% all time), plus all seven groups and the cross account Holdings table for 12 symbols, at the 2026-10-01 close. The headline includes chequing: the seven groups sum to $268,126.43, and adding chequing's $338.26 lands within $3.21 of it. Compare this project's total against $268,126.43. The app's Household net worth, $257,368.28, sits $11,093.20 below its own headline and is not explained yet. Recorded against 2026-09 because that is the owner's intent, but it is one trading day after the September statements, so expect a day of price and FX movement in every account.
+
+Two things will differ from the September statements for a known reason. 2c62 sold all its GOLD on 2026-10-01; the statement carries GOLD at its Sep 30 price where the app shows $4,432.46 of pending cash. And any payroll deposit or recurring buy dated 2026-10-01 is in the app and not in a statement that ends Sep 30.
+
+The Holdings table prints USD rows in USD (CHPX 9.8491 at $102.16 is $1,006.18), so compare those against the statement's USD market value, not its CAD total.
+
+Also visible here and worth checking on import: PSA has left the TFSA, Loblaw has left the FHSA, and 2c62 no longer holds META, L or QQC.
