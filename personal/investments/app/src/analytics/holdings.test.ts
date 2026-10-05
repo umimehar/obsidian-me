@@ -180,6 +180,7 @@ function statement(overrides: {
   fxRate?: number | null;
   holdings?: Holding[];
   cash?: CashSummary[];
+  cashMarketValue?: number;
 }): Statement {
   const { accountNo = "acct_0001", period = "2026-08" } = overrides;
   return {
@@ -193,7 +194,16 @@ function statement(overrides: {
     accountType: "",
     periodStart: `${period}-01`,
     periodEnd: `${period}-28`,
-    portfolio: null,
+    portfolio:
+      overrides.cashMarketValue === undefined
+        ? null
+        : {
+            cashMarketValue: overrides.cashMarketValue,
+            cashBookCost: 0,
+            classes: [],
+            totalMarketValue: 0,
+            totalBookCost: 0,
+          },
     cash: overrides.cash ?? [],
     holdings: overrides.holdings ?? [],
     activity: [],
@@ -300,5 +310,61 @@ describe("buildHoldings, fixtures", () => {
     const result = buildHoldings(statements, accounts);
     expect(result.period).toBe("2026-08");
     expect(result.behind).toEqual(["Account B"]);
+  });
+});
+
+describe("buildHoldings, cashByAccount", () => {
+  test("two accounts sharing the same CAD cash currency keep distinct per-account totals, unlike the pooled `Cash (CAD)` holding row", () => {
+    const accounts = [
+      account({ maskedId: "acct_a", label: "Account A" }),
+      account({ maskedId: "acct_b", label: "Account B" }),
+    ];
+    const statements = [
+      statement({
+        accountNo: "acct_a",
+        cashMarketValue: 176.51,
+        cash: [cash({ currency: "CAD", closing: 176.51 })],
+      }),
+      statement({
+        accountNo: "acct_b",
+        cashMarketValue: 176.51,
+        cash: [cash({ currency: "CAD", closing: 176.51 })],
+      }),
+    ];
+    const result = buildHoldings(statements, accounts);
+    // The pooled holding row sums both accounts' cash into one entry --
+    // exactly the figure `cashByAccount` must NOT attribute to either
+    // account alone.
+    const pooledCash = result.holdings.find((h) => h.symbol === "" && h.priceCurrency === "CAD");
+    expect(pooledCash?.value).toBeCloseTo(353.02, 6);
+    expect(result.cashByAccount.acct_a).toBeCloseTo(176.51, 6);
+    expect(result.cashByAccount.acct_b).toBeCloseTo(176.51, 6);
+  });
+
+  test("a BROKERAGE statement reads cashByAccount off portfolio.cashMarketValue, not a re-sum of cash[]", () => {
+    const accounts = [account({ maskedId: "acct_a", label: "Account A" })];
+    const statements = [
+      statement({
+        accountNo: "acct_a",
+        cashMarketValue: 999,
+        cash: [cash({ currency: "CAD", closing: 1 })],
+      }),
+    ];
+    const result = buildHoldings(statements, accounts);
+    expect(result.cashByAccount.acct_a).toBe(999);
+  });
+
+  test("an account with no BROKERAGE statement at the target period has no cashByAccount entry", () => {
+    const accounts = [
+      account({ maskedId: "acct_a", label: "Account A" }),
+      account({ maskedId: "acct_b", label: "Account B" }),
+    ];
+    const statements = [
+      statement({ accountNo: "acct_a", period: "2026-08", cashMarketValue: 50 }),
+      statement({ accountNo: "acct_b", period: "2026-07", cashMarketValue: 50 }),
+    ];
+    const result = buildHoldings(statements, accounts);
+    expect(result.cashByAccount.acct_a).toBe(50);
+    expect(result.cashByAccount.acct_b).toBeUndefined();
   });
 });

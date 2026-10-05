@@ -274,6 +274,475 @@
         }
       ],
       "openQuestions": []
+    },
+    {
+      "observed": "2026-10-01T22:00:00-04:00",
+      "source": "Wealthsimple app, home screen (two readings), accounts screen and the cross account Holdings table, six screenshots",
+      "coversPeriod": "2026-09",
+      "reconciledAgainst": null,
+      "note": "Taken the evening of Thursday 2026-10-01, so prices are the 2026-10-01 close, one trading day after the 2026-09-30 statements. Expected differences against the September statements: one day of price and FX movement; the GOLD sale in 2c62 on 2026-10-01 (GOLD at its Sep 30 price on the statement, $4,432.46 of pending cash here); and any payroll deposit or recurring buy dated 2026-10-01. The observed time is approximate (evening, after the close). Holdings table values for USD rows are in USD, as the app prints them.",
+      "portfolioTotal": 268461.48,
+      "totalIsDerived": false,
+      "totalNote": "The app's own home screen total (YTD view reading). The seven visible investment groups sum to $268,126.43; the difference is the three chequing accounts ($338.26) and a few dollars of drift between screens. This project holds chequing out of the portfolio total, so compare its total against $268,126.43, not the headline.",
+      "groups": [
+        {
+          "label": "TFSA",
+          "statedTotal": 49705.31,
+          "accountCount": 2,
+          "accounts": [
+            {
+              "label": "TFSA",
+              "ours": "d77c",
+              "value": 42062.43,
+              "allTimeReturnPercent": 25.72
+            },
+            {
+              "label": "Managed (TFSA)",
+              "ours": "9710",
+              "value": 7642.88,
+              "allTimeReturnPercent": 27.38
+            }
+          ],
+          "partsSumTo": 49705.31
+        },
+        {
+          "label": "FHSA",
+          "statedTotal": 28899.93,
+          "accountCount": 1,
+          "accounts": [
+            {
+              "label": "Home",
+              "ours": "e2ec",
+              "value": 28899.93,
+              "allTimeReturnPercent": 20.42
+            }
+          ]
+        },
+        {
+          "label": "RRSP",
+          "statedTotal": 40155.23,
+          "accountCount": 3,
+          "accounts": [
+            {
+              "label": "[redacted]'s RRSP",
+              "ours": "2318",
+              "value": 19160.13,
+              "allTimeReturnPercent": 6.45
+            },
+            {
+              "label": "Private Market Fund (Managed)",
+              "ours": "d6d9",
+              "value": 20995.1,
+              "allTimeReturnPercent": 4.98
+            },
+            {
+              "label": "[redacted]'s RRSP",
+              "ours": "97ab",
+              "value": 19920.72,
+              "allTimeReturnPercent": 4.85,
+              "inGroupTotal": false
+            }
+          ],
+          "partsSumTo": 40155.23,
+          "partsNote": "Group total is the owner's RRSP plus the Private Market Fund to the cent; the spousal RRSP is listed and left out, as before."
+        },
+        {
+          "label": "Joint RESP",
+          "statedTotal": 6586.15,
+          "accountCount": 1,
+          "accounts": [
+            {
+              "label": "Family RESP",
+              "ours": "c2e9",
+              "value": 6586.15,
+              "allTimeReturnPercent": 9.77
+            }
+          ]
+        },
+        {
+          "label": "Non-registered",
+          "statedTotal": 75426.33,
+          "accountCount": 2,
+          "accounts": [
+            {
+              "label": "Auto investing",
+              "ours": "1f9a",
+              "value": 37490.81,
+              "allTimeReturnPercent": 11.58
+            },
+            {
+              "label": "Non-registered",
+              "ours": "2c62",
+              "value": 37935.52,
+              "allTimeReturnPercent": 20.05
+            }
+          ],
+          "partsSumTo": 75426.33,
+          "partsNote": "Two screenshots taken moments apart read $75,426.06 / $37,490.55 and $75,426.33 / $37,490.81; the later pair is recorded. 2c62 includes $4,432.46 of unsettled cash from the 2026-10-01 GOLD sale (holdings $33,502.64, available cash $12.27 at the time)."
+        },
+        {
+          "label": "Business investing",
+          "statedTotal": 65331.87,
+          "accountCount": 2,
+          "accounts": [
+            {
+              "label": "[redacted]",
+              "ours": "91b8",
+              "value": 54945.43,
+              "allTimeReturnPercent": 9.89
+            },
+            {
+              "label": "[redacted] (self)",
+              "ours": "8297",
+              "value": 10386.44,
+              "allTimeReturnPercent": 3.86
+            }
+          ],
+          "partsSumTo": 65331.87
+        },
+        {
+          "label": "Crypto",
+          "statedTotal": 2021.61,
+          "accountCount": 1,
+          "accounts": [
+            {
+              "label": "Crypto",
+              "ours": "e2d6",
+              "value": 2021.61,
+              "allTimeReturnPercent": 43.38
+            }
+          ]
+        }
+      ],
+      "holdings": [
+        {
+          "symbol": "BTC",
+          "ours": "e2d6",
+          "currency": "CAD",
+          "quantity": 0.010259,
+          "price": 121164.19,
+          "value": 1243.0,
+          "allTimeReturn": 308.0,
+          "allTimeReturnPercent": 32.94
+        },
+        {
+          "symbol": "ETH",
+          "ours": "e2d6",
+          "currency": "CAD",
+          "quantity": 0.201815,
+          "price": 3860.33,
+          "value": 779.07,
+          "allTimeReturn": 304.07,
+          "allTimeReturnPercent": 64.02
+        },
+        {
+          "symbol": "CHPS",
+          "ours": "d77c",
+          "currency": "CAD",
+          "quantity": 59.9433,
+          "price": 91.6,
+          "value": 5490.81,
+          "allTimeReturn": 754.57,
+          "allTimeReturnPercent": 15.93
+        },
+        {
+          "symbol": "CHPS",
+          "ours": "2c62",
+          "currency": "CAD",
+          "quantity": 38.0607,
+          "price": 91.6,
+          "value": 3486.36,
+          "allTimeReturn": 278.76,
+          "allTimeReturnPercent": 8.69
+        },
+        {
+          "symbol": "CHPX",
+          "ours": "2318",
+          "currency": "USD",
+          "quantity": 9.8491,
+          "price": 102.16,
+          "value": 1006.18,
+          "allTimeReturn": 89.76,
+          "allTimeReturnPercent": 9.8
+        },
+        {
+          "symbol": "CHPX",
+          "ours": "2c62",
+          "currency": "USD",
+          "quantity": 37.2572,
+          "price": 102.16,
+          "value": 3806.2,
+          "allTimeReturn": 277.39,
+          "allTimeReturnPercent": 7.86
+        },
+        {
+          "symbol": "HXQ",
+          "ours": "2c62",
+          "currency": "CAD",
+          "quantity": 50.8327,
+          "price": 124.81,
+          "value": 6344.43,
+          "allTimeReturn": 359.88,
+          "allTimeReturnPercent": 6.01
+        },
+        {
+          "symbol": "HXQ",
+          "ours": "8297",
+          "currency": "CAD",
+          "quantity": 48,
+          "price": 124.81,
+          "value": 5990.88,
+          "allTimeReturn": 392.5,
+          "allTimeReturnPercent": 7.01
+        },
+        {
+          "symbol": "HXQ.U",
+          "ours": "2c62",
+          "currency": "USD",
+          "quantity": 53,
+          "price": 87.98,
+          "value": 4662.94,
+          "allTimeReturn": 164.92,
+          "allTimeReturnPercent": 3.67
+        },
+        {
+          "symbol": "QQC",
+          "ours": "d77c",
+          "currency": "CAD",
+          "quantity": 177.9164,
+          "price": 51.55,
+          "value": 9171.59,
+          "allTimeReturn": 551.99,
+          "allTimeReturnPercent": 6.4
+        },
+        {
+          "symbol": "QQC",
+          "ours": "e2ec",
+          "currency": "CAD",
+          "quantity": 150.2566,
+          "price": 51.55,
+          "value": 7745.73,
+          "allTimeReturn": 884.8,
+          "allTimeReturnPercent": 12.9
+        },
+        {
+          "symbol": "QQC",
+          "ours": "c2e9",
+          "currency": "CAD",
+          "quantity": 44.7172,
+          "price": 51.55,
+          "value": 2305.17,
+          "allTimeReturn": 192.39,
+          "allTimeReturnPercent": 9.11
+        },
+        {
+          "symbol": "VFV",
+          "ours": "d77c",
+          "currency": "CAD",
+          "quantity": 70.8485,
+          "price": 193.3,
+          "value": 13695.02,
+          "allTimeReturn": 2716.37,
+          "allTimeReturnPercent": 24.74
+        },
+        {
+          "symbol": "VFV",
+          "ours": "e2ec",
+          "currency": "CAD",
+          "quantity": 58.8775,
+          "price": 193.3,
+          "value": 11381.02,
+          "allTimeReturn": 1977.58,
+          "allTimeReturnPercent": 21.03
+        },
+        {
+          "symbol": "VFV",
+          "ours": "2318",
+          "currency": "CAD",
+          "quantity": 35.5126,
+          "price": 193.3,
+          "value": 6864.59,
+          "allTimeReturn": 461.21,
+          "allTimeReturnPercent": 7.2
+        },
+        {
+          "symbol": "VFV",
+          "ours": "2c62",
+          "currency": "CAD",
+          "quantity": 31.0276,
+          "price": 193.3,
+          "value": 5997.64,
+          "allTimeReturn": 677.26,
+          "allTimeReturnPercent": 12.73
+        },
+        {
+          "symbol": "VFV",
+          "ours": "c2e9",
+          "currency": "CAD",
+          "quantity": 11.6549,
+          "price": 193.3,
+          "value": 2252.89,
+          "allTimeReturn": 205.23,
+          "allTimeReturnPercent": 10.02
+        },
+        {
+          "symbol": "VGT",
+          "ours": "2318",
+          "currency": "USD",
+          "quantity": 12.3562,
+          "price": 127.5,
+          "value": 1575.42,
+          "allTimeReturn": 110.43,
+          "allTimeReturnPercent": 7.54
+        },
+        {
+          "symbol": "VOOG",
+          "ours": "2318",
+          "currency": "USD",
+          "quantity": 20.5328,
+          "price": 85.76,
+          "value": 1760.89,
+          "allTimeReturn": 64.07,
+          "allTimeReturnPercent": 3.78
+        },
+        {
+          "symbol": "XEQT",
+          "ours": "d77c",
+          "currency": "CAD",
+          "quantity": 213.4072,
+          "price": 45.46,
+          "value": 9701.49,
+          "allTimeReturn": 464.78,
+          "allTimeReturnPercent": 5.03
+        },
+        {
+          "symbol": "XEQT",
+          "ours": "e2ec",
+          "currency": "CAD",
+          "quantity": 214.9834,
+          "price": 45.46,
+          "value": 9773.15,
+          "allTimeReturn": 823.73,
+          "allTimeReturnPercent": 9.2
+        },
+        {
+          "symbol": "XEQT",
+          "ours": "2318",
+          "currency": "CAD",
+          "quantity": 134.643,
+          "price": 45.46,
+          "value": 6120.87,
+          "allTimeReturn": 162.65,
+          "allTimeReturnPercent": 2.73
+        },
+        {
+          "symbol": "XEQT",
+          "ours": "2c62",
+          "currency": "CAD",
+          "quantity": 123.6272,
+          "price": 45.46,
+          "value": 5620.09,
+          "allTimeReturn": 507.87,
+          "allTimeReturnPercent": 9.93
+        },
+        {
+          "symbol": "XEQT",
+          "ours": "c2e9",
+          "currency": "CAD",
+          "quantity": 44.6125,
+          "price": 45.46,
+          "value": 2028.08,
+          "allTimeReturn": 161.47,
+          "allTimeReturnPercent": 8.65
+        },
+        {
+          "symbol": "XEQT",
+          "ours": "8297",
+          "currency": "CAD",
+          "quantity": 96.4742,
+          "price": 45.46,
+          "value": 4385.72,
+          "allTimeReturn": -15.9,
+          "allTimeReturnPercent": -0.36
+        },
+        {
+          "symbol": "ZGLD",
+          "ours": "d77c",
+          "currency": "CAD",
+          "quantity": 62.8633,
+          "price": 63.68,
+          "value": 4003.13,
+          "allTimeReturn": 133.88,
+          "allTimeReturnPercent": 3.46
+        }
+      ],
+      "holdingsNote": "The Holdings table was captured for the symbols shown only (12 symbols across accounts). Not captured: direct indexing's individual stocks, Managed TFSA 9710, Corporate 91b8, the Private Market Fund, and the spousal RRSP. The TFSA d77c rows sum to $42,062.04 against the account's $42,062.43, so PSA has left the TFSA since August. FHSA e2ec shows no L, so Loblaw was sold there too. 2c62 no longer holds META, L, QQC or GOLD.",
+      "openQuestions": [
+        {
+          "id": "usd-rows-currency",
+          "severity": "check",
+          "summary": "Confirm on import that the Holdings table's USD rows (CHPX, HXQ.U, VGT, VOOG) are stated in USD: 9.8491 x $102.16 = $1,006.18 says they are. 2c62's account value then implies about 1.4234 CAD per USD on 2026-10-01.",
+          "leads": "2c62: CAD rows plus cash $25,880.97; USD rows $8,469.14; account $37,935.52."
+        },
+        {
+          "id": "crypto-sum",
+          "severity": "check",
+          "summary": "BTC $1,243.00 plus ETH $779.07 is $2,022.07 against the Crypto card's $2,021.61, $0.46 apart; the two screens were read moments apart and crypto trades continuously.",
+          "leads": "Expect a gap of this size; not a defect unless the September statement disagrees by more."
+        },
+        {
+          "id": "household-net-worth",
+          "severity": "open",
+          "summary": "The app's Household net worth reads $257,368.28, $11,093.20 below its own $268,461.48 headline, with a three segment bar (red, green, blue). Unexplained.",
+          "leads": "The credit card owes $159.75, so it explains only that much; $10,933.45 remains. Chequing is $338.26 across three sub accounts (Chequing $338.26, one named RRSP $0.00, Savings $0.00). Remaining candidates: the corporate accounts or the spousal RRSP treated differently in a household view, or a net worth figure refreshed on a different schedule from the live headline. Ask the owner what the bar's red, green and blue segments are labelled."
+        },
+        {
+          "id": "ytd-return",
+          "severity": "check",
+          "summary": "The app reports +$29,516.10 (+12.35%) this year and +$34,328.33 (+14.66%) all time at 2026-10-01. Compare with this project's 2026 chained return and all time gain after the September import.",
+          "leads": "The app's method is not stated; this project's 2026 figure is chained monthly and deposit netted, so expect them to differ by method as well as by the one day offset."
+        }
+      ],
+      "appHeadline": {
+        "readings": [
+          {
+            "view": "YTD",
+            "total": 268461.48,
+            "change": 29516.1,
+            "changePercent": 12.35,
+            "changeLabel": "this year"
+          },
+          {
+            "view": "ALL",
+            "total": 268462.22,
+            "change": 34328.33,
+            "changePercent": 14.66,
+            "changeLabel": "all time"
+          }
+        ],
+        "chequing": {
+          "statedTotal": 338.26,
+          "accountCount": 3,
+          "accounts": [
+            {
+              "label": "Chequing",
+              "value": 338.26
+            },
+            {
+              "label": "RRSP",
+              "value": 0.0,
+              "note": "A chequing sub account the owner named RRSP, not a registered account"
+            },
+            {
+              "label": "Savings",
+              "value": 0.0
+            }
+          ]
+        },
+        "householdNetWorth": 257368.28,
+        "note": "Unlike the 2026-08-31 checkpoint, the app's own headline total was captured. It includes the chequing accounts: the seven investment groups ($268,126.43) plus chequing ($338.26) is $268,464.69, $2.47 to $3.21 from the two headline readings, which were taken moments apart while crypto and FX moved. The spousal RRSP is outside the headline, as it is outside the RRSP group.",
+        "creditCardOwed": 159.75
+      }
     }
   ]
 }

@@ -102,3 +102,22 @@ summary {
 [data-flow-rows-table] .rt-ScrollAreaViewport {
   max-height: 360px;
 }
+
+/*
+ * Every money column on the tax tabs (Non-registered, Corporate): right
+ * aligned and tabular-figured, so a column of dollar amounts lines up on its
+ * decimal point instead of ragged-left text that happens to be numeric.
+ */
+.ivt-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * A table that would otherwise force the whole tax page to scroll sideways
+ * at phone width scrolls inside its own box instead -- see the redesign
+ * spec's phone-width rule.
+ */
+.ivt-table-scroll {
+  overflow-x: auto;
+}

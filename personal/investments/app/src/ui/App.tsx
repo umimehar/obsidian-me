@@ -6,13 +6,16 @@ import type { AnalyticsOutput } from "../analytics/build";
 import { feeReconciliationGaps } from "../analytics/feeReconciliation";
 import { latestGroupGain } from "../analytics/groupGain";
 import type { AccountSeries } from "../analytics/types";
+import { loadTaxTable } from "../tax";
 import { AboutNumbers } from "./AboutNumbers";
 import { AccountFilter } from "./AccountFilter";
 import { Cards } from "./Cards";
+import { CORPORATE_NOTES, Corporate } from "./Corporate";
 import { DataStatus } from "./DataStatus";
 import { Flow } from "./Flow";
 import { Holdings } from "./Holdings";
 import { IncomeCosts } from "./IncomeCosts";
+import { NON_REGISTERED_NOTES, NonRegistered } from "./NonRegistered";
 import { GroupGainLine, Overview } from "./Overview";
 import { Reconciliation } from "./Reconciliation";
 import { SummaryStrip } from "./SummaryStrip";
@@ -481,6 +484,7 @@ function DataPanel({
 function Dashboard() {
   const all = loadAnalytics();
   const report = loadReconciliation();
+  const taxTable = loadTaxTable();
   const years = scopeYears(all);
   const latestYear = years[years.length - 1] ?? new Date().getUTCFullYear();
   const [{ tab, scope, flowPeriod }, setHash] = useHashTab();
@@ -566,6 +570,20 @@ function Dashboard() {
     contributions: (
       <WithSummary {...summary}>
         <ContributionsPanel analytics={analytics} all={all} year={year} />
+      </WithSummary>
+    ),
+    // Both read the UNSCOPED `all`: a sale realized in January still
+    // belongs to the year it happened in, which the global clip would
+    // silently cut away on "All time" the same way Income's own tax view
+    // reads `all` rather than the clipped `analytics`.
+    nonRegistered: (
+      <WithSummary {...summary} extraNotes={NON_REGISTERED_NOTES}>
+        <NonRegistered analytics={all} year={year} scope={scope} taxTable={taxTable} />
+      </WithSummary>
+    ),
+    corporate: (
+      <WithSummary {...summary} extraNotes={CORPORATE_NOTES}>
+        <Corporate analytics={all} year={year} scope={scope} taxTable={taxTable} />
       </WithSummary>
     ),
     future: (

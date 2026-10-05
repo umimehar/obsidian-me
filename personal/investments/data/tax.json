@@ -1,0 +1,57 @@
+{
+  "2026": {
+    "personal": {
+      "province": "ON",
+      "marginalRate": {
+        "value": 0.4826,
+        "source": "TaxTips.ca, 2025 & 2026 Combined Federal & Ontario Tax Rates Including Surtaxes (https://www.taxtips.ca/taxrates/on.htm), checked 2026-10-01. Owner's estimated 2026 taxable income after the planned $53,500 RRSP deduction is about $181,500, in the $181,440-$220,000 combined federal+Ontario bracket taxed at 48.26% on ordinary income. An owner-set estimate, not a filing number."
+      },
+      "capitalGainsInclusion": {
+        "value": 0.5,
+        "source": "Income Tax Act s.38(a); the 2024 proposed increase to 66.67% was deferred (2025-01-31) then cancelled (2025-03-21) by the Department of Finance and confirmed in Budget 2025 (2025-11-04), so the inclusion rate stays 50% for 2026. Checked 2026-10-01 via Scotia Wealth Management, Cancellation of the proposed capital gains inclusion rate increase (https://enrichedthinking.scotiawealthmanagement.com/2025/04/07/cancellation-of-the-proposed-capital-gains-inclusion-rate-increase/)."
+      },
+      "eligibleDividendGrossUp": {
+        "value": 0.38,
+        "source": "Income Tax Act s.82(1); 38% gross-up for eligible dividends, unchanged since 2012. Checked 2026-10-01 via wealthnorth.ca Canadian Dividend Tax Credit Guide (https://wealthnorth.ca/taxes/investment-tax/canadian-dividend-tax-credit-guide/)."
+      },
+      "federalEligibleDtcRate": {
+        "value": 0.150198,
+        "source": "Income Tax Act s.121; federal dividend tax credit of 15.0198% of the grossed-up eligible dividend. Checked 2026-10-01 via wealthnorth.ca Canadian Dividend Tax Credit Guide (https://wealthnorth.ca/taxes/investment-tax/canadian-dividend-tax-credit-guide/)."
+      },
+      "ontarioEligibleDtcRate": {
+        "value": 0.10,
+        "source": "Ontario Taxation Act, 2007 s.12; Ontario dividend tax credit of 10% of the grossed-up eligible dividend. Checked 2026-10-01 via wealthnorth.ca Canadian Dividend Tax Credit Guide (https://wealthnorth.ca/taxes/investment-tax/canadian-dividend-tax-credit-guide/)."
+      }
+    },
+    "corporate": {
+      "fiscalYearEnd": "12-31",
+      "passiveIncomeRate": {
+        "value": 0.5017,
+        "source": "EY, Corporate investment income tax rates -- 2026 (https://www.ey.com/content/dam/ey-unified-site/ey-com/en-ca/services/tax/tax-calculators/2026/ey-tax-rates-corporate-investment-2026-01-15-v1.pdf), checked 2026-10-01. Combined Ontario CCPC rate on aggregate investment income, before any refund."
+      },
+      "partIVRate": {
+        "value": 0.3833,
+        "source": "Income Tax Act Part IV, s.186; 38 1/3% flat rate on portfolio dividends received by a private corporation, long-standing and unchanged for 2026. Checked 2026-10-01."
+      },
+      "aaiiThresholds": {
+        "lower": 50000,
+        "upper": 150000,
+        "gradePerDollar": 5,
+        "source": "Income Tax Act s.125(5.1); small business deduction grinds by $5 for every $1 of adjusted aggregate investment income (AAII) over $50,000, reaching zero at $150,000. Checked 2026-10-01 via gondaliyacpa.ca Active vs. Passive Income Corporate Tax Implications (https://gondaliyacpa.ca/active-vs-passive-income-corporate-tax-implications/)."
+      },
+      "nerdtohRate": {
+        "value": 0.3067,
+        "source": "Income Tax Act s.129(4), definition of non-eligible RDTOH; 30.67% of aggregate investment income (AAII) added to non-eligible RDTOH each year. Checked 2026-10-01 via modernaxis.ca RDTOH and ERDTOH: CCPC Investment Income Guide (https://www.modernaxis.ca/blog/rdtoh-erdtoh-ccpc-investment-income)."
+      },
+      "dividendRefundRate": {
+        "value": 0.3833,
+        "source": "Income Tax Act s.129(1); dividend refund is the lesser of 38.33% of taxable dividends paid and the RDTOH balance. Checked 2026-10-01 via modernaxis.ca RDTOH and ERDTOH: CCPC Investment Income Guide (https://www.modernaxis.ca/blog/rdtoh-erdtoh-ccpc-investment-income)."
+      }
+    },
+    "t1135": {
+      "filingThreshold": 100000,
+      "detailedThreshold": 250000,
+      "source": "CRA, Questions and answers about Form T1135 (https://www.canada.ca/en/revenue-agency/services/tax/international-non-residents/information-been-moved/foreign-reporting/questions-answers-about-form-t1135.html), checked 2026-10-01. Cost amount (not market value) of specified foreign property; $100,000 filing threshold, $250,000 simplified-vs-detailed reporting method threshold. Both are flat statutory amounts, not indexed."
+    }
+  }
+}

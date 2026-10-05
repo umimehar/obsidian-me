@@ -17,6 +17,7 @@ import { type DollarsMode, buildProjectionSeries } from "../charts/projectionSer
 import { formatCurrency, formatRate } from "../format";
 import { GoalsPanel } from "./GoalsPanel";
 import { RunwayTable } from "./RunwayTable";
+import { StrategyPanel } from "./StrategyPanel";
 
 export interface ProjectionsViewProps {
   analytics: AnalyticsOutput;
@@ -35,6 +36,14 @@ const RATE_MAX = 0.12;
 const INFLATION_MAX = 0.05;
 const MIN_YEARS = 30;
 const MILESTONES = [500_000, 1_000_000] as const;
+
+/** Today's local date in ISO `YYYY-MM-DD` form, so the strategy panel's current phase is unambiguous. */
+function todayIso(): string {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${now.getFullYear()}-${month}-${day}`;
+}
 
 /** The scenario point at a calendar year, or undefined when the horizon does not reach it. */
 function pointAt(points: readonly ScenarioPoint[], year: number): ScenarioPoint | undefined {
@@ -498,6 +507,7 @@ export function ProjectionsView({
         fhsaCloseYear={inputs.fhsaCloseYear}
         goals={plan.goals}
       />
+      <StrategyPanel strategy={plan.strategy} today={todayIso()} />
       <RunwayTable rows={rows} inputs={inputs} />
     </Flex>
   );

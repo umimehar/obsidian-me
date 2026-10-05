@@ -2,7 +2,7 @@
 title: Investments
 tags: [personal/investments]
 created: 2026-07-13
-updated: 2026-09-29
+updated: 2026-10-01
 status: active
 type: personal
 personal: investments
@@ -24,10 +24,11 @@ Summing the eleven investment accounts from their June 2026 statements gives $24
 
 - [[tracking]], statement coverage per account and per month, and the latest month with every account in. Also on the dashboard's Data tab.
 - [[rrsp-room]], the RRSP deduction limit and available room from the latest notice of assessment, which is what the room bars measure against.
+- [[2026-10-01-allocation-and-rrsp-plan]], the October 2026 decisions: direct indexing at 70% U.S. Market and 30% U.S. Innovation filled by deposits, the GOLD sale for a capital loss, the three phase payroll schedule, and the 2026 RRSP deduction of $53,500. The Future tab's Plan panel renders the same plan from `data/plan.json`.
 
 ## The dashboard
 
-`app/` is a Vite + React + TypeScript app, run locally, read only. Nine tabs synced to the hash, in order: this month, flow, portfolio, holdings, growth, income, contributions, future, data. The Holdings tab combines every account down to one symbol at a time, with an S&P 500 exposure line and a currency and asset class split. The Growth tab opens with two market value lines, the portfolio against the same deposits invested in XEQT, the single fund benchmark, ahead of the per account returns grid. Charts are hand built SVG on `d3-scale` rather than a chart library.
+`app/` is a Vite + React + TypeScript app, run locally, read only. Eleven tabs synced to the hash, in order: this month, flow, portfolio, holdings, growth, income, contributions, non-registered, corporate, future, data. The Holdings tab combines every account down to one symbol at a time, with an S&P 500 exposure line and a currency and asset class split. The Growth tab opens with two market value lines, the portfolio against the same deposits invested in XEQT, the single fund benchmark, ahead of the per account returns grid. Charts are hand built SVG on `d3-scale` rather than a chart library.
 
 Every figure is stated at market value and at book cost, both from the statements. Gain or loss is the difference, and it appears on every group card in all three lenses and on the portfolio headline: $241,739.67 against a book cost of $223,675.08, a gain of $18,064.59.
 

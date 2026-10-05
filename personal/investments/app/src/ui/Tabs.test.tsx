@@ -13,6 +13,8 @@ const PANELS: Record<TabId, string> = {
   growth: "Growth panel content",
   income: "Income panel content",
   contributions: "Contributions panel content",
+  nonRegistered: "Non-registered panel content",
+  corporate: "Corporate panel content",
   future: "Future panel content",
   data: "Data panel content",
 };
@@ -38,6 +40,8 @@ function Harness() {
         growth: <div>{PANELS.growth}</div>,
         income: <div>{PANELS.income}</div>,
         contributions: <div>{PANELS.contributions}</div>,
+        nonRegistered: <div>{PANELS.nonRegistered}</div>,
+        corporate: <div>{PANELS.corporate}</div>,
         future: <div>{PANELS.future}</div>,
         data: <div>{PANELS.data}</div>,
       }}
@@ -71,6 +75,8 @@ describe("Tabs", () => {
       "Growth",
       "Income",
       "Contributions",
+      "Non-registered",
+      "Corporate",
       "Future",
       "Data",
     ]) {
@@ -86,6 +92,8 @@ describe("Tabs", () => {
     expect(screen.queryByText(PANELS.growth)).toBeNull();
     expect(screen.queryByText(PANELS.income)).toBeNull();
     expect(screen.queryByText(PANELS.contributions)).toBeNull();
+    expect(screen.queryByText(PANELS.nonRegistered)).toBeNull();
+    expect(screen.queryByText(PANELS.corporate)).toBeNull();
     expect(screen.queryByText(PANELS.future)).toBeNull();
     expect(screen.queryByText(PANELS.data)).toBeNull();
   });

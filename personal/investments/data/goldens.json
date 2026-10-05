@@ -822,5 +822,32 @@
         "leftInCash": -18197.11210300001
       }
     }
+  },
+  "taxableTabs": {
+    "personal": {
+      "realizedGains": 1859.3522478667628,
+      "foreignDividends": 191.67641199999997,
+      "foreignTaxWithheld": 27.953969999999998,
+      "interest": 0.02,
+      "canadianDistributions": 90.82000000000001,
+      "salesCount": 265,
+      "superficialLossFlaggedCount": 31,
+      "claimableDeductionsTotal": 65.68,
+      "claimableCreditsTotal": 27.953969999999995,
+      "t1135MaxForeignCost": 34661.59740999999
+    },
+    "corporate": {
+      "realizedGains": 102.72368732516897,
+      "foreignDividends": 320.08000000000004,
+      "foreignTaxWithheld": 48.00000000000001,
+      "interest": 0.02,
+      "canadianDistributions": 123.31,
+      "aaii": 494.7718436625845,
+      "cdaAddition": 51.361843662584484,
+      "nerdtohAdded": 151.74652445131466,
+      "partIVTax": 47.264723,
+      "claimableDeductionsTotal": 115.83999999999999,
+      "t1135MaxForeignCost": 37765.51
+    }
   }
 }

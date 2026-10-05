@@ -2,7 +2,7 @@
 title: RRSP deduction limit and contribution room
 tags: [personal/investments, reference]
 created: 2026-08-04
-updated: 2026-08-04
+updated: 2026-10-01
 status: active
 type: reference
 personal: investments
@@ -46,7 +46,11 @@ Additional limit earned in 2025:
 
 ## Position
 
-Contributions recorded for 2026 across the four RRSP accounts total $33,000, leaving $37,752. The 2025 NOA deducted $15,000, which is the $12,000 and $3,000 the statements show for that year.
+Contributions for 2026 reached $42,000 by 2026-10-01 per the owner, leaving $28,752. The 2025 NOA deducted $15,000, which is the $12,000 and $3,000 the statements show for that year.
+
+## 2026 plan
+
+Contribute about $53,500 and deduct exactly that on the 2026 return: estimated income of about $235,000 then lands at the $181,440 top of the 44.97% bracket, so the whole deduction saves 48% to 50%. The remaining room carries to 2027. Reasoning and the payroll schedule are in [[2026-10-01-allocation-and-rrsp-plan]].
 
 ## Maintenance
 

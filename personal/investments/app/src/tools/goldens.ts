@@ -1,8 +1,15 @@
 import { join } from "node:path";
 import rawDatastore from "@data/datastore.json";
+import {
+  CORPORATE_KINDS,
+  PERSONAL_NONREG_KINDS,
+  accountIdsOfKind,
+} from "../analytics/accountScopes";
 import { simulateBenchmark, skippedPeriods } from "../analytics/benchmark";
 import type { AnalyticsOutput } from "../analytics/build";
 import { buildCashflowSeries } from "../analytics/cashflowSeries";
+import { claimableYear } from "../analytics/claimable";
+import { passiveIncomeYear } from "../analytics/corporatePassiveIncome";
 import { feeReconciliationGaps } from "../analytics/feeReconciliation";
 import { type TileBreakdown, tileBreakdowns } from "../analytics/flows/breakdown";
 import { buildFlows } from "../analytics/flows/build";
@@ -13,7 +20,11 @@ import type { FlowsData } from "../analytics/flows/types";
 import { latestGroupGain } from "../analytics/groupGain";
 import type { HoldingsOutput } from "../analytics/holdings";
 import { buildIncome } from "../analytics/income";
-import { chequingInterestByAccount, incomeByYear } from "../analytics/incomeCosts";
+import {
+  chequingInterestByAccount,
+  incomeByYear,
+  withholdingByAccount,
+} from "../analytics/incomeCosts";
 import { monthReview, reviewPeriods } from "../analytics/monthReview";
 import { buildPortfolioSeries } from "../analytics/portfolioSeries";
 import { latestMarketValue, rollup } from "../analytics/rollup";
@@ -31,6 +42,7 @@ import { fittedReturnRate } from "../projection/fittedRate";
 import { projectedAccounts, projectionInputs } from "../projection/inputs";
 import { milestoneYear, retirementIncome, runScenarios } from "../projection/scenario";
 import type { Datastore } from "../store/datastore";
+import { loadTaxTable, taxYear } from "../tax";
 import { defaultSelection } from "../ui/chartAccounts";
 import type { ReturnValuePoint } from "../ui/charts/returnsSeries";
 import {
@@ -350,6 +362,97 @@ function buildBenchmarkGoldens(analytics: AnalyticsOutput): Goldens["benchmark"]
   };
 }
 
+/**
+ * The Non-registered and Corporate tabs' own figures for `year`, each
+ * computed by calling the same production function the tab itself calls --
+ * `claimableYear`, `passiveIncomeYear`, `t1135ThresholdStatus` -- over the
+ * committed `analytics.json` and `tax.json`. Returns `null` when `year` has
+ * no rates entered, the same "not entered yet" case the tabs themselves
+ * render rather than falling back to another year's rates.
+ */
+function buildTaxableTabsGoldens(
+  analytics: AnalyticsOutput,
+  year: number,
+): Goldens["taxableTabs"] | null {
+  const table = loadTaxTable();
+  const rates = taxYear(table, year);
+  if (rates === null) return null;
+
+  const personalIds = accountIdsOfKind(analytics.series, PERSONAL_NONREG_KINDS);
+  const corporateIds = accountIdsOfKind(analytics.series, CORPORATE_KINDS);
+  const withholding = withholdingByAccount(analytics, year);
+  const personalForeignTax = new Map(
+    withholding
+      .filter((w) => personalIds.has(w.maskedId))
+      .map((w) => [w.maskedId, w.withholdingTax]),
+  );
+  const corporateForeignTax = new Map(
+    withholding
+      .filter((w) => corporateIds.has(w.maskedId))
+      .map((w) => [w.maskedId, w.withholdingTax]),
+  );
+
+  const personalIncome = required(analytics.income[String(year)], `personal income for ${year}`);
+  const corporateIncome = required(
+    analytics.corporateIncome[String(year)],
+    `corporate income for ${year}`,
+  );
+  const superficialLoss = analytics.superficialLoss[String(year)] ?? [];
+  const personalClaimable = claimableYear(
+    analytics,
+    year,
+    personalIds,
+    rates.personal.marginalRate.value,
+    false,
+    personalForeignTax,
+  );
+  const corporateClaimable = claimableYear(
+    analytics,
+    year,
+    corporateIds,
+    rates.corporate.passiveIncomeRate.value,
+    true,
+    corporateForeignTax,
+  );
+  const corporatePassive = passiveIncomeYear(year, corporateIncome, rates.corporate);
+  const personalForeignProperty = required(
+    analytics.foreignPropertyPersonal[String(year)],
+    `personal foreign property for ${year}`,
+  );
+  const corporateForeignProperty = required(
+    analytics.foreignPropertyCorporate[String(year)],
+    `corporate foreign property for ${year}`,
+  );
+
+  return {
+    personal: {
+      realizedGains: personalIncome.realizedGains,
+      foreignDividends: personalIncome.foreignDividends,
+      foreignTaxWithheld: personalIncome.foreignTaxWithheld,
+      interest: personalIncome.interest,
+      canadianDistributions: personalIncome.canadianDistributions,
+      salesCount: personalIncome.sales.length,
+      superficialLossFlaggedCount: superficialLoss.filter((c) => c.status !== "clear").length,
+      claimableDeductionsTotal: personalClaimable.deductionsTotal,
+      claimableCreditsTotal: personalClaimable.creditsTotal,
+      t1135MaxForeignCost: personalForeignProperty.maxForeignCost,
+    },
+    corporate: {
+      realizedGains: corporateIncome.realizedGains,
+      foreignDividends: corporateIncome.foreignDividends,
+      foreignTaxWithheld: corporateIncome.foreignTaxWithheld,
+      interest: corporateIncome.interest,
+      canadianDistributions: corporateIncome.canadianDistributions,
+      aaii: corporatePassive.aaii,
+      cdaAddition: corporatePassive.cdaAddition,
+      nerdtohAdded: corporatePassive.nerdtohAdded,
+      partIVTax: corporatePassive.partIVTax,
+      claimableDeductionsTotal: corporateClaimable.deductionsTotal,
+      t1135MaxForeignCost: corporateForeignProperty.maxForeignCost,
+    },
+  };
+}
+
 function buildGoldens(): Goldens {
   const analytics = loadAnalytics();
   const reconciliation = loadReconciliation();
@@ -594,6 +697,10 @@ function buildGoldens(): Goldens {
     holdings: buildHoldingsGoldens(analytics.holdings),
     benchmark: buildBenchmarkGoldens(analytics),
     flows: buildFlowGoldens(rawDatastore as Datastore),
+    taxableTabs: required(
+      buildTaxableTabsGoldens(analytics, Number(startYear)),
+      `tax.json rates for ${startYear}`,
+    ),
   };
 }
 

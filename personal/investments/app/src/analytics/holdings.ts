@@ -16,6 +16,10 @@ export interface HoldingSummary {
   assetClass: string;
   /** True when the statement flags this symbol's pricing as not yet final. */
   pendingValuation: boolean;
+  /** Summed book cost, CAD -- already converted per-holding where `Holding.bookCostConverted` says so, the same convention `value` follows for market value. */
+  bookCost: number;
+  /** True when any contributing holding's book cost was a converted USD approximation -- see `Holding.bookCostConverted`'s own doc. */
+  bookCostConverted: boolean;
 }
 
 export interface HoldingsGroup {
@@ -37,6 +41,17 @@ export interface HoldingsOutput {
   assetClasses: { name: string; value: number }[];
   /** Counted account labels with no BROKERAGE statement at `period`, sorted -- named, never silently dropped. */
   behind: string[];
+  /**
+   * Each account's own cash balance at `period`, CAD, keyed by `maskedId` --
+   * unlike `holdings`, which pools cash by currency across every account
+   * (so a shared-currency balance cannot be read back per account), this is
+   * that account's own statement, never summed with another account's. Read
+   * straight off a BROKERAGE statement's `portfolio.cashMarketValue`
+   * (already CAD, the same figure the statement's own portfolio section
+   * totals), or summed from `cash[]` converted at that statement's own rate
+   * on a CASH-template statement, which carries no `portfolio` block.
+   */
+  cashByAccount: Record<string, number>;
 }
 
 /**
@@ -57,6 +72,8 @@ interface Entry {
   priceCurrency: Currency;
   assetClass: string;
   pendingValuation: boolean;
+  bookCost: number;
+  bookCostConverted: boolean;
 }
 
 /** The running totals `buildHoldings` folds every account's statement into. */
@@ -80,6 +97,8 @@ interface EntryInput {
   priceCurrency: Currency;
   assetClass: string;
   pendingValuation: boolean;
+  bookCost: number;
+  bookCostConverted: boolean;
 }
 
 /**
@@ -98,8 +117,12 @@ function addEntry(totals: Totals, input: EntryInput): void {
     priceCurrency: input.priceCurrency,
     assetClass: input.assetClass,
     pendingValuation: false,
+    bookCost: 0,
+    bookCostConverted: false,
   };
   entry.value += input.value;
+  entry.bookCost += input.bookCost;
+  entry.bookCostConverted = entry.bookCostConverted || input.bookCostConverted;
   entry.accounts.add(input.accountLabel);
   entry.pendingValuation = entry.pendingValuation || input.pendingValuation;
   totals.bySymbol.set(input.key, entry);
@@ -112,7 +135,7 @@ function addEntry(totals: Totals, input: EntryInput): void {
 }
 
 /** One symbol priced properly (`marketPrice > 0`) somewhere in the corpus: which account, which period, in which currency. */
-interface PricedSighting {
+export interface PricedSighting {
   accountId: string;
   period: string;
   currency: Currency;
@@ -124,7 +147,9 @@ interface PricedSighting {
  * symbol's true currency is a fact about the security, not about the one
  * statement that happened to omit its price.
  */
-function pricedSightingsBySymbol(statements: readonly Statement[]): Map<string, PricedSighting[]> {
+export function pricedSightingsBySymbol(
+  statements: readonly Statement[],
+): Map<string, PricedSighting[]> {
   const bySymbol = new Map<string, PricedSighting[]>();
   for (const statement of statements) {
     if (statement.source.template !== "BROKERAGE") continue;
@@ -156,7 +181,7 @@ function monthIndex(period: string): number {
  * different account regardless of period, and only ties are broken by
  * period: the same period first, then whichever is closest in time.
  */
-function resolveCurrency(
+export function resolveCurrency(
   sightings: ReadonlyMap<string, readonly PricedSighting[]>,
   symbol: string,
   accountId: string,
@@ -235,6 +260,8 @@ function addHolding(
     priceCurrency,
     assetClass: holding.assetClass,
     pendingValuation: holding.pendingValuation,
+    bookCost: holding.bookCost,
+    bookCostConverted: holding.bookCostConverted,
   });
 }
 
@@ -252,8 +279,24 @@ function addCashHoldings(totals: Totals, statement: Statement, label: string): v
       priceCurrency: cash.currency,
       assetClass: "Cash",
       pendingValuation: false,
+      bookCost: 0,
+      bookCostConverted: false,
     });
   }
+}
+
+/**
+ * One statement's own cash total, CAD. `buildHoldings` only ever calls this
+ * on a BROKERAGE statement (the CASH template never enters its `atPeriod`
+ * map, the same restriction `latestCountedPeriod`/`statementsAtPeriod`
+ * apply), so `portfolio.cashMarketValue` -- already the CAD cash component
+ * the statement's own totals are built from -- is read directly rather than
+ * re-summed from `cash[]`. The `?? 0` guards only the parser-bug case the
+ * `Statement.portfolio` field's own doc names (null on a BROKERAGE
+ * statement), never a real CASH-template statement reaching this call.
+ */
+function accountCashTotal(statement: Statement): number {
+  return statement.portfolio?.cashMarketValue ?? 0;
 }
 
 function toHoldingSummaries(totals: Totals): HoldingSummary[] {
@@ -267,6 +310,8 @@ function toHoldingSummaries(totals: Totals): HoldingSummary[] {
       priceCurrency: e.priceCurrency,
       assetClass: e.assetClass,
       pendingValuation: e.pendingValuation,
+      bookCost: e.bookCost,
+      bookCostConverted: e.bookCostConverted,
     }))
     .sort((a, b) => b.value - a.value);
 }
@@ -327,12 +372,14 @@ export function buildHoldings(
     .sort();
 
   const totals = emptyTotals();
+  const cashByAccount: Record<string, number> = {};
   for (const [accountId, statement] of atPeriod) {
     const label = labelById.get(accountId) ?? accountId;
     for (const holding of statement.holdings) {
       addHolding(totals, holding, label, accountId, period, sightings);
     }
     addCashHoldings(totals, statement, label);
+    cashByAccount[accountId] = accountCashTotal(statement);
   }
 
   const holdings = toHoldingSummaries(totals);
@@ -349,5 +396,6 @@ export function buildHoldings(
     currency: totals.currency,
     assetClasses,
     behind,
+    cashByAccount,
   };
 }
