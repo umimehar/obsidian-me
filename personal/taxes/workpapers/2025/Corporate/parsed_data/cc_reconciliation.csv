@@ -1,0 +1,234 @@
+month_sheet,date,merchant,amount,category,deductibility,receipt_on_file,notes,original_category,source,stmt_match,stmt_description,stmt_amount,stmt_date,match_quality
+Jan,2025-01-01,Apple store hub (returned),508.44,Return / refund,,Yes,Apple subscription (iCloud/Apple One) for business,,CC_v2,Matched,APPLE STORE #R350 MISSISSAUGA ON,508.44,2025-01-01,Exact
+Jan,2025-01-01,minimoes rest,32.97,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,MINI MOE'S BURGERS SCARBOROUGH,32.97,2025-01-01,Exact
+Jan,2025-01-04,amazon  (returned),33.89,Return / refund,,MISSING,"Amazon purchase — returned same month, net $0",,CC_v2,Matched,AMZN Mktp CA*ZP1FY52K0,33.89,2025-01-04,Exact
+Jan,2025-01-05,amazon return,-33.89,Return / refund,,MISSING,"Return of Amazon purchase — matched to Jan charge, net $0",,CC_v2,No match,,,,
+Jan,2025-01-06,apple return,-508.44,Return / refund,,MISSING,Apple subscription (iCloud/Apple One) for business,,CC_v2,No match,,,,
+Jan,2025-01-06,amazon (mic and extender,86.88,Office equipment & supplies,100%,Yes,Microphone and extender for video conferencing,office expense,CC_v2,Matched,AMZN Mktp CA*ZD8B21K82,86.88,2025-01-06,Exact
+Jan,2025-01-16,emirates flight change,175.62,Travel & transportation,100%,Yes,Emirates flight change fee — business travel,travel,CC_v2,Matched,EMIRATES 117635681616969 TORONTO ON,175.62,2025-01-16,Exact
+Jan,2025-01-17,emirates flight change,150.38,Travel & transportation,100%,Yes,Emirates flight change fee — business travel,travel,CC_v2,Matched,Internation 0054538311 Winnipeg QC,150.38,2025-01-17,Exact
+Jan,2025-01-25,nawab bbq rest,31.95,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NAWAB'S LEGENDARY BBQ MISSISSAUGA,31.95,2025-01-25,Exact
+Jan,2025-01-26,ginsoy rest,63.0,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,TST-Ginsoy Mississauga ON,63.0,2025-01-28,Exact
+Jan,2025-01-29,tim horton,15.3,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,Matched,TIM HORTONS #6228 MISSISSAUGA ON,15.3,2025-01-29,Exact
+Jan,2025-01-29,Monteiro resturant,45.0,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Jan,2025-01-30,Lyft ride,20.0,Travel & transportation,100%,Yes,Ride-share for business travel,travel,CC_v2,Matched,LYFT *1 RIDE 01-29 VANCOUVER BC,20.0,2025-01-30,Exact
+Jan,2025-01-31,watan kabob,11.99,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,WATAN KABOB MISSISSAUGA ON,11.99,2025-01-31,Exact
+Feb,2025-01-01,Gladiator Burger client meeting,16.16,Meals & entertainment,50%,Yes,Client meeting meal — note attendees and business topic discussed,,CC_v2,No match,,,,
+Feb,2025-02-02,Airlo UK sim,8.5,Travel & transportation,100%,Yes,"UK SIM card for business trip to Newcastle, UK",,CC_v2,Matched,AIRALO SINGAPORE,8.5,2025-02-02,Exact
+Feb,2025-02-03,Food newcastle uk,40.93,Meals & entertainment,50%,Yes,"Meal during business trip to Newcastle, UK (GBP 21.99 = CAD 40.93)",,CC_v2,Matched,GBP 21.99@1.861300591 Newcastle Halal,40.93,2025-02-03,Exact
+Feb,2025-02-05,starbucks UK,21.49,Meals & entertainment,50%,Yes,"Coffee during business trip to Newcastle, UK",,CC_v2,Matched,GBP 11.55@1.86060606 STARBUCKS SSP,21.49,2025-02-05,Exact
+Mar,2025-03-04,CC prime bonus,-0.73,Cashback credit,,No,Credit card reward credit,,CC_v2,No match,,,,
+Mar,2025-03-07,Amazon prime member,111.87,Office equipment & supplies,100%,Yes,Amazon Prime membership for business deliveries,office expense,CC_v2,Matched,Amazon.ca Prime Member amazon.ca/priBC,111.87,2025-03-07,Exact
+Mar,2025-03-07,WATAN kabob food,74.52,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,WATAN KABOB MISSISSAUGA ON,74.52,2025-03-07,Exact
+Mar,2025-03-08,AMZN (side table office),63.27,Office equipment & supplies,100%,Yes,Side table for office,office expense,CC_v2,Matched,AMZN Mktp CA*MZ7H09KB3,63.27,2025-03-08,Exact
+Mar,2025-03-09,AMZN (printer inks),45.0,Office equipment & supplies,100%,Yes,Printer ink consumables for office printer,office expense,CC_v2,Matched,AMZN Mktp CA*BY7ZZ6C23,45.0,2025-03-09,Exact
+Mar,2025-03-09,AMZN (IRONING BOARD),85.87,Office equipment & supplies,100%,Yes,Ironing board — confirm office use (e.g. for client presentations),office eq,CC_v2,Matched,AMZN Mktp CA*GQ5D86Q73,85.87,2025-03-09,Exact
+Mar,2025-03-14,AMZN (toolkit),118.38,Office equipment & supplies,100%,Yes,Office toolkit for setup and maintenance,office expense,CC_v2,Matched,AMZN Mktp CA*ZB7I78ZW3,118.38,2025-03-14,Exact
+Mar,2025-03-15,VILLAGE TASTE rest,122.69,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,VILLAGE TASTE MISSISSAUGA ON,122.69,2025-03-15,Exact
+Mar,2025-03-17,ASEER time,36.11,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,ASEER TIME MISSISSAUGA ON,36.11,2025-03-17,Exact
+Mar,2025-03-14,dewalt drill/driver kit,135.6,Office equipment & supplies,100%,Yes,Tools for office setup and maintenance,office tool,CC_v2,Matched,COMPLETE EQUIPMENT SAL MISSISSAUGA,135.6,2025-03-14,Exact
+Mar,2025-03-21,NAWAB BBQ,18.07,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NAWAB'S LEGENDARY BBQ MISSISSAUGA,18.07,2025-03-21,Exact
+Mar,2025-03-20,3 food street,20.34,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,3 FOOD STREET MISSISSAUGA ON,20.34,2025-03-20,Exact
+Mar,2025-03-22,MELT N Dip,25.64,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,MELT N DIP MISSISSAUGA ON,25.64,2025-03-22,Exact
+Mar,2025-03-23,NAWAB BBQ,37.28,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NAWAB'S LEGENDARY BBQ MISSISSAUGA,37.28,2025-03-23,Exact
+Mar,2025-03-24,SHOOPER DRUG (Canada post envelop),27.46,Office equipment & supplies,100%,Yes,Canada Post envelopes for business correspondence,office expense,CC_v2,Matched,SHOPPERS DRUG MART #11 MISSISSAUGA,27.46,2025-03-24,Exact
+Apr,2025-03-30,NAWAB BBQ,74.56,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NAWAB'S LEGENDARY BBQ MISSISSAUGA,74.56,2025-03-30,Exact
+Apr,2025-04-03,NAWAB BBQ,38.37,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NAWAB'S LEGENDARY BBQ MISSISSAUGA,38.37,2025-04-03,Exact
+Apr,2025-04-05,MELT N DIP,108.19,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,MELT N DIP MISSISSAUGA ON,108.19,2025-04-05,Exact
+Apr,2025-04-06,MELT N DIP,17.52,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,MELT N DIP EGLINGTON MISSISSAUGA ON,17.52,2025-04-06,Exact
+Apr,2025-04-06,SHAHKEY REST,351.98,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,SHASHKAY MISSISSAUGA ON,351.98,2025-04-06,Exact
+Apr,2025-04-07,NAWAB BBQ,21.46,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NAWAB'S LEGENDARY BBQ MISSISSAUGA,21.46,2025-04-07,Exact
+Apr,2025-04-09,PIZZA PRO,32.75,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,PIZZA PROS MISSISSAUGA ON,32.75,2025-04-09,Exact
+Apr,2025-04-11,Krispy kreme,21.65,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,KRISPY KREME #513 MISSISSAUGA ON,21.65,2025-04-11,Exact
+Apr,2025-04-13,TIM HORTONS,20.57,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,Matched,TIM HORTONS #1733 MISSISSAUGA ON,20.57,2025-04-13,Exact
+Apr,2025-04-13,BASKIN ROBBINS,40.48,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,BASKIN ROBBINS #335380 MISSISSAUGA,40.48,2025-04-13,Exact
+Apr,2025-04-18,KARACHI FOOD COURT,32.75,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,KARACHI FOOD COURT MISSISSAUGA ON,32.75,2025-04-18,Exact
+Apr,2025-04-21,CHANG AND HUANG THAI,43.96,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,CHANG AND HUANG THAI A MISSISSAUGA,43.96,2025-04-21,Exact
+Apr,2025-04-30,tim,4.19,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,TIM HORTONS #2603 MISSISSAUGA ON,4.19,2025-04-30,Exact
+May,2025-05-02,SONG COOK'S COREAN CHI,39.54,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,SONG COOK'S COREAN CHI MISSISSAUGA,39.54,2025-05-02,Exact
+May,2025-05-03,tim,11.65,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,TIM HORTONS #6228 MISSISSAUGA ON,11.65,2025-05-03,Exact
+May,2025-05-03,MONTEIRO,33.31,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,MONTEIRO SCARBOROUGH TORONTO,33.31,2025-05-03,Exact
+May,2025-05-06,tim,11.08,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,TIM HORTONS #6228 MISSISSAUGA ON,11.08,2025-05-06,Exact
+May,2025-05-17,starbucks,24.69,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,Matched,STARBUCKS 75525 NIAGARA FALLSON,24.69,2025-05-17,Exact
+May,2025-05-17,OSMOW's,16.92,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,OSMOW'S NIAGARA FALLSON,16.92,2025-05-17,Exact
+May,2025-05-17,OSMOW's,2.24,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,OSMOW'S NIAGARA FALLSON,2.24,2025-05-17,Exact
+May,2025-05-17,OSMOW's,20.32,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,OSMOW'S NIAGARA FALLSON,20.32,2025-05-17,Exact
+May,2025-05-18,HONK PARKING,7.35,Office equipment & supplies,100%,Yes,Parking for business meeting,office expense,CC_v2,Matched,HONK PARKING 866-675-7337 ON,7.35,2025-05-18,Exact
+May,2025-05-18,HONK PARKING,7.35,Office equipment & supplies,100%,Yes,Parking for business meeting,office expense,CC_v2,Matched,HONK PARKING 866-675-7337 ON,7.35,2025-05-18,Exact
+May,2025-05-18,tst dhaba,68.86,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,TST-Dhaba On The Falls Niagara FallsON,68.86,2025-05-18,Exact
+May,2025-05-20,airport parking,14.0,Office equipment & supplies,100%,Yes,Airport parking for business travel,office expense,CC_v2,Matched,PEARSON PARKING T3 TORONTO ON,14.0,2025-05-20,Exact
+May,2025-05-20,butt karahi,138.07,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,BUTT KARAHI CANADA BRAMPTON ON,138.07,2025-05-20,Exact
+May,2025-05-25,uber eats drinks,37.61,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,UBER CANADA/UBEREATS TORONTO ON,37.61,2025-05-25,Exact
+May,2025-05-25,ginsoy,226.56,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,TST-Ginsoy Mississauga ON,226.56,2025-05-25,Exact
+Jun,2025-05-31,Nawab bbq,63.25,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NAWAB'S LEGENDARY BBQ MISSISSAUGA,63.25,2025-05-31,Exact
+Jun,2025-06-02,charsi karahi,234.17,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,CHARSI KARAHI & BBQ MISSISSAUGA ON,234.17,2025-06-02,Exact
+Jun,2025-06-03,airport parking,21.0,Travel & transportation,100%,Yes,Airport parking for business travel,parking/travel,CC_v2,Matched,PEARSON PARKING T3 TORONTO ON,21.0,2025-06-03,Exact
+Jun,2025-06-05,gladiator burger,42.33,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,SQ *GLADIATOR BURGER & MISSISSAUGA,42.33,2025-06-05,Exact
+Jun,2025-06-13,karachi food court,30.48,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,KARACHI FOOD COURT MISSISSAUGA ON,30.48,2025-06-13,Exact
+Jun,2025-06-13,AMZN office bag,361.59,Office equipment & supplies,100%,Yes,Office bag for business travel,office,CC_v2,Matched,AMZN Mktp CA*NA4082FT0,361.59,2025-06-13,Exact
+Jun,2025-06-14,ikea furniture,1476.9,Office equipment & supplies,100%,Yes,Office furniture — confirm location (e.g. Lazer Technologies office),office,CC_v2,Matched,IKEA.CA ONLINE BURLINGTON ON,1476.9,2025-06-14,Exact
+Jun,2025-06-14,ikea furniture/plant,14.68,Office equipment & supplies,100%,Yes,Office furniture — confirm location (e.g. Lazer Technologies office),office,CC_v2,Matched,IKEA ETOBICOKE ETOBICOKE ON,14.68,2025-06-14,Exact
+Jun,2025-06-14,AMZN office webcam (REFUNDED),305.09,Return / refund,,No,"Webcam — refunded in Jun, net $0",office,CC_v2,Matched,AMZN Mktp CA*NA1VL0ZA0,305.09,2025-06-14,Exact
+Jun,2025-06-14,AMZN office webcam,305.09,Office equipment & supplies,100%,Yes,Webcam for video conferencing,office,CC_v2,Matched,AMZN Mktp CA*NA84E2TY1,305.09,2025-06-14,Exact
+Jun,2025-06-14,AMZN monitor,725.6,Office equipment & supplies,100%,Yes,External monitor for office workstation,office,CC_v2,Matched,Amazon.ca*NA16X63Q1 AMAZON.CA ON,725.6,2025-06-14,Exact
+Jun,2025-06-15,apple mac studio,5931.37,Office equipment & supplies,100%,Yes,Primary workstation for software development,office,CC_v2,Matched,APPLE.COM/CA 800-676-2775 ON,5931.37,2025-06-15,Exact
+Jun,2025-06-15,AMZN wireless charger,107.34,Office equipment & supplies,100%,Yes,Wireless charger for office desk,office,CC_v2,Matched,AMZN Mktp CA*NA34O6T50,107.34,2025-06-15,Exact
+Jun,2025-06-16,AMZN office webcam,-305.09,Office equipment & supplies,100%,No,Webcam for video conferencing,,CC_v2,No match,,,,
+Jun,2025-06-18,Bollywood unlimited,33.3,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,BOLLYWOOD UNLIMITED IN MISSISSAUGA,33.3,2025-06-18,Exact
+Jun,2025-06-19,"AMZN (wire, desk, lamp)",171.73,Office equipment & supplies,100%,Yes,"Office desk accessories — wires, organizer, lamp",office,CC_v2,Matched,AMZN Mktp CA*NO6Q508I2,171.73,2025-06-19,Exact
+Jun,2025-06-19,AMZN (wires & adapter),281.56,Office equipment & supplies,100%,Yes,Office wiring and adapters,office,CC_v2,Matched,AMZN Mktp CA*NA1L80RH0,281.56,2025-06-19,Exact
+Jun,2025-06-20,AMZN ups,158.19,Office equipment & supplies,100%,Yes,UPS battery backup for office equipment,office,CC_v2,Matched,Amazon.ca*NO9HX6K02 AMAZON.CA ON,158.19,2025-06-20,Exact
+Jun,2025-06-23,Ginsoy,355.84,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,TST-Ginsoy Mississauga ON,355.84,2025-06-23,Exact
+Jun,2025-06-26,3 food st,29.38,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,3 FOOD STREET MISSISSAUGA ON,29.38,2025-06-26,Exact
+Jul,2025-06-28,KARACHI FOOD COURT,62.49,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,KARACHI FOOD COURT MISSISSAUGA ON,62.49,2025-06-28,Exact
+Jul,2025-06-29,winners 260,180.75,Office equipment & supplies,100%,Yes,"Office decoration — specify items (frames, plants, etc.)",office accessories/decoration,CC_v2,Matched,WINNERS 360 MISSISSAUGA ON,180.75,2025-06-29,Exact
+Jul,2025-06-29,IKEA,64.83,Office equipment & supplies,100%,Yes,Office accessories and decor for workspace,office accessories/decoration,CC_v2,Matched,IKEA ETOBICOKE ETOBICOKE ON,64.83,2025-06-29,Exact
+Jul,2025-07-02,Lazeez,30.36,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,Lazeez L018 Mississauga ON,30.36,2025-07-02,Exact
+Jul,2025-07-03,Tim,17.17,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,TIM HORTONS #2891 MISSISSAUGA ON,17.17,2025-07-03,Exact
+Jul,2025-07-05,Tim,26.26,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,TIM HORTONS #2603 MISSISSAUGA ON,26.26,2025-07-05,Exact
+Jul,2025-07-05,Haze lounge,54.95,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,HAZE LOUNGE MISSISSAUGA ON,54.95,2025-07-05,Exact
+Jul,2025-07-05,Apple,28.24,Office subscriptions & software,100%,Yes,Apple subscription (iCloud/Apple One) for business,work subscription (office),CC_v2,Matched,APPLE.COM/BILL 866-712-7753 ON,28.24,2025-07-05,Exact
+Jul,2025-07-13,Chai n Chill,60.36,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,Matched,CHAI N CHILL MILTON ON,60.36,2025-07-13,Exact
+Jul,2025-07-14,Amzn (power bank case),28.71,Office subscriptions & software,100%,Yes,,office util,CC_v2,Matched,AMZN Mktp CA*7W89K4233,28.71,2025-07-14,Exact
+Jul,2025-07-14,Amzn (power bank),237.29,Office subscriptions & software,100%,Yes,,office util,CC_v2,Matched,AMZN Mktp CA*1Y19W9VF3,237.29,2025-07-14,Exact
+Jul,2025-07-15,3 food st,23.73,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,3 FOOD STREET MISSISSAUGA ON,23.73,2025-07-15,Exact
+Jul,2025-07-15,flexispot,1141.27,Office equipment & supplies,100%,Yes,Standing desk for office workstation,office desk,CC_v2,Matched,FLEXISPOT LIMITED LONDON GBR,1141.27,2025-07-15,Exact
+Jul,2025-07-16,cashback,-237.29,Cashback credit,,No,Cashback credit,,CC_v2,No match,,,,
+Jul,2025-07-18,flexispot,-20.0,Office equipment & supplies,100%,No,Standing desk for office workstation,,CC_v2,No match,,,,
+Jul,2025-07-19,song cook resturnat,74.55,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,SONG COOK'S COREAN CHI MISSISSAUGA,74.55,2025-07-19,Exact
+Jul,2025-07-19,song cook resturnat,7.47,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,SONG COOK'S COREAN CHI MISSISSAUGA,7.47,2025-07-19,Exact
+Jul,2025-07-23,Melt n dip,38.34,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,MELT N DIP EGLINGTON MISSISSAUGA ON,38.34,2025-07-23,Exact
+Jul,2025-07-24,Aseer times,19.19,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,ASEER TIME MISSISSAUGA ON,19.19,2025-07-24,Exact
+Jul,2025-07-28,CC Annual fee,149.0,Bank & card fees,100%,Yes,Annual credit card fee — fully deductible as business expense,fee,CC_v2,Matched,ANNUAL FEE,149.0,2025-07-28,Exact
+Aug,2025-07-27,The cheese cake factory,148.41,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,THE CHEESECAKE FACTORY NORTH YORK,148.41,2025-07-27,Exact
+Aug,2025-08-02,claude AI subs,28.0,Office subscriptions & software,100%,Yes,Claude AI subscription — AI development and productivity tool,AI subscription,CC_v2,Matched,CLAUDE.AI SUBSCRIPTION SAN,28.0,2025-08-02,Exact
+Aug,2025-08-02,Karachi express resturant,66.83,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,TST-Karachi Xpress - E Toronto ON,66.83,2025-08-02,Exact
+Aug,2025-08-03,Lokma resturant,11.99,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,LOKMA DESERT SCARBOROUGH ON,11.99,2025-08-03,Exact
+Aug,2025-08-03,Monteriro resturant,57.03,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,MONTEIRO SCARBOROUGH TORONTO,57.03,2025-08-03,Exact
+Aug,2025-08-04,Spive villa resturant,48.52,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,SPICE VILLA MISSISSAUGA ON,48.52,2025-08-04,Exact
+Aug,2025-08-05,Nawabs resturant,41.79,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NAWAB'S LEGENDARY BBQ MISSISSAUGA,41.79,2025-08-05,Exact
+Aug,2025-08-08,Food at mississauga,20.0,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,ISLAMIC PROPAGATION CE MISSISSAUGA,20.0,2025-08-08,Exact
+Aug,2025-08-08,hakka ren resturant,53.05,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,HAKKA REN - HURONTARIO MISSISSAUGA,53.05,2025-08-08,Exact
+Aug,2025-08-13,burger bros,26.51,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,THE BURGER BROS MISSISSAUGA ON,26.51,2025-08-13,Exact
+Aug,2025-08-15,Flexi spot limi credit,-2.6,Return / refund,,No,Flexispot partial refund/credit,REFUND,CC_v2,No match,,,,
+Aug,2025-08-16,Nawabs resturant,23.43,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NAWABS LEGENDARY BBQ MISSISSAUGA,23.43,2025-08-16,Exact
+Aug,2025-08-17,Aseer times,15.8,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,ASEER TIME MISSISSAUGA ON,15.8,2025-08-17,Exact
+Aug,2025-08-21,Juice to Go,12.42,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,JUICE TO GO Mississauga ON,12.42,2025-08-21,Exact
+Aug,2025-08-24,3 food st,35.03,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,3 FOOD STREET MISSISSAUGA ON,35.03,2025-08-24,Exact
+Aug,2025-08-26,Asser Times,18.06,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,ASEER TIME MISSISSAUGA ON,18.06,2025-08-26,Exact
+Sep,2025-08-31,Nandos resturant,46.86,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NANDO'S DIXIE MISSISSAUGA ON,46.86,2025-08-31,Exact
+Sep,2025-08-31,Google youtube Premium service subscription,129.99,Office subscriptions & software,100%,Yes,Google/YouTube Premium for business use,office util/software purchase,CC_v2,Matched,GOOGLE *YouTubePremium g.co/helppay#NS,129.99,2025-08-31,Exact
+Sep,2025-09-02,3 food st,25.67,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,3 FOOD STREET MISSISSAUGA ON,25.67,2025-09-02,Exact
+Sep,2025-09-02,Mr loop,32.21,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,MR LOOP MISSISSAUGA ON,32.21,2025-09-02,Exact
+Sep,2025-09-06,OnRoute,74.31,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,ONROUTE MORRISBURG E # MORRISBURG,74.31,2025-09-06,Exact
+Sep,2025-09-08,Cremerie Montreal,13.2,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,CREMERIE DU VIEUX MONTREAL QC,13.2,2025-09-08,Exact
+Sep,2025-09-08,Queues DE Castor,10.47,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,QUEUES DE CASTOR-BEAVE MONTREAL,10.47,2025-09-08,Exact
+Sep,2025-09-08,Administration Portuai Mont,35.0,Travel & transportation,100%,Yes,"Parking — Montreal, business trip",parking,CC_v2,Matched,ADMINISTRATION PORTUAI MONTREAL,35.0,2025-09-08,Exact
+Sep,2025-09-08,Popeyes,30.04,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,POPEYES 13209 BROCKVILLE ON,30.04,2025-09-09,Exact
+Sep,2025-09-09,Gas petro canada,50.0,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,travel/gas,CC_v2,Matched,PETRO-CANADA 65236 BROCKVILLE ON,50.0,2025-09-09,Exact
+Sep,2025-09-09,Petro-Canada 00481,44.07,Vehicle — fuel,100%,Yes,,travel/gas,CC_v2,Matched,PETRO-CANADA 00481 MISSISSAUGA ON,44.07,2025-09-09,Exact
+Sep,2025-09-10,Enterprise rent a car,405.62,Travel & transportation,100%,Yes,Rental car for business travel (Sep trip),travel/rentCar,CC_v2,Matched,ENTERPRISE CANADA C21S MISSISSAUGA,405.62,2025-09-10,Exact
+Sep,2025-09-18,Tim horton,12.62,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,Matched,TIM HORTONS #6228 MISSISSAUGA ON,12.62,2025-09-18,Exact
+Sep,2025-09-20,Craveables,61.59,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,CRAVEABLES MISSISSAUGA ON,61.59,2025-09-20,Exact
+Sep,2025-09-21,Nawabs bbq,49.19,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NAWABS LEGENDARY BBQ MISSISSAUGA,49.19,2025-09-21,Exact
+Sep,2025-09-22,table plus software subscription,206.62,Office subscriptions & software,100%,Yes,"TablePlus — database management software (USD, 13% HST paid)",office util/software purchase,CC_v2,Matched,USD 145.77@1.41743843 PADDLE.NET*,206.62,2025-09-22,Exact
+Sep,2025-09-24,Watan kabob,42.33,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,WATAN KABOB MISSISSAUGA ON,42.33,2025-09-24,Exact
+Oct,2025-09-26,Ikea furn,609.02,Office equipment & supplies,100%,Yes,Office furniture — confirm location,office furnicher,CC_v2,Matched,IKEA ETOBICOKE ETOBICOKE ON,609.02,2025-09-26,Exact
+Oct,2025-09-27,Mercedes-benz car lease downpayment,4000.0,Vehicle — lease,100% (confirm CRA cap),Yes,Mercedes lease downpayment — 100% business vehicle; confirm CRA prescribed limit with accountant,car lease,CC_v2,Matched,MERCEDES-BENZ MISSISSA MISSISSAUGA,4000.0,2025-09-27,Exact
+Oct,2025-09-30,Nandos,45.38,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NANDO'S DIXIE MISSISSAUGA ON,45.38,2025-09-30,Exact
+Oct,2025-09-30,Mercedes-benz car lease downpayment & first month lease,2750.01,Vehicle — lease,100% (confirm CRA cap),Yes,"Mercedes lease downpayment + 1st month — 100% business vehicle; confirm CRA prescribed limit ($36,000 cost cap) with accountant",car lease,CC_v2,Matched,MERCEDES-BENZ MISSISSA MISSISSAUGA,2750.01,2025-09-30,Exact
+Oct,2025-09-30,Lyft,26.09,Travel & transportation,100%,Yes,Ride-share for business travel,travel,CC_v2,Matched,LYFT *1 RIDE 09-29 VANCOUVER BC,26.09,2025-09-30,Exact
+Oct,2025-10-01,google one subscription,39.99,Office subscriptions & software,100%,Yes,Google One cloud storage for business,office util/subscription,CC_v2,Matched,GOOGLE *Google One 650-253-0000 NS,39.99,2025-10-01,Exact
+Oct,2025-10-01,Lyft,17.1,Travel & transportation,100%,Yes,Ride-share for business travel,travel,CC_v2,Matched,LYFT *1 RIDE 09-30 VANCOUVER BC,17.1,2025-10-01,Exact
+Oct,2025-10-04,gas,75.0,Vehicle — fuel,100%,Yes,,car gas,CC_v2,Matched,ESSO CIRCLE K MISSISSAUGA ON,75.0,2025-10-04,Exact
+Oct,2025-10-04,car wash,56.49,Vehicle — car wash,100%,Yes,Car wash — 100% business-use vehicle,car wash,CC_v2,Matched,ESSO CIRCLE K MISSISSAUGA ON,56.49,2025-10-04,Exact
+Oct,2025-10-04,Mercedes-benz car tires,2817.77,Vehicle — tires & maintenance,100%,Yes,Replacement tires for 100% business-use vehicle,car tires,CC_v2,Matched,MERCEDES-BENZ MISSISSA MISSISSAUGA,2817.77,2025-10-04,Exact
+Oct,2025-10-04,AMZN,13.56,Vehicle — accessories,100%,Yes,,car accessory,CC_v2,Matched,AMZN Mktp CA*NV72T57G0 866-216-1072 ON,13.56,2025-10-04,Exact
+Oct,2025-10-04,AMZN,41.97,Vehicle — accessories,100%,Yes,,car accessory,CC_v2,Matched,AMZN Mktp CA*NV7665T71 866-216-1072 ON,41.97,2025-10-04,Exact
+Oct,2025-10-05,Lahore Chatkhara,49.13,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,LAHORE CHATKHARA MISSISSAUGA ON,49.13,2025-10-05,Exact
+Oct,2025-10-05,Shelbyes,54.19,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,Shelbys niagara fallsON,54.19,2025-10-05,Exact
+Oct,2025-10-07,gas shell,87.19,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,gas,CC_v2,Matched,SHELL C11301 MISSISSAUGA ON,87.19,2025-10-07,Exact
+Oct,2025-10-09,Paan casa (cafe paaya),30.46,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,PAAN CASA MISSISSAUGA ON,30.46,2025-10-09,Exact
+Oct,2025-10-09,Aseer Times,10.16,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,ASEER TIME MISSISSAUGA ON,10.16,2025-10-09,Exact
+Oct,2025-10-12,gas shell,63.84,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,gas,CC_v2,Matched,SHELL C06528 MISSISSAUGA ON,63.84,2025-10-12,Exact
+Oct,2025-10-12,Car dashcam,259.84,Vehicle — accessories,100%,Yes,Dashcam for 100% business-use vehicle,car,CC_v2,Matched,HOLLYWOOD ACCESSORIES BRAMPTON,259.84,2025-10-12,Exact
+Oct,2025-10-13,fision flo,73.45,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,SQ *FUSIONFLO SCARBOROUGH ON,73.45,2025-10-13,Exact
+Oct,2025-10-15,parking,51.25,Vehicle — parking,100%,Yes,,car parking,CC_v2,Matched,HALTON HEALTH CARE OAKVILLE ON,51.25,2025-10-15,Exact
+Oct,2025-10-17,asser times,10.16,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,ASEER TIME MISSISSAUGA ON,10.16,2025-10-17,Exact
+Oct,2025-10-18,gas,52.09,Vehicle — fuel,100%,Yes,,gas,CC_v2,Matched,ESSO CIRCLE K MISSISSAUGA ON,52.09,2025-10-18,Exact
+Oct,2025-10-18,Melt n dip,18.92,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,MELT N DIP EGLINGTON MISSISSAUGA ON,18.92,2025-10-18,Exact
+Oct,2025-10-19,sumaq resturant,47.44,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,SUMAQ IRAQI CHARCOAL G MISSISSAUGA,47.44,2025-10-19,Exact
+Oct,2025-10-21,Ginsoy resturant,29.44,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,TST-Ginsoy Mississauga ON,29.44,2025-10-21,Exact
+Oct,2025-10-25,gas shell,87.37,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,gas,CC_v2,Matched,SHELL C20702 MISSISSAUGA ON,87.37,2025-10-25,Exact
+Oct,2025-10-25,car wash,24.85,Vehicle — car wash,100%,Yes,Car wash — 100% business-use vehicle,car wash,CC_v2,Matched,DENNY'S TOUCH FREE CAR MISSISSAUGA,24.85,2025-10-25,Exact
+Nov,2025-10-28,gas shell,72.35,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2,Matched,SHELL C07659 MISSISSAUGA ON,72.35,2025-10-28,Exact
+Nov,2025-10-29,open mic cafe,114.58,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,OPEN MIC CAFE AND CUIS MISSISSAUGA,114.58,2025-10-29,Exact
+Nov,2025-11-01,soul5,19.21,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,SOUL 5 MISSISSAUGA ON,19.21,2025-11-01,Exact
+Nov,2025-11-01,AMZN Mktp CA,18.52,Office equipment & supplies,100%,Yes,Amazon office supplies — specify item if >$50,shopping,CC_v2,Matched,AMZN Mktp CA*NK4K24SL2 TORONTO ON,18.52,2025-11-06,Exact
+Nov,2025-11-06,Halton Parking,13.5,Vehicle — parking,100%,Yes,,,CC_v2,Matched,HALTON HEALTH CARE OAKVILLE ON,13.5,2025-11-06,Exact
+Nov,2025-11-06,Tim Hortons #6228,9.97,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,Matched,TIM HORTONS #6228 MISSISSAUGA ON,9.97,2025-11-06,Exact
+Nov,2025-11-07,Tim Hortons #6228,7.71,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,Matched,TIM HORTONS #4883 OAKVILLE ON,7.71,2025-11-07,Exact
+Nov,2025-11-07,Shell C11577,92.71,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2,Matched,SHELL C20702 MISSISSAUGA ON,92.71,2025-11-07,Exact
+Nov,2025-11-08,Original Shawarma,18.5,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,ORIGINAL SHAWARMA MISSISSAUGA ON,18.5,2025-11-07,Exact
+Nov,2025-11-08,Mercedes-Benz Mississauga,316.28,Vehicle — tires & maintenance,100%,Yes,Vehicle service — 100% business-use vehicle,auto service,CC_v2,Matched,MERCEDES-BENZ MISSISSA MISSISSAUGA,316.28,2025-11-08,Exact
+Nov,2025-11-16,Mr Loop,10.74,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,MR LOOP MISSISSAUGA ON,10.74,2025-11-16,Exact
+Nov,2025-11-17,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,TST-Matari coffee co. Mississauga ON,6.78,2025-11-17,Exact
+Nov,2025-11-17,Nandos Dixie,60.75,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NANDO'S DIXIE MISSISSAUGA ON,60.75,2025-11-17,Exact
+Nov,2025-11-17,Nandos Dixie,23.46,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,NANDO'S DIXIE MISSISSAUGA ON,23.46,2025-11-17,Exact
+Nov,2025-11-17,Shell C20702,82.57,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2,Matched,SHELL C07659 MISSISSAUGA ON,82.57,2025-11-17,Exact
+Nov,2025-11-19,Galitos Flame Grilled,56.46,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,GALITOS FLAME GRILL CH MISSISSAUGA,56.46,2025-11-19,Exact
+Nov,2025-11-22,Original Shawarma,19.66,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,ORIGINAL SHAWARMA MISSISSAUGA ON,19.66,2025-11-22,Exact
+Nov,2025-11-22,Petro-Canada,82.46,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2,Matched,PETRO-CANADA 00481 MISSISSAUGA ON,82.46,2025-11-22,Exact
+Nov,2025-11-23,Bollywood Unlimited,22.86,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,BOLLYWOOD UNLIMITED IN MISSISSAUGA,22.86,2025-11-23,Exact
+Nov,2025-11-27,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,TST-Matari coffee co. Mississauga ON,6.78,2025-11-27,Exact
+Dec,2025-11-28,Circle K,67.79,Vehicle — car wash,100%,Yes,Car wash subscription for 100% business-use vehicle ($59.99+HST),car wash subscription,CC_v2,Matched,CIRCLE K SCARBOROUGH ON,67.79,2025-11-28,Exact
+Dec,2025-11-28,Halton Parking,13.5,Vehicle — parking,100%,Yes,,,CC_v2,Matched,HALTON HEALTH CARE OAKVILLE ON,13.5,2025-11-28,Exact
+Dec,2025-11-29,AMZN Mktp CA (LEVOIT),333.31,Office equipment & supplies,100%,Yes,LEVOIT air purifier for office (confirmed office use),shopping,CC_v2,Matched,AMZN Mktp CA*BB8UK40P2 TORONTO ON,333.31,2025-11-29,Exact
+Dec,2025-11-29,AMZN Mktp CA (Mova Vacuum),1693.87,Office equipment & supplies,100%,Yes,Mova robot vacuum for office (confirmed office use),shopping,CC_v2,Matched,AMZN Mktp CA*B25469UM0 TORONTO ON,1693.87,2025-11-29,Exact
+Dec,2025-11-29,Shell C11577,84.4,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2,Matched,SHELL C11301 MISSISSAUGA ON,84.4,2025-11-29,Exact
+Dec,2025-11-30,3 Food Street,13.56,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,Matched,3 FOOD STREET MISSISSAUGA ON,13.56,2025-11-30,Exact
+Dec,2025-11-30,Arabica GTA Inc,25.43,Meals & entertainment,50%,Yes,,food,CC_v2,Matched,ARABICA (SQUARE ONE) MISSISSAUGA ON,25.43,2025-11-30,Exact
+Dec,2025-12-01,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-04,Nawabs Authentic India,35.01,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-03,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-05,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-05,Matari,13.56,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-05,HH-OTMH Main Cafe,9.0,Meals & entertainment,50%,Yes,,food,CC_v2,No match,,,,
+Dec,2025-12-06,Matari,16.95,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-06,Shell C11577,90.25,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2,No match,,,,
+Dec,2025-12-07,Nandos Dixie,43.81,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-07,Apple Store #R350,2404.64,Office equipment & supplies,100%,Yes,"Apple Store — specify hardware purchased (e.g. iPad, accessories)",electronics,CC_v2,No match,,,,
+Dec,2025-12-08,Roman Zaman Shawarma,44.05,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-10,Matari,11.85,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-10,3 Food Street,13.56,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-11,Matari,18.07,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-11,Tim Hortons #6228,10.16,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,No match,,,,
+Dec,2025-12-12,Shell C20702,67.94,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2,No match,,,,
+Dec,2025-12-13,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-14,GC Burger,26.53,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-14,Esso Circle K,60.07,Vehicle — fuel,100%,Yes,Car wash subscription for 100% business-use vehicle ($59.99+HST),car gas,CC_v2,No match,,,,
+Dec,2025-12-16,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-17,OpenAI ChatGPT Sub,31.94,Office subscriptions & software,100%,Yes,ChatGPT subscription — AI tool for business (USD $22.60),software subscription,CC_v2,No match,,,,
+Dec,2025-12-18,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-19,Amazon.ca,14.79,Office equipment & supplies,100%,Yes,Amazon office supplies — specify item if >$50,shopping,CC_v2,No match,,,,
+Dec,2025-12-19,EggSmart,39.55,Meals & entertainment,50%,Yes,,food,CC_v2,No match,,,,
+Dec,2025-12-20,Karachi Food Court,20.33,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-21,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-21,Pool Lab Canada Inc,28.25,Meals & entertainment,50%,Yes,Office holiday gathering — entertainment expense (50% deductible per ITA s.67.1),maintenance (reclassified to meals),CC_v2,No match,,,,
+Dec,2025-12-21,Shell C11577,80.0,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2,No match,,,,
+Dec,2025-12-22,Cineplex Rec Room,56.5,Meals & entertainment,50%,Yes,Client/team entertainment — note attendees and business purpose,entertainment,CC_v2,No match,,,,
+Dec,2025-12-22,Watan Kabob,15.23,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-24,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-24,La Prep,5.48,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,
+Dec,2025-12-24,Chai And Grill,39.53,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,No match,,,,
+Dec,2025-12-05,CASH BACK EARNED,-35.01,Cashback credit,,No,Cashback credit — offsets deductible expenses,cashback credit,CC_v2,No match,,,,
+Dec,2025-12-05,CASH BACK EARNED,-9.0,Cashback credit,,No,Cashback credit — offsets deductible expenses,cashback credit,CC_v2,No match,,,,
+Dec,2025-12-07,CASH BACK EARNED,-43.81,Cashback credit,,No,Cashback credit — offsets deductible expenses,cashback credit,CC_v2,No match,,,,
+Dec,2025-12-17,CASH BACK EARNED,-60.75,Cashback credit,,No,Cashback credit — offsets deductible expenses,cashback credit,CC_v2,No match,,,,
+Dec,2025-12-25,Tim Hortons #6544,8.11,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,No match,,,,
+Dec,2025-12-26,Chai And Grill,33.87,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,No match,,,,
+Dec,2025-12-27,Tim Hortons #6228,16.02,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2,No match,,,,
+Dec,2025-12-28,Circle K,67.79,Vehicle — car wash,100%,Yes,Car wash subscription for 100% business-use vehicle ($59.99+HST),car wash subscription,CC_v2,No match,,,,
+Dec,2025-12-28,DoorDash (The Burger Bros),44.28,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food delivery,CC_v2,No match,,,,
+Dec,2025-12-29,Shell C11577,92.11,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2,No match,,,,
+Dec,2025-12-31,Matari,30.5,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2,No match,,,,

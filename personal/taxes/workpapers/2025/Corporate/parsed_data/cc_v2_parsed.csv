@@ -1,0 +1,234 @@
+month_sheet,date,merchant,amount,category,deductibility,receipt_on_file,notes,original_category,source
+Jan,2025-01-01,Apple store hub (returned),508.44,Return / refund,,Yes,Apple subscription (iCloud/Apple One) for business,,CC_v2
+Jan,2025-01-01,minimoes rest,32.97,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jan,2025-01-04,amazon  (returned),33.89,Return / refund,,MISSING,"Amazon purchase — returned same month, net $0",,CC_v2
+Jan,2025-01-05,amazon return,-33.89,Return / refund,,MISSING,"Return of Amazon purchase — matched to Jan charge, net $0",,CC_v2
+Jan,2025-01-06,apple return,-508.44,Return / refund,,MISSING,Apple subscription (iCloud/Apple One) for business,,CC_v2
+Jan,2025-01-06,amazon (mic and extender,86.88,Office equipment & supplies,100%,Yes,Microphone and extender for video conferencing,office expense,CC_v2
+Jan,2025-01-16,emirates flight change,175.62,Travel & transportation,100%,Yes,Emirates flight change fee — business travel,travel,CC_v2
+Jan,2025-01-17,emirates flight change,150.38,Travel & transportation,100%,Yes,Emirates flight change fee — business travel,travel,CC_v2
+Jan,2025-01-25,nawab bbq rest,31.95,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jan,2025-01-26,ginsoy rest,63.0,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jan,2025-01-29,tim horton,15.3,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Jan,2025-01-29,Monteiro resturant,45.0,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jan,2025-01-30,Lyft ride,20.0,Travel & transportation,100%,Yes,Ride-share for business travel,travel,CC_v2
+Jan,2025-01-31,watan kabob,11.99,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Feb,2025-01-01,Gladiator Burger client meeting,16.16,Meals & entertainment,50%,Yes,Client meeting meal — note attendees and business topic discussed,,CC_v2
+Feb,2025-02-02,Airlo UK sim,8.5,Travel & transportation,100%,Yes,"UK SIM card for business trip to Newcastle, UK",,CC_v2
+Feb,2025-02-03,Food newcastle uk,40.93,Meals & entertainment,50%,Yes,"Meal during business trip to Newcastle, UK (GBP 21.99 = CAD 40.93)",,CC_v2
+Feb,2025-02-05,starbucks UK,21.49,Meals & entertainment,50%,Yes,"Coffee during business trip to Newcastle, UK",,CC_v2
+Mar,2025-03-04,CC prime bonus,-0.73,Cashback credit,,No,Credit card reward credit,,CC_v2
+Mar,2025-03-07,Amazon prime member,111.87,Office equipment & supplies,100%,Yes,Amazon Prime membership for business deliveries,office expense,CC_v2
+Mar,2025-03-07,WATAN kabob food,74.52,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Mar,2025-03-08,AMZN (side table office),63.27,Office equipment & supplies,100%,Yes,Side table for office,office expense,CC_v2
+Mar,2025-03-09,AMZN (printer inks),45.0,Office equipment & supplies,100%,Yes,Printer ink consumables for office printer,office expense,CC_v2
+Mar,2025-03-09,AMZN (IRONING BOARD),85.87,Office equipment & supplies,100%,Yes,Ironing board — confirm office use (e.g. for client presentations),office eq,CC_v2
+Mar,2025-03-14,AMZN (toolkit),118.38,Office equipment & supplies,100%,Yes,Office toolkit for setup and maintenance,office expense,CC_v2
+Mar,2025-03-15,VILLAGE TASTE rest,122.69,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Mar,2025-03-17,ASEER time,36.11,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Mar,2025-03-14,dewalt drill/driver kit,135.6,Office equipment & supplies,100%,Yes,Tools for office setup and maintenance,office tool,CC_v2
+Mar,2025-03-21,NAWAB BBQ,18.07,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Mar,2025-03-20,3 food street,20.34,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Mar,2025-03-22,MELT N Dip,25.64,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Mar,2025-03-23,NAWAB BBQ,37.28,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Mar,2025-03-24,SHOOPER DRUG (Canada post envelop),27.46,Office equipment & supplies,100%,Yes,Canada Post envelopes for business correspondence,office expense,CC_v2
+Apr,2025-03-30,NAWAB BBQ,74.56,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Apr,2025-04-03,NAWAB BBQ,38.37,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Apr,2025-04-05,MELT N DIP,108.19,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Apr,2025-04-06,MELT N DIP,17.52,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Apr,2025-04-06,SHAHKEY REST,351.98,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Apr,2025-04-07,NAWAB BBQ,21.46,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Apr,2025-04-09,PIZZA PRO,32.75,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Apr,2025-04-11,Krispy kreme,21.65,Meals & entertainment,50%,Yes,,food,CC_v2
+Apr,2025-04-13,TIM HORTONS,20.57,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Apr,2025-04-13,BASKIN ROBBINS,40.48,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Apr,2025-04-18,KARACHI FOOD COURT,32.75,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Apr,2025-04-21,CHANG AND HUANG THAI,43.96,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Apr,2025-04-30,tim,4.19,Meals & entertainment,50%,Yes,,food,CC_v2
+May,2025-05-02,SONG COOK'S COREAN CHI,39.54,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+May,2025-05-03,tim,11.65,Meals & entertainment,50%,Yes,,food,CC_v2
+May,2025-05-03,MONTEIRO,33.31,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+May,2025-05-06,tim,11.08,Meals & entertainment,50%,Yes,,food,CC_v2
+May,2025-05-17,starbucks,24.69,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+May,2025-05-17,OSMOW's,16.92,Meals & entertainment,50%,Yes,,food,CC_v2
+May,2025-05-17,OSMOW's,2.24,Meals & entertainment,50%,Yes,,food,CC_v2
+May,2025-05-17,OSMOW's,20.32,Meals & entertainment,50%,Yes,,food,CC_v2
+May,2025-05-18,HONK PARKING,7.35,Office equipment & supplies,100%,Yes,Parking for business meeting,office expense,CC_v2
+May,2025-05-18,HONK PARKING,7.35,Office equipment & supplies,100%,Yes,Parking for business meeting,office expense,CC_v2
+May,2025-05-18,tst dhaba,68.86,Meals & entertainment,50%,Yes,,food,CC_v2
+May,2025-05-20,airport parking,14.0,Office equipment & supplies,100%,Yes,Airport parking for business travel,office expense,CC_v2
+May,2025-05-20,butt karahi,138.07,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+May,2025-05-25,uber eats drinks,37.61,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+May,2025-05-25,ginsoy,226.56,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jun,2025-05-31,Nawab bbq,63.25,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jun,2025-06-02,charsi karahi,234.17,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jun,2025-06-03,airport parking,21.0,Travel & transportation,100%,Yes,Airport parking for business travel,parking/travel,CC_v2
+Jun,2025-06-05,gladiator burger,42.33,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jun,2025-06-13,karachi food court,30.48,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jun,2025-06-13,AMZN office bag,361.59,Office equipment & supplies,100%,Yes,Office bag for business travel,office,CC_v2
+Jun,2025-06-14,ikea furniture,1476.9,Office equipment & supplies,100%,Yes,Office furniture — confirm location (e.g. Lazer Technologies office),office,CC_v2
+Jun,2025-06-14,ikea furniture/plant,14.68,Office equipment & supplies,100%,Yes,Office furniture — confirm location (e.g. Lazer Technologies office),office,CC_v2
+Jun,2025-06-14,AMZN office webcam (REFUNDED),305.09,Return / refund,,No,"Webcam — refunded in Jun, net $0",office,CC_v2
+Jun,2025-06-14,AMZN office webcam,305.09,Office equipment & supplies,100%,Yes,Webcam for video conferencing,office,CC_v2
+Jun,2025-06-14,AMZN monitor,725.6,Office equipment & supplies,100%,Yes,External monitor for office workstation,office,CC_v2
+Jun,2025-06-15,apple mac studio,5931.37,Office equipment & supplies,100%,Yes,Primary workstation for software development,office,CC_v2
+Jun,2025-06-15,AMZN wireless charger,107.34,Office equipment & supplies,100%,Yes,Wireless charger for office desk,office,CC_v2
+Jun,2025-06-16,AMZN office webcam,-305.09,Office equipment & supplies,100%,No,Webcam for video conferencing,,CC_v2
+Jun,2025-06-18,Bollywood unlimited,33.3,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jun,2025-06-19,"AMZN (wire, desk, lamp)",171.73,Office equipment & supplies,100%,Yes,"Office desk accessories — wires, organizer, lamp",office,CC_v2
+Jun,2025-06-19,AMZN (wires & adapter),281.56,Office equipment & supplies,100%,Yes,Office wiring and adapters,office,CC_v2
+Jun,2025-06-20,AMZN ups,158.19,Office equipment & supplies,100%,Yes,UPS battery backup for office equipment,office,CC_v2
+Jun,2025-06-23,Ginsoy,355.84,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jun,2025-06-26,3 food st,29.38,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jul,2025-06-28,KARACHI FOOD COURT,62.49,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jul,2025-06-29,winners 260,180.75,Office equipment & supplies,100%,Yes,"Office decoration — specify items (frames, plants, etc.)",office accessories/decoration,CC_v2
+Jul,2025-06-29,IKEA,64.83,Office equipment & supplies,100%,Yes,Office accessories and decor for workspace,office accessories/decoration,CC_v2
+Jul,2025-07-02,Lazeez,30.36,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jul,2025-07-03,Tim,17.17,Meals & entertainment,50%,Yes,,food,CC_v2
+Jul,2025-07-05,Tim,26.26,Meals & entertainment,50%,Yes,,food,CC_v2
+Jul,2025-07-05,Haze lounge,54.95,Meals & entertainment,50%,Yes,,food,CC_v2
+Jul,2025-07-05,Apple,28.24,Office subscriptions & software,100%,Yes,Apple subscription (iCloud/Apple One) for business,work subscription (office),CC_v2
+Jul,2025-07-13,Chai n Chill,60.36,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Jul,2025-07-14,Amzn (power bank case),28.71,Office subscriptions & software,100%,Yes,,office util,CC_v2
+Jul,2025-07-14,Amzn (power bank),237.29,Office subscriptions & software,100%,Yes,,office util,CC_v2
+Jul,2025-07-15,3 food st,23.73,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jul,2025-07-15,flexispot,1141.27,Office equipment & supplies,100%,Yes,Standing desk for office workstation,office desk,CC_v2
+Jul,2025-07-16,cashback,-237.29,Cashback credit,,No,Cashback credit,,CC_v2
+Jul,2025-07-18,flexispot,-20.0,Office equipment & supplies,100%,No,Standing desk for office workstation,,CC_v2
+Jul,2025-07-19,song cook resturnat,74.55,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jul,2025-07-19,song cook resturnat,7.47,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jul,2025-07-23,Melt n dip,38.34,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jul,2025-07-24,Aseer times,19.19,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Jul,2025-07-28,CC Annual fee,149.0,Bank & card fees,100%,Yes,Annual credit card fee — fully deductible as business expense,fee,CC_v2
+Aug,2025-07-27,The cheese cake factory,148.41,Meals & entertainment,50%,Yes,,food,CC_v2
+Aug,2025-08-02,claude AI subs,28.0,Office subscriptions & software,100%,Yes,Claude AI subscription — AI development and productivity tool,AI subscription,CC_v2
+Aug,2025-08-02,Karachi express resturant,66.83,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-03,Lokma resturant,11.99,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-03,Monteriro resturant,57.03,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-04,Spive villa resturant,48.52,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-05,Nawabs resturant,41.79,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-08,Food at mississauga,20.0,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-08,hakka ren resturant,53.05,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-13,burger bros,26.51,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-15,Flexi spot limi credit,-2.6,Return / refund,,No,Flexispot partial refund/credit,REFUND,CC_v2
+Aug,2025-08-16,Nawabs resturant,23.43,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-17,Aseer times,15.8,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-21,Juice to Go,12.42,Meals & entertainment,50%,Yes,,food,CC_v2
+Aug,2025-08-24,3 food st,35.03,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Aug,2025-08-26,Asser Times,18.06,Meals & entertainment,50%,Yes,,food,CC_v2
+Sep,2025-08-31,Nandos resturant,46.86,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Sep,2025-08-31,Google youtube Premium service subscription,129.99,Office subscriptions & software,100%,Yes,Google/YouTube Premium for business use,office util/software purchase,CC_v2
+Sep,2025-09-02,3 food st,25.67,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Sep,2025-09-02,Mr loop,32.21,Meals & entertainment,50%,Yes,,food,CC_v2
+Sep,2025-09-06,OnRoute,74.31,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Sep,2025-09-08,Cremerie Montreal,13.2,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Sep,2025-09-08,Queues DE Castor,10.47,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Sep,2025-09-08,Administration Portuai Mont,35.0,Travel & transportation,100%,Yes,"Parking — Montreal, business trip",parking,CC_v2
+Sep,2025-09-08,Popeyes,30.04,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Sep,2025-09-09,Gas petro canada,50.0,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,travel/gas,CC_v2
+Sep,2025-09-09,Petro-Canada 00481,44.07,Vehicle — fuel,100%,Yes,,travel/gas,CC_v2
+Sep,2025-09-10,Enterprise rent a car,405.62,Travel & transportation,100%,Yes,Rental car for business travel (Sep trip),travel/rentCar,CC_v2
+Sep,2025-09-18,Tim horton,12.62,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Sep,2025-09-20,Craveables,61.59,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Sep,2025-09-21,Nawabs bbq,49.19,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Sep,2025-09-22,table plus software subscription,206.62,Office subscriptions & software,100%,Yes,"TablePlus — database management software (USD, 13% HST paid)",office util/software purchase,CC_v2
+Sep,2025-09-24,Watan kabob,42.33,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Oct,2025-09-26,Ikea furn,609.02,Office equipment & supplies,100%,Yes,Office furniture — confirm location,office furnicher,CC_v2
+Oct,2025-09-27,Mercedes-benz car lease downpayment,4000.0,Vehicle — lease,100% (confirm CRA cap),Yes,Mercedes lease downpayment — 100% business vehicle; confirm CRA prescribed limit with accountant,car lease,CC_v2
+Oct,2025-09-30,Nandos,45.38,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Oct,2025-09-30,Mercedes-benz car lease downpayment & first month lease,2750.01,Vehicle — lease,100% (confirm CRA cap),Yes,"Mercedes lease downpayment + 1st month — 100% business vehicle; confirm CRA prescribed limit ($36,000 cost cap) with accountant",car lease,CC_v2
+Oct,2025-09-30,Lyft,26.09,Travel & transportation,100%,Yes,Ride-share for business travel,travel,CC_v2
+Oct,2025-10-01,google one subscription,39.99,Office subscriptions & software,100%,Yes,Google One cloud storage for business,office util/subscription,CC_v2
+Oct,2025-10-01,Lyft,17.1,Travel & transportation,100%,Yes,Ride-share for business travel,travel,CC_v2
+Oct,2025-10-04,gas,75.0,Vehicle — fuel,100%,Yes,,car gas,CC_v2
+Oct,2025-10-04,car wash,56.49,Vehicle — car wash,100%,Yes,Car wash — 100% business-use vehicle,car wash,CC_v2
+Oct,2025-10-04,Mercedes-benz car tires,2817.77,Vehicle — tires & maintenance,100%,Yes,Replacement tires for 100% business-use vehicle,car tires,CC_v2
+Oct,2025-10-04,AMZN,13.56,Vehicle — accessories,100%,Yes,,car accessory,CC_v2
+Oct,2025-10-04,AMZN,41.97,Vehicle — accessories,100%,Yes,,car accessory,CC_v2
+Oct,2025-10-05,Lahore Chatkhara,49.13,Meals & entertainment,50%,Yes,,food,CC_v2
+Oct,2025-10-05,Shelbyes,54.19,Meals & entertainment,50%,Yes,,food,CC_v2
+Oct,2025-10-07,gas shell,87.19,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,gas,CC_v2
+Oct,2025-10-09,Paan casa (cafe paaya),30.46,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Oct,2025-10-09,Aseer Times,10.16,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Oct,2025-10-12,gas shell,63.84,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,gas,CC_v2
+Oct,2025-10-12,Car dashcam,259.84,Vehicle — accessories,100%,Yes,Dashcam for 100% business-use vehicle,car,CC_v2
+Oct,2025-10-13,fision flo,73.45,Meals & entertainment,50%,Yes,,food,CC_v2
+Oct,2025-10-15,parking,51.25,Vehicle — parking,100%,Yes,,car parking,CC_v2
+Oct,2025-10-17,asser times,10.16,Meals & entertainment,50%,Yes,,food,CC_v2
+Oct,2025-10-18,gas,52.09,Vehicle — fuel,100%,Yes,,gas,CC_v2
+Oct,2025-10-18,Melt n dip,18.92,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Oct,2025-10-19,sumaq resturant,47.44,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Oct,2025-10-21,Ginsoy resturant,29.44,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Oct,2025-10-25,gas shell,87.37,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,gas,CC_v2
+Oct,2025-10-25,car wash,24.85,Vehicle — car wash,100%,Yes,Car wash — 100% business-use vehicle,car wash,CC_v2
+Nov,2025-10-28,gas shell,72.35,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2
+Nov,2025-10-29,open mic cafe,114.58,Meals & entertainment,50%,Yes,,food,CC_v2
+Nov,2025-11-01,soul5,19.21,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Nov,2025-11-01,AMZN Mktp CA,18.52,Office equipment & supplies,100%,Yes,Amazon office supplies — specify item if >$50,shopping,CC_v2
+Nov,2025-11-06,Halton Parking,13.5,Vehicle — parking,100%,Yes,,,CC_v2
+Nov,2025-11-06,Tim Hortons #6228,9.97,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Nov,2025-11-07,Tim Hortons #6228,7.71,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Nov,2025-11-07,Shell C11577,92.71,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2
+Nov,2025-11-08,Original Shawarma,18.5,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Nov,2025-11-08,Mercedes-Benz Mississauga,316.28,Vehicle — tires & maintenance,100%,Yes,Vehicle service — 100% business-use vehicle,auto service,CC_v2
+Nov,2025-11-16,Mr Loop,10.74,Meals & entertainment,50%,Yes,,food,CC_v2
+Nov,2025-11-17,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Nov,2025-11-17,Nandos Dixie,60.75,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Nov,2025-11-17,Nandos Dixie,23.46,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Nov,2025-11-17,Shell C20702,82.57,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2
+Nov,2025-11-19,Galitos Flame Grilled,56.46,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Nov,2025-11-22,Original Shawarma,19.66,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Nov,2025-11-22,Petro-Canada,82.46,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2
+Nov,2025-11-23,Bollywood Unlimited,22.86,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Nov,2025-11-27,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-11-28,Circle K,67.79,Vehicle — car wash,100%,Yes,Car wash subscription for 100% business-use vehicle ($59.99+HST),car wash subscription,CC_v2
+Dec,2025-11-28,Halton Parking,13.5,Vehicle — parking,100%,Yes,,,CC_v2
+Dec,2025-11-29,AMZN Mktp CA (LEVOIT),333.31,Office equipment & supplies,100%,Yes,LEVOIT air purifier for office (confirmed office use),shopping,CC_v2
+Dec,2025-11-29,AMZN Mktp CA (Mova Vacuum),1693.87,Office equipment & supplies,100%,Yes,Mova robot vacuum for office (confirmed office use),shopping,CC_v2
+Dec,2025-11-29,Shell C11577,84.4,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2
+Dec,2025-11-30,3 Food Street,13.56,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-11-30,Arabica GTA Inc,25.43,Meals & entertainment,50%,Yes,,food,CC_v2
+Dec,2025-12-01,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-04,Nawabs Authentic India,35.01,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-03,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-05,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-05,Matari,13.56,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-05,HH-OTMH Main Cafe,9.0,Meals & entertainment,50%,Yes,,food,CC_v2
+Dec,2025-12-06,Matari,16.95,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-06,Shell C11577,90.25,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2
+Dec,2025-12-07,Nandos Dixie,43.81,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-07,Apple Store #R350,2404.64,Office equipment & supplies,100%,Yes,"Apple Store — specify hardware purchased (e.g. iPad, accessories)",electronics,CC_v2
+Dec,2025-12-08,Roman Zaman Shawarma,44.05,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-10,Matari,11.85,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-10,3 Food Street,13.56,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-11,Matari,18.07,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-11,Tim Hortons #6228,10.16,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Dec,2025-12-12,Shell C20702,67.94,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2
+Dec,2025-12-13,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-14,GC Burger,26.53,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-14,Esso Circle K,60.07,Vehicle — fuel,100%,Yes,Car wash subscription for 100% business-use vehicle ($59.99+HST),car gas,CC_v2
+Dec,2025-12-16,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-17,OpenAI ChatGPT Sub,31.94,Office subscriptions & software,100%,Yes,ChatGPT subscription — AI tool for business (USD $22.60),software subscription,CC_v2
+Dec,2025-12-18,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-19,Amazon.ca,14.79,Office equipment & supplies,100%,Yes,Amazon office supplies — specify item if >$50,shopping,CC_v2
+Dec,2025-12-19,EggSmart,39.55,Meals & entertainment,50%,Yes,,food,CC_v2
+Dec,2025-12-20,Karachi Food Court,20.33,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-21,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-21,Pool Lab Canada Inc,28.25,Meals & entertainment,50%,Yes,Office holiday gathering — entertainment expense (50% deductible per ITA s.67.1),maintenance,CC_v2
+Dec,2025-12-21,Shell C11577,80.0,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2
+Dec,2025-12-22,Cineplex Rec Room,56.5,Meals & entertainment,50%,Yes,Client/team entertainment — note attendees and business purpose,entertainment,CC_v2
+Dec,2025-12-22,Watan Kabob,15.23,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-24,Matari,6.78,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-24,La Prep,5.48,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2
+Dec,2025-12-24,Chai And Grill,39.53,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Dec,2025-12-05,CASH BACK EARNED,-35.01,Cashback credit,,No,Cashback credit — offsets deductible expenses,cashback credit,CC_v2
+Dec,2025-12-05,CASH BACK EARNED,-9.0,Cashback credit,,No,Cashback credit — offsets deductible expenses,cashback credit,CC_v2
+Dec,2025-12-07,CASH BACK EARNED,-43.81,Cashback credit,,No,Cashback credit — offsets deductible expenses,cashback credit,CC_v2
+Dec,2025-12-17,CASH BACK EARNED,-60.75,Cashback credit,,No,Cashback credit — offsets deductible expenses,cashback credit,CC_v2
+Dec,2025-12-25,Tim Hortons #6544,8.11,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Dec,2025-12-26,Chai And Grill,33.87,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Dec,2025-12-27,Tim Hortons #6228,16.02,Meals & entertainment,50%,Yes,Coffee — note if with client or business associate,food,CC_v2
+Dec,2025-12-28,Circle K,67.79,Vehicle — car wash,100%,Yes,Car wash subscription for 100% business-use vehicle ($59.99+HST),car wash subscription,CC_v2
+Dec,2025-12-28,DoorDash (The Burger Bros),44.28,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food delivery,CC_v2
+Dec,2025-12-29,Shell C11577,92.11,Vehicle — fuel,100%,Yes,Fuel for 100% business-use vehicle,car gas,CC_v2
+Dec,2025-12-31,Matari,30.5,Meals & entertainment,50%,Yes,Business meal — note attendees and purpose,food,CC_v2

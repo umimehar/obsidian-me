@@ -1,0 +1,25 @@
+date,source,account,direction,amount,gross,hst,net,description,category,deductible_pct,hst_in_price,itc_pct,itc_claimable,supplier,tax_year,gst_period,ref
+2025-08-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2025,2025-26,Rogers bill history
+2025-09-03,personal,Personal card (director-funded),out,57.64,,,,Bell (mobile + internet),Telecom,1.0,6.63,1.0,6.63,Canadian,2025,2025-26,Bell payment history
+2025-09-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2025,2025-26,Rogers bill history
+2025-10-03,personal,Personal card (director-funded),out,57.64,,,,Bell (mobile + internet),Telecom,1.0,6.63,1.0,6.63,Canadian,2025,2025-26,Bell payment history
+2025-10-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2025,2025-26,Rogers bill history
+2025-10-31,personal,Personal card (director-funded),out,57.64,,,,Bell (mobile + internet),Telecom,1.0,6.63,1.0,6.63,Canadian,2025,2025-26,Bell payment history
+2025-11-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2025,2025-26,Rogers bill history
+2025-12-03,personal,Personal card (director-funded),out,57.64,,,,Bell (mobile + internet),Telecom,1.0,6.63,1.0,6.63,Canadian,2025,2025-26,Bell payment history
+2025-12-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2025,2025-26,Rogers bill history
+2026-01-02,personal,Personal card (director-funded),out,57.64,,,,Bell (mobile + internet),Telecom,1.0,6.63,1.0,6.63,Canadian,2026,2025-26,Bell payment history
+2026-01-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2026,2025-26,Rogers bill history
+2026-02-02,personal,Personal card (director-funded),out,60.47,,,,Bell (mobile + internet),Telecom,1.0,6.96,1.0,6.96,Canadian,2026,2025-26,Bell payment history
+2026-02-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2026,2025-26,Rogers bill history
+2026-03-05,personal,Personal card (director-funded),out,58.25,,,,Bell (mobile + internet),Telecom,1.0,6.7,1.0,6.7,Canadian,2026,2025-26,Bell payment history
+2026-03-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2026,2025-26,Rogers bill history
+2026-04-02,personal,Personal card (director-funded),out,56.5,,,,Bell (mobile + internet),Telecom,1.0,6.5,1.0,6.5,Canadian,2026,2025-26,Bell payment history
+2026-04-02,personal,Personal card (director-funded),out,353.94,,,,"Mercedes-Benz Mississauga service, invoice 1128781 (paid on personal Visa 1680)",Vehicle — maintenance,1.0,40.72,1.0,40.72,Canadian,2026,2025-26,receipt 04-April
+2026-04-22,personal,Personal card (director-funded),out,163.58,,,,Rogers home internet,Telecom,1.0,18.82,1.0,18.82,Canadian,2026,2025-26,Rogers bill history
+2026-05-01,personal,Personal card (director-funded),out,118.65,,,,Bell (mobile + internet),Telecom,1.0,13.65,1.0,13.65,Canadian,2026,2025-26,Bell payment history
+2026-05-22,personal,Personal card (director-funded),refund,148.78,,,,Rogers home internet,Telecom,1.0,-17.12,1.0,-17.12,Canadian,2026,2025-26,Rogers bill history
+2026-06-13,personal,Personal card (director-funded),out,113.0,,,,Bell (mobile + internet),Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2025-26,Bell payment history
+2026-07-14,personal,Personal card (director-funded),out,113.0,,,,Bell (mobile + internet),Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2025-26,Bell payment history
+2026-08-13,personal,Personal card (director-funded),out,117.24,,,,Bell (mobile + internet),Telecom,1.0,13.49,1.0,13.49,Canadian,2026,2025-26,Bell payment history
+2026-09-13,personal,Personal card (director-funded),out,113.0,,,,Bell (mobile + internet),Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2026-27,Bell payment history

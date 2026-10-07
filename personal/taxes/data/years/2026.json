@@ -1,0 +1,537 @@
+{
+ "year": 2026,
+ "status": "open",
+ "summary": "MIR is the only client, the T2 2025 refund arrived, the HST return is with Saira, and 2026 tax looks about $4,743 short of instalments.",
+ "corporate_story": [
+  "MIR paid 17 times by 31 August, $151,872 including HST ($134,400 before HST); the full year projects to $208,320. Cash stood at $163,061.21 on 31 August after $55,000 moved to Wealthsimple.",
+  "The T2 2025 was filed and assessed on 18 May and its $4,592 refund arrived on 28 May as $4,644.90. That deposit is not revenue and must come out of the 2026 workbook totals.",
+  "Instalments are paid at about $900 a month ($6,900 by August) instead of CRA's $13,370 schedule. The 7 October projection puts 2026 tax about $4,743 above planned instalments. Lease payments over the s.67.3 cap ($11,564.77) explain about $1,411 of that and the non deductible 20% personal share of the Mercedes $578; the rest is profit. Topping up would take about $1,186 a month from September to December.",
+  "Maham's pay runs from April at $2,666.67 a month with $460.14 sent to CRA each month. The Mercedes stays at 80% business use; the 20% personal share ($7,119.48 for 2026) is charged to Umar against what the corporation owes him, which was $16,111.98 on 23 September.",
+  "The HST year ending 14 August 2026 shows a $2,404.66 refund after the Mercedes claim was cut to 80% on 7 October. Saira, back as accountant since September, files it by 16 November and will prepare the T2 2026."
+ ],
+ "personal_story": [
+  "No 2026 personal documents are on file yet. Maham earns $24,000 from the corporation for April to December; both personal returns are due 30 April 2027."
+ ],
+ "groups": [
+  {
+   "title": "Revenue by client",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "MIR Services, 17 deposits to 31 August including HST",
+     "value": 151872,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx",
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ]
+    },
+    {
+     "label": "MIR before HST, to 31 August",
+     "value": 134400,
+     "basis": "per bank",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ]
+    },
+    {
+     "label": "MIR before HST, full year",
+     "value": 208320,
+     "basis": "projection",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Payments to and from CRA, to 31 August",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Corporate instalments, 7 payments",
+     "value": 6900,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx",
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md"
+     ]
+    },
+    {
+     "label": "HST instalments (January, April, July)",
+     "value": 19500,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Payroll remittances, 4 payments",
+     "value": 1840.56,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "T2 2025 refund received 28 May",
+     "value": 4644.9,
+     "basis": "per bank",
+     "note": "Not revenue.",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Spending, to 31 August",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Zeeshan, 2 WISE payments",
+     "value": 16520,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Mercedes lease, 8 payments",
+     "value": 14000.08,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Corporate card net spend to 28 August",
+     "value": 13389.04,
+     "basis": "per card statements",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ]
+    },
+    {
+     "label": "Maham net pay",
+     "value": 11739.2,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Car insurance, 8 payments",
+     "value": 5606.72,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Accounting fees",
+     "value": 1864.5,
+     "basis": "per bank",
+     "note": "Saira $423.75 and Ejaz Pirwani $1,440.75.",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "WISE fees",
+     "value": 121.91,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Moved to Wealthsimple (not an expense)",
+     "value": 55000,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "2026 corporate tax projection",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Taxable income",
+     "value": 120205.06,
+     "basis": "projection",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ]
+    },
+    {
+     "label": "Tax at 12.2%",
+     "value": 14665.02,
+     "basis": "projection",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ]
+    },
+    {
+     "label": "Instalments planned by 31 December",
+     "value": 10500,
+     "basis": "projection",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ]
+    },
+    {
+     "label": "Shortfall, 23 September model",
+     "value": 4165.02,
+     "basis": "projection",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ],
+     "note": "Superseded on 7 October by about $4,743."
+    },
+    {
+     "label": "Tax added by the 20% Mercedes personal share",
+     "value": 578,
+     "basis": "projection",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+      "2026/Corporate/Vehicle personal use 2026.xlsx"
+     ]
+    },
+    {
+     "label": "Shortfall",
+     "value": 4743,
+     "basis": "projection",
+     "note": "About $1,186 a month of extra instalments from September to December.",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+      "2026/Corporate/Vehicle personal use 2026.xlsx"
+     ]
+    },
+    {
+     "label": "Shortfall, 3 August version",
+     "value": 2318,
+     "basis": "projection",
+     "note": "Superseded: that model subtracted the CRA refund from revenue and ignored the lease cap.",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md"
+     ]
+    },
+    {
+     "label": "Lease above the s.67.3 cap, not deductible",
+     "value": 11564.77,
+     "basis": "projection",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ]
+    },
+    {
+     "label": "Director funded expenses needed to break even",
+     "value": 45273,
+     "basis": "projection",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ],
+     "note": "23 September model. Includes the $11,134 already tracked, so about $34,139 more would be needed."
+    }
+   ]
+  },
+  {
+   "title": "What the corporation owes Umar",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Owed at 1 January (T2 2025)",
+     "value": 13357,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Added 1 January to 23 September",
+     "value": 8704.33,
+     "basis": "per expense tracking",
+     "note": "Rent at 30% $7,029, phone and internet $1,025.92, Mercedes service $353.94, home insurance $295.47.",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+     ]
+    },
+    {
+     "label": "Less hospital charge on the corporate card",
+     "value": -1221,
+     "basis": "per expense tracking",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+     ]
+    },
+    {
+     "label": "Less 20% Mercedes personal use, January to August",
+     "value": -4728.35,
+     "basis": "per expense tracking",
+     "note": "Includes $70.79, 20% of the 2 April service Umar paid.",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
+      "2026/Corporate/Vehicle personal use 2026.xlsx"
+     ]
+    },
+    {
+     "label": "Owed at 23 September",
+     "value": 16111.98,
+     "basis": "per expense tracking",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+     ]
+    },
+    {
+     "label": "Owed at 23 September, before the Mercedes offset",
+     "value": 20840.33,
+     "basis": "per expense tracking",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ],
+     "note": "Superseded on 7 October by $16,111.98."
+    },
+    {
+     "label": "Owed at 31 December",
+     "value": 16525.34,
+     "basis": "projection",
+     "note": "After $2,391.13 of estimated Mercedes personal use for September to December.",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+     ]
+    },
+    {
+     "label": "Owed at 31 December, 23 September version",
+     "value": 23644.82,
+     "basis": "projection",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+     ],
+     "note": "Superseded by $16,525.34."
+    },
+    {
+     "label": "Owed at 31 December, 3 August version",
+     "value": 24490.96,
+     "basis": "projection",
+     "note": "Superseded by $23,644.82.",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/INDEX.md"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Payroll",
+   "scope": "both",
+   "figures": [
+    {
+     "label": "Maham monthly gross pay",
+     "value": 2666.67,
+     "basis": "payroll plan",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md",
+      "2026/Corporate/payroll/CPP_24K_Apr-Dec.pdf"
+     ]
+    },
+    {
+     "label": "Maham monthly net pay",
+     "value": 2347.84,
+     "basis": "payroll plan",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md"
+     ]
+    },
+    {
+     "label": "Monthly remittance to CRA",
+     "value": 460.14,
+     "basis": "payroll plan",
+     "sources": [
+      "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
+     ]
+    },
+    {
+     "label": "Gross pay April to December",
+     "value": 24000,
+     "basis": "payroll plan",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md"
+     ]
+    },
+    {
+     "label": "All nine remittances",
+     "value": 4141.26,
+     "basis": "payroll plan",
+     "sources": [
+      "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "HST 2025-26 return",
+   "scope": "corporate",
+   "note": "The HST year runs 15 August 2025 to 14 August 2026.",
+   "figures": [
+    {
+     "label": "Sales",
+     "value": 207480,
+     "basis": "prepared",
+     "sources": [
+      "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+     ]
+    },
+    {
+     "label": "HST collected",
+     "value": 26972.4,
+     "basis": "prepared",
+     "sources": [
+      "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+     ]
+    },
+    {
+     "label": "ITC",
+     "value": 3377.06,
+     "basis": "prepared",
+     "sources": [
+      "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+      "memory:mercedes-80-percent-business-use.md"
+     ]
+    },
+    {
+     "label": "Net tax",
+     "value": 23595.34,
+     "basis": "prepared",
+     "sources": [
+      "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+     ]
+    },
+    {
+     "label": "Instalments",
+     "value": 26000,
+     "basis": "per bank",
+     "sources": [
+      "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Refund",
+     "value": 2404.66,
+     "basis": "prepared",
+     "sources": [
+      "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+     ]
+    },
+    {
+     "label": "Refund as sent 23 September",
+     "value": 4400.05,
+     "basis": "prepared",
+     "note": "Superseded on 7 October (Mercedes cut to 80% with the cap).",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26_long_version.md"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Bank balance",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "1 January",
+     "value": 154616.2,
+     "basis": "per bank",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+     ]
+    },
+    {
+     "label": "30 June",
+     "value": 167472.06,
+     "basis": "per bank",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/reports/Debit_Reconciliation_2026_H1.md"
+     ]
+    },
+    {
+     "label": "31 July",
+     "value": 170848.03,
+     "basis": "per bank",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/reports/Debit_Reconciliation_2026_JulAug.md"
+     ]
+    },
+    {
+     "label": "31 August",
+     "value": 163061.21,
+     "basis": "per bank",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/reports/Debit_Reconciliation_2026_JulAug.md"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Mercedes",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Lease per month including HST",
+     "value": 1750.01,
+     "basis": "lease",
+     "sources": [
+      "2026/Corporate/HST Filing 2025-26 - for Saira/05 Vehicle lease - Mercedes GLC 43/lease-agreement-detailed.pdf",
+      "2026/Corporate/HST Filing 2025-26 - for Saira/05 Vehicle lease - Mercedes GLC 43/lease-pricing-worksheet.pdf"
+     ]
+    },
+    {
+     "label": "Insurance per month to September",
+     "value": 700.84,
+     "basis": "per bank",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/INDEX.md"
+     ]
+    },
+    {
+     "label": "Insurance per month from October",
+     "value": 804.75,
+     "basis": "renewal",
+     "sources": [
+      "vault:obsidian-me/personal/business-vehicle/tracking.md"
+     ]
+    },
+    {
+     "label": "Buyout price at end of lease",
+     "value": 58580,
+     "basis": "lease",
+     "sources": [
+      "2026/Corporate/HST Filing 2025-26 - for Saira/05 Vehicle lease - Mercedes GLC 43/lease-pricing-worksheet.pdf"
+     ]
+    },
+    {
+     "label": "Personal use charged to Umar for 2026",
+     "value": 7119.48,
+     "basis": "per vehicle workbook",
+     "note": "$4,728.35 actual January to August, $2,391.13 estimated September to December.",
+     "sources": [
+      "2026/Corporate/Vehicle personal use 2026.xlsx",
+      "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx"
+     ]
+    },
+    {
+     "label": "2026 lease over the s.67.3 cap, not charged to Umar",
+     "value": 9251.81,
+     "basis": "per vehicle workbook",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md"
+     ]
+    }
+   ]
+  }
+ ]
+}

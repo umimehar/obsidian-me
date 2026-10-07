@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15248132 Canada Inc. — 2025 Financial Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    min-height: 100vh;
+  }
+  .header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1B2A4A 100%);
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid #2d4a7a;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; color: #f8fafc; letter-spacing: -0.3px; }
+  .header p  { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+
+  /* KPI strip */
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    background: #1e293b;
+    border-bottom: 1px solid #1e293b;
+  }
+  .kpi {
+    background: #0f172a;
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .kpi .label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .kpi .value { font-size: 20px; font-weight: 700; }
+  .kpi .sub   { font-size: 10px; color: #475569; margin-top: 3px; }
+  .blue   { color: #38bdf8; }
+  .green  { color: #34d399; }
+  .amber  { color: #fbbf24; }
+  .red    { color: #f87171; }
+  .purple { color: #a78bfa; }
+  .pink   { color: #f472b6; }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+    padding: 20px 24px;
+  }
+  .card {
+    background: #1e293b;
+    border: 1px solid #2d3748;
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .card.col-8  { grid-column: span 8; }
+  .card.col-7  { grid-column: span 7; }
+  .card.col-6  { grid-column: span 6; }
+  .card.col-5  { grid-column: span 5; }
+  .card.col-4  { grid-column: span 4; }
+  .card.col-12 { grid-column: span 12; }
+  .card h3 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+  }
+  .card h3 span {
+    font-size: 11px;
+    font-weight: 400;
+    color: #475569;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 6px;
+  }
+  .chart-wrap { position: relative; }
+  .chart-wrap.h200 { height: 200px; }
+  .chart-wrap.h220 { height: 220px; }
+  .chart-wrap.h240 { height: 240px; }
+  .chart-wrap.h260 { height: 260px; }
+  .chart-wrap.h280 { height: 280px; }
+  .chart-wrap.h300 { height: 300px; }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #94a3b8; }
+  .legend-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Table */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .data-table th { text-align: left; color: #64748b; font-weight: 600; font-size: 10px; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid #2d3748; }
+  .data-table td { padding: 7px 8px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+  .data-table tr:hover td { background: #0f172a; }
+  .data-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .data-table .pos { color: #34d399; }
+  .data-table .neg { color: #f87171; }
+  .data-table .warn { color: #fbbf24; }
+
+  /* Badge */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; }
+  .badge-red    { background: #450a0a; color: #f87171; }
+  .badge-green  { background: #052e16; color: #34d399; }
+  .badge-amber  { background: #431407; color: #fbbf24; }
+  .badge-blue   { background: #0c1a4a; color: #60a5fa; }
+
+  /* Progress bar */
+  .prog-row { margin-bottom: 10px; }
+  .prog-label { display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
+  .prog-label span:last-child { color: #e2e8f0; font-weight: 600; }
+  .prog-track { background: #0f172a; border-radius: 4px; height: 7px; overflow: hidden; }
+  .prog-fill  { height: 100%; border-radius: 4px; transition: width 1s ease; }
+
+  /* Divider */
+  .divider { height: 1px; background: #2d3748; margin: 10px 0; }
+
+  /* Flag items */
+  .flag { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid #1e293b; }
+  .flag:last-child { border-bottom: none; }
+  .flag-icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+  .flag-text { font-size: 12px; color: #94a3b8; line-height: 1.5; }
+  .flag-text strong { color: #e2e8f0; display: block; margin-bottom: 1px; }
+
+  footer { text-align: center; padding: 16px; font-size: 11px; color: #334155; border-top: 1px solid #1e293b; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>15248132 Canada Inc. &nbsp;·&nbsp; o/a XYZ Bytes &nbsp;·&nbsp; 2025 Financial Dashboard</h1>
+  <p>CRA BN: 795920958 RC0001 &nbsp;·&nbsp; Fiscal Year: Jan 1 – Dec 31, 2025 &nbsp;·&nbsp; All amounts in CAD</p>
+</div>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip">
+  <div class="kpi"><div class="label">Net Revenue</div><div class="value blue">$261,878</div><div class="sub">ex-HST · full year</div></div>
+  <div class="kpi"><div class="label">HST Collected</div><div class="value amber">$39,022</div><div class="sub">filed · net owing $35,122</div></div>
+  <div class="kpi"><div class="label">Subcontractors</div><div class="value pink">$63,970</div><div class="sub">Zeeshan + WISE</div></div>
+  <div class="kpi"><div class="label">Director Reimb.</div><div class="value green">$24,143</div><div class="sub">personal CC expenses</div></div>
+  <div class="kpi"><div class="label">Corp Tax Paid '25</div><div class="value red">$17,960</div><div class="sub">vs $15,852 required</div></div>
+  <div class="kpi"><div class="label">Est. Tax Refund</div><div class="value green">~$4,500–6,400</div><div class="sub">estimated on T2 2025</div></div>
+</div>
+
+<div class="grid">
+
+  <!-- 1. 3-YEAR REVENUE BAR — col 8 -->
+  <div class="card col-8">
+    <h3>3-Year Revenue Growth <span>Net revenue ex-HST</span></h3>
+    <div class="chart-wrap h260">
+      <canvas id="chart3yr"></canvas>
+    </div>
+  </div>
+
+  <!-- 2. CLIENT SPLIT DONUT — col 4 -->
+  <div class="card col-4">
+    <h3>2025 Revenue by Client</h3>
+    <div class="chart-wrap h200">
+      <canvas id="chartClients"></canvas>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#38bdf8"></div>MIR Pay — $208,056 (70.4%)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#818cf8"></div>Lazer Technologies — $87,866 (29.6%)</div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-size:11px; color:#64748b; line-height:1.6">
+      Lazer contract ended <strong style="color:#fbbf24">May 2025</strong>.<br>
+      MIR is the sole active client from Jun onwards.
+    </div>
+  </div>
+
+  <!-- 3. MONTHLY REVENUE LINE — col 12 -->
+  <div class="card col-12">
+    <h3>Monthly Revenue vs Outgoing Cash <span>2025 · Net revenue ex-HST vs total outgoing payments</span></h3>
+    <div class="chart-wrap h260">
+      <canvas id="chartMonthly"></canvas>
+    </div>
+  </div>
+
+  <!-- 4. CUMULATIVE REVENUE — col 7 -->
+  <div class="card col-7">
+    <h3>Cumulative Net Revenue 2025 <span>Running total · ex-HST</span></h3>
+    <div class="chart-wrap h240">
+      <canvas id="chartCumulative"></canvas>
+    </div>
+  </div>
+
+  <!-- 5. SUBCONTRACTOR TIMING — col 5 -->
+  <div class="card col-5">
+    <h3>Subcontractor Payments by Month</h3>
+    <div class="chart-wrap h240">
+      <canvas id="chartSub"></canvas>
+    </div>
+  </div>
+
+  <!-- 6. 2025 EXPENSE BREAKDOWN DONUT — col 5 -->
+  <div class="card col-5">
+    <h3>2025 Cash Outflow Breakdown</h3>
+    <div class="chart-wrap h220">
+      <canvas id="chartExpenses"></canvas>
+    </div>
+    <div class="legend" style="margin-top:8px">
+      <div class="legend-item"><div class="legend-dot" style="background:#f472b6"></div>Subcontractors $63,970</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>Director Reimb. $24,143</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>Maham Salary $17,838</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#38bdf8"></div>Car Expenses $16,920</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f87171"></div>Corp Tax 2025 $17,960</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#fb923c"></div>Corp Tax 2024 $16,154</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#fbbf24"></div>HST Pre-pmts $34,900</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#64748b"></div>Credit Card pmts $25,004</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#94a3b8"></div>Other $7,117</div>
+    </div>
+  </div>
+
+  <!-- 7. EXPENSE COMPARISON 2024 vs 2025 — col 7 -->
+  <div class="card col-7">
+    <h3>Operating Expense Comparison <span>2024 Actual (T2) vs 2025 Estimate</span></h3>
+    <div class="chart-wrap h280">
+      <canvas id="chartExpComp"></canvas>
+    </div>
+  </div>
+
+  <!-- 8. HST SUMMARY — col 6 -->
+  <div class="card col-6">
+    <h3>HST/GST Summary <span>Filed period: Aug 15, 2024 – Aug 14, 2025</span></h3>
+    <div class="chart-wrap h200">
+      <canvas id="chartHST"></canvas>
+    </div>
+    <div class="divider"></div>
+    <table class="data-table">
+      <tr><td>Revenue reported (L101)</td><td class="num">$300,168.74</td></tr>
+      <tr><td>HST Collected (L103)</td><td class="num amber">$39,021.93</td></tr>
+      <tr><td>Input Tax Credits — ITCs (L106)</td><td class="num green">−$3,900.43</td></tr>
+      <tr><td><strong>Net Tax Owing (L115)</strong></td><td class="num neg"><strong>$35,121.50</strong></td></tr>
+      <tr><td>Pre-payments made (2024–25)</td><td class="num green">−$28,400.00</td></tr>
+      <tr><td>Pre-payment for 2025–26 period</td><td class="num green">−$6,500.00</td></tr>
+    </table>
+  </div>
+
+  <!-- 9. TAX INSTALMENT — col 6 -->
+  <div class="card col-6">
+    <h3>Corporate Tax Instalments 2025 <span>Required (T2 2024 schedule) vs Paid</span></h3>
+    <div class="chart-wrap h200">
+      <canvas id="chartInstalments"></canvas>
+    </div>
+    <div class="divider"></div>
+    <table class="data-table">
+      <tr><td>Total instalments required</td><td class="num">$15,852</td></tr>
+      <tr><td>Total instalments paid</td><td class="num warn">$17,960</td></tr>
+      <tr><td>Overpaid</td><td class="num pos">+$2,108</td></tr>
+      <tr><td>CRA refund received (Oct 10)</td><td class="num pos">$4,960.50</td></tr>
+      <tr><td>T2 2024 tax owing</td><td class="num">$15,848</td></tr>
+      <tr><td>T2 2024 paid (Mar 5, 2025)</td><td class="num">$16,154.35</td></tr>
+    </table>
+  </div>
+
+  <!-- 10. PROGRESS BARS — col 4 -->
+  <div class="card col-4">
+    <h3>Revenue Coverage Ratios <span>2025</span></h3>
+    <div style="margin-top:4px">
+      <div class="prog-row">
+        <div class="prog-label"><span>Subcontractors</span><span>24.4% of revenue</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:24.4%;background:#f472b6"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label"><span>Director Reimbursement</span><span>9.2% of revenue</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:9.2%;background:#34d399"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label"><span>Maham Salary</span><span>6.8% of revenue</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:6.8%;background:#a78bfa"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label"><span>Vehicle Expenses</span><span>6.5% of revenue</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:6.5%;background:#38bdf8"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label"><span>HST Collected</span><span>14.9% of revenue</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:14.9%;background:#fbbf24"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label"><span>Corp Tax Instalments</span><span>6.9% of revenue</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:6.9%;background:#f87171"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label"><span>Est. Net Income (pre-tax)</span><span>~39–42% of revenue</span></div>
+        <div class="prog-track"><div class="prog-fill" style="width:41%;background:#22d3ee"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. RETAINED EARNINGS WATERFALL — col 8 -->
+  <div class="card col-8">
+    <h3>Retained Earnings History <span>2023 → 2024 → 2025 (projected)</span></h3>
+    <div class="chart-wrap h240">
+      <canvas id="chartRE"></canvas>
+    </div>
+  </div>
+
+  <!-- 12. ACTION FLAGS — col 12 -->
+  <div class="card col-12">
+    <h3>⚠ Outstanding Items & Key Flags</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 24px">
+      <div>
+        <div class="flag">
+          <div class="flag-icon badge-red">🔴</div>
+          <div class="flag-text"><strong>Lazer T4A Gap — $5,075</strong>T4A Box 048 shows $82,791 but bank deposits = $87,866. Reconcile with Lazer before T2 2025 filing.</div>
+        </div>
+        <div class="flag">
+          <div class="flag-icon badge-red">🔴</div>
+          <div class="flag-text"><strong>Director Resolution — Sign & File</strong>Doc is PENDING. Must be executed and added to corporate minute book before T2 2025.</div>
+        </div>
+        <div class="flag">
+          <div class="flag-icon badge-amber">🟡</div>
+          <div class="flag-text"><strong>Shareholder Loan Repayment</strong>$3,856.75 must be repaid to corp by Dec 31, 2026 (ITA s.15(2)).</div>
+        </div>
+      </div>
+      <div>
+        <div class="flag">
+          <div class="flag-icon badge-amber">🟡</div>
+          <div class="flag-text"><strong>RE Opening Balance Discrepancy</strong>T2 2024 closing RE = $57,377 but accountant's 2025 sheet shows $129,924. New accountant must reconcile opening entry.</div>
+        </div>
+        <div class="flag">
+          <div class="flag-icon badge-amber">🟡</div>
+          <div class="flag-text"><strong>Oct Corp Tax Duplicate?</strong>Two $1,396 Corp Tax 2025 entries on Oct 31. Verify with bank — may be a spreadsheet duplicate.</div>
+        </div>
+        <div class="flag">
+          <div class="flag-icon badge-amber">🟡</div>
+          <div class="flag-text"><strong>2025 Books Reclassification</strong>New accountant must rebook $28K: $24,143 as expense reimbursement + $3,857 as shareholder loan. No dividends. No T5.</div>
+        </div>
+      </div>
+      <div>
+        <div class="flag">
+          <div class="flag-icon" style="background:#052e16;color:#34d399">✓</div>
+          <div class="flag-text"><strong>HST Filed — ✓ Confirmed</strong>Filed Sep 24, 2025. Confirmation #837076. $35,121.50 net tax. Exact match with accountant's balance sheet.</div>
+        </div>
+        <div class="flag">
+          <div class="flag-icon" style="background:#052e16;color:#34d399">✓</div>
+          <div class="flag-text"><strong>Zeeshan — No Withholding Required</strong>Offshore contractor. No T4A, NR4, or Reg. 105 withholding. Services performed outside Canada.</div>
+        </div>
+        <div class="flag">
+          <div class="flag-icon badge-blue">📅</div>
+          <div class="flag-text"><strong>T2 2025 Filing Deadline</strong>File by June 30, 2026. Balance owing due March 31, 2026. Estimated refund ~$4,500–6,400.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end grid -->
+
+<footer>15248132 Canada Inc. (o/a XYZ Bytes) · 2025 Financial Dashboard · Confidential · For internal use only</footer>
+
+<script>
+Chart.defaults.color = '#64748b';
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 11;
+
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ── 1. 3-YEAR REVENUE + NET INCOME ──────────────────
+new Chart(document.getElementById('chart3yr'), {
+  type: 'bar',
+  data: {
+    labels: ['2023\n(140 days)', '2024\n(Full Year)', '2025\n(Full Year)'],
+    datasets: [
+      { label: 'Net Revenue', data: [72923, 238877, 261878],
+        backgroundColor: ['#1e4d78','#1d6fb5','#38bdf8'],
+        borderRadius: 5, barPercentage: 0.5 },
+      { label: 'Total Expenses', data: [37207, 110825, 155000],
+        backgroundColor: ['#5c2a2a','#922222','#f87171'],
+        borderRadius: 5, barPercentage: 0.5 },
+      { label: 'Net Income (after tax)', data: [35716, 107825, 102000],
+        backgroundColor: ['#14532d','#15803d','#34d399'],
+        borderRadius: 5, barPercentage: 0.5 },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position:'top', labels:{ color:'#94a3b8', boxWidth:12, padding:16 } },
+      tooltip: { callbacks: { label: ctx => ' $' + ctx.raw.toLocaleString() } }
+    },
+    scales: {
+      x: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b' } },
+      y: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b',
+           callback: v => '$' + (v/1000).toFixed(0) + 'K' } }
+    }
+  }
+});
+
+// ── 2. CLIENT DONUT ─────────────────────────────────
+new Chart(document.getElementById('chartClients'), {
+  type: 'doughnut',
+  data: {
+    labels: ['MIR Pay', 'Lazer Technologies'],
+    datasets: [{ data: [208056, 87866],
+      backgroundColor: ['#38bdf8','#818cf8'],
+      borderColor: ['#1e293b','#1e293b'], borderWidth: 3,
+      hoverOffset: 8 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '68%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ' $' + ctx.raw.toLocaleString() + ' (' + ((ctx.raw/295922)*100).toFixed(1) + '%)' } }
+    }
+  }
+});
+
+// ── 3. MONTHLY REVENUE vs OUTGOING ──────────────────
+new Chart(document.getElementById('chartMonthly'), {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [
+      { label: 'Net Revenue (ex-HST)', type:'bar',
+        data: [32276,24243,19815,32415,31328,16800,15960,15960,15960,23520,16800,16800],
+        backgroundColor: 'rgba(56,189,248,0.75)', borderRadius:4, yAxisID:'y' },
+      { label: 'Total Outgoing', type:'bar',
+        data: [7885,24355,40437,19103,16590,26356,11667,7279,9070,24581,7761,28922],
+        backgroundColor: 'rgba(248,113,113,0.65)', borderRadius:4, yAxisID:'y' },
+      { label: 'Net Cash Flow', type:'line',
+        data: [32276-7885,24243-24355,19815-40437,32415-19103,31328-16590,16800-26356,15960-11667,15960-7279,15960-9070,23520-24581,16800-7761,16800-28922],
+        borderColor:'#34d399', backgroundColor:'rgba(52,211,153,0.1)',
+        pointBackgroundColor:'#34d399', pointRadius:4,
+        borderWidth:2, fill:true, tension:0.4, yAxisID:'y' },
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    interaction: { mode:'index', intersect:false },
+    plugins: {
+      legend:{ position:'top', labels:{ color:'#94a3b8', boxWidth:12, padding:14 } },
+      tooltip:{ callbacks:{ label: ctx => ' ' + ctx.dataset.label + ': $' + Math.abs(ctx.raw).toLocaleString() + (ctx.raw < 0 ? ' (deficit)' : '') } }
+    },
+    scales: {
+      x: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b' } },
+      y: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b',
+           callback: v => '$' + (v/1000).toFixed(0) + 'K' } }
+    }
+  }
+});
+
+// ── 4. CUMULATIVE REVENUE ────────────────────────────
+new Chart(document.getElementById('chartCumulative'), {
+  type: 'line',
+  data: {
+    labels: months,
+    datasets: [{
+      label: 'Cumulative Net Revenue 2025',
+      data: [32276,56519,76335,108750,140078,156878,172838,188798,204758,228278,245078,261878],
+      borderColor:'#38bdf8', backgroundColor:'rgba(56,189,248,0.08)',
+      pointBackgroundColor:'#38bdf8', pointRadius:4, pointHoverRadius:6,
+      borderWidth:2.5, fill:true, tension:0.4
+    }, {
+      label: 'Projected (flat MIR only)',
+      data: [null,null,null,null,null,null,null,null,null,null,null,261878],
+      borderColor:'#475569', borderDash:[5,5], borderWidth:1.5,
+      pointRadius:0, fill:false
+    }]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend:{ position:'top', labels:{ color:'#94a3b8', boxWidth:12 } },
+      tooltip:{ callbacks:{ label: ctx => ' $' + ctx.raw?.toLocaleString() } }
+    },
+    scales: {
+      x: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b' } },
+      y: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b',
+           callback: v => '$' + (v/1000).toFixed(0) + 'K' },
+           suggestedMin:0, suggestedMax:280000 }
+    }
+  }
+});
+
+// ── 5. SUBCONTRACTOR BY MONTH ────────────────────────
+new Chart(document.getElementById('chartSub'), {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [{
+      label: 'Subcontractor Payments',
+      data: [0,15240,0,8740,8680,8770,8240,7240,0,0,7008,0],
+      backgroundColor: ctx => {
+        const v = ctx.raw;
+        if (v > 12000) return '#f43f5e';
+        if (v > 0)     return '#f472b6';
+        return 'transparent';
+      },
+      borderRadius: 5
+    }]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend:{ display:false },
+      tooltip:{ callbacks:{ label: ctx => ctx.raw > 0 ? ' $' + ctx.raw.toLocaleString() : ' No payment' } }
+    },
+    scales: {
+      x: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b' } },
+      y: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b',
+           callback: v => '$' + (v/1000).toFixed(0) + 'K' } }
+    }
+  }
+});
+
+// ── 6. EXPENSE DONUT ────────────────────────────────
+new Chart(document.getElementById('chartExpenses'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Subcontractors','Dir. Reimb.','Maham Salary','Car Expenses','Corp Tax 2025','Corp Tax 2024','HST Pre-pmts','CC Payments','Other'],
+    datasets: [{ data: [63970,24143,17838,16920,17960,16154,34900,25004,7117],
+      backgroundColor:['#f472b6','#34d399','#a78bfa','#38bdf8','#f87171','#fb923c','#fbbf24','#64748b','#94a3b8'],
+      borderColor:'#1e293b', borderWidth:2, hoverOffset:6 }]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false, cutout:'62%',
+    plugins: {
+      legend:{ display:false },
+      tooltip:{ callbacks:{ label: ctx => ' ' + ctx.label + ': $' + ctx.raw.toLocaleString() + ' (' + ((ctx.raw/224006)*100).toFixed(1) + '%)' } }
+    }
+  }
+});
+
+// ── 7. EXPENSE COMPARISON 2024 vs 2025 ──────────────
+const expLabels = ['Sub-contractors','Director Reimb.','Maham Salary','Vehicle','Rental/Home Office','Insurance','Meals & Entert.','Telephone','Travel','Office Exp.','Accounting','Other'];
+const exp2024   = [78680, 0,     0,     13426, 6024, 515,  3159, 1158, 1804, 3923, 800, 3];
+const exp2025   = [63970, 24143, 17838, 16920, 12480, 2637, 3800, 1507, 980,  1200, 1074, 400];
+new Chart(document.getElementById('chartExpComp'), {
+  type: 'bar',
+  data: {
+    labels: expLabels,
+    datasets: [
+      { label: '2024 (T2 filed)', data: exp2024,
+        backgroundColor: 'rgba(148,163,184,0.5)', borderColor:'#64748b', borderWidth:1, borderRadius:3 },
+      { label: '2025 (Estimated)', data: exp2025,
+        backgroundColor: 'rgba(56,189,248,0.7)', borderRadius:3 },
+    ]
+  },
+  options: {
+    indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend:{ position:'top', labels:{ color:'#94a3b8', boxWidth:12 } },
+      tooltip:{ callbacks:{ label: ctx => ' $' + ctx.raw.toLocaleString() } }
+    },
+    scales: {
+      x: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b',
+           callback: v => '$' + (v/1000).toFixed(0) + 'K' } },
+      y: { grid:{ color:'#1e293b' }, ticks:{ color:'#94a3b8', font:{ size:10 } } }
+    }
+  }
+});
+
+// ── 8. HST BAR ───────────────────────────────────────
+new Chart(document.getElementById('chartHST'), {
+  type: 'bar',
+  data: {
+    labels: ['HST Collected', 'ITCs Claimed', 'Net Tax Owing', 'Pre-payments Made'],
+    datasets: [{ data: [39022, 3900, 35122, 28400],
+      backgroundColor: ['#fbbf24','#34d399','#f87171','#38bdf8'],
+      borderRadius: 6, barPercentage: 0.6 }]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend:{ display:false },
+      tooltip:{ callbacks:{ label: ctx => ' $' + ctx.raw.toLocaleString() } }
+    },
+    scales: {
+      x: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b', font:{ size:10 } } },
+      y: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b',
+           callback: v => '$' + (v/1000).toFixed(0) + 'K' } }
+    }
+  }
+});
+
+// ── 9. INSTALMENTS ───────────────────────────────────
+new Chart(document.getElementById('chartInstalments'), {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [
+      { label: 'Required (T2 schedule)', data: [951,951,1395,1395,1395,1395,1395,1395,1395,1395,1395,1395],
+        backgroundColor: 'rgba(148,163,184,0.4)', borderRadius:3 },
+      { label: 'Paid (debit records)', data: [0,1902,4000,1396,1396,1396,1396,1396,1396,2792,0,1396],
+        backgroundColor: ctx => ctx.raw > 1400 ? 'rgba(251,191,36,0.8)' : 'rgba(56,189,248,0.7)',
+        borderRadius:3 },
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend:{ position:'top', labels:{ color:'#94a3b8', boxWidth:12 } },
+      tooltip:{ callbacks:{ label: ctx => ' $' + ctx.raw.toLocaleString() } }
+    },
+    scales: {
+      x: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b', font:{ size:10 } } },
+      y: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b',
+           callback: v => '$' + v.toLocaleString() } }
+    }
+  }
+});
+
+// ── 10. RETAINED EARNINGS WATERFALL ─────────────────
+new Chart(document.getElementById('chartRE'), {
+  type: 'bar',
+  data: {
+    labels: ['Aug 2023\n(Start)', '+Net Income\n2023', '−Dividends\n2023', 'Dec 2023\n(RE)', '+Net Income\n2024', '−Dividends\n2024', 'Dec 2024\n(RE)', '+Net Income\n2025 est.', '−Director\nPayments', 'Dec 2025\n(RE est.)'],
+    datasets: [{
+      label: 'Retained Earnings',
+      data: [0, 35716, -13614, 22102, 107825, -72550, 57377, 102000, -28000, 131377],
+      backgroundColor: ctx => {
+        const vals = [0, 35716, -13614, 22102, 107825, -72550, 57377, 102000, -28000, 131377];
+        const v = vals[ctx.dataIndex];
+        if ([0,3,6,9].includes(ctx.dataIndex)) return '#38bdf8';
+        return v >= 0 ? '#34d399' : '#f87171';
+      },
+      borderRadius: 4, barPercentage: 0.65
+    }]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins: {
+      legend:{ display:false },
+      tooltip:{ callbacks:{ label: ctx => {
+        const v = ctx.raw;
+        return (v < 0 ? ' −$' + Math.abs(v).toLocaleString() : ' $' + v.toLocaleString());
+      }}}
+    },
+    scales: {
+      x: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b', font:{ size:9 } } },
+      y: { grid:{ color:'#1e293b' }, ticks:{ color:'#64748b',
+           callback: v => '$' + (v/1000).toFixed(0) + 'K' } }
+    }
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{
+ "as_of": "2026-10-07",
+ "standing": {
+  "headline": "Every return through 2025 is filed. Next is the HST return, with Saira now, which should bring back $2,404.66.",
+  "points": [
+   {
+    "label": "Filed and settled",
+    "text": "The T2 for 2023, 2024 and 2025. The T2 2025 was filed by Ejaz Pirwani on 18 May 2026 and assessed the same day: tax $13,368 against $17,960 of instalments, so CRA refunded $4,592, received with interest as $4,644.90 on 28 May. Umar's and Maham's 2025 T1 returns were filed electronically on 20 April 2026 with refunds of $22,130.37 and $40.17; no notice of assessment for either is in the folder yet."
+   },
+   {
+    "label": "Waiting",
+    "text": "The HST return for the year ending 14 August 2026. On the workpaper, sales were $207,480, HST collected $26,972.40 and ITC $3,377.06, against $26,000 already paid in instalments, so a $2,404.66 refund. Saira, the accountant again since September 2026, files it. First Umar has to give her Represent a Client access to the RT account, and she says her books show more than ours, so her numbers need checking against ours."
+   },
+   {
+    "label": "Umar and the corporation",
+    "text": "No dividends were paid in 2025 and there is no shareholder loan. The filed T2 2025 shows the corporation owing Umar $13,357 for business costs he paid personally. With 2026 rent at 30%, phone and insurance added, and the 20% personal share of the Mercedes charged back to him ($4,728.35 for January to August), he was owed $16,111.98 on 23 September 2026, about $16,525 by year end. He can draw it tax free as expense reimbursement once Saira agrees."
+   },
+   {
+    "label": "Main risk",
+    "text": "2026 corporate tax is projected about $4,743 above the $10,500 of planned instalments. About $1,411 of that comes from lease payments over the s.67.3 cap and $578 from the 20% personal share of the Mercedes no longer being deductible; the rest is simply profit. Top up instalments by about $1,186 a month from September to December, or record more director funded expenses. The Mercedes has no mileage log behind the 80% claim, and the filed T2 2025 deducted the whole lease at 100%: about $6,608 above the cap, about $9,600 if the down payment is also spread over the 36 month term."
+   }
+  ]
+ },
+ "evidence_root": "~/Documents/Taxes",
+ "corporation": {
+  "legal_name": "15248132 Canada Inc.",
+  "operating_name": "XYZ Bytes",
+  "bn": "795920958 RC0001",
+  "hst_account": "795920958 RT0001",
+  "payroll_account": "795920958 RP0001",
+  "incorporated": "2023-08-14",
+  "address": "1004 – 200 Burnhamthorpe Rd E, Mississauga, ON  L5A 4L4",
+  "province": "Ontario, 13% HST",
+  "type": "Canadian-controlled private corporation (CCPC)",
+  "year_end": "December 31",
+  "hst_period": "Annual, August 15 to August 14"
+ },
+ "person": {
+  "name": "Umar Farooq Aslam",
+  "sin": "****",
+  "role": "Sole shareholder and director"
+ },
+ "glance": [
+  {
+   "label": "The corporation owes you",
+   "value": "$16,112",
+   "note": "At 23 September 2026, after the Mercedes personal-use offset. You can withdraw it tax free once Saira agrees.",
+   "href": "year-2026.html"
+  },
+  {
+   "label": "Watch",
+   "value": "$4,743 short",
+   "note": "2026 corporate tax against planned instalments. Top up or decide by 31 December.",
+   "href": "todo.html"
+  }
+ ]
+}

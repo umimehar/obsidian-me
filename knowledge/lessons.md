@@ -149,6 +149,8 @@ Recurred twice on 2026-09-29 (TCK-0010 and TCK-0013 implementers each wiped an u
 
 NEVER verify a restore by exit code. Compare `shasum` against the known pre-mutation hash, or use `git diff --quiet`. On macOS with `cp` aliased to `cp -i` and zsh `noclobber` set, a failed restore is SILENT: both refuse rather than erroring, so the tree keeps the mutation while the command reports success and later mutations stack on top of it.
 
+Recurred 2026-10-07 (taxes renderer, TCK-0017): a `cp backup src/x.ts` restore printed "not overwritten" inside a chained command, the next mutation stacked on the first, and a `trash` of the backups in the same command nearly removed the only good copy. ALWAYS restore with `command cp -f` (bypasses the alias), never chain the backup's deletion into the mutation command, and `diff` the restored file against the backup before deleting the backup.
+
 ### noclobber blocks overwrite, not just creation (2026-08-19)
 
 Why:

@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XYZ Bytes — 2026 Financial Position</title>
+<style>
+:root{
+  color-scheme:light;
+  --plane:#f4f4f1; --surface:#fcfcfb; --raise:#ffffff;
+  --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --rule:rgba(11,11,11,.09); --ring:rgba(11,11,11,.14);
+  --s1:#2a78d6; --s2:#eb6834;
+  --good:#0ca30c; --crit:#d03b3b; --warn:#fab219; --success:#006300;
+  --tipbg:#0b0b0b; --tipink:#fcfcfb;
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --plane:#0d0d0d; --surface:#1a1a19; --raise:#211f1f;
+  --ink:#fff; --ink2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --rule:rgba(255,255,255,.09); --ring:rgba(255,255,255,.16);
+  --s1:#3987e5; --s2:#d95926;
+  --good:#0ca30c; --crit:#d03b3b; --warn:#fab219; --success:#0ca30c;
+  --tipbg:#f4f4f1; --tipink:#0b0b0b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{background:var(--plane);color:var(--ink);
+  font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;padding-bottom:72px}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+/* ---- masthead ---- */
+header{position:sticky;top:0;z-index:40;background:var(--surface);
+  border-bottom:1px solid var(--rule);backdrop-filter:saturate(1.4) blur(8px)}
+.mast{max-width:1180px;margin:0 auto;padding:13px 24px 0;
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.mast h1{font-size:14.5px;font-weight:650;letter-spacing:-.01em}
+.mast .meta{color:var(--muted);font-size:11.5px;letter-spacing:.055em;text-transform:uppercase}
+.mast .sep{color:var(--ring)}
+.spacer{flex:1}
+button.tog{border:1px solid var(--ring);background:transparent;color:var(--ink2);
+  font:inherit;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  padding:5px 11px;border-radius:5px;cursor:pointer;transition:.14s}
+button.tog:hover{border-color:var(--ink2);color:var(--ink)}
+nav{max-width:1180px;margin:0 auto;padding:9px 24px 0;display:flex;gap:2px;overflow-x:auto}
+nav a{color:var(--muted);text-decoration:none;font-size:11.5px;letter-spacing:.06em;
+  text-transform:uppercase;padding:7px 11px;border-bottom:2px solid transparent;white-space:nowrap;transition:.14s}
+nav a:hover{color:var(--ink)}
+nav a.on{color:var(--ink);border-bottom-color:var(--s1)}
+.tabs{max-width:1180px;margin:0 auto;padding:2px 24px 0;display:flex;gap:22px}
+.tabs button{border:0;background:transparent;color:var(--muted);font:inherit;font-size:13px;
+  font-weight:600;letter-spacing:-.005em;padding:9px 0 10px;cursor:pointer;
+  border-bottom:2px solid transparent;transition:.14s}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.panel[hidden]{display:none}
+.ctl{display:flex;gap:26px;align-items:center;flex-wrap:wrap;padding:14px 20px;
+  border-bottom:1px solid var(--rule);background:var(--plane);border-radius:10px 10px 0 0}
+.ctl label{font-size:10.5px;letter-spacing:.075em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.ctl .fld{min-width:210px}
+.ctl output{font-size:15px;letter-spacing:-.01em;color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--s1);margin-top:5px}
+.chk{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink2);cursor:pointer}
+.chk input{accent-color:var(--s1);width:15px;height:15px}
+.callout{display:flex;gap:14px;align-items:flex-start;margin:0;padding:14px 20px;border-top:1px solid var(--rule)}
+.callout .big{font-size:21px;letter-spacing:-.02em;white-space:nowrap}
+.callout .txt{font-size:12.5px;color:var(--ink2);line-height:1.5}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.hint{font-size:11.5px;color:var(--muted);margin-top:4px}
+
+main{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* ---- kpi strip ---- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(184px,1fr));
+  border:1px solid var(--rule);border-radius:10px;overflow:hidden;background:var(--surface);margin:22px 0 26px}
+.kpi{padding:15px 17px 14px;border-right:1px solid var(--rule);min-width:0;display:flex;flex-direction:column}
+.kpi .d{margin-top:auto}
+.kpi:last-child{border-right:0}
+.kpi .k{color:var(--muted);font-size:10.5px;letter-spacing:.075em;text-transform:uppercase;margin-bottom:7px}
+.kpi .v{font-size:24px;letter-spacing:-.025em;line-height:1.1;white-space:nowrap}
+.kpi .d{font-size:11.5px;color:var(--ink2);margin-top:6px;display:flex;align-items:center;gap:5px}
+.kpi svg.spark{width:100%;height:20px;margin-top:9px;opacity:.55}
+.pos{color:var(--success)} .neg{color:var(--crit)}
+.dot{width:6px;height:6px;border-radius:50%;flex:none}
+
+/* ---- sections ---- */
+section{margin:0 0 26px;background:var(--surface);border:1px solid var(--rule);border-radius:10px}
+.shead{display:flex;align-items:baseline;gap:12px;padding:15px 20px 0;flex-wrap:wrap}
+.shead h2{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);font-weight:650}
+.shead .note{color:var(--muted);font-size:12px;flex:1;min-width:180px}
+.body{padding:8px 20px 18px}
+.seg{display:inline-flex;border:1px solid var(--ring);border-radius:6px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-size:11px;
+  letter-spacing:.05em;text-transform:uppercase;padding:5px 11px;cursor:pointer;transition:.14s}
+.seg button+button{border-left:1px solid var(--ring)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.seg button:not([aria-pressed="true"]):hover{color:var(--ink)}
+.legend{display:flex;gap:16px;font-size:11.5px;color:var(--ink2);margin:2px 0 4px;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:2.5px}
+
+/* ---- charts ---- */
+.chart{position:relative}
+svg.plot{display:block;width:100%;height:auto;overflow:visible}
+.gl{stroke:var(--grid);stroke-width:1}
+.ax{stroke:var(--axis);stroke-width:1}
+.tk{fill:var(--muted);font-size:10.5px;letter-spacing:.03em}
+.dl{fill:var(--ink2);font-size:11px}
+.mk{transition:opacity .14s}
+.chart.hot .mk{opacity:.38}
+.chart.hot .mk.live{opacity:1}
+.tip{position:absolute;z-index:30;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--tipbg);color:var(--tipink);border-radius:7px;padding:8px 11px;
+  font-size:11.5px;line-height:1.4;white-space:nowrap;
+  box-shadow:0 6px 22px rgba(0,0,0,.22)}
+.tip b{font-weight:600;display:block;margin-bottom:2px;letter-spacing:.03em;text-transform:uppercase;font-size:10px;opacity:.72}
+.tip .r{display:flex;justify-content:space-between;gap:16px}
+.cross{stroke:var(--axis);stroke-width:1;stroke-dasharray:3 3;opacity:0}
+
+/* ---- tables ---- */
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:8px 12px;text-align:right;border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child{text-align:left}
+thead th{color:var(--muted);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:var(--plane)}
+tbody tr:last-child td{border-bottom:0}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;
+  padding:2px 8px;border-radius:20px;border:1px solid var(--ring);white-space:nowrap}
+.tag{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.flag{border-left:2px solid var(--warn);padding:1px 0 1px 13px;margin:14px 20px 0;
+  font-size:12.5px;color:var(--ink2);line-height:1.5}
+details{border-top:1px solid var(--rule);margin-top:2px}
+summary{cursor:pointer;color:var(--muted);font-size:11px;letter-spacing:.07em;
+  text-transform:uppercase;padding:12px 20px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+ ";font-weight:600}
+details[open] summary::before{content:"− "}
+footer{max-width:1180px;margin:0 auto;padding:4px 24px;color:var(--muted);font-size:11.5px;line-height:1.6}
+@media(prefers-reduced-motion:no-preference){
+  .rise{animation:rise .5s cubic-bezier(.22,.8,.3,1) backwards}
+  @keyframes rise{from{opacity:0;transform:translateY(7px)}}
+}
+</style></head><body>
+
+<header>
+  <div class="mast">
+    <h1>XYZ Bytes</h1>
+    <span class="meta">15248132 Canada Inc.</span><span class="sep">/</span>
+    <span class="meta">BMO #04941961‑004</span><span class="sep">/</span>
+    <span class="meta">as of 23 Sep 2026</span>
+    <span class="spacer"></span>
+    <button class="tog" id="themeBtn" aria-label="Toggle colour theme">Dark</button>
+  </div>
+  <nav>
+    <a href="#cash" class="on">Cash position</a><a href="#flow">Monthly flow</a>
+    <a href="#out">Outflows</a><a href="#cc">Credit card</a><a href="#pers">Personal card</a><a href="#reimb">Reimbursement</a><a href="#obl">Obligations</a><a href="#led">Ledger</a>
+  </nav>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-p="p-ytd">Year to date</button>
+    <button role="tab" aria-selected="false" data-p="p-fc">Forecast to 31 Dec</button>
+    <button role="tab" aria-selected="false" data-p="p-hst">HST filing 2025‑26</button>
+  </div>
+</header>
+
+<main>
+<div class="panel" id="p-ytd">
+  <div class="kpis rise" id="kpis"></div>
+
+  <section id="cash" class="rise" style="animation-delay:.05s">
+    <div class="shead"><h2>Cash position</h2>
+      <span class="note">Month-end closing balance. Jan–Jun confirmed against BMO statements; Jul and Aug are booked entries awaiting a statement.</span></div>
+    <div class="body"><div class="chart" id="c-bal">
+      <svg class="plot" viewBox="0 0 960 286" role="img" aria-label="Line chart of month-end bank balance, January to August 2026"></svg>
+      <div class="tip"></div></div></div>
+  </section>
+
+  <section id="flow" class="rise" style="animation-delay:.1s">
+    <div class="shead"><h2>Monthly flow</h2>
+      <span class="note">Deposits against withdrawals. January's outflow is the $20,000 Wealthsimple transfer; May's inflow carries the $4,644.90 CRA refund.</span>
+      <span class="seg" id="flowSeg">
+        <button aria-pressed="true" data-v="gross">In / out</button>
+        <button aria-pressed="false" data-v="net">Net</button></span></div>
+    <div class="body">
+      <div class="legend" id="flowLeg"><span><i style="background:var(--s1)"></i>Cash in</span><span><i style="background:var(--s2)"></i>Cash out</span></div>
+      <div class="chart" id="c-flow">
+        <svg class="plot" viewBox="0 0 960 286" role="img" aria-label="Bar chart of monthly cash in and cash out"></svg>
+        <div class="tip"></div></div></div>
+  </section>
+
+  <section id="out" class="rise" style="animation-delay:.15s">
+    <div class="shead"><h2>Outflows by category</h2>
+      <span class="note">All withdrawals 1 Jan – 31 Aug. Only the blue bars are operating expenses.</span>
+      <span class="seg" id="catSeg">
+        <button aria-pressed="true" data-v="all">All</button>
+        <button aria-pressed="false" data-v="op">Operating only</button></span></div>
+    <div class="body">
+      <div class="legend"><span><i style="background:var(--s1)"></i>Operating expense</span><span><i style="background:var(--s2)"></i>Transfer or remittance</span></div>
+      <div class="chart" id="c-cat">
+        <svg class="plot" viewBox="0 0 960 396" role="img" aria-label="Horizontal bar chart of outflows by category"></svg>
+        <div class="tip"></div></div></div>
+    <p class="flag">$95,953.98 of the $148,071.89 total is not an expense: investments, tax and GST remittances, credit card settlements. Operating cash expenses through the debit account: <strong>$52,117.91</strong>. The credit card carries the rest, shown below.</p>
+    <details><summary>Category detail</summary><div class="body" style="padding-top:0"><table><thead><tr>
+      <th>Category</th><th>Amount</th><th>Share</th><th>Count</th><th>Type</th></tr></thead>
+      <tbody id="ctbl" class="num"></tbody></table></div></details>
+  </section>
+
+  <section id="cc" class="rise" style="animation-delay:.18s">
+    <div class="shead"><h2>Corporate credit card</h2>
+      <span class="note">BMO Mastercard 5840 · 8 statements, 1 Jan – 28 Aug. Net of $343.30 in merchant refunds. Meals shown at the 50% deductible portion.</span></div>
+    <div class="body">
+      <div class="legend"><span><i style="background:var(--s1)"></i>Deductible</span><span><i style="background:var(--s2)"></i>Not deductible</span></div>
+      <div class="chart" id="c-cc">
+        <svg class="plot" viewBox="0 0 960 250" role="img" aria-label="Credit card spend by category"></svg>
+        <div class="tip"></div></div></div>
+    <p class="flag">Spend is running at <strong>$1,673.63/month</strong> against $2,953.36/month in 2025. $1,978.91 went to US suppliers who charge no Canadian HST, so none of it carries an input tax credit. $1,221.00 at Credit Valley hospital on 27 Jul is marked personal until confirmed.</p>
+  </section>
+
+  <section id="pers" class="rise" style="animation-delay:.19s">
+    <div class="shead"><h2>Director-funded expenses</h2>
+      <span class="note">Paid on Umar's personal card, reimbursable by the corporation. Kept separate from the chequing and Mastercard sources so they can be handed to the accountant on their own.</span></div>
+    <div class="body"><table><thead><tr><th>Item</th><th>Paid</th><th>Claim</th><th>Claimed</th>
+      <th>HST status</th><th>ITC / yr</th><th style="text-align:left">Cadence</th></tr></thead>
+      <tbody id="perstbl" class="num"></tbody></table></div>
+    <p class="flag" id="persFlag"></p>
+  </section>
+
+  <section id="reimb" class="rise" style="animation-delay:.195s">
+    <div class="shead"><h2>Reimbursement owed to you</h2>
+      <span class="note">What the corporation owes for expenses you funded personally. Reimbursing a business expense you already paid is not income and not a taxable benefit — it is repayment, so no personal tax arises.</span></div>
+    <div class="body">
+      <div class="chart" id="c-reimb">
+        <svg class="plot" viewBox="0 0 960 240" role="img" aria-label="Balance owed to the director through 2026"></svg>
+        <div class="tip"></div></div>
+      <table style="margin-top:10px"><tbody id="reimbtbl" class="num"></tbody></table></div>
+    <p class="flag" id="reimbFlag"></p>
+  </section>
+
+  <section id="obl" class="rise" style="animation-delay:.2s">
+    <div class="shead"><h2>Obligations</h2><span class="note">Where each account stands against what is owed.</span></div>
+    <div class="body"><table><thead><tr>
+      <th>Item</th><th>Required</th><th>Paid</th><th>Variance</th><th style="text-align:left">Status</th></tr></thead>
+      <tbody id="otbl" class="num"></tbody></table></div>
+    <p class="flag">CRA's issued schedule asks $13,370 in 2026. Paying below it on the current-year estimate method is deliberate — but on full-year figures the instalments now project short. See the Forecast tab.</p>
+    <p class="flag" style="border-left-color:var(--good)">The director account is money the <em>corporation owes you</em> — $13,357 per Schedule 100 line 2780 of the filed T2, plus $8,704.33 accrued this year on personally funded expenses, less $1,221.00 of personal charges on the corporate card: $20,840.33 at 23 Sep. Not a loan you owe it, so no ITA s.15(2) deadline. Drawable at any time with no personal tax.</p>
+  </section>
+
+  <section id="led" class="rise" style="animation-delay:.25s">
+    <div class="shead"><h2>Monthly ledger</h2><span class="note">Eight months, reconciled where a statement exists.</span></div>
+    <div class="body"><table><thead><tr>
+      <th>Period</th><th>Cash in</th><th>Cash out</th><th>Net</th><th>Closing balance</th><th style="text-align:left">Source</th></tr></thead>
+      <tbody id="mtbl" class="num"></tbody></table></div>
+  </section>
+
+</div>
+
+<div class="panel" id="p-fc" hidden>
+  <div class="kpis rise" id="fkpis"></div>
+
+  <section class="rise">
+    <div class="ctl">
+      <div class="fld"><label for="dfe">Director-funded expenses · full year</label>
+        <output id="cardOut" class="num">$11,509</output>
+        <input type="range" id="dfe" min="0" max="60000" step="1" value="11509">
+        <div class="hint">$11,508.82 now tracked (rent 30%, phone, insurance, Mercedes service) · 2025 total was $41,357</div></div>
+      <div><label>Break-even for instalments</label><output class="num">$45,273</output>
+        <div class="hint">below this, CRA charges instalment interest</div></div>
+      <label class="chk"><input type="checkbox" id="invest" checked> Keep investing $1,000 biweekly</label>
+    </div>
+    <div class="shead" style="padding-top:15px"><h2>Projected cash to 31 December</h2>
+      <span class="note">Solid to 31 Aug is checked against statements. Dashed is projection: forecast MIR deposits less committed costs, card settlements and investing.</span></div>
+    <div class="body"><div class="chart" id="c-run">
+      <svg class="plot" viewBox="0 0 960 300" role="img" aria-label="Projected bank balance to December 2026"></svg>
+      <div class="tip"></div></div></div>
+    <div class="callout"><div class="big num" id="endCash">—</div>
+      <div class="txt">projected balance at 31 Dec 2026. <span id="runNote"></span></div></div>
+  </section>
+
+  <section class="rise" style="animation-delay:.05s">
+    <div class="shead"><h2>Income against committed cost · Sep – Dec</h2>
+      <span class="note">Deposits are contracted work. Committed cost is only what recurs on a fixed schedule — card spend and one-off subcontractor payments are excluded.</span></div>
+    <div class="body">
+      <div class="legend"><span><i style="background:var(--s1)"></i>MIR deposits (gross)</span><span><i style="background:var(--s2)"></i>Committed cost</span></div>
+      <div class="chart" id="c-fc">
+        <svg class="plot" viewBox="0 0 960 276" role="img" aria-label="Monthly forecast income against committed cost"></svg>
+        <div class="tip"></div></div></div>
+  </section>
+
+  <div class="grid2">
+    <section class="rise" style="animation-delay:.1s;margin:0">
+      <div class="shead"><h2>GST / HST · period closes 14 Aug 2026</h2></div>
+      <div class="body"><table><tbody id="gsttbl" class="num"></tbody></table></div>
+      <p class="flag">Input tax credits are measured line by line from every chequing and card statement in the period, each traceable in <code>transactions_master.csv</code>. Mercedes costs are claimed at 80% business use, and the lease also at the s.235 cap. Return due 14 Nov 2026 (a Saturday, so 16 Nov); nothing to pay.</p>
+    </section>
+
+    <section class="rise" style="animation-delay:.15s;margin:0">
+      <div class="shead"><h2>Corporate tax · year ends 31 Dec 2026</h2></div>
+      <div class="body"><table><tbody id="corptbl" class="num"></tbody></table></div>
+      <p class="flag" id="corpFlag"></p>
+      <p class="flag" id="drawNote" style="border-left-color:var(--good)"></p>
+    </section>
+  </div>
+
+  <section class="rise" style="animation-delay:.2s">
+    <div class="shead"><h2>Remaining MIR payments</h2>
+      <span class="note">$105/hr, 80 hrs per biweekly period, less 8 hrs for each Ontario public holiday. This rule reproduces 14 of your 15 payments so far to the cent.</span></div>
+    <div class="body"><table><thead><tr><th>Pay date</th><th style="text-align:left">Work period</th>
+      <th>Hours</th><th>Net</th><th>HST</th><th>Gross</th><th style="text-align:left">Holiday</th></tr></thead>
+      <tbody id="paytbl" class="num"></tbody></table></div>
+    <p class="flag">The one miss: 1 May paid 64 hours for the 13–24 Apr period, which has no public holiday in it. Two days of vacation would explain it. If that was leave rather than a rule I've got wrong, the forecast above stands.</p>
+  </section>
+
+  <section class="rise" style="animation-delay:.25s">
+    <div class="shead"><h2>Fixed commitments · 5 Aug – 31 Dec</h2>
+      <span class="note">Everything that recurs on a known schedule.</span></div>
+    <div class="body"><table><thead><tr><th>Commitment</th><th>Each</th><th>Left</th><th>Total</th>
+      <th style="text-align:left">Cadence</th><th style="text-align:left">Type</th></tr></thead>
+      <tbody id="fixtbl" class="num"></tbody></table></div>
+  </section>
+</div>
+
+</div>
+
+<div class="panel" id="p-hst" hidden>
+  <div class="kpis rise" id="hkpis"></div>
+
+  <section class="rise">
+    <div class="shead"><h2>Return · period 15 Aug 2025 – 14 Aug 2026</h2>
+      <span class="note">Business number 795920958 RT0001 · annual filer · GST/HST NETFILE. Figures follow the return's own line numbering.</span></div>
+    <div class="body"><table><thead><tr><th style="text-align:left">Line</th>
+      <th style="text-align:left">Description</th><th>Amount</th></tr></thead>
+      <tbody id="hstlines" class="num"></tbody></table></div>
+    <p class="flag" id="hstFlag"></p>
+  </section>
+
+  <div class="grid2">
+    <section class="rise" style="animation-delay:.05s;margin:0">
+      <div class="shead"><h2>Input tax credits by source</h2>
+        <span class="note">Every line traceable in the master ledger.</span></div>
+      <div class="body">
+        <div class="chart" id="c-itc">
+          <svg class="plot" viewBox="0 0 460 230" role="img" aria-label="Input tax credits by category"></svg>
+          <div class="tip"></div></div>
+        <table style="margin-top:6px"><tbody id="itctbl" class="num"></tbody></table></div>
+    </section>
+
+    <section class="rise" style="animation-delay:.1s;margin:0">
+      <div class="shead"><h2>Against last year</h2>
+        <span class="note">Period ended 14 Aug 2025, filed 24 Sep 2025, confirmation 837076.</span></div>
+      <div class="body"><table><thead><tr><th style="text-align:left">Line</th>
+        <th>2024‑25 filed</th><th>2025‑26 est.</th><th>Change</th></tr></thead>
+        <tbody id="vstbl" class="num"></tbody></table></div>
+      <p class="flag">Revenue fell 31% as Lazer ended in May 2025 and MIR became the only client. Instalments were not reduced to match, which is why a $35,121.50 payment last year becomes a refund this year.</p>
+    </section>
+  </div>
+
+  <section class="rise" style="animation-delay:.15s">
+    <div class="shead"><h2>Instalments paid into the period</h2></div>
+    <div class="body"><table><thead><tr><th style="text-align:left">Date</th><th>Amount</th>
+      <th style="text-align:left">Bank descriptor</th><th style="text-align:left">Status</th></tr></thead>
+      <tbody id="instbl" class="num"></tbody></table></div>
+  </section>
+
+  <section class="rise" style="animation-delay:.2s">
+    <div class="shead"><h2>Filing checklist</h2>
+      <span class="note">Based on how last year's return actually ran.</span></div>
+    <div class="body"><table><tbody id="chktbl"></tbody></table></div>
+  </section>
+
+  <footer>
+    Generated from <code>Business Transactions.xlsx</code>, master tab <code>T 23-26</code>. Jan–Aug 2026 reconciled line-by-line against eight BMO chequing statements: 84 bank transactions, every closing balance matching to the cent. Card figures from eight Mastercard statements to 28 Aug. Updated 23 Sep 2026. Forecast figures are projections, not booked transactions.
+  </footer>
+</main>
+
+<script>
+const M=[{m:'Jan',i:16136.40,o:30115.79,b:140636.81,v:1},{m:'Feb',i:18984.00,o:7786.07,b:151834.74,v:1},
+{m:'Mar',i:18034.80,o:24702.69,b:145166.85,v:1},{m:'Apr',i:18034.80,o:14743.72,b:148457.93,v:1},
+{m:'May',i:30273.30,o:16654.43,b:162076.80,v:1},{m:'Jun',i:18984.00,o:13588.74,b:167472.06,v:1},
+{m:'Jul',i:18034.80,o:14658.83,b:170848.03,v:1},{m:'Aug',i:18034.80,o:25821.62,b:163061.21,v:1}];
+const C=[['Investments (Wealthsimple)',55000.00,15,0],['GST/HST prepayments',19500.00,3,0],
+['Subcontractor (WISE)',16520.00,2,1],['Credit card payments',14553.98,9,0],['Vehicle — lease',14000.08,8,1],
+['Salary — Maham (net)',11739.20,6,1],['Corp tax instalments',6900.00,7,0],['Vehicle — insurance',5606.72,8,1],
+['Professional fees',1864.50,2,1],['Payroll remittances (CRA)',1840.56,4,0],['Software & domains',424.94,1,1],
+['WISE fees',121.91,2,1]];
+const OBL=[['HST, period ending 14 Aug 2026 · net tax',23595.34,26000.00,'good','Refund $2,404.66'],
+['Corp tax instalments 2026',10500,6900.00,'warn','$6,900 of $10,500 planned'],
+['Payroll remittances (9 total)',4141.26,1840.56,'warn','4 of 9 · on schedule'],
+['Director account — corp owes you',0,20840.33,'good','Drawable tax-free']];
+const TOTAL=148071.89;
+
+const NS='http://www.w3.org/2000/svg', $=s=>document.querySelector(s);
+const el=(t,a={})=>{const e=document.createElementNS(NS,t);for(const p in a)e.setAttribute(p,a[p]);return e;};
+const m$=v=>(v<0?'−':'')+'$'+Math.abs(v===0?0:v).toLocaleString('en-CA',{minimumFractionDigits:2,maximumFractionDigits:2});
+const k$=v=>'$'+Math.round(v/1000)+'k';
+const sign=v=>(v>=0?'+':'−')+m$(Math.abs(v));
+
+/* tooltip lives in the DOM above the SVG -- no paint-order problem */
+function tipper(root){
+  const box=root.querySelector('.tip');
+  return {
+    show(cx,cy,title,rows){
+      box.innerHTML='<b>'+title+'</b>'+rows.map(r=>Array.isArray(r)
+        ? '<div class="r"><span>'+r[0]+'</span><span class="num">'+r[1]+'</span></div>'
+        : '<div>'+r+'</div>').join('');
+      const r=root.getBoundingClientRect(), sv=root.querySelector('svg').viewBox.baseVal;
+      box.style.opacity=1; box.style.transform='none';   // measure unshifted
+      const bw=box.offsetWidth, bh=box.offsetHeight;
+      let x=cx/sv.width*r.width, y=cy/sv.height*r.height;
+      const flip = y - bh - 12 < 0;                       // not enough room above
+      y = flip ? y + 18 : y - bh - 12;
+      x = Math.max(4, Math.min(x - bw/2, r.width - bw - 4));
+      box.style.left=x+'px'; box.style.top=y+'px';
+      root.classList.add('hot');
+    },
+    hide(){ box.style.opacity=0; root.classList.remove('hot');
+      root.querySelectorAll('.live').forEach(n=>n.classList.remove('live')); }
+  };
+}
+
+/* ---------- cash position ---------- */
+(function(){
+  const root=$('#c-bal'), svg=root.querySelector('svg'), tip=tipper(root);
+  const L=58,R=26,T=16,B=38,W=960,H=286, lo=130000, hi=180000;
+  const X=i=>L+i*(W-L-R)/(M.length-1), Y=v=>T+(hi-v)*(H-T-B)/(hi-lo);
+  for(let v=lo;v<=hi;v+=10000){
+    svg.append(el('line',{class:'gl',x1:L,x2:W-R,y1:Y(v),y2:Y(v)}));
+    const t=el('text',{class:'tk num',x:L-11,y:Y(v)+4,'text-anchor':'end'});t.textContent=k$(v);svg.append(t);
+  }
+  svg.append(el('line',{class:'ax',x1:L,x2:W-R,y1:Y(lo),y2:Y(lo)}));
+
+  const area=M.map((d,i)=>(i?'L':'M')+X(i)+' '+Y(d.b)).join(' ')+` L${X(M.length-1)} ${Y(lo)} L${L} ${Y(lo)} Z`;
+  const grad=el('linearGradient',{id:'g1',x1:0,y1:0,x2:0,y2:1});
+  grad.append(el('stop',{offset:'0%','stop-color':'var(--s1)','stop-opacity':.17}),
+              el('stop',{offset:'100%','stop-color':'var(--s1)','stop-opacity':0}));
+  const defs=el('defs');defs.append(grad);svg.append(defs);
+  svg.append(el('path',{d:area,fill:'url(#g1)'}));
+
+  const cut=M.filter(d=>d.v).length-1;
+  svg.append(el('path',{d:M.slice(0,cut+1).map((d,i)=>(i?'L':'M')+X(i)+' '+Y(d.b)).join(' '),
+    fill:'none',stroke:'var(--s1)','stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'}));
+  svg.append(el('path',{d:M.slice(cut).map((d,j)=>(j?'L':'M')+X(cut+j)+' '+Y(d.b)).join(' '),
+    fill:'none',stroke:'var(--s1)','stroke-width':2,'stroke-dasharray':'5 4','stroke-linecap':'round'}));
+
+  const cross=el('line',{class:'cross',y1:T,y2:Y(lo)}); svg.append(cross);
+  const nodes=M.map((d,i)=>{
+    const c=el('circle',{class:'mk',cx:X(i),cy:Y(d.b),r:4,fill:'var(--s1)',
+      stroke:'var(--surface)','stroke-width':2}); svg.append(c);
+    const t=el('text',{class:'tk',x:X(i),y:H-13,'text-anchor':'middle'});t.textContent=d.m;svg.append(t);
+    return c;
+  });
+  [[0,'start',-14],[M.length-1,'end',20]].forEach(([i,a,dy])=>{
+    const t=el('text',{class:'dl num',x:X(i),y:Y(M[i].b)+dy,'text-anchor':a});
+    t.textContent=m$(M[i].b);svg.append(t);});
+
+  const hit=el('rect',{x:L,y:T,width:W-L-R,height:H-T-B,fill:'transparent'});
+  svg.append(hit);
+  hit.addEventListener('mousemove',e=>{
+    const bb=svg.getBoundingClientRect(), vx=(e.clientX-bb.left)/bb.width*W;
+    let i=Math.round((vx-L)/((W-L-R)/(M.length-1))); i=Math.max(0,Math.min(M.length-1,i));
+    const d=M[i];
+    nodes.forEach(n=>n.classList.remove('live')); nodes[i].classList.add('live');
+    cross.setAttribute('x1',X(i)); cross.setAttribute('x2',X(i)); cross.style.opacity=.85;
+    const prev=i?M[i-1].b:null;
+    tip.show(X(i),Y(d.b)-12,d.m+' 2026',[['Closing',m$(d.b)],
+      prev!==null?['Change',sign(d.b-prev)]:['Opening','$154,616.20'],
+      d.v?'Confirmed against statement':'Booked, no statement yet']);
+  });
+  hit.addEventListener('mouseleave',()=>{cross.style.opacity=0;tip.hide();});
+})();
+
+/* ---------- monthly flow ---------- */
+const flow=(function(){
+  const root=$('#c-flow'), svg=root.querySelector('svg'), tip=tipper(root);
+  const L=58,R=26,T=16,B=38,W=960,H=286;
+  function draw(mode){
+    svg.innerHTML='';
+    const net=mode==='net';
+    const max=net?24000:32000, min=net?-16000:0, step=8000;
+    const Y=v=>T+(max-v)*(H-T-B)/(max-min);
+    for(let v=min;v<=max;v+=step){
+      svg.append(el('line',{class:'gl',x1:L,x2:W-R,y1:Y(v),y2:Y(v)}));
+      const t=el('text',{class:'tk num',x:L-11,y:Y(v)+4,'text-anchor':'end'});
+      t.textContent=(v<0?'−':'')+k$(Math.abs(v));svg.append(t);
+    }
+    svg.append(el('line',{class:'ax',x1:L,x2:W-R,y1:Y(0),y2:Y(0)}));
+    const bw=(W-L-R)/M.length, marks=[];
+    M.forEach((d,i)=>{
+      const x0=L+i*bw+9;
+      const t=el('text',{class:'tk',x:x0+bw/2-9,y:H-13,'text-anchor':'middle'});t.textContent=d.m;svg.append(t);
+      if(net){
+        const v=d.i-d.o, w=bw-24;
+        if(Math.abs(v)<1) return;
+        const r=el('rect',{class:'mk',x:x0+7,width:w,rx:4,fill:v>=0?'var(--s1)':'var(--s2)',
+          y:v>=0?Y(v):Y(0)+1,height:Math.max(Math.abs(Y(v)-Y(0))-1,2)});
+        svg.append(r); marks.push([r,x0+7+w/2,Math.min(Y(v),Y(0)),d,'Net movement',v]);
+      }else{
+        const w=(bw-20)/2-1;
+        [[d.i,'var(--s1)','Cash in',0],[d.o,'var(--s2)','Cash out',w+2]].forEach(([v,c,lab,dx])=>{
+          if(v<=0)return;
+          const r=el('rect',{class:'mk',x:x0+dx,y:Y(v),width:w,height:Y(0)-Y(v),rx:4,fill:c});
+          svg.append(r); marks.push([r,x0+dx+w/2,Y(v),d,lab,v]);
+        });
+      }
+    });
+    marks.forEach(([r,cx,cy,d,lab,v])=>{
+      r.addEventListener('mouseenter',()=>{
+        marks.forEach(x=>x[0].classList.remove('live')); r.classList.add('live');
+        tip.show(cx,cy-8,d.m+' 2026',[[lab,(net&&v<0?'−':'')+m$(Math.abs(v))],
+          ['Closing',m$(d.b)], d.v?'Confirmed':'Booked only']);
+      });
+      r.addEventListener('mouseleave',()=>tip.hide());
+    });
+  }
+  return draw;
+})();
+flow('gross');
+
+/* ---------- categories ---------- */
+const cats=(function(){
+  const root=$('#c-cat'), svg=root.querySelector('svg'), tip=tipper(root);
+  const L=214,R=112,T=6,W=960,H=396;
+  function draw(mode){
+    svg.innerHTML='';
+    const rows=mode==='op'?C.filter(c=>c[3]):C;
+    const rh=(H-T-8)/rows.length, max=rows[0][1], X=v=>L+v*(W-L-R)/max;
+    rows.forEach(([name,val,cnt,isExp],i)=>{
+      const y=T+i*rh, h=Math.min(rh-8,30);
+      const t=el('text',{class:'dl',x:L-13,y:y+h/2+4,'text-anchor':'end'});t.textContent=name;svg.append(t);
+      svg.append(el('line',{class:'gl',x1:L,x2:W-R,y1:y+h/2,y2:y+h/2,opacity:.5}));
+      const r=el('rect',{class:'mk',x:L,y:y,width:Math.max(X(val)-L,2),height:h,rx:4,
+        fill:isExp?'var(--s1)':'var(--s2)'});
+      svg.append(r);
+      const v=el('text',{class:'dl num',x:X(val)+10,y:y+h/2+4});v.textContent=m$(val);svg.append(v);
+      r.addEventListener('mouseenter',()=>{
+        svg.querySelectorAll('.mk').forEach(n=>n.classList.remove('live')); r.classList.add('live');
+        tip.show((L+X(val))/2,y-2,name,[['Amount',m$(val)],
+          ['Payments',String(cnt)],['Share of outflow',(val/TOTAL*100).toFixed(1)+'%'],
+          isExp?'Operating expense':'Transfer or remittance']);
+      });
+      r.addEventListener('mouseleave',()=>tip.hide());
+    });
+  }
+  return draw;
+})();
+cats('all');
+
+/* ---------- kpis ---------- */
+(function(){
+  const spark=vals=>{
+    const lo=Math.min(...vals),hi=Math.max(...vals);
+    const p=vals.map((v,i)=>(i?'L':'M')+(i*100/(vals.length-1)).toFixed(1)+' '+(18-(v-lo)/(hi-lo)*16).toFixed(1)).join(' ');
+    return `<svg class="spark" viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true">`+
+      `<path d="${p}" fill="none" stroke="var(--s1)" stroke-width="1.4" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`;
+  };
+  const K=[
+    ['Bank balance · 31 Aug','$163,061.21',`<span class="pos">${sign(163061.21-154616.20)}</span> since 1 Jan`,spark(M.filter(d=>d.v).map(d=>d.b))],
+    ['Net revenue YTD','$134,400.00','17 MIR payments · HST stripped',''],
+    ['Operating expenses','$52,117.91','debit account · card $9,747.10 deductible on top',''],
+    ['HST position','<span class="pos">−$2,404.66</span>','refund · period to 14 Aug, after ITCs',''],
+    ['Corp tax paid','$6,900.00','of $10,500 planned by 31 Dec','']];
+  $('#kpis').innerHTML=K.map(([k,v,d,s])=>
+    `<div class="kpi"><div class="k">${k}</div><div class="v num">${v}</div><div class="d">${d}</div>${s}</div>`).join('');
+})();
+
+/* ---------- tables ---------- */
+$('#mtbl').innerHTML=M.map(d=>{const n=d.i-d.o;return `<tr><td>${d.m} 2026</td><td>${m$(d.i)}</td>
+<td>${m$(d.o)}</td><td class="${n>=0?'pos':'neg'}">${sign(n)}</td><td>${m$(d.b)}</td>
+<td style="text-align:left"><span class="tag">${d.v?'statement':'booked only'}</span></td></tr>`}).join('');
+
+$('#ctbl').innerHTML=C.map(c=>`<tr><td>${c[0]}</td><td>${m$(c[1])}</td>
+<td>${(c[1]/TOTAL*100).toFixed(1)}%</td><td>${c[2]}</td>
+<td style="text-align:left"><span class="tag">${c[3]?'operating':'transfer'}</span></td></tr>`).join('')
++`<tr><td><strong>Total</strong></td><td><strong>${m$(TOTAL)}</strong></td><td>100.0%</td><td>59</td><td></td></tr>`;
+
+$('#otbl').innerHTML=OBL.map(([name,req,paid,st,label])=>{
+  const col={good:'var(--good)',warn:'var(--warn)',crit:'var(--crit)'}[st];
+  const varc=paid-req;
+  const isDraw = name.startsWith('Director account');
+  return `<tr><td>${name}</td><td>${req?m$(req):'—'}</td><td>${paid?m$(paid):'—'}</td>
+  <td class="${!isDraw&&st==='good'&&varc>=0?'pos':''}">${isDraw?'—':(paid?sign(varc):'—')}</td>
+  <td style="text-align:left"><span class="pill"><i class="dot" style="background:${col}"></i>${label}</span></td></tr>`;
+}).join('');
+
+/* ---------- controls ---------- */
+function seg(id,fn){ const g=$(id);
+  g.addEventListener('click',e=>{const b=e.target.closest('button'); if(!b)return;
+    [...g.children].forEach(x=>x.setAttribute('aria-pressed',x===b));
+    fn(b.dataset.v);});
+}
+seg('#flowSeg',v=>{ flow(v);
+  $('#flowLeg').innerHTML = v==='net'
+    ? '<span><i style="background:var(--s1)"></i>Net inflow</span><span><i style="background:var(--s2)"></i>Net outflow</span>'
+    : '<span><i style="background:var(--s1)"></i>Cash in</span><span><i style="background:var(--s2)"></i>Cash out</span>';
+});
+seg('#catSeg',v=>cats(v));
+
+const btn=$('#themeBtn'), root=document.documentElement;
+if(matchMedia('(prefers-color-scheme: dark)').matches) root.dataset.theme='dark';
+const syncBtn=()=>btn.textContent = root.dataset.theme==='dark'?'Light':'Dark';
+syncBtn();
+btn.addEventListener('click',()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';syncBtn();});
+
+const links=[...document.querySelectorAll('nav a')];
+document.querySelectorAll('section').forEach(s=>
+  new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting)
+    links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+s.id)); }),
+    {rootMargin:'-110px 0px -55% 0px'}).observe(s));
+
+/* =================== CREDIT CARD =================== */
+const CC=[['Meals & entertainment',4708.81,2354.41,134],['Vehicle & fuel',3681.03,3681.03,41],
+['Software & subscriptions',2348.69,2348.69,14],['Personal — owed by Umar',1221.00,0,2],
+['Travel & parking',582.41,582.41,9],['Office & supplies',402.60,402.60,13],['Telecom',190.97,190.97,1],
+['Bank fees',175.00,175.00,1],['Fines & penalties',66.53,0,2],['Government fees',12.00,12.00,1]];
+const CC_TOTAL=13389.04, CC_DED=9747.10, CC_ITC=873.38;
+(function(){
+  const root=$('#c-cc'), svg=root.querySelector('svg'), tip=tipper(root);
+  const L=200,R=112,T=6,W=960,H=250, rh=(H-T-8)/CC.length, max=CC[0][1], X=v=>L+v*(W-L-R)/max;
+  CC.forEach(([name,spend,ded,n],i)=>{
+    const y=T+i*rh, h=Math.min(rh-8,22);
+    const t=el('text',{class:'dl',x:L-13,y:y+h/2+4,'text-anchor':'end'});t.textContent=name;svg.append(t);
+    svg.append(el('line',{class:'gl',x1:L,x2:W-R,y1:y+h/2,y2:y+h/2,opacity:.5}));
+    // deductible portion, then the non-deductible remainder butted against it with a 2px gap
+    if(ded>0) svg.append(el('rect',{class:'mk',x:L,y:y,width:Math.max(X(ded)-L,2),height:h,rx:4,fill:'var(--s1)'}));
+    const rem=spend-ded;
+    if(rem>0.005) svg.append(el('rect',{class:'mk',x:L+(ded>0?X(ded)-L+2:0),y:y,
+      width:Math.max(X(spend)-L-(ded>0?X(ded)-L+2:0),2),height:h,rx:4,fill:'var(--s2)'}));
+    const v=el('text',{class:'dl num',x:X(spend)+10,y:y+h/2+4});v.textContent=m$(spend);svg.append(v);
+    const hit=el('rect',{x:L,y:y,width:W-R-L,height:h,fill:'transparent'});svg.append(hit);
+    hit.addEventListener('mouseenter',()=>{
+      svg.querySelectorAll('.mk').forEach(nn=>nn.classList.remove('live'));
+      tip.show((L+X(spend))/2,y-2,name,[['Spend',m$(spend)],['Deductible',m$(ded)],
+        ['Lines',String(n)],['Share',(spend/CC_TOTAL*100).toFixed(1)+'%']]);});
+    hit.addEventListener('mouseleave',()=>tip.hide());
+  });
+})();
+
+/* =================== FORECAST =================== */
+const PAY=[['2026-09-04','17 Aug – 28 Aug',80,8400,1092.00,9492.00,''],
+['2026-09-18','31 Aug – 11 Sep',72,7560,982.80,8542.80,'Labour Day'],
+['2026-10-02','14 Sep – 25 Sep',80,8400,1092.00,9492.00,''],
+['2026-10-16','28 Sep – 9 Oct',80,8400,1092.00,9492.00,''],
+['2026-10-30','12 Oct – 23 Oct',72,7560,982.80,8542.80,'Thanksgiving'],
+['2026-11-13','26 Oct – 6 Nov',80,8400,1092.00,9492.00,''],
+['2026-11-27','9 Nov – 20 Nov',80,8400,1092.00,9492.00,''],
+['2026-12-11','23 Nov – 4 Dec',80,8400,1092.00,9492.00,''],
+['2026-12-25','7 Dec – 18 Dec',80,8400,1092.00,9492.00,'paid 24 Dec']];
+const FIX=[['Car lease',1750.01,4,'monthly · 30th','expense'],
+['Car insurance (expiring term)',700.84,1,'1 Sep','expense'],
+['Car insurance (renewal)',804.75,3,'monthly · 1st from 1 Oct','expense'],
+['Salary — Maham (net)',2347.84,4,'monthly · month-end','expense'],
+['Payroll remittance (CRA)',460.14,5,'11 Sep, 9 Oct, 13 Nov, 4 Dec, 31 Dec','expense'],
+['Corp tax instalment',900.00,4,'monthly · month-end','remittance'],
+['GST prepayment',6500.00,1,'20 Oct','remittance']];
+const FM=[  /* month, gross in, committed out, wealthsimple payments */
+ ['Sep',18034.80,6158.83,2],['Oct',27526.80,12762.74,2],
+ ['Nov',18984.00,6262.74,3],['Dec',18984.00,6722.88,2]];
+const START=163061.21;              // statement balance 31 Aug
+const FC_GROSS=83529.60, FC_NET=73920.00, FC_HST=9609.60;
+const YR_NET=208320.00, OPEX_YTD=52117.91, OPEX_FIX=21807.19;
+const CARD_DED_YR=14620.65;         // measured: $9,747.10 deductible over 8 months, projected
+// s.67.3: 55.07% of the 12 lease payments ($21,000.12) is above the cap and not deductible
+const LEASE_ADDBACK=11564.77;
+const SUB=131339.02;                // revenue less debit opex less card, plus lease add-back
+const INST=10500, RATE=.122, BE_CARD=45273.45, PERS_KNOWN=11508.82;
+const GST_COLL=26972.40, GST_PRE=26000, ITC_CARD=1956.74, ITC_LEASE=1002.69, ITC_PROF=214.50, ITC_PERS=203.13;
+
+/* ---- static tables ---- */
+$('#paytbl').innerHTML=PAY.map(r=>`<tr><td>${new Date(r[0]+'T12:00').toLocaleDateString('en-CA',{day:'numeric',month:'short'})}</td>
+<td style="text-align:left">${r[1]}</td><td>${r[2]}</td><td>${m$(r[3])}</td><td>${m$(r[4])}</td>
+<td>${m$(r[5])}</td><td style="text-align:left"><span class="tag">${r[6]||'—'}</span></td></tr>`).join('')
++`<tr><td><strong>9 payments</strong></td><td></td><td><strong>704</strong></td><td><strong>${m$(FC_NET)}</strong></td>
+<td><strong>${m$(FC_HST)}</strong></td><td><strong>${m$(FC_GROSS)}</strong></td><td></td></tr>`;
+
+$('#fixtbl').innerHTML=FIX.map(([l,a,n,c,t])=>`<tr><td>${l}</td><td>${m$(a)}</td><td>${n}</td>
+<td>${m$(a*n)}</td><td style="text-align:left">${c}</td>
+<td style="text-align:left"><span class="tag">${t}</span></td></tr>`).join('')
++`<tr><td><strong>Total committed</strong></td><td></td><td></td><td><strong>${m$(31907.19)}</strong></td>
+<td style="text-align:left">of which ${m$(OPEX_FIX)} is expense</td><td></td></tr>`;
+
+$('#gsttbl').innerHTML=[['HST collected · 15 Aug 25 – 14 Aug 26',GST_COLL,''],
+['Prepaid in four instalments',-GST_PRE,''],['Net before input tax credits',GST_COLL-GST_PRE,'b'],
+['ITC · corporate Mastercard (excl. lease)',-ITC_CARD,''],['ITC · vehicle lease, 80% use × s.235 cap',-ITC_LEASE,''],
+['ITC · professional fees',-ITC_PROF,''],['ITC · director-funded (phone, internet, Mercedes service)',-ITC_PERS,''],
+['Position · refund',GST_COLL-GST_PRE-ITC_CARD-ITC_LEASE-ITC_PROF-ITC_PERS,'b']]
+.map(([l,v,st])=>`<tr><td${st==='b'?' style="font-weight:600"':''}>${l}</td>
+<td class="${v<0&&st==='b'?'pos':''}"${st==='b'?' style="font-weight:600"':''}>${sign(v)}</td></tr>`).join('');
+
+/* ---- reactive model ---- */
+const cardEl=$('#dfe'), investEl=$('#invest'), cardOut=$('#cardOut');
+function model(){
+  const card=+cardEl.value, inv=investEl.checked;      // card = director-funded expenses, full year
+  const income=SUB-card, tax=+(income*RATE).toFixed(2), gap=+(tax-INST).toFixed(2);
+  let bal=START; const pts=[{m:'31 Aug',b:START}];
+  FM.forEach(([m,gin,gout,ws])=>{
+    const out=gout+1673.63+(inv?ws*1000:0);   // measured card settlement run rate
+    bal=+(bal+gin-out).toFixed(2);
+    pts.push({m,b:bal,gin,gout,card,ws:inv?ws*1000:0,out});
+  });
+  return {card,inv,income,tax,gap,pts,end:bal};
+}
+
+function render(){
+  const M2=model();
+  cardOut.textContent='$'+M2.card.toLocaleString('en-CA');
+  $('#endCash').textContent=m$(M2.end);
+  $('#runNote').innerHTML = M2.end>START
+    ? `Up ${m$(M2.end-START)} from today, before any corporate tax balance is settled.`
+    : `Down ${m$(START-M2.end)} from today. ${M2.inv?'Investing $1,000 biweekly accounts for '+m$(11000)+' of that.':''}`;
+
+  $('#corptbl').innerHTML=[
+   ['MIR revenue net of HST · full year',YR_NET,''],
+   ['Operating expenses · booked to 31 Aug',-OPEX_YTD,''],
+   ['Committed operating expenses · Sep–Dec',-OPEX_FIX,''],
+   ['Lease above the s.67.3 cap · not deductible',LEASE_ADDBACK,''],
+   ['Corporate card, deductible · projected',-CARD_DED_YR,''],
+   ['Director-funded expenses (assumption)',-M2.card,''],
+   ['Taxable income',M2.income,'b'],
+   ['Tax at 12.2% small business rate',M2.tax,'b'],
+   ['Instalments by 31 Dec ($6,900 paid + 4 × $900)',-INST,''],
+   [M2.gap>0?'Balance owing':'Refund expected',Math.abs(M2.gap),'b']
+  ].map(([l,v,st])=>`<tr><td${st==='b'?' style="font-weight:600"':''}>${l}</td>
+   <td${st==='b'?' style="font-weight:600"':''}>${v<0?sign(v):m$(v)}</td></tr>`).join('');
+
+  $('#drawNote').innerHTML = `Separately, the corporation owes you <strong>${m$(20840.33)}</strong> today — $13,357.00 from the filed T2 plus $8,704.33 accrued on personally funded expenses, less $1,221.00 of personal charges on the corporate card, reaching <strong>${m$(23644.82)}</strong> by 31 Dec. Drawing it is tax-free and would reduce the projected year-end balance to <strong>${m$(M2.end-23644.82)}</strong>.`;
+  const f=$('#corpFlag');
+  if(M2.gap>0){
+    f.style.borderLeftColor='var(--crit)';
+    f.innerHTML=`With ${m$(M2.card)} of director-funded expenses, 2026 tax lands near <strong>${m$(M2.tax)}</strong> against ${m$(INST)} of instalments — <strong>${m$(M2.gap)} short</strong>, which attracts instalment interest. Break-even is <strong>${m$(BE_CARD)}</strong> for the year. In 2025 these totalled $41,357.`;
+  }else{
+    f.style.borderLeftColor='var(--good)';
+    f.innerHTML=`With ${m$(M2.card)} of director-funded expenses, 2026 tax lands near <strong>${m$(M2.tax)}</strong> against ${m$(INST)} of instalments — <strong>${m$(-M2.gap)} overpaid</strong>, refundable after filing. Break-even is ${m$(BE_CARD)} for the year.`;
+  }
+
+  $('#fkpis').innerHTML=[
+   ['Revenue still to come','$83,529.60','9 MIR payments · 704 hrs',''],
+   ['Full-year revenue · net','$208,320.00','actual + contracted forecast',''],
+   ['Committed cost · Sep–Dec','$31,907.19','fixed schedule only',''],
+   ['Card spend · measured','$1,673.63','per month · 57% of 2025',''],
+   ['Projected cash · 31 Dec',m$(M2.end),(M2.end>=START?'<span class="pos">'+sign(M2.end-START)+'</span>':'<span class="neg">'+sign(M2.end-START)+'</span>')+' from today',''],
+   ['Corp tax estimate',m$(M2.tax),M2.gap>0?'<span class="neg">'+m$(M2.gap)+' short of instalments</span>':'<span class="pos">'+m$(-M2.gap)+' overpaid</span>','']
+  ].map(([k,v,d])=>`<div class="kpi"><div class="k">${k}</div><div class="v num">${v}</div><div class="d">${d}</div></div>`).join('');
+
+  runway(M2.pts);
+}
+
+/* ---- cash runway chart ---- */
+const runway=(function(){
+  const root=$('#c-run'), svg=root.querySelector('svg'), tip=tipper(root);
+  const L=60,R=28,T=16,B=38,W=960,H=300;
+  const hist=M.map(d=>({m:d.m,b:d.b}));
+  return function(pts){
+    svg.innerHTML='';
+    const all=[...hist,...pts.slice(1)];
+    const vals=all.map(p=>p.b), lo=Math.floor(Math.min(...vals,120000)/20000)*20000,
+          hi=Math.ceil(Math.max(...vals)/20000)*20000;
+    const X=i=>L+i*(W-L-R)/(all.length-1), Y=v=>T+(hi-v)*(H-T-B)/(hi-lo);
+    for(let v=lo;v<=hi;v+=20000){
+      svg.append(el('line',{class:'gl',x1:L,x2:W-R,y1:Y(v),y2:Y(v)}));
+      const t=el('text',{class:'tk num',x:L-11,y:Y(v)+4,'text-anchor':'end'});t.textContent=k$(v);svg.append(t);
+    }
+    svg.append(el('line',{class:'ax',x1:L,x2:W-R,y1:Y(lo),y2:Y(lo)}));
+    const c=hist.length-1;
+    svg.append(el('path',{d:all.slice(0,c+1).map((p,i)=>(i?'L':'M')+X(i)+' '+Y(p.b)).join(' '),
+      fill:'none',stroke:'var(--s1)','stroke-width':2,'stroke-linejoin':'round'}));
+    svg.append(el('path',{d:all.slice(c).map((p,j)=>(j?'L':'M')+X(c+j)+' '+Y(p.b)).join(' '),
+      fill:'none',stroke:'var(--s1)','stroke-width':2,'stroke-dasharray':'5 4','stroke-linejoin':'round',opacity:.85}));
+    const div=el('line',{x1:X(c),x2:X(c),y1:T,y2:Y(lo),stroke:'var(--axis)','stroke-width':1,'stroke-dasharray':'2 4'});
+    svg.append(div);
+    const lb=el('text',{class:'tk',x:X(c)+6,y:T+10});lb.textContent='projected →';svg.append(lb);
+    const nodes=all.map((p,i)=>{
+      const cc=el('circle',{class:'mk',cx:X(i),cy:Y(p.b),r:i===c?4.5:3.5,fill:'var(--s1)',
+        stroke:'var(--surface)','stroke-width':2,opacity:i<=c?1:.85});
+      svg.append(cc);
+      const t=el('text',{class:'tk',x:X(i),y:H-13,'text-anchor':'middle'});t.textContent=p.m;svg.append(t);
+      return cc;});
+    const end=el('text',{class:'dl num',x:X(all.length-1),y:Y(all[all.length-1].b)-13,'text-anchor':'end'});
+    end.textContent=m$(all[all.length-1].b);svg.append(end);
+    const hit=el('rect',{x:L,y:T,width:W-L-R,height:H-T-B,fill:'transparent'});svg.append(hit);
+    hit.addEventListener('mousemove',e=>{
+      const bb=svg.getBoundingClientRect(), vx=(e.clientX-bb.left)/bb.width*W;
+      let i=Math.round((vx-L)/((W-L-R)/(all.length-1)));i=Math.max(0,Math.min(all.length-1,i));
+      const p=all[i];nodes.forEach(n=>n.classList.remove('live'));nodes[i].classList.add('live');
+      const rows=[['Balance',m$(p.b)]];
+      if(p.gin!==undefined){rows.push(['MIR deposits',m$(p.gin)],['Committed cost','−'+m$(p.gout)],
+        ['Card settlement','−'+m$(p.card)]);
+        if(p.ws)rows.push(['Investing','−'+m$(p.ws)]);}
+      else rows.push(i===c?'Balance today':(M[i]&&M[i].v?'Confirmed against statement':'Booked, no statement yet'));
+      tip.show(X(i),Y(p.b)-12,p.m+(i<=c?' 2026':' 2026 · projected'),rows);
+    });
+    hit.addEventListener('mouseleave',()=>tip.hide());
+  };
+})();
+
+/* ---- income vs committed cost ---- */
+(function(){
+  const root=$('#c-fc'), svg=root.querySelector('svg'), tip=tipper(root);
+  const L=60,R=28,T=16,B=38,W=960,H=276,max=28000;
+  const Y=v=>T+(max-v)*(H-T-B)/max, bw=(W-L-R)/FM.length, w=(bw-30)/2-2;
+  for(let v=0;v<=max;v+=7000){
+    svg.append(el('line',{class:'gl',x1:L,x2:W-R,y1:Y(v),y2:Y(v)}));
+    const t=el('text',{class:'tk num',x:L-11,y:Y(v)+4,'text-anchor':'end'});t.textContent=k$(v);svg.append(t);
+  }
+  svg.append(el('line',{class:'ax',x1:L,x2:W-R,y1:Y(0),y2:Y(0)}));
+  const marks=[];
+  FM.forEach(([m,gin,gout],i)=>{
+    const x0=L+i*bw+14;
+    const t=el('text',{class:'tk',x:x0+w+2,y:H-13,'text-anchor':'middle'});t.textContent=m;svg.append(t);
+    [[gin,'var(--s1)','MIR deposits',0],[gout,'var(--s2)','Committed cost',w+4]].forEach(([v,c,lab,dx])=>{
+      const r=el('rect',{class:'mk',x:x0+dx,y:Y(v),width:w,height:Y(0)-Y(v),rx:4,fill:c});
+      svg.append(r);marks.push([r,x0+dx+w/2,Y(v),m,lab,v,gin-gout]);});
+  });
+  marks.forEach(([r,cx,cy,m,lab,v,net])=>{
+    r.addEventListener('mouseenter',()=>{marks.forEach(x=>x[0].classList.remove('live'));r.classList.add('live');
+      tip.show(cx,cy-8,m+' 2026',[[lab,m$(v)],['Before card spend',sign(net)]]);});
+    r.addEventListener('mouseleave',()=>tip.hide());
+  });
+})();
+
+cardEl.addEventListener('input',render);
+investEl.addEventListener('change',render);
+render();
+
+
+/* =================== DIRECTOR-FUNDED =================== */
+const PERS=[
+ ['Rent — home office share','$2,600 → $2,630/mo',0.30,9396.00,'exempt',0,'15th · 30% · $2,630 from 15 Sep'],
+ ['Phone and internet','actuals, then $113/mo',1.00,1364.92,'taxable',157.03,'Bell and Rogers bills · Rogers ended Apr'],
+ ['Mercedes service, 2 Apr','$353.94 once',1.00,353.94,'taxable',40.72,'paid on personal Visa'],
+ ['Home insurance',32.83,1.00,393.96,'exempt',0,'1st of the month']];
+const PERS_CLAIMED=11508.82, PERS_ITC=197.75;
+$('#perstbl').innerHTML=PERS.map(([n,amt,pct,claimed,st,itc,cad])=>
+ `<tr><td>${n}</td><td>${typeof amt==='string'?amt:m$(amt)+'/mo'}</td><td>${(pct*100).toFixed(0)}%</td><td>${m$(claimed)}</td>
+  <td><span class="pill"><i class="dot" style="background:${st==='taxable'?'var(--good)':'var(--muted)'}"></i>${st}</span></td>
+  <td>${itc?m$(itc):'—'}</td><td style="text-align:left"><span class="tag">${cad}</span></td></tr>`).join('')
+ +`<tr><td><strong>Total · 2026</strong></td><td></td><td></td><td><strong>${m$(PERS_CLAIMED)}</strong></td>
+   <td></td><td><strong>${m$(PERS_ITC)}</strong></td><td></td></tr>`;
+$('#persFlag').innerHTML=`Insurance and residential rent are <strong>exempt supplies</strong> — no HST is charged on them, so claiming a notional 13/113 would be an over-claim. The phone line and the Mercedes service carry input tax credits. These items cover ${m$(PERS_CLAIMED)} of the ${m$(30132.49)} needed to bring 2026 tax down to the instalments already paid; the 2025 equivalent was $41,357 once vehicle and mileage were included.`;
+
+
+/* =================== REIMBURSEMENT =================== */
+const RB=[['Dec 25',13357.00,0,1],['Jan',14295.26,938.26,1],['Feb',15236.35,941.09,1],
+['Mar',16175.22,938.87,1],['Apr',17562.07,1386.85,1],['May',18344.77,782.70,1],
+['Jun',19270.60,925.83,1],['Jul',18975.43,-295.17,1],['Aug',19905.50,930.07,1],
+['Sep',20840.33,934.83,1],['Oct',21775.16,934.83,0],['Nov',22709.99,934.83,0],['Dec',23644.82,934.83,0]];
+const RB_TODAY=20840.33, RB_OPEN=13357.00, RB_YTD=8704.33, RB_PERS=-1221.00, RB_REST=2804.49, RB_DEC=23644.82;
+
+$('#reimbtbl').innerHTML=[
+ ['Opening balance at 31 Dec 2025 — filed Schedule 100, line 2780',RB_OPEN,''],
+ ['Accrued 1 Jan – 23 Sep 2026 — rent, phone, insurance, Mercedes service',RB_YTD,''],
+ ['Less Credit Valley charges on the corporate card, 27 Jul (personal)',RB_PERS,''],
+ ['Reimbursements paid to you in 2026',0,''],
+ ['Owed to you today',RB_TODAY,'b'],
+ ['Still to accrue to 31 Dec — Oct to Dec',RB_REST,''],
+ ['Owed at 31 Dec 2026',RB_DEC,'b']
+].map(([l,v,st])=>`<tr><td${st==='b'?' style="font-weight:600"':''}>${l}</td>
+ <td${st==='b'?' style="font-weight:600"':''}>${v<0?sign(v):m$(v)}</td></tr>`).join('');
+
+$('#reimbFlag').innerHTML=`Accruing at <strong>${m$(934.83)}/month</strong>: rent share $789 (rent rose to $2,630 on 15 Sep), phone $113, insurance $32.83. The Aug–Dec 2025 portion (${m$(4491.32)}) is <strong>already inside the $13,357</strong> — the filed 2025 T2 recognised $41,357 of director-funded costs for the whole of 2025, so counting it again would double up. You can draw this at any time with no personal tax; it reduces the corporation's cash, not its income.`;
+
+(function(){
+  const root=$('#c-reimb'), svg=root.querySelector('svg'), tip=tipper(root);
+  const L=62,R=26,T=16,B=38,W=960,H=240, lo=10000, hi=26000;
+  const X=i=>L+i*(W-L-R)/(RB.length-1), Y=v=>T+(hi-v)*(H-T-B)/(hi-lo);
+  for(let v=lo;v<=hi;v+=4000){
+    svg.append(el('line',{class:'gl',x1:L,x2:W-R,y1:Y(v),y2:Y(v)}));
+    const t=el('text',{class:'tk num',x:L-11,y:Y(v)+4,'text-anchor':'end'});t.textContent=k$(v);svg.append(t);
+  }
+  svg.append(el('line',{class:'ax',x1:L,x2:W-R,y1:Y(lo),y2:Y(lo)}));
+  const g=el('linearGradient',{id:'gr',x1:0,y1:0,x2:0,y2:1});
+  g.append(el('stop',{offset:'0%','stop-color':'var(--s1)','stop-opacity':.16}),
+           el('stop',{offset:'100%','stop-color':'var(--s1)','stop-opacity':0}));
+  const df=el('defs');df.append(g);svg.append(df);
+  svg.append(el('path',{d:RB.map((r,i)=>(i?'L':'M')+X(i)+' '+Y(r[1])).join(' ')+
+    ` L${X(RB.length-1)} ${Y(lo)} L${L} ${Y(lo)} Z`,fill:'url(#gr)'}));
+  const cut=RB.filter(r=>r[3]).length-1;
+  svg.append(el('path',{d:RB.slice(0,cut+1).map((r,i)=>(i?'L':'M')+X(i)+' '+Y(r[1])).join(' '),
+    fill:'none',stroke:'var(--s1)','stroke-width':2,'stroke-linejoin':'round'}));
+  svg.append(el('path',{d:RB.slice(cut).map((r,j)=>(j?'L':'M')+X(cut+j)+' '+Y(r[1])).join(' '),
+    fill:'none',stroke:'var(--s1)','stroke-width':2,'stroke-dasharray':'5 4',opacity:.85}));
+  svg.append(el('line',{x1:X(cut),x2:X(cut),y1:T,y2:Y(lo),stroke:'var(--axis)','stroke-width':1,'stroke-dasharray':'2 4'}));
+  const lb=el('text',{class:'tk',x:X(cut)+6,y:T+10});lb.textContent='projected →';svg.append(lb);
+  const nodes=RB.map((r,i)=>{
+    const c=el('circle',{class:'mk',cx:X(i),cy:Y(r[1]),r:3.5,fill:'var(--s1)',
+      stroke:'var(--surface)','stroke-width':2,opacity:r[3]?1:.85});svg.append(c);
+    const t=el('text',{class:'tk',x:X(i),y:H-13,'text-anchor':'middle'});t.textContent=r[0];svg.append(t);
+    return c;});
+  const e0=el('text',{class:'dl num',x:X(0),y:Y(RB[0][1])+20});e0.textContent=m$(RB_OPEN);svg.append(e0);
+  const e1=el('text',{class:'dl num',x:X(RB.length-1),y:Y(RB_DEC)-13,'text-anchor':'end'});
+  e1.textContent=m$(RB_DEC);svg.append(e1);
+  const hit=el('rect',{x:L,y:T,width:W-L-R,height:H-T-B,fill:'transparent'});svg.append(hit);
+  hit.addEventListener('mousemove',ev=>{
+    const bb=svg.getBoundingClientRect(), vx=(ev.clientX-bb.left)/bb.width*W;
+    let i=Math.round((vx-L)/((W-L-R)/(RB.length-1)));i=Math.max(0,Math.min(RB.length-1,i));
+    nodes.forEach(n=>n.classList.remove('live'));nodes[i].classList.add('live');
+    const r=RB[i];
+    tip.show(X(i),Y(r[1])-12,r[0]==='Dec 25'?'31 Dec 2025 · filed':(r[0]+' 2026'+(r[3]?'':' · projected')),
+      [['Balance owed',m$(r[1])], r[2]?['Accrued that month',m$(r[2])]:'Opening position, per the T2']);
+  });
+  hit.addEventListener('mouseleave',()=>tip.hide());
+})();
+
+/* =================== HST FILING 2025-26 =================== */
+const H={L101:207480.00,L103:26972.40,L106:3377.06,INST:26000.00};
+H.L109=+(H.L103-H.L106).toFixed(2); H.BAL=+(H.L109-H.INST).toFixed(2);
+const ITC_CAT=[['Vehicle — lease (80% × cap)',1002.69,'card + debit'],['Office & supplies',636.16,'card'],
+['Vehicle & fuel (80%)',468.61,'card'],['Vehicle — maintenance (80%)',321.03,'card + personal'],['Meals & entertainment',386.83,'card'],
+['Professional fees',214.50,'debit'],['Telecom',192.52,'card + personal'],['Travel & parking',90.85,'card'],
+['Software & subscriptions',63.87,'card']];
+const PRIOR={L101:300168.74,L103:39021.93,L106:3900.43,L109:35121.50};
+const INSTALS=[['20 Oct 2025',6500,'CANADATXD/DIM','cleared'],['20 Jan 2026',6500,'CANADATXD/DIM','cleared'],
+['20 Apr 2026',6500,'CANADATXD/DIM','cleared'],['20 Jul 2026',6500,'CANADATXD/DIM','cleared']];
+
+$('#hkpis').innerHTML=[
+ ['Line 101 · sales',m$(H.L101),'26 MIR deposits, net of HST'],
+ ['Line 103 · HST collected',m$(H.L103),'13% on every deposit'],
+ ['Line 106 · ITCs',m$(H.L106),'Mercedes at 80%, lease capped'],
+ ['Line 109 · net tax',m$(H.L109),'before instalments'],
+ ['Balance','<span class="pos">'+m$(H.BAL)+'</span>','refund after $26,000 prepaid']
+].map(([k,v,d])=>`<div class="kpi"><div class="k">${k}</div><div class="v num">${v}</div><div class="d">${d}</div></div>`).join('');
+
+$('#hstlines').innerHTML=[
+ ['101','Sales and other revenue, net of HST',H.L101,''],
+ ['103','HST collected or collectible',H.L103,'b'],
+ ['104','Adjustments to be added',0,''],
+ ['105','Total HST and adjustments (103 + 104)',H.L103,'b'],
+ ['106','Input tax credits',H.L106,''],
+ ['107','Adjustments to be deducted',0,''],
+ ['108','Total ITCs and adjustments (106 + 107)',H.L106,'b'],
+ ['109','Net tax (105 − 108)',H.L109,'b'],
+ ['110','Instalments and other annual filer payments',H.INST,''],
+ ['115','Balance — negative is a refund',H.BAL,'b']
+].map(([l,d,v,st])=>`<tr><td style="text-align:left"><span class="tag">${l}</span></td>
+ <td style="text-align:left"${st==='b'?' style2':''}>${d}</td>
+ <td class="${l==='115'&&v<0?'pos':''}"${st==='b'?' style="font-weight:600"':''}>${m$(v)}</td></tr>`).join('');
+
+$('#hstFlag').innerHTML=`Every month of the period is now checked against a statement: 12 chequing and 13 card statements, the 7 Aug MIR deposit included at $9,492.00. Mercedes costs are at 80% business use and the lease is also capped under s.235: lease ITC $1,002.69 of $2,789.85 HST paid. The 21 Aug deposit ($8,542.80) pays for 3 to 14 Aug work but is left out, matching last year's by-receipt method.`;
+
+$('#itctbl').innerHTML=ITC_CAT.map(([c,v,src])=>`<tr><td>${c}</td>
+ <td style="text-align:left"><span class="tag">${src}</span></td><td>${m$(v)}</td></tr>`).join('')
+ +`<tr><td><strong>Total</strong></td><td></td><td><strong>${m$(H.L106)}</strong></td></tr>`;
+
+$('#vstbl').innerHTML=[['101','Sales',PRIOR.L101,H.L101],['103','HST collected',PRIOR.L103,H.L103],
+['106','ITCs',PRIOR.L106,H.L106],['109','Net tax',PRIOR.L109,H.L109]]
+.map(([l,d,a,b])=>{const ch=b-a;return `<tr><td style="text-align:left"><span class="tag">${l}</span> ${d}</td>
+ <td>${m$(a)}</td><td>${m$(b)}</td><td class="${ch>=0?'':'neg'}">${sign(ch)}</td></tr>`}).join('');
+
+$('#instbl').innerHTML=INSTALS.map(([d,a,ref,st])=>`<tr><td style="text-align:left">${d}</td><td>${m$(a)}</td>
+ <td style="text-align:left"><code>${ref}</code></td><td style="text-align:left"><span class="pill"><i class="dot" style="background:var(--good)"></i>${st}</span></td></tr>`).join('')
+ +`<tr><td style="text-align:left"><strong>Total</strong></td><td><strong>${m$(26000)}</strong></td><td></td><td></td></tr>`;
+
+$('#chktbl').innerHTML=[
+ ['Period ends','14 Aug 2026','done'],
+ ['Return due','14 Nov 2026 is a Saturday, so Monday 16 Nov. Saira filed last year on 24 Sep and files this one.','Saira'],
+ ['Payment due','Nothing to pay, the period is a refund of $2,404.66','—'],
+ ['Lease ITC','80% business use × 44.93% cap = $1,002.69 of $2,789.85. Saira confirms the cap and list price','Saira'],
+ ['Boundary deposit','21 Aug MIR deposit is for 3–14 Aug work. By receipt it is next period; by invoice date it may be this one','Saira'],
+ ['Personal card charges','$1,221.00 at Credit Valley hospital (Jul 27): personal, charged by mistake. Not claimed; reduces what the corporation owes Umar. Halton parking is business','done'],
+ ['Vehicle benefit','80% business use claimed, but there is no mileage log. Also s.173 HST on the standby charge for Oct–Dec 2025','Saira'],
+ ['Filing package','HST Filing 2025-26 - for Saira: 355 files, 263 MB incl. T2 2025, losslessly compressed. 3 card receipts still missing','Umar']
+].map(([a,b,c])=>`<tr><td style="width:22%"><strong>${a}</strong></td><td style="text-align:left">${b}</td>
+ <td style="text-align:left;width:14%"><span class="tag">${c}</span></td></tr>`).join('');
+
+(function(){
+  const root=$('#c-itc'), svg=root.querySelector('svg'), tip=tipper(root);
+  const L=168,R=76,T=6,W=460,H2=230, rh=(H2-T-8)/ITC_CAT.length, max=ITC_CAT[0][1], X=v=>L+v*(W-L-R)/max;
+  ITC_CAT.forEach(([name,v,src],i)=>{
+    const y=T+i*rh, h=Math.min(rh-7,18);
+    const t=el('text',{class:'dl',x:L-11,y:y+h/2+4,'text-anchor':'end','font-size':10.5});
+    t.textContent=name;svg.append(t);
+    const r=el('rect',{class:'mk',x:L,y:y,width:Math.max(X(v)-L,2),height:h,rx:3,fill:'var(--s1)'});
+    svg.append(r);
+    const lb=el('text',{class:'dl num',x:X(v)+8,y:y+h/2+4,'font-size':10.5});lb.textContent=m$(v);svg.append(lb);
+    const hit=el('rect',{x:L,y:y,width:W-R-L,height:h,fill:'transparent'});svg.append(hit);
+    hit.addEventListener('mouseenter',()=>tip.show((L+X(v))/2,y-2,name,
+      [['ITC',m$(v)],['Source',src],['Share of 106',(v/H.L106*100).toFixed(1)+'%']]));
+    hit.addEventListener('mouseleave',()=>tip.hide());
+  });
+})();
+
+/* ---- tab switching ---- */
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('.panel').forEach(p=>p.hidden = p.id!==b.dataset.p);
+  document.querySelector('nav').style.display = b.dataset.p==='p-ytd' ? '' : 'none';
+  scrollTo({top:0,behavior:'smooth'});
+}));
+
+</script></body></html>

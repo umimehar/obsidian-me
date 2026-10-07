@@ -1,0 +1,194 @@
+[
+ {
+  "term": "T2",
+  "plain": "The corporation's yearly income tax return, for January to December."
+ },
+ {
+  "term": "T1",
+  "plain": "A person's yearly income tax return, due 30 April."
+ },
+ {
+  "term": "T4",
+  "plain": "The slip an employer gives an employee showing pay and the tax, CPP and EI taken off it."
+ },
+ {
+  "term": "T4A",
+  "plain": "A slip a payer issues for fees paid to someone who is not an employee."
+ },
+ {
+  "term": "T5",
+  "plain": "A slip showing dividends or interest paid to a person. The corporation files one only in years it pays dividends."
+ },
+ {
+  "term": "T183",
+  "plain": "The form a taxpayer signs to let an accountant file the return electronically."
+ },
+ {
+  "term": "T3",
+  "plain": "A slip showing income from a trust or fund."
+ },
+ {
+  "term": "T5008",
+  "plain": "A slip from a broker listing investments sold during the year, used to work out gains or losses."
+ },
+ {
+  "term": "T1135",
+  "plain": "A form for people holding more than $100,000 of property outside Canada."
+ },
+ {
+  "term": "T4FHSA",
+  "plain": "The slip showing money put into or taken out of a first home savings account."
+ },
+ {
+  "term": "HST",
+  "plain": "Harmonized sales tax: 13% in Ontario. The corporation adds it to invoices and sends the net amount to CRA once a year."
+ },
+ {
+  "term": "ITC",
+  "plain": "Input tax credit: HST the corporation paid on business purchases, which it subtracts from the HST it collected."
+ },
+ {
+  "term": "GIFI",
+  "plain": "The standard line numbers CRA uses for the income statement and balance sheet in a T2, such as 8000 for revenue."
+ },
+ {
+  "term": "Schedule 125",
+  "plain": "The income statement part of the T2: revenue and expenses by GIFI line."
+ },
+ {
+  "term": "Schedule 100",
+  "plain": "The balance sheet part of the T2: what the corporation owns and owes at year end."
+ },
+ {
+  "term": "CCPC",
+  "plain": "Canadian controlled private corporation. It gets a lower tax rate on its first $500,000 of business income."
+ },
+ {
+  "term": "small business deduction",
+  "plain": "The tax cut a CCPC gets on its first $500,000 of income, bringing the Ontario rate to 12.2%."
+ },
+ {
+  "term": "NETFILE",
+  "plain": "CRA's online system for sending a return directly."
+ },
+ {
+  "term": "instalments",
+  "plain": "Advance payments toward tax that is not yet due, so there is little or nothing left to pay when the return is filed."
+ },
+ {
+  "term": "retained earnings",
+  "plain": "Profit the corporation has kept over the years after tax and dividends."
+ },
+ {
+  "term": "shareholder loan",
+  "plain": "Money the corporation lends its owner. If not repaid within a year after the year end it becomes the owner's taxable income."
+ },
+ {
+  "term": "s.15(2)",
+  "plain": "The rule in the Income Tax Act that taxes a shareholder loan as income if it is not repaid in time."
+ },
+ {
+  "term": "s.67.3",
+  "plain": "The rule that limits how much of a car lease a business can deduct when the car's list price is high. For this lease 44.93% of each payment counts."
+ },
+ {
+  "term": "s.173",
+  "plain": "The rule that may add a standby charge when a car the corporation pays for is available to the owner personally."
+ },
+ {
+  "term": "s.174",
+  "plain": "The rule that lets a business claim a small HST credit on mileage it pays to someone driving their own car."
+ },
+ {
+  "term": "CPP",
+  "plain": "Canada Pension Plan. Employer and employee each pay a share on wages."
+ },
+ {
+  "term": "EI",
+  "plain": "Employment insurance. The owner's spouse is exempt, so Maham's pay has none."
+ },
+ {
+  "term": "RP account",
+  "plain": "The corporation's payroll account with CRA, 795920958 RP0001, used for remittances."
+ },
+ {
+  "term": "RT account",
+  "plain": "The corporation's HST account with CRA, 795920958 RT0001."
+ },
+ {
+  "term": "BN",
+  "plain": "Business number: the corporation's nine digit CRA identifier, 795920958."
+ },
+ {
+  "term": "director funded expenses",
+  "plain": "Business costs Umar paid personally that the corporation owes him back. Repaying them is not income to him."
+ },
+ {
+  "term": "home office",
+  "plain": "The part of the home used for the business. The corporation claims 30% of the rent."
+ },
+ {
+  "term": "CCA",
+  "plain": "Capital cost allowance: deducting the cost of equipment over several years instead of at once."
+ },
+ {
+  "term": "notice of assessment",
+  "plain": "CRA's letter confirming what it accepted from a return and what is owed or refunded."
+ },
+ {
+  "term": "Represent a Client",
+  "plain": "CRA's online service where a business authorises an accountant to see and file for its accounts."
+ },
+ {
+  "term": "CRA",
+  "plain": "Canada Revenue Agency, the federal tax authority."
+ },
+ {
+  "term": "NR4",
+  "plain": "A slip for payments to non residents of Canada. Not needed for Zeeshan because he works outside Canada."
+ },
+ {
+  "term": "Reg. 105",
+  "plain": "The rule that makes payers withhold 15% from non residents for services done in Canada. Does not apply to Zeeshan."
+ },
+ {
+  "term": "RRSP",
+  "plain": "Registered retirement savings plan. Contributions reduce taxable income."
+ },
+ {
+  "term": "FHSA",
+  "plain": "First home savings account. Contributions reduce taxable income and withdrawals for a first home are tax free."
+ },
+ {
+  "term": "TFSA",
+  "plain": "Tax free savings account. No deduction going in, no tax coming out."
+ },
+ {
+  "term": "PD7A",
+  "plain": "CRA's statement of payroll remittances made under the RP account."
+ },
+ {
+  "term": "s.235",
+  "plain": "The HST rule that limits the credit on a car lease the same way s.67.3 limits the income tax deduction."
+ },
+ {
+  "term": "ETA",
+  "plain": "Excise Tax Act, the law that sets out HST."
+ },
+ {
+  "term": "Schedule 1",
+  "plain": "The part of the T2 that turns accounting profit into taxable income, for example adding back half of meals."
+ },
+ {
+  "term": "standby charge",
+  "plain": "A taxable benefit for having a company car available for personal use (see s.173)."
+ },
+ {
+  "term": "T4 Summary",
+  "plain": "The form filed with CRA alongside the T4 slips, totalling pay, deductions and remittances for the year."
+ },
+ {
+  "term": "simplified registrant",
+  "plain": "A foreign seller registered for HST under a simplified system (number ending RT9999); its HST cannot be claimed back as a credit."
+ }
+]

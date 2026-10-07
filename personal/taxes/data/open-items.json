@@ -1,0 +1,684 @@
+[
+ {
+  "id": "oi-hst-2025-26-file",
+  "title": "File the HST return for 2025 to 2026",
+  "owner": "Saira",
+  "scope": "corporate",
+  "due": "2026-11-16",
+  "status": "waiting",
+  "detail": "Workpaper: sales $207,480, ITC $3,377.06, refund $2,404.66. Saira is applying the 80% Mercedes rule to her own copy and says her books show more than ours.",
+  "sources": [
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "oi-represent-a-client",
+  "title": "Give Saira Represent a Client access to the RT account",
+  "owner": "Umar",
+  "scope": "corporate",
+  "due": "2026-11-16",
+  "status": "open",
+  "detail": "She cannot file the HST return until CRA shows her as authorised for 795920958 RT0001.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "vault:obsidian-me/personal/taxes/log/2026-09-23.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e"
+  ]
+ },
+ {
+  "id": "oi-compare-saira-numbers",
+  "title": "Compare Saira's HST figures line by line with the 7 October workpaper",
+  "owner": "Claude",
+  "scope": "corporate",
+  "due": "2026-11-16",
+  "status": "waiting",
+  "detail": "Check the car rows at 80%, the 9 September 2025 fuel rows, items we left out (previous accountant's invoice credit $165.75, US software, Credit Valley), the 21 August deposit and the Rogers credit (answered: one credit, counted once, nothing owed).",
+  "sources": [
+   "session:075be64b-be34-45d8-8e62-13cde675d867",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "oi-instalment-shortfall-2026",
+  "title": "Cover the projected $4,743 shortfall on 2026 corporate tax",
+  "owner": "Umar",
+  "scope": "corporate",
+  "due": "2026-12-31",
+  "status": "open",
+  "detail": "Projected tax about $15,243 against $10,500 of instalments after the Mercedes personal share was made non deductible (+$578). Either top up instalments by about $1,186 a month from September to December, or record more director funded expenses: the 23 September break even of $45,273 includes the $11,134 already tracked, so about $34,139 more (mileage is the obvious gap). Recheck in November.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "2026/Corporate/Vehicle personal use 2026.xlsx"
+  ]
+ },
+ {
+  "id": "oi-mileage-log",
+  "title": "Start a Mercedes mileage log and rebuild it back to 30 September 2025",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "No log exists. The HST claim uses 80%; Umar's 2025 logs on his own car suggest about 52%; he stated 95% in August.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "memory:mercedes-80-percent-business-use.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "oi-t2-2025-lease-cap",
+  "title": "Decide whether to correct the T2 2025 lease deduction",
+  "owner": "Saira",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "The whole lease was deducted at 100% with no s.67.3 cap: about $6,608 above the cap, about $9,600 if the down payment is also spread over the 36 month term (about $806 to $1,170 of tax). Umar's call with Saira.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md"
+  ]
+ },
+ {
+  "id": "oi-saira-questions",
+  "title": "Saira to settle the open HST questions",
+  "owner": "Saira",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "Lease cap list price ($99,500 or $109,929.95), receipt date versus invoice date, iFly Calgary at 50%, s.174 mileage credit, the Rogers credit (answered: one credit, counted once, nothing owed), and HST instalments for 2026 to 2027 (about $5,898.84 a quarter).",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26_long_version.md"
+  ]
+ },
+ {
+  "id": "oi-s173-standby",
+  "title": "Decide whether a s.173 standby charge applies to the Mercedes",
+  "owner": "Saira",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "The corporation claims HST credits on a car Umar can use personally; line 104 is currently $0.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "oi-reimburse-umar",
+  "title": "Draw what the corporation owes Umar once Saira agrees",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "$16,111.98 at 23 September 2026 after the Mercedes personal use offset (was $20,840.33), about $16,525.34 expected at year end (was $23,644.82). Label every payment 'Director expense reimbursement'; anything above the amount owed would become a shareholder loan.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26.md",
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e",
+   "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx"
+  ]
+ },
+ {
+  "id": "oi-redraft-resolution",
+  "title": "Decide whether to redraft the Director Resolution to match the filed T2 2025",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "The unsigned draft still shows rent at 40% and a $3,856.75 advance; the filed return has no advance and $13,357 owed to Umar. No decision yet on a replacement.",
+  "sources": [
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "vault:obsidian-me/personal/taxes/log/2026-09-23.md"
+  ]
+ },
+ {
+  "id": "oi-back-out-refund",
+  "title": "Take the $4,644.90 CRA refund out of 2026 revenue in the workbook",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "The 28 May 2026 row sits in the gross and net revenue columns.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/reports/Debit_Reconciliation_2026_H1.md",
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "oi-full-year-spreadsheet",
+  "title": "Build the full year 2026 transaction spreadsheet for Saira",
+  "owner": "Claude",
+  "scope": "corporate",
+  "due": "2027-02-01",
+  "status": "open",
+  "detail": "After the December bank and card statements arrive. Mercedes at 80%, rent at 30%, Schedule 125 categories. Target moved from Sunday 31 January to Monday 1 February 2027.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "memory:saira-next-package-full-year-2026.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "oi-missing-receipts",
+  "title": "Find receipts for three card purchases",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "Shell 7 November 2025 ($92.71), Valet 1 May 2026 ($45.19), Petro-Canada 23 June 2026 ($100). Claimed from the card statements; credit $21.90 in the workpaper ($27.37 in the long email). 16 receipts of $30 or more are missing overall.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "oi-rogers-credit",
+  "title": "Call Rogers about the $148.78 credit",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "superseded",
+  "detail": "Not needed. Umar confirmed on 7 October 2026 that Rogers returned $148.78 for a charge of about $163 made by mistake (the $163.58 April bill). The $148.78 on the June bill is the same credit shown again on the account; it was never money owed or paid out.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/log/2026-09-23.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "session:8e9c47d2-227a-4e86-bde2-7e06ae3d8f65"
+  ],
+  "closed_on": "2026-10-07"
+ },
+ {
+  "id": "oi-insurance-business-use",
+  "title": "Tell the insurer the Mercedes is used for business",
+  "owner": "Umar",
+  "scope": "corporate",
+  "due": "2026-10-01",
+  "status": "open",
+  "detail": "The 1 October 2026 renewal ($804.75 a month) is still rated personal use. Do not cancel Desjardins until a replacement is in force.",
+  "sources": [
+   "vault:obsidian-me/personal/business-vehicle/README.md",
+   "vault:obsidian-me/personal/business-vehicle/tracking.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "oi-mercedes-lease-paperwork",
+  "title": "Sort out the Mercedes warranty date and loss payee",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "Two documents disagree on warranty end (29 September 2028 or 2029); no insurance certificate names Mercedes-Benz Financial as loss payee; front tires at 4 mm against a 3.2 mm return limit.",
+  "sources": [
+   "vault:obsidian-me/personal/business-vehicle/README.md",
+   "vault:obsidian-me/personal/business-vehicle/tracking.md"
+  ]
+ },
+ {
+  "id": "oi-home-office-proof",
+  "title": "Keep proof for the 30% home office claim",
+  "owner": "Umar",
+  "scope": "both",
+  "status": "open",
+  "detail": "Measure the office and the condo, sketch a floor plan, take photos, and keep the lease renewal showing $2,630 rent from 15 September 2026.",
+  "sources": [
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md"
+  ]
+ },
+ {
+  "id": "oi-confirm-hst-instalments",
+  "title": "Check in My Business Account that the four $6,500 HST payments sit in 2025 to 2026",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "The 10 October 2025 deposit was the HST refund, so all four instalments should apply to the year ending 14 August 2026.",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "oi-personal-noa",
+  "title": "Confirm the 2025 personal returns were assessed and refunds arrived",
+  "owner": "Umar",
+  "scope": "personal",
+  "status": "open",
+  "detail": "Umar $22,130.37 and Maham $40.17. No notices of assessment are in the folder.",
+  "sources": [
+   "2025/Personal/accountant docs/T-183 2025 - Umar Farooq Aslam.pdf",
+   "2025/Personal/accountant docs/T-183 2025 - Maham Amir.pdf",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "oi-maham-t4-2025-proof",
+  "title": "Find proof that Maham's 2025 T4 and T4 Summary were filed",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "The slip is on file but no T4 Summary or remittance report. One note says filed 28 February 2026; the accountant's May invoice has a $75 T4 line.",
+  "sources": [
+   "2025/Personal/Maham T4.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "oi-maham-2025-deductions",
+  "title": "Check how Maham's 2025 payroll deductions were handled",
+  "owner": "Saira",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "Her T4 says $1,093.75 of CPP and tax came off $16,000, but the bank shows she received the full $16,000 and the corporation remitted $1,837.50 on top.",
+  "sources": [
+   "2025/Personal/Maham T4.pdf",
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf"
+  ]
+ },
+ {
+  "id": "oi-maham-t4-2026",
+  "title": "File Maham's 2026 T4 and T4 Summary",
+  "owner": "Saira",
+  "scope": "corporate",
+  "due": "2027-03-01",
+  "status": "open",
+  "detail": "$24,000 gross April to December; CPP only. Confirm the withholding method and that the payroll account is set up as EI exempt. 28 February 2027 is a Sunday, so the deadline is Monday 1 March.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md",
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
+  ]
+ },
+ {
+  "id": "oi-dividends-paid-vs-declared",
+  "title": "Explain dividends paid versus declared in 2023 and 2024",
+  "owner": "Saira",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "Transfers to Umar: $18,000 in 2023 against $13,614 declared, $100,000 in 2024 against $72,550. The 2024 T2 also shows $23,311 more expenses than the bank alone explains.",
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/performa.xlsx",
+   "2024/Corporate/(20241231) T2.pdf"
+  ]
+ },
+ {
+  "id": "oi-anthropic-hst",
+  "title": "Ask Anthropic to refund the $6.50 HST charged on 29 January",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "Charged before the business number was on the account; not claimable as a credit.",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "oi-vercel-name",
+  "title": "Put the company name on the Vercel account",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "Invoices are billed to a personal project name.",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "oi-next-period-items",
+  "title": "Put the 21 August 2026 deposit and 31 August lease payment in the 2026 to 2027 HST year",
+  "owner": "Saira",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "Both fall after 14 August 2026.",
+  "sources": [
+   "session:075be64b-be34-45d8-8e62-13cde675d867",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ },
+ {
+  "id": "oi-update-claude-md",
+  "title": "Update the project CLAUDE.md",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "Rewritten on 7 October 2026 as a short pointer to the vault datastore.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "memory:home-office-rent-30-percent.md"
+  ],
+  "closed_on": "2026-10-07"
+ },
+ {
+  "id": "oi-workbook-tax-rate",
+  "title": "Change the workbook's corporate tax rate from 12.3% to 12.2%",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "The filed rate is 12.2%.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "oi-mir-miscategorised",
+  "title": "Fix three 2024 MIR deposits labelled 'Other' in the transaction ledger",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "4 October, 18 October and 1 November 2024: $21,515.20 including HST.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/parsed_data/transactions_master.csv",
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "oi-income-statement-labels",
+  "title": "Fix stale labels in the 2025 income statement spreadsheet",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "Rent labelled 40% but calculated at 30%; salary dates 5 and 24 December (bank: 19 and 22); the reconciliation tab still shows $24,143.25 and $3,856.75.",
+  "sources": [
+   "2025/Corporate/2025_Income_Statement.xlsx",
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "oi-rogers-receipt-cell",
+  "title": "Point the Rogers credit row in the workpaper to the Rogers bill history",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "Offered on 7 October, not yet confirmed by Umar.",
+  "sources": [
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "oi-september-receipts",
+  "title": "File 13 receipts from 29 August to 22 September 2026 when the card statement arrives",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "waiting",
+  "detail": "They belong to the next HST year.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/log/2026-09-23.md"
+  ]
+ },
+ {
+  "id": "oi-september-bank",
+  "title": "Check the September 2026 bank statement",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "waiting",
+  "detail": "Expected: insurance $700.84 on 1 September, MIR deposits on 4 and 18 September, payroll remittance on 11 September.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/reports/Debit_Reconciliation_2026_JulAug.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "oi-keep-records",
+  "title": "Keep the 2025 tax records",
+  "owner": "Umar",
+  "scope": "corporate",
+  "due": "2031-12-31",
+  "status": "open",
+  "detail": "Six years, to 31 December 2031. Use the same Schedule 125 layout for 2026, as the 2025 preparer asked.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "oi-lazer-t4a-gap",
+  "title": "Reconcile the Lazer T4A with bank deposits",
+  "owner": "Lazer Technologies",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "T4A $82,791.46 against $87,866.46 deposited ($5,075 gap), and it carried Umar's SIN. Lazer revoked the slip. No written confirmation is in the folder.",
+  "closed_on": "2026-05-14",
+  "sources": [
+   "CLAUDE.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "2025/Corporate/Lazer - T4A.pdf",
+   "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf"
+  ]
+ },
+ {
+  "id": "oi-sign-resolution",
+  "title": "Sign the Director Resolution and file it in the minute book",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "superseded",
+  "detail": "The draft no longer matches the filed T2 2025, which has no advance. Replaced by the decision on whether to redraft it.",
+  "closed_on": "2026-08-03",
+  "sources": [
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx",
+   "CLAUDE.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "oi-repay-shareholder-loan",
+  "title": "Repay the shareholder loan by 31 December 2026",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "superseded",
+  "detail": "Was $3,856.75, then $6,968.35. The filed T2 2025 has no loan; the corporation owes Umar $13,357 instead.",
+  "closed_on": "2026-08-03",
+  "sources": [
+   "CLAUDE.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md"
+  ]
+ },
+ {
+  "id": "oi-oct-duplicate-instalment",
+  "title": "Check the possible duplicate $1,396 instalment in October 2025",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "Not a duplicate: the second payment was on 30 December 2025, as the bank statement shows. The T2 2025 list has a typing slip.",
+  "closed_on": "2026-08-03",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "2025/Corporate/Debit Account/Statements/10-October 31, 2025.pdf",
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf"
+  ]
+ },
+ {
+  "id": "oi-file-t2-2025",
+  "title": "File the T2 2025",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "Filed by Ejaz Pirwani on 18 May 2026 and assessed the same day.",
+  "closed_on": "2026-05-18",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "2025/Corporate/accountant files/final/2. T2 '25 - Initial Assessment Tracker - 15248132 Ca Inc. - Umar.pdf"
+  ]
+ },
+ {
+  "id": "oi-opening-re",
+  "title": "Use $57,377 as retained earnings at the start of 2025",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "The filed T2 2025 starts from $57,377 and ends at $150,613.",
+  "closed_on": "2026-05-18",
+  "sources": [
+   "CLAUDE.md",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+  ]
+ },
+ {
+  "id": "oi-rebook-28k",
+  "title": "Rebook the $28,000 paid to Umar so no dividends appear in 2025",
+  "owner": "Claude",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "The filed T2 2025 treats it as repaid business costs.",
+  "closed_on": "2026-05-18",
+  "sources": [
+   "CLAUDE.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "oi-t2-2025-refund",
+  "title": "Receive the T2 2025 assessment and refund",
+  "owner": "CRA",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "Assessed 18 May 2026; $4,644.90 received 28 May. The formal notice of assessment PDF is not in the folder.",
+  "closed_on": "2026-05-28",
+  "sources": [
+   "2025/Corporate/accountant files/final/2. T2 '25 - Initial Assessment Tracker - 15248132 Ca Inc. - Umar.pdf",
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md"
+  ]
+ },
+ {
+  "id": "oi-accountant-clarifications",
+  "title": "Get the accountant's answers on other expenses and taxes receivable",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "Other expenses $5,332 stays as a balancing figure; taxes receivable $11,207 is $4,898 corporate tax plus $6,309 GST.",
+  "closed_on": "2026-05-16",
+  "sources": [
+   "2025/Corporate/accountant files/accountant emails.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md"
+  ]
+ },
+ {
+  "id": "oi-send-package",
+  "title": "Upload the HST package and send Saira the email",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "Saira has the package and has been told about the 80% rule.",
+  "closed_on": "2026-10-07",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/log/2026-09-23.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "oi-ifly-and-trip",
+  "title": "Document iFly Calgary and the April 2026 trip",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "iFly is client entertainment at 50%; the 16 to 20 April trip is business.",
+  "closed_on": "2026-09-23",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "oi-unclaimed-2025-itcs",
+  "title": "Claim about $148 of possibly missed HST credits from January to August 2025",
+  "owner": "Saira",
+  "scope": "corporate",
+  "status": "superseded",
+  "detail": "Dropped: Umar said those items were already given to Saira for the 2024 to 2025 return.",
+  "closed_on": "2026-09-23",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "oi-cpacm-invoice",
+  "title": "Pay Saira's invoice 2041",
+  "owner": "Umar",
+  "scope": "corporate",
+  "status": "done",
+  "detail": "$423.75 paid from the business account on 9 February 2026.",
+  "closed_on": "2026-02-09",
+  "sources": [
+   "2026/Corporate/Debit Account/Invoices/09-Feb-CPACM-invoice-2041-423.75.pdf",
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "oi-decide-80-or-85",
+  "title": "Decide 80% or 85% Mercedes business use",
+  "owner": "Umar",
+  "scope": "corporate",
+  "due": "2026-11-16",
+  "status": "open",
+  "detail": "80% stands until decided. At 85%: personal charge $5,339.61 instead of $7,119.48, deductions up $1,201.63, 2026 tax gap about $4,596, and HST 2025-26 vehicle credits up about $112, which must be settled before Saira files.",
+  "sources": [
+   "2026/Corporate/Vehicle personal use 2026.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
+   "memory:mercedes-80-percent-business-use.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+  ]
+ },
+ {
+  "id": "oi-sign-vehicle-resolution",
+  "title": "Sign the 2026 vehicle personal use resolution",
+  "owner": "Umar",
+  "scope": "both",
+  "due": "2026-12-31",
+  "status": "open",
+  "detail": "Drafted, unsigned. It records 80% business use and charges the 20% personal share ($7,119.48 for 2026) against what the corporation owes Umar. Replace the September to December estimates with actuals before booking it at 31 December.",
+  "sources": [
+   "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx",
+   "2026/Corporate/Vehicle personal use 2026.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "oi-2025-mercedes-at-100",
+  "title": "Review the 2025 Mercedes claim at 100% with no cap",
+  "owner": "Saira",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "On the filed T2 2025, Mercedes costs from 27 September to 31 December 2025 ($18,858.79) were deducted in full. At 80% the personal share would be $3,771.76, on top of the s.67.3 excess. Raise together with the lease cap item.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
+   "memory:mercedes-80-percent-business-use.md"
+  ]
+ },
+ {
+  "id": "oi-2025-own-car-double-claim",
+  "title": "Review the likely double claim on Umar's own car in 2025",
+  "owner": "Saira",
+  "scope": "corporate",
+  "status": "open",
+  "detail": "January to September 2025 the corporation paid Umar mileage per km ($3,160.96) and also deducted actual costs: Lexus services $1,984.13, car instalments $963.77, washes $325.42 (about $3,270). A per km allowance is meant to cover running costs, so the actual costs look claimed twice.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md"
+  ]
+ },
+ {
+  "id": "oi-hst-instalments-2026-27",
+  "title": "Pay quarterly HST instalments for 2026 to 2027",
+  "owner": "Umar",
+  "scope": "corporate",
+  "due": "2026-12-14",
+  "status": "open",
+  "detail": "About $5,898.84 a quarter; the usual $6,500 covers it. Worked out from the CRA rule (within one month after each quarter): 14 December 2026, 15 March 2027, 14 June 2027, 14 September 2027. Check the dates and amounts with Saira.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ }
+]

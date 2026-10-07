@@ -1,0 +1,2134 @@
+[
+ {
+  "id": "ev-2023-08-14-incorporated",
+  "date": "2023-08-14",
+  "scope": "corporate",
+  "category": "other",
+  "title": "15248132 Canada Inc. (XYZ Bytes) is incorporated",
+  "detail": "Federal CCPC in Ontario, Umar is sole director and 100% shareholder. The first tax year is a 140 day stub to 31 December 2023.",
+  "sources": [
+   "CLAUDE.md",
+   "2024/Corporate/(20241231) T2.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md"
+  ]
+ },
+ {
+  "id": "ev-2023-08-25-first-lazer-deposit",
+  "date": "2023-08-25",
+  "scope": "corporate",
+  "category": "other",
+  "title": "First client deposit: Lazer Technologies pays $7,605.77",
+  "detail": "Lazer pays every two weeks through Rippling: $6,730.77 plus HST. Eight payments at this rate from 25 August to 1 December 2023.",
+  "amount": 7605.77,
+  "sources": [
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2023-09-08-dividend-to-umar",
+  "date": "2023-09-08",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $5,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook. 2023 transfers total $18,000 against $13,614 declared on the T2.",
+  "amount": 5000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2023-10-15-dividend-to-umar",
+  "date": "2023-10-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $4,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 4000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2023-11-15-dividend-to-umar",
+  "date": "2023-11-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $4,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 4000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2023-12-15-dividend-to-umar",
+  "date": "2023-12-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $5,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 5000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2023-12-15-lazer-rate-up",
+  "date": "2023-12-15",
+  "scope": "corporate",
+  "category": "other",
+  "title": "Lazer payment rises to $7,953.46 every two weeks",
+  "detail": "Up from $7,605.77. The 29 December 2023 payment of $13,603.46 includes a bonus.",
+  "amount": 7953.46,
+  "sources": [
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-01-16-dividend-to-umar",
+  "date": "2024-01-16",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $4,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook. 2024 transfers total $100,000 against $72,550 declared on the T2 2024.",
+  "amount": 4000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-01-18-saira-first-fee",
+  "date": "2024-01-18",
+  "scope": "corporate",
+  "category": "engagement",
+  "title": "Saira (CPACM) paid $904 for the first tax filing",
+  "detail": "Bank note reads 'Tax filling CMCPA Saira payment'. Five days later CRA assessed the T2 2023, so this fee most likely covers that return.",
+  "amount": 904,
+  "sources": [
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-01-23-t2-2023-assessed",
+  "date": "2024-01-23",
+  "scope": "corporate",
+  "category": "filing",
+  "title": "T2 2023 (140 day first year) assessed by CRA",
+  "detail": "Revenue $72,923, net income $35,716, tax $4,379, dividends declared $13,614, retained earnings $22,102. Filing date itself is not on file.",
+  "amount": 4379,
+  "sources": [
+   "2025/Corporate/accountant files/final/Efile Submission Failure -15248132 Canada Inc. - Umar.docx",
+   "2024/Corporate/(20241231) T2.pdf",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "ev-2024-02-08-t2-2023-tax-paid",
+  "date": "2024-02-08",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax for 2023 paid, $4,379",
+  "detail": "Bank debit 'Canada corporate taxes 2023', equal to the tax on the first T2.",
+  "amount": 4379,
+  "sources": [
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-02-15-dividend-to-umar",
+  "date": "2024-02-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $4,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 4000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-03-18-dividend-to-umar",
+  "date": "2024-03-18",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $5,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 5000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-04-05-lazer-dip",
+  "date": "2024-04-05",
+  "scope": "corporate",
+  "category": "other",
+  "title": "One low Lazer payment of $7,038.46",
+  "detail": "Then $8,868.46 on 19 April and back to $7,953.46.",
+  "amount": 7038.46,
+  "sources": [
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-04-16-dividend-to-umar",
+  "date": "2024-04-16",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $5,500",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 5500,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-05-14-dividend-to-umar",
+  "date": "2024-05-14",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $6,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 6000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-06-17-dividend-to-umar",
+  "date": "2024-06-17",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $6,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 6000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-07-12-lazer-bonus",
+  "date": "2024-07-12",
+  "scope": "corporate",
+  "category": "other",
+  "title": "Lazer pays $14,238.08 including a $5,000 bonus",
+  "detail": "Contract $7,423.08 plus bonus $5,000 plus HST $1,615; $200 was vacation pay with no HST. The 26 July payment was $44.25 short on HST, made up on 12 August.",
+  "amount": 14238.08,
+  "sources": [
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-07-15-dividend-to-umar",
+  "date": "2024-07-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $6,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 6000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-07-19-hi-immigration-starts",
+  "date": "2024-07-19",
+  "scope": "corporate",
+  "category": "other",
+  "title": "Small client H.I. Immigration Consult starts at $565 a month",
+  "detail": "Website maintenance, $500 plus HST. Paid on 19 July, 9 August and 10 October 2024 only, $1,695 in all.",
+  "amount": 565,
+  "sources": [
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-08-14-hst-2023-24-ends",
+  "date": "2024-08-14",
+  "scope": "corporate",
+  "category": "other",
+  "title": "First HST year ends (14 August 2023 to 14 August 2024)",
+  "detail": "Bank balance that day $86,217.48 per the workbook.",
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/WORKBOOK_GUIDE.md"
+  ]
+ },
+ {
+  "id": "ev-2024-08-15-dividend-to-umar",
+  "date": "2024-08-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $6,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook. The workbook deliberately keeps this one in the 2023 to 2024 HST year block.",
+  "amount": 6000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/WORKBOOK_GUIDE.md"
+  ]
+ },
+ {
+  "id": "ev-2024-08-23-lazer-fixed-rate",
+  "date": "2024-08-23",
+  "scope": "corporate",
+  "category": "other",
+  "title": "Lazer payment fixed at $8,388.08 every two weeks",
+  "detail": "Constant from 23 August to 30 December 2024. A workbook note on this row says 'GOT HST refund' with no amount; not confirmed anywhere else.",
+  "amount": 8388.08,
+  "sources": [
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-09-16-dividend-to-umar",
+  "date": "2024-09-16",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $6,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 6000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-09-25-dividend-to-umar",
+  "date": "2024-09-25",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $5,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 5000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-10-04-mir-starts",
+  "date": "2024-10-04",
+  "scope": "corporate",
+  "category": "other",
+  "title": "New client MIR Services starts paying every two weeks",
+  "detail": "First deposit $7,684, two weeks in arrears. Six payments in 2024, $49,946 including HST.",
+  "amount": 7684,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/parsed_data/transactions_master.csv"
+  ]
+ },
+ {
+  "id": "ev-2024-10-09-hst-2023-24-paid",
+  "date": "2024-10-09",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST for the first HST year paid, $23,187.60",
+  "detail": "HST collected $25,073.01 less ITC $1,885.41. A later ledger miscounted the HST inside this payment ($2,667.60) as a purchase ITC; it is a payment to CRA, not a credit.",
+  "amount": 23187.6,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CREDIT_CARD_2026.md"
+  ]
+ },
+ {
+  "id": "ev-2024-10-15-dividend-to-umar",
+  "date": "2024-10-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $10,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 10000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-11-15-dividend-to-umar",
+  "date": "2024-11-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $10,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 10000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-12-02-dividend-to-umar",
+  "date": "2024-12-02",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $8,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 8000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-12-10-hst-prepayment",
+  "date": "2024-12-10",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST prepayment, $5,882",
+  "detail": "Prepayment toward the HST year ending 14 August 2025 (part of the $34,282 prepaid before filing).",
+  "amount": 5882,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-12-15-dividend-to-umar",
+  "date": "2024-12-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $10,000",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 10000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-12-16-hst-prepayment",
+  "date": "2024-12-16",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST prepayment, $5,800",
+  "detail": "Prepayment toward the HST year ending 14 August 2025 (part of the $34,282 prepaid before filing).",
+  "amount": 5800,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-12-30-dividend-to-umar",
+  "date": "2024-12-30",
+  "scope": "both",
+  "category": "payment",
+  "title": "Dividend transfer to Umar, $8,500",
+  "detail": "Recorded as 'Dividends to Umar' in the bank workbook.",
+  "amount": 8500,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2025-01-10-lazer-high-payments",
+  "date": "2025-01-10",
+  "scope": "corporate",
+  "category": "other",
+  "title": "Lazer pays $14,038.08, above its usual amount",
+  "detail": "Lazer paid $14,038.08 (10 January), $10,139.58 (24 January) and $10,752.66 (7 February), then $8,822.69 from 21 February. The reason is not recorded.",
+  "amount": 14038.08,
+  "sources": [
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2025-01-15-payment-to-umar",
+  "date": "2025-01-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Payment to Umar, $6,000 (first of four, $28,000 in all)",
+  "detail": "Interac transfer first captioned 'Dividends to Umar'. Now treated as repaying business costs Umar paid personally; no dividends in 2025.",
+  "amount": 6000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "ev-2025-02-18-payment-to-umar",
+  "date": "2025-02-18",
+  "scope": "both",
+  "category": "payment",
+  "title": "Payment to Umar, $7,000 (second of four)",
+  "detail": "Treated as repaying business costs Umar paid personally.",
+  "amount": 7000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx"
+  ]
+ },
+ {
+  "id": "ev-2025-02-19-t2-2024-filed",
+  "date": "2025-02-19",
+  "scope": "corporate",
+  "category": "filing",
+  "title": "T2 2024 signed and filed",
+  "detail": "Net income for tax $129,905, tax $15,848, dividends declared $72,550, retained earnings $57,377 at year end.",
+  "amount": 15848,
+  "sources": [
+   "2024/Corporate/(20241231) T2.pdf"
+  ]
+ },
+ {
+  "id": "ev-2025-02-26-saira-fee-2025",
+  "date": "2025-02-26",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Saira (CPACM) paid $1,073.50",
+  "detail": "Bank note 'Tax filling CMCPA Saira payment', a week after the T2 2024 was signed. CLAUDE.md ties this fee to her August 2025 statements, but the date fits the T2 2024.",
+  "amount": 1073.5,
+  "sources": [
+   "Business Transactions.xlsx",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "ev-2025-02-28-t2-2024-assessed",
+  "date": "2025-02-28",
+  "scope": "corporate",
+  "category": "filing",
+  "title": "T2 2024 assessed by CRA",
+  "detail": "Date shown on CRA My Business Account.",
+  "sources": [
+   "2025/Corporate/accountant files/final/Efile Submission Failure -15248132 Canada Inc. - Umar.docx"
+  ]
+ },
+ {
+  "id": "ev-2025-03-05-t2-2024-tax-paid",
+  "date": "2025-03-05",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax balance for 2024 paid, $16,154.35",
+  "detail": "The T2 2024 shows $15,848 owing; the payment was $306.35 more. The sources do not explain the difference.",
+  "amount": 16154.35,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2025/Corporate/2025_Corporate_Tax_Report.pdf"
+  ]
+ },
+ {
+  "id": "ev-2025-03-07-hst-prepayment",
+  "date": "2025-03-07",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST prepayment, $6,000",
+  "detail": "Prepayment toward the HST year ending 14 August 2025 (part of the $34,282 prepaid before filing).",
+  "amount": 6000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2025-03-14-corp-instalment",
+  "date": "2025-03-14",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $4,000 lump sum",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required. This lump sum covered the January and February amounts.",
+  "amount": 4000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "ev-2025-03-17-hst-prepayment",
+  "date": "2025-03-17",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST prepayment, $5,800",
+  "detail": "Prepayment toward the HST year ending 14 August 2025 (part of the $34,282 prepaid before filing).",
+  "amount": 5800,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2025-03-17-payment-to-umar",
+  "date": "2025-03-17",
+  "scope": "both",
+  "category": "payment",
+  "title": "Payment to Umar, $7,000 (third of four)",
+  "detail": "Treated as repaying business costs Umar paid personally.",
+  "amount": 7000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx"
+  ]
+ },
+ {
+  "id": "ev-2025-03-21-mir-gap",
+  "date": "2025-03-21",
+  "scope": "corporate",
+  "category": "other",
+  "title": "MIR pays half a period after a six week gap",
+  "detail": "MIR paid $7,819.60 on 7 February and nothing until $4,746 on 21 March. From 4 April MIR pays $9,492, or $8,542.80 in weeks with a public holiday (80 hours at $105 plus HST).",
+  "amount": 4746,
+  "sources": [
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2025-03-31-corp-instalment",
+  "date": "2025-03-31",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,396",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required.",
+  "amount": 1396,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "ev-2025-04-15-payment-to-umar",
+  "date": "2025-04-15",
+  "scope": "both",
+  "category": "payment",
+  "title": "Payment to Umar, $8,000 (last of four)",
+  "detail": "The draft resolution split it into $4,143.25 reimbursement and a $3,856.75 advance (later $6,968.35 at 30% rent). The filed T2 2025 has no advance at all.",
+  "amount": 8000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx",
+   "2025/Corporate/2025_Corporate_Tax_Report.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "ev-2025-04-30-corp-instalment",
+  "date": "2025-04-30",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,396",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required. The T2 2025 lists this one with the year typed as 2024.",
+  "amount": 1396,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+  ]
+ },
+ {
+  "id": "ev-2025-05-02-lazer-ends",
+  "date": "2025-05-02",
+  "scope": "corporate",
+  "category": "other",
+  "title": "Lazer contract ends with a last payment of $8,822.69",
+  "detail": "Nine Lazer payments in 2025, $87,866.46 including HST ($77,757.93 before HST). MIR is the only client from June.",
+  "amount": 8822.69,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/2025_Income_Statement.xlsx",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "ev-2025-05-09-hst-prepayment",
+  "date": "2025-05-09",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST prepayment, $5,000",
+  "detail": "Prepayment toward the HST year ending 14 August 2025 (part of the $34,282 prepaid before filing).",
+  "amount": 5000,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2025-05-30-corp-instalment",
+  "date": "2025-05-30",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,396",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required.",
+  "amount": 1396,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "ev-2025-06-15-mac-studio",
+  "date": "2025-06-15",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Mac Studio bought on the corporate card, $5,931.37",
+  "detail": "Largest of seven equipment purchases ($13,982.67) that the filed T2 2025 expensed in full instead of depreciating.",
+  "amount": 5931.37,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md",
+   "2025/Corporate/2025_Income_Statement.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2025-06-16-hst-prepayment",
+  "date": "2025-06-16",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST prepayment, $5,800",
+  "detail": "Prepayment toward the HST year ending 14 August 2025 (part of the $34,282 prepaid before filing).",
+  "amount": 5800,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2025-06-30-corp-instalment",
+  "date": "2025-06-30",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,396",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required.",
+  "amount": 1396,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "ev-2025-07-30-corp-instalment",
+  "date": "2025-07-30",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,396",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required.",
+  "amount": 1396,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "ev-2025-08-14-accountant-snapshot",
+  "date": "2025-08-14",
+  "scope": "corporate",
+  "category": "document",
+  "title": "HST year ends; previous accountant's statements to 14 August 2025",
+  "detail": "Saira's part year statements: income $181,237.94, expenses $72,704.14, net income $108,533.80, bank $136,145.35. They wrongly showed $72,550 of 2025 dividends and opening retained earnings of $129,923.59.",
+  "sources": [
+   "2025/Corporate/business financials from previous accountant.xlsm",
+   "Business Transactions.xlsx",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "ev-2025-09-02-corp-instalment",
+  "date": "2025-09-02",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,396 (August amount, paid late)",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required.",
+  "amount": 1396,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "2025/Corporate/Debit Account/Statements/9-September 29, 2025.pdf"
+  ]
+ },
+ {
+  "id": "ev-2025-09-15-hst-final-payment",
+  "date": "2025-09-15",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST payment of $5,800 overpays the 2024 to 2025 balance",
+  "detail": "Only $839.50 was still owing ($35,121.50 less $34,282 prepaid), so $4,960.50 was overpaid. CRA refunded it on 10 October. It does not count toward the next HST year.",
+  "amount": 5800,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "2025/Corporate/Debit Account/Statements/9-September 29, 2025.pdf"
+  ]
+ },
+ {
+  "id": "ev-2025-09-15-personal-instalment",
+  "date": "2025-09-15",
+  "scope": "personal",
+  "category": "payment",
+  "title": "Umar pays a personal tax instalment, $2,463.14",
+  "detail": "Shown on line 47600 of his 2025 T1.",
+  "amount": 2463.14,
+  "sources": [
+   "2025/Personal/accountant docs/T-183 2025 - Umar Farooq Aslam.pdf",
+   "2025/Personal/accountant docs/Tax Summary 2025 - Umar Farooq Aslam.pdf",
+   "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf"
+  ]
+ },
+ {
+  "id": "ev-2025-09-24-hst-2024-25-filed",
+  "date": "2025-09-24",
+  "scope": "corporate",
+  "category": "filing",
+  "title": "HST return for 2024 to 2025 filed (confirmation 837076)",
+  "detail": "Sales $300,168.74, HST collected $39,021.93, ITC $3,900.43, net tax $35,121.50. Filed by Saira; due 14 November 2025.",
+  "amount": 35121.5,
+  "sources": [
+   "2025/Corporate/HST Filing/15248132 Canada Inc. HST.pdf",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "ev-2025-09-27-mercedes-deposit",
+  "date": "2025-09-27",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "$4,000 deposit on the Mercedes paid on the corporate card",
+  "detail": "First part of the $6,750.01 due at signing.",
+  "amount": 4000,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/business-vehicle/data/vehicle.json"
+  ]
+ },
+ {
+  "id": "ev-2025-09-30-mercedes-lease",
+  "date": "2025-09-30",
+  "scope": "corporate",
+  "category": "document",
+  "title": "Corporation leases a 2026 Mercedes GLC 43 for 36 months",
+  "detail": "$1,548.68 plus $201.33 HST = $1,750.01 a month; down payment $4,424.78; buyout $58,580; 18,000 km a year. Umar is co lessee. At signing $2,750.01 went on a Mastercard and $59 on a Visa.",
+  "amount": 1750.01,
+  "sources": [
+   "2026/Corporate/HST Filing 2025-26 - for Saira/05 Vehicle lease - Mercedes GLC 43/lease-agreement-detailed.pdf",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/05 Vehicle lease - Mercedes GLC 43/lease-pricing-worksheet.pdf",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/05 Vehicle lease - Mercedes GLC 43/payment-receipts.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/business-vehicle/README.md"
+  ]
+ },
+ {
+  "id": "ev-2025-10-01-car-insurance-starts",
+  "date": "2025-10-01",
+  "scope": "corporate",
+  "category": "other",
+  "title": "Car insurance with Desjardins starts, $8,410 for the year",
+  "detail": "Rated for personal use with business km left blank; later paid as $700.84 a month.",
+  "amount": 8410,
+  "sources": [
+   "vault:obsidian-me/personal/business-vehicle/README.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md"
+  ]
+ },
+ {
+  "id": "ev-2025-10-01-corp-instalment",
+  "date": "2025-10-01",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,396",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required.",
+  "amount": 1396,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "2025/Corporate/Debit Account/Statements/10-October 31, 2025.pdf"
+  ]
+ },
+ {
+  "id": "ev-2025-10-10-hst-refund",
+  "date": "2025-10-10",
+  "scope": "corporate",
+  "category": "refund",
+  "title": "CRA refunds $4,960.50, the HST overpayment",
+  "detail": "The bank shows it as 'CANADA GST/TPS'. It equals $40,082 prepaid less $35,121.50 owed. Not revenue, and not a corporate tax refund as CLAUDE.md said.",
+  "amount": 4960.5,
+  "sources": [
+   "2025/Corporate/Debit Account/Statements/10-October 31, 2025.pdf",
+   "Business Transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ },
+ {
+  "id": "ev-2025-10-20-hst-instalment",
+  "date": "2025-10-20",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST instalment, $6,500",
+  "detail": "Instalment toward the HST year ending 14 August 2026; one of four $6,500 payments, $26,000 in all. CLAUDE.md dates this payment 11 September; the September bank statement has no such payment.",
+  "amount": 6500,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "2025/Corporate/Debit Account/Statements/10-October 31, 2025.pdf",
+   "2025/Corporate/Debit Account/Statements/9-September 29, 2025.pdf",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "ev-2025-10-30-corp-instalment",
+  "date": "2025-10-30",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,396",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required.",
+  "amount": 1396,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "2025/Corporate/Debit Account/Statements/10-October 31, 2025.pdf"
+  ]
+ },
+ {
+  "id": "ev-2025-11-26-zeeshan-payout",
+  "date": "2025-11-26",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Zeeshan paid $7,007.69 after a three month gap",
+  "detail": "Last 2025 payout to the offshore subcontractor. 2025 payouts total $63,917.69.",
+  "amount": 7007.69,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md"
+  ]
+ },
+ {
+  "id": "ev-2025-12-01-corp-instalment",
+  "date": "2025-12-01",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,396",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required.",
+  "amount": 1396,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf"
+  ]
+ },
+ {
+  "id": "ev-2025-12-19-maham-salary",
+  "date": "2025-12-19",
+  "scope": "both",
+  "category": "payroll",
+  "title": "First salary to Maham, $10,000",
+  "detail": "Maham joins the payroll. The traceability map dates her two payments 5 and 24 December; the bank statement shows 19 and 22 December.",
+  "amount": 10000,
+  "sources": [
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf",
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md"
+  ]
+ },
+ {
+  "id": "ev-2025-12-22-maham-salary",
+  "date": "2025-12-22",
+  "scope": "both",
+  "category": "payroll",
+  "title": "Second salary to Maham, $6,000",
+  "detail": "Brings her 2025 pay to $16,000.",
+  "amount": 6000,
+  "sources": [
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf",
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2025-12-30-corp-instalment",
+  "date": "2025-12-30",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,396 (last for 2025)",
+  "detail": "One of 11 payments toward 2025 corporate tax, $17,960 in all against $15,852 required. The T2 2025 lists this payment as a second 30 October entry; the bank shows 30 December.",
+  "amount": 1396,
+  "sources": [
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf",
+   "Business Transactions.xlsx",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+  ]
+ },
+ {
+  "id": "ev-2025-12-30-payroll-remittance",
+  "date": "2025-12-30",
+  "scope": "corporate",
+  "category": "payroll",
+  "title": "Payroll remittance for Maham, $1,837.50",
+  "detail": "Labelled employer CPP and EI in the notes, but it equals her CPP $743.75 plus the corporation's CPP $743.75 plus tax withheld $350 from her T4. She is exempt from EI.",
+  "amount": 1837.5,
+  "sources": [
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf",
+   "Business Transactions.xlsx",
+   "2025/Personal/Maham T4.pdf",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "ev-2025-12-31-director-resolution",
+  "date": "2025-12-31",
+  "scope": "corporate",
+  "category": "document",
+  "title": "Director Resolution drafted, dated 31 December 2025, never signed",
+  "detail": "Calls the $28,000 a $24,143.25 reimbursement (rent at 40%) plus a $3,856.75 advance due back by 31 December 2026; no dividends, no T5. The filed T2 2025 later took a different route.",
+  "amount": 28000,
+  "sources": [
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "ev-2026-lazer-t4a-issued",
+  "date": "2026",
+  "scope": "corporate",
+  "category": "document",
+  "title": "Lazer issues a 2025 T4A of $82,791.46 under Umar's SIN",
+  "detail": "Box 048 fees. Box 012 carries Umar's SIN and box 013 the corporation's RT account, so CRA could match it to Umar's personal return. Lazer deposits to the corporation in 2025 were $87,866.46 ($5,075 more). Month of issue not recorded.",
+  "amount": 82791.46,
+  "sources": [
+   "2025/Corporate/Lazer - T4A.pdf",
+   "CLAUDE.md",
+   "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf"
+  ]
+ },
+ {
+  "id": "ev-2026-01-20-hst-instalment",
+  "date": "2026-01-20",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST instalment, $6,500",
+  "detail": "Instalment toward the HST year ending 14 August 2026; one of four $6,500 payments, $26,000 in all.",
+  "amount": 6500,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2026-02-09-cpacm-invoice",
+  "date": "2026-02-09",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Saira's invoice 2041 paid, $423.75",
+  "detail": "For January to August 2025 bookkeeping and preparing and filing the 2024 to 2025 HST return ($375 plus HST).",
+  "amount": 423.75,
+  "sources": [
+   "2026/Corporate/Debit Account/Invoices/09-Feb-CPACM-invoice-2041-423.75.pdf",
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ },
+ {
+  "id": "ev-2026-02-27-donation-receipt",
+  "date": "2026-02-27",
+  "scope": "personal",
+  "category": "document",
+  "title": "IPC Ontario issues a $90 donation receipt",
+  "detail": "Receipt F-15275: five 2025 gifts of $113, of which $90 is eligible.",
+  "amount": 90,
+  "sources": [
+   "2025/Personal/Donations Receipts $150/donations-$90CAD.pdf"
+  ]
+ },
+ {
+  "id": "ev-2026-03-02-maham-t4-2025",
+  "date": "2026-03-02",
+  "scope": "both",
+  "category": "payroll",
+  "title": "Maham's 2025 T4 due (28 February fell on a Saturday)",
+  "detail": "T4: pay $16,000, tax $350, CPP $743.75. One note says it was filed on 28 February; the May review still asked to confirm it and the later accountant invoice has a $75 T4 line, so filing is not confirmed.",
+  "sources": [
+   "2025/Personal/Maham T4.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "ev-2026-03-31-corp-instalment",
+  "date": "2026-03-31",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $900 (first for 2026)",
+  "detail": "Paid on the current year estimate method at about $900 a month, below the CRA schedule of $13,370 for 2026.",
+  "amount": 900,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md"
+  ]
+ },
+ {
+  "id": "ev-2026-03-31-t2-2025-balance-due",
+  "date": "2026-03-31",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "Balance due date for 2025 corporate tax",
+  "detail": "Instalments already exceeded the tax, so nothing was owing.",
+  "sources": [
+   "CLAUDE.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md"
+  ]
+ },
+ {
+  "id": "ev-2026-04-02-mercedes-service",
+  "date": "2026-04-02",
+  "scope": "both",
+  "category": "payment",
+  "title": "Mercedes service paid on Umar's personal Visa, $353.94",
+  "detail": "Added to what the corporation owes Umar; HST credit at 80% use.",
+  "amount": 353.94,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2026-04-03-claude-md",
+  "date": "2026-04-03",
+  "scope": "corporate",
+  "category": "document",
+  "title": "Project notes (CLAUDE.md) last written",
+  "detail": "Still says rent 40%, a $3,856.75 loan, an open Lazer T4A gap and the Oct 10 refund as corporate tax. Later work overturned each of these.",
+  "sources": [
+   "CLAUDE.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md"
+  ]
+ },
+ {
+  "id": "ev-2026-04-14-corp-instalment",
+  "date": "2026-04-14",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $1,500",
+  "detail": "Paid on the current year estimate method at about $900 a month, below the CRA schedule of $13,370 for 2026.",
+  "amount": 1500,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md"
+  ]
+ },
+ {
+  "id": "ev-2026-04-20-hst-instalment",
+  "date": "2026-04-20",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST instalment, $6,500",
+  "detail": "Instalment toward the HST year ending 14 August 2026; one of four $6,500 payments, $26,000 in all.",
+  "amount": 6500,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2026-04-20-t1-2025-signed",
+  "date": "2026-04-20",
+  "scope": "personal",
+  "category": "filing",
+  "title": "Umar's and Maham's 2025 personal returns signed for filing",
+  "detail": "Umar: income $142,215.55, refund $22,130.37. Maham: income $16,000, refund $40.17. Filed electronically by Ejaz Pirwani (Fintax).",
+  "amount": 22130.37,
+  "sources": [
+   "2025/Personal/accountant docs/T-183 2025 - Umar Farooq Aslam.pdf",
+   "2025/Personal/accountant docs/T-183 2025 - Maham Amir.pdf",
+   "2025/Personal/accountant docs/Tax Summary 2025 - Umar Farooq Aslam.pdf"
+  ]
+ },
+ {
+  "id": "ev-2026-04-30-corp-instalment",
+  "date": "2026-04-30",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $900",
+  "detail": "Paid on the current year estimate method at about $900 a month, below the CRA schedule of $13,370 for 2026.",
+  "amount": 900,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-08-maham-2026-pay-starts",
+  "date": "2026-05-08",
+  "scope": "both",
+  "category": "payroll",
+  "title": "Maham's 2026 pay starts: April net pay of $2,347.84",
+  "detail": "Sent as $2,000 plus $347.84. The plan is $24,000 gross for April to December. The payroll plan put the first payment on 30 April; the bank shows 8 May.",
+  "amount": 2347.84,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-09-remittance-schedule",
+  "date": "2026-05-09",
+  "scope": "corporate",
+  "category": "payroll",
+  "title": "Nine monthly payroll remittances of $460.14 scheduled",
+  "detail": "11 May to 31 December 2026, $4,141.26 in all, under payroll account RP0001. Monthly chosen over quarterly; the 31 December payment keeps all of it in 2026.",
+  "amount": 4141.26,
+  "sources": [
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-09-tax-report",
+  "date": "2026-05-09",
+  "scope": "corporate",
+  "category": "document",
+  "title": "Claude's corrected 2025 corporate tax report",
+  "detail": "Rent at 30%; estimated taxable income $115,955.56; reimbursement $21,031.65 and advance $6,968.35. The filed return later came out lower.",
+  "sources": [
+   "2025/Corporate/2025_Corporate_Tax_Report.pdf"
+  ]
+ },
+ {
+  "id": "ev-2026-05-11-payroll-remittance",
+  "date": "2026-05-11",
+  "scope": "corporate",
+  "category": "payroll",
+  "title": "Payroll remittance, $460.14",
+  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31.",
+  "amount": 460.14,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-14-lazer-t4a-closed",
+  "date": "2026-05-14",
+  "scope": "corporate",
+  "category": "correction",
+  "title": "Lazer T4A gap closed: Lazer revoked the T4A",
+  "detail": "The T4A showed $82,791.46 against $87,866.46 deposited ($5,075 gap) and carried Umar's SIN. Revocation date is not recorded.",
+  "amount": 5075,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-14-review-round-1",
+  "date": "2026-05-14",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Claude's review of the accountant's draft 2025 statements sent",
+  "detail": "Ten issues raised with Ejaz Pirwani, including tax at about 15% instead of the 12.2% small business rate and insurance filed as vehicle. Rent set at 30%; equipment expensed.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/Email_to_Accountant_2026-05-14.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-15-t2-review-package",
+  "date": "2026-05-15",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Accountant sends revised T2 2025; Umar signs the T183",
+  "detail": "Small business rate fixed: tax $13,368 instead of $15,989, refund $4,592. Umar asks about other expenses $5,332 and taxes receivable $11,207.",
+  "amount": 4592,
+  "sources": [
+   "2025/Corporate/accountant files/accountant emails.pdf",
+   "2025/Corporate/1. T-183 x2725 - Sign x26 Return - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/Email_to_Accountant_Round2_2026-05-15.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-16-accountant-answers",
+  "date": "2026-05-16",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Accountant answers Umar's questions",
+  "detail": "Other expenses $5,332 is a balancing figure; taxes receivable $11,207 is corporate tax $4,898 plus GST $6,309. He asks to keep the same format for 2026.",
+  "sources": [
+   "2025/Corporate/accountant files/accountant emails.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-17-submit-t2",
+  "date": "2026-05-17",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Umar tells the accountant to submit the T2 2025",
+  "detail": "Email at 4:19 AM.",
+  "sources": [
+   "2025/Corporate/accountant files/accountant emails.pdf"
+  ]
+ },
+ {
+  "id": "ev-2026-05-18-t2-2025-filed",
+  "date": "2026-05-18",
+  "scope": "corporate",
+  "category": "filing",
+  "title": "T2 2025 filed and assessed the same day: refund $4,592",
+  "detail": "Filed by Ejaz Pirwani (Fintax). Net income for tax $109,574, tax $13,368, instalments $17,960. The software showed a failure at 12:23 but CRA recorded the return.",
+  "amount": 4592,
+  "sources": [
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "2025/Corporate/accountant files/final/2. T2 '25 - Initial Assessment Tracker - 15248132 Ca Inc. - Umar.pdf",
+   "2025/Corporate/accountant files/final/Efile Submission Failure -15248132 Canada Inc. - Umar.docx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-19-error-387",
+  "date": "2026-05-19",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Second EFILE attempt rejected: CRA had already assessed",
+  "detail": "CRA error 387. The client copy of the T2 is dated 19 May.",
+  "sources": [
+   "2025/Corporate/accountant files/final/Efile Submission Failure -15248132 Canada Inc. - Umar.docx",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+  ]
+ },
+ {
+  "id": "ev-2026-05-21-ejaz-fee",
+  "date": "2026-05-21",
+  "scope": "both",
+  "category": "payment",
+  "title": "Accountant fee paid to Fintax, $1,440.75",
+  "detail": "$1,200 for the T2 and $75 for Maham's T4, plus HST. One note records a $1,575 invoice paid 19 May that also has a $300 personal return line; the bank shows $1,440.75 on 21 May.",
+  "amount": 1440.75,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "memory:no-previous-accountant-name-for-saira.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-28-t2-2025-refund",
+  "date": "2026-05-28",
+  "scope": "corporate",
+  "category": "refund",
+  "title": "T2 2025 refund arrives, $4,644.90",
+  "detail": "$4,592 plus about $52.90 interest, bank text 'CANADA RIT/RIF'. Not revenue; it sits in the 2026 revenue columns of the workbook and must be backed out.",
+  "amount": 4644.9,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/reports/Debit_Reconciliation_2026_H1.md"
+  ]
+ },
+ {
+  "id": "ev-2026-05-29-traceability-map",
+  "date": "2026-05-29",
+  "scope": "corporate",
+  "category": "document",
+  "title": "2025 expense traceability map written",
+  "detail": "Maps every filed Schedule 125 line to source records. Written before the lease cap problem was found.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md"
+  ]
+ },
+ {
+  "id": "ev-2026-06-01-corp-instalment",
+  "date": "2026-06-01",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $900",
+  "detail": "Paid on the current year estimate method at about $900 a month, below the CRA schedule of $13,370 for 2026.",
+  "amount": 900,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md"
+  ]
+ },
+ {
+  "id": "ev-2026-06-15-payroll-remittance",
+  "date": "2026-06-15",
+  "scope": "corporate",
+  "category": "payroll",
+  "title": "Payroll remittance, $460.14",
+  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31.",
+  "amount": 460.14,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
+  ]
+ },
+ {
+  "id": "ev-2026-06-30-corp-instalment",
+  "date": "2026-06-30",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $900",
+  "detail": "Paid on the current year estimate method at about $900 a month, below the CRA schedule of $13,370 for 2026.",
+  "amount": 900,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md"
+  ]
+ },
+ {
+  "id": "ev-2026-07-15-payroll-remittance",
+  "date": "2026-07-15",
+  "scope": "corporate",
+  "category": "payroll",
+  "title": "Payroll remittance, $460.14",
+  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31.",
+  "amount": 460.14,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
+  ]
+ },
+ {
+  "id": "ev-2026-07-20-hst-instalment",
+  "date": "2026-07-20",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "HST instalment, $6,500 (fourth and last)",
+  "detail": "Instalment toward the HST year ending 14 August 2026; one of four $6,500 payments, $26,000 in all.",
+  "amount": 6500,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2026-07-27-credit-valley-charges",
+  "date": "2026-07-27",
+  "scope": "corporate",
+  "category": "other",
+  "title": "Hospital charges of $1,221 put on the corporate card by mistake",
+  "detail": "Credit Valley $1,200 plus $21 parking. Personal: no HST claim, and it reduces what the corporation owes Umar.",
+  "amount": 1221,
+  "sources": [
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2026-07-31-corp-instalment",
+  "date": "2026-07-31",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $900",
+  "detail": "Paid on the current year estimate method at about $900 a month, below the CRA schedule of $13,370 for 2026.",
+  "amount": 900,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md"
+  ]
+ },
+ {
+  "id": "ev-2026-08-03-audit-file",
+  "date": "2026-08-03",
+  "scope": "corporate",
+  "category": "document",
+  "title": "Audit defence file for the T2 2025 updated",
+  "detail": "Central record for a CRA review; keep the 2025 records until 31 December 2031.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "ev-2026-08-03-duplicate-instalment",
+  "date": "2026-08-03",
+  "scope": "corporate",
+  "category": "discovery",
+  "title": "The 'duplicate' October 2025 instalment was a mis-dated December payment",
+  "detail": "Total $17,960 is right either way. The December 2025 bank statement confirms a $1,396 payment on 30 December.",
+  "amount": 1396,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf"
+  ]
+ },
+ {
+  "id": "ev-2026-08-03-h1-reconciliation",
+  "date": "2026-08-03",
+  "scope": "corporate",
+  "category": "document",
+  "title": "January to June 2026 bank statements match the workbook exactly",
+  "detail": "62 bank lines; month end balances match, from $140,636.81 at 30 January to $167,472.06 at 30 June.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/reports/Debit_Reconciliation_2026_H1.md"
+  ]
+ },
+ {
+  "id": "ev-2026-08-03-instalment-basis",
+  "date": "2026-08-03",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "2026 corporate instalments set on the current year estimate",
+  "detail": "CRA's schedule asks $4,011 on 31 May then $1,337 a month ($13,370). Umar pays about $900 a month instead; $6,000 paid by 3 August.",
+  "amount": 13370,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "ev-2026-08-03-no-shareholder-loan",
+  "date": "2026-08-03",
+  "scope": "corporate",
+  "category": "discovery",
+  "title": "Filed T2 2025 has no shareholder loan; the corporation owes Umar $13,357",
+  "detail": "The accountant treated $41,357 of Umar's personally paid business costs as expenses: $28,000 already repaid plus $13,357 still owed. No 31 December 2026 repayment deadline. Umar confirmed this on 3 August.",
+  "amount": 13357,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+  ]
+ },
+ {
+  "id": "ev-2026-08-03-workbook-bugs",
+  "date": "2026-08-03",
+  "scope": "corporate",
+  "category": "discovery",
+  "title": "Workbook bugs fixed: 2026 payouts were understated",
+  "detail": "One subtotal subtracted a real $700.84 insurance payment; another stopped early and showed $85,978.63 of payouts instead of $209,138.72. 43 MINUS() formulas rewritten.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/WORKBOOK_GUIDE.md"
+  ]
+ },
+ {
+  "id": "ev-2026-08-12-odometer",
+  "date": "2026-08-12",
+  "scope": "corporate",
+  "category": "other",
+  "title": "Mercedes odometer reads 14,035 km at service",
+  "detail": "About 16,000 km a year against an 18,000 km allowance. Warranty end date disputed (2028 or 2029).",
+  "sources": [
+   "vault:obsidian-me/personal/business-vehicle/tracking.md"
+  ]
+ },
+ {
+  "id": "ev-2026-08-14-payroll-remittance",
+  "date": "2026-08-14",
+  "scope": "corporate",
+  "category": "payroll",
+  "title": "Payroll remittance, $460.14",
+  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31.",
+  "amount": 460.14,
+  "sources": [
+   "Business Transactions.xlsx",
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
+  ]
+ },
+ {
+  "id": "ev-2026-08-20-mercedes-95",
+  "date": "2026-08-20",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "Umar states Mercedes business use at about 95%",
+  "detail": "No mileage log exists and both insurance certificates are rated for personal use.",
+  "sources": [
+   "vault:obsidian-me/personal/business-vehicle/README.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "ev-2026-08-21-next-hst-deposit",
+  "date": "2026-08-21",
+  "scope": "corporate",
+  "category": "other",
+  "title": "MIR deposit of $8,542.80 falls in the next HST year",
+  "detail": "Sales are counted by the date received, so this belongs to the year ending 14 August 2027.",
+  "amount": 8542.8,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "ev-2026-08-31-corp-instalment",
+  "date": "2026-08-31",
+  "scope": "corporate",
+  "category": "payment",
+  "title": "Corporate tax instalment, $900",
+  "detail": "Paid on the current year estimate method at about $900 a month, below the CRA schedule of $13,370 for 2026. Paid so far: $6,900.",
+  "amount": 900,
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md"
+  ]
+ },
+ {
+  "id": "ev-2026-09-11-payroll-remittance",
+  "date": "2026-09-11",
+  "scope": "corporate",
+  "category": "payroll",
+  "title": "Payroll remittance of $460.14 scheduled",
+  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31. Not yet on a statement as of 23 September.",
+  "amount": 460.14,
+  "sources": [
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "ev-2026-09-15-rent-rises",
+  "date": "2026-09-15",
+  "scope": "both",
+  "category": "other",
+  "title": "Rent rises from $2,600 to $2,630 a month",
+  "detail": "The 30% home office share becomes $789 a month.",
+  "amount": 2630,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/parsed_data/recurring_expenses.json",
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-back-to-saira",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "engagement",
+  "title": "Accountant switched back to Saira; Ejaz Pirwani's engagement ends",
+  "detail": "Saira files the HST return for 2025 to 2026 and will prepare the T2 2026. Ejaz Pirwani filed only the T2 2025 and the 2025 personal returns.",
+  "sources": [
+   "memory:accountant-saira-from-sep-2026.md",
+   "memory:no-previous-accountant-name-for-saira.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-card-lines-reclassified",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "correction",
+  "title": "Card purchases filed as meals reclassified",
+  "detail": "Mercedes signing payments, tires, service, Apple Store, hospitals and Paddle had fallen into meals. Phone and internet switched to actual Bell and Rogers bills.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CREDIT_CARD_2026.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/scripts/README.md"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-corp-tax-model",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "discovery",
+  "title": "23 September model: 2026 corporate tax about $4,165 short of instalments",
+  "detail": "The 3 August model wrongly subtracted the $4,644.90 refund from revenue, and $11,564.77 of 2026 lease payments are over the s.67.3 cap. Shortfall moved from $2,318 to $4,165. Revised on 7 October to about $4,743 after the Mercedes personal share.",
+  "amount": 4165.02,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-data-verified",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "discovery",
+  "title": "HST refund estimate cut from $3,624.51 to about $2,967 after checking the data",
+  "detail": "Car and computer purchases had been filed as meals, the lease credit was not capped and hospital parking looked personal. Revised estimate about $2,967.",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-email-to-saira",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Email to Saira drafted and cut to about 330 words",
+  "detail": "Six questions: lease cap, Mercedes use with no log, mileage on Umar's own car, three missing receipts, Valet receipts with no HST number, the Rogers credit.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26_long_version.md",
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-hospital-parking",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "Credit Valley charges ruled personal; Halton parking ruled business",
+  "detail": "Credit Valley $1,221 personal; three Halton Health Care parking charges in October and November 2025 ($78.25) are business and claimed.",
+  "amount": 1221,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-ifly",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "iFly Calgary ($319.76) treated as client entertainment",
+  "detail": "HST credit at 50%, $18.40, instead of $36.79 as travel.",
+  "amount": 319.76,
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26_long_version.md"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-julaug-reconciliation",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "document",
+  "title": "July and August 2026 bank statements match the workbook exactly",
+  "detail": "Closing balances $170,848.03 on 31 July and $163,061.21 on 31 August. Every day of the HST year now checked against a statement.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/reports/Debit_Reconciliation_2026_JulAug.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/WORKBOOK_GUIDE.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-lease-claimed-full",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "Umar asks to claim all the lease HST: package refund becomes $4,400.05",
+  "detail": "On Umar's instruction the lease credit of $2,789.85 was claimed with no cap and 100% business use. Line 106 $5,372.45.",
+  "amount": 4400.05,
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26_long_version.md"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-oct-10-relabelled",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "correction",
+  "title": "Oct 10 2025 refund relabelled as HST, not corporate tax",
+  "detail": "Payments toward 2024 to 2025 HST totalled $40,082 against $35,121.50, exactly $4,960.50 over. So all four $6,500 instalments count toward 2025 to 2026.",
+  "amount": 4960.5,
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/log/2026-09-23.md"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-owed-to-umar",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "discovery",
+  "title": "Corporation owed Umar $20,840.33 on 23 September, before the Mercedes offset",
+  "detail": "$13,357 from the T2 2025, plus 2026 rent at 30%, phone, home insurance and the Mercedes service, less the $1,221 hospital charge. Nothing repaid yet in 2026. Revised on 7 October to $16,111.98 after charging Umar the 20% personal share of the Mercedes.",
+  "amount": 20840.33,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-rent-30-confirmed",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "Umar confirms the home office share of rent at 30%",
+  "detail": "Matches the $9,335 rent line on the filed T2 2025. Replaces the 40% in CLAUDE.md.",
+  "sources": [
+   "memory:home-office-rent-30-percent.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-saira-package",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "document",
+  "title": "HST package for Saira built: 355 files, 273 MB zipped",
+  "detail": "Workpaper, 13 bank and 13 card statements, receipts, lease, prior return and the T2 2025 client copy. 293 of 328 card purchases have a receipt; receipts compressed without quality loss.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/log/2026-09-23.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-session-hst-package",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "session",
+  "title": "Claude session: HST 2025 to 2026 package for Saira",
+  "detail": "Verified data, added July and August statements, rebuilt the ledger, built and revised the package (refund estimates moved from $2,868.95 to $4,400.05), filed receipts and drafted the email.",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-session-owed-to-umar",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "session",
+  "title": "Claude session: email edits, amount owed to Umar, rent research",
+  "detail": "Shortened the Saira email, worked out the $20,840.33 owed to Umar, researched the 30% home office share and moved rent to $2,630 from 15 September.",
+  "sources": [
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-t2-2025-lease-cap",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "discovery",
+  "title": "T2 2025 deducted the whole Mercedes lease with no s.67.3 limit",
+  "detail": "The cap alone means about $6,608 too much was deducted ($6,608.42), about $9,600 if the down payment is also spread over the 36 month term; about $806 to $1,170 of tax. The return is filed and assessed; left for the accountant to decide.",
+  "amount": 6608.42,
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md"
+  ]
+ },
+ {
+  "id": "ev-2026-09-23-vault-rule",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "Tax notes go only in the personal vault, never in obsidian-dev",
+  "detail": "A dev vault commit was reverted after Umar said so.",
+  "sources": [
+   "memory:no-taxes-in-obsidian-dev.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2026-10-01-insurance-renews",
+  "date": "2026-10-01",
+  "scope": "corporate",
+  "category": "other",
+  "title": "Car insurance renews at $804.75 a month, still rated personal use",
+  "detail": "Up from $700.84; yearly premium $9,657. Business use was to be declared before renewal.",
+  "amount": 804.75,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "vault:obsidian-me/personal/business-vehicle/README.md",
+   "vault:obsidian-me/personal/business-vehicle/tracking.md"
+  ]
+ },
+ {
+  "id": "ev-2026-10-07-mercedes-80",
+  "date": "2026-10-07",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "Mercedes HST claim cut to 80% business use plus the lease cap",
+  "detail": "Lease credit 80% x 44.93% = 35.94% ($1,002.69); fuel and maintenance at 80%. Line 106 falls from $5,372.45 to $3,377.06 and the refund from $4,400.05 to $2,404.66.",
+  "amount": 2404.66,
+  "sources": [
+   "memory:mercedes-80-percent-business-use.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "ev-2026-10-07-mercedes-personal-use-offset",
+  "date": "2026-10-07",
+  "scope": "both",
+  "category": "decision",
+  "title": "20% personal use of the Mercedes charged to Umar against what he is owed",
+  "detail": "$7,119.48 for 2026: $4,728.35 actual January to August and $2,391.13 estimated for September to December, including $70.79 of the 2 April service. No cash moves. Owed to Umar falls to $16,111.98; 2026 tax gap rises by about $578 to $4,743.",
+  "amount": 7119.48,
+  "sources": [
+   "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx",
+   "2026/Corporate/Vehicle personal use 2026.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "memory:mercedes-80-percent-business-use.md"
+  ]
+ },
+ {
+  "id": "ev-2026-10-07-phone-totals",
+  "date": "2026-10-07",
+  "scope": "corporate",
+  "category": "discovery",
+  "title": "Phone and internet claims totalled: $1,482.43 paid, $170.55 HST credit",
+  "detail": "Rogers $557.12 (credit $64.10) and Bell $925.31 ($106.45). Rogers ended in April 2026; Bell doubled from May.",
+  "amount": 1482.43,
+  "sources": [
+   "session:075be64b-be34-45d8-8e62-13cde675d867",
+   "2026/Corporate/Director-funded expenses/Bell payment history Apr 2025 - Sep 2026.png",
+   "2026/Corporate/Director-funded expenses/Rogers bill history Apr 2025 - Jun 2026.png"
+  ]
+ },
+ {
+  "id": "ev-2026-10-07-rogers-credit-explained",
+  "date": "2026-10-07",
+  "scope": "corporate",
+  "category": "correction",
+  "title": "Rogers $148.78 credit explained: one refund, nothing owed",
+  "detail": "Rogers returned $148.78 for a charge of about $163 made by mistake after the April 2026 bill. The June bill shows the same credit again on the account; it was never a second refund. Counting it once in the HST return, which lowers the credit by $17.12, stays right.",
+  "amount": 148.78,
+  "sources": [
+   "session:8e9c47d2-227a-4e86-bde2-7e06ae3d8f65",
+   "2026/Corporate/Director-funded expenses/Rogers bill history Apr 2025 - Jun 2026.png"
+  ]
+ },
+ {
+  "id": "ev-2026-10-07-saira-update",
+  "date": "2026-10-07",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Saira applies the 80% herself and asks for a full year 2026 spreadsheet",
+  "detail": "Umar had already told her; the revised workpaper was not sent. She says her books show more than ours. Next package covers 1 January to 31 December 2026 for the T2 2026.",
+  "sources": [
+   "memory:saira-next-package-full-year-2026.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "ev-2026-10-07-session-80-percent",
+  "date": "2026-10-07",
+  "scope": "corporate",
+  "category": "session",
+  "title": "Claude session: HST credit review and Mercedes at 80%",
+  "detail": "Checked what the credit column includes, compared vehicle claims with last year, modelled 100%, 80% and 50% use, applied 80% plus the cap and totalled Bell and Rogers.",
+  "sources": [
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "ev-2026-10-07-vehicle-2025-findings",
+  "date": "2026-10-07",
+  "scope": "corporate",
+  "category": "discovery",
+  "title": "Two 2025 car claims on the filed T2 look too high",
+  "detail": "The Mercedes was claimed at 100% with no cap from 27 September to 31 December 2025 (a 20% personal share would be $3,771.76). For Umar's own car the corporation paid mileage of $3,160.96 and also deducted about $3,270 of actual costs (Lexus services, car instalments, washes), a likely double claim.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
+   "memory:mercedes-80-percent-business-use.md"
+  ]
+ },
+ {
+  "id": "ev-2026-10-07-vehicle-resolution-drafted",
+  "date": "2026-10-07",
+  "scope": "both",
+  "category": "document",
+  "title": "Vehicle personal use resolution for 2026 drafted, not yet signed",
+  "detail": "Records the 80% business use and the offset of the 20% personal share against the amount owed to Umar. The s.67.3 excess ($9,251.81 in 2026) is not charged to him.",
+  "sources": [
+   "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md"
+  ]
+ },
+ {
+  "id": "ev-2026-10-09-payroll-remittance",
+  "date": "2026-10-09",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "Payroll remittance of $460.14 scheduled (September pay)",
+  "detail": "CRA due date 15 October.",
+  "amount": 460.14,
+  "sources": [
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
+  ]
+ },
+ {
+  "id": "ev-2026-11-13-payroll-remittance",
+  "date": "2026-11-13",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "Payroll remittance of $460.14 scheduled (October pay)",
+  "detail": "CRA due date 15 November.",
+  "amount": 460.14,
+  "sources": [
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
+  ]
+ },
+ {
+  "id": "ev-2026-11-16-hst-2025-26-due",
+  "date": "2026-11-16",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "HST return for 2025 to 2026 due",
+  "detail": "14 November is a Saturday, so Monday 16 November. Saira files; expected refund $2,404.66. She needs Represent a Client access first.",
+  "amount": 2404.66,
+  "sources": [
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "ev-2026-12-04-payroll-remittance",
+  "date": "2026-12-04",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "Payroll remittance of $460.14 scheduled (November pay)",
+  "detail": "CRA due date 15 December.",
+  "amount": 460.14,
+  "sources": [
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
+  ]
+ },
+ {
+  "id": "ev-2026-12-14-hst-instalment-2026-27",
+  "date": "2026-12-14",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "HST instalment for 2026 to 2027 due (first quarter), about $5,898.84",
+  "detail": "Annual filers with more than $3,000 of net tax pay quarterly, within one month after each quarter ends (quarters end 14 November, 14 February, 14 May, 14 August). Dates worked out from the CRA rule; check with Saira.",
+  "amount": 5898.84,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ },
+ {
+  "id": "ev-2026-12-31-year-end-2026",
+  "date": "2026-12-31",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "Last payroll remittance, last instalment and 2026 books close",
+  "detail": "Final $460.14 remittance. Instalments planned $10,500 against projected tax of about $15,243, about $4,743 short: top up (about $1,186 a month from September) or record more director funded expenses before this date. Book the $7,119.48 Mercedes personal use offset at year end.",
+  "sources": [
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx"
+  ]
+ },
+ {
+  "id": "ev-2027-03-01-maham-t4-2026",
+  "date": "2027-03-01",
+  "scope": "both",
+  "category": "deadline",
+  "title": "Maham's 2026 T4 and T4 Summary due",
+  "detail": "28 February 2027 is a Sunday, so Monday 1 March. Pay $24,000 for April to December 2026; CPP only, no EI.",
+  "amount": 24000,
+  "sources": [
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md"
+  ]
+ },
+ {
+  "id": "ev-2027-03-15-hst-instalment-2026-27",
+  "date": "2027-03-15",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "HST instalment for 2026 to 2027 due (second quarter), about $5,898.84",
+  "detail": "Annual filers with more than $3,000 of net tax pay quarterly, within one month after each quarter ends (quarters end 14 November, 14 February, 14 May, 14 August). 14 March 2027 is a Sunday, so Monday 15 March. Dates worked out from the CRA rule; check with Saira.",
+  "amount": 5898.84,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ },
+ {
+  "id": "ev-2027-03-31-t2-2026-balance",
+  "date": "2027-03-31",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "Balance of 2026 corporate tax due",
+  "detail": "Three months after year end. Projected about $4,743 owing if nothing changes.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "ev-2027-04-30-t1-2026-due",
+  "date": "2027-04-30",
+  "scope": "personal",
+  "category": "deadline",
+  "title": "2026 personal returns due for Umar and Maham",
+  "detail": "No 2026 personal documents are on file yet.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/README.md"
+  ]
+ },
+ {
+  "id": "ev-2027-06-14-hst-instalment-2026-27",
+  "date": "2027-06-14",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "HST instalment for 2026 to 2027 due (third quarter), about $5,898.84",
+  "detail": "Annual filers with more than $3,000 of net tax pay quarterly, within one month after each quarter ends (quarters end 14 November, 14 February, 14 May, 14 August). Dates worked out from the CRA rule; check with Saira.",
+  "amount": 5898.84,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ },
+ {
+  "id": "ev-2027-06-30-t2-2026-due",
+  "date": "2027-06-30",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "T2 2026 filing deadline",
+  "detail": "Saira prepares it from the full year 2026 transaction spreadsheet.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/README.md",
+   "memory:saira-next-package-full-year-2026.md"
+  ]
+ },
+ {
+  "id": "ev-2027-09-14-hst-instalment-2026-27",
+  "date": "2027-09-14",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "HST instalment for 2026 to 2027 due (fourth quarter), about $5,898.84",
+  "detail": "Annual filers with more than $3,000 of net tax pay quarterly, within one month after each quarter ends (quarters end 14 November, 14 February, 14 May, 14 August). Dates worked out from the CRA rule; check with Saira.",
+  "amount": 5898.84,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ },
+ {
+  "id": "ev-2031-12-31-record-retention",
+  "date": "2031-12-31",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "Keep the 2025 tax records until this date",
+  "detail": "Six years after the 2025 tax year, the window in which CRA can ask for them.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ }
+]

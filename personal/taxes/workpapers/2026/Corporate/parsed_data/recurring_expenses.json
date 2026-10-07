@@ -1,0 +1,51 @@
+{
+  "_comment": "Director-funded recurring expenses paid on Umar's personal card and reimbursable by the corporation. Edit this file to add, change or stop an item, then re-run scripts/expand_recurring_expenses.py. 'claim_pct' is the business share. 'hst_status' drives whether an ITC arises: 'taxable' = HST is in the price and claimable, 'exempt' = no HST charged (insurance and residential rent are exempt supplies), 'zero_rated' = HST at 0%.",
+  "generate_from": "2025-08-15",
+  "generate_to": "2026-12-31",
+  "items": [
+    {
+      "name": "Home insurance",
+      "category": "Insurance — home office",
+      "amount": 32.83,
+      "day_of_month": 1,
+      "claim_pct": 1.0,
+      "hst_status": "exempt",
+      "note": "Claimed in full. Insurance is an exempt financial service, so no HST and no ITC.",
+      "starts": "2025-08-15",
+      "ends": null
+    },
+    {
+      "name": "Phone and internet",
+      "category": "Telecom",
+      "amount": 113.0,
+      "day_of_month": 1,
+      "claim_pct": 1.0,
+      "hst_status": "taxable",
+      "note": "Modelled only after the last known actual (Bell, Sep 13, 2026). Earlier months come from personal_actuals.csv (Bell payments, Rogers bills). Rogers ended Apr 2026; Bell bundle is $113/month.",
+      "starts": "2026-09-14",
+      "ends": null
+    },
+    {
+      "name": "Rent — home office share",
+      "category": "Rent — home office",
+      "amount": 2600.0,
+      "day_of_month": 15,
+      "claim_pct": 0.3,
+      "hst_status": "exempt",
+      "note": "Full rent recorded; 30% is the business share, matching the rate used on the filed 2025 T2. Residential rent is an exempt supply, so no ITC.",
+      "starts": "2025-08-15",
+      "ends": "2026-09-14"
+    },
+    {
+      "name": "Rent — home office share",
+      "category": "Rent — home office",
+      "amount": 2630.0,
+      "day_of_month": 15,
+      "claim_pct": 0.3,
+      "hst_status": "exempt",
+      "note": "Rent rose to $2,630 from the Sep 15, 2026 payment. 30% is the business share. Residential rent is an exempt supply, so no ITC.",
+      "starts": "2026-09-15",
+      "ends": null
+    }
+  ]
+}

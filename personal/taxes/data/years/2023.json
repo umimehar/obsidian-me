@@ -1,0 +1,233 @@
+{
+ "year": 2023,
+ "status": "partial",
+ "summary": "The corporation's first 140 days: one client, Lazer, $72,923 of revenue and $4,379 of corporate tax.",
+ "corporate_story": [
+  "15248132 Canada Inc., operating as XYZ Bytes, was incorporated on 14 August 2023 with Umar as sole director and owner. Its first tax year ran only 140 days, to 31 December.",
+  "Lazer Technologies was the only client, paying every two weeks: $82,403.08 including HST, $72,923 before HST. Zeeshan, an offshore subcontractor, was paid $24,955.48 through WISE.",
+  "The T2 2023 showed net income of $35,716 and tax of $4,379, paid on 8 February 2024. It declared $13,614 of dividends and ended the year with $22,102 of retained earnings and $34,571 in the bank."
+ ],
+ "personal_story": [
+  "Umar received four transfers recorded as dividends, $18,000 in all, against $13,614 declared on the T2. No 2023 personal return is in the folder."
+ ],
+ "groups": [
+  {
+   "title": "Revenue by client",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Lazer Technologies, 10 deposits including HST",
+     "value": 82403.08,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Lazer Technologies before HST",
+     "value": 72923.08,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Revenue on the T2",
+     "value": 72923,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf",
+      "CLAUDE.md"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Expenses",
+   "scope": "corporate",
+   "note": "From the prior year column of the T2 2024.",
+   "figures": [
+    {
+     "label": "Sub-contracts",
+     "value": 28175,
+     "basis": "as filed",
+     "note": "Zeeshan's payouts by date were $24,955.48; the pro forma sheet shows $25,000.",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Travel",
+     "value": 2432,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Telephone",
+     "value": 2076,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Rent",
+     "value": 1883,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Vehicle",
+     "value": 1105,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Office",
+     "value": 712,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Computer related",
+     "value": 423,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Meals",
+     "value": 349,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Insurance",
+     "value": 52,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Total operating expenses",
+     "value": 37207,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ],
+     "note": "Revenue $72,923 less $37,207 gives the $35,716 net income."
+    },
+    {
+     "label": "Bank and WISE fees",
+     "value": 179.08,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Income and tax",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Net income",
+     "value": 35716,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf",
+      "CLAUDE.md"
+     ]
+    },
+    {
+     "label": "Corporate tax",
+     "value": 4379,
+     "basis": "as filed",
+     "note": "Paid 8 February 2024.",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf",
+      "CLAUDE.md"
+     ]
+    },
+    {
+     "label": "HST collected on deposits",
+     "value": 9480,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Payments to Umar",
+   "scope": "both",
+   "figures": [
+    {
+     "label": "Dividends declared",
+     "value": 13614,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf",
+      "CLAUDE.md"
+     ]
+    },
+    {
+     "label": "Transfers recorded as dividends",
+     "value": 18000,
+     "basis": "per bank",
+     "note": "$4,386 more than declared; not explained in the sources.",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Balance sheet at year end",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Cash",
+     "value": 34571,
+     "basis": "as filed",
+     "note": "The bank workbook shows $34,571.49.",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf",
+      "2025/Corporate/performa.xlsx"
+     ]
+    },
+    {
+     "label": "Withholding taxes payable",
+     "value": 9124,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Retained earnings",
+     "value": 22102,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf",
+      "CLAUDE.md"
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -514,3 +514,282 @@ h1, h2, h3, h4 {
   margin: -6px 0 22px;
   color: var(--color-neutral-800);
 }
+
+/* ===== Taxes endeavor (tax-, clk-) ==========================================
+   Corporate and personal tax history. Scope is carried by two existing series
+   hues (corporate blue, personal green) so a reader can tell whose taxes a row
+   is about at a glance. Statuses stay tonal: filed reads as solid ink, work in
+   progress as gold, nothing red. Every selector is namespaced. */
+.tax {
+  --tax-corporate: var(--color-series-grant);
+  --tax-personal: var(--color-series-growth);
+}
+.tax .page { max-width: 1100px; }
+.tax code { font-size: 0.92em; background: var(--color-surface); padding: 1px 5px; border-radius: var(--radius-sm); }
+.tax a { color: inherit; text-decoration-color: color-mix(in srgb, var(--color-accent) 60%, transparent); text-underline-offset: 3px; }
+.tax a:hover { color: var(--color-accent-700); }
+.tax-scroll { overflow-x: auto; }
+
+/* Opening statement: the answer before the detail. */
+.tax-standing { max-width: 68ch; }
+.tax-standing p { font-size: 15.5px; margin: 0 0 12px; }
+.tax-headline {
+  font: 400 clamp(22px, 2.6vw, 28px)/1.3 var(--font-heading);
+  max-width: 40ch;
+  margin: 0 0 18px;
+}
+
+/* Whose taxes: a coloured dot and a word, never colour alone. */
+.tax-scope { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-neutral-700); white-space: nowrap; }
+.tax-scope::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--color-neutral-500); }
+.tax-scope-corporate::before { background: var(--tax-corporate); }
+.tax-scope-personal::before { background: var(--tax-personal); }
+.tax-scope-both::before { background: linear-gradient(90deg, var(--tax-corporate) 50%, var(--tax-personal) 50%); }
+
+/* Status words. Done is quiet, to-do is gold, waiting is outlined. */
+.tax-status { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 99px; white-space: nowrap; border: 1px solid transparent; }
+.tax-status-filed, .tax-status-assessed, .tax-item-done { background: var(--color-neutral-200); color: var(--color-neutral-800); }
+.tax-status-prepared, .tax-item-open { background: color-mix(in srgb, var(--color-accent) 18%, transparent); color: var(--color-accent-700); }
+.tax-status-in-progress, .tax-item-waiting { border-color: var(--color-accent); color: var(--color-accent-700); }
+.tax-status-upcoming, .tax-status-not-required, .tax-item-superseded { border-color: var(--color-divider); color: var(--color-neutral-600); }
+
+/* Three clocks. */
+.tax-clocks { margin: 4px 0 6px; }
+.clk { min-width: 760px; width: 100%; height: auto; display: block; font-family: var(--font-body); }
+.clk-grid { stroke: var(--color-divider); }
+.clk-year { font: 400 15px var(--font-heading); fill: var(--color-neutral-700); }
+.clk-lane { font: 600 15px var(--font-heading); fill: var(--color-text); }
+.clk-hint { font-size: 10.5px; fill: var(--color-neutral-600); }
+.clk-bar { stroke-width: 1.5; transition: opacity 0.15s var(--ease); }
+.clk a:hover .clk-bar, .clk a:focus .clk-bar { opacity: 0.75; }
+.clk a:focus { outline: none; }
+.clk a:focus-visible .clk-bar { stroke: var(--color-accent-700); stroke-width: 3; }
+.clk-filed, .clk-assessed, .clk-not-required { fill: var(--color-neutral-800); stroke: var(--color-neutral-800); }
+.clk-prepared { fill: var(--color-accent); stroke: var(--color-accent); }
+.clk-in-progress { fill: color-mix(in srgb, var(--color-accent) 22%, transparent); stroke: var(--color-accent); }
+.clk-upcoming { fill: transparent; stroke: var(--color-neutral-400); stroke-dasharray: 4 3; }
+.clk-due { fill: var(--color-accent-700); }
+.clk-today { stroke: var(--color-text); stroke-width: 1.5; }
+.clk-today-label { font-size: 11px; font-style: italic; fill: var(--color-text); }
+.tax-legend { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 12.5px; color: var(--color-neutral-700); }
+.tax-legend li { display: inline-flex; align-items: center; gap: 8px; }
+.clk-key { display: inline-block; width: 22px; height: 10px; border-radius: 2px; border: 1.5px solid; }
+.clk-key.clk-assessed { background: var(--color-neutral-800); border-color: var(--color-neutral-800); }
+.clk-key.clk-prepared { background: var(--color-accent); border-color: var(--color-accent); }
+.clk-key.clk-in-progress { background: color-mix(in srgb, var(--color-accent) 22%, transparent); border-color: var(--color-accent); }
+.clk-key.clk-upcoming { border: 1.5px dashed var(--color-neutral-400); }
+.clk-key-due { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid var(--color-accent-700); }
+
+/* What needs doing, one column per person who has to act. */
+.tax-todo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px 40px; }
+.tax-todo-owner { font-size: 22px; font-weight: 400; margin: 0 0 6px; display: flex; align-items: baseline; gap: 10px; }
+.tax-count { font: 400 13px var(--font-body); color: var(--color-neutral-600); }
+.tax-todo { list-style: none; margin: 0; padding: 0; }
+.tax-todo-item { padding: 12px 0; border-top: 1px solid var(--color-divider); }
+.tax-todo-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.tax-todo-head strong { font-weight: 600; font-size: 15px; }
+.tax-todo-item p { margin: 4px 0 8px; font-size: 13.5px; color: var(--color-neutral-800); }
+.tax-todo-meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.tax-due { font-size: 12.5px; font-style: italic; color: var(--color-accent-700); white-space: nowrap; }
+
+/* Date-led lists: deadlines, recent events, rule history. */
+.tax-deadlines { list-style: none; margin: 0; padding: 0; }
+.tax-deadlines li { display: grid; grid-template-columns: 9.5rem 1fr auto; gap: 16px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--color-divider); }
+.tax-deadline-date { font-variant-numeric: tabular-nums; color: var(--color-neutral-700); font-size: 13.5px; }
+.tax-more { margin-top: 14px; font-style: italic; }
+
+/* Timeline. */
+.tax-filters { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin: 0 0 26px; font-size: 13px; }
+.tax-seg { display: inline-flex; border: 1px solid var(--color-divider); border-radius: var(--radius-md); overflow: hidden; }
+.tax-seg button { font: inherit; font-size: 13px; background: transparent; color: var(--color-neutral-700); border: 0; padding: 7px 14px; cursor: pointer; }
+.tax-seg button + button { border-left: 1px solid var(--color-divider); }
+.tax-seg button[aria-pressed="true"] { background: var(--color-text); color: var(--color-bg); }
+.tax-select, .tax-search, .tax-check { display: inline-flex; align-items: center; gap: 8px; color: var(--color-neutral-700); }
+.tax-select select, .tax-search input { font: inherit; font-size: 13px; color: var(--color-text); background: transparent; border: 1px solid var(--color-divider); border-radius: var(--radius-md); padding: 6px 10px; }
+.tax-search input { width: 15rem; max-width: 60vw; }
+.tax-count-line { color: var(--color-neutral-600); font-style: italic; }
+.tax-year-head { font-size: 44px; font-weight: 400; margin: 10px 0 6px; position: sticky; top: 0; background: var(--color-bg); padding: 6px 0; z-index: 2; border-bottom: 1px solid var(--color-divider); }
+.tax-events { list-style: none; margin: 0 0 30px; padding: 0; }
+.tax-event { display: grid; grid-template-columns: 5.5rem 1fr; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--color-divider); }
+.tax-event-date { font: 400 18px/1.2 var(--font-heading); font-variant-numeric: tabular-nums; color: var(--color-neutral-700); }
+.tax-event-head { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+.tax-event-head strong { font-weight: 600; }
+.tax-amount { white-space: nowrap; font-size: 14px; }
+.tax-event-body p { margin: 4px 0 8px; font-size: 14px; max-width: 72ch; }
+.tax-event-meta { display: flex; gap: 14px; align-items: center; }
+.tax-cat { font-size: 12px; color: var(--color-neutral-600); }
+.tax-event:target { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+
+/* Sources and expanders. */
+.tax-sources, .tax-history, .tax-lines { margin-top: 6px; font-size: 12.5px; }
+.tax-sources summary, .tax-history summary, .tax-lines summary { cursor: pointer; color: var(--color-neutral-600); }
+.tax-sources summary:hover, .tax-history summary:hover, .tax-lines summary:hover { color: var(--color-accent-700); }
+.tax-sources ul { margin: 6px 0 0; padding-left: 18px; color: var(--color-neutral-700); }
+.tax-lines .table { margin-top: 8px; }
+
+/* Returns and rules. */
+.tax-jump { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-bottom: 28px; font-size: 13.5px; }
+.tax-filing, .tax-rule { padding: 22px 0; border-bottom: 1px solid var(--color-divider); scroll-margin-top: 16px; }
+.tax-filing:target, .tax-rule:target { background: color-mix(in srgb, var(--color-accent) 8%, transparent); }
+.tax-filing-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+.tax-filing-head h3 { font-size: 24px; font-weight: 500; }
+.tax-plain { font-size: 15.5px; max-width: 68ch; margin: 0 0 14px; }
+.tax-notes { font-size: 13.5px; max-width: 72ch; padding-left: 18px; color: var(--color-neutral-800); }
+.tax-why { font-size: 14px; max-width: 72ch; color: var(--color-neutral-800); margin: 0 0 6px; }
+.tax-why span { font-style: italic; color: var(--color-neutral-600); }
+.tax-since { font-size: 12.5px; font-style: italic; color: var(--color-neutral-600); margin: 0; }
+.tax-old { color: var(--color-neutral-600); text-decoration: line-through; text-decoration-color: var(--color-neutral-400); }
+.tax-rule.is-retired .tax-plain { color: var(--color-neutral-600); }
+
+/* Year pages. */
+.tax-years { display: flex; gap: 4px; margin-bottom: 26px; }
+.tax-years a { font: 400 20px var(--font-heading); padding: 4px 14px; border-radius: var(--radius-md); text-decoration: none; color: var(--color-neutral-600); }
+.tax-years a[aria-current="page"] { background: var(--color-text); color: var(--color-bg); }
+.tax-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 48px; }
+.tax-two p { font-size: 14.5px; max-width: 62ch; }
+.tax-row-note { display: block; font-size: 12px; color: var(--color-neutral-600); }
+
+/* Glossary and terms. */
+.tax-term { text-decoration: underline dotted; text-decoration-color: var(--color-neutral-500); }
+.tax-glossary { display: grid; grid-template-columns: minmax(140px, 220px) 1fr; max-width: 900px; }
+.tax-glossary dt { font: 600 18px var(--font-heading); padding: 12px 16px 12px 0; border-bottom: 1px solid var(--color-divider); scroll-margin-top: 16px; }
+.tax-glossary dd { margin: 0; padding: 12px 0; border-bottom: 1px solid var(--color-divider); font-size: 14.5px; max-width: 68ch; }
+.tax-glossary dt:target, .tax-glossary dt:target + dd { background: color-mix(in srgb, var(--color-accent) 10%, transparent); }
+
+.tax-doc-table { max-height: 70vh; }
+
+@media (max-width: 720px) {
+  .tax-two, .tax-glossary { grid-template-columns: 1fr; }
+  .tax-glossary dt { border-bottom: 0; padding-bottom: 0; }
+  .tax-deadlines li { grid-template-columns: 1fr; gap: 2px; }
+  .tax-event { grid-template-columns: 1fr; gap: 4px; }
+  .tax-event-head, .tax-todo-head, .tax-filing-head { flex-direction: column; gap: 4px; }
+  .tax-year-head { font-size: 34px; }
+}
+.tax-standing .tax-headline { font-size: clamp(22px, 2.6vw, 28px); margin-bottom: 22px; }
+.tax-points { display: grid; grid-template-columns: minmax(9rem, 12rem) 1fr; margin: 0; max-width: 62rem; }
+.tax-points dt { font: 500 19px/1.3 var(--font-heading); padding: 14px 20px 14px 0; border-top: 1px solid var(--color-divider); }
+.tax-points dd { margin: 0; padding: 14px 0; border-top: 1px solid var(--color-divider); font-size: 14.5px; max-width: 70ch; }
+.tax-more-items summary { cursor: pointer; padding: 10px 0; border-top: 1px solid var(--color-divider); color: var(--color-accent-700); font-size: 13.5px; }
+@media (max-width: 720px) {
+  .tax-points { grid-template-columns: 1fr; }
+  .tax-points dd { border-top: 0; padding-top: 0; }
+}
+.tax-overdue { font-weight: 600; font-style: normal; }
+.tax-ahead { padding: 4px 20px 0; margin: 0 -20px 30px; background: color-mix(in srgb, var(--color-accent) 7%, transparent); border-radius: var(--radius-md); }
+.tax-ahead .tax-year-head { position: static; background: transparent; font-size: 30px; }
+.tax-ahead summary { cursor: pointer; display: flex; align-items: baseline; gap: 14px; list-style: none; padding: 6px 0 12px; }
+.tax-ahead summary::-webkit-details-marker { display: none; }
+.tax-ahead summary .tax-year-head { border: 0; margin: 0; padding: 0; }
+.tax-ahead summary::after { content: "Show"; margin-left: auto; font-size: 13px; color: var(--color-accent-700); }
+.tax-ahead details[open] summary::after { content: "Hide"; }
+.tax-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0 28px; margin: 0 0 8px; }
+.tax-facts div { padding: 10px 0; border-top: 1px solid var(--color-divider); }
+.tax-facts dt { font-size: 12.5px; color: var(--color-neutral-600); margin-bottom: 3px; }
+.tax-facts dd { margin: 0; font-size: 15px; font-variant-numeric: tabular-nums; }
+.tax-notes-head { font: 600 16px var(--font-heading); margin: 16px 0 4px; }
+.tax-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 30px 44px; align-items: start; }
+.tax-group-title { font-size: 21px; font-weight: 500; margin: 0 0 4px; }
+.tax-group .table { font-size: 13.5px; }
+.tax-basis { font-size: 12px; color: var(--color-neutral-600); white-space: nowrap; }
+@media (max-width: 720px) { .tax-groups { grid-template-columns: 1fr; } }
+.tax-rule-index { columns: 3 15rem; column-gap: 40px; list-style: none; padding: 0; margin: 0; font-size: 14px; }
+.tax-rule-index li { padding: 4px 0; break-inside: avoid; }
+@media (max-width: 640px) {
+  .tax .dateline { flex-wrap: wrap; gap: 4px 16px; }
+  .tax .dateline .reviewed { display: none; }
+}
+
+/* ----- Taxes, answer-first pass (2026-10-07) --------------------------------
+   One headline, three tiles, the clocks, then two short lists. Everything else
+   folds behind a summary line; the reader opens only what they need. */
+.tax .tax-lead { font-size: clamp(24px, 3vw, 32px); max-width: 34ch; margin: 6px 0 26px; }
+
+.tax-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 44px; }
+.tax-tile { display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; border: 1px solid var(--color-divider); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-surface) 60%, transparent); text-decoration: none; color: inherit; }
+a.tax-tile:hover { border-color: var(--color-accent); }
+.tax-tile-label { font-size: 12.5px; color: var(--color-neutral-600); }
+.tax-tile-value { font: 400 30px/1.1 var(--font-heading); font-variant-numeric: tabular-nums; }
+.tax-tile-note { font-size: 13px; color: var(--color-neutral-700); }
+
+.tax-clock-section .section-note { margin-bottom: 14px; }
+.clk a { cursor: pointer; }
+.clk a.is-selected .clk-bar { stroke: var(--color-text); stroke-width: 3; }
+.tax-clock-panel { margin-top: 16px; padding: 18px 22px; border-left: 3px solid var(--color-accent); background: color-mix(in srgb, var(--color-accent) 7%, transparent); max-width: 70ch; }
+.tax-clock-panel-head { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; }
+.tax-clock-panel h3 { font-size: 24px; font-weight: 500; }
+.tax-clock-panel p { font-size: 15px; margin: 8px 0 10px; }
+
+.tax-halves { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px 56px; margin-top: 48px; }
+.tax-half .section-title { margin-bottom: 10px; }
+.tax-steps { list-style: none; margin: 0; padding: 0; }
+.tax-step { border-top: 1px solid var(--color-divider); }
+.tax-step:last-child { border-bottom: 1px solid var(--color-divider); }
+.tax-step summary { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; padding: 12px 0; cursor: pointer; list-style: none; }
+.tax-step summary::-webkit-details-marker { display: none; }
+.tax-step-title { font-weight: 600; font-size: 15px; }
+.tax-step summary:hover .tax-step-title { color: var(--color-accent-700); }
+.tax-step p { margin: 0 0 10px; font-size: 14px; max-width: 68ch; color: var(--color-neutral-800); }
+.tax-step .tax-todo-meta { margin-bottom: 12px; }
+.tax-dates { list-style: none; margin: 0; padding: 0; }
+.tax-dates li { display: grid; grid-template-columns: 4.5rem 1fr; gap: 14px; align-items: baseline; padding: 12px 0; border-top: 1px solid var(--color-divider); }
+.tax-dates li:last-child { border-bottom: 1px solid var(--color-divider); }
+.tax-date-day { font: 400 20px/1 var(--font-heading); font-variant-numeric: tabular-nums; }
+.tax-dates .tax-due { display: block; margin-top: 2px; }
+
+.tax-picture { margin-top: 48px; border-top: 1px solid var(--color-divider); }
+.tax-picture > summary { cursor: pointer; padding: 14px 0; font: 400 20px var(--font-heading); color: var(--color-neutral-700); }
+.tax-picture > summary:hover { color: var(--color-accent-700); }
+.tax-done { list-style: none; padding: 0; margin: 0; }
+.tax-done li { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-top: 1px solid var(--color-divider); color: var(--color-neutral-700); font-size: 14px; }
+
+/* Timeline rows: one line each, open for the detail. */
+.tax .tax-event { display: block; padding: 0; }
+.tax-event summary { display: grid; grid-template-columns: 5.5rem 1fr auto; gap: 16px; align-items: baseline; padding: 11px 0; cursor: pointer; list-style: none; }
+.tax-event summary::-webkit-details-marker { display: none; }
+.tax-event summary:hover .tax-event-title { color: var(--color-accent-700); }
+.tax-event-title { display: flex; gap: 10px; align-items: baseline; }
+.tax-dot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--color-neutral-500); transform: translateY(-1px); }
+.tax-dot-corporate { background: var(--tax-corporate); }
+.tax-dot-personal { background: var(--tax-personal); }
+.tax-dot-both { background: linear-gradient(90deg, var(--tax-corporate) 50%, var(--tax-personal) 50%); }
+.tax .tax-event-body { padding: 0 0 14px calc(5.5rem + 16px); }
+.tax .tax-event-date { font-size: 16px; }
+
+/* Rules and returns: the answer, then one toggle for the rest. */
+.tax-rule-title { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+.tax .tax-rule, .tax .tax-filing { padding: 18px 0; }
+.tax .tax-plain { margin-bottom: 8px; }
+.tax-rule-more > summary { cursor: pointer; font-size: 13px; font-style: italic; color: var(--color-neutral-600); padding: 4px 0; }
+.tax-rule-more > summary:hover { color: var(--color-accent-700); }
+.tax-rule-more[open] { padding-bottom: 6px; }
+.tax .tax-history li { grid-template-columns: 13rem 1fr; }
+
+/* Year pages: a single column of named sections. */
+.tax .tax-groups { display: block; }
+.tax-group { border-top: 1px solid var(--color-divider); }
+.tax-group:last-of-type { border-bottom: 1px solid var(--color-divider); }
+.tax-group > summary { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 13px 0; cursor: pointer; list-style: none; }
+.tax-group > summary::-webkit-details-marker { display: none; }
+.tax-group > summary .tax-group-title { font: 500 20px var(--font-heading); }
+.tax-group > summary:hover .tax-group-title { color: var(--color-accent-700); }
+.tax-group[open] { padding-bottom: 18px; }
+
+@media (max-width: 720px) {
+  .tax-event summary { grid-template-columns: 1fr auto; }
+  .tax-event summary .tax-event-date { grid-column: 1 / -1; }
+  .tax .tax-event-body { padding-left: 0; }
+  .tax .tax-history li { grid-template-columns: 1fr; }
+  .tax-step summary { flex-direction: column; gap: 2px; }
+}
+/* Lane names pinned left while the clocks scroll sideways on narrow screens. */
+.clk-wrap { display: flex; width: max-content; }
+.clk-lanes { position: sticky; left: 0; z-index: 1; list-style: none; margin: 0; padding: 0 12px 0 0; width: 150px; background: var(--color-bg); }
+.clk-lanes li { display: flex; flex-direction: column; justify-content: center; }
+.clk-lanes .clk-lane { font: 600 15px/1.2 var(--font-heading); }
+.clk-lanes .clk-hint { font-size: 10.5px; color: var(--color-neutral-600); }
+.tax .clk { min-width: 0; width: auto; height: auto; }
+@media (max-width: 720px) {
+  .clk-lanes { width: 92px; box-shadow: 6px 0 8px -6px color-mix(in srgb, var(--color-text) 25%, transparent); }
+  .clk-lanes .clk-hint { display: none; }
+}

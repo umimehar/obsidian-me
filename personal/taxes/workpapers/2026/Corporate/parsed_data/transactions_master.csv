@@ -1,0 +1,833 @@
+date,source,account,direction,amount,gross,hst,net,description,category,deductible_pct,hst_in_price,itc_pct,itc_claimable,supplier,tax_year,gst_period,ref
+2023-08-25,debit,BMO chequing ****1004,in,7605.77,7605.77,875.0,6730.77,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2023,2023-24,T 23-26
+2023-09-08,debit,BMO chequing ****1004,in,7605.77,7605.77,875.0,6730.77,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2023,2023-24,T 23-26
+2023-09-08,debit,BMO chequing ****1004,out,5000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-09-15,debit,BMO chequing ****1004,out,6440.0,,,,Contract payout (Zeeshan 184 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-09-15,debit,BMO chequing ****1004,out,46.06,,,,Contract payment platform fee,Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-09-18,debit,BMO chequing ****1004,out,60.0,,,,business name registration,Office & supplies,1.0,6.9,1.0,6.9,Canadian,2023,2023-24,T 23-26
+2023-09-18,debit,BMO chequing ****1004,out,122.7,,,,logo design for xyz from Fiverr,Office & supplies,1.0,14.12,1.0,14.12,Canadian,2023,2023-24,T 23-26
+2023-09-22,debit,BMO chequing ****1004,in,7605.77,7605.77,875.0,6730.77,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2023,2023-24,T 23-26
+2023-09-28,debit,BMO chequing ****1004,out,2432.0,,,,Flight to Dubai and Pak,Travel & parking,1.0,279.79,1.0,279.79,Canadian,2023,2023-24,T 23-26
+2023-09-30,debit,BMO chequing ****1004,out,27.99,,,,Google one subscription,Other,1.0,3.22,1.0,3.22,Canadian,2023,2023-24,T 23-26
+2023-10-02,debit,BMO chequing ****1004,out,1976.37,,,,Iphone (APPLE.COM/CA),Other,1.0,227.37,1.0,227.37,Canadian,2023,2023-24,T 23-26
+2023-10-06,debit,BMO chequing ****1004,in,7605.77,7605.77,875.0,6730.77,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2023,2023-24,T 23-26
+2023-10-12,debit,BMO chequing ****1004,out,77.97,,,,business phone cover,Other,1.0,8.97,1.0,8.97,Canadian,2023,2023-24,T 23-26
+2023-10-13,debit,BMO chequing ****1004,out,5600.0,,,,Contract payout (Zeeshan 160 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-10-13,debit,BMO chequing ****1004,out,40.68,,,,Contract payment platform fee,Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-10-15,debit,BMO chequing ****1004,out,4000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-10-20,debit,BMO chequing ****1004,in,7605.77,7605.77,875.0,6730.77,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2023,2023-24,T 23-26
+2023-11-03,debit,BMO chequing ****1004,in,7605.77,7605.77,875.0,6730.77,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2023,2023-24,T 23-26
+2023-11-15,debit,BMO chequing ****1004,out,4000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-11-15,debit,BMO chequing ****1004,out,6405.23,,,,Contract payout (Zeeshan 183 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-11-15,debit,BMO chequing ****1004,out,45.83,,,,Contract payment platform fee,Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-11-17,debit,BMO chequing ****1004,in,7605.77,7605.77,875.0,6730.77,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2023,2023-24,T 23-26
+2023-12-01,debit,BMO chequing ****1004,in,7605.77,7605.77,875.0,6730.77,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2023,2023-24,T 23-26
+2023-12-13,debit,BMO chequing ****1004,out,6510.25,,,,Contract payout (Zeeshan 186.06 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-12-13,debit,BMO chequing ****1004,out,46.51,,,,Contract payment platform fee,Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-12-15,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2023,2023-24,T 23-26
+2023-12-15,debit,BMO chequing ****1004,out,5000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2023,2023-24,T 23-26
+2023-12-29,debit,BMO chequing ****1004,in,13603.46,13603.46,1565.0,12038.46,Lazer Biweekly Payment + bonus,Revenue,,0.0,,0.0,Canadian,2023,2023-24,T 23-26
+2024-01-12,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-01-16,debit,BMO chequing ****1004,out,3219.59,,,,zeeshan payout 15 dec to 31st dec (92 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-01-16,debit,BMO chequing ****1004,out,25.45,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-01-16,debit,BMO chequing ****1004,out,4000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-01-18,debit,BMO chequing ****1004,out,904.0,,,,Tax filling CMCPA (cpacm.ca) Saira payment,Professional fees,1.0,104.0,1.0,104.0,Canadian,2024,2023-24,T 23-26
+2024-01-26,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-02-01,debit,BMO chequing ****1004,out,1.5,,,,e transfer fee by bank,Other,1.0,0.17,1.0,0.17,Canadian,2024,2023-24,T 23-26
+2024-02-01,debit,BMO chequing ****1004,out,5520.0,,,,zeeshan payout JAN (184 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-02-01,debit,BMO chequing ****1004,out,40.2,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-02-05,debit,BMO chequing ****1004,out,9.03,,,,staples (office supplies),Office & supplies,1.0,1.04,1.0,1.04,Canadian,2024,2023-24,T 23-26
+2024-02-08,debit,BMO chequing ****1004,out,4379.0,,,,Canada corporate taxes 2023,Other,1.0,503.78,1.0,503.78,Canadian,2024,2023-24,T 23-26
+2024-02-09,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-02-15,debit,BMO chequing ****1004,out,4000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-02-22,debit,BMO chequing ****1004,out,35.0,,,,parking in Toronto (lazer meeting),Revenue,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-02-23,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-03-04,debit,BMO chequing ****1004,out,7250.0,,,,zeeshan payout FEB (175 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-03-04,debit,BMO chequing ****1004,out,51.3,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-03-08,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-03-18,debit,BMO chequing ****1004,out,5000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-03-22,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-03-22,debit,BMO chequing ****1004,out,62.15,,,,amazon keyboard and trackpad tray,Office & supplies,1.0,7.15,1.0,7.15,Canadian,2024,2023-24,T 23-26
+2024-03-25,debit,BMO chequing ****1004,out,22.99,,,,amazon macbook holder,Office & supplies,1.0,2.64,1.0,2.64,Canadian,2024,2023-24,T 23-26
+2024-03-25,debit,BMO chequing ****1004,out,393.24,,,,Apple keyboard and trackpad,Other,1.0,45.24,1.0,45.24,Canadian,2024,2023-24,T 23-26
+2024-04-01,debit,BMO chequing ****1004,out,4830.0,,,,zeeshan payout MARCH (161 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-04-01,debit,BMO chequing ****1004,out,35.8,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-04-05,debit,BMO chequing ****1004,in,7038.46,7038.46,809.73,6228.73,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-04-15,debit,BMO chequing ****1004,out,2.14,,,,hp ink,Other,1.0,0.25,1.0,0.25,Canadian,2024,2023-24,T 23-26
+2024-04-16,debit,BMO chequing ****1004,out,20.0,,,,Parking at lazer office,Revenue,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-04-16,debit,BMO chequing ****1004,in,0.01,0.01,0.0,0.01,PEOPLE CENTER PAY/PAY,Other,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-04-16,debit,BMO chequing ****1004,out,5500.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-04-16,debit,BMO chequing ****1004,in,0.01,0.01,0.0,0.01,PEOPLE CENTER PAY/PAY,Other,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-04-19,debit,BMO chequing ****1004,in,8868.46,8868.46,1020.27,7848.19,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-05-02,debit,BMO chequing ****1004,out,5250.0,,,,zeeshan payout April (175 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-05-03,debit,BMO chequing ****1004,out,38.49,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-05-03,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-05-14,debit,BMO chequing ****1004,out,2.14,,,,HP INSTANT INK CA,Other,1.0,0.25,1.0,0.25,Canadian,2024,2023-24,T 23-26
+2024-05-14,debit,BMO chequing ****1004,out,6000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-05-17,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-05-31,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-06-03,debit,BMO chequing ****1004,out,5100.0,,,,zeeshan payout May (170 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-06-03,debit,BMO chequing ****1004,out,41.71,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-06-14,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-06-17,debit,BMO chequing ****1004,out,6000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-06-28,debit,BMO chequing ****1004,in,7953.46,7953.46,915.0,7038.46,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-07-02,debit,BMO chequing ****1004,out,4800.0,,,,zeeshan payout June (160 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-07-02,debit,BMO chequing ****1004,out,38.1,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-07-12,debit,BMO chequing ****1004,in,14238.08,14238.08,1638.01,12600.07,Lazer Biweekly Payment + bonus,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-07-15,debit,BMO chequing ****1004,out,6000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-07-19,debit,BMO chequing ****1004,in,565.0,565.0,65.0,500.0,"H.I. IMMIGRATION CONSULT monthly (June) Payment, Website maintanance",Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-07-26,debit,BMO chequing ****1004,in,8338.08,8338.08,959.25,7378.83,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-08-09,debit,BMO chequing ****1004,in,565.0,565.0,65.0,500.0,"H.I. IMMIGRATION CONSULT monthly (JULY) Payment, Website maintanance",Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-08-12,debit,BMO chequing ****1004,in,8438.08,8438.08,970.75,7467.33,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2023-24,T 23-26
+2024-08-12,debit,BMO chequing ****1004,out,5280.0,,,,zeeshan payout July (176 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-08-12,debit,BMO chequing ****1004,out,41.42,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2023-24,T 23-26
+2024-08-15,debit,BMO chequing ****1004,out,6000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-08-23,debit,BMO chequing ****1004,in,8388.08,8388.08,965.0,7423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-08-28,debit,BMO chequing ****1004,out,234.89,,,,business credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-09-06,debit,BMO chequing ****1004,in,8388.08,8388.08,965.0,7423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-09-09,debit,BMO chequing ****1004,out,6970.0,,,,zeeshan payout July (199 hrs),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-09-09,debit,BMO chequing ****1004,out,37.72,,,,transfer fee (WISE),Other,1.0,4.34,1.0,4.34,Canadian,2024,2024-25,T 23-26
+2024-09-16,debit,BMO chequing ****1004,out,6000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-09-20,debit,BMO chequing ****1004,in,8388.08,8388.08,965.0,7423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-09-25,debit,BMO chequing ****1004,out,5000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-10-01,debit,BMO chequing ****1004,out,502.99,,,,business credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-10-04,debit,BMO chequing ****1004,in,7684.0,7684.0,884.0,6800.0,MIR Biweekly pay,Other,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-10-04,debit,BMO chequing ****1004,in,8388.08,8388.08,965.0,7423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-10-06,debit,BMO chequing ****1004,out,7450.0,,,,zeeshan payout July (215 hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-10-06,debit,BMO chequing ****1004,out,39.98,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-10-09,debit,BMO chequing ****1004,out,23187.6,,,,Canada TXD/DIM GST,Other,1.0,2667.6,1.0,2667.6,Canadian,2024,2024-25,T 23-26
+2024-10-10,debit,BMO chequing ****1004,in,565.0,565.0,65.0,500.0,"H.I. IMMIGRATION CONSULT monthly (JULY) Payment, Website maintanance",Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-10-15,debit,BMO chequing ****1004,out,10000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-10-18,debit,BMO chequing ****1004,in,6915.6,6915.6,795.6,6120.0,MIR Biweekly pay,Other,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-10-18,debit,BMO chequing ****1004,in,8388.08,8388.08,965.0,7423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-10-29,debit,BMO chequing ****1004,out,2374.49,,,,business credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-11-01,debit,BMO chequing ****1004,in,6915.6,6915.6,795.6,6120.0,MIR Biweekly pay,Other,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-11-01,debit,BMO chequing ****1004,in,8388.08,8388.08,965.0,7423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-11-04,debit,BMO chequing ****1004,out,7300.0,,,,zeeshan payout (215 hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-11-04,debit,BMO chequing ****1004,out,39.27,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-11-15,debit,BMO chequing ****1004,in,8388.08,8388.08,965.0,7423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-11-15,debit,BMO chequing ****1004,out,10000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-11-29,debit,BMO chequing ****1004,in,13062.8,13062.8,1502.8,11560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-11-29,debit,BMO chequing ****1004,in,8388.08,8388.08,965.0,7423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-11-29,debit,BMO chequing ****1004,out,1297.36,,,,business credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-02,debit,BMO chequing ****1004,out,8000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-03,debit,BMO chequing ****1004,out,7030.0,,,,zeeshan payout (201 hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-03,debit,BMO chequing ****1004,out,38.01,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-10,debit,BMO chequing ****1004,out,5882.0,,,,pre payment GST (2024 - 2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-13,debit,BMO chequing ****1004,in,7684.0,7684.0,884.0,6800.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-13,debit,BMO chequing ****1004,in,8388.08,8388.08,965.0,7423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-13,debit,BMO chequing ****1004,out,11.29,,,,Amazon prime payment,Office & supplies,1.0,1.3,1.0,1.3,Canadian,2024,2024-25,T 23-26
+2024-12-15,debit,BMO chequing ****1004,out,10000.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-16,debit,BMO chequing ****1004,out,5800.0,,,,pre payment GST (2024 - 2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-26,card,BMO Mastercard 5840,out,10.15,,,,WAL-MART #3055 MISSISSAUGA ON,Office & supplies,1.0,1.17,1.0,1.17,Canadian,2024,2024-25,"01-January 28, 2025-min.pdf"
+2024-12-26,card,BMO Mastercard 5840,out,26.97,,,,NAWAB'S LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,3.1,0.5,1.55,Canadian,2024,2024-25,"01-January 28, 2025-min.pdf"
+2024-12-27,card,BMO Mastercard 5840,out,85.17,,,,AMZN Mktp CA*ZE5ID6MV0 WWW.AMAZON.CAON,Office & supplies,1.0,9.8,1.0,9.8,Canadian,2024,2024-25,"01-January 28, 2025-min.pdf"
+2024-12-27,debit,BMO chequing ****1004,in,7684.0,7684.0,884.0,6800.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-28,card,BMO Mastercard 5840,out,195.22,,,,AMZN Mktp CA*ZP9SX5TY2 WWW.AMAZON.CAON,Office & supplies,1.0,22.46,1.0,22.46,Canadian,2024,2024-25,"01-January 28, 2025-min.pdf"
+2024-12-28,card,BMO Mastercard 5840,refund,36.6,,,,AMZN Mktp CA WWW.AMAZON.CAON,Office & supplies,1.0,-4.21,1.0,-4.21,Canadian,2024,2024-25,"01-January 28, 2025-min.pdf"
+2024-12-28,card,BMO Mastercard 5840,refund,21.46,,,,AMZN Mktp CA WWW.AMAZON.CAON,Office & supplies,1.0,-2.47,1.0,-2.47,Canadian,2024,2024-25,"01-January 28, 2025-min.pdf"
+2024-12-29,card,BMO Mastercard 5840,out,67.79,,,,AMZN Mktp CA*ZE35N5KH0 WWW.AMAZON.CAON,Office & supplies,1.0,7.8,1.0,7.8,Canadian,2024,2024-25,"01-January 28, 2025-min.pdf"
+2024-12-29,card,BMO Mastercard 5840,out,33.89,,,,AMZN Mktp CA*ZP4SI6XU2 WWW.AMAZON.CAON,Office & supplies,1.0,3.9,1.0,3.9,Canadian,2024,2024-25,"01-January 28, 2025-min.pdf"
+2024-12-30,card,BMO Mastercard 5840,refund,34.34,,,,AMZN Mktp CA WWW.AMAZON.CAON,Office & supplies,1.0,-3.95,1.0,-3.95,Canadian,2024,2024-25,"01-January 28, 2025-min.pdf"
+2024-12-30,debit,BMO chequing ****1004,in,8388.08,8388.08,965.0,7423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-30,debit,BMO chequing ****1004,out,8500.0,,,,Dividends to Umar,Director payments,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-30,debit,BMO chequing ****1004,out,2446.54,,,,business credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-31,debit,BMO chequing ****1004,out,1.5,,,,interact e transfer bank fee,Other,1.0,0.17,1.0,0.17,Canadian,2024,2024-25,T 23-26
+2024-12-31,debit,BMO chequing ****1004,out,8680.0,,,,zeeshan payout (206 hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2024-12-31,debit,BMO chequing ****1004,out,45.77,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2024,2024-25,T 23-26
+2025-01-01,card,BMO Mastercard 5840,out,32.97,,,,MINI MOE'S BURGERS SCARBOROUGH ON,Meals & entertainment,0.5,3.79,0.5,1.9,Canadian,2025,2024-25,"01-January 28, 2025-min.pdf"
+2025-01-01,card,BMO Mastercard 5840,out,508.44,,,,APPLE STORE #R350 MISSISSAUGA ON,Office & supplies,1.0,58.49,1.0,58.49,Canadian,2025,2024-25,"01-January 28, 2025-min.pdf"
+2025-01-04,card,BMO Mastercard 5840,out,33.89,,,,AMZN Mktp CA*ZP1FY52K0 WWW.AMAZON.CAON,Office & supplies,1.0,3.9,1.0,3.9,Canadian,2025,2024-25,"01-January 28, 2025-min.pdf"
+2025-01-05,card,BMO Mastercard 5840,refund,33.89,,,,AMZN Mktp CA WWW.AMAZON.CAON,Office & supplies,1.0,-3.9,1.0,-3.9,Canadian,2025,2024-25,"01-January 28, 2025-min.pdf"
+2025-01-06,card,BMO Mastercard 5840,out,86.88,,,,AMZN Mktp CA*ZD8B21K82 WWW.AMAZON.CAON,Office & supplies,1.0,10.0,1.0,10.0,Canadian,2025,2024-25,"01-January 28, 2025-min.pdf"
+2025-01-06,card,BMO Mastercard 5840,refund,508.44,,,,APPLE STORE #R350 MISSISSAUGA ON,Office & supplies,1.0,-58.49,1.0,-58.49,Canadian,2025,2024-25,"01-January 28, 2025-min.pdf"
+2025-01-10,debit,BMO chequing ****1004,in,3842.0,3842.0,442.0,3400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-01-10,debit,BMO chequing ****1004,in,14038.08,14038.08,1615.0,12423.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-01-15,debit,BMO chequing ****1004,out,6000.0,,,,Umar/Personal CC Expense Reimbursement,Director payments,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-01-16,card,BMO Mastercard 5840,out,175.62,,,,EMIRATES 117635681616969 TORONTO ON,Meals & entertainment,0.5,20.2,0.5,10.1,Canadian,2025,2024-25,"01-January 28, 2025-min.pdf"
+2025-01-17,card,BMO Mastercard 5840,out,150.38,,,,Internation 0054538311 Winnipeg QC,Meals & entertainment,0.5,17.3,0.5,8.65,Canadian,2025,2024-25,"01-January 28, 2025-min.pdf"
+2025-01-24,debit,BMO chequing ****1004,in,8452.4,8452.4,972.4,7480.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-01-24,debit,BMO chequing ****1004,in,10139.58,10139.58,1166.5,8973.08,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-01-25,card,BMO Mastercard 5840,out,31.95,,,,NAWAB'S LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,3.68,0.5,1.84,Canadian,2025,2024-25,"01-January 28, 2025-min.pdf"
+2025-01-28,card,BMO Mastercard 5840,out,63.0,,,,TST-Ginsoy Mississauga ON,Meals & entertainment,0.5,7.25,0.5,3.63,Canadian,2025,2024-25,"02-February 28, 2025-min.pdf"
+2025-01-29,card,BMO Mastercard 5840,out,40.0,,,,MONTEIRO SCARBOROUGH TORONTO ON,Meals & entertainment,0.5,4.6,0.5,2.3,Canadian,2025,2024-25,"02-February 28, 2025-min.pdf"
+2025-01-29,card,BMO Mastercard 5840,out,5.0,,,,MONTEIRO SCARBOROUGH TORONTO ON,Meals & entertainment,0.5,0.58,0.5,0.29,Canadian,2025,2024-25,"02-February 28, 2025-min.pdf"
+2025-01-29,card,BMO Mastercard 5840,out,15.3,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,1.76,0.5,0.88,Canadian,2025,2024-25,"02-February 28, 2025-min.pdf"
+2025-01-30,card,BMO Mastercard 5840,out,20.0,,,,LYFT *1 RIDE 01-29 VANCOUVER BC,Travel & parking,1.0,2.3,1.0,2.3,Canadian,2025,2024-25,"02-February 28, 2025-min.pdf"
+2025-01-30,debit,BMO chequing ****1004,out,1884.5,,,,TCX (currency exchange to 1000 GBP),Other,1.0,216.8,1.0,216.8,Canadian,2025,2024-25,T 23-26
+2025-01-31,card,BMO Mastercard 5840,out,11.99,,,,WATAN KABOB MISSISSAUGA ON,Meals & entertainment,0.5,1.38,0.5,0.69,Canadian,2025,2024-25,"02-February 28, 2025-min.pdf"
+2025-02-01,card,BMO Mastercard 5840,out,16.16,,,,SQ *GLADIATOR BURGER & Mississauga ON,Meals & entertainment,0.5,1.86,0.5,0.93,Canadian,2025,2024-25,"02-February 28, 2025-min.pdf"
+2025-02-02,card,BMO Mastercard 5840,out,8.5,,,,AIRALO SINGAPORE,Meals & entertainment,0.5,0.98,0.5,0.49,Canadian,2025,2024-25,"02-February 28, 2025-min.pdf"
+2025-02-03,card,BMO Mastercard 5840,out,40.93,,,,GBP 21.99@1.861300591 Newcastle Halal,Meals & entertainment,0.5,0.0,0.5,0.0,non-resident,2025,2024-25,"02-February 28, 2025-min.pdf"
+2025-02-03,debit,BMO chequing ****1004,out,959.88,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-02-03,debit,BMO chequing ****1004,out,6560.0,,,,zeeshan payout (202 hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-02-03,debit,BMO chequing ****1004,out,35.8,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-02-05,card,BMO Mastercard 5840,out,21.49,,,,GBP 11.55@1.86060606 STARBUCKS SSP NEWCASTLE UPO,Meals & entertainment,0.5,0.0,0.5,0.0,non-resident,2025,2024-25,"02-February 28, 2025-min.pdf"
+2025-02-07,debit,BMO chequing ****1004,in,7819.6,7819.6,899.6,6920.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-02-07,debit,BMO chequing ****1004,in,10752.66,10752.66,1237.03,9515.63,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-02-18,debit,BMO chequing ****1004,out,7000.0,,,,Umar/Personal CC Expense Reimbursement,Director payments,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-02-20,debit,BMO chequing ****1004,out,8680.0,,,,zeeshan payout (??? hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-02-20,debit,BMO chequing ****1004,out,45.77,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-02-21,debit,BMO chequing ****1004,in,8822.69,8822.69,1015.0,7807.69,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-02-26,debit,BMO chequing ****1004,out,1073.5,,,,Tax filling CMCPA (cpacm.ca) Saira payment,Professional fees,1.0,123.5,1.0,123.5,Canadian,2025,2024-25,T 23-26
+2025-03-04,card,BMO Mastercard 5840,refund,0.73,,,,Points en prime-bonus Rebate ON,Meals & entertainment,0.5,-0.08,0.5,-0.04,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-05,debit,BMO chequing ****1004,out,16154.35,,,,Corp tax (2024),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-03-07,card,BMO Mastercard 5840,out,111.87,,,,Amazon.ca Prime Member amazon.ca/priBC,Software & subscriptions,1.0,12.87,1.0,12.87,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-07,card,BMO Mastercard 5840,out,74.52,,,,WATAN KABOB MISSISSAUGA ON,Meals & entertainment,0.5,8.57,0.5,4.29,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-07,debit,BMO chequing ****1004,in,8822.69,8822.69,1015.0,7807.69,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-03-07,debit,BMO chequing ****1004,out,6000.0,,,,pre payment GST (2024 - 2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-03-08,card,BMO Mastercard 5840,out,63.27,,,,AMZN Mktp CA*MZ7H09KB3 WWW.AMAZON.CAON,Office & supplies,1.0,7.28,1.0,7.28,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-09,card,BMO Mastercard 5840,out,45.0,,,,AMZN Mktp CA*BY7ZZ6C23 WWW.AMAZON.CAON,Office & supplies,1.0,5.18,1.0,5.18,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-09,card,BMO Mastercard 5840,out,85.87,,,,AMZN Mktp CA*GQ5D86Q73 WWW.AMAZON.CAON,Office & supplies,1.0,9.88,1.0,9.88,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-14,card,BMO Mastercard 5840,out,118.38,,,,AMZN Mktp CA*ZB7I78ZW3 WWW.AMAZON.CAON,Office & supplies,1.0,13.62,1.0,13.62,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-14,card,BMO Mastercard 5840,out,135.6,,,,COMPLETE EQUIPMENT SAL MISSISSAUGA ON,Meals & entertainment,0.5,15.6,0.5,7.8,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-14,debit,BMO chequing ****1004,out,87.08,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-03-14,debit,BMO chequing ****1004,out,4000.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-03-15,card,BMO Mastercard 5840,out,122.69,,,,VILLAGE TASTE MISSISSAUGA ON,Meals & entertainment,0.5,14.11,0.5,7.06,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-17,card,BMO Mastercard 5840,out,36.11,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,4.15,0.5,2.08,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-17,debit,BMO chequing ****1004,out,7000.0,,,,Umar/Personal CC Expense Reimbursement,Director payments,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-03-17,debit,BMO chequing ****1004,out,5800.0,,,,pre payment GST (2024 - 2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-03-20,card,BMO Mastercard 5840,out,20.34,,,,3 FOOD STREET MISSISSAUGA ON,Meals & entertainment,0.5,2.34,0.5,1.17,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-21,card,BMO Mastercard 5840,out,18.07,,,,NAWAB'S LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,2.08,0.5,1.04,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-21,debit,BMO chequing ****1004,in,4746.0,4746.0,546.0,4200.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-03-21,debit,BMO chequing ****1004,in,8822.69,8822.69,1015.0,7807.69,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-03-22,card,BMO Mastercard 5840,out,25.64,,,,MELT N DIP MISSISSAUGA ON,Meals & entertainment,0.5,2.95,0.5,1.48,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-23,card,BMO Mastercard 5840,out,37.28,,,,NAWAB'S LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,4.29,0.5,2.15,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-24,card,BMO Mastercard 5840,out,27.46,,,,SHOPPERS DRUG MART #11 MISSISSAUGA ON,Meals & entertainment,0.5,3.16,0.5,1.58,Canadian,2025,2024-25,"03-March 28, 2025-min.pdf"
+2025-03-30,card,BMO Mastercard 5840,out,74.56,,,,NAWAB'S LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,8.58,0.5,4.29,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-03-31,debit,BMO chequing ****1004,out,1396.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-04-01,debit,BMO chequing ****1004,out,921.37,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-04-02,debit,BMO chequing ****1004,out,8740.0,,,,zeeshan payout (208 hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-04-02,debit,BMO chequing ****1004,out,46.04,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-04-03,card,BMO Mastercard 5840,out,38.37,,,,NAWAB'S LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,4.41,0.5,2.21,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-04,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-04-04,debit,BMO chequing ****1004,in,8822.69,8822.69,1015.0,7807.69,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-04-05,card,BMO Mastercard 5840,out,108.19,,,,MELT N DIP MISSISSAUGA ON,Meals & entertainment,0.5,12.45,0.5,6.23,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-06,card,BMO Mastercard 5840,out,17.52,,,,MELT N DIP EGLINGTON MISSISSAUGA ON,Meals & entertainment,0.5,2.02,0.5,1.01,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-06,card,BMO Mastercard 5840,out,351.98,,,,SHASHKAY MISSISSAUGA ON,Meals & entertainment,0.5,40.49,0.5,20.25,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-07,card,BMO Mastercard 5840,out,21.46,,,,NAWAB'S LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,2.47,0.5,1.24,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-09,card,BMO Mastercard 5840,out,32.75,,,,PIZZA PROS MISSISSAUGA ON,Meals & entertainment,0.5,3.77,0.5,1.89,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-11,card,BMO Mastercard 5840,out,21.65,,,,KRISPY KREME #513 MISSISSAUGA ON,Meals & entertainment,0.5,2.49,0.5,1.25,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-13,card,BMO Mastercard 5840,out,20.57,,,,TIM HORTONS #1733 MISSISSAUGA ON,Meals & entertainment,0.5,2.37,0.5,1.19,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-13,card,BMO Mastercard 5840,out,40.48,,,,BASKIN ROBBINS #335380 MISSISSAUGA ON,Meals & entertainment,0.5,4.66,0.5,2.33,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-15,debit,BMO chequing ****1004,out,8000.0,,,,Umar/Personal CC Expense Reimbursement (Partial),Director payments,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-04-17,debit,BMO chequing ****1004,in,8822.69,8822.69,1015.0,7807.69,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-04-18,card,BMO Mastercard 5840,out,32.75,,,,KARACHI FOOD COURT MISSISSAUGA ON,Meals & entertainment,0.5,3.77,0.5,1.89,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-21,card,BMO Mastercard 5840,out,43.96,,,,CHANG AND HUANG THAI A MISSISSAUGA ON,Meals & entertainment,0.5,5.06,0.5,2.53,Canadian,2025,2024-25,"04-April 28, 2025-min.pdf"
+2025-04-21,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-04-21,debit,BMO chequing ****1004,in,0.01,0.01,0.0,0.01,test transaction (rippling),Other,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-04-30,card,BMO Mastercard 5840,out,4.19,,,,TIM HORTONS #2603 MISSISSAUGA ON,Meals & entertainment,0.5,0.48,0.5,0.24,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-04-30,debit,BMO chequing ****1004,out,1396.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-02,card,BMO Mastercard 5840,out,39.54,,,,SONG COOK'S COREAN CHI MISSISSAUGA ON,Meals & entertainment,0.5,4.55,0.5,2.28,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-02,debit,BMO chequing ****1004,in,8822.69,8822.69,1015.0,7807.69,Lazer Biweekly Payment,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-02,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-02,debit,BMO chequing ****1004,out,808.43,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-03,card,BMO Mastercard 5840,out,33.31,,,,MONTEIRO SCARBOROUGH TORONTO ON,Meals & entertainment,0.5,3.83,0.5,1.92,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-03,card,BMO Mastercard 5840,out,11.65,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,1.34,0.5,0.67,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-05,debit,BMO chequing ****1004,out,8680.0,,,,zeeshan payout (206 hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-05,debit,BMO chequing ****1004,out,45.77,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-06,card,BMO Mastercard 5840,out,11.08,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,1.27,0.5,0.64,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-09,debit,BMO chequing ****1004,out,5000.0,,,,pre payment GST (2024 - 2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-16,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-17,card,BMO Mastercard 5840,out,20.32,,,,OSMOW'S NIAGARA FALLSON,Meals & entertainment,0.5,2.34,0.5,1.17,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-17,card,BMO Mastercard 5840,out,2.24,,,,OSMOW'S NIAGARA FALLSON,Meals & entertainment,0.5,0.26,0.5,0.13,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-17,card,BMO Mastercard 5840,out,16.92,,,,OSMOW'S NIAGARA FALLSON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-17,card,BMO Mastercard 5840,out,24.69,,,,STARBUCKS 75525 NIAGARA FALLSON,Meals & entertainment,0.5,2.84,0.5,1.42,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-18,card,BMO Mastercard 5840,out,68.86,,,,TST-Dhaba On The Falls Niagara FallsON,Meals & entertainment,0.5,7.92,0.5,3.96,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-18,card,BMO Mastercard 5840,out,7.35,,,,HONK PARKING 866-675-7337 ON,Travel & parking,1.0,0.85,1.0,0.85,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-18,card,BMO Mastercard 5840,out,7.35,,,,HONK PARKING 866-675-7337 ON,Travel & parking,1.0,0.85,1.0,0.85,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-20,card,BMO Mastercard 5840,out,138.07,,,,BUTT KARAHI CANADA BRAMPTON ON,Meals & entertainment,0.5,15.88,0.5,7.94,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-20,card,BMO Mastercard 5840,out,14.0,,,,PEARSON PARKING T3 TORONTO ON,Travel & parking,1.0,1.61,1.0,1.61,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-25,card,BMO Mastercard 5840,out,226.56,,,,TST-Ginsoy Mississauga ON,Meals & entertainment,0.5,26.06,0.5,13.03,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-25,card,BMO Mastercard 5840,out,37.61,,,,UBER CANADA/UBEREATS TORONTO ON,Travel & parking,1.0,4.33,1.0,4.33,Canadian,2025,2024-25,"05-May 28, 2025.pdf"
+2025-05-29,debit,BMO chequing ****1004,out,659.55,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-30,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-30,debit,BMO chequing ****1004,out,1396.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-05-31,card,BMO Mastercard 5840,out,63.25,,,,NAWAB'S LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,7.28,0.5,3.64,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-02,card,BMO Mastercard 5840,out,234.17,,,,CHARSI KARAHI & BBQ MISSISSAUGA ON,Meals & entertainment,0.5,26.94,0.5,13.47,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-03,card,BMO Mastercard 5840,out,21.0,,,,PEARSON PARKING T3 TORONTO ON,Travel & parking,1.0,2.42,1.0,2.42,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-05,card,BMO Mastercard 5840,out,42.33,,,,SQ *GLADIATOR BURGER & MISSISSAUGA ON,Meals & entertainment,0.5,4.87,0.5,2.44,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-13,card,BMO Mastercard 5840,out,361.59,,,,AMZN Mktp CA*NA4082FT0 WWW.AMAZON.CAON,Office & supplies,1.0,41.6,1.0,41.6,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-13,card,BMO Mastercard 5840,out,30.48,,,,KARACHI FOOD COURT MISSISSAUGA ON,Meals & entertainment,0.5,3.51,0.5,1.76,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-13,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-06-14,card,BMO Mastercard 5840,out,725.6,,,,Amazon.ca*NA16X63Q1 AMAZON.CA ON,Office & supplies,1.0,83.48,1.0,83.48,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-14,card,BMO Mastercard 5840,out,305.09,,,,AMZN Mktp CA*NA1VL0ZA0 WWW.AMAZON.CAON,Office & supplies,1.0,35.1,1.0,35.1,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-14,card,BMO Mastercard 5840,out,305.09,,,,AMZN Mktp CA*NA84E2TY1 WWW.AMAZON.CAON,Office & supplies,1.0,35.1,1.0,35.1,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-14,card,BMO Mastercard 5840,out,14.68,,,,IKEA ETOBICOKE ETOBICOKE ON,Office & supplies,1.0,1.69,1.0,1.69,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-14,card,BMO Mastercard 5840,out,1476.9,,,,IKEA.CA ONLINE BURLINGTON ON,Office & supplies,1.0,169.91,1.0,169.91,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-15,card,BMO Mastercard 5840,out,107.34,,,,AMZN Mktp CA*NA34O6T50 WWW.AMAZON.CAON,Office & supplies,1.0,12.35,1.0,12.35,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-15,card,BMO Mastercard 5840,out,5931.37,,,,APPLE.COM/CA 800-676-2775 ON,Meals & entertainment,0.5,682.37,0.5,341.19,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-16,card,BMO Mastercard 5840,refund,305.09,,,,AMZN Mktp CA WWW.AMAZON.CAON,Office & supplies,1.0,-35.1,1.0,-35.1,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-16,debit,BMO chequing ****1004,out,5800.0,,,,pre payment GST (2024 - 2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-06-16,debit,BMO chequing ****1004,out,8770.0,,,,zeeshan payout (209 hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-06-16,debit,BMO chequing ****1004,out,46.19,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-06-18,card,BMO Mastercard 5840,out,33.3,,,,BOLLYWOOD UNLIMITED IN MISSISSAUGA ON,Meals & entertainment,0.5,3.83,0.5,1.92,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-19,card,BMO Mastercard 5840,out,281.56,,,,AMZN Mktp CA*NA1L80RH0 WWW.AMAZON.CAON,Office & supplies,1.0,32.39,1.0,32.39,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-19,card,BMO Mastercard 5840,out,171.73,,,,AMZN Mktp CA*NO6Q508I2 WWW.AMAZON.CAON,Office & supplies,1.0,19.76,1.0,19.76,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-20,card,BMO Mastercard 5840,out,158.19,,,,Amazon.ca*NO9HX6K02 AMAZON.CA ON,Office & supplies,1.0,18.2,1.0,18.2,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-23,card,BMO Mastercard 5840,out,355.84,,,,TST-Ginsoy Mississauga ON,Meals & entertainment,0.5,40.94,0.5,20.47,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-23,debit,BMO chequing ****1004,out,9958.58,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-06-26,card,BMO Mastercard 5840,out,29.38,,,,3 FOOD STREET MISSISSAUGA ON,Meals & entertainment,0.5,3.38,0.5,1.69,Canadian,2025,2024-25,"06-June 28, 2025.pdf"
+2025-06-27,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-06-27,debit,BMO chequing ****1004,out,385.22,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-06-28,card,BMO Mastercard 5840,out,62.49,,,,KARACHI FOOD COURT MISSISSAUGA ON,Meals & entertainment,0.5,7.19,0.5,3.6,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-06-29,card,BMO Mastercard 5840,out,64.83,,,,IKEA ETOBICOKE ETOBICOKE ON,Office & supplies,1.0,7.46,1.0,7.46,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-06-29,card,BMO Mastercard 5840,out,180.75,,,,WINNERS 360 MISSISSAUGA ON,Office & supplies,1.0,20.79,1.0,20.79,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-06-30,debit,BMO chequing ****1004,out,1396.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-07-02,card,BMO Mastercard 5840,out,30.36,,,,Lazeez L018 Mississauga ON,Meals & entertainment,0.5,3.49,0.5,1.75,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-03,card,BMO Mastercard 5840,out,17.17,,,,TIM HORTONS #2891 MISSISSAUGA ON,Meals & entertainment,0.5,1.98,0.5,0.99,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-05,card,BMO Mastercard 5840,out,28.24,,,,APPLE.COM/BILL 866-712-7753 ON,Meals & entertainment,0.5,3.25,0.5,1.63,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-05,card,BMO Mastercard 5840,out,54.95,,,,HAZE LOUNGE MISSISSAUGA ON,Meals & entertainment,0.5,6.32,0.5,3.16,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-05,card,BMO Mastercard 5840,out,26.26,,,,TIM HORTONS #2603 MISSISSAUGA ON,Meals & entertainment,0.5,3.02,0.5,1.51,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-07,debit,BMO chequing ****1004,out,8240.0,,,,zeeshan payout (208 hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-07-07,debit,BMO chequing ****1004,out,43.69,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-07-11,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-07-13,card,BMO Mastercard 5840,out,60.36,,,,CHAI N CHILL MILTON ON,Meals & entertainment,0.5,6.94,0.5,3.47,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-14,card,BMO Mastercard 5840,out,237.29,,,,AMZN Mktp CA*1Y19W9VF3 WWW.AMAZON.CAON,Office & supplies,1.0,27.3,1.0,27.3,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-14,card,BMO Mastercard 5840,out,28.71,,,,AMZN Mktp CA*7W89K4233 WWW.AMAZON.CAON,Office & supplies,1.0,3.3,1.0,3.3,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-15,card,BMO Mastercard 5840,out,1141.27,,,,FLEXISPOT LIMITED LONDON GBR,Office & supplies,1.0,131.3,1.0,131.3,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-15,card,BMO Mastercard 5840,out,23.73,,,,3 FOOD STREET MISSISSAUGA ON,Meals & entertainment,0.5,2.73,0.5,1.37,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-16,card,BMO Mastercard 5840,refund,237.29,,,,Cash Back / Remises Rebate MO,Cash back rebate,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-18,card,BMO Mastercard 5840,refund,20.0,,,,FLEXISPOT LIMITED LONDON GBR,Office & supplies,1.0,-2.3,1.0,-2.3,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-19,card,BMO Mastercard 5840,out,7.47,,,,SONG COOK'S COREAN CHI MISSISSAUGA ON,Meals & entertainment,0.5,0.86,0.5,0.43,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-19,card,BMO Mastercard 5840,out,74.55,,,,SONG COOK'S COREAN CHI MISSISSAUGA ON,Meals & entertainment,0.5,8.58,0.5,4.29,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-23,card,BMO Mastercard 5840,out,38.34,,,,MELT N DIP EGLINGTON MISSISSAUGA ON,Meals & entertainment,0.5,4.41,0.5,2.21,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-24,card,BMO Mastercard 5840,out,19.19,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,2.21,0.5,1.11,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-25,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-07-27,card,BMO Mastercard 5840,out,148.41,,,,THE CHEESECAKE FACTORY NORTH YORK ON,Meals & entertainment,0.5,17.07,0.5,8.54,Canadian,2025,2024-25,"08-August 28, 2025.pdf"
+2025-07-28,card,BMO Mastercard 5840,out,149.0,,,,ANNUAL FEE,Bank fees (HST-exempt),1.0,0.0,0.0,0.0,Canadian,2025,2024-25,"07-July 28, 2025.pdf"
+2025-07-30,debit,BMO chequing ****1004,out,1396.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-07-31,debit,BMO chequing ****1004,out,1987.67,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2024-25,T 23-26
+2025-08-02,card,BMO Mastercard 5840,out,66.83,,,,TST-Karachi Xpress - E Toronto ON,Meals & entertainment,0.5,7.69,0.5,3.85,Canadian,2025,2024-25,"08-August 28, 2025.pdf"
+2025-08-02,card,BMO Mastercard 5840,out,28.0,,,,CLAUDE.AI SUBSCRIPTION SAN FRANCISCOCA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2025,2024-25,"08-August 28, 2025.pdf"
+2025-08-03,card,BMO Mastercard 5840,out,57.03,,,,MONTEIRO SCARBOROUGH TORONTO ON,Meals & entertainment,0.5,6.56,0.5,3.28,Canadian,2025,2024-25,"08-August 28, 2025.pdf"
+2025-08-03,card,BMO Mastercard 5840,out,11.99,,,,LOKMA DESERT SCARBOROUGH ON,Meals & entertainment,0.5,1.38,0.5,0.69,Canadian,2025,2024-25,"08-August 28, 2025.pdf"
+2025-08-04,card,BMO Mastercard 5840,out,48.52,,,,SPICE VILLA MISSISSAUGA ON,Meals & entertainment,0.5,5.58,0.5,2.79,Canadian,2025,2024-25,"08-August 28, 2025.pdf"
+2025-08-05,card,BMO Mastercard 5840,out,41.79,,,,NAWAB'S LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,4.81,0.5,2.41,Canadian,2025,2024-25,"08-August 28, 2025.pdf"
+2025-08-08,card,BMO Mastercard 5840,out,53.05,,,,HAKKA REN - HURONTARIO MISSISSAUGA ON,Meals & entertainment,0.5,6.1,0.5,3.05,Canadian,2025,2024-25,"08-August 28, 2025.pdf"
+2025-08-08,card,BMO Mastercard 5840,out,20.0,,,,ISLAMIC PROPAGATION CE MISSISSAUGA ON,Meals & entertainment,0.5,2.3,0.5,1.15,Canadian,2025,2024-25,"08-August 28, 2025.pdf"
+2025-08-08,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2024-25,T 23-26
+2025-08-13,card,BMO Mastercard 5840,out,26.51,,,,THE BURGER BROS MISSISSAUGA ON,Meals & entertainment,0.5,3.05,0.5,1.53,Canadian,2025,2024-25,"08-August 28, 2025.pdf"
+2025-08-15,card,BMO Mastercard 5840,refund,2.6,,,,FLEXISPOT LIMITED LONDON GBR,Office & supplies,1.0,-0.3,1.0,-0.3,Canadian,2025,2025-26,"08-August 28, 2025.pdf"
+2025-08-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-08-16,card,BMO Mastercard 5840,out,23.43,,,,NAWABS LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,2.7,0.5,1.35,Canadian,2025,2025-26,"08-August 28, 2025.pdf"
+2025-08-17,card,BMO Mastercard 5840,out,15.8,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,1.82,0.5,0.91,Canadian,2025,2025-26,"08-August 28, 2025.pdf"
+2025-08-21,card,BMO Mastercard 5840,out,12.42,,,,JUICE TO GO Mississauga ON,Meals & entertainment,0.5,1.43,0.5,0.72,Canadian,2025,2025-26,"08-August 28, 2025.pdf"
+2025-08-22,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-08-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2025,2025-26,Rogers bill history
+2025-08-24,card,BMO Mastercard 5840,out,35.03,,,,3 FOOD STREET MISSISSAUGA ON,Meals & entertainment,0.5,4.03,0.5,2.02,Canadian,2025,2025-26,"08-August 28, 2025.pdf"
+2025-08-26,card,BMO Mastercard 5840,out,18.06,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,2.08,0.5,1.04,Canadian,2025,2025-26,"08-August 28, 2025.pdf"
+2025-08-27,debit,BMO chequing ****1004,out,7240.0,,,,zeeshan payout (208 hrs + design work),Subcontractor,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-08-27,debit,BMO chequing ****1004,out,38.99,,,,Contract payment platform fee (WISE),Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-08-31,card,BMO Mastercard 5840,out,129.99,,,,GOOGLE *YouTubePremium g.co/helppay#NS,Software & subscriptions,1.0,14.95,1.0,14.95,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-08-31,card,BMO Mastercard 5840,out,46.86,,,,NANDO'S DIXIE MISSISSAUGA ON,Meals & entertainment,0.5,5.39,0.5,2.7,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-09-02,card,BMO Mastercard 5840,out,32.21,,,,MR LOOP MISSISSAUGA ON,Meals & entertainment,0.5,3.71,0.5,1.86,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-02,card,BMO Mastercard 5840,out,25.67,,,,3 FOOD STREET MISSISSAUGA ON,Meals & entertainment,0.5,2.95,0.5,1.48,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-02,debit,BMO chequing ****1004,out,604.27,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-09-02,debit,BMO chequing ****1004,out,1396.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-09-03,personal,Personal card (director-funded),out,57.64,,,,Bell (mobile + internet),Telecom,1.0,6.63,1.0,6.63,Canadian,2025,2025-26,Bell payment history
+2025-09-05,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-09-06,card,BMO Mastercard 5840,out,74.31,,,,ONROUTE MORRISBURG E # MORRISBURG ON,Meals & entertainment,0.5,8.55,0.5,4.28,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-08,card,BMO Mastercard 5840,out,35.0,,,,ADMINISTRATION PORTUAI MONTREAL QC,Meals & entertainment,0.5,4.03,0.5,2.02,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-08,card,BMO Mastercard 5840,out,10.47,,,,QUEUES DE CASTOR-BEAVE MONTREAL QC,Meals & entertainment,0.5,1.2,0.5,0.6,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-08,card,BMO Mastercard 5840,out,13.2,,,,CREMERIE DU VIEUX MONTREAL QC,Meals & entertainment,0.5,1.52,0.5,0.76,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-09,card,BMO Mastercard 5840,out,44.07,,,,PETRO-CANADA 00481 MISSISSAUGA ON,Vehicle & fuel,1.0,5.07,0.0,0.0,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-09,card,BMO Mastercard 5840,out,50.0,,,,PETRO-CANADA 65236 BROCKVILLE ON,Vehicle & fuel,1.0,5.75,0.0,0.0,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-09,card,BMO Mastercard 5840,out,30.04,,,,POPEYES 13209 BROCKVILLE ON,Meals & entertainment,0.5,3.46,0.5,1.73,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-10,card,BMO Mastercard 5840,out,405.62,,,,ENTERPRISE CANADA C21S MISSISSAUGA ON,Travel & parking,1.0,46.66,1.0,46.66,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-15,debit,BMO chequing ****1004,out,5800.0,,,,pre payment GST (2024 - 2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-09-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-09-18,card,BMO Mastercard 5840,out,12.62,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,1.45,0.5,0.73,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-19,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-09-20,card,BMO Mastercard 5840,out,61.59,,,,CRAVEABLES MISSISSAUGA ON,Meals & entertainment,0.5,7.09,0.5,3.55,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-21,card,BMO Mastercard 5840,out,49.19,,,,NAWABS LEGENDARY BBQ MISSISSAUGA ON,Meals & entertainment,0.5,5.66,0.5,2.83,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-22,card,BMO Mastercard 5840,out,206.62,,,,USD 145.77@1.41743843 PADDLE.NET*,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2025,2025-26,Rogers bill history
+2025-09-24,card,BMO Mastercard 5840,out,42.33,,,,WATAN KABOB MISSISSAUGA ON,Meals & entertainment,0.5,4.87,0.5,2.44,Canadian,2025,2025-26,"09-September 28, 2025.pdf"
+2025-09-26,card,BMO Mastercard 5840,out,609.02,,,,IKEA ETOBICOKE ETOBICOKE ON,Office & supplies,1.0,70.06,1.0,70.06,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-09-27,card,BMO Mastercard 5840,out,4000.0,,,,MERCEDES-BENZ MISSISSA MISSISSAUGA ON,Vehicle — lease,0.4493,460.18,0.3594,165.39,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-09-30,card,BMO Mastercard 5840,out,26.09,,,,LYFT *1 RIDE 09-29 VANCOUVER BC,Travel & parking,1.0,3.0,1.0,3.0,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-09-30,card,BMO Mastercard 5840,out,2750.01,,,,MERCEDES-BENZ MISSISSA MISSISSAUGA ON,Vehicle — lease,0.4493,316.37,0.3594,113.7,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-09-30,card,BMO Mastercard 5840,out,45.38,,,,NANDO'S DIXIE MISSISSAUGA ON,Meals & entertainment,0.5,5.22,0.5,2.61,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-09-30,debit,BMO chequing ****1004,out,1269.79,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-01,card,BMO Mastercard 5840,out,17.1,,,,LYFT *1 RIDE 09-30 VANCOUVER BC,Travel & parking,1.0,1.97,1.0,1.97,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-01,card,BMO Mastercard 5840,out,39.99,,,,GOOGLE *Google One 650-253-0000 NS,Software & subscriptions,1.0,4.6,1.0,4.6,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-01,debit,BMO chequing ****1004,out,1396.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-10-03,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-03,personal,Personal card (director-funded),out,57.64,,,,Bell (mobile + internet),Telecom,1.0,6.63,1.0,6.63,Canadian,2025,2025-26,Bell payment history
+2025-10-04,card,BMO Mastercard 5840,out,41.97,,,,AMZN Mktp CA*NV7665T71 866-216-1072 ON,Office & supplies,1.0,4.83,1.0,4.83,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-04,card,BMO Mastercard 5840,out,13.56,,,,AMZN Mktp CA*NV72T57G0 866-216-1072 ON,Office & supplies,1.0,1.56,1.0,1.56,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-04,card,BMO Mastercard 5840,out,2817.77,,,,MERCEDES-BENZ MISSISSA MISSISSAUGA ON,Vehicle — maintenance,1.0,324.17,0.8,259.34,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-04,card,BMO Mastercard 5840,out,56.49,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,6.5,0.8,5.2,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-04,card,BMO Mastercard 5840,out,75.0,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,8.63,0.8,6.9,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-05,card,BMO Mastercard 5840,out,54.19,,,,Shelbys niagara fallsON,Meals & entertainment,0.5,6.23,0.5,3.12,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-05,card,BMO Mastercard 5840,out,49.13,,,,LAHORE CHATKHARA MISSISSAUGA ON,Meals & entertainment,0.5,5.65,0.5,2.83,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-06,debit,BMO chequing ****1004,out,6750.01,,,,credit card payment (Car downpayment with 1st lease installment),Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-06,debit,BMO chequing ****1004,out,2817.77,,,,credit card payment (Car winter tires payment),Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-07,card,BMO Mastercard 5840,out,87.19,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,10.03,0.8,8.02,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-09,card,BMO Mastercard 5840,out,10.16,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,1.17,0.5,0.59,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-09,card,BMO Mastercard 5840,out,30.46,,,,PAAN CASA MISSISSAUGA ON,Meals & entertainment,0.5,3.5,0.5,1.75,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-10,debit,BMO chequing ****1004,in,4960.5,4960.5,0.0,4960.5,Corp tax (2025),Tax & GST remittances,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-10,debit,BMO chequing ****1004,out,700.76,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-12,card,BMO Mastercard 5840,out,259.84,,,,HOLLYWOOD ACCESSORIES BRAMPTON ON,Vehicle & fuel,1.0,29.89,0.8,23.91,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-12,card,BMO Mastercard 5840,out,63.84,,,,SHELL C06528 MISSISSAUGA ON,Vehicle & fuel,1.0,7.34,0.8,5.87,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-13,card,BMO Mastercard 5840,out,73.45,,,,SQ *FUSIONFLO SCARBOROUGH ON,Meals & entertainment,0.5,8.45,0.5,4.23,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-15,card,BMO Mastercard 5840,out,51.25,,,,HALTON HEALTH CARE OAKVILLE ON,Travel & parking,1.0,5.9,1.0,5.9,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-10-17,card,BMO Mastercard 5840,out,10.16,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,1.17,0.5,0.59,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-17,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-18,card,BMO Mastercard 5840,out,18.92,,,,MELT N DIP EGLINGTON MISSISSAUGA ON,Meals & entertainment,0.5,2.18,0.5,1.09,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-18,card,BMO Mastercard 5840,out,52.09,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,5.99,0.8,4.79,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-19,card,BMO Mastercard 5840,out,47.44,,,,SUMAQ IRAQI CHARCOAL G MISSISSAUGA ON,Meals & entertainment,0.5,5.46,0.5,2.73,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-20,debit,BMO chequing ****1004,out,6500.0,,,,pre payment GST (2025 - 2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-21,card,BMO Mastercard 5840,out,29.44,,,,TST-Ginsoy Mississauga ON,Meals & entertainment,0.5,3.39,0.5,1.7,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2025,2025-26,Rogers bill history
+2025-10-25,card,BMO Mastercard 5840,out,24.85,,,,DENNY'S TOUCH FREE CAR MISSISSAUGA ON,Meals & entertainment,0.5,2.86,0.5,1.43,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-25,card,BMO Mastercard 5840,out,87.37,,,,SHELL C20702 MISSISSAUGA ON,Vehicle & fuel,1.0,10.05,0.8,8.04,Canadian,2025,2025-26,"10-October 28, 2025.pdf"
+2025-10-28,card,BMO Mastercard 5840,out,72.35,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,8.32,0.8,6.66,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-10-29,card,BMO Mastercard 5840,out,114.58,,,,OPEN MIC CAFE AND CUIS MISSISSAUGA ON,Meals & entertainment,0.5,13.18,0.5,6.59,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-10-30,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2025,2025-26,T 23-26
+2025-10-30,debit,BMO chequing ****1004,out,1396.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-31,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-31,debit,BMO chequing ****1004,out,1874.38,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-10-31,personal,Personal card (director-funded),out,57.64,,,,Bell (mobile + internet),Telecom,1.0,6.63,1.0,6.63,Canadian,2025,2025-26,Bell payment history
+2025-11-01,card,BMO Mastercard 5840,out,19.21,,,,SOUL 5 MISSISSAUGA ON,Meals & entertainment,0.5,2.21,0.5,1.11,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-11-03,debit,BMO chequing ****1004,out,700.84,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-11-06,card,BMO Mastercard 5840,out,18.52,,,,AMZN Mktp CA*NK4K24SL2 TORONTO ON,Office & supplies,1.0,2.13,1.0,2.13,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-06,card,BMO Mastercard 5840,out,9.97,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,1.15,0.5,0.58,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-06,card,BMO Mastercard 5840,out,13.5,,,,HALTON HEALTH CARE OAKVILLE ON,Travel & parking,1.0,1.55,1.0,1.55,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-07,card,BMO Mastercard 5840,out,18.5,,,,ORIGINAL SHAWARMA MISSISSAUGA ON,Meals & entertainment,0.5,2.13,0.5,1.07,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-07,card,BMO Mastercard 5840,out,7.71,,,,TIM HORTONS #4883 OAKVILLE ON,Meals & entertainment,0.5,0.89,0.5,0.45,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-07,card,BMO Mastercard 5840,out,92.71,,,,SHELL C20702 MISSISSAUGA ON,Vehicle & fuel,1.0,10.67,0.8,8.54,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-08,card,BMO Mastercard 5840,out,316.28,,,,MERCEDES-BENZ MISSISSA MISSISSAUGA ON,Vehicle — maintenance,1.0,36.39,0.8,29.11,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-14,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-11-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-11-16,card,BMO Mastercard 5840,out,10.74,,,,MR LOOP MISSISSAUGA ON,Meals & entertainment,0.5,1.24,0.5,0.62,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-17,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-17,card,BMO Mastercard 5840,out,23.46,,,,NANDO'S DIXIE MISSISSAUGA ON,Meals & entertainment,0.5,2.7,0.5,1.35,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-17,card,BMO Mastercard 5840,out,60.75,,,,NANDO'S DIXIE MISSISSAUGA ON,Meals & entertainment,0.5,6.99,0.5,3.5,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-17,card,BMO Mastercard 5840,out,82.57,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,9.5,0.8,7.6,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-19,card,BMO Mastercard 5840,out,56.46,,,,GALITOS FLAME GRILL CH MISSISSAUGA ON,Meals & entertainment,0.5,6.5,0.5,3.25,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-22,card,BMO Mastercard 5840,out,19.66,,,,ORIGINAL SHAWARMA MISSISSAUGA ON,Meals & entertainment,0.5,2.26,0.5,1.13,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-22,card,BMO Mastercard 5840,out,82.46,,,,PETRO-CANADA 00481 MISSISSAUGA ON,Vehicle & fuel,1.0,9.49,0.8,7.59,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2025,2025-26,Rogers bill history
+2025-11-23,card,BMO Mastercard 5840,out,22.86,,,,BOLLYWOOD UNLIMITED IN MISSISSAUGA ON,Meals & entertainment,0.5,2.63,0.5,1.32,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-26,debit,BMO chequing ****1004,out,7007.69,,,,WISE Freelancer payment,Subcontractor,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-11-26,debit,BMO chequing ****1004,out,52.31,,,,WISE FEE,Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-11-27,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2025,2025-26,"11-November 28, 2025.pdf"
+2025-11-28,card,BMO Mastercard 5840,out,67.79,,,,CIRCLE K SCARBOROUGH ON,Vehicle & fuel,1.0,7.8,0.8,6.24,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-11-28,card,BMO Mastercard 5840,out,13.5,,,,HALTON HEALTH CARE OAKVILLE ON,Travel & parking,1.0,1.55,1.0,1.55,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-11-28,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-11-29,card,BMO Mastercard 5840,out,333.31,,,,AMZN Mktp CA*BB8UK40P2 TORONTO ON,Office & supplies,1.0,38.35,1.0,38.35,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-11-29,card,BMO Mastercard 5840,out,1693.87,,,,AMZN Mktp CA*B25469UM0 TORONTO ON,Office & supplies,1.0,194.87,1.0,194.87,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-11-29,card,BMO Mastercard 5840,out,84.4,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,9.71,0.8,7.77,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-11-30,card,BMO Mastercard 5840,out,13.56,,,,3 FOOD STREET MISSISSAUGA ON,Meals & entertainment,0.5,1.56,0.5,0.78,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-11-30,card,BMO Mastercard 5840,out,25.43,,,,ARABICA (SQUARE ONE) MISSISSAUGA ON,Meals & entertainment,0.5,2.93,0.5,1.47,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-01,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-01,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2025,2025-26,T 23-26
+2025-12-01,debit,BMO chequing ****1004,out,700.84,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-12-01,debit,BMO chequing ****1004,out,1396.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-12-01,debit,BMO chequing ****1004,out,1055.85,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-12-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-12-03,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-03,personal,Personal card (director-funded),out,57.64,,,,Bell (mobile + internet),Telecom,1.0,6.63,1.0,6.63,Canadian,2025,2025-26,Bell payment history
+2025-12-04,card,BMO Mastercard 5840,out,35.01,,,,TST-Nawabs Legendary Mississauga ON,Meals & entertainment,0.5,4.03,0.5,2.02,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-05,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-05,card,BMO Mastercard 5840,out,13.56,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,1.56,0.5,0.78,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-05,card,BMO Mastercard 5840,out,9.0,,,,HH-OTMH OAKVILLE ON,Meals & entertainment,0.5,1.04,0.5,0.52,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-06,card,BMO Mastercard 5840,out,16.95,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-06,card,BMO Mastercard 5840,out,90.25,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,10.38,0.8,8.3,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-07,card,BMO Mastercard 5840,out,43.81,,,,NANDO'S DIXIE MISSISSAUGA ON,Meals & entertainment,0.5,5.04,0.5,2.52,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-07,card,BMO Mastercard 5840,out,2404.64,,,,APPLE STORE #R350 MISSISSAUGA ON,Office & supplies,1.0,276.64,1.0,276.64,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-08,card,BMO Mastercard 5840,refund,43.81,,,,Cash Back / Remises Rebate MO,Cash back rebate,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-08,card,BMO Mastercard 5840,refund,35.01,,,,Cash Back / Remises Rebate MO,Cash back rebate,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-08,card,BMO Mastercard 5840,refund,9.0,,,,Cash Back / Remises Rebate MO,Cash back rebate,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-08,card,BMO Mastercard 5840,refund,60.75,,,,Cash Back / Remises Rebate MO,Cash back rebate,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-08,card,BMO Mastercard 5840,out,44.05,,,,ROMAN ZAMAN DAMASCENE Mississauga ON,Meals & entertainment,0.5,5.07,0.5,2.54,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-10,card,BMO Mastercard 5840,out,11.85,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,1.36,0.5,0.68,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-10,card,BMO Mastercard 5840,out,13.56,,,,3 FOOD STREET MISSISSAUGA ON,Meals & entertainment,0.5,1.56,0.5,0.78,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-11,card,BMO Mastercard 5840,out,18.07,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,2.08,0.5,1.04,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-11,card,BMO Mastercard 5840,out,10.16,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,1.17,0.5,0.59,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-12,card,BMO Mastercard 5840,out,67.94,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,7.82,0.8,6.26,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-12,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-12-13,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-14,card,BMO Mastercard 5840,out,26.53,,,,TST-GC Burger - Missis Mississauga ON,Meals & entertainment,0.5,3.05,0.5,1.53,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-14,card,BMO Mastercard 5840,out,60.07,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,6.91,0.8,5.53,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-15,debit,BMO chequing ****1004,out,2027.18,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-12-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-12-16,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-17,card,BMO Mastercard 5840,out,31.94,,,,USD 22.6@1.413274336 OPENAI *CHATGPT SUBSCR SAN FRANCISCOCA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-18,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-18,debit,BMO chequing ****1004,out,2404.64,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-12-19,card,BMO Mastercard 5840,out,14.79,,,,Amazon.ca*6N47G35F3 TORONTO ON,Office & supplies,1.0,1.7,1.0,1.7,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-19,card,BMO Mastercard 5840,out,39.55,,,,EGGSMART #4060 MISSISSAUGA ON,Meals & entertainment,0.5,4.55,0.5,2.28,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-19,debit,BMO chequing ****1004,out,10000.0,,,,"10,000 salary to Maham",Salary,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-12-20,card,BMO Mastercard 5840,out,20.33,,,,KARACHI FOOD COURT MISSISSAUGA ON,Meals & entertainment,0.5,2.34,0.5,1.17,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-21,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-21,card,BMO Mastercard 5840,out,28.25,,,,POOL LAB TORONTO ON,Meals & entertainment,0.5,3.25,0.5,1.63,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-21,card,BMO Mastercard 5840,out,80.0,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,9.2,0.8,7.36,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-22,card,BMO Mastercard 5840,out,15.23,,,,WATAN KABOB MISSISSAUGA ON,Meals & entertainment,0.5,1.75,0.5,0.88,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-22,card,BMO Mastercard 5840,out,56.5,,,,CINEPLEX REC ROOM 7009 MISSISSAUGA ON,Meals & entertainment,0.5,6.5,0.5,3.25,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-22,debit,BMO chequing ****1004,out,6000.0,,,,"6,000 salary to Maham",Salary,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-12-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2025,2025-26,Rogers bill history
+2025-12-24,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-24,card,BMO Mastercard 5840,out,5.48,,,,LA PREP OAKVILLE ON,Meals & entertainment,0.5,0.63,0.5,0.32,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-24,card,BMO Mastercard 5840,out,39.53,,,,CHAI AND GRILL OAKVILLE ON,Meals & entertainment,0.5,4.55,0.5,2.28,Canadian,2025,2025-26,"12-December 28, 2025.pdf"
+2025-12-24,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2025,2025-26,T 23-26
+2025-12-25,card,BMO Mastercard 5840,out,8.11,,,,TIM HORTONS #6544 OAKVILLE ON,Meals & entertainment,0.5,0.93,0.5,0.47,Canadian,2025,2025-26,"January 28, 2026.pdf"
+2025-12-26,card,BMO Mastercard 5840,out,33.87,,,,CHAI AND GRILL OAKVILLE ON,Meals & entertainment,0.5,3.9,0.5,1.95,Canadian,2025,2025-26,"January 28, 2026.pdf"
+2025-12-27,card,BMO Mastercard 5840,out,16.02,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,1.84,0.5,0.92,Canadian,2025,2025-26,"January 28, 2026.pdf"
+2025-12-28,card,BMO Mastercard 5840,out,67.79,,,,CIRCLE K SCARBOROUGH ON,Vehicle & fuel,1.0,7.8,0.8,6.24,Canadian,2025,2025-26,"January 28, 2026.pdf"
+2025-12-28,card,BMO Mastercard 5840,out,44.28,,,,DD/DOORDASHTHEBURGERBR VANCOUVER BC,Meals & entertainment,0.5,5.09,0.5,2.55,Canadian,2025,2025-26,"January 28, 2026.pdf"
+2025-12-29,card,BMO Mastercard 5840,out,92.11,,,,SHELL C11577 MISSISSAUGA ON,Vehicle & fuel,1.0,10.6,0.8,8.48,Canadian,2025,2025-26,"January 28, 2026.pdf"
+2025-12-30,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2025,2025-26,T 23-26
+2025-12-30,debit,BMO chequing ****1004,out,1837.5,,,,Payroll Taxes,Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2025-12-30,debit,BMO chequing ****1004,out,1396.0,,,,Corp tax (2025),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2025,2025-26,T 23-26
+2026-01-01,card,BMO Mastercard 5840,out,30.5,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,3.51,0.5,1.76,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-01-02,card,BMO Mastercard 5840,out,15.8,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,1.82,0.5,0.91,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-02,debit,BMO chequing ****1004,out,1164.94,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-01-02,debit,BMO chequing ****1004,out,700.84,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-01-02,personal,Personal card (director-funded),out,57.64,,,,Bell (mobile + internet),Telecom,1.0,6.63,1.0,6.63,Canadian,2026,2025-26,Bell payment history
+2026-01-04,card,BMO Mastercard 5840,out,19.2,,,,KARACHI FOOD COURT MISSISSAUGA ON,Meals & entertainment,0.5,2.21,0.5,1.11,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-04,card,BMO Mastercard 5840,out,95.04,,,,SHELL C20702 MISSISSAUGA ON,Vehicle & fuel,1.0,10.93,0.8,8.74,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-05,card,BMO Mastercard 5840,out,269.99,,,,GOOGLE *Google One HALIFAX NS,Software & subscriptions,1.0,31.06,1.0,31.06,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-05,card,BMO Mastercard 5840,out,8.59,,,,2746024 ONTARIO INC. MISSISSAUGA ON,Meals & entertainment,0.5,0.99,0.5,0.5,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-07,card,BMO Mastercard 5840,out,16.94,,,,SAM S NASHVILLE HOT MISSISSAUGA ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-08,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-08,card,BMO Mastercard 5840,out,69.99,,,,LAHORI FLAME MISSISSAUGA ON,Meals & entertainment,0.5,8.05,0.5,4.03,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-09,debit,BMO chequing ****1004,in,6644.4,6644.4,764.4,5880.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-01-10,card,BMO Mastercard 5840,out,16.94,,,,SAM S NASHVILLE HOT MISSISSAUGA ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-11,card,BMO Mastercard 5840,out,16.95,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-11,card,BMO Mastercard 5840,out,11.85,,,,WATAN KABOB MISSISSAUGA ON,Meals & entertainment,0.5,1.36,0.5,0.68,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-11,card,BMO Mastercard 5840,out,20.0,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,2.3,0.8,1.84,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-12,card,BMO Mastercard 5840,out,8.84,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,1.02,0.5,0.51,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-12,card,BMO Mastercard 5840,out,21.79,,,,SAM S NASHVILLE HOT MISSISSAUGA ON,Meals & entertainment,0.5,2.51,0.5,1.26,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-13,card,BMO Mastercard 5840,out,6.78,,,,TST-Matari coffee co. Mississauga ON,Meals & entertainment,0.5,0.78,0.5,0.39,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-13,card,BMO Mastercard 5840,out,25.4,,,,WATAN KABOB MISSISSAUGA ON,Meals & entertainment,0.5,2.92,0.5,1.46,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-01-16,card,BMO Mastercard 5840,out,19.2,,,,KARACHI FOOD COURT MISSISSAUGA ON,Meals & entertainment,0.5,2.21,0.5,1.11,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-16,card,BMO Mastercard 5840,out,90.72,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,10.44,0.8,8.35,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-16,card,BMO Mastercard 5840,out,7.9,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,0.91,0.5,0.46,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-17,card,BMO Mastercard 5840,out,32.26,,,,USD 22.6@1.427433628 OPENAI *CHATGPT SUBSCR SAN FRANCISCOCA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"January 28, 2026.pdf"
+2026-01-17,card,BMO Mastercard 5840,out,3.14,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,0.36,0.5,0.18,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-18,card,BMO Mastercard 5840,out,45.44,,,,GALITOS FLAME GRILL CH MISSISSAUGA ON,Meals & entertainment,0.5,5.23,0.5,2.62,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-20,debit,BMO chequing ****1004,out,6500.0,,,,pre payment GST (2025 - 2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-01-22,card,BMO Mastercard 5840,out,7.15,,,,TIM HORTONS #6351 MISSISSAUGA ON,Meals & entertainment,0.5,0.82,0.5,0.41,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2026,2025-26,Rogers bill history
+2026-01-23,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-01-24,card,BMO Mastercard 5840,out,72.88,,,,ORIGINAL SHAWARMA MISSISSAUGA ON,Meals & entertainment,0.5,8.38,0.5,4.19,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-25,card,BMO Mastercard 5840,out,96.27,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,11.08,0.8,8.86,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-27,card,BMO Mastercard 5840,out,67.79,,,,CIRCLE K SCARBOROUGH ON,Vehicle & fuel,1.0,7.8,0.8,6.24,Canadian,2026,2025-26,"January 28, 2026.pdf"
+2026-01-28,card,BMO Mastercard 5840,out,53.51,,,,USD 37.99@1.40852856 VERCEL DOMAINS COVINA CA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"February 28, 2026.pdf"
+2026-01-29,card,BMO Mastercard 5840,out,78.9,,,,USD 56.5@1.396460176 ANTHROPIC SAN FRANCISCOCA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"February 28, 2026.pdf"
+2026-01-30,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2026,2025-26,T 23-26
+2026-01-30,debit,BMO chequing ****1004,out,20000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-01-31,card,BMO Mastercard 5840,out,54.36,,,,ORIGINAL SHAWARMA EXPR MISSISSAUGA ON,Meals & entertainment,0.5,6.25,0.5,3.13,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-02-02,debit,BMO chequing ****1004,out,1236.54,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-02-02,debit,BMO chequing ****1004,out,700.84,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-02-02,personal,Personal card (director-funded),out,60.47,,,,Bell (mobile + internet),Telecom,1.0,6.96,1.0,6.96,Canadian,2026,2025-26,Bell payment history
+2026-02-03,card,BMO Mastercard 5840,out,72.95,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,8.39,0.8,6.71,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-04,card,BMO Mastercard 5840,out,5.63,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,0.65,0.5,0.33,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-04,debit,BMO chequing ****1004,out,424.94,,,,vercel domain names purchase,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,T 23-26
+2026-02-05,debit,BMO chequing ****1004,out,5000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-02-06,card,BMO Mastercard 5840,out,37.27,,,,SAM S NASHVILLE HOT MISSISSAUGA ON,Meals & entertainment,0.5,4.29,0.5,2.15,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-06,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-02-07,card,BMO Mastercard 5840,out,10.95,,,,MR.PUFFS HEARTLAND MISSISSAUGA ON,Meals & entertainment,0.5,1.26,0.5,0.63,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-07,card,BMO Mastercard 5840,out,69.83,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,8.03,0.8,6.42,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-08,card,BMO Mastercard 5840,out,20.77,,,,DESISHAMIANA HALAL RES MISSISSAUGA ON,Meals & entertainment,0.5,2.39,0.5,1.2,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-09,debit,BMO chequing ****1004,out,423.75,,,,dues cleared for old accountant for last year GST filling,Professional fees,1.0,48.75,1.0,48.75,Canadian,2026,2025-26,T 23-26
+2026-02-10,card,BMO Mastercard 5840,out,22.59,,,,AMZN Mktp CA*A80GY5ML3 TORONTO ON,Office & supplies,1.0,2.6,1.0,2.6,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-10,card,BMO Mastercard 5840,out,35.41,,,,AMZN Mktp CA*BX8M11VT1 TORONTO ON,Office & supplies,1.0,4.07,1.0,4.07,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-10,card,BMO Mastercard 5840,out,9.01,,,,AMZN Mktp CA*DL7CT1AZ3 TORONTO ON,Office & supplies,1.0,1.04,1.0,1.04,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-10,card,BMO Mastercard 5840,out,248.59,,,,AMZN Mktp CA*HD0BY9393 TORONTO ON,Office & supplies,1.0,28.6,1.0,28.6,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-10,card,BMO Mastercard 5840,out,15.19,,,,AMZN Mktp CA*U36ES4KL3 TORONTO ON,Office & supplies,1.0,1.75,1.0,1.75,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-11,card,BMO Mastercard 5840,out,12.19,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,1.4,0.5,0.7,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-11,card,BMO Mastercard 5840,out,21.79,,,,SAM S NASHVILLE HOT MISSISSAUGA ON,Meals & entertainment,0.5,2.51,0.5,1.26,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-12,card,BMO Mastercard 5840,out,95.39,,,,SHELL C20130 MISSISSAUGA ON,Vehicle & fuel,1.0,10.97,0.8,8.78,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-13,card,BMO Mastercard 5840,out,31.61,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,3.64,0.5,1.82,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-14,card,BMO Mastercard 5840,out,939.52,,,,USD 672@1.398095238 STRIPE-Z.AI SINGAPORE,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"February 28, 2026.pdf"
+2026-02-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-02-20,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-02-22,card,BMO Mastercard 5840,out,123.8,,,,RONA+ CENTRAL MISSISSA MISSISSAUGA ON,Office & supplies,1.0,14.24,1.0,14.24,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-22,card,BMO Mastercard 5840,out,94.39,,,,PIONEER 43431 MISSISSAUGA ON,Vehicle & fuel,1.0,10.86,0.8,8.69,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-22,card,BMO Mastercard 5840,out,7.9,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,0.91,0.5,0.46,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2026,2025-26,Rogers bill history
+2026-02-23,card,BMO Mastercard 5840,out,5.37,,,,MUTABAK KARAK MISSISSAUGA ON,Meals & entertainment,0.5,0.62,0.5,0.31,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-02-24,card,BMO Mastercard 5840,out,43.47,,,,FIREFLY BURGER MISSISSAUGA ON,Meals & entertainment,0.5,5.0,0.5,2.5,Canadian,2026,2025-26,"February 28, 2026.pdf"
+2026-03-01,card,BMO Mastercard 5840,out,45.19,,,,VALET CAR WASH MISSISSAUGA ON,Vehicle & fuel,1.0,5.2,0.8,4.16,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-01,card,BMO Mastercard 5840,out,16.94,,,,SAM S NASHVILLE HOT MISSISSAUGA ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-01,card,BMO Mastercard 5840,out,63.27,,,,SHELL C20702 MISSISSAUGA ON,Vehicle & fuel,1.0,7.28,0.8,5.82,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-03-02,card,BMO Mastercard 5840,out,37.78,,,,TST-Badshah grill Mississauga ON,Meals & entertainment,0.5,4.35,0.5,2.18,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-02,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2026,2025-26,T 23-26
+2026-03-02,debit,BMO chequing ****1004,out,700.84,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-03-03,card,BMO Mastercard 5840,out,38.4,,,,MONTEIRO SCARBOROUGH TORONTO ON,Meals & entertainment,0.5,4.42,0.5,2.21,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-04,debit,BMO chequing ****1004,out,10000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-03-05,personal,Personal card (director-funded),out,58.25,,,,Bell (mobile + internet),Telecom,1.0,6.7,1.0,6.7,Canadian,2026,2025-26,Bell payment history
+2026-03-06,card,BMO Mastercard 5840,out,21.5,,,,DOORDASHTHEBURGERBR DOWNTOWN TOROON,Meals & entertainment,0.5,2.47,0.5,1.24,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-06,card,BMO Mastercard 5840,out,19.2,,,,SUMAQ EXPRESS MISSISSAUGA ON,Meals & entertainment,0.5,2.21,0.5,1.11,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-06,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-03-08,card,BMO Mastercard 5840,out,32.75,,,,TST-Namkeen - Mississa Mississauga ON,Meals & entertainment,0.5,3.77,0.5,1.89,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-08,card,BMO Mastercard 5840,out,92.7,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,10.66,0.8,8.53,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-09,card,BMO Mastercard 5840,out,31.31,,,,CENTRAL PARKWAY CARDS MISSISSAUGA ON,Travel & parking,1.0,3.6,1.0,3.6,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-09,debit,BMO chequing ****1004,out,1977.98,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-03-09,debit,BMO chequing ****1004,out,5000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-03-11,card,BMO Mastercard 5840,out,22.58,,,,SQ *KANAFANI SWEETS & MISSISSAUGA ON,Meals & entertainment,0.5,2.6,0.5,1.3,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-12,card,BMO Mastercard 5840,out,111.87,,,,Amazon.ca Prime Member VANCOUVER BC,Software & subscriptions,1.0,12.87,1.0,12.87,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-13,card,BMO Mastercard 5840,refund,248.59,,,,AMZN Mktp CA TORONTO ON,Office & supplies,1.0,-28.6,1.0,-28.6,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-14,card,BMO Mastercard 5840,out,38.39,,,,SUMAQ EXPRESS MISSISSAUGA ON,Meals & entertainment,0.5,4.42,0.5,2.21,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-03-17,card,BMO Mastercard 5840,out,73.39,,,,LS Naan and Kabob Mississauga ON,Meals & entertainment,0.5,8.44,0.5,4.22,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-18,card,BMO Mastercard 5840,out,35.01,,,,SQ *KANAFANI SWEETS & MISSISSAUGA ON,Meals & entertainment,0.5,4.03,0.5,2.02,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-19,card,BMO Mastercard 5840,out,105.97,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,12.19,0.8,9.75,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-20,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-03-20,debit,BMO chequing ****1004,out,1000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-03-21,card,BMO Mastercard 5840,out,26.84,,,,MUTABAK KARAK MISSISSAUGA ON,Meals & entertainment,0.5,3.09,0.5,1.55,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-21,card,BMO Mastercard 5840,out,5.37,,,,MUTABAK KARAK MISSISSAUGA ON,Meals & entertainment,0.5,0.62,0.5,0.31,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-22,card,BMO Mastercard 5840,out,6.58,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,0.76,0.5,0.38,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-22,personal,Personal card (director-funded),out,67.79,,,,Rogers home internet,Telecom,1.0,7.8,1.0,7.8,Canadian,2026,2025-26,Rogers bill history
+2026-03-23,card,BMO Mastercard 5840,out,15.79,,,,DOORDASHTHEBURGERBR DOWNTOWN TOROON,Meals & entertainment,0.5,1.82,0.5,0.91,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-24,card,BMO Mastercard 5840,out,7.9,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,0.91,0.5,0.46,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-25,card,BMO Mastercard 5840,out,23.71,,,,WATAN KABOB MISSISSAUGA ON,Meals & entertainment,0.5,2.73,0.5,1.37,Canadian,2026,2025-26,"March 28, 2026.pdf"
+2026-03-26,card,BMO Mastercard 5840,out,5.37,,,,MUTABAK KARAK MISSISSAUGA ON,Meals & entertainment,0.5,0.62,0.5,0.31,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-03-26,card,BMO Mastercard 5840,out,5.37,,,,CROWN PASTRIES RIDGEWA MISSISSAUGA ON,Meals & entertainment,0.5,0.62,0.5,0.31,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-03-27,card,BMO Mastercard 5840,out,140.0,,,,CLAUDE.AI SUBSCRIPTION SAN FRANCISCOCA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"April 28, 2026.pdf"
+2026-03-27,card,BMO Mastercard 5840,out,96.91,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,11.15,0.8,8.92,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-03-28,card,BMO Mastercard 5840,out,16.94,,,,SQ *KANAFANI SWEETS & MISSISSAUGA ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-03-29,card,BMO Mastercard 5840,out,5.37,,,,MUTABAK KARAK MISSISSAUGA ON,Meals & entertainment,0.5,0.62,0.5,0.31,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-03-30,card,BMO Mastercard 5840,out,17.35,,,,DOORDASHTHEBURGERBR DOWNTOWN TOROON,Meals & entertainment,0.5,2.0,0.5,1.0,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-03-30,debit,BMO chequing ****1004,out,623.85,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-03-30,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2026,2025-26,T 23-26
+2026-03-30,debit,BMO chequing ****1004,out,1000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-03-31,card,BMO Mastercard 5840,out,7.9,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,0.91,0.5,0.46,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-03-31,debit,BMO chequing ****1004,out,900.0,,,,Corp tax (2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-04-01,card,BMO Mastercard 5840,out,45.19,,,,VALET CAR WASH MISSISSAUGA ON,Vehicle & fuel,1.0,5.2,0.8,4.16,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-01,debit,BMO chequing ****1004,out,700.84,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-04-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-04-02,card,BMO Mastercard 5840,out,100.0,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,11.5,0.8,9.2,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-02,personal,Personal card (director-funded),out,56.5,,,,Bell (mobile + internet),Telecom,1.0,6.5,1.0,6.5,Canadian,2026,2025-26,Bell payment history
+2026-04-02,personal,Personal card (director-funded),out,353.94,,,,"Mercedes-Benz Mississauga service, invoice 1128781 (paid on personal Visa 1680)",Vehicle — maintenance,1.0,40.72,0.8,32.58,Canadian,2026,2025-26,receipt 04-April
+2026-04-03,card,BMO Mastercard 5840,out,46.57,,,,GALITOS FLAME GRILL CH MISSISSAUGA ON,Meals & entertainment,0.5,5.36,0.5,2.68,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-04,card,BMO Mastercard 5840,out,18.07,,,,WATAN KABOB MISSISSAUGA ON,Meals & entertainment,0.5,2.08,0.5,1.04,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-05,card,BMO Mastercard 5840,out,7.9,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,0.91,0.5,0.46,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-06,card,BMO Mastercard 5840,out,16.94,,,,SQ *KANAFANI SWEETS & MISSISSAUGA ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-06,card,BMO Mastercard 5840,out,5.37,,,,MUTABAK KARAK MISSISSAUGA ON,Meals & entertainment,0.5,0.62,0.5,0.31,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-06,card,BMO Mastercard 5840,out,190.97,,,,FREEDOM MOBILE WCMA010 MISSISSAUGA ON,Telecom,1.0,21.97,1.0,21.97,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-06,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-04-07,card,BMO Mastercard 5840,out,5.18,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,0.6,0.5,0.3,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-07,debit,BMO chequing ****1004,out,1000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-04-09,card,BMO Mastercard 5840,out,129.99,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,14.95,0.8,11.96,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-10,card,BMO Mastercard 5840,out,16.94,,,,SQ *KANAFANI SWEETS & MISSISSAUGA ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-10,card,BMO Mastercard 5840,out,3.99,,,,2746024 ONTARIO INC. MISSISSAUGA ON,Meals & entertainment,0.5,0.46,0.5,0.23,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-11,card,BMO Mastercard 5840,out,15.8,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,1.82,0.5,0.91,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-11,card,BMO Mastercard 5840,out,42.93,,,,SAM S NASHVILLE HOT MISSISSAUGA ON,Meals & entertainment,0.5,4.94,0.5,2.47,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-14,card,BMO Mastercard 5840,out,55.17,,,,TEMU.COM VICTORIA BC,Office & supplies,1.0,6.35,1.0,6.35,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-14,debit,BMO chequing ****1004,out,1500.0,,,,Corp tax (2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-04-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-04-17,card,BMO Mastercard 5840,out,38.91,,,,LYFT *1 RIDE 04-16 VANCOUVER BC,Travel & parking,1.0,4.48,1.0,4.48,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-17,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-04-19,card,BMO Mastercard 5840,out,15.46,,,,USD 11@1.405454545 PIZZA HUT AIPC TERM A HIGUEY DOM,Meals & entertainment,0.5,0.0,0.5,0.0,non-resident,2026,2025-26,"April 28, 2026.pdf"
+2026-04-20,card,BMO Mastercard 5840,out,18.95,,,,LYFT *1 RIDE 04-19 VANCOUVER BC,Travel & parking,1.0,2.18,1.0,2.18,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-20,card,BMO Mastercard 5840,out,5.37,,,,MUTABAK KARAK MISSISSAUGA ON,Meals & entertainment,0.5,0.62,0.5,0.31,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-20,card,BMO Mastercard 5840,out,100.0,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,11.5,0.8,9.2,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-20,debit,BMO chequing ****1004,out,6500.0,,,,pre payment GST (2025 - 2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-04-21,card,BMO Mastercard 5840,out,27.65,,,,WATAN KABOB MISSISSAUGA ON,Meals & entertainment,0.5,3.18,0.5,1.59,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-22,personal,Personal card (director-funded),out,163.58,,,,Rogers home internet,Telecom,1.0,18.82,1.0,18.82,Canadian,2026,2025-26,Rogers bill history
+2026-04-25,card,BMO Mastercard 5840,out,32.52,,,,POPEYES 11598 MISSISSAUGA ON,Meals & entertainment,0.5,3.74,0.5,1.87,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-25,card,BMO Mastercard 5840,out,108.38,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,12.47,0.8,9.98,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-26,card,BMO Mastercard 5840,out,4.24,,,,MUTABAK KARAK MISSISSAUGA ON,Meals & entertainment,0.5,0.49,0.5,0.25,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-27,card,BMO Mastercard 5840,out,45.17,,,,TST-Namkeen - Mississa Mississauga ON,Meals & entertainment,0.5,5.2,0.5,2.6,Canadian,2026,2025-26,"April 28, 2026.pdf"
+2026-04-28,card,BMO Mastercard 5840,out,7.9,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,0.91,0.5,0.46,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-04-28,card,BMO Mastercard 5840,out,16.94,,,,SAM S NASHVILLE HOT MISSISSAUGA ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-04-28,card,BMO Mastercard 5840,refund,55.17,,,,TEMU.COM VICTORIA BC,Office & supplies,1.0,-6.35,1.0,-6.35,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-04-28,debit,BMO chequing ****1004,out,1000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-04-29,card,BMO Mastercard 5840,out,88.08,,,,SUMAQ IRAQI CHARCOAL G MISSISSAUGA ON,Meals & entertainment,0.5,10.13,0.5,5.07,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-04-30,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2026,2025-26,T 23-26
+2026-04-30,debit,BMO chequing ****1004,out,900.0,,,,Corp tax (2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-04-30,debit,BMO chequing ****1004,out,1392.87,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-01,card,BMO Mastercard 5840,out,45.19,,,,VALET CAR WASH MISSISSAUGA ON,Vehicle & fuel,1.0,5.2,0.8,4.16,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-01,debit,BMO chequing ****1004,in,7593.6,7593.6,873.6,6720.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-01,debit,BMO chequing ****1004,out,700.84,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-05-01,personal,Personal card (director-funded),out,118.65,,,,Bell (mobile + internet),Telecom,1.0,13.65,1.0,13.65,Canadian,2026,2025-26,Bell payment history
+2026-05-02,card,BMO Mastercard 5840,out,110.0,,,,PETRO-CANADA 33526 BRANTFORD ON,Vehicle & fuel,1.0,12.65,0.8,10.12,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-04,card,BMO Mastercard 5840,out,11.28,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,1.3,0.5,0.65,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-05,card,BMO Mastercard 5840,out,34.21,,,,DOORDASHCHICKNBROS DOWNTOWN TOROON,Meals & entertainment,0.5,3.94,0.5,1.97,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-06,card,BMO Mastercard 5840,out,16.71,,,,POPEYES 11598 MISSISSAUGA ON,Meals & entertainment,0.5,1.92,0.5,0.96,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-07,card,BMO Mastercard 5840,out,81.51,,,,KOLACHI INN MISSISSAUGA ON,Meals & entertainment,0.5,9.38,0.5,4.69,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-07,card,BMO Mastercard 5840,out,30.0,,,,PEARSON PARKING T3 TORONTO ON,Travel & parking,1.0,3.45,1.0,3.45,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-08,card,BMO Mastercard 5840,out,140.0,,,,CLAUDE.AI SUBSCRIPTION SAN FRANCISCOCA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"May 28, 2026.pdf"
+2026-05-08,debit,BMO chequing ****1004,out,8008.0,,,,WISE Freelancer payment,Subcontractor,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-08,debit,BMO chequing ****1004,out,59.15,,,,WISE Fee,Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-08,debit,BMO chequing ****1004,out,2000.0,,,,salary to Maham,Salary,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-08,debit,BMO chequing ****1004,out,347.84,,,,salary to Maham,Salary,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-09,card,BMO Mastercard 5840,out,16.37,,,,GALITO'S MILTON BRANCH MILTON ON,Meals & entertainment,0.5,1.88,0.5,0.94,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-09,card,BMO Mastercard 5840,out,100.0,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,11.5,0.8,9.2,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-11,card,BMO Mastercard 5840,out,3.38,,,,Ad free for PrimeVideo VANCOUVER BC,Software & subscriptions,1.0,0.39,1.0,0.39,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-11,card,BMO Mastercard 5840,out,21.36,,,,NORA CAKES AND SWEETS MISSISSAUGA ON,Meals & entertainment,0.5,2.46,0.5,1.23,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-11,debit,BMO chequing ****1004,out,460.14,,,,Payroll Taxes,Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-15,card,BMO Mastercard 5840,out,27.1,,,,SQ *PANI PURI PARADISE Mississauga ON,Meals & entertainment,0.5,3.12,0.5,1.56,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-15,card,BMO Mastercard 5840,out,118.61,,,,PIONEER STN #849 MISSISSAUGA ON,Vehicle & fuel,1.0,13.65,0.8,10.92,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-15,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-05-18,card,BMO Mastercard 5840,out,77.32,,,,TST-Hen n Bun - Missi Mississauga ON,Meals & entertainment,0.5,8.9,0.5,4.45,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-18,card,BMO Mastercard 5840,out,12.41,,,,TIM HORTONS #2381 GUELPH ON,Meals & entertainment,0.5,1.43,0.5,0.72,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-18,card,BMO Mastercard 5840,out,9.0,,,,GUELPH GENERAL HOSPITA GUELPH ON,Travel & parking,1.0,1.04,1.0,1.04,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-19,card,BMO Mastercard 5840,out,187.86,,,,CLAUDE.AI SUBSCRIPTION SAN FRANCISCOCA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"May 28, 2026.pdf"
+2026-05-21,card,BMO Mastercard 5840,out,118.67,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,13.65,0.8,10.92,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-21,debit,BMO chequing ****1004,out,1440.75,,,,Ejaz accountant fee,Professional fees,1.0,165.75,1.0,165.75,Canadian,2026,2025-26,T 23-26
+2026-05-22,personal,Personal card (director-funded),refund,148.78,,,,Rogers home internet,Telecom,1.0,-17.12,1.0,-17.12,Canadian,2026,2025-26,Rogers bill history
+2026-05-25,card,BMO Mastercard 5840,out,15.8,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,1.82,0.5,0.91,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-27,card,BMO Mastercard 5840,out,55.34,,,,MONTEIRO SCARBOROUGH TORONTO ON,Meals & entertainment,0.5,6.37,0.5,3.19,Canadian,2026,2025-26,"May 28, 2026.pdf"
+2026-05-28,card,BMO Mastercard 5840,out,19.19,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,2.21,0.5,1.11,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-05-28,card,BMO Mastercard 5840,out,100.0,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,11.5,0.8,9.2,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-05-28,debit,BMO chequing ****1004,in,4644.9,4644.9,0.0,4644.9,Tax Return,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-28,debit,BMO chequing ****1004,out,2347.84,,,,salary to Maham,Salary,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-29,card,BMO Mastercard 5840,out,10.74,,,,MUTABAK KARAK MISSISSAUGA ON,Meals & entertainment,0.5,1.24,0.5,0.62,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-05-29,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-05-29,debit,BMO chequing ****1004,out,1289.87,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-01,card,BMO Mastercard 5840,out,45.19,,,,VALET CAR WASH MISSISSAUGA ON,Vehicle & fuel,1.0,5.2,0.8,4.16,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-01,card,BMO Mastercard 5840,out,102.0,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,11.73,0.8,9.38,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-01,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2026,2025-26,T 23-26
+2026-06-01,debit,BMO chequing ****1004,out,900.0,,,,Corp tax (2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-01,debit,BMO chequing ****1004,out,700.84,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-06-03,card,BMO Mastercard 5840,out,28.61,,,,DOORDASHPOPEYESLOUI DOWNTOWN TOROON,Meals & entertainment,0.5,3.29,0.5,1.65,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-05,card,BMO Mastercard 5840,out,7.9,,,,MELT N DIP EGLINGTON MISSISSAUGA ON,Meals & entertainment,0.5,0.91,0.5,0.46,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-06,card,BMO Mastercard 5840,out,24.85,,,,PIZZA PROS MISSISSAUGA ON,Meals & entertainment,0.5,2.86,0.5,1.43,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-08,card,BMO Mastercard 5840,out,9.04,,,,NORA CAKES AND SWEETS MISSISSAUGA ON,Meals & entertainment,0.5,1.04,0.5,0.52,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-08,debit,BMO chequing ****1004,out,1000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-09,card,BMO Mastercard 5840,out,115.18,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,13.25,0.8,10.6,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-09,card,BMO Mastercard 5840,out,68.88,,,,SUMAQ IRAQI CHARCOAL G MISSISSAUGA ON,Meals & entertainment,0.5,7.92,0.5,3.96,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-12,card,BMO Mastercard 5840,out,18.07,,,,Zauq Hospitality Group MISSISSAUGA ON,Meals & entertainment,0.5,2.08,0.5,1.04,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-12,card,BMO Mastercard 5840,out,12.95,,,,ZAITS MILTON ON,Meals & entertainment,0.5,1.49,0.5,0.75,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-12,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-13,personal,Personal card (director-funded),out,113.0,,,,Bell (mobile + internet),Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2025-26,Bell payment history
+2026-06-14,card,BMO Mastercard 5840,out,39.54,,,,AMZN Mktp CA*UC3216KZ3 TORONTO ON,Office & supplies,1.0,4.55,1.0,4.55,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-14,card,BMO Mastercard 5840,out,19.06,,,,POPEYES 11598 MISSISSAUGA ON,Meals & entertainment,0.5,2.19,0.5,1.1,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-14,card,BMO Mastercard 5840,out,18.06,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,2.08,0.5,1.04,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-14,card,BMO Mastercard 5840,out,72.95,,,,SHELL C11301 MISSISSAUGA ON,Vehicle & fuel,1.0,8.39,0.8,6.71,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-15,card,BMO Mastercard 5840,out,38.41,,,,AMZN Mktp CA*5H2O740V3 TORONTO ON,Office & supplies,1.0,4.42,1.0,4.42,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-15,card,BMO Mastercard 5840,out,16.94,,,,SAM S NASHVILLE HOT MISSISSAUGA ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-15,debit,BMO chequing ****1004,out,1000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-15,debit,BMO chequing ****1004,out,460.14,,,,Payroll Taxes,Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-06-18,card,BMO Mastercard 5840,out,36.7,,,,KARACHI FOOD COURT MISSISSAUGA ON,Meals & entertainment,0.5,4.22,0.5,2.11,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-20,card,BMO Mastercard 5840,out,20.32,,,,TST-GC Burger - Missis Mississauga ON,Meals & entertainment,0.5,2.34,0.5,1.17,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-20,card,BMO Mastercard 5840,out,53.38,,,,GALITO'S MISSISSAUGA ON,Meals & entertainment,0.5,6.14,0.5,3.07,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-21,card,BMO Mastercard 5840,out,73.42,,,,LAHORE CHATKHARA MISSISSAUGA ON,Meals & entertainment,0.5,8.45,0.5,4.23,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-22,card,BMO Mastercard 5840,out,45.48,,,,THE BURGER BROS MISSISSAUGA ON,Meals & entertainment,0.5,5.23,0.5,2.62,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-23,card,BMO Mastercard 5840,out,100.0,,,,PETRO-CANADA 00227 ETOBICOKE ON,Vehicle & fuel,1.0,11.5,0.8,9.2,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-23,card,BMO Mastercard 5840,out,22.0,,,,WATERPARK PLACE TORONTO ON,Travel & parking,1.0,2.53,1.0,2.53,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-23,card,BMO Mastercard 5840,out,110.98,,,,CITY OF TORONTO FERRY TORONTO ON,Travel & parking,1.0,12.77,1.0,12.77,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-24,card,BMO Mastercard 5840,out,433.92,,,,TST-Hakkalicious - Od Mississauga ON,Meals & entertainment,0.5,49.92,0.5,24.96,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-24,card,BMO Mastercard 5840,out,88.14,,,,TST-Hakkalicious - Od Mississauga ON,Meals & entertainment,0.5,10.14,0.5,5.07,Canadian,2026,2025-26,"June 28, 2026.pdf"
+2026-06-25,card,BMO Mastercard 5840,out,28.0,,,,ANTHROPIC* CLAUDE SUB SAN FRANCISCOCA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"June 28, 2026.pdf"
+2026-06-26,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-29,card,BMO Mastercard 5840,out,1.53,,,,CONV FEE -TORONTO RSD ETOBICOKE ON,Fines & penalties,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-06-29,card,BMO Mastercard 5840,out,65.0,,,,RSD-PARKING TICKET-CRE TORONTO ON,Fines & penalties,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-06-29,card,BMO Mastercard 5840,out,41.2,,,,CHA SHA MISSISSAUGA ON,Meals & entertainment,0.5,4.74,0.5,2.37,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-06-29,debit,BMO chequing ****1004,out,1000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-29,debit,BMO chequing ****1004,out,1779.9,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-30,card,BMO Mastercard 5840,refund,39.54,,,,AMZN Mktp CA TORONTO ON,Office & supplies,1.0,-4.55,1.0,-4.55,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-06-30,card,BMO Mastercard 5840,out,27.07,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,3.11,0.5,1.56,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-06-30,debit,BMO chequing ****1004,out,2347.84,,,,salary to Maham,Salary,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-06-30,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2026,2025-26,T 23-26
+2026-06-30,debit,BMO chequing ****1004,out,900.0,,,,Corp tax (2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-07-01,card,BMO Mastercard 5840,out,45.19,,,,VALET CAR WASH MISSISSAUGA ON,Vehicle & fuel,1.0,5.2,0.8,4.16,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-01,card,BMO Mastercard 5840,out,111.83,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,12.87,0.8,10.3,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-07-02,card,BMO Mastercard 5840,out,118.4,,,,ANTHROPIC* CLAUDE SUB SAN FRANCISCOCA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"July 28, 2026.pdf"
+2026-07-02,card,BMO Mastercard 5840,out,8.45,,,,TIM HORTONS #1733 MISSISSAUGA ON,Meals & entertainment,0.5,0.97,0.5,0.49,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-02,debit,BMO chequing ****1004,out,700.84,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-07-03,card,BMO Mastercard 5840,out,105.0,,,,SQSP* DOMAIN#241109608 NEW YORK NY,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"July 28, 2026.pdf"
+2026-07-05,card,BMO Mastercard 5840,out,158.19,,,,Amazon.ca*DS1890NH3 TORONTO ON,Office & supplies,1.0,18.2,1.0,18.2,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-05,card,BMO Mastercard 5840,out,44.58,,,,TST-Hen n Bun - Missi Mississauga ON,Meals & entertainment,0.5,5.13,0.5,2.57,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-10,card,BMO Mastercard 5840,out,40.64,,,,WATAN KABOB MISSISSAUGA ON,Meals & entertainment,0.5,4.68,0.5,2.34,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-10,card,BMO Mastercard 5840,out,110.03,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,12.66,0.8,10.13,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-10,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-07-11,card,BMO Mastercard 5840,out,42.42,,,,LS Daves Hot Chicken Burlington ON,Meals & entertainment,0.5,4.88,0.5,2.44,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-11,card,BMO Mastercard 5840,out,319.76,,,,WC*iFly Calgary Vancouver BC,Meals & entertainment,0.5,36.79,0.5,18.4,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-12,card,BMO Mastercard 5840,out,7.9,,,,DOORDASHSHAWARMAROY DOWNTOWN TOROON,Meals & entertainment,0.5,0.91,0.5,0.46,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-13,debit,BMO chequing ****1004,out,1000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-07-14,card,BMO Mastercard 5840,out,86.16,,,,DOORDASHDAVESHOTCHI DOWNTOWN TOROON,Meals & entertainment,0.5,9.91,0.5,4.96,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-14,personal,Personal card (director-funded),out,113.0,,,,Bell (mobile + internet),Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2025-26,Bell payment history
+2026-07-15,debit,BMO chequing ****1004,out,460.14,,,,Payroll Taxes,Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-07-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-07-16,card,BMO Mastercard 5840,out,16.94,,,,SQ *KANAFANI SWEETS & MISSISSAUGA ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-16,card,BMO Mastercard 5840,out,112.66,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,12.96,0.8,10.37,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-16,card,BMO Mastercard 5840,out,11.98,,,,2746024 ONTARIO INC. MISSISSAUGA ON,Meals & entertainment,0.5,1.38,0.5,0.69,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-19,card,BMO Mastercard 5840,out,472.32,,,,TST-Hakkalicious - Od Mississauga ON,Meals & entertainment,0.5,54.34,0.5,27.17,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-20,debit,BMO chequing ****1004,out,6500.0,,,,pre payment GST (2025 - 2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-07-21,card,BMO Mastercard 5840,out,17.99,,,,BASKIN ROBBINS #335380 MISSISSAUGA ON,Meals & entertainment,0.5,2.07,0.5,1.04,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-24,card,BMO Mastercard 5840,out,43.45,,,,TST-Hen n Bun - Missi Mississauga ON,Meals & entertainment,0.5,5.0,0.5,2.5,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-24,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-07-25,card,BMO Mastercard 5840,out,110.0,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,12.65,0.8,10.12,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-27,card,BMO Mastercard 5840,out,1200.0,,,,THP-CREDIT VALLEY SITE MISSISSAUGA ON,Personal — owed by Umar,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-07-27,card,BMO Mastercard 5840,out,1.5,,,,CITY OF MISSISSAUGA ON MISSISSAUGA ON,Travel & parking,1.0,0.17,1.0,0.17,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-07-27,card,BMO Mastercard 5840,out,21.0,,,,THP - CREDIT VALLEY HO MISSISSAUGA ON,Personal — owed by Umar,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-07-27,debit,BMO chequing ****1004,out,1000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-07-28,card,BMO Mastercard 5840,out,38.36,,,,DESISHAMIANA HALAL RES MISSISSAUGA ON,Meals & entertainment,0.5,4.41,0.5,2.21,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-07-28,card,BMO Mastercard 5840,out,175.0,,,,ANNUAL FEE,Bank fees (HST-exempt),1.0,0.0,0.0,0.0,Canadian,2026,2025-26,"July 28, 2026.pdf"
+2026-07-29,card,BMO Mastercard 5840,out,12.48,,,,TIM HORTONS #6105 MISSISSAUGA ON,Meals & entertainment,0.5,1.44,0.5,0.72,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-07-29,card,BMO Mastercard 5840,out,110.0,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,12.65,0.8,10.12,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-07-30,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2026,2025-26,T 23-26
+2026-07-31,debit,BMO chequing ****1004,out,900.0,,,,Corp tax (2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-07-31,debit,BMO chequing ****1004,out,2347.84,,,,salary to Maham,Salary,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-08-01,card,BMO Mastercard 5840,out,22.6,,,,SQ *JUICE Mississauga ON,Meals & entertainment,0.5,2.6,0.5,1.3,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-01,card,BMO Mastercard 5840,out,45.19,,,,VALET CAR WASH MISSISSAUGA ON,Vehicle & fuel,1.0,5.2,0.8,4.16,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-08-02,card,BMO Mastercard 5840,out,140.0,,,,ANTHROPIC* CLAUDE SUB SAN FRANCISCOCA,Software & subscriptions,1.0,0.0,1.0,0.0,non-resident,2026,2025-26,"August 28, 2026.pdf"
+2026-08-02,card,BMO Mastercard 5840,out,44.94,,,,POPEYES 11598 MISSISSAUGA ON,Meals & entertainment,0.5,5.17,0.5,2.59,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-03,card,BMO Mastercard 5840,out,104.52,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,12.02,0.8,9.62,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-04,debit,BMO chequing ****1004,out,700.84,,,,Car insurance,Vehicle — insurance,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-08-04,debit,BMO chequing ****1004,out,8512.0,,,,WISE Freelancer payment,Subcontractor,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-08-04,debit,BMO chequing ****1004,out,62.76,,,,WISE Fee,Bank & transfer fees,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-08-04,debit,BMO chequing ****1004,out,2254.15,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-08-05,card,BMO Mastercard 5840,out,26.53,,,,POPEYES 11598 MISSISSAUGA ON,Meals & entertainment,0.5,3.05,0.5,1.53,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-06,card,BMO Mastercard 5840,out,18.07,,,,PIZZA KARACHI LEBOVIC TORONTO ON,Meals & entertainment,0.5,2.08,0.5,1.04,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-07,debit,BMO chequing ****1004,in,9492.0,9492.0,1092.0,8400.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2025-26,T 23-26
+2026-08-08,card,BMO Mastercard 5840,out,48.36,,,,SQ *THE BURGER ALLEY Mississauga ON,Meals & entertainment,0.5,5.56,0.5,2.78,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-08,card,BMO Mastercard 5840,out,26.44,,,,THE DOUGH STORY MISSISSAUGA ON,Meals & entertainment,0.5,3.04,0.5,1.52,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-10,debit,BMO chequing ****1004,out,1000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-08-11,card,BMO Mastercard 5840,out,102.62,,,,SHELL C07659 MISSISSAUGA ON,Vehicle & fuel,1.0,11.81,0.8,9.45,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-13,card,BMO Mastercard 5840,out,103.96,,,,TST-Hakkalicious - Od Mississauga ON,Meals & entertainment,0.5,11.96,0.5,5.98,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-13,card,BMO Mastercard 5840,out,294.4,,,,AFGHAN FLAME KABOB HOU MISSISSAUGA ON,Meals & entertainment,0.5,33.87,0.5,16.94,Canadian,2026,2025-26,"August 28, 2026.pdf"
+2026-08-13,personal,Personal card (director-funded),out,117.24,,,,Bell (mobile + internet),Telecom,1.0,13.49,1.0,13.49,Canadian,2026,2025-26,Bell payment history
+2026-08-14,debit,BMO chequing ****1004,out,460.14,,,,Payroll Taxes,Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2025-26,T 23-26
+2026-08-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · actual
+2026-08-16,card,BMO Mastercard 5840,out,15.8,,,,ASEER TIME MISSISSAUGA ON,Meals & entertainment,0.5,1.82,0.5,0.91,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-16,card,BMO Mastercard 5840,out,45.2,,,,SLIDER STATION MISSISSAUGA ON,Meals & entertainment,0.5,5.2,0.5,2.6,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-17,card,BMO Mastercard 5840,out,95.58,,,,ESSO CIRCLE K MISSISSAUGA ON,Vehicle & fuel,1.0,11.0,0.8,8.8,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-17,card,BMO Mastercard 5840,out,12.0,,,,CORP CANADA/20436875 OTTAWA ON,Government fees,1.0,0.0,0.0,0.0,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-18,card,BMO Mastercard 5840,out,29.36,,,,SQ *FAROOJ ABO ALABED Mississauga ON,Meals & entertainment,0.5,3.38,0.5,1.69,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-18,card,BMO Mastercard 5840,out,10.16,,,,SQ *KANAFANI SWEETS & MISSISSAUGA ON,Meals & entertainment,0.5,1.17,0.5,0.59,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-21,card,BMO Mastercard 5840,out,18.34,,,,PIZZA KARACHI HEARTLAN MISSISSAUGA ON,Meals & entertainment,0.5,2.11,0.5,1.06,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-21,card,BMO Mastercard 5840,out,8.33,,,,TIM HORTONS #6228 MISSISSAUGA ON,Meals & entertainment,0.5,0.96,0.5,0.48,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-21,debit,BMO chequing ****1004,in,8542.8,8542.8,982.8,7560.0,MIR pay,Revenue,,0.0,,0.0,Canadian,2026,2026-27,T 23-26
+2026-08-22,card,BMO Mastercard 5840,out,50.78,,,,CHAI PANI MISSISSAUGA MISSISSAUGA ON,Meals & entertainment,0.5,5.84,0.5,2.92,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-22,card,BMO Mastercard 5840,out,16.93,,,,CHAI PANI MISSISSAUGA MISSISSAUGA ON,Meals & entertainment,0.5,1.95,0.5,0.98,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-24,card,BMO Mastercard 5840,out,54.79,,,,TST-Farooj Abo Alabed Scarborough ON,Meals & entertainment,0.5,6.3,0.5,3.15,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-24,card,BMO Mastercard 5840,out,115.64,,,,HORNBY ESSO MILTON ON,Vehicle & fuel,1.0,13.3,0.8,10.64,Canadian,2026,2026-27,"August 28, 2026.pdf"
+2026-08-24,debit,BMO chequing ****1004,out,5000.0,,,,Wealthsimple investment,Investments (not expense),0.0,0.0,0.0,0.0,Canadian,2026,2026-27,T 23-26
+2026-08-31,debit,BMO chequing ****1004,out,1750.01,,,,Car lease,Vehicle — lease,0.4493,201.33,0.3594,72.36,Canadian,2026,2026-27,T 23-26
+2026-08-31,debit,BMO chequing ****1004,out,900.0,,,,Corp tax (2026),Tax & GST remittances,0.0,0.0,0.0,0.0,Canadian,2026,2026-27,T 23-26
+2026-08-31,debit,BMO chequing ****1004,out,2347.84,,,,salary to Maham,Salary,1.0,0.0,0.0,0.0,Canadian,2026,2026-27,T 23-26
+2026-08-31,debit,BMO chequing ****1004,out,2833.88,,,,credit card payment,Card settlement,0.0,0.0,0.0,0.0,Canadian,2026,2026-27,T 23-26
+2026-09-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · actual
+2026-09-13,personal,Personal card (director-funded),out,113.0,,,,Bell (mobile + internet),Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2026-27,Bell payment history
+2026-09-15,personal,Personal card (director-funded),out,2630.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · actual
+2026-10-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected
+2026-10-01,personal,Personal card (director-funded),out,113.0,,,,Phone and internet,Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2026-27,recurring · projected
+2026-10-15,personal,Personal card (director-funded),out,2630.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected
+2026-11-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected
+2026-11-01,personal,Personal card (director-funded),out,113.0,,,,Phone and internet,Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2026-27,recurring · projected
+2026-11-15,personal,Personal card (director-funded),out,2630.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected
+2026-12-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected
+2026-12-01,personal,Personal card (director-funded),out,113.0,,,,Phone and internet,Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2026-27,recurring · projected
+2026-12-15,personal,Personal card (director-funded),out,2630.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected

@@ -1,0 +1,1340 @@
+[
+ {
+  "id": "t2-2023",
+  "kind": "T2",
+  "scope": "corporate",
+  "title": "T2 2023 (first, 140 day year)",
+  "period_start": "2023-08-14",
+  "period_end": "2023-12-31",
+  "due": "2024-07-02",
+  "payment_due": "2024-04-01",
+  "status": "assessed",
+  "result": {
+   "kind": "owing",
+   "amount": 4379
+  },
+  "plain": "The corporation's first income tax return, for its first 140 days. It earned $72,923 and owed $4,379 of tax, paid on 8 February 2024.",
+  "lines": [
+   {
+    "label": "Revenue",
+    "value": 72923
+   },
+   {
+    "label": "Sub-contracts",
+    "value": 28175
+   },
+   {
+    "label": "Telephone",
+    "value": 2076
+   },
+   {
+    "label": "Travel",
+    "value": 2432
+   },
+   {
+    "label": "Rent",
+    "value": 1883
+   },
+   {
+    "label": "Vehicle",
+    "value": 1105
+   },
+   {
+    "label": "Office",
+    "value": 712
+   },
+   {
+    "label": "Computer related",
+    "value": 423
+   },
+   {
+    "label": "Meals",
+    "value": 349
+   },
+   {
+    "label": "Insurance",
+    "value": 52
+   },
+   {
+    "label": "Total operating expenses",
+    "value": 37207
+   },
+   {
+    "label": "Net income",
+    "value": 35716
+   },
+   {
+    "label": "Tax payable",
+    "value": 4379
+   },
+   {
+    "label": "Dividends declared",
+    "value": 13614
+   },
+   {
+    "label": "Retained earnings at year end",
+    "value": 22102
+   },
+   {
+    "label": "Cash at year end",
+    "value": 34571
+   },
+   {
+    "label": "Withholding taxes payable",
+    "value": 9124
+   }
+  ],
+  "notes": [
+   "These lines come from the prior year column of the filed T2 2024; the 2023 return itself is not in the folder.",
+   "CRA assessed it on 23 January 2024. The filing date is not recorded; a $904 fee to Saira on 18 January 2024 suggests she filed it.",
+   "The pro forma spreadsheet splits the same year differently (sub-contractors $25,000, office and sundry $7,828, net income before tax $40,095). The filed column is used here.",
+   "Revenue $72,923 less operating expenses $37,207 gives the $35,716 net income.",
+   "Deadlines rolled forward from weekend dates: 30 June 2024 was a Sunday and 1 July a holiday, so filing was due 2 July; 31 March 2024 was a Sunday, so payment was due 1 April."
+  ],
+  "sources": [
+   "2024/Corporate/(20241231) T2.pdf",
+   "2025/Corporate/accountant files/final/Efile Submission Failure -15248132 Canada Inc. - Umar.docx",
+   "2025/Corporate/performa.xlsx",
+   "Business Transactions.xlsx",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "t2-2024",
+  "kind": "T2",
+  "scope": "corporate",
+  "title": "T2 2024",
+  "period_start": "2024-01-01",
+  "period_end": "2024-12-31",
+  "due": "2025-06-30",
+  "payment_due": "2025-03-31",
+  "filed_on": "2025-02-19",
+  "filed_by": "Saira Chaudhry (EFILE R4767), signed by Umar 19 February 2025",
+  "status": "assessed",
+  "result": {
+   "kind": "owing",
+   "amount": 15848
+  },
+  "plain": "The corporation's 2024 return. Revenue was $238,877 and tax came to $15,848, paid on 5 March 2025; it also declared $72,550 of dividends to Umar.",
+  "lines": [
+   {
+    "label": "Revenue",
+    "value": 238877
+   },
+   {
+    "label": "Sub-contracts",
+    "value": 78680
+   },
+   {
+    "label": "Vehicle",
+    "value": 13426
+   },
+   {
+    "label": "Rent",
+    "value": 6024
+   },
+   {
+    "label": "Office",
+    "value": 3923
+   },
+   {
+    "label": "Meals",
+    "value": 3159
+   },
+   {
+    "label": "Travel",
+    "value": 1804
+   },
+   {
+    "label": "Telephone",
+    "value": 1158
+   },
+   {
+    "label": "Accounting",
+    "value": 800
+   },
+   {
+    "label": "Computer related",
+    "value": 788
+   },
+   {
+    "label": "Amortization",
+    "value": 545
+   },
+   {
+    "label": "Insurance",
+    "value": 515
+   },
+   {
+    "label": "Bank charges",
+    "value": 3
+   },
+   {
+    "label": "Total operating expenses",
+    "value": 110825
+   },
+   {
+    "label": "Net income before tax",
+    "value": 128052
+   },
+   {
+    "label": "Line 300 Net income for tax",
+    "value": 129905
+   },
+   {
+    "label": "Line 430 Small business deduction",
+    "value": 24682
+   },
+   {
+    "label": "Line 700 Federal tax",
+    "value": 11691
+   },
+   {
+    "label": "Line 760 Ontario tax",
+    "value": 4157
+   },
+   {
+    "label": "Line 770 Total tax payable",
+    "value": 15848
+   },
+   {
+    "label": "Line 840 Instalments paid",
+    "value": 0
+   },
+   {
+    "label": "Income tax provision (books)",
+    "value": 20227
+   },
+   {
+    "label": "Net income after tax",
+    "value": 107825
+   },
+   {
+    "label": "Dividends declared (non eligible)",
+    "value": 72550
+   },
+   {
+    "label": "Cash",
+    "value": 77740
+   },
+   {
+    "label": "Computer equipment at cost",
+    "value": 1817
+   },
+   {
+    "label": "Accumulated amortization",
+    "value": -545
+   },
+   {
+    "label": "Total assets",
+    "value": 79012
+   },
+   {
+    "label": "Total liabilities",
+    "value": 21535
+   },
+   {
+    "label": "Retained earnings at start",
+    "value": 22102
+   },
+   {
+    "label": "Retained earnings at year end",
+    "value": 57377
+   }
+  ],
+  "notes": [
+   "Assessed by CRA on 28 February 2025.",
+   "The bank paid $16,154.35 on 5 March 2025, $306.35 more than the $15,848 owing; the sources do not explain why.",
+   "CLAUDE.md lists computer equipment net $6,521; that figure comes from the previous accountant's August 2025 sheet. The filed return shows $1,817 less $545 = $1,272.",
+   "No instalments were paid during 2024. The return set the 2025 instalments at $15,852.",
+   "The bank workbook shows $100,000 of 'Dividends to Umar' transfers in 2024 against $72,550 declared; the gap of $27,450 is unexplained."
+  ],
+  "sources": [
+   "2024/Corporate/(20241231) T2.pdf",
+   "2025/Corporate/accountant files/final/Efile Submission Failure -15248132 Canada Inc. - Umar.docx",
+   "Business Transactions.xlsx",
+   "CLAUDE.md",
+   "2025/Corporate/performa.xlsx"
+  ]
+ },
+ {
+  "id": "t2-2025",
+  "kind": "T2",
+  "scope": "corporate",
+  "title": "T2 2025",
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "due": "2026-06-30",
+  "payment_due": "2026-03-31",
+  "filed_on": "2026-05-18",
+  "filed_by": "Ejaz Pirwani, Fintax Associate Inc. (EFILE V3102)",
+  "status": "assessed",
+  "result": {
+   "kind": "refund",
+   "amount": 4592
+  },
+  "plain": "The corporation's 2025 return. Revenue $261,878, tax $13,368; instalments of $17,960 were already paid, so CRA refunded $4,592, which arrived with interest as $4,644.90 on 28 May 2026.",
+  "lines": [
+   {
+    "label": "Revenue",
+    "value": 261878
+   },
+   {
+    "label": "Sub-contracts",
+    "value": 64272
+   },
+   {
+    "label": "Vehicle",
+    "value": 24315
+   },
+   {
+    "label": "Salaries and wages",
+    "value": 17838
+   },
+   {
+    "label": "Computer related",
+    "value": 14157
+   },
+   {
+    "label": "Rent (home office)",
+    "value": 9335
+   },
+   {
+    "label": "Meals and entertainment",
+    "value": 5939
+   },
+   {
+    "label": "Other expenses",
+    "value": 5332
+   },
+   {
+    "label": "Office",
+    "value": 4131
+   },
+   {
+    "label": "Travel",
+    "value": 2880
+   },
+   {
+    "label": "Accounting fees",
+    "value": 2274
+   },
+   {
+    "label": "Insurance",
+    "value": 1866
+   },
+   {
+    "label": "Telephone",
+    "value": 1789
+   },
+   {
+    "label": "Business taxes and memberships",
+    "value": 752
+   },
+   {
+    "label": "Amortization",
+    "value": 382
+   },
+   {
+    "label": "Bank charges",
+    "value": 12
+   },
+   {
+    "label": "Total operating expenses",
+    "value": 155274
+   },
+   {
+    "label": "Net income before tax",
+    "value": 106604
+   },
+   {
+    "label": "Meals add back (50%)",
+    "value": 2970
+   },
+   {
+    "label": "Line 300 Net income for tax",
+    "value": 109574
+   },
+   {
+    "label": "Line 430 Small business deduction",
+    "value": 20819
+   },
+   {
+    "label": "Line 700 Federal tax",
+    "value": 9862
+   },
+   {
+    "label": "Line 760 Ontario tax",
+    "value": 3506
+   },
+   {
+    "label": "Line 770 Total tax payable",
+    "value": 13368
+   },
+   {
+    "label": "Line 840 Instalments paid",
+    "value": 17960
+   },
+   {
+    "label": "Refund",
+    "value": 4592
+   },
+   {
+    "label": "Net income after tax",
+    "value": 93236
+   },
+   {
+    "label": "Cash and deposits",
+    "value": 154616
+   },
+   {
+    "label": "Taxes receivable",
+    "value": 11207
+   },
+   {
+    "label": "Total assets",
+    "value": 166713
+   },
+   {
+    "label": "Amounts payable",
+    "value": 2643
+   },
+   {
+    "label": "Owed to Umar (due to shareholder)",
+    "value": 13357
+   },
+   {
+    "label": "Total liabilities",
+    "value": 16000
+   },
+   {
+    "label": "Retained earnings at start",
+    "value": 57377
+   },
+   {
+    "label": "Dividends declared in 2025",
+    "value": 0
+   },
+   {
+    "label": "Retained earnings at year end",
+    "value": 150613
+   },
+   {
+    "label": "2026 instalments CRA asks for",
+    "value": 13370
+   }
+  ],
+  "notes": [
+   "Received and assessed by CRA on 18 May 2026. A resubmission on 19 May was rejected with error 387 because the year was already assessed. No formal notice of assessment is in the folder.",
+   "INDEX.md lists Claude's pre filing estimates under 'T2 filed and assessed' (net income $112,985.74, tax $14,146.58, retained earnings $156,216.16). Those are not the filed numbers.",
+   "The whole Mercedes lease was deducted at 100% business use without the s.67.3 cap: about $6,608 above the cap, about $9,600 if the down payment is also spread over the 36 month term (about $806 to $1,170 of tax). Left for Saira to decide.",
+   "Other expenses $5,332 is a balancing figure with no invoices behind it, per the accountant.",
+   "Taxes receivable $11,207 is corporate tax $4,898 plus GST $6,309. $4,898 is $306 more than the $4,592 refund, close to the $306.35 extra paid on the 2024 balance; not confirmed.",
+   "The instalment list on the return has two typing slips: 30 April shows year 2024, and the 30 December payment is listed as a second 30 October. Bank statements confirm the dates; the $17,960 total is right.",
+   "Salaries $17,838 is Maham's $16,000 plus the $1,837.50 payroll remittance.",
+   "The accountant's first draft (tax $15,989, refund $1,971) was replaced on 15 May by this version.",
+   "Also flagged on 7 October 2026: the Mercedes was claimed at 100% from 27 September to 31 December 2025 (a 20% personal share would be $3,771.76), and Umar's own car was paid mileage of $3,160.96 while about $3,270 of its actual costs were also deducted, a likely double claim."
+  ],
+  "sources": [
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/07 T2 2025 - as filed/T2 2025 - 15248132 Canada Inc. - client copy.pdf",
+   "2025/Corporate/accountant files/final/2. T2 '25 - Initial Assessment Tracker - 15248132 Ca Inc. - Umar.pdf",
+   "2025/Corporate/accountant files/final/Efile Submission Failure -15248132 Canada Inc. - Umar.docx",
+   "2025/Corporate/accountant files/accountant emails.pdf",
+   "2025/Corporate/accountant files/2. Tax Summary '25 - Review - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "2025/Corporate/1. T-183 x2725 - Sign x26 Return - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md"
+  ]
+ },
+ {
+  "id": "t2-2026",
+  "kind": "T2",
+  "scope": "corporate",
+  "title": "T2 2026",
+  "period_start": "2026-01-01",
+  "period_end": "2026-12-31",
+  "due": "2027-06-30",
+  "payment_due": "2027-03-31",
+  "filed_by": "Saira (CPACM), planned",
+  "status": "in-progress",
+  "plain": "The corporation's 2026 return, year still running. On the 7 October projection tax would be about $15,243 against $10,500 of planned instalments, leaving about $4,743 to pay by 31 March 2027.",
+  "lines": [
+   {
+    "label": "Projected taxable income (23 September model)",
+    "value": 120205.06
+   },
+   {
+    "label": "Income added: 20% personal share of the Mercedes no longer deductible",
+    "value": 4736
+   },
+   {
+    "label": "Projected tax at 12.2% (23 September model)",
+    "value": 14665.02
+   },
+   {
+    "label": "Tax added by the Mercedes personal share",
+    "value": 578
+   },
+   {
+    "label": "Instalments paid by 31 August",
+    "value": 6900
+   },
+   {
+    "label": "Instalments planned by 31 December",
+    "value": 10500
+   },
+   {
+    "label": "Projected balance owing",
+    "value": 4743
+   },
+   {
+    "label": "Lease payments above the s.67.3 cap (not deductible)",
+    "value": 11564.77
+   },
+   {
+    "label": "Director funded expenses needed to break even (23 September model)",
+    "value": 45273
+   }
+  ],
+  "notes": [
+   "The 23 September projection counted only rent, phone, insurance and one service bill as director funded expenses ($11,133.96). The $45,273 break even includes those, so about $34,139 more would be needed; it predates the $578 Mercedes change.",
+   "An earlier estimate (taxable income $105,064, tax $12,818, about $2,318 short) dates from 3 August and wrongly subtracted the $4,644.90 refund from revenue.",
+   "Saira prepares it from a spreadsheet of every 2026 transaction, built after the December statements. Mercedes at 80%, rent at 30%.",
+   "The $4,644.90 CRA refund sits in the workbook's 2026 revenue columns and must be taken out.",
+   "Covering the gap by instalments means about $1,186 a month from September to December.",
+   "If Umar picks 85% business use instead of 80%, the personal charge becomes $5,339.61, deductions rise by $1,201.63 and the gap falls to about $4,596."
+  ],
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "memory:saira-next-package-full-year-2026.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "session:075be64b-be34-45d8-8e62-13cde675d867",
+   "2026/Corporate/Vehicle personal use 2026.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
+   "memory:mercedes-80-percent-business-use.md"
+  ]
+ },
+ {
+  "id": "hst-2023-24",
+  "kind": "HST",
+  "scope": "corporate",
+  "title": "HST 2023-24",
+  "period_start": "2023-08-14",
+  "period_end": "2024-08-14",
+  "due": "2024-11-14",
+  "status": "filed",
+  "result": {
+   "kind": "owing",
+   "amount": 23187.6
+  },
+  "plain": "The first HST year, from incorporation to 14 August 2024. The corporation owed $23,187.60, paid on 9 October 2024.",
+  "lines": [
+   {
+    "label": "Line 101 Sales (from deposits)",
+    "value": 192869.29
+   },
+   {
+    "label": "Line 103 HST collected",
+    "value": 25073.01
+   },
+   {
+    "label": "Line 106 ITC",
+    "value": 1885.41
+   },
+   {
+    "label": "Line 109 Net tax",
+    "value": 23187.6
+   },
+   {
+    "label": "Paid 9 October 2024",
+    "value": 23187.6
+   }
+  ],
+  "notes": [
+   "Rebuilt from the bank workbook; the return itself, its filing date and confirmation number are not in the folder.",
+   "Sales were Lazer $191,869.29 and H.I. Immigration $1,000 before HST."
+  ],
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "hst-2024-25",
+  "kind": "HST",
+  "scope": "corporate",
+  "title": "HST 2024-25",
+  "period_start": "2024-08-15",
+  "period_end": "2025-08-14",
+  "due": "2025-11-14",
+  "filed_on": "2025-09-24",
+  "filed_by": "Saira (CPACM)",
+  "confirmation": "837076",
+  "status": "filed",
+  "result": {
+   "kind": "owing",
+   "amount": 35121.5
+  },
+  "plain": "HST for 15 August 2024 to 14 August 2025. Net tax was $35,121.50; the corporation paid $40,082 toward it and CRA refunded the $4,960.50 overpaid.",
+  "lines": [
+   {
+    "label": "Line 101 Sales",
+    "value": 300168.74
+   },
+   {
+    "label": "Line 103 HST collected",
+    "value": 39021.93
+   },
+   {
+    "label": "Line 106 ITC",
+    "value": 3900.43
+   },
+   {
+    "label": "Line 109 Net tax",
+    "value": 35121.5
+   },
+   {
+    "label": "Line 110 Instalments claimed",
+    "value": 0
+   },
+   {
+    "label": "Line 115 Amount owing",
+    "value": 35121.5
+   },
+   {
+    "label": "Prepaid December 2024",
+    "value": 11682
+   },
+   {
+    "label": "Prepaid March to June 2025",
+    "value": 22600
+   },
+   {
+    "label": "Paid 15 September 2025",
+    "value": 5800
+   },
+   {
+    "label": "Refunded 10 October 2025",
+    "value": 4960.5
+   }
+  ],
+  "notes": [
+   "Filed by NETFILE; never recalculate or refile.",
+   "CLAUDE.md says $28,400 was prepaid in 2025. That counts only March to September 2025 ($22,600 + $5,800) and leaves out $11,682 paid in December 2024.",
+   "A later ledger rebuilt the ITC total as $4,303.67; it wrongly counts the HST inside a CRA payment and is not comparable.",
+   "Sales are counted by the date received."
+  ],
+  "sources": [
+   "2025/Corporate/HST Filing/15248132 Canada Inc. HST.pdf",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "Business Transactions.xlsx",
+   "2025/Corporate/business financials from previous accountant.xlsm",
+   "CLAUDE.md",
+   "2025/Corporate/Debit Account/Statements/10-October 31, 2025.pdf",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "hst-2025-26",
+  "kind": "HST",
+  "scope": "corporate",
+  "title": "HST 2025-26",
+  "period_start": "2025-08-15",
+  "period_end": "2026-08-14",
+  "due": "2026-11-16",
+  "filed_by": "Saira (CPACM), to file",
+  "status": "prepared",
+  "result": {
+   "kind": "refund",
+   "amount": 2404.66
+  },
+  "plain": "HST for 15 August 2025 to 14 August 2026. The workpaper shows $23,595.34 of net tax against $26,000 already paid in instalments, so a refund of $2,404.66; Saira files it by 16 November 2026.",
+  "lines": [
+   {
+    "label": "Line 101 Sales (26 MIR deposits)",
+    "value": 207480
+   },
+   {
+    "label": "Line 103 HST collected",
+    "value": 26972.4
+   },
+   {
+    "label": "Line 104 Adjustments",
+    "value": 0
+   },
+   {
+    "label": "Line 106 ITC",
+    "value": 3377.06
+   },
+   {
+    "label": "Line 109 Net tax",
+    "value": 23595.34
+   },
+   {
+    "label": "Line 110 Instalments",
+    "value": 26000
+   },
+   {
+    "label": "Line 114 Refund",
+    "value": 2404.66
+   },
+   {
+    "label": "ITC: vehicle lease",
+    "value": 1002.69
+   },
+   {
+    "label": "ITC: office and supplies",
+    "value": 636.16
+   },
+   {
+    "label": "ITC: vehicle and fuel",
+    "value": 468.61
+   },
+   {
+    "label": "ITC: meals (50%)",
+    "value": 386.83
+   },
+   {
+    "label": "ITC: vehicle maintenance",
+    "value": 321.03
+   },
+   {
+    "label": "ITC: professional fees",
+    "value": 214.5
+   },
+   {
+    "label": "ITC: telecom",
+    "value": 192.52
+   },
+   {
+    "label": "ITC: travel and parking",
+    "value": 90.85
+   },
+   {
+    "label": "ITC: software",
+    "value": 63.87
+   },
+   {
+    "label": "HST paid on the lease in the year",
+    "value": 2789.85
+   }
+  ],
+  "notes": [
+   "14 November 2026 is a Saturday, so the due date is Monday 16 November.",
+   "The package sent on 23 September claimed the lease in full at 100% use: line 106 $5,372.45, refund $4,400.05. Revised on 7 October to 80% use plus the cap.",
+   "Saira says her books show more than ours; compare when her numbers arrive. She needs Represent a Client access to the RT account before filing.",
+   "Open questions for Saira: which list price sets the lease cap, 80% with no mileage log, three purchases without receipts, Valet receipts with no HST number, the Rogers credit (since answered: one credit, counted once, nothing owed), s.173 standby charge.",
+   "The instalments were paid on 20 October 2025 and 20 January, 20 April and 20 July 2026. The 15 September 2025 payment belongs to the year before.",
+   "The workpaper's Lease cap sheet gives the lease credit as $1,002.67 and the ITCs sheet as $1,002.69, a 2 cent rounding difference for Saira to settle.",
+   "If Umar picks 85% business use, the vehicle credits rise by about $112; that has to be settled before Saira files."
+  ],
+  "sources": [
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26_long_version.md",
+   "memory:mercedes-80-percent-business-use.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "hst-2026-27",
+  "kind": "HST",
+  "scope": "corporate",
+  "title": "HST 2026-27",
+  "period_start": "2026-08-15",
+  "period_end": "2027-08-14",
+  "due": "2027-11-15",
+  "status": "in-progress",
+  "plain": "The current HST year, 15 August 2026 to 14 August 2027. So far one MIR deposit of $8,542.80 is in it.",
+  "lines": [
+   {
+    "label": "Sales so far (to 31 August 2026)",
+    "value": 7560
+   },
+   {
+    "label": "HST collected so far",
+    "value": 982.8
+   },
+   {
+    "label": "Quarterly instalment (estimate)",
+    "value": 5898.84
+   }
+  ],
+  "notes": [
+   "Due three months after 14 August 2027; 14 November 2027 is a Sunday, so Monday 15 November.",
+   "The 21 August 2026 MIR deposit and the 31 August 2026 lease payment belong here, not in 2025-26.",
+   "Net tax runs above $3,000 a year, so quarterly instalments apply: about $5,898.84 each, due within one month after each quarter ends, so 14 December 2026, 15 March 2027 (14 March is a Sunday), 14 June 2027 and 14 September 2027. Worked out from the CRA rule; check with Saira."
+  ],
+  "sources": [
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "t1-2025-umar",
+  "kind": "T1",
+  "scope": "personal",
+  "title": "T1 2025, Umar",
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "due": "2026-04-30",
+  "filed_on": "2026-04-20",
+  "filed_by": "Ejaz Pirwani, Fintax Associate Inc. (EFILE V3102)",
+  "confirmation": "Document control V31022592K8HK",
+  "status": "filed",
+  "result": {
+   "kind": "refund",
+   "amount": 22130.37
+  },
+  "plain": "Umar's 2025 personal return. His Lazer job paid $142,011.53 with $46,867.74 of tax already taken off, so after RRSP and FHSA deductions he is owed a refund of $22,130.37.",
+  "lines": [
+   {
+    "label": "Line 10100 Employment income (Lazer T4)",
+    "value": 142011.53
+   },
+   {
+    "label": "Line 12100 Interest and investment income",
+    "value": 204
+   },
+   {
+    "label": "Line 15000 Total income",
+    "value": 142215.55
+   },
+   {
+    "label": "Line 20800 RRSP deduction",
+    "value": 15000
+   },
+   {
+    "label": "Line 20805 FHSA deduction",
+    "value": 8000
+   },
+   {
+    "label": "Line 22200 Enhanced CPP deduction",
+    "value": 1074
+   },
+   {
+    "label": "Line 23600 Net income",
+    "value": 118141.55
+   },
+   {
+    "label": "Line 26000 Taxable income",
+    "value": 118141.55
+   },
+   {
+    "label": "Line 35000 Federal non refundable credits",
+    "value": 3244.75
+   },
+   {
+    "label": "Line 42000 Net federal tax",
+    "value": 17728
+   },
+   {
+    "label": "Line 42800 Ontario tax",
+    "value": 9493
+   },
+   {
+    "label": "Line 43500 Total payable",
+    "value": 27221
+   },
+   {
+    "label": "Line 43700 Tax deducted",
+    "value": 46868
+   },
+   {
+    "label": "Line 47600 Instalment paid",
+    "value": 2463.14
+   },
+   {
+    "label": "Line 48400 Refund",
+    "value": 22130.37
+   }
+  ],
+  "notes": [
+   "The tax summary printed earlier the same day shows a $22,110 refund; the signed T183 adds the $90 donation credit and shows $22,130.37.",
+   "No notice of assessment is in the folder, so whether the refund arrived is not confirmed.",
+   "The Lazer T4A ($82,791.46) carried Umar's SIN; Lazer revoked it so it would not be added to this return.",
+   "Line 12100 shows $204, but the T5 and T3 slips add to $180.48 ($118.77 + $57.38 + $1.62 + $2.71); the $23.54 difference is not explained in the sources.",
+   "Net income and taxable income are the same here ($118,141.55, from the T183); the tax summary rounds them to $118,142."
+  ],
+  "sources": [
+   "2025/Personal/accountant docs/T-183 2025 - Umar Farooq Aslam.pdf",
+   "2025/Personal/accountant docs/Tax Summary 2025 - Umar Farooq Aslam.pdf",
+   "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf",
+   "2025/Personal/T4s/Lazer_2025_T4.pdf"
+  ]
+ },
+ {
+  "id": "t1-2025-maham",
+  "kind": "T1",
+  "scope": "personal",
+  "title": "T1 2025, Maham",
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "due": "2026-04-30",
+  "filed_on": "2026-04-20",
+  "filed_by": "Ejaz Pirwani, Fintax Associate Inc. (EFILE V3102)",
+  "status": "filed",
+  "result": {
+   "kind": "refund",
+   "amount": 40.17
+  },
+  "plain": "Maham's 2025 personal return. Her only income was the $16,000 December salary from the corporation; refund $40.17.",
+  "lines": [
+   {
+    "label": "Line 10100 Employment income",
+    "value": 16000
+   },
+   {
+    "label": "Line 22200 Enhanced CPP deduction",
+    "value": 125
+   },
+   {
+    "label": "Line 26000 Taxable income",
+    "value": 15875
+   },
+   {
+    "label": "Line 30000 Basic personal amount (part year)",
+    "value": 13301
+   },
+   {
+    "label": "Line 35000 Federal non refundable credits",
+    "value": 2231.64
+   },
+   {
+    "label": "Net federal tax",
+    "value": 70
+   },
+   {
+    "label": "Ontario tax",
+    "value": 240
+   },
+   {
+    "label": "Total payable",
+    "value": 310
+   },
+   {
+    "label": "Line 43700 Tax deducted",
+    "value": 350
+   },
+   {
+    "label": "Line 48400 Refund",
+    "value": 40.17
+   }
+  ],
+  "notes": [
+   "Canadian permanent resident from 6 March 2025, so the basic personal amount is prorated to 301 of 365 days.",
+   "No notice of assessment in the folder."
+  ],
+  "sources": [
+   "2025/Personal/accountant docs/T-183 2025 - Maham Amir.pdf",
+   "2025/Personal/accountant docs/Tax Summary 2025 - Umar Farooq Aslam.pdf"
+  ]
+ },
+ {
+  "id": "t1-2026-umar",
+  "kind": "T1",
+  "scope": "personal",
+  "title": "T1 2026, Umar",
+  "period_start": "2026-01-01",
+  "period_end": "2026-12-31",
+  "due": "2027-04-30",
+  "status": "in-progress",
+  "plain": "Umar's 2026 personal return, year still running. No 2026 personal documents are on file yet.",
+  "lines": [],
+  "notes": [
+   "The 2026/Personal folder holds no documents yet."
+  ],
+  "sources": [
+   "2026/Personal"
+  ]
+ },
+ {
+  "id": "t1-2026-maham",
+  "kind": "T1",
+  "scope": "personal",
+  "title": "T1 2026, Maham",
+  "period_start": "2026-01-01",
+  "period_end": "2026-12-31",
+  "due": "2027-04-30",
+  "status": "in-progress",
+  "plain": "Maham's 2026 personal return. Her income will be the corporation's $24,000 salary for April to December, shown on her 2026 T4.",
+  "lines": [
+   {
+    "label": "Planned salary",
+    "value": 24000
+   }
+  ],
+  "notes": [],
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md",
+   "2026/Corporate/payroll/CPP_24K_Apr-Dec.pdf"
+  ]
+ },
+ {
+  "id": "t4-2025-maham",
+  "kind": "T4",
+  "scope": "corporate",
+  "title": "T4 2025, Maham",
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "due": "2026-03-02",
+  "status": "prepared",
+  "plain": "The slip the corporation gave Maham for her December 2025 salary: $16,000 of pay, $350 of tax and $743.75 of CPP.",
+  "lines": [
+   {
+    "label": "Box 14 Employment income",
+    "value": 16000
+   },
+   {
+    "label": "Box 22 Income tax deducted",
+    "value": 350
+   },
+   {
+    "label": "Box 16 CPP",
+    "value": 743.75
+   },
+   {
+    "label": "Box 18 EI",
+    "value": 0
+   },
+   {
+    "label": "Box 26 CPP pensionable earnings",
+    "value": 16000
+   }
+  ],
+  "notes": [
+   "Filing not confirmed: no T4 Summary or CRA confirmation is on file.",
+   "EI exempt because she is the owner's spouse (box 28 ticked).",
+   "The traceability map says filed 28 February 2026; the May review still asked to confirm it and the accountant's May invoice has a $75 T4 line. Filing date uncertain; no T4 Summary is on file.",
+   "The bank shows Maham received the full $16,000, while the slip says $1,093.75 was withheld from it. The $1,837.50 remittance equals her CPP plus the corporation's CPP plus the tax, so the deductions were paid on top.",
+   "28 February 2026 was a Saturday, so the slip was due Monday 2 March 2026."
+  ],
+  "sources": [
+   "2025/Personal/Maham T4.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf"
+  ]
+ },
+ {
+  "id": "t4-2026-maham",
+  "kind": "T4",
+  "scope": "corporate",
+  "title": "T4 2026, Maham",
+  "period_start": "2026-01-01",
+  "period_end": "2026-12-31",
+  "due": "2027-03-01",
+  "status": "in-progress",
+  "plain": "Maham's 2026 slip, due with the T4 Summary by 28 February 2027. Planned pay $24,000 for April to December.",
+  "lines": [
+   {
+    "label": "Planned gross pay",
+    "value": 24000
+   },
+   {
+    "label": "Planned CPP (Maham)",
+    "value": 1271.79
+   },
+   {
+    "label": "Planned income tax",
+    "value": 1597.68
+   },
+   {
+    "label": "Planned CPP (corporation)",
+    "value": 1271.79
+   },
+   {
+    "label": "Planned remittances",
+    "value": 4141.26
+   }
+  ],
+  "notes": [
+   "CPP only; EI exempt.",
+   "28 February 2027 is a Sunday, so the due date is Monday 1 March 2027."
+  ],
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md",
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md",
+   "2026/Corporate/payroll/CPP_24K_Apr-Dec.pdf"
+  ]
+ },
+ {
+  "id": "t5-2025",
+  "kind": "T5",
+  "scope": "corporate",
+  "title": "T5 2025",
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "status": "not-required",
+  "plain": "No dividend slip for 2025: the corporation paid no dividends that year.",
+  "lines": [
+   {
+    "label": "Dividends paid in 2025",
+    "value": 0
+   }
+  ],
+  "notes": [
+   "The $28,000 paid to Umar from January to April 2025 is expense reimbursement."
+  ],
+  "sources": [
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "payroll-2025",
+  "kind": "payroll",
+  "scope": "corporate",
+  "title": "Payroll remittances 2025",
+  "period_start": "2025-12-01",
+  "period_end": "2025-12-31",
+  "status": "filed",
+  "plain": "Maham's first payroll: two December salary transfers of $10,000 and $6,000 and one $1,837.50 remittance to CRA on 30 December.",
+  "lines": [
+   {
+    "label": "Salary 19 December",
+    "value": 10000
+   },
+   {
+    "label": "Salary 22 December",
+    "value": 6000
+   },
+   {
+    "label": "Remittance 30 December",
+    "value": 1837.5
+   }
+  ],
+  "notes": [
+   "Some notes date the salaries 5 and 24 December; the December bank statement shows 19 and 22 December.",
+   "No PD7A remittance record is on file."
+  ],
+  "sources": [
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf",
+   "Business Transactions.xlsx",
+   "2025/Personal/Maham T4.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md"
+  ]
+ },
+ {
+  "id": "payroll-2026",
+  "kind": "payroll",
+  "scope": "corporate",
+  "title": "Payroll remittances 2026",
+  "period_start": "2026-04-01",
+  "period_end": "2026-12-31",
+  "due": "2027-01-15",
+  "status": "in-progress",
+  "plain": "Maham is paid $2,347.84 a month after deductions and the corporation sends CRA $460.14 a month, nine payments from May to 31 December 2026.",
+  "lines": [
+   {
+    "label": "Monthly gross pay",
+    "value": 2666.67
+   },
+   {
+    "label": "Monthly net pay",
+    "value": 2347.84
+   },
+   {
+    "label": "Monthly remittance",
+    "value": 460.14
+   },
+   {
+    "label": "Remitted 11 May",
+    "value": 460.14
+   },
+   {
+    "label": "Remitted 15 June",
+    "value": 460.14
+   },
+   {
+    "label": "Remitted 15 July",
+    "value": 460.14
+   },
+   {
+    "label": "Remitted 14 August",
+    "value": 460.14
+   },
+   {
+    "label": "Remitted to 31 August",
+    "value": 1840.56
+   },
+   {
+    "label": "Net pay sent to 31 August",
+    "value": 11739.2
+   },
+   {
+    "label": "All nine remittances",
+    "value": 4141.26
+   }
+  ],
+  "notes": [
+   "Payroll account 795920958 RP0001.",
+   "Remaining scheduled dates: 11 September, 9 October, 13 November, 4 December and 31 December. CRA's due date for December pay is 15 January 2027."
+  ],
+  "sources": [
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md",
+   "Business Transactions.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "instalments-2025",
+  "kind": "instalments",
+  "scope": "corporate",
+  "title": "Corporate instalments 2025",
+  "period_start": "2025-01-01",
+  "period_end": "2025-12-31",
+  "status": "filed",
+  "plain": "Advance payments toward 2025 corporate tax. CRA asked for $15,852; the corporation paid $17,960, which is why the T2 2025 ended in a refund.",
+  "lines": [
+   {
+    "label": "Required by CRA (from the T2 2024)",
+    "value": 15852
+   },
+   {
+    "label": "Paid 14 March",
+    "value": 4000
+   },
+   {
+    "label": "Paid 31 March",
+    "value": 1396
+   },
+   {
+    "label": "Paid 30 April",
+    "value": 1396
+   },
+   {
+    "label": "Paid 30 May",
+    "value": 1396
+   },
+   {
+    "label": "Paid 30 June",
+    "value": 1396
+   },
+   {
+    "label": "Paid 30 July",
+    "value": 1396
+   },
+   {
+    "label": "Paid 2 September",
+    "value": 1396
+   },
+   {
+    "label": "Paid 1 October",
+    "value": 1396
+   },
+   {
+    "label": "Paid 30 October",
+    "value": 1396
+   },
+   {
+    "label": "Paid 1 December",
+    "value": 1396
+   },
+   {
+    "label": "Paid 30 December",
+    "value": 1396
+   },
+   {
+    "label": "Total paid",
+    "value": 17960
+   },
+   {
+    "label": "Paid above schedule",
+    "value": 2108
+   }
+  ],
+  "notes": [
+   "CRA's schedule was $951 for January and February, then $1,395 a month.",
+   "CLAUDE.md thought the $2,108 overpayment explained the 10 October 2025 refund; that refund was HST.",
+   "A possible duplicate on 30 October is really the 30 December payment, confirmed on the bank statement."
+  ],
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
+   "2024/Corporate/(20241231) T2.pdf",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "2025/Corporate/Debit Account/Statements/10-October 31, 2025.pdf",
+   "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "instalments-2026",
+  "kind": "instalments",
+  "scope": "corporate",
+  "title": "Corporate instalments 2026",
+  "period_start": "2026-01-01",
+  "period_end": "2026-12-31",
+  "due": "2026-12-31",
+  "status": "in-progress",
+  "plain": "Advance payments toward 2026 corporate tax. CRA asks for $13,370; Umar is paying about $900 a month on an estimate of this year's tax, $6,900 by the end of August.",
+  "lines": [
+   {
+    "label": "CRA schedule",
+    "value": 13370
+   },
+   {
+    "label": "Paid 31 March",
+    "value": 900
+   },
+   {
+    "label": "Paid 14 April",
+    "value": 1500
+   },
+   {
+    "label": "Paid 30 April",
+    "value": 900
+   },
+   {
+    "label": "Paid 1 June",
+    "value": 900
+   },
+   {
+    "label": "Paid 30 June",
+    "value": 900
+   },
+   {
+    "label": "Paid 31 July",
+    "value": 900
+   },
+   {
+    "label": "Paid 31 August",
+    "value": 900
+   },
+   {
+    "label": "Paid to 31 August",
+    "value": 6900
+   },
+   {
+    "label": "Planned by 31 December",
+    "value": 10500
+   },
+   {
+    "label": "Projected 2026 tax",
+    "value": 14665.02
+   }
+  ],
+  "notes": [
+   "CRA's schedule is $4,011 on 31 May then $1,337 a month from June to December.",
+   "Recheck in November; top up before 31 December or record more director funded expenses."
+  ],
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "Business Transactions.xlsx"
+  ]
+ }
+]

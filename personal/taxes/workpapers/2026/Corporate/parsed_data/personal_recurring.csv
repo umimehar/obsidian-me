@@ -1,0 +1,37 @@
+date,source,account,direction,amount,gross,hst,net,description,category,deductible_pct,hst_in_price,itc_pct,itc_claimable,supplier,tax_year,gst_period,ref
+2025-08-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-09-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-09-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-10-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-10-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-11-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-11-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-12-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2025-12-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2025,2025-26,recurring · actual
+2026-01-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-01-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-02-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-02-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-03-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-03-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-04-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-04-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-05-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-05-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-06-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-06-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-07-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-07-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-08-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2025-26,recurring · actual
+2026-08-15,personal,Personal card (director-funded),out,2600.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · actual
+2026-09-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · actual
+2026-09-15,personal,Personal card (director-funded),out,2630.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · actual
+2026-10-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected
+2026-10-01,personal,Personal card (director-funded),out,113.0,,,,Phone and internet,Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2026-27,recurring · projected
+2026-10-15,personal,Personal card (director-funded),out,2630.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected
+2026-11-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected
+2026-11-01,personal,Personal card (director-funded),out,113.0,,,,Phone and internet,Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2026-27,recurring · projected
+2026-11-15,personal,Personal card (director-funded),out,2630.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected
+2026-12-01,personal,Personal card (director-funded),out,32.83,,,,Home insurance,Insurance — home office,1.0,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected
+2026-12-01,personal,Personal card (director-funded),out,113.0,,,,Phone and internet,Telecom,1.0,13.0,1.0,13.0,Canadian,2026,2026-27,recurring · projected
+2026-12-15,personal,Personal card (director-funded),out,2630.0,,,,Rent — home office share,Rent — home office,0.3,0.0,0.0,0.0,Canadian,2026,2026-27,recurring · projected

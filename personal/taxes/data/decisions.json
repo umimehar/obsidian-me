@@ -1,0 +1,775 @@
+[
+ {
+  "id": "dec-home-office-rent-share-2025-12-31",
+  "date": "2025-12-31",
+  "scope": "corporate",
+  "subject": "home-office-rent-share",
+  "title": "Home office share of rent",
+  "decision": "Claim 40% of the rent for the home office; every other cost Umar pays personally for the business at 100%.",
+  "rationale": "The rule in CLAUDE.md and the draft Director Resolution, which gave a $24,143.25 reimbursement for 2025.",
+  "status": "superseded",
+  "superseded_by": "dec-home-office-rent-share-2026-05-09",
+  "sources": [
+   "CLAUDE.md",
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx",
+   "2025/Corporate/Personal CC Expenses/Expenses Record 2025.xlsx"
+  ]
+ },
+ {
+  "id": "dec-home-office-rent-share-2026-05-09",
+  "date": "2026-05-09",
+  "scope": "corporate",
+  "subject": "home-office-rent-share",
+  "title": "Home office share of rent",
+  "decision": "Claim 30% of the rent. For 2025 that is 30% of $31,116 = $9,335, the rent line on the filed T2 2025. In 2026 it is $780 a month, $789 from 15 September.",
+  "rationale": "Easier to defend: CRA has no fixed percentage and the share must match the office's floor area or room count. Umar confirmed 30% again on 23 September 2026. Keep a floor plan, photos and the lease to back it.",
+  "status": "active",
+  "sources": [
+   "2025/Corporate/2025_Corporate_Tax_Report.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "memory:home-office-rent-30-percent.md",
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+  ]
+ },
+ {
+  "id": "dec-mercedes-business-use-2026-05-18",
+  "date": "2026-05-18",
+  "scope": "corporate",
+  "subject": "mercedes-business-use",
+  "title": "Mercedes business use",
+  "decision": "The filed T2 2025 deducts all Mercedes costs at 100% business use, including the whole lease ($12,000.04 in 2025).",
+  "rationale": "The card ledger and the accountant treated the car as fully business. No mileage log supported it.",
+  "status": "superseded",
+  "superseded_by": "dec-mercedes-business-use-2026-08-20",
+  "sources": [
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md",
+   "2025/Corporate/Credit Card/Invoices by Month/CC Expenses 2025 v2.xlsx",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "dec-mercedes-business-use-2026-08-20",
+  "date": "2026-08-20",
+  "scope": "corporate",
+  "subject": "mercedes-business-use",
+  "title": "Mercedes business use",
+  "decision": "Umar states business use at about 95%.",
+  "rationale": "Owner's estimate for insurance and compliance notes; no log, and both insurance certificates say personal use.",
+  "status": "superseded",
+  "superseded_by": "dec-mercedes-business-use-2026-09-23",
+  "sources": [
+   "vault:obsidian-me/personal/business-vehicle/README.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "dec-mercedes-business-use-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "mercedes-business-use",
+  "title": "Mercedes business use",
+  "decision": "The HST package sent to Saira claims the Mercedes at 100% business use.",
+  "rationale": "Umar's instruction during the package build; the dashboard checklist moved from 95% to 100% to match the email.",
+  "status": "superseded",
+  "superseded_by": "dec-mercedes-business-use-2026-10-07",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26.md"
+  ]
+ },
+ {
+  "id": "dec-mercedes-business-use-2026-10-07",
+  "date": "2026-10-07",
+  "scope": "corporate",
+  "subject": "mercedes-business-use",
+  "title": "Mercedes business use",
+  "decision": "Claim the Mercedes at 80% business use from 27 September 2025, plus the s.67.3 lease cap. Use 80% on the T2 2026 too so the returns agree. No credit for car costs from 15 August to 26 September 2025, when Umar drove his own car and was paid mileage.",
+  "rationale": "100% gave HST credits of $5,372.45, well above last year's $3,900.43. Umar's 2025 mileage logs on his own car point to about 52%, his own estimate to 95%; 80% sits between. Claude warned there is still no log. Umar asked about 85% on 7 October but has not decided; 80% stands.",
+  "status": "active",
+  "sources": [
+   "memory:mercedes-80-percent-business-use.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
+   "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx"
+  ]
+ },
+ {
+  "id": "dec-payments-to-umar-2025-2025-01-15",
+  "date": "2025-01-15",
+  "scope": "corporate",
+  "subject": "payments-to-umar-2025",
+  "title": "What the $28,000 paid to Umar in 2025 was",
+  "decision": "The four transfers to Umar from January to April 2025 ($6,000, $7,000, $7,000, $8,000) are recorded as 'Dividends to Umar', like the 2023 and 2024 transfers.",
+  "rationale": "The bank workbook's original caption.",
+  "status": "superseded",
+  "superseded_by": "dec-payments-to-umar-2025-2025-12-31",
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "dec-payments-to-umar-2025-2025-12-31",
+  "date": "2025-12-31",
+  "scope": "corporate",
+  "subject": "payments-to-umar-2025",
+  "title": "What the $28,000 paid to Umar in 2025 was",
+  "decision": "Not dividends: $24,143.25 repays business costs Umar paid on his own cards (rent at 40%), and $3,856.75 is an advance he must repay by 31 December 2026 under s.15(2).",
+  "rationale": "Draft Director Resolution dated 31 December 2025, never signed.",
+  "status": "superseded",
+  "superseded_by": "dec-payments-to-umar-2025-2026-05-09",
+  "sources": [
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx",
+   "CLAUDE.md"
+  ]
+ },
+ {
+  "id": "dec-payments-to-umar-2025-2026-05-09",
+  "date": "2026-05-09",
+  "scope": "corporate",
+  "subject": "payments-to-umar-2025",
+  "title": "What the $28,000 paid to Umar in 2025 was",
+  "decision": "At 30% rent the split becomes $21,031.65 reimbursement and a $6,968.35 advance, still due back by 31 December 2026.",
+  "rationale": "Followed from cutting the rent share to 30%. Never adopted in the filed return.",
+  "status": "superseded",
+  "superseded_by": "dec-payments-to-umar-2025-2026-05-18",
+  "sources": [
+   "2025/Corporate/2025_Corporate_Tax_Report.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "2025/Corporate/2025_Income_Statement.xlsx"
+  ]
+ },
+ {
+  "id": "dec-payments-to-umar-2025-2026-05-18",
+  "date": "2026-05-18",
+  "scope": "corporate",
+  "subject": "payments-to-umar-2025",
+  "title": "What the $28,000 paid to Umar in 2025 was",
+  "decision": "As filed, there is no advance and no loan. The T2 2025 treats $41,357 of Umar's personally paid business costs as expenses: the $28,000 repaid plus $13,357 the corporation still owes him (Schedule 100 line 2780). Future payments to Umar are labelled expense reimbursement.",
+  "rationale": "The accountant spread the amounts across rent, vehicle, phone, insurance and other expenses. Umar confirmed on 3 August 2026 that no shareholder loan remains, so there is no repayment deadline.",
+  "status": "active",
+  "sources": [
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+  ]
+ },
+ {
+  "id": "dec-no-t5-2025-2025-12-31",
+  "date": "2025-12-31",
+  "scope": "corporate",
+  "subject": "no-t5-2025",
+  "title": "No T5 slip for 2025",
+  "decision": "The corporation issues no T5 for 2025 because it paid no dividends in 2025.",
+  "rationale": "The $28,000 to Umar is expense reimbursement; the filed T2 2025 shows no 2025 dividends.",
+  "status": "active",
+  "sources": [
+   "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx",
+   "CLAUDE.md",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+  ]
+ },
+ {
+  "id": "dec-zeeshan-no-t4a-nr4-2025-12-31",
+  "date": "2025-12-31",
+  "scope": "corporate",
+  "subject": "zeeshan-no-t4a-nr4",
+  "title": "No T4A or NR4 for Zeeshan",
+  "decision": "No T4A, no NR4 and no Reg. 105 withholding for Zeeshan, the offshore subcontractor paid through WISE.",
+  "rationale": "He works entirely outside Canada (Pakistan), so his pay is not Canadian source income. Keep the contractor agreement and WISE records.",
+  "status": "active",
+  "sources": [
+   "CLAUDE.md",
+   "2025/Corporate/2025_Corporate_Tax_Report.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+  ]
+ },
+ {
+  "id": "dec-oct-10-2025-refund-2026-04-03",
+  "date": "2026-04-03",
+  "scope": "corporate",
+  "subject": "oct-10-2025-refund",
+  "title": "What the 10 October 2025 CRA deposit was",
+  "decision": "The $4,960.50 received on 10 October 2025 is a corporate tax refund, partly from overpaid 2025 instalments ($2,108).",
+  "rationale": "CLAUDE.md and the 2025 dashboard; the workbook row was labelled 'Corp tax (2025)'.",
+  "status": "superseded",
+  "superseded_by": "dec-oct-10-2025-refund-2026-09-23",
+  "sources": [
+   "CLAUDE.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/reports/2025_Financial_Dashboard.html",
+   "2025/Corporate/2025_Income_Statement.xlsx"
+  ]
+ },
+ {
+  "id": "dec-oct-10-2025-refund-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "oct-10-2025-refund",
+  "title": "What the 10 October 2025 CRA deposit was",
+  "decision": "It is the refund of the HST overpaid on 15 September 2025. Not revenue and not corporate tax.",
+  "rationale": "Payments toward the 2024 to 2025 HST year total $40,082 against $35,121.50 owed, exactly $4,960.50 over. The October 2025 bank statement shows the deposit as 'CANADA GST/TPS'.",
+  "status": "active",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "Business Transactions.xlsx",
+   "2025/Corporate/Debit Account/Statements/10-October 31, 2025.pdf"
+  ]
+ },
+ {
+  "id": "dec-corp-tax-instalments-2026-2026-08-03",
+  "date": "2026-08-03",
+  "scope": "corporate",
+  "subject": "corp-tax-instalments-2026",
+  "title": "How 2026 corporate tax instalments are paid",
+  "decision": "Pay 2026 instalments on an estimate of 2026 tax, about $900 a month, instead of CRA's schedule ($4,011 on 31 May then $1,337 a month, $13,370 in all).",
+  "rationale": "Allowed by s.157; interest only arises if 2026 tax ends up above the instalments. Recheck in November: the September projection is $14,665 of tax against $10,500 of instalments.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "dec-accountant-2024-01-18",
+  "date": "2024-01-18",
+  "scope": "corporate",
+  "subject": "accountant",
+  "title": "Who the accountant is",
+  "decision": "Saira (CPACM) prepares the corporation's returns: the T2 for 2023 and 2024, the HST returns and the 2025 bookkeeping to 14 August.",
+  "rationale": "Her fees: $904 in January 2024, $1,073.50 in February 2025 and invoice 2041 for $423.75.",
+  "status": "superseded",
+  "superseded_by": "dec-accountant-2026-04-20",
+  "sources": [
+   "Business Transactions.xlsx",
+   "CLAUDE.md",
+   "2026/Corporate/Debit Account/Invoices/09-Feb-CPACM-invoice-2041-423.75.pdf"
+  ]
+ },
+ {
+  "id": "dec-accountant-2026-04-20",
+  "date": "2026-04-20",
+  "scope": "corporate",
+  "subject": "accountant",
+  "title": "Who the accountant is",
+  "decision": "Ejaz Pirwani (Fintax Associate) prepares the 2025 personal returns for Umar and Maham and then the T2 2025.",
+  "rationale": "He transmitted the T1s signed on 20 April 2026 and the T2 filed on 18 May 2026; fee $1,440.75 paid 21 May.",
+  "status": "superseded",
+  "superseded_by": "dec-accountant-2026-09-23",
+  "sources": [
+   "2025/Personal/accountant docs/T-183 2025 - Umar Farooq Aslam.pdf",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+   "2025/Corporate/accountant files/accountant emails.pdf",
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "dec-accountant-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "accountant",
+  "title": "Who the accountant is",
+  "decision": "Back to Saira (CPACM) from September 2026: she files the HST return for 2025 to 2026 and prepares the T2 2026.",
+  "rationale": "Umar stopped working with Ejaz Pirwani.",
+  "status": "active",
+  "sources": [
+   "memory:accountant-saira-from-sep-2026.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md"
+  ]
+ },
+ {
+  "id": "dec-previous-accountant-not-named-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "previous-accountant-not-named",
+  "title": "Keep the previous accountant out of Saira's papers",
+  "decision": "In anything for Saira, refer to Ejaz Pirwani only as 'the previous accountant' and leave his $1,440.75 invoice out of her package. Its $165.75 HST credit is still claimed.",
+  "rationale": "Umar's instruction. The T2 2025 client copy goes in unaltered, preparer box included.",
+  "status": "active",
+  "sources": [
+   "memory:no-previous-accountant-name-for-saira.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ },
+ {
+  "id": "dec-hst-lease-itc-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "hst-lease-itc",
+  "title": "HST credit on the Mercedes lease",
+  "decision": "Claim all HST paid on the lease in the 2025 to 2026 return: $2,789.85 ($776.55 at signing plus 10 x $201.33).",
+  "rationale": "Umar asked to claim it in full and leave the s.67.3 cap as a question for Saira. Earlier the same day the capped version gave a $2,868.95 refund; the full claim gave $4,400.05.",
+  "status": "superseded",
+  "superseded_by": "dec-hst-lease-itc-2026-10-07",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26_long_version.md"
+  ]
+ },
+ {
+  "id": "dec-hst-lease-itc-2026-10-07",
+  "date": "2026-10-07",
+  "scope": "corporate",
+  "subject": "hst-lease-itc",
+  "title": "HST credit on the Mercedes lease",
+  "decision": "Claim 35.94% of the lease HST: 80% business use times the 44.93% cap = $1,002.69.",
+  "rationale": "Follows the move to 80% business use. Line 106 becomes $3,377.06 and the refund $2,404.66.",
+  "status": "active",
+  "sources": [
+   "memory:mercedes-80-percent-business-use.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "dec-lease-cap-list-price-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "lease-cap-list-price",
+  "title": "Price used for the lease cap",
+  "decision": "Work the s.67.3 cap on a $99,500 list price: $38,000 / (85% x $99,500) = 44.93% of each lease payment counts.",
+  "rationale": "Using the full $109,929.95 list including options gives 40.67%. Which one applies is a question for Saira.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/05 Vehicle lease - Mercedes GLC 43/lease-pricing-worksheet.pdf"
+  ]
+ },
+ {
+  "id": "dec-hospital-and-parking-charges-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "hospital-and-parking-charges",
+  "title": "Hospital and parking charges on the corporate card",
+  "decision": "Credit Valley Hospital charges of 27 July 2026 ($1,200 plus $21) are personal: no HST credit, and they reduce what the corporation owes Umar. Halton Health Care parking in October and November 2025 ($78.25) is business and claimed.",
+  "rationale": "Umar said hospital charges went on the corporate card by mistake, then clarified that only Credit Valley is personal.",
+  "status": "active",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ]
+ },
+ {
+  "id": "dec-ifly-calgary-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "ifly-calgary",
+  "title": "iFly Calgary charge",
+  "decision": "Treat the $319.76 iFly Calgary charge of 11 July 2026 as client entertainment at 50%: HST credit $18.40.",
+  "rationale": "Umar said it was client entertainment. HST_RETURN notes still showed it as travel ($36.79), so Saira should confirm.",
+  "status": "active",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26_long_version.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ },
+ {
+  "id": "dec-vault-routing-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "both",
+  "subject": "vault-routing",
+  "title": "Where tax notes are saved",
+  "decision": "Tax notes go only in the obsidian-me vault under personal/taxes, never in obsidian-dev.",
+  "rationale": "Umar's instruction after a save wrote tax lessons to the dev vault; that commit was reverted.",
+  "status": "active",
+  "sources": [
+   "memory:no-taxes-in-obsidian-dev.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "dec-saira-package-scope-2026-10-07",
+  "date": "2026-10-07",
+  "scope": "corporate",
+  "subject": "saira-package-scope",
+  "title": "What the next package for Saira covers",
+  "decision": "The next spreadsheet for Saira covers every corporate transaction from 1 January to 31 December 2026, for the T2 2026. Build it after the December statements arrive, with the Mercedes at 80% and rent at 30%.",
+  "rationale": "Saira asked for the whole calendar year for the corporate return, not another HST year workpaper.",
+  "status": "active",
+  "sources": [
+   "memory:saira-next-package-full-year-2026.md",
+   "session:075be64b-be34-45d8-8e62-13cde675d867",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "dec-saira-applies-80-percent-2026-10-07",
+  "date": "2026-10-07",
+  "scope": "corporate",
+  "subject": "saira-applies-80-percent",
+  "title": "Who updates the HST workpaper",
+  "decision": "Do not send Saira the revised workpaper; she applies 80% and the cap to her own copy. Compare her figures line by line when they arrive.",
+  "rationale": "Umar had already told her. She says her books show more than ours.",
+  "status": "active",
+  "sources": [
+   "session:075be64b-be34-45d8-8e62-13cde675d867",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "dec-opening-retained-earnings-2025-2026-04-03",
+  "date": "2026-04-03",
+  "scope": "corporate",
+  "subject": "opening-retained-earnings-2025",
+  "title": "Retained earnings at the start of 2025",
+  "decision": "Start 2025 with retained earnings of $57,377, the T2 2024 closing figure, not the $129,924 on the previous accountant's August 2025 sheet.",
+  "rationale": "Her figure added the $72,550 of 2024 dividends back in. The filed T2 2025 uses $57,377.",
+  "status": "active",
+  "sources": [
+   "CLAUDE.md",
+   "2025/Corporate/business financials from previous accountant.xlsm",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+  ]
+ },
+ {
+  "id": "dec-hst-2024-25-final-2026-04-03",
+  "date": "2026-04-03",
+  "scope": "corporate",
+  "subject": "hst-2024-25-final",
+  "title": "HST return for 2024 to 2025 stays as filed",
+  "decision": "Never recalculate or refile the HST return for 15 August 2024 to 14 August 2025.",
+  "rationale": "Filed 24 September 2025, confirmation 837076, and fully paid.",
+  "status": "active",
+  "sources": [
+   "CLAUDE.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md"
+  ]
+ },
+ {
+  "id": "dec-equipment-expensed-2025-2026-05-14",
+  "date": "2026-05-14",
+  "scope": "corporate",
+  "subject": "equipment-expensed-2025",
+  "title": "2025 equipment written off at once",
+  "decision": "Expense the 2025 equipment purchases (about $13,983, including the Mac Studio) in full under computer related costs instead of depreciating them.",
+  "rationale": "Umar's choice. The risk is timing only: CRA could make the corporation spread them out (computers at 55% a year, furniture at 20%).",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md"
+  ]
+ },
+ {
+  "id": "dec-small-business-rate-2026-05-14",
+  "date": "2026-05-14",
+  "scope": "corporate",
+  "subject": "small-business-rate",
+  "title": "Corporate tax rate",
+  "decision": "Claim the small business deduction: combined rate 12.2% (9% federal plus 3.2% Ontario).",
+  "rationale": "The corporation is far below the $500,000 limit. The accountant's first draft used about 15%; the revised file brought tax down from $15,989 to $13,368.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/Email_to_Accountant_Round2_2026-05-15.md",
+   "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+  ]
+ },
+ {
+  "id": "dec-accountant-lines-not-raised-2026-05-14",
+  "date": "2026-05-14",
+  "scope": "corporate",
+  "subject": "accountant-lines-not-raised",
+  "title": "Items not raised with the accountant in May 2026",
+  "decision": "Accept the accountant's treatment of equipment, WISE fees inside subcontracts, software inside business taxes and the director account, without raising them.",
+  "rationale": "Each was favourable or had no tax effect.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/Email_to_Accountant_Round2_2026-05-15.md"
+  ]
+ },
+ {
+  "id": "dec-pool-lab-and-tcx-2026-05-14",
+  "date": "2026-05-14",
+  "scope": "corporate",
+  "subject": "pool-lab-and-tcx",
+  "title": "Two 2025 card items reclassified",
+  "decision": "Pool Lab Canada ($28.25, 21 December 2025) goes to meals and entertainment at 50%; TCX (1,000 GBP, $1,884.50) goes to travel.",
+  "rationale": "Umar's direction: an office holiday gathering and a UK business trip.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md"
+  ]
+ },
+ {
+  "id": "dec-hst-sales-timing-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "hst-sales-timing",
+  "title": "When a sale counts for HST",
+  "decision": "Count sales by the date the money arrives, as Saira did for 2024 to 2025.",
+  "rationale": "The deposits at each end of the year (22 August 2025 and 21 August 2026) are both $8,542.80, so invoice date would give the same total.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "dec-hst-exclusions-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "hst-exclusions",
+  "title": "What is left out of the 2025 to 2026 HST return",
+  "decision": "Leave out the two CRA deposits ($4,960.50 and $4,644.90), the $5,800 payment of 15 September 2025, the $1,221 hospital charge, US suppliers that charge no Canadian HST (Vercel, Anthropic, OpenAI, Z.AI), simplified registrants (Paddle), rent and insurance (exempt) and the 9 September 2025 fuel for Umar's own car.",
+  "rationale": "None is taxable revenue or carries a claimable credit.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26_long_version.md",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "dec-phone-and-internet-2026-08-03",
+  "date": "2026-08-03",
+  "scope": "corporate",
+  "subject": "phone-and-internet",
+  "title": "Phone and internet amounts",
+  "decision": "Model phone and internet at $115 a month at 100% business use.",
+  "rationale": "Placeholder before the bills were loaded.",
+  "status": "superseded",
+  "superseded_by": "dec-phone-and-internet-2026-09-23",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+  ]
+ },
+ {
+  "id": "dec-phone-and-internet-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "phone-and-internet",
+  "title": "Phone and internet amounts",
+  "decision": "Use the actual Bell and Rogers bills, counting the $148.78 Rogers credit once; model $113 a month only from 14 September 2026.",
+  "rationale": "Actual amounts were available. Rogers ended in April 2026; Bell's bundle is $113 a month.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/parsed_data/recurring_expenses.json",
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
+   "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ]
+ },
+ {
+  "id": "dec-payroll-remittance-frequency-2026-05-08",
+  "date": "2026-05-08",
+  "scope": "corporate",
+  "subject": "payroll-remittance-frequency",
+  "title": "How often Maham's payroll is remitted",
+  "decision": "Remit quarterly as a small remitter: $1,380.42 on 15 July, 15 October and 15 January.",
+  "rationale": "Older recommendation in the payroll notes.",
+  "status": "superseded",
+  "superseded_by": "dec-payroll-remittance-frequency-2026-05-09",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md"
+  ]
+ },
+ {
+  "id": "dec-payroll-remittance-frequency-2026-05-09",
+  "date": "2026-05-09",
+  "scope": "corporate",
+  "subject": "payroll-remittance-frequency",
+  "title": "How often Maham's payroll is remitted",
+  "decision": "Remit monthly, $460.14 in nine scheduled payments, the last on 31 December 2026.",
+  "rationale": "Simpler to reconcile, and paying December on 31 December keeps the whole cost in 2026.",
+  "status": "active",
+  "sources": [
+   "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md"
+  ]
+ },
+ {
+  "id": "dec-maham-2026-pay-2026-05-09",
+  "date": "2026-05-09",
+  "scope": "both",
+  "subject": "maham-2026-pay",
+  "title": "Maham's 2026 pay",
+  "decision": "Pay Maham $24,000 gross for April to December 2026: nine monthly payments of $2,666.67, $2,347.84 after deductions. CPP applies; EI does not, because she is the owner's spouse.",
+  "rationale": "Replaces an earlier plan of $2,000 a month for twelve months. Withholding is trued up over the nine months ($177.52 a month); a more cautious method ($269.07 a month) is open for the accountant.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md",
+   "2026/Corporate/payroll/CPP_24K_Apr-Dec.pdf"
+  ]
+ },
+ {
+  "id": "dec-transfers-and-refunds-2026-08-03",
+  "date": "2026-08-03",
+  "scope": "corporate",
+  "subject": "transfers-and-refunds",
+  "title": "Investment transfers and CRA refunds",
+  "decision": "Transfers to Wealthsimple ($55,000 by 31 August 2026) are moves between the corporation's own accounts, not expenses. CRA refunds are not revenue.",
+  "rationale": "Neither changes taxable income.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
+  "id": "dec-director-reimbursement-2026-08-03",
+  "date": "2026-08-03",
+  "scope": "corporate",
+  "subject": "director-reimbursement",
+  "title": "Repaying Umar for business costs",
+  "decision": "Repaying Umar for business costs he paid personally is not income to him: no T4, no benefit, no deadline. Track it as owed to Umar and count only 2026 items, since $4,491.32 of August to December 2025 items are already in the $13,357.",
+  "rationale": "The corporation already deducted the costs when it recorded them.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+  ]
+ },
+ {
+  "id": "dec-withdraw-reimbursement-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "withdraw-reimbursement",
+  "title": "Drawing what the corporation owes Umar",
+  "decision": "Ask Saira whether Umar can take the amount owed (about $20,800 then, $16,111.98 after the 7 October Mercedes offset) now, labelled 'Director expense reimbursement'.",
+  "rationale": "Repayment up to the amount owed is tax free; anything above it would become a shareholder loan under s.15(2).",
+  "status": "active",
+  "sources": [
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/Email_to_Saira_HST_2025-26.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
+  ]
+ },
+ {
+  "id": "dec-receipt-compression-2026-09-23",
+  "date": "2026-09-23",
+  "scope": "corporate",
+  "subject": "receipt-compression",
+  "title": "Receipts sent to Saira",
+  "decision": "Compress receipts without losing quality before sending: pixel checked images, every PDF page kept.",
+  "rationale": "Umar asked to save space without reducing quality. Receipts went from 334 MB to 267 MB.",
+  "status": "active",
+  "sources": [
+   "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26"
+  ]
+ },
+ {
+  "id": "dec-lazer-t4a-sin-2026-04-20",
+  "date": "2026-04-20",
+  "scope": "personal",
+  "subject": "lazer-t4a-sin",
+  "title": "Lazer T4A carrying Umar's SIN",
+  "decision": "Asked Lazer to cancel or amend the 2025 T4A so the $82,791.46 would sit only under the corporation's number, not Umar's SIN.",
+  "rationale": "Otherwise CRA could add it to Umar's personal income and tax it twice. By 14 May 2026 Lazer had revoked the slip.",
+  "status": "superseded",
+  "sources": [
+   "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf",
+   "2025/Corporate/Lazer - T4A.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md"
+  ],
+  "superseded_by": "dec-lazer-t4a-sin-2026-05-14"
+ },
+ {
+  "id": "dec-lazer-t4a-sin-2026-05-14",
+  "date": "2026-05-14",
+  "scope": "personal",
+  "subject": "lazer-t4a-sin",
+  "title": "Lazer T4A carrying Umar's SIN",
+  "decision": "Settled: Lazer revoked the 2025 T4A, so nothing is reported on Umar's personal return from it and nothing more is needed.",
+  "rationale": "Recorded in the 14 May 2026 review. No written revocation notice is in the folder.",
+  "status": "active",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "2025/Corporate/Lazer - T4A.pdf"
+  ]
+ },
+ {
+  "id": "dec-donation-claim-2025-2026-04-20",
+  "date": "2026-04-20",
+  "scope": "personal",
+  "subject": "donation-claim-2025",
+  "title": "Donations claimed for 2025",
+  "decision": "Claim the $90 IPC Ontario receipt; drop the $60 MMCC Fitra payment.",
+  "rationale": "The MMCC item is a card payment confirmation, not an official receipt.",
+  "status": "active",
+  "sources": [
+   "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf",
+   "2025/Personal/Donations Receipts $150/mmcc-donation-60.pdf",
+   "2025/Personal/Donations Receipts $150/donations-$90CAD.pdf"
+  ]
+ },
+ {
+  "id": "dec-t1135-2025-2026-04-20",
+  "date": "2026-04-20",
+  "scope": "personal",
+  "subject": "t1135-2025",
+  "title": "Foreign property form for 2025",
+  "decision": "No T1135 for 2025.",
+  "rationale": "Highest cost of foreign property was $15,283.87, under the $100,000 threshold.",
+  "status": "active",
+  "sources": [
+   "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf",
+   "2025/Personal/foreign assets report 15,283CAD.pdf"
+  ]
+ },
+ {
+  "id": "dec-capital-loss-2025-2026-04-20",
+  "date": "2026-04-20",
+  "scope": "personal",
+  "subject": "capital-loss-2025",
+  "title": "2025 capital loss",
+  "decision": "Report the $231.52 capital loss from the T5008 and carry it forward ($115.76 allowable).",
+  "rationale": "There were no 2025 gains to offset.",
+  "status": "active",
+  "sources": [
+   "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf",
+   "2025/Personal/T5008_2025_capital_loss_-$231.52 CAD.pdf"
+  ]
+ },
+ {
+  "id": "dec-contractor-payout-year-2024-2024-01-16",
+  "date": "2024-01-16",
+  "scope": "corporate",
+  "subject": "contractor-payout-year-2024",
+  "title": "Year of the January 2024 contractor payout",
+  "decision": "The workbook keeps the $3,219.59 payout of 16 January 2024 (plus $25.45 fee) in 2023, because the work was done 15 to 31 December 2023.",
+  "rationale": "The filed returns point the other way: T2 2024 subcontracts of $78,680 equal the date based total of $78,679.59.",
+  "status": "active",
+  "sources": [
+   "Business Transactions.xlsx",
+   "2025/Corporate/performa.xlsx"
+  ]
+ },
+ {
+  "id": "dec-mercedes-personal-use-offset-2026-10-07",
+  "date": "2026-10-07",
+  "scope": "both",
+  "subject": "mercedes-personal-use-offset",
+  "title": "Charging Umar for personal use of the Mercedes",
+  "decision": "Charge Umar the 20% personal share of 2026 Mercedes costs by offset against what the corporation owes him, with no cash moving: $7,119.48 for 2026 ($4,728.35 actual January to August, $2,391.13 estimated September to December), including $70.79, 20% of the 2 April service he paid. The part of the lease over the s.67.3 cap ($9,251.81 in 2026) is not charged to him. Replace the estimates with December actuals and book it at 31 December.",
+  "rationale": "With 80% business use, 20% of the lease (on the capped amount), insurance and fuel is personal and cannot be deducted. Offsetting avoids a taxable benefit and needs no payment. Set out in a resolution that is drafted but not signed.",
+  "status": "active",
+  "sources": [
+   "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx",
+   "2026/Corporate/Vehicle personal use 2026.xlsx",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
+   "memory:mercedes-80-percent-business-use.md"
+  ]
+ }
+]

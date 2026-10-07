@@ -1,0 +1,859 @@
+{
+ "year": 2025,
+ "status": "closed",
+ "summary": "Lazer left in May and MIR carried the year: $261,878 of revenue, $13,368 of tax, a $4,592 refund and no dividends.",
+ "corporate_story": [
+  "Lazer paid nine times before its contract ended on 2 May; MIR paid every two weeks all year. Revenue before HST was $261,878.",
+  "From January to April the corporation sent Umar $28,000. A draft resolution at year end called it reimbursement plus a small advance, but the filed T2 2025 went further: it counted $41,357 of business costs Umar had paid personally, so the $28,000 is fully repaid costs and the corporation still owed him $13,357 at year end. There were no dividends and no shareholder loan.",
+  "In September the corporation leased a Mercedes GLC 43 for 36 months at $1,750.01 a month. The T2 2025 deducted all Mercedes costs at 100% business use with no s.67.3 cap: about $6,608 above the cap, about $9,600 if the down payment is also spread over the 36 month term. Umar's own car, used until September, was paid mileage and also had its actual costs deducted, a likely double claim of about $3,270.",
+  "Maham joined the payroll in December with $16,000 of salary. Instalments of $17,960 beat the $13,368 of tax, so the return filed on 18 May 2026 brought a $4,592 refund. The HST return for 2024 to 2025 was filed on 24 September with $35,121.50 owing, and the $4,960.50 overpaid came back on 10 October."
+ ],
+ "personal_story": [
+  "Umar earned $142,011.53 as a Lazer employee (T4), with $46,867.74 of tax taken off. He put $15,000 into his RRSP, $8,000 into an FHSA and $25,000 into TFSAs.",
+  "His 2025 return, signed 20 April 2026, shows a refund of $22,130.37. Maham's return shows $16,000 from the corporation and a $40.17 refund. No notices of assessment are on file yet."
+ ],
+ "groups": [
+  {
+   "title": "Revenue by client",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "MIR Services, 24 deposits including HST",
+     "value": 208055.6,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx",
+      "CLAUDE.md"
+     ]
+    },
+    {
+     "label": "Lazer Technologies, 9 deposits including HST",
+     "value": 87866.46,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx",
+      "CLAUDE.md"
+     ]
+    },
+    {
+     "label": "All clients before HST",
+     "value": 261877.93,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Revenue on the T2",
+     "value": 261878,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Lazer T4A box 048",
+     "value": 82791.46,
+     "basis": "as issued, later revoked",
+     "note": "$5,075 less than deposited; Lazer revoked the slip.",
+     "sources": [
+      "2025/Corporate/Lazer - T4A.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Expenses on the T2",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Sub-contracts",
+     "value": 64272,
+     "basis": "as filed",
+     "note": "Zeeshan $63,917.69 plus WISE fees $354.56.",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Vehicle",
+     "value": 24315,
+     "basis": "as filed",
+     "note": "Includes the full Mercedes lease paid in 2025, $12,000.04.",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Salaries and wages",
+     "value": 17838,
+     "basis": "as filed",
+     "note": "Maham $16,000 plus the $1,837.50 remittance.",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Computer related",
+     "value": 14157,
+     "basis": "as filed",
+     "note": "Includes about $13,983 of equipment expensed at once.",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Rent, home office share (30% of $31,116)",
+     "value": 9335,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+      "2025/Corporate/Personal CC Expenses/Expenses Record 2025.xlsx"
+     ]
+    },
+    {
+     "label": "Meals and entertainment",
+     "value": 5939,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Other expenses",
+     "value": 5332,
+     "basis": "as filed",
+     "note": "Balancing figure with no invoices behind it.",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+      "2025/Corporate/accountant files/accountant emails.pdf"
+     ]
+    },
+    {
+     "label": "Office",
+     "value": 4131,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Travel",
+     "value": 2880,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Accounting fees",
+     "value": 2274,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Insurance",
+     "value": 1866,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Telephone",
+     "value": 1789,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Business taxes and memberships",
+     "value": 752,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Amortization",
+     "value": 382,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Bank charges",
+     "value": 12,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Total operating expenses",
+     "value": 155274,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Income and tax",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Net income before tax",
+     "value": 106604,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Net income for tax",
+     "value": 109574,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Small business deduction",
+     "value": 20819,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Total tax payable",
+     "value": 13368,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Net income after tax",
+     "value": 93236,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Net income before tax, Claude's May estimate",
+     "value": 112985.74,
+     "basis": "Claude estimate",
+     "note": "Superseded by the filed return.",
+     "sources": [
+      "2025/Corporate/2025_Corporate_Tax_Report.pdf",
+      "2025/Corporate/2025_Income_Statement.xlsx"
+     ]
+    },
+    {
+     "label": "Tax, Claude's May estimate",
+     "value": 14146.58,
+     "basis": "Claude estimate",
+     "note": "Superseded by the filed return.",
+     "sources": [
+      "2025/Corporate/2025_Corporate_Tax_Report.pdf",
+      "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md"
+     ]
+    },
+    {
+     "label": "Tax, accountant's first draft",
+     "value": 15989,
+     "basis": "accountant draft",
+     "note": "Superseded on 15 May 2026.",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Payments to and from CRA",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Corporate tax balance for 2024, paid 5 March",
+     "value": 16154.35,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Corporate instalments for 2025, 11 payments",
+     "value": 17960,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx",
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "HST prepayments March to June toward 2024 to 2025",
+     "value": 22600,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "HST payment 15 September",
+     "value": 5800,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx",
+      "2025/Corporate/Debit Account/Statements/9-September 29, 2025.pdf"
+     ]
+    },
+    {
+     "label": "HST refund received 10 October",
+     "value": 4960.5,
+     "basis": "per bank",
+     "sources": [
+      "2025/Corporate/Debit Account/Statements/10-October 31, 2025.pdf"
+     ]
+    },
+    {
+     "label": "HST instalment 20 October toward 2025 to 2026",
+     "value": 6500,
+     "basis": "per bank",
+     "sources": [
+      "2025/Corporate/Debit Account/Statements/10-October 31, 2025.pdf"
+     ]
+    },
+    {
+     "label": "Payroll remittance 30 December",
+     "value": 1837.5,
+     "basis": "per bank",
+     "sources": [
+      "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Payments to Umar and what he is owed",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Paid to Umar, January to April",
+     "value": 28000,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx",
+      "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Business costs Umar paid personally, recognised on the T2",
+     "value": 41357,
+     "basis": "as filed",
+     "note": "$28,000 repaid plus $13,357 still owed.",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md"
+     ]
+    },
+    {
+     "label": "Owed to Umar at 31 December (line 2780)",
+     "value": 13357,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Reimbursement in the draft resolution (rent 40%)",
+     "value": 24143.25,
+     "basis": "draft, unsigned",
+     "note": "Superseded: the filed return has no advance.",
+     "sources": [
+      "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx"
+     ]
+    },
+    {
+     "label": "Advance in the draft resolution (rent 40%)",
+     "value": 3856.75,
+     "basis": "draft, unsigned",
+     "note": "Superseded: never booked.",
+     "sources": [
+      "2025/Corporate/[Pending]Director_Resolution_Dec31_2025.docx"
+     ]
+    },
+    {
+     "label": "Advance at 30% rent",
+     "value": 6968.35,
+     "basis": "Claude estimate",
+     "note": "Superseded: never booked.",
+     "sources": [
+      "2025/Corporate/2025_Corporate_Tax_Report.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Costs on Umar's personal cards",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Rent paid",
+     "value": 31116,
+     "basis": "per expense record",
+     "note": "30% claimed, $9,334.80.",
+     "sources": [
+      "2025/Corporate/Personal CC Expenses/Expenses Record 2025.xlsx"
+     ]
+    },
+    {
+     "label": "Vehicle (mileage, service, car wash)",
+     "value": 6468.17,
+     "basis": "per expense record",
+     "sources": [
+      "2025/Corporate/2025_Income_Statement.xlsx"
+     ]
+    },
+    {
+     "label": "Home and auto insurance",
+     "value": 1865.79,
+     "basis": "per expense record",
+     "sources": [
+      "2025/Corporate/2025_Income_Statement.xlsx"
+     ]
+    },
+    {
+     "label": "Rogers internet",
+     "value": 813.48,
+     "basis": "per expense record",
+     "sources": [
+      "2025/Corporate/2025_Income_Statement.xlsx"
+     ]
+    },
+    {
+     "label": "Bell mobile",
+     "value": 703.91,
+     "basis": "per expense record",
+     "sources": [
+      "2025/Corporate/2025_Income_Statement.xlsx"
+     ]
+    },
+    {
+     "label": "Telus and Koodo SIM cards",
+     "value": 271.2,
+     "basis": "per expense record",
+     "sources": [
+      "2025/Corporate/2025_Income_Statement.xlsx"
+     ]
+    },
+    {
+     "label": "All personal card items",
+     "value": 42763.64,
+     "basis": "per expense record",
+     "sources": [
+      "2025/Corporate/Personal CC Expenses/Expenses Record 2025.xlsx"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Payroll",
+   "scope": "both",
+   "figures": [
+    {
+     "label": "Maham salary (19 and 22 December)",
+     "value": 16000,
+     "basis": "per bank",
+     "sources": [
+      "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf"
+     ]
+    },
+    {
+     "label": "Tax withheld (T4 box 22)",
+     "value": 350,
+     "basis": "T4",
+     "sources": [
+      "2025/Personal/Maham T4.pdf"
+     ]
+    },
+    {
+     "label": "CPP (T4 box 16)",
+     "value": 743.75,
+     "basis": "T4",
+     "sources": [
+      "2025/Personal/Maham T4.pdf"
+     ]
+    },
+    {
+     "label": "Remittance to CRA",
+     "value": 1837.5,
+     "basis": "per bank",
+     "sources": [
+      "2025/Corporate/Debit Account/Statements/12-December 31, 2025.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Mercedes",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Lease paid in 2025 (card and bank)",
+     "value": 12000.04,
+     "basis": "per bank",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_EXPENSE_TRACEABILITY_MAP.md"
+     ]
+    },
+    {
+     "label": "Car insurance October to December",
+     "value": 2102.44,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Winter tires",
+     "value": 2817.77,
+     "basis": "per card",
+     "sources": [
+      "2025/Corporate/2025_Income_Statement.xlsx"
+     ]
+    },
+    {
+     "label": "Lease deducted above the s.67.3 cap",
+     "value": 6608.42,
+     "basis": "Claude estimate",
+     "note": "About $9,600 if the down payment is also spread over the 36 month term; about $806 to $1,170 of tax.",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/T2_2025_FILED_AUDIT_PROTECTION.md",
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md"
+     ]
+    },
+    {
+     "label": "20% personal share of Mercedes costs, 27 September to 31 December, claimed at 100%",
+     "value": 3771.76,
+     "basis": "Claude estimate",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md"
+     ]
+    },
+    {
+     "label": "Own car: mileage paid to Umar, January to September",
+     "value": 3160.96,
+     "basis": "per expense record",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md"
+     ]
+    },
+    {
+     "label": "Own car: actual costs also deducted",
+     "value": 3273.32,
+     "basis": "per expense record",
+     "note": "Lexus services $1,984.13, car instalments $963.77, washes $325.42; likely claimed twice.",
+     "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Balance sheet at year end",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Cash and deposits",
+     "value": 154616,
+     "basis": "as filed",
+     "note": "Bank statement $154,616.20. A first Claude figure of $160,636.79 wrongly included January 2026 rows.",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Taxes receivable",
+     "value": 11207,
+     "basis": "as filed",
+     "note": "Corporate tax $4,898 plus GST $6,309.",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf",
+      "2025/Corporate/accountant files/accountant emails.pdf"
+     ]
+    },
+    {
+     "label": "Total assets",
+     "value": 166713,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Owed to Umar",
+     "value": 13357,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Total liabilities",
+     "value": 16000,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Retained earnings at start",
+     "value": 57377,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Retained earnings at year end",
+     "value": 150613,
+     "basis": "as filed",
+     "sources": [
+      "2025/Corporate/accountant files/final/1. T2 Yr '25 - Client Copy - 15248132 CANADA INC (20251231) - Umar Farooq Aslam.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Previous accountant's statements to 14 August 2025",
+   "scope": "corporate",
+   "note": "A part year snapshot, not a tax return.",
+   "figures": [
+    {
+     "label": "Consulting income",
+     "value": 181237.94,
+     "basis": "per accountant",
+     "sources": [
+      "2025/Corporate/business financials from previous accountant.xlsm"
+     ]
+    },
+    {
+     "label": "Sub-contractor",
+     "value": 49670,
+     "basis": "per accountant",
+     "sources": [
+      "2025/Corporate/business financials from previous accountant.xlsm"
+     ]
+    },
+    {
+     "label": "Total expenses",
+     "value": 72704.14,
+     "basis": "per accountant",
+     "sources": [
+      "2025/Corporate/business financials from previous accountant.xlsm"
+     ]
+    },
+    {
+     "label": "Net income",
+     "value": 108533.8,
+     "basis": "per accountant",
+     "sources": [
+      "2025/Corporate/business financials from previous accountant.xlsm"
+     ]
+    },
+    {
+     "label": "Bank",
+     "value": 136145.35,
+     "basis": "per accountant",
+     "note": "Matches the bank workbook.",
+     "sources": [
+      "2025/Corporate/business financials from previous accountant.xlsm"
+     ]
+    },
+    {
+     "label": "Owed to Umar",
+     "value": 14012.78,
+     "basis": "per accountant",
+     "sources": [
+      "2025/Corporate/business financials from previous accountant.xlsm",
+      "CLAUDE.md"
+     ]
+    },
+    {
+     "label": "Dividends shown",
+     "value": 72550,
+     "basis": "per accountant",
+     "note": "Wrong: these were 2024 dividends.",
+     "sources": [
+      "2025/Corporate/business financials from previous accountant.xlsm"
+     ]
+    },
+    {
+     "label": "Opening retained earnings shown",
+     "value": 129923.59,
+     "basis": "per accountant",
+     "note": "Wrong: superseded by $57,377 from the T2 2024.",
+     "sources": [
+      "2025/Corporate/business financials from previous accountant.xlsm"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Personal income and slips",
+   "scope": "personal",
+   "figures": [
+    {
+     "label": "Lazer T4 employment income",
+     "value": 142011.53,
+     "basis": "T4",
+     "sources": [
+      "2025/Personal/T4s/Lazer_2025_T4.pdf"
+     ]
+    },
+    {
+     "label": "Tax deducted by Lazer",
+     "value": 46867.74,
+     "basis": "T4",
+     "sources": [
+      "2025/Personal/T4s/Lazer_2025_T4.pdf"
+     ]
+    },
+    {
+     "label": "Interest (two T5 slips)",
+     "value": 176.15,
+     "basis": "T5",
+     "sources": [
+      "2025/Personal/T5s/T5_2025_interest_118.77.pdf",
+      "2025/Personal/T5s/T5_2025_interest_57.38.pdf"
+     ]
+    },
+    {
+     "label": "Foreign income (T5 and T3)",
+     "value": 4.33,
+     "basis": "T5 and T3",
+     "sources": [
+      "2025/Personal/T5s/T5_2025_foriegn_income_1.62.pdf",
+      "2025/Personal/T3-non-registered-2025.pdf"
+     ]
+    },
+    {
+     "label": "Capital loss (T5008)",
+     "value": -231.52,
+     "basis": "T5008",
+     "sources": [
+      "2025/Personal/T5008_2025_capital_loss_-$231.52 CAD.pdf"
+     ]
+    },
+    {
+     "label": "Total income",
+     "value": 142215.55,
+     "basis": "as filed",
+     "sources": [
+      "2025/Personal/accountant docs/T-183 2025 - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Taxable income",
+     "value": 118141.55,
+     "basis": "as filed",
+     "sources": [
+      "2025/Personal/accountant docs/T-183 2025 - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Instalment paid 15 September",
+     "value": 2463.14,
+     "basis": "as filed",
+     "sources": [
+      "2025/Personal/accountant docs/T-183 2025 - Umar Farooq Aslam.pdf",
+      "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf"
+     ]
+    },
+    {
+     "label": "Donation receipt",
+     "value": 90,
+     "basis": "receipt",
+     "sources": [
+      "2025/Personal/Donations Receipts $150/donations-$90CAD.pdf"
+     ]
+    },
+    {
+     "label": "Refund",
+     "value": 22130.37,
+     "basis": "as filed",
+     "sources": [
+      "2025/Personal/accountant docs/T-183 2025 - Umar Farooq Aslam.pdf"
+     ]
+    },
+    {
+     "label": "Maham: employment income",
+     "value": 16000,
+     "basis": "as filed",
+     "sources": [
+      "2025/Personal/accountant docs/T-183 2025 - Maham Amir.pdf"
+     ]
+    },
+    {
+     "label": "Maham: refund",
+     "value": 40.17,
+     "basis": "as filed",
+     "sources": [
+      "2025/Personal/accountant docs/T-183 2025 - Maham Amir.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Registered accounts",
+   "scope": "personal",
+   "figures": [
+    {
+     "label": "RRSP contributions",
+     "value": 15000,
+     "basis": "receipts",
+     "note": "$12,000 on 20 November plus $3,000 in September and October.",
+     "sources": [
+      "2025/Personal/RRSP Total_ 15,000 CAD/RRSP-2025-private-equity-12000.pdf",
+      "2025/Personal/RRSP Total_ 15,000 CAD/RRSP-2025-self-managed-3000.pdf"
+     ]
+    },
+    {
+     "label": "FHSA contributions",
+     "value": 8000,
+     "basis": "T4FHSA",
+     "sources": [
+      "2025/Personal/FHSA Total_ 8000/HQ75YWF61CAD_T4_FHSA_2025_v_0.pdf"
+     ]
+    },
+    {
+     "label": "TFSA contributions",
+     "value": 25000,
+     "basis": "statements",
+     "sources": [
+      "2025/Personal/TFSA Total_ 25000/HQ51705K2CAD_TFSA_2025_21,431.75.pdf",
+      "2025/Personal/TFSA Total_ 25000/WK1V04QK2CAD_TFSA_2025_3,568.25.pdf"
+     ]
+    },
+    {
+     "label": "Highest cost of foreign property",
+     "value": 15283.87,
+     "basis": "statement",
+     "note": "Under $100,000, so no T1135.",
+     "sources": [
+      "2025/Personal/foreign assets report 15,283CAD.pdf"
+     ]
+    }
+   ]
+  }
+ ]
+}

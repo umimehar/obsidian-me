@@ -1,0 +1,101 @@
+date,merchant,type,gross_amount,gst_hst,net_amount,payout_amount,notes,amount_notes,Unnamed: 9,source
+2025-01-10,MIR pay,Incoming,3842.0,442.0,3400.0,,,,,Debit_Excel
+2025-01-10,Lazer Biweekly Payment,Incoming,14038.08,1615.0,12423.08,,,,,Debit_Excel
+2025-01-15,Dividends to Umar,Outgoing,,0.0,0.0,6000.0,,,,Debit_Excel
+2025-01-24,MIR pay,Incoming,8452.4,972.4,7480.0,,,,,Debit_Excel
+2025-01-24,Lazer Biweekly Payment,Incoming,10139.58,1166.5,8973.08,,,,,Debit_Excel
+2025-01-30,TCX (currency exchange to 1000 GBP),Outgoing,,,,1884.5,Travel expense,,,Debit_Excel
+2025-02-03,credit card payment,Outgoing,,,,959.88,,,,Debit_Excel
+2025-02-03,zeeshan payout (202 hrs + design work),Outgoing,,0.0,0.0,6560.0,,,,Debit_Excel
+2025-02-03,Contract payment platform fee (WISE),Outgoing,,0.0,0.0,35.8,,,,Debit_Excel
+2025-02-07,MIR pay,Incoming,7819.6,899.6,6920.0,,,,,Debit_Excel
+2025-02-07,Lazer Biweekly Payment,Incoming,10752.66,1237.03,9515.63,,,,,Debit_Excel
+2025-02-18,Dividends to Umar,Outgoing,,0.0,0.0,7000.0,,,,Debit_Excel
+2025-02-20,zeeshan payout (??? hrs + design work),Outgoing,,0.0,0.0,8680.0,,,,Debit_Excel
+2025-02-20,Contract payment platform fee (WISE),Outgoing,,0.0,0.0,45.77,,,,Debit_Excel
+2025-02-21,Lazer Biweekly Payment,Incoming,8822.69,1015.0,7807.69,,,,,Debit_Excel
+2025-02-26,Tax filling CMCPA (cpacm.ca) Saira payment ,Outgoing,,0.0,0.0,1073.5,,,,Debit_Excel
+2025-03-05,Corp tax (2024),Outgoing,,0.0,0.0,16154.35,,,,Debit_Excel
+2025-03-07,Lazer Biweekly Payment,Incoming,8822.69,1015.0,7807.69,,,,,Debit_Excel
+2025-03-07, pre payment GST (2024 - 2025),Outgoing,,0.0,0.0,6000.0,,,,Debit_Excel
+2025-03-14,credit card payment,Outgoing,,0.0,0.0,87.08,,,,Debit_Excel
+2025-03-14,Corp tax (2025),Outgoing,,0.0,0.0,4000.0,,,,Debit_Excel
+2025-03-17,Dividends to Umar,Outgoing,,0.0,0.0,7000.0,,,,Debit_Excel
+2025-03-17, pre payment GST (2024 - 2025),Outgoing,,0.0,0.0,5800.0,,,,Debit_Excel
+2025-03-21,MIR pay,Incoming,4746.0,546.0,4200.0,,,,,Debit_Excel
+2025-03-21,Lazer Biweekly Payment,Incoming,8822.69,1015.0,7807.69,,,,,Debit_Excel
+2025-03-31,Corp tax (2025),Outgoing,,0.0,0.0,1396.0,,,,Debit_Excel
+2025-04-01,credit card payment,Outgoing,,0.0,0.0,921.37,,,,Debit_Excel
+2025-04-02,zeeshan payout (208 hrs + design work),Outgoing,,0.0,0.0,8740.0,,,,Debit_Excel
+2025-04-02,Contract payment platform fee (WISE),Outgoing,,0.0,0.0,46.04,,,,Debit_Excel
+2025-04-04,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-04-04,Lazer Biweekly Payment,Incoming,8822.69,1015.0,7807.69,,,,,Debit_Excel
+2025-04-15,Dividends to Umar,Outgoing,,0.0,0.0,8000.0,,,,Debit_Excel
+2025-04-17,Lazer Biweekly Payment,Incoming,8822.69,1015.0,7807.69,,,,,Debit_Excel
+2025-04-21,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-04-21,test transaction (rippling),Incoming,0.01,0.0,0.01,,,,,Debit_Excel
+2025-04-30,Corp tax (2025),Outgoing,,0.0,0.0,1396.0,,,,Debit_Excel
+2025-05-02,Lazer Biweekly Payment,Incoming,8822.69,1015.0,7807.69,,,,,Debit_Excel
+2025-05-02,MIR pay,Incoming,8542.8,982.8,7560.0,,,,,Debit_Excel
+2025-05-02,credit card payment,Outgoing,,0.0,0.0,808.43,,,,Debit_Excel
+2025-05-05,zeeshan payout (206 hrs + design work),Outgoing,,0.0,0.0,8680.0,,,,Debit_Excel
+2025-05-05,Contract payment platform fee (WISE),Outgoing,,0.0,0.0,45.77,,,,Debit_Excel
+2025-05-09, pre payment GST (2024 - 2025),Outgoing,,0.0,0.0,5000.0,,,,Debit_Excel
+2025-05-16,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-05-29,credit card payment,Outgoing,,,,659.55,,,,Debit_Excel
+2025-05-30,MIR pay,Incoming,8542.8,982.8,7560.0,,,,,Debit_Excel
+2025-05-30,Corp tax (2025),Outgoing,,0.0,0.0,1396.0,,,,Debit_Excel
+2025-06-13,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-06-16, pre payment GST (2024 - 2025),Outgoing,,0.0,0.0,5800.0,,,,Debit_Excel
+2025-06-16,zeeshan payout (209 hrs + design work),Outgoing,,0.0,0.0,8770.0,,,,Debit_Excel
+2025-06-16,Contract payment platform fee (WISE),Outgoing,,0.0,0.0,46.19,,,,Debit_Excel
+2025-06-23,credit card payment,Outgoing,,,,9958.58,,,,Debit_Excel
+2025-06-27,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-06-27,credit card payment,Outgoing,,,,385.22,,,,Debit_Excel
+2025-06-30,Corp tax (2025),Outgoing,,0.0,0.0,1396.0,,,,Debit_Excel
+2025-07-07,zeeshan payout (208 hrs + design work),Outgoing,,0.0,0.0,8240.0,,,,Debit_Excel
+2025-07-07,Contract payment platform fee (WISE),Outgoing,,0.0,0.0,43.69,,,,Debit_Excel
+2025-07-11,MIR pay,Incoming,8542.8,982.8,7560.0,,,,,Debit_Excel
+2025-07-25,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-07-30,Corp tax (2025),Outgoing,,0.0,0.0,1396.0,,,,Debit_Excel
+2025-07-31,credit card payment,Outgoing,,,,1987.67,,,,Debit_Excel
+2025-08-08,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-08-22,MIR pay,Incoming,8542.8,982.8,7560.0,,,,,Debit_Excel
+2025-08-27,zeeshan payout (208 hrs + design work),Outgoing,,0.0,0.0,7240.0,,,,Debit_Excel
+2025-08-27,Contract payment platform fee (WISE),Outgoing,,0.0,0.0,38.99,,,,Debit_Excel
+2025-09-02,credit card payment,Outgoing,,0.0,0.0,604.27,,,,Debit_Excel
+2025-09-02,Corp tax (2025),Outgoing,,0.0,0.0,1396.0,,,,Debit_Excel
+2025-09-05,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-09-15, pre payment GST (2024 - 2025),Outgoing,,0.0,0.0,5800.0,This got added in 2024-25 GST tax,,,Debit_Excel
+2025-09-19,MIR pay,Incoming,8542.8,982.8,7560.0,,,,,Debit_Excel
+2025-09-30,credit card payment,Outgoing,,0.0,0.0,1269.79,,,,Debit_Excel
+2025-10-01,Corp tax (2025),Outgoing,,0.0,0.0,1396.0,,,,Debit_Excel
+2025-10-03,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-10-06,credit card payment (Car downpayment with 1st lease installment),Outgoing,,0.0,0.0,6750.01,,,,Debit_Excel
+2025-10-06,credit card payment (Car winter tires payment) ,Outgoing,,0.0,0.0,2817.77,,,,Debit_Excel
+2025-10-10,Corp tax (2025),Incoming,4960.5,,,,,Got GST refund,,Debit_Excel
+2025-10-10,Car insurance,Outgoing,,0.0,0.0,700.76,,,,Debit_Excel
+2025-10-17,MIR pay,Incoming,8542.8,982.8,7560.0,,,,,Debit_Excel
+2025-10-20, pre payment GST (2025 - 2026),Outgoing,,0.0,0.0,6500.0,,,,Debit_Excel
+2025-10-30,Car lease,Outgoing,,0.0,0.0,1750.01,,,,Debit_Excel
+2025-10-30,Corp tax (2025),Outgoing,,0.0,0.0,1396.0,,,,Debit_Excel
+2025-10-31,MIR pay,Incoming,8542.8,982.8,7560.0,,,,,Debit_Excel
+2025-10-31,credit card payment,Outgoing,,0.0,0.0,1874.38,,,,Debit_Excel
+2025-11-03,Car insurance,Outgoing,,0.0,0.0,700.84,,,,Debit_Excel
+2025-11-14,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-11-26,WISE Freelancer payment,Outgoing,,0.0,0.0,7007.69,,,,Debit_Excel
+2025-11-26,WISE FEE,Outgoing,,,,52.31,,,,Debit_Excel
+2025-11-28,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-12-01,Car lease,Outgoing,,0.0,0.0,1750.01,,,,Debit_Excel
+2025-12-01,Car insurance,Outgoing,,0.0,0.0,700.84,,,,Debit_Excel
+2025-12-01,Corp tax (2025),Outgoing,,0.0,0.0,1396.0,,,,Debit_Excel
+2025-12-01,credit card payment,Outgoing,,0.0,0.0,1055.85,,,,Debit_Excel
+2025-12-12,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-12-15,credit card payment,Outgoing,,0.0,0.0,2027.18,,,,Debit_Excel
+2025-12-18,credit card payment,Outgoing,,0.0,0.0,2404.64,,,,Debit_Excel
+2025-12-19,"10,000 salary to Maham",Outgoing,,0.0,0.0,10000.0,,,,Debit_Excel
+2025-12-22,"6,000 salary to Maham",Outgoing,,0.0,0.0,6000.0,,,,Debit_Excel
+2025-12-24,MIR pay,Incoming,9492.0,1092.0,8400.0,,,,,Debit_Excel
+2025-12-30,Car lease,Outgoing,,0.0,0.0,1750.01,,,,Debit_Excel
+2025-12-30,Payroll Taxes,Outgoing,,0.0,0.0,1837.5,,,,Debit_Excel
+2025-10-30,Corp tax (2025),Outgoing,,0.0,0.0,1396.0,,,,Debit_Excel

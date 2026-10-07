@@ -1,0 +1,97 @@
+month_sheet,date,merchant,amount,category,expense_type,paid_from,invoice_on_file,notes,source
+12-Dec,2025-11-01,SQUARE ONE HOME/OFFICE insurance,32.83,Insurance,corporation,Personal Credit Card,,,Personal_CC
+12-Dec,2025-12-03,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+12-Dec,2025-12-06,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+12-Dec,2025-10-15,Rent,2600.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+11-Nov,2025-10-31,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+11-Nov,2025-11-01,SQUARE ONE HOME/OFFICE insurance,32.83,Insurance,corporation,Personal Credit Card,,,Personal_CC
+11-Nov,2025-11-05,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+11-Nov,2025-10-15,Rent,2600.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+10-Oct,2025-10-03,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+10-Oct,2025-10-06,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+10-Oct,2025-10-14,Annual Return filling (CORP CAN),12.0,Util,corporation,Personal Credit Card,Yes,,Personal_CC
+10-Oct,2025-10-15,Rent,2600.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+09-Sep,2025-09-03,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,Can get invoice from bell,,Personal_CC
+09-Sep,2025-09-05,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,can get invoice from rogers,,Personal_CC
+09-Sep,2025-08-14,Millage expenses,0.0,Vehicle Expense,corporation,Personal Credit Card,,,Personal_CC
+09-Sep,2025-09-15,Rent,2600.0,Util,personal + corporation,Personal Credit Card,rent is from 15 to 15.,,Personal_CC
+09-Sep,2025-09-20,Lexus services,1247.34,Vehicle Expense,personal + corporation,Personal Credit Card,,,Personal_CC
+09-Sep,2025-09-23,car wash membership,36.16,Vehicle Expense,corporation,Personal Credit Card,,,Personal_CC
+09-Sep,2025-09-29,SQUARE ONE HOME/OFFICE insurance,32.83,Insurance,corporation,Personal Credit Card,,,Personal_CC
+09-Sep,2025-09-30,Millage expenses,360.76,Vehicle Expense,corporation,Personal Credit Card,,,Personal_CC
+08-Aug,2025-08-04,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+08-Aug,2025-08-05,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+08-Aug,2025-08-14,Millage expenses (beofre 14 Aug),165.07,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+08-Aug,2025-08-14,Millage expenses,0.0,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+08-Aug,,FISCAL YEAR COMPLETED (GST FILLING),0.0,,,,,,Personal_CC
+08-Aug,2025-08-15,Rent,2600.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+08-Aug,2025-08-23,car wash membership,36.16,Vehicle Expense,corporation,Personal Credit Card,No,,Personal_CC
+08-Aug,2025-08-14,Millage expenses,243.6,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+07-July,2025-07-03,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+07-July,2025-07-06,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+07-July,2025-07-07,Lids caps business,94.9,Util,corporation,Personal Credit Card,Yes,,Personal_CC
+07-July,2025-07-08,tabaq,23.12,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+07-July,2025-07-15,Rent,2600.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+07-July,2025-07-18,xyzbytes domain payment,21.0,Util,corporation,Personal Credit Card,Yes,,Personal_CC
+07-July,2025-07-21,Aviva home/office and auto insurance,293.04,Insurance,personal + corporation,Personal Credit Card,No,Can get invoice from RBC Aviva insurance,Personal_CC
+07-July,2025-07-24,car wash membership,36.16,Vehicle Expense,corporation,Personal Credit Card,No,,Personal_CC
+07-July,2025-07-31,Millage expenses,351.11,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+06-Jun,2025-06-02,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+06-Jun,2025-06-05,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+06-Jun,2025-06-19,Aviva home/office and auto insurance,293.04,Insurance,personal + corporation,Personal Credit Card,No,Can get invoice from RBC Aviva insurance,Personal_CC
+06-Jun,2025-06-16,Rent,2600.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+06-Jun,2025-06-24,car wash membership,36.16,Vehicle Expense,corporation,Personal Credit Card,No,,Personal_CC
+06-Jun,2025-06-30,Millage expenses,393.65,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+05-May,2025-05-02,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+05-May,2025-05-06,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+05-May,2025-05-14,Tabaq,46.22,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+05-May,2025-05-15,Marriot hotel stay (Amex),779.13,travel,corporation,Personal Credit Card,Yes,,Personal_CC
+05-May,2025-05-19,Marriot hotel stay (Amex),200.91,travel,corporation,Personal Credit Card,,,Personal_CC
+05-May,2025-05-15,parking,15.0,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+05-May,2025-05-16,Rent,2600.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+05-May,2025-05-20,office bag,56.49,office utils,corporation,Personal Credit Card,Yes,,Personal_CC
+05-May,2025-05-20,Aviva home/office and auto insurance,293.04,Insurance,personal + corporation,Personal Credit Card,No,Can get invoice from RBC Aviva insurance,Personal_CC
+05-May,2025-05-23,car wash membership,36.16,Vehicle Expense,corporation,Personal Credit Card,No,,Personal_CC
+05-May,2025-05-27,melt and dip,27.9,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+05-May,2025-05-31,Millage expenses,430.77,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+04-Apr,2025-04-02,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+04-Apr,2025-04-05,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+04-Apr,2025-04-12,Popeyes,39.55,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+04-Apr,2025-04-15,Rent,2600.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+04-Apr,2025-04-21,Aviva home/office and auto insurance,293.04,Insurance,personal + corporation,Personal Credit Card,No,Can get invoice from RBC Aviva insurance,Personal_CC
+04-Apr,2025-04-24,car wash membership,36.16,Vehicle Expense,corporation,Personal Credit Card,No,,Personal_CC
+04-Apr,2025-04-30,Millage expenses,454.72,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+03-Mar,2025-03-05,BELL CANADA - Mobile,69.87,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+03-Mar,2025-03-07,tim,9.22,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+03-Mar,2025-03-08,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+03-Mar,2025-03-12,skip (gc burger),35.24,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+03-Mar,2025-03-17,Rent,2572.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+03-Mar,2025-03-16,"Temu order office supplies (sockets, extensions, lights) including GST",99.85,office things,corporation,Personal Credit Card,Yes,,Personal_CC
+03-Mar,2025-03-18,car service charges,736.79,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+03-Mar,2025-03-18,car rental charges,33.89,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+03-Mar,2025-03-19,Aviva home/office and auto insurance,293.04,Insurance,personal + corporation,Personal Credit Card,No,Can get invoice from RBC Aviva insurance,Personal_CC
+03-Mar,2025-03-20,telus sim,135.6,sim,corporation,Personal Credit Card,Yes,,Personal_CC
+03-Mar,2025-03-22,"temu order (usb extension cable, usb dock hub)",8.7,office,corporation,Personal Credit Card,,,Personal_CC
+03-Mar,2025-03-24,car wash membership,36.15,Vehicle Expense,corporation,Personal Credit Card,No,,Personal_CC
+03-Mar,2025-03-25,Koodo (telus sim) (DUPLICATE),135.6,Util,corporation,Personal Credit Card,,,Personal_CC
+03-Mar,2025-03-29,shawarma royale,18.07,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+03-Mar,2025-03-31,Millage expenses,368.16,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+02-Feb,2025-02-05,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+02-Feb,2025-02-15,Rent,2572.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+02-Feb,2025-02-19,Aviva home/office and auto insurance,293.04,Insurance,personal + corporation,Personal Credit Card,No,Can get invoice from RBC Aviva insurance,Personal_CC
+02-Feb,2025-02-23,car wash membership,36.15,Vehicle Expense,corporation,Personal Credit Card,No,,Personal_CC
+02-Feb,2025-01-31,Millage expenses,0.0,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC
+01-Jan,2025-01-03,Gladiator rest,16.38,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+01-Jan,2025-01-03,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+01-Jan,2025-01-04,Watan kabob rest,11.49,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+01-Jan,2025-01-04,Skip-popayes,19.25,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+01-Jan,2025-01-05,Rogers home internet,67.79,Util,personal + corporation,Personal Credit Card,No,can get invoice from rogers,Personal_CC
+01-Jan,2025-01-06,car installment,484.11,Vehicle Expense,personal + corporation,Personal Credit Card,Yes,,Personal_CC
+01-Jan,2025-01-08,skip-gcburger,27.89,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+01-Jan,2025-01-15,Rent,2572.0,Util,personal + corporation,Personal Credit Card,No,rent is from 15 to 15.,Personal_CC
+01-Jan,2025-01-19,watankabob,11.99,Food,corporation,Personal Credit Card,Yes,,Personal_CC
+01-Jan,2025-01-20,car installment,479.66,Vehicle Expense,personal + corporation,Personal Credit Card,Yes,,Personal_CC
+01-Jan,2025-01-24,car wash membership,36.16,Vehicle Expense,corporation,Personal Credit Card,No,,Personal_CC
+01-Jan,2025-01-28,td insurance home/auto,9.06,Insurance,corporation,Personal Credit Card,,,Personal_CC
+01-Jan,2025-01-31,BELL CANADA - Mobile,57.64,Util,personal + corporation,Personal Credit Card,No,Can get invoice from bell,Personal_CC
+01-Jan,2025-01-31,Millage expenses for Jan,393.12,Vehicle Expense,corporation,Personal Credit Card,Yes,,Personal_CC

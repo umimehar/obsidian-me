@@ -1,0 +1,328 @@
+{
+ "year": 2024,
+ "status": "closed",
+ "summary": "A full year with Lazer, MIR joining in October: $238,877 of revenue, $15,848 of tax and $72,550 of dividends declared.",
+ "corporate_story": [
+  "Lazer paid all year, most of it at $8,388.08 every two weeks from late August, including a $5,000 bonus in July. MIR Services started on 4 October and H.I. Immigration paid three small website invoices. Revenue on the T2 was $238,877.",
+  "The biggest cost was Zeeshan, $78,680 in sub-contracts. Total expenses were $110,825 and income before tax $128,052. Tax came to $15,848, paid on 5 March 2025; no instalments were paid during 2024.",
+  "The first HST year closed on 14 August 2024 and its $23,187.60 balance was paid on 9 October. Two prepayments in December ($11,682) went toward the next HST year.",
+  "The T2 2024, signed 19 February 2025 and assessed 28 February, ended with $57,377 of retained earnings and $77,740 in the bank."
+ ],
+ "personal_story": [
+  "Umar received $100,000 of transfers recorded as dividends; the T2 2024 declares $72,550 of non eligible dividends. The $27,450 gap is an open question for Saira. No 2024 personal return is in the folder."
+ ],
+ "groups": [
+  {
+   "title": "Revenue by client",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Lazer Technologies, 26 deposits including HST",
+     "value": 218290.02,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "MIR Services, 6 deposits including HST",
+     "value": 49946,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "H.I. Immigration Consult, 3 deposits including HST",
+     "value": 1695,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "All clients before HST",
+     "value": 238877.01,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Revenue on the T2",
+     "value": 238877,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Expenses",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Sub-contracts",
+     "value": 78680,
+     "basis": "as filed",
+     "note": "Zeeshan's payouts by date total $78,679.59.",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Vehicle",
+     "value": 13426,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Rent",
+     "value": 6024,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Office",
+     "value": 3923,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Meals",
+     "value": 3159,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Travel",
+     "value": 1804,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Telephone",
+     "value": 1158,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Accounting",
+     "value": 800,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Computer related",
+     "value": 788,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Amortization",
+     "value": 545,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Insurance",
+     "value": 515,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Total operating expenses",
+     "value": 110825,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Income and tax",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Net income before tax",
+     "value": 128052,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Net income for tax",
+     "value": 129905,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Small business deduction",
+     "value": 24682,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Total tax payable",
+     "value": 15848,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Net income after tax",
+     "value": 107825,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Payments to and from CRA",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Corporate tax for 2023, paid 8 February",
+     "value": 4379,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "HST for 2023 to 2024, paid 9 October",
+     "value": 23187.6,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "HST prepayments in December toward 2024 to 2025",
+     "value": 11682,
+     "basis": "per bank",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    },
+    {
+     "label": "Corporate tax instalments",
+     "value": 0,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Payments to Umar",
+   "scope": "both",
+   "figures": [
+    {
+     "label": "Dividends declared (non eligible)",
+     "value": 72550,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Transfers recorded as dividends",
+     "value": 100000,
+     "basis": "per bank",
+     "note": "$27,450 more than declared; not explained in the sources.",
+     "sources": [
+      "Business Transactions.xlsx"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Balance sheet at year end",
+   "scope": "corporate",
+   "figures": [
+    {
+     "label": "Cash",
+     "value": 77740,
+     "basis": "as filed",
+     "note": "The bank workbook shows $77,739.87.",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Computer equipment after amortization",
+     "value": 1272,
+     "basis": "as filed",
+     "note": "CLAUDE.md's $6,521 comes from the previous accountant's 2025 sheet, not the return.",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Total assets",
+     "value": 79012,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Taxes payable",
+     "value": 15848,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Total liabilities",
+     "value": 21535,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    },
+    {
+     "label": "Retained earnings",
+     "value": 57377,
+     "basis": "as filed",
+     "sources": [
+      "2024/Corporate/(20241231) T2.pdf"
+     ]
+    }
+   ]
+  }
+ ]
+}
