@@ -35,7 +35,6 @@ kanban-plugin: board
 
 ## In Progress
 
-- [ ] [[TCK-0017-taxes-vault-datastore-and-html]] #project/system #type/feature #p1
 
 - [ ] [[TCK-0016-investments-flow-chart-readout]] #project/system #type/feature #p1
 
@@ -50,6 +49,8 @@ kanban-plugin: board
 
 
 ## Review
+
+- [ ] [[TCK-0017-taxes-vault-datastore-and-html]] #project/system #type/feature #p1
 
 
 - [ ] [[TCK-0006-dashboard-v2-registered-contributions]] #project/system #type/feature #p1

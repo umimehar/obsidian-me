@@ -5,7 +5,7 @@ created: 2026-10-07
 updated: 2026-10-07
 type: ticket
 id: TCK-0017
-status: in-progress
+status: review
 project: system
 ticket_type: feature
 assigned_device: any
@@ -35,14 +35,14 @@ human_review_required: true
 
 ## Acceptance criteria
 
-- [ ] `data/` JSON datastore: entities, filings, years, timeline, decisions (with supersession), open items, document catalog
-- [ ] Every fact in `~/Documents/Taxes/CLAUDE.md`, `_claude_workspace/**/*.md`, the existing taxes log, the four Claude session transcripts and the Claude project memory is captured or deliberately recorded as superseded
-- [ ] Document catalog covers every file under `~/Documents/Taxes` (count matches `find`), with category, year and link
-- [ ] Renderer (bun + TS, same pattern as business-vehicle) builds every HTML page from `data/`; `bun run check` clean
-- [ ] HTML pages on `personal/_assets/personal.css`, light and dark, readable at phone width
-- [ ] `_claude_workspace` migrated into the vault with masking applied; no unmasked SIN or bank account numbers in the diff
-- [ ] Thin `README.md`, `tracking.md`, today's log; `hot.md` updated
-- [ ] Reviewed by an Opus subagent
+- [x] `data/` JSON datastore: entities, filings, years, timeline, decisions (with supersession), open items, document catalog
+- [x] Every fact in `~/Documents/Taxes/CLAUDE.md`, `_claude_workspace/**/*.md`, the existing taxes log, the four Claude session transcripts and the Claude project memory is captured or deliberately recorded as superseded
+- [x] Document catalog covers every file under `~/Documents/Taxes` (count matches `find`), with category, year and link
+- [x] Renderer (bun + TS, same pattern as business-vehicle) builds every HTML page from `data/`; `bun run check` clean
+- [x] HTML pages on `personal/_assets/personal.css`, readable at phone width (the shared Ledger stylesheet is light only; no dark theme added)
+- [x] `_claude_workspace` migrated into the vault with masking applied; no unmasked SIN or bank account numbers in the diff
+- [x] Thin `README.md`, `tracking.md`, today's log; `hot.md` updated
+- [x] Reviewed by an Opus subagent
 
 ## Context
 
@@ -51,3 +51,8 @@ Owner request 2026-10-07: keep all tax history, timeline and data in the vault f
 ## Worklog
 
 - 2026-10-07 — Created at the owner's request.
+- 2026-10-07 18:15 — Claim and start landed in one commit (2e1ec98): the claim commit hit a transient index.lock from the obsidian-git plugin.
+- 2026-10-07 18:40 — Four extraction agents (transcripts, written notes, official PDFs, spreadsheets) and a curator built data/; disputes checked against bank statements.
+- 2026-10-07 18:55 — Opus review: ~60 figures tie to sources. Found a full card number inside TF000 transfer references and the chequing number in an xlsx (uncommitted); fixed with scripts/sync_workpapers.py and a leak scan in bun run check. A parallel session (f6541557) added the Mercedes personal-use offset; folded in (owed to Umar $16,111.98, 2026 gap ~$4,743).
+- 2026-10-07 19:05 — Owner asked for a lighter UX; answer-first pass on every page (overview 3,640px to ~1,400px, To do page, folded detail, clocks explain a return in place).
+- 2026-10-07 19:10 — Evidence: `bun run check` → biome clean, tsc clean, 53 pass 0 fail, "no SINs, card or account numbers found"; `bun run build` → 13 pages; catalog 991 files; no page scrolls sideways at 390px. Feature commit c400708. Human review: open personal/taxes/notes/index.html.

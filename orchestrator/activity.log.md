@@ -81,3 +81,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-10-07 18:15 · personal-macbook · create · TCK-0017 · taxes endeavor datastore, timeline, catalog, HTML (owner request)
 - 2026-10-07 18:15 · personal-macbook · claim · TCK-0017 · taxes endeavor build
 - 2026-10-07 18:15 · personal-macbook · start · TCK-0017 · extraction and datastore first
+- 2026-10-07 19:04 · personal-macbook · review · TCK-0017 · taxes endeavor built and reviewed; human review of the pages
