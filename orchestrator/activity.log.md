@@ -78,3 +78,4 @@ Verbs: `init | create | triage | claim | release | start | review | done | fail 
 - 2026-09-29 21:45 · mac-studio · done · TCK-0015 · tile explanations and breakdowns, agent review PASS in round 3
 - 2026-09-29 21:45 · mac-studio · claim · TCK-0016 · taller flow chart and structured readout
 - 2026-09-29 21:45 · mac-studio · start · TCK-0016 · starting chart height and readout
+- 2026-10-07 18:15 · personal-macbook · create · TCK-0017 · taxes endeavor datastore, timeline, catalog, HTML (owner request)
