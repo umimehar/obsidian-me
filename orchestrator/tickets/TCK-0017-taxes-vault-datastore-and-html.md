@@ -5,18 +5,18 @@ created: 2026-10-07
 updated: 2026-10-07
 type: ticket
 id: TCK-0017
-status: ready
+status: in-progress
 project: system
 ticket_type: feature
 assigned_device: any
-claimed_by: null
+claimed_by: personal-macbook
 auto_ok: false
 triage: manual
 priority: p1
 effort: large
 depends_on: []
 created_by: umar
-session: null
+session: 8e9c47d2-227a-4e86-bde2-7e06ae3d8f65
 human_review_required: true
 ---
 

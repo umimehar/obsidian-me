@@ -19,7 +19,7 @@ capabilities:
   - git
 repos: []
 daemon: false
-last_heartbeat: 2026-10-07T18:15:12
+last_heartbeat: 2026-10-07T18:15:36
 ---
 
 # Device — personal-macbook
