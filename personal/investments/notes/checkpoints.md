@@ -2,7 +2,7 @@
 title: App checkpoints, and what they are for
 tags: [personal/investments, reference]
 created: 2026-08-31
-updated: 2026-10-01
+updated: 2026-10-05
 status: active
 type: reference
 personal: investments
@@ -66,3 +66,9 @@ Two things will differ from the September statements for a known reason. 2c62 so
 The Holdings table prints USD rows in USD (CHPX 9.8491 at $102.16 is $1,006.18), so compare those against the statement's USD market value, not its CAD total.
 
 Also visible here and worth checking on import: PSA has left the TFSA, Loblaw has left the FHSA, and 2c62 no longer holds META, L or QQC.
+
+## 2026-10-05, 10:33 and 11:20
+
+Two accounts only, read intraday on a Monday, 47 minutes apart. The self directed TFSA's Stocks table: CHPS, QQC, VFV, XEQT and ZGLD summing to $42,644.57, with no account total or cash captured. The FHSA page: $29,301.06, which its three holdings ($29,301.04) plus $0.03 of cash match to the cent.
+
+Taken as the starting point for [[2026-10-05-tqqq-entry-plan]], before its first QQC sale on 2026-10-07. Against the August statements, PSA has left the TFSA and Loblaw has left the FHSA, the TFSA's into QQC, XEQT and CHPS and the FHSA's into QQC, VFV and XEQT. The September statement should show those trades.
