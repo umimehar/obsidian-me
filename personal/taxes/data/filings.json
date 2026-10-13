@@ -648,13 +648,13 @@
   "period_start": "2025-08-15",
   "period_end": "2026-08-14",
   "due": "2026-11-16",
-  "filed_by": "Saira (CPACM), to file",
+  "filed_by": "Saira (CPACM), awaiting approval",
   "status": "prepared",
   "result": {
    "kind": "refund",
-   "amount": 2404.66
+   "amount": 4021.34
   },
-  "plain": "HST for 15 August 2025 to 14 August 2026. The workpaper shows $23,595.34 of net tax against $26,000 already paid in instalments, so a refund of $2,404.66; Saira files it by 16 November 2026.",
+  "plain": "HST for 15 August 2025 to 14 August 2026. Saira's figures show $21,978.66 of net tax against $26,000 already paid in instalments, so a refund of $4,021.34, with the Mercedes at 90% business use. She files by 16 November 2026 once Umar approves.",
   "lines": [
    {
     "label": "Line 101 Sales (26 MIR deposits)",
@@ -670,11 +670,11 @@
    },
    {
     "label": "Line 106 ITC",
-    "value": 3377.06
+    "value": 4993.74
    },
    {
     "label": "Line 109 Net tax",
-    "value": 23595.34
+    "value": 21978.66
    },
    {
     "label": "Line 110 Instalments",
@@ -682,10 +682,10 @@
    },
    {
     "label": "Line 114 Refund",
-    "value": 2404.66
+    "value": 4021.34
    },
    {
-    "label": "ITC: vehicle lease",
+    "label": "ITC: vehicle lease (7 October workpaper, 80%)",
     "value": 1002.69
    },
    {
@@ -693,7 +693,7 @@
     "value": 636.16
    },
    {
-    "label": "ITC: vehicle and fuel",
+    "label": "ITC: vehicle and fuel (7 October workpaper, 80%)",
     "value": 468.61
    },
    {
@@ -701,7 +701,7 @@
     "value": 386.83
    },
    {
-    "label": "ITC: vehicle maintenance",
+    "label": "ITC: vehicle maintenance (7 October workpaper, 80%)",
     "value": 321.03
    },
    {
@@ -726,15 +726,16 @@
    }
   ],
   "notes": [
+   "Saira's figures of 12 October: ITC $4,993.74 at 90% vehicle use, refund $4,021.34. They appear to claim the lease HST without the s.67.3 limit; with it the refund is about $2,639. Our 7 October workpaper had ITC $3,377.06 and refund $2,404.66 at 80% with the limit.",
+   "Saira has Represent a Client access to the RT account (confirmed 13 October). Umar approved 90% the same day and asked whether the uncapped lease claim is intended.",
    "14 November 2026 is a Saturday, so the due date is Monday 16 November.",
    "The package sent on 23 September claimed the lease in full at 100% use: line 106 $5,372.45, refund $4,400.05. Revised on 7 October to 80% use plus the cap.",
-   "Saira says her books show more than ours; compare when her numbers arrive. She needs Represent a Client access to the RT account before filing.",
    "Open questions for Saira: which list price sets the lease cap, 80% with no mileage log, three purchases without receipts, Valet receipts with no HST number, the Rogers credit (since answered: one credit, counted once, nothing owed), s.173 standby charge.",
    "The instalments were paid on 20 October 2025 and 20 January, 20 April and 20 July 2026. The 15 September 2025 payment belongs to the year before.",
-   "The workpaper's Lease cap sheet gives the lease credit as $1,002.67 and the ITCs sheet as $1,002.69, a 2 cent rounding difference for Saira to settle.",
-   "If Umar picks 85% business use, the vehicle credits rise by about $112; that has to be settled before Saira files."
+   "The workpaper's Lease cap sheet gives the lease credit as $1,002.67 and the ITCs sheet as $1,002.69, a 2 cent rounding difference for Saira to settle."
   ],
   "sources": [
+   "email:Saira Chaudhry, 2026 HST, 12 October 2026",
    "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",

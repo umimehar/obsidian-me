@@ -89,7 +89,7 @@
   "title": "Mercedes business use",
   "decision": "Claim the Mercedes at 80% business use from 27 September 2025, plus the s.67.3 lease cap. Use 80% on the T2 2026 too so the returns agree. No credit for car costs from 15 August to 26 September 2025, when Umar drove his own car and was paid mileage.",
   "rationale": "100% gave HST credits of $5,372.45, well above last year's $3,900.43. Umar's 2025 mileage logs on his own car point to about 52%, his own estimate to 95%; 80% sits between. Claude warned there is still no log. Umar asked about 85% on 7 October but has not decided; 80% stands.",
-  "status": "active",
+  "status": "superseded",
   "sources": [
    "memory:mercedes-80-percent-business-use.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
@@ -97,6 +97,21 @@
    "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
    "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx"
+  ],
+  "superseded_by": "dec-mercedes-business-use-2026-10-13"
+ },
+ {
+  "id": "dec-mercedes-business-use-2026-10-13",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "subject": "mercedes-business-use",
+  "title": "Mercedes business use",
+  "decision": "Claim the Mercedes at 90% business use from 27 September 2025, on the HST 2025-26 return and the T2 2026 alike. No credit for car costs from 15 August to 26 September 2025, when Umar drove his own car and was paid mileage.",
+  "rationale": "Saira prepared the HST return at 90% on 12 October and Umar chose to keep it. There is still no mileage log; his 2025 logs on his own car point to about 52%. The 10% personal share replaces the 20% charged to him, so the books and the returns agree.",
+  "status": "active",
+  "sources": [
+   "email:Saira Chaudhry, 2026 HST, 12 October 2026",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
   ]
  },
  {
@@ -326,12 +341,44 @@
   "title": "HST credit on the Mercedes lease",
   "decision": "Claim 35.94% of the lease HST: 80% business use times the 44.93% cap = $1,002.69.",
   "rationale": "Follows the move to 80% business use. Line 106 becomes $3,377.06 and the refund $2,404.66.",
-  "status": "active",
+  "status": "superseded",
   "sources": [
    "memory:mercedes-80-percent-business-use.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
    "session:075be64b-be34-45d8-8e62-13cde675d867",
    "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ],
+  "superseded_by": "dec-hst-lease-itc-2026-10-13"
+ },
+ {
+  "id": "dec-hst-lease-itc-2026-10-13",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "subject": "hst-lease-itc",
+  "title": "HST credit on the Mercedes lease",
+  "decision": "Claim 90% of the lease HST. Saira's figures carry it without the s.67.3 limit: $2,510.87 of the $2,789.85 paid. With the 44.93% limit it would be $1,128.13. Whether the limit applies now, or the excess is added back later under ETA s.235, is Saira's call.",
+  "rationale": "Follows the move to 90%. Saira's ITC of $4,993.74 matches 90% of every vehicle cost with no cap to within $10; she has not said so herself.",
+  "status": "superseded",
+  "sources": [
+   "email:Saira Chaudhry, 2026 HST, 12 October 2026",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390",
+   "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
+  ],
+  "superseded_by": "dec-hst-lease-itc-2026-10-13b"
+ },
+ {
+  "id": "dec-hst-lease-itc-2026-10-13b",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "subject": "hst-lease-itc",
+  "title": "HST credit on the Mercedes lease",
+  "decision": "Claim 90% of all lease HST paid, $2,510.87, with no s.67.3 limit on the ITC. The limit applies only to the T2 lease deduction.",
+  "rationale": "Saira confirmed on 13 October that the ITCs are claimed at the full 90% and the corporate tax deduction is limited instead. No ETA s.235 add back was mentioned. Umar kept Saira's treatment on 13 October. Our 23 September working capped the ITC at 44.93% under s.235 ($1,128.13 at 90%, refund about $2,638.60); that difference, $1,382.74, is the exposure if CRA applies s.235.",
+  "status": "active",
+  "sources": [
+   "email:Saira Chaudhry, reply on the lease cap, 13 October 2026",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
   ]
  },
  {
@@ -342,12 +389,28 @@
   "title": "Price used for the lease cap",
   "decision": "Work the s.67.3 cap on a $99,500 list price: $38,000 / (85% x $99,500) = 44.93% of each lease payment counts.",
   "rationale": "Using the full $109,929.95 list including options gives 40.67%. Which one applies is a question for Saira.",
-  "status": "active",
+  "status": "superseded",
   "sources": [
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
    "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
    "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
    "2026/Corporate/HST Filing 2025-26 - for Saira/05 Vehicle lease - Mercedes GLC 43/lease-pricing-worksheet.pdf"
+  ],
+  "superseded_by": "dec-lease-cap-list-price-2026-10-13"
+ },
+ {
+  "id": "dec-lease-cap-list-price-2026-10-13",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "subject": "lease-cap-list-price",
+  "title": "Limit on the lease deduction for corporate tax",
+  "decision": "Use Saira's $1,100 a month limit on the lease deduction for corporate tax.",
+  "rationale": "Her answer of 13 October; Umar chose to keep it the same day. Our earlier working used the list price formula, $38,000 / (85% x $99,500) = 44.93% of the $1,548.68 payment, about $695.82 a month, which is lower; at $1,100 the deduction is about $4,850 a year higher, about $590 of tax.",
+  "status": "active",
+  "sources": [
+   "email:Saira Chaudhry, reply on the lease cap, 13 October 2026",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
   ]
  },
  {
@@ -417,10 +480,25 @@
   "title": "Who updates the HST workpaper",
   "decision": "Do not send Saira the revised workpaper; she applies 80% and the cap to her own copy. Compare her figures line by line when they arrive.",
   "rationale": "Umar had already told her. She says her books show more than ours.",
-  "status": "active",
+  "status": "superseded",
   "sources": [
    "session:075be64b-be34-45d8-8e62-13cde675d867",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ],
+  "superseded_by": "dec-saira-applies-80-percent-2026-10-13"
+ },
+ {
+  "id": "dec-saira-applies-80-percent-2026-10-13",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "subject": "saira-applies-80-percent",
+  "title": "Who updates the HST workpaper",
+  "decision": "Saira's own figures are the working copy for HST 2025-26. Ours stays at the 7 October version for reference.",
+  "rationale": "Her figures arrived on 12 October at 90%; sales, HST collected and instalments match ours exactly.",
+  "status": "active",
+  "sources": [
+   "email:Saira Chaudhry, 2026 HST, 12 October 2026",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
   ]
  },
  {
@@ -763,13 +841,29 @@
   "title": "Charging Umar for personal use of the Mercedes",
   "decision": "Charge Umar the 20% personal share of 2026 Mercedes costs by offset against what the corporation owes him, with no cash moving: $7,119.48 for 2026 ($4,728.35 actual January to August, $2,391.13 estimated September to December), including $70.79, 20% of the 2 April service he paid. The part of the lease over the s.67.3 cap ($9,251.81 in 2026) is not charged to him. Replace the estimates with December actuals and book it at 31 December.",
   "rationale": "With 80% business use, 20% of the lease (on the capped amount), insurance and fuel is personal and cannot be deducted. Offsetting avoids a taxable benefit and needs no payment. Set out in a resolution that is drafted but not signed.",
-  "status": "active",
+  "status": "superseded",
   "sources": [
    "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx",
    "2026/Corporate/Vehicle personal use 2026.xlsx",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
    "memory:mercedes-80-percent-business-use.md"
+  ],
+  "superseded_by": "dec-mercedes-personal-use-offset-2026-10-13"
+ },
+ {
+  "id": "dec-mercedes-personal-use-offset-2026-10-13",
+  "date": "2026-10-13",
+  "scope": "both",
+  "subject": "mercedes-personal-use-offset",
+  "title": "Charging Umar for personal use of the Mercedes",
+  "decision": "Charge Umar the 10% personal share of 2026 Mercedes costs by offset against what the corporation owes him, with no cash moving: about $3,559.74 for 2026 (about $2,364.18 actual January to August, $1,195.57 estimated September to December), half the 20% figures. The part of the lease over the s.67.3 cap is not charged to him. Redo the vehicle workbook at 10%, replace the estimates with December actuals and book it at 31 December.",
+  "rationale": "Follows the move to 90% business use. Every component of the personal share scales with the percentage, so the 10% figures are half the 20% ones until the workbook is redone.",
+  "status": "active",
+  "sources": [
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390",
+   "2026/Corporate/Vehicle personal use 2026.xlsx",
+   "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx"
   ]
  }
 ]

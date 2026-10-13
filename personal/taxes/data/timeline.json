@@ -1973,6 +1973,63 @@
   ]
  },
  {
+  "id": "ev-2026-10-12-saira-hst-figures",
+  "date": "2026-10-12",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Saira sends the HST 2025-26 figures and asks to file",
+  "detail": "Sales $207,480, HST collected $26,972.40, ITC $4,993.74, net tax $21,978.66, instalments $26,000, refund $4,021.34. 90% of vehicle expenses claimed.",
+  "amount": 4021.34,
+  "sources": [
+   "email:Saira Chaudhry, 2026 HST, 12 October 2026"
+  ]
+ },
+ {
+  "id": "ev-2026-10-13-mercedes-90",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "Mercedes business use set to 90%",
+  "detail": "Umar keeps Saira's 90%. The personal share charged to him drops from 20% to 10%. Whether the lease HST needs the s.67.3 limit in this return is still a question for Saira.",
+  "sources": [
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
+  ]
+ },
+ {
+  "id": "ev-2026-10-13-reply-to-saira",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Umar approves 90% and asks Saira about the lease cap",
+  "detail": "Asked whether claiming 90% of the full lease HST, with no s.67.3 limit, is intended. Saira already has Represent a Client access to the RT account.",
+  "sources": [
+   "email:Umar to Saira, 13 October 2026"
+  ]
+ },
+ {
+  "id": "ev-2026-10-13-saira-lease-answer",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Saira: ITCs at the full 90%, lease deduction limited to $1,100 a month",
+  "detail": "The s.67.3 limit applies to the corporate tax deduction, not the HST credits. She asks whether the HST return is good to file.",
+  "sources": [
+   "email:Saira Chaudhry, reply on the lease cap, 13 October 2026"
+  ]
+ },
+ {
+  "id": "ev-2026-10-13-hst-approved",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "Umar keeps Saira's lease treatment and approves the HST return",
+  "detail": "Lease ITC at the full 90%; lease deduction for corporate tax limited to $1,100 a month. Refund $4,021.34.",
+  "amount": 4021.34,
+  "sources": [
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
+  ]
+ },
+ {
   "id": "ev-2026-11-13-payroll-remittance",
   "date": "2026-11-13",
   "scope": "corporate",
@@ -1990,8 +2047,8 @@
   "scope": "corporate",
   "category": "deadline",
   "title": "HST return for 2025 to 2026 due",
-  "detail": "14 November is a Saturday, so Monday 16 November. Saira files; expected refund $2,404.66. She needs Represent a Client access first.",
-  "amount": 2404.66,
+  "detail": "14 November is a Saturday, so Monday 16 November. Saira files; her figures show a $4,021.34 refund, pending her answer on the lease cap.",
+  "amount": 4021.34,
   "sources": [
    "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
