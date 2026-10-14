@@ -5,14 +5,31 @@
   "owner": "Saira",
   "scope": "corporate",
   "due": "2026-11-16",
-  "status": "waiting",
-  "detail": "Saira's figures: sales $207,480, HST collected $26,972.40, ITC $4,993.74, net tax $21,978.66, instalments $26,000, refund $4,021.34. 90% vehicle use, lease ITC at the full 90%. Umar approved on 13 October; Saira files.",
+  "status": "done",
+  "detail": "Filed by Saira on 13 October 2026, NETFILE confirmation 573643. Net tax $21,978.66; line 110 left at $0, so the $26,000 of instalments sit on the account.",
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
+   "email:Saira Chaudhry, filed HST, 14 October 2026",
    "email:Saira Chaudhry, 2026 HST, 12 October 2026",
    "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
    "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ],
+  "closed_on": "2026-10-13"
+ },
+ {
+  "id": "oi-hst-2025-26-refund",
+  "title": "Confirm CRA applies the $26,000 HST instalments and refunds about $4,021.34",
+  "owner": "Umar",
+  "scope": "corporate",
+  "due": "2026-11-14",
+  "status": "waiting",
+  "detail": "The filed return shows $21,978.66 owing by 14 November because line 110 is $0. The instalments are on the RT account, so CRA should net them and refund about $4,021.34, as it did with $4,960.50 on 10 October 2025. Check the RT balance in My Business Account in early November. Do not pay the $21,978.66. If a balance is still showing, ask Saira to have the instalments applied.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
+   "email:Saira Chaudhry, filed HST, 14 October 2026",
+   "vault:obsidian-me/personal/taxes/log/2026-10-14.md"
   ]
  },
  {
@@ -723,14 +740,17 @@
  },
  {
   "id": "oi-hst-instalments-2026-27",
-  "title": "Pay quarterly HST instalments for 2026 to 2027",
+  "title": "Schedule the four HST instalments for 2026 to 2027 ($5,500 each)",
   "owner": "Umar",
   "scope": "corporate",
-  "due": "2026-12-14",
-  "status": "open",
-  "detail": "About $5,898.84 a quarter; the usual $6,500 covers it. Worked out from the CRA rule (within one month after each quarter): 14 December 2026, 15 March 2027, 14 June 2027, 14 September 2027. Check the dates and amounts with Saira.",
+  "due": "2026-11-14",
+  "status": "done",
+  "detail": "Done 14 October 2026: quarterly pre-authorized debit on RT0001 from BMO, $5,500 x 4 = $22,000, allocation 'Payment on filing and Interim balance', period end 2027-08-14, first debit 2026-11-14, last 2027-08-14. CRA's prior year minimum is $5,494.66.",
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_HST_PAD_2026-27_2026-10-14.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
-  ]
+  ],
+  "closed_on": "2026-10-14"
  }
 ]

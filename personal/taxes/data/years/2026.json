@@ -1,13 +1,13 @@
 {
  "year": 2026,
  "status": "open",
- "summary": "MIR is the only client, the T2 2025 refund arrived, Saira has the HST return at a $4,021.34 refund, and 2026 tax looks about $4,454 short of instalments.",
+ "summary": "MIR is the only client, the T2 2025 refund arrived, the HST return was filed on 13 October with about $4,021.34 to come back, and 2026 tax looks about $4,454 short of instalments.",
  "corporate_story": [
   "MIR paid 17 times by 31 August, $151,872 including HST ($134,400 before HST); the full year projects to $208,320. Cash stood at $163,061.21 on 31 August after $55,000 moved to Wealthsimple.",
   "The T2 2025 was filed and assessed on 18 May and its $4,592 refund arrived on 28 May as $4,644.90. That deposit is not revenue and must come out of the 2026 workbook totals.",
   "Instalments are paid at about $900 a month ($6,900 by August) instead of CRA's $13,370 schedule. The 7 October projection puts 2026 tax about $4,743 above planned instalments. Lease payments over the s.67.3 cap ($11,564.77) explain about $1,411 of that and the non deductible 20% personal share of the Mercedes $578; the rest is profit. Topping up would take about $1,186 a month from September to December.",
   "Maham's pay runs from April at $2,666.67 a month with $460.14 sent to CRA each month. The Mercedes is at 90% business use from 13 October (80% before); the 10% personal share, about $3,559.74 for 2026, is charged to Umar against what the corporation owes him.",
-  "Saira's HST figures for the year ending 14 August 2026, sent 12 October, show a $4,021.34 refund at 90% Mercedes use. Saira, back as accountant since September, files it by 16 November and will prepare the T2 2026."
+  "Saira filed the HST return for the year ending 14 August 2026 on 13 October (confirmation 573643) at her figures with 90% Mercedes use: net tax $21,978.66. Line 110 is $0, so the $26,000 of instalments on the account should come back as about $4,021.34. Saira, back as accountant since September, will prepare the T2 2026."
  ],
  "personal_story": [
   "No 2026 personal documents are on file yet. Maham earns $24,000 from the corporation for April to December; both personal returns are due 30 April 2027."
@@ -396,16 +396,18 @@
     {
      "label": "ITC",
      "value": 4993.74,
-     "basis": "prepared",
+     "basis": "filed",
      "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
       "email:Saira Chaudhry, 2026 HST, 12 October 2026"
      ]
     },
     {
      "label": "Net tax",
      "value": 21978.66,
-     "basis": "prepared",
+     "basis": "filed",
      "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
       "email:Saira Chaudhry, 2026 HST, 12 October 2026"
      ]
     },
@@ -419,13 +421,14 @@
      ]
     },
     {
-     "label": "Refund",
+     "label": "Refund expected",
      "value": 4021.34,
-     "basis": "prepared",
+     "basis": "filed",
      "sources": [
+      "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
       "email:Saira Chaudhry, 2026 HST, 12 October 2026"
      ],
-     "note": "Saira's figure at 90%, apparently without the lease cap."
+     "note": "Filed 13 October with line 110 at $0; comes back once CRA applies the $26,000 of instalments."
     },
     {
      "label": "Refund on the 7 October workpaper",

@@ -1,7 +1,7 @@
 {
- "as_of": "2026-10-13",
+ "as_of": "2026-10-14",
  "standing": {
-  "headline": "Every return through 2025 is filed. Next is the HST return: Saira's figures show a $4,021.34 refund at 90% Mercedes use.",
+  "headline": "Every return through 2025 is filed, and the HST return for 2025-26 was filed on 13 October. About $4,021.34 should come back once CRA applies the instalments.",
   "points": [
    {
     "label": "Filed and settled",
@@ -9,7 +9,7 @@
    },
    {
     "label": "Waiting",
-    "text": "The HST return for the year ending 14 August 2026. Saira's figures: sales $207,480, HST collected $26,972.40 and ITC $4,993.74, against $26,000 already paid in instalments, so a $4,021.34 refund, with the Mercedes at 90% business use and the lease ITC at the full 90%. Umar approved it on 13 October; Saira files."
+    "text": "The HST refund for the year ending 14 August 2026. Saira filed the return on 13 October (confirmation 573643): sales $207,480, HST collected $26,972.40, ITC $4,993.74, net tax $21,978.66, with the Mercedes at 90% and the lease ITC at the full 90%. Line 110 is $0, so CRA shows $21,978.66 owing by 14 November; the $26,000 of instalments on the account should cover it and leave about $4,021.34 to refund, as happened in October 2025. Check the RT balance in early November; do not pay it."
    },
    {
     "label": "Umar and the corporation",
