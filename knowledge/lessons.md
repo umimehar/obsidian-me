@@ -2,7 +2,7 @@
 title: Lessons
 tags: [knowledge, lessons]
 created: 2026-07-13
-updated: 2026-10-02
+updated: 2026-10-13
 status: active
 type: permanent
 ---
@@ -56,6 +56,14 @@ Why:
 - Claude Code reports that as a bare `Connection closed`, which says nothing about the cause and sends you looking at the wrong layer.
 
 ALWAYS diagnose an MCP `Connection closed` by running the server's command by hand and reading stderr, not by re-registering it. For these two the fix is `uvx --with "mcp<2" <server>`; drop the pin when either package ships a 2.x-compatible release.
+
+### search the endeavor's workpapers before raising a question with an advisor (2026-10-13)
+
+Why:
+- On 2026-10-13 Claude drafted two questions for the accountant (the s.67.3 $1,100 versus list price limit, and the ETA s.235 lease ITC cap) that the 23 September workpaper had already worked out in full; Umar had to point it out.
+- Asking an advisor something already settled costs a round trip and hides the position we already hold.
+
+ALWAYS `rg` the endeavor's `data/` and `workpapers/` (scripts included) for the section number or figure before writing "ask X whether…". If an answer exists, state it as our position with its source file, and ask only what is genuinely open.
 
 ## Sensitive data
 

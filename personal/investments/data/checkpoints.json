@@ -743,6 +743,157 @@
         "note": "Unlike the 2026-08-31 checkpoint, the app's own headline total was captured. It includes the chequing accounts: the seven investment groups ($268,126.43) plus chequing ($338.26) is $268,464.69, $2.47 to $3.21 from the two headline readings, which were taken moments apart while crypto and FX moved. The spousal RRSP is outside the headline, as it is outside the RRSP group.",
         "creditCardOwed": 159.75
       }
+    },
+    {
+      "observed": "2026-10-05T10:33:00-04:00",
+      "source": "Wealthsimple app, two account screens: TFSA d77c Stocks table at 10:33 and FHSA e2ec account page at 11:20, both Monday 2026-10-05",
+      "coversPeriod": "2026-10",
+      "reconciledAgainst": null,
+      "note": "Intraday readings during the trading session, not a close, and taken 47 minutes apart, so the two accounts are not priced at the same moment. Recorded before the TQQQ entry plan (notes/2026-10-05-tqqq-entry-plan.md) starts selling QQC in d77c on 2026-10-07, so this is the TFSA before that plan. Compare against the 2026-10 statements knowing a month of trades and prices sits between.",
+      "portfolioTotal": null,
+      "totalNote": "Only the self directed TFSA and the FHSA were captured.",
+      "groups": [
+        {
+          "label": "TFSA",
+          "statedTotal": null,
+          "accountCount": 2,
+          "accounts": [
+            {
+              "label": "TFSA",
+              "ours": "d77c",
+              "value": null,
+              "holdingsSumTo": 42644.57
+            }
+          ],
+          "partsNote": "Only the Stocks table of d77c was captured, not the account total or its cash, and not Managed (TFSA) 9710. The five holdings sum to $42,644.57."
+        },
+        {
+          "label": "FHSA",
+          "statedTotal": 29301.06,
+          "accountCount": 1,
+          "accounts": [
+            {
+              "label": "Home",
+              "ours": "e2ec",
+              "value": 29301.06,
+              "pastDayChange": 97.83,
+              "pastDayChangePercent": 0.34,
+              "cash": {
+                "CAD": 0.02,
+                "USD": 0.01,
+                "totalCad": 0.03
+              }
+            }
+          ],
+          "partsSumTo": 29301.07,
+          "partsNote": "Three holdings ($29,301.04) plus $0.03 of cash is $29,301.07 against the stated $29,301.06, one cent apart, the app's rounding. The 2026 FHSA contribution reads $8,000.00, matching rooms.2026."
+        }
+      ],
+      "holdings": [
+        {
+          "symbol": "CHPS",
+          "ours": "d77c",
+          "currency": "CAD",
+          "quantity": 59.9433,
+          "price": 94.09,
+          "averageCost": 79.01,
+          "value": 5640.07,
+          "allTimeReturn": 903.82,
+          "allTimeReturnPercent": 19.08
+        },
+        {
+          "symbol": "QQC",
+          "ours": "d77c",
+          "currency": "CAD",
+          "quantity": 177.9164,
+          "price": 52.49,
+          "averageCost": 48.45,
+          "value": 9338.83,
+          "allTimeReturn": 719.23,
+          "allTimeReturnPercent": 8.34
+        },
+        {
+          "symbol": "VFV",
+          "ours": "d77c",
+          "currency": "CAD",
+          "quantity": 70.8485,
+          "price": 195.81,
+          "averageCost": 154.96,
+          "value": 13872.84,
+          "allTimeReturn": 2894.19,
+          "allTimeReturnPercent": 26.36
+        },
+        {
+          "symbol": "XEQT",
+          "ours": "d77c",
+          "currency": "CAD",
+          "quantity": 213.4072,
+          "price": 46.0,
+          "averageCost": 43.28,
+          "value": 9816.73,
+          "allTimeReturn": 580.02,
+          "allTimeReturnPercent": 6.28
+        },
+        {
+          "symbol": "ZGLD",
+          "ours": "d77c",
+          "currency": "CAD",
+          "quantity": 62.8633,
+          "price": 63.25,
+          "averageCost": 61.55,
+          "value": 3976.1,
+          "allTimeReturn": 106.85,
+          "allTimeReturnPercent": 2.76
+        },
+        {
+          "symbol": "QQC",
+          "ours": "e2ec",
+          "currency": "CAD",
+          "quantity": 150.2566,
+          "price": 52.44,
+          "averageCost": 45.66,
+          "value": 7879.46,
+          "allTimeReturn": 1018.53,
+          "allTimeReturnPercent": 14.85
+        },
+        {
+          "symbol": "VFV",
+          "ours": "e2ec",
+          "currency": "CAD",
+          "quantity": 58.8775,
+          "price": 195.87,
+          "averageCost": 159.71,
+          "value": 11532.34,
+          "allTimeReturn": 2128.9,
+          "allTimeReturnPercent": 22.64
+        },
+        {
+          "symbol": "XEQT",
+          "ours": "e2ec",
+          "currency": "CAD",
+          "quantity": 214.9834,
+          "price": 46.0,
+          "averageCost": 41.63,
+          "value": 9889.24,
+          "allTimeReturn": 939.82,
+          "allTimeReturnPercent": 10.5
+        }
+      ],
+      "holdingsNote": "Values, quantities, average cost and all time return are read off the screen; price is value divided by quantity, derived rather than displayed. All rows are CAD.",
+      "openQuestions": [
+        {
+          "id": "tfsa-psa-redeployed",
+          "severity": "check",
+          "summary": "d77c holds QQC 177.9164 and XEQT 213.4072 against 96.3858 and 164.6832 on the 2026-08 statement, and PSA (137.5199 units in August) is gone. The PSA proceeds went into QQC, XEQT and CHPS. Confirm the trades on the September statement.",
+          "leads": "CHPS at 59.9433 matches the 2026-10-01 checkpoint, so its change happened in September."
+        },
+        {
+          "id": "fhsa-loblaw-redeployed",
+          "severity": "check",
+          "summary": "e2ec holds QQC 150.2566, VFV 58.8775 and XEQT 214.9834 against 94.2365, 46.9457 and 202.7636 plus 88.5228 L on the 2026-08 statement. The Loblaw proceeds were redeployed into the three ETFs before 2026-10-01.",
+          "leads": "Check the September statement for the L sale and the three purchases."
+        }
+      ]
     }
   ]
 }

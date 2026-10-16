@@ -25,6 +25,7 @@ Summing the eleven investment accounts from their June 2026 statements gives $24
 - [[tracking]], statement coverage per account and per month, and the latest month with every account in. Also on the dashboard's Data tab.
 - [[rrsp-room]], the RRSP deduction limit and available room from the latest notice of assessment, which is what the room bars measure against.
 - [[2026-10-01-allocation-and-rrsp-plan]], the October 2026 decisions: direct indexing at 70% U.S. Market and 30% U.S. Innovation filled by deposits, the GOLD sale for a capital loss, the three phase payroll schedule, and the 2026 RRSP deduction of $53,500. The Future tab's Plan panel renders the same plan from `data/plan.json`.
+- [[norberts-gambit]], converting CAD to USD by journaling DLR to DLR.U: when it beats the 1.5% Convert fee, the website steps, and a history of each journal.
 
 ## The dashboard
 

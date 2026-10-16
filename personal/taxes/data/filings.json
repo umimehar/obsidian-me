@@ -520,19 +520,40 @@
   ]
  },
  {
+  "id": "hst-2023-stub",
+  "kind": "HST",
+  "scope": "corporate",
+  "title": "HST 2023 (one day stub)",
+  "period_start": "2023-08-14",
+  "period_end": "2023-08-14",
+  "filed_on": "2024-01-18",
+  "status": "filed",
+  "plain": "A one day HST return for 14 August 2023, the day of incorporation, so that later years run 15 August to 14 August. CRA received it on 18 January 2024 and shows it as Processed, no notice.",
+  "lines": [],
+  "notes": [
+   "Known only from CRA's list of filed returns, seen 14 October 2026. The amounts are not on file; with no sales on the first day it was almost certainly a nil return.",
+   "Received the same day as the $904 fee paid to Saira (CPACM), so that fee likely covered this return as well as the T2 2023."
+  ],
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_GST34_returns_list_2026-10-14.png",
+   "Business Transactions.xlsx"
+  ]
+ },
+ {
   "id": "hst-2023-24",
   "kind": "HST",
   "scope": "corporate",
   "title": "HST 2023-24",
-  "period_start": "2023-08-14",
+  "period_start": "2023-08-15",
   "period_end": "2024-08-14",
   "due": "2024-11-14",
-  "status": "filed",
+  "filed_on": "2024-10-01",
+  "status": "assessed",
   "result": {
    "kind": "owing",
    "amount": 23187.6
   },
-  "plain": "The first HST year, from incorporation to 14 August 2024. The corporation owed $23,187.60, paid on 9 October 2024.",
+  "plain": "The first full HST year, 15 August 2023 to 14 August 2024. CRA received the return on 1 October 2024 and assessed it. The corporation owed $23,187.60, paid on 9 October 2024.",
   "lines": [
    {
     "label": "Line 101 Sales (from deposits)",
@@ -556,10 +577,12 @@
    }
   ],
   "notes": [
-   "Rebuilt from the bank workbook; the return itself, its filing date and confirmation number are not in the folder.",
+   "CRA's list of filed returns (seen 14 October 2026) gives the period as 15 August 2023 to 14 August 2024, received 1 October 2024, status Assessed. The day of incorporation, 14 August 2023, was its own one day return.",
+   "The lines are rebuilt from the bank workbook; the return itself and its confirmation number are not in the folder. Who filed it is not recorded.",
    "Sales were Lazer $191,869.29 and H.I. Immigration $1,000 before HST."
   ],
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_GST34_returns_list_2026-10-14.png",
    "Business Transactions.xlsx",
    "2025/Corporate/Debit Account/business-debit-transactions.xlsx",
    "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx"
@@ -576,7 +599,7 @@
   "filed_on": "2025-09-24",
   "filed_by": "Saira (CPACM)",
   "confirmation": "837076",
-  "status": "filed",
+  "status": "assessed",
   "result": {
    "kind": "owing",
    "amount": 35121.5
@@ -626,11 +649,13 @@
   ],
   "notes": [
    "Filed by NETFILE; never recalculate or refile.",
+   "CRA shows it as Assessed (received 24 September 2025), seen 14 October 2026.",
    "CLAUDE.md says $28,400 was prepaid in 2025. That counts only March to September 2025 ($22,600 + $5,800) and leaves out $11,682 paid in December 2024.",
    "A later ledger rebuilt the ITC total as $4,303.67; it wrongly counts the HST inside a CRA payment and is not comparable.",
    "Sales are counted by the date received."
   ],
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_GST34_returns_list_2026-10-14.png",
    "2025/Corporate/HST Filing/15248132 Canada Inc. HST.pdf",
    "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
    "Business Transactions.xlsx",
@@ -648,16 +673,19 @@
   "period_start": "2025-08-15",
   "period_end": "2026-08-14",
   "due": "2026-11-16",
-  "filed_by": "Saira (CPACM), to file",
-  "status": "prepared",
+  "payment_due": "2026-11-14",
+  "filed_on": "2026-10-13",
+  "filed_by": "Saira (CPACM)",
+  "confirmation": "573643",
+  "status": "filed",
   "result": {
-   "kind": "refund",
-   "amount": 2404.66
+   "kind": "owing",
+   "amount": 21978.66
   },
-  "plain": "HST for 15 August 2025 to 14 August 2026. The workpaper shows $23,595.34 of net tax against $26,000 already paid in instalments, so a refund of $2,404.66; Saira files it by 16 November 2026.",
+  "plain": "HST for 15 August 2025 to 14 August 2026, filed by Saira on 13 October 2026 (NETFILE confirmation 573643). Net tax is $21,978.66. The return claims no instalments on line 110, so CRA shows that amount owing by 14 November; the $26,000 of instalments already paid sit on the account and should cover it, leaving about $4,021.34 to come back, the same way the 2024-25 overpayment was refunded in October 2025.",
   "lines": [
    {
-    "label": "Line 101 Sales (26 MIR deposits)",
+    "label": "Line 101 Sales and other revenue",
     "value": 207480
    },
    {
@@ -669,23 +697,51 @@
     "value": 0
    },
    {
+    "label": "Line 105 Total HST and adjustments",
+    "value": 26972.4
+   },
+   {
     "label": "Line 106 ITC",
-    "value": 3377.06
+    "value": 4993.74
+   },
+   {
+    "label": "Line 107 Adjustments deducted",
+    "value": 0
+   },
+   {
+    "label": "Line 108 Total ITCs and adjustments",
+    "value": 4993.74
    },
    {
     "label": "Line 109 Net tax",
-    "value": 23595.34
+    "value": 21978.66
    },
    {
-    "label": "Line 110 Instalments",
+    "label": "Line 110 Instalments claimed",
+    "value": 0
+   },
+   {
+    "label": "Line 111 Rebates",
+    "value": 0
+   },
+   {
+    "label": "Line 114 Refund claimed",
+    "value": 0
+   },
+   {
+    "label": "Line 115 Amount owing",
+    "value": 21978.66
+   },
+   {
+    "label": "Instalments paid, on account (not claimed on line 110)",
     "value": 26000
    },
    {
-    "label": "Line 114 Refund",
-    "value": 2404.66
+    "label": "Expected refund once CRA applies the instalments",
+    "value": 4021.34
    },
    {
-    "label": "ITC: vehicle lease",
+    "label": "ITC: vehicle lease (7 October workpaper, 80%)",
     "value": 1002.69
    },
    {
@@ -693,7 +749,7 @@
     "value": 636.16
    },
    {
-    "label": "ITC: vehicle and fuel",
+    "label": "ITC: vehicle and fuel (7 October workpaper, 80%)",
     "value": 468.61
    },
    {
@@ -701,7 +757,7 @@
     "value": 386.83
    },
    {
-    "label": "ITC: vehicle maintenance",
+    "label": "ITC: vehicle maintenance (7 October workpaper, 80%)",
     "value": 321.03
    },
    {
@@ -726,15 +782,20 @@
    }
   ],
   "notes": [
-   "14 November 2026 is a Saturday, so the due date is Monday 16 November.",
-   "The package sent on 23 September claimed the lease in full at 100% use: line 106 $5,372.45, refund $4,400.05. Revised on 7 October to 80% use plus the cap.",
-   "Saira says her books show more than ours; compare when her numbers arrive. She needs Represent a Client access to the RT account before filing.",
-   "Open questions for Saira: which list price sets the lease cap, 80% with no mileage log, three purchases without receipts, Valet receipts with no HST number, the Rogers credit (since answered: one credit, counted once, nothing owed), s.173 standby charge.",
-   "The instalments were paid on 20 October 2025 and 20 January, 20 April and 20 July 2026. The 15 September 2025 payment belongs to the year before.",
-   "The workpaper's Lease cap sheet gives the lease credit as $1,002.67 and the ITCs sheet as $1,002.69, a 2 cent rounding difference for Saira to settle.",
-   "If Umar picks 85% business use, the vehicle credits rise by about $112; that has to be settled before Saira files."
+   "Filed by NETFILE on 13 October 2026, confirmation 573643; never recalculate or refile. Saira sent the confirmation on 14 October.",
+   "CRA shows it as 'Received, processing in progress' on 14 October 2026, with every line matching the NETFILE confirmation, line 110 included at $0.",
+   "Line 110 is $0, as on the 2024-25 return. The four $6,500 instalments (20 October 2025, 20 January, 20 April and 20 July 2026) were paid to the RT account and are not claimed on the return. In 2025 CRA applied the prepayments itself and refunded the $4,960.50 difference 16 days after filing.",
+   "CRA's confirmation gives the payment due date as 14 November 2026, a Saturday. If the account still shows a balance owing in early November, ask Saira before paying anything.",
+   "Filed at Saira's figures: 90% vehicle use, lease ITC at the full 90% ($2,510.87) with no s.67.3 limit. If CRA applies the limit under s.235 the ITC drops by $1,382.74.",
+   "The ITC lines below line 115 come from our 7 October workpaper at 80% with the cap ($3,377.06 in all); Saira's line by line sheet was never sent.",
+   "The package sent on 23 September claimed the lease in full at 100% use: line 106 $5,372.45, refund $4,400.05. Revised on 7 October to 80% use plus the cap, refund $2,404.66."
   ],
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_HST_2025-26_summary_2026-10-14.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_GST34_returns_list_2026-10-14.png",
+   "email:Saira Chaudhry, filed HST, 14 October 2026",
+   "email:Saira Chaudhry, 2026 HST, 12 October 2026",
    "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
@@ -764,16 +825,19 @@
     "value": 982.8
    },
    {
-    "label": "Quarterly instalment (estimate)",
-    "value": 5898.84
+    "label": "Quarterly instalment (CRA minimum $5,494.66, paid as $5,500)",
+    "value": 5500
    }
   ],
   "notes": [
    "Due three months after 14 August 2027; 14 November 2027 is a Sunday, so Monday 15 November.",
    "The 21 August 2026 MIR deposit and the 31 August 2026 lease payment belong here, not in 2025-26.",
-   "Net tax runs above $3,000 a year, so quarterly instalments apply: about $5,898.84 each, due within one month after each quarter ends, so 14 December 2026, 15 March 2027 (14 March is a Sunday), 14 June 2027 and 14 September 2027. Worked out from the CRA rule; check with Saira."
+   "Quarterly instalments of $5,500 ($22,000 a year), set up by Umar on 14 October 2026 as a quarterly pre-authorized debit on RT0001, allocated to the interim balance for the period ending 2027-08-14. Debits on 14 November 2026, 14 February, 14 May and 14 August 2027, each a month before CRA's due dates (14 December, 14 March, 14 June, 14 September) so the last lands inside the period. CRA's prior year minimum is $5,494.66 a quarter.",
+   "CRA lists it as the next expected return, due 14 November 2027. That is a Sunday, so the working deadline is Monday 15 November."
   ],
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_GST34_returns_list_2026-10-14.png",
    "Business Transactions.xlsx",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
    "session:075be64b-be34-45d8-8e62-13cde675d867"
@@ -1166,6 +1230,14 @@
     "value": 460.14
    },
    {
+    "label": "Remitted 11 September",
+    "value": 460.14
+   },
+   {
+    "label": "Credited by CRA to 16 September (April to August pay)",
+    "value": 2300.7
+   },
+   {
     "label": "Remitted to 31 August",
     "value": 1840.56
    },
@@ -1180,9 +1252,11 @@
   ],
   "notes": [
    "Payroll account 795920958 RP0001.",
-   "Remaining scheduled dates: 11 September, 9 October, 13 November, 4 December and 31 December. CRA's due date for December pay is 15 January 2027."
+   "CRA's RP0001 transactions, seen 14 October 2026, show five $460.14 credits for April to August pay: received 11 May, 15 June, 15 July, 14 August and 11 September 2026, posted 14 May, 18 June, 20 July, 19 August and 16 September. Each arrived before the 15th of the month after the pay.",
+   "Remaining scheduled dates: 9 October (September pay, not yet posted on 14 October), 13 November, 4 December and 31 December. CRA's due date for December pay is 15 January 2027."
   ],
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_RP_payroll_transactions_2026-10-14.png",
    "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md",
    "Business Transactions.xlsx",

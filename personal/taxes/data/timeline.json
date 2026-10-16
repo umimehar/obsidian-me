@@ -114,6 +114,17 @@
   ]
  },
  {
+  "id": "ev-2024-01-18-hst-stub-filed",
+  "date": "2024-01-18",
+  "scope": "corporate",
+  "category": "filing",
+  "title": "One day HST return for 14 August 2023 received by CRA",
+  "detail": "The stub return for the day of incorporation. CRA shows it as Processed, no notice. Same day as Saira's $904 fee.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_GST34_returns_list_2026-10-14.png"
+  ]
+ },
+ {
   "id": "ev-2024-01-23-t2-2023-assessed",
   "date": "2024-01-23",
   "scope": "corporate",
@@ -315,6 +326,18 @@
   "sources": [
    "Business Transactions.xlsx",
    "2025/Corporate/Debit Account/business-debit-transactions.xlsx"
+  ]
+ },
+ {
+  "id": "ev-2024-10-01-hst-2023-24-filed",
+  "date": "2024-10-01",
+  "scope": "corporate",
+  "category": "filing",
+  "title": "HST return for 2023 to 2024 received by CRA",
+  "detail": "Period 15 August 2023 to 14 August 2024, net tax $23,187.60, paid 9 October 2024. Assessed.",
+  "amount": 23187.6,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_GST34_returns_list_2026-10-14.png"
   ]
  },
  {
@@ -1225,10 +1248,11 @@
   "date": "2026-05-11",
   "scope": "corporate",
   "category": "payroll",
-  "title": "Payroll remittance, $460.14",
-  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31.",
+  "title": "Payroll remittance, $460.14 (April pay)",
+  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31. CRA's RP0001 account shows it received 2026-05-11 as 'Payment Apr 2026', posted 14 May, credited.",
   "amount": 460.14,
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_RP_payroll_transactions_2026-10-14.png",
    "Business Transactions.xlsx",
    "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
   ]
@@ -1381,10 +1405,11 @@
   "date": "2026-06-15",
   "scope": "corporate",
   "category": "payroll",
-  "title": "Payroll remittance, $460.14",
-  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31.",
+  "title": "Payroll remittance, $460.14 (May pay)",
+  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31. CRA's RP0001 account shows it received 2026-06-15 as 'Payment May 2026', posted 18 June, credited.",
   "amount": 460.14,
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_RP_payroll_transactions_2026-10-14.png",
    "Business Transactions.xlsx",
    "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
   ]
@@ -1407,10 +1432,11 @@
   "date": "2026-07-15",
   "scope": "corporate",
   "category": "payroll",
-  "title": "Payroll remittance, $460.14",
-  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31.",
+  "title": "Payroll remittance, $460.14 (June pay)",
+  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31. CRA's RP0001 account shows it received 2026-07-15 as 'Payment June 2026', posted 20 July, credited.",
   "amount": 460.14,
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_RP_payroll_transactions_2026-10-14.png",
    "Business Transactions.xlsx",
    "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
   ]
@@ -1545,10 +1571,11 @@
   "date": "2026-08-14",
   "scope": "corporate",
   "category": "payroll",
-  "title": "Payroll remittance, $460.14",
-  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31.",
+  "title": "Payroll remittance, $460.14 (July pay)",
+  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31. CRA's RP0001 account shows it received 2026-08-14 as 'Payment July 2026', posted 19 August, credited.",
   "amount": 460.14,
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_RP_payroll_transactions_2026-10-14.png",
    "Business Transactions.xlsx",
    "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
   ]
@@ -1597,10 +1624,11 @@
   "date": "2026-09-11",
   "scope": "corporate",
   "category": "payroll",
-  "title": "Payroll remittance of $460.14 scheduled",
-  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31. Not yet on a statement as of 23 September.",
+  "title": "Payroll remittance, $460.14 (August pay)",
+  "detail": "Monthly payroll remittance for Maham: her CPP $141.31, income tax $177.52 and the corporation's CPP $141.31. CRA's RP0001 account shows it received 2026-09-11 as 'Payment Aug 2026', posted 16 September, credited.",
   "amount": 460.14,
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_RP_payroll_transactions_2026-10-14.png",
    "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
   ]
@@ -1973,6 +2001,76 @@
   ]
  },
  {
+  "id": "ev-2026-10-12-saira-hst-figures",
+  "date": "2026-10-12",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Saira sends the HST 2025-26 figures and asks to file",
+  "detail": "Sales $207,480, HST collected $26,972.40, ITC $4,993.74, net tax $21,978.66, instalments $26,000, refund $4,021.34. 90% of vehicle expenses claimed.",
+  "amount": 4021.34,
+  "sources": [
+   "email:Saira Chaudhry, 2026 HST, 12 October 2026"
+  ]
+ },
+ {
+  "id": "ev-2026-10-13-mercedes-90",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "Mercedes business use set to 90%",
+  "detail": "Umar keeps Saira's 90%. The personal share charged to him drops from 20% to 10%. Whether the lease HST needs the s.67.3 limit in this return is still a question for Saira.",
+  "sources": [
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
+  ]
+ },
+ {
+  "id": "ev-2026-10-13-reply-to-saira",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Umar approves 90% and asks Saira about the lease cap",
+  "detail": "Asked whether claiming 90% of the full lease HST, with no s.67.3 limit, is intended. Saira already has Represent a Client access to the RT account.",
+  "sources": [
+   "email:Umar to Saira, 13 October 2026"
+  ]
+ },
+ {
+  "id": "ev-2026-10-13-saira-lease-answer",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "category": "correspondence",
+  "title": "Saira: ITCs at the full 90%, lease deduction limited to $1,100 a month",
+  "detail": "The s.67.3 limit applies to the corporate tax deduction, not the HST credits. She asks whether the HST return is good to file.",
+  "sources": [
+   "email:Saira Chaudhry, reply on the lease cap, 13 October 2026"
+  ]
+ },
+ {
+  "id": "ev-2026-10-13-hst-approved",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "category": "decision",
+  "title": "Umar keeps Saira's lease treatment and approves the HST return",
+  "detail": "Lease ITC at the full 90%; lease deduction for corporate tax limited to $1,100 a month. Refund $4,021.34.",
+  "amount": 4021.34,
+  "sources": [
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
+  ]
+ },
+ {
+  "id": "ev-2026-10-13-hst-2025-26-filed",
+  "date": "2026-10-13",
+  "scope": "corporate",
+  "category": "filing",
+  "title": "HST return for 2025 to 2026 filed (confirmation 573643)",
+  "detail": "Sales $207,480, HST collected $26,972.40, ITC $4,993.74, net tax $21,978.66. Filed by Saira the day Umar approved; confirmation sent 14 October. Line 110 is $0, so the $26,000 of instalments should come back as a refund of about $4,021.34.",
+  "amount": 21978.66,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
+   "email:Saira Chaudhry, filed HST, 14 October 2026"
+  ]
+ },
+ {
   "id": "ev-2026-11-13-payroll-remittance",
   "date": "2026-11-13",
   "scope": "corporate",
@@ -1985,17 +2083,32 @@
   ]
  },
  {
-  "id": "ev-2026-11-16-hst-2025-26-due",
-  "date": "2026-11-16",
+  "id": "ev-2026-11-14-hst-2025-26-payment-due",
+  "date": "2026-11-14",
   "scope": "corporate",
   "category": "deadline",
-  "title": "HST return for 2025 to 2026 due",
-  "detail": "14 November is a Saturday, so Monday 16 November. Saira files; expected refund $2,404.66. She needs Represent a Client access first.",
-  "amount": 2404.66,
+  "title": "HST 2025-26 payment due date",
+  "detail": "Filed on 13 October. CRA shows $21,978.66 owing because line 110 is $0; the $26,000 of instalments already on the account should cover it. Check the RT balance before this date; nothing should need paying.",
+  "amount": 21978.66,
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
    "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+  ]
+ },
+ {
+  "id": "ev-2026-11-14-hst-instalment-2026-27",
+  "date": "2026-11-14",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "HST instalment for 2026 to 2027 debit (first quarter), $5,500",
+  "detail": "Quarterly pre-authorized debit of $5,500 on RT0001 (CRA minimum $5,494.66). CRA's due date is 2026-12-14; paid a month early so the last debit falls on the period end, 14 August 2027.",
+  "amount": 5500,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_HST_PAD_2026-27_2026-10-14.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
   ]
  },
  {
@@ -2008,18 +2121,6 @@
   "amount": 460.14,
   "sources": [
    "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md"
-  ]
- },
- {
-  "id": "ev-2026-12-14-hst-instalment-2026-27",
-  "date": "2026-12-14",
-  "scope": "corporate",
-  "category": "deadline",
-  "title": "HST instalment for 2026 to 2027 due (first quarter), about $5,898.84",
-  "detail": "Annual filers with more than $3,000 of net tax pay quarterly, within one month after each quarter ends (quarters end 14 November, 14 February, 14 May, 14 August). Dates worked out from the CRA rule; check with Saira.",
-  "amount": 5898.84,
-  "sources": [
-   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
   ]
  },
  {
@@ -2037,6 +2138,20 @@
   ]
  },
  {
+  "id": "ev-2027-02-14-hst-instalment-2026-27",
+  "date": "2027-02-14",
+  "scope": "corporate",
+  "category": "deadline",
+  "title": "HST instalment for 2026 to 2027 debit (second quarter), $5,500",
+  "detail": "Quarterly pre-authorized debit of $5,500 on RT0001 (CRA minimum $5,494.66). CRA's due date is 2027-03-15; paid a month early so the last debit falls on the period end, 14 August 2027.",
+  "amount": 5500,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_HST_PAD_2026-27_2026-10-14.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
+  ]
+ },
+ {
   "id": "ev-2027-03-01-maham-t4-2026",
   "date": "2027-03-01",
   "scope": "both",
@@ -2047,18 +2162,6 @@
   "sources": [
    "2026/Corporate/payroll/CRA_Remittance_Schedule_Set_Up.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/payroll/PAYROLL_CONTEXT.md"
-  ]
- },
- {
-  "id": "ev-2027-03-15-hst-instalment-2026-27",
-  "date": "2027-03-15",
-  "scope": "corporate",
-  "category": "deadline",
-  "title": "HST instalment for 2026 to 2027 due (second quarter), about $5,898.84",
-  "detail": "Annual filers with more than $3,000 of net tax pay quarterly, within one month after each quarter ends (quarters end 14 November, 14 February, 14 May, 14 August). 14 March 2027 is a Sunday, so Monday 15 March. Dates worked out from the CRA rule; check with Saira.",
-  "amount": 5898.84,
-  "sources": [
-   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
   ]
  },
  {
@@ -2085,14 +2188,16 @@
   ]
  },
  {
-  "id": "ev-2027-06-14-hst-instalment-2026-27",
-  "date": "2027-06-14",
+  "id": "ev-2027-05-14-hst-instalment-2026-27",
+  "date": "2027-05-14",
   "scope": "corporate",
   "category": "deadline",
-  "title": "HST instalment for 2026 to 2027 due (third quarter), about $5,898.84",
-  "detail": "Annual filers with more than $3,000 of net tax pay quarterly, within one month after each quarter ends (quarters end 14 November, 14 February, 14 May, 14 August). Dates worked out from the CRA rule; check with Saira.",
-  "amount": 5898.84,
+  "title": "HST instalment for 2026 to 2027 debit (third quarter), $5,500",
+  "detail": "Quarterly pre-authorized debit of $5,500 on RT0001 (CRA minimum $5,494.66). CRA's due date is 2027-06-14; paid a month early so the last debit falls on the period end, 14 August 2027.",
+  "amount": 5500,
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_HST_PAD_2026-27_2026-10-14.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
   ]
  },
@@ -2109,14 +2214,16 @@
   ]
  },
  {
-  "id": "ev-2027-09-14-hst-instalment-2026-27",
-  "date": "2027-09-14",
+  "id": "ev-2027-08-14-hst-instalment-2026-27",
+  "date": "2027-08-14",
   "scope": "corporate",
   "category": "deadline",
-  "title": "HST instalment for 2026 to 2027 due (fourth quarter), about $5,898.84",
-  "detail": "Annual filers with more than $3,000 of net tax pay quarterly, within one month after each quarter ends (quarters end 14 November, 14 February, 14 May, 14 August). Dates worked out from the CRA rule; check with Saira.",
-  "amount": 5898.84,
+  "title": "HST instalment for 2026 to 2027 debit (fourth quarter), $5,500",
+  "detail": "Quarterly pre-authorized debit of $5,500 on RT0001 (CRA minimum $5,494.66). CRA's due date is 2027-09-14; paid a month early so the last debit falls on the period end, 14 August 2027.",
+  "amount": 5500,
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_HST_PAD_2026-27_2026-10-14.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
   ]
  },

@@ -5,13 +5,31 @@
   "owner": "Saira",
   "scope": "corporate",
   "due": "2026-11-16",
-  "status": "waiting",
-  "detail": "Workpaper: sales $207,480, ITC $3,377.06, refund $2,404.66. Saira is applying the 80% Mercedes rule to her own copy and says her books show more than ours.",
+  "status": "done",
+  "detail": "Filed by Saira on 13 October 2026, NETFILE confirmation 573643. Net tax $21,978.66; line 110 left at $0, so the $26,000 of instalments sit on the account.",
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
+   "email:Saira Chaudhry, filed HST, 14 October 2026",
+   "email:Saira Chaudhry, 2026 HST, 12 October 2026",
    "2026/Corporate/HST Filing 2025-26 - for Saira/01 HST 2025-26 workpaper.xlsx",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
    "session:075be64b-be34-45d8-8e62-13cde675d867"
+  ],
+  "closed_on": "2026-10-13"
+ },
+ {
+  "id": "oi-hst-2025-26-refund",
+  "title": "Confirm CRA applies the $26,000 HST instalments and refunds about $4,021.34",
+  "owner": "Umar",
+  "scope": "corporate",
+  "due": "2026-11-14",
+  "status": "waiting",
+  "detail": "The filed return shows $21,978.66 owing by 14 November because line 110 is $0. The instalments are on the RT account, so CRA should net them and refund about $4,021.34, as it did with $4,960.50 on 10 October 2025. Check the RT balance in My Business Account in early November. Do not pay the $21,978.66. If a balance is still showing, ask Saira to have the instalments applied.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
+   "email:Saira Chaudhry, filed HST, 14 October 2026",
+   "vault:obsidian-me/personal/taxes/log/2026-10-14.md"
   ]
  },
  {
@@ -20,14 +38,16 @@
   "owner": "Umar",
   "scope": "corporate",
   "due": "2026-11-16",
-  "status": "open",
-  "detail": "She cannot file the HST return until CRA shows her as authorised for 795920958 RT0001.",
+  "status": "done",
+  "detail": "Done. Umar confirmed on 13 October 2026 that Saira already has access to 795920958 RT0001.",
   "sources": [
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
    "vault:obsidian-me/personal/taxes/log/2026-09-23.md",
    "session:0c64cb3f-e456-4e27-acf4-8a3cfedcfc26",
-   "session:9e013127-e7b9-41e2-b18b-869c1c56377e"
-  ]
+   "session:9e013127-e7b9-41e2-b18b-869c1c56377e",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
+  ],
+  "closed_on": "2026-10-13"
  },
  {
   "id": "oi-compare-saira-numbers",
@@ -35,11 +55,58 @@
   "owner": "Claude",
   "scope": "corporate",
   "due": "2026-11-16",
-  "status": "waiting",
-  "detail": "Check the car rows at 80%, the 9 September 2025 fuel rows, items we left out (previous accountant's invoice credit $165.75, US software, Credit Valley), the 21 August deposit and the Rogers credit (answered: one credit, counted once, nothing owed).",
+  "status": "done",
+  "detail": "Compared totals on 13 October; her line by line sheet was not sent. Sales, HST collected and instalments match. ITC is $1,616.68 higher than ours ($4,993.74 against $3,377.06): about $224 from 90% instead of 80%, about $1,383 from claiming the lease HST with no s.67.3 limit.",
   "sources": [
    "session:075be64b-be34-45d8-8e62-13cde675d867",
-   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md"
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
+   "email:Saira Chaudhry, 2026 HST, 12 October 2026",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
+  ],
+  "closed_on": "2026-10-13"
+ },
+ {
+  "id": "oi-hst-lease-cap-saira",
+  "title": "Ask Saira whether the lease HST needs the s.67.3 limit in this return",
+  "owner": "Saira",
+  "scope": "corporate",
+  "due": "2026-11-16",
+  "status": "done",
+  "detail": "Answered 13 October: ITCs at the full 90% ($2,510.87 of lease HST); the s.67.3 limit applies to the corporate tax deduction at $1,100 a month. Refund stays $4,021.34.",
+  "sources": [
+   "email:Saira Chaudhry, 2026 HST, 12 October 2026",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390",
+   "email:Umar to Saira, 13 October 2026",
+   "email:Saira Chaudhry, reply on the lease cap, 13 October 2026"
+  ],
+  "closed_on": "2026-10-13"
+ },
+ {
+  "id": "oi-lease-limit-t2-2026",
+  "title": "Tell Saira the list price formula governs the lease limit, and s.235 caps the lease ITC",
+  "owner": "Saira",
+  "scope": "corporate",
+  "due": "2026-11-16",
+  "status": "superseded",
+  "detail": "Not raised. Umar kept Saira's treatment on 13 October: lease ITC at the full 90%, lease deduction limited to $1,100 a month. Our earlier working (list price formula at 44.93%, s.235 cap on the ITC) differs by $1,382.74 of HST and about $590 a year of corporate tax.",
+  "sources": [
+   "email:Saira Chaudhry, reply on the lease cap, 13 October 2026",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/scripts/receipts/build_saira_package.py"
+  ],
+  "closed_on": "2026-10-13"
+ },
+ {
+  "id": "oi-vehicle-workbook-90",
+  "title": "Redo the vehicle personal use workbook at 90% business use",
+  "owner": "Claude",
+  "scope": "both",
+  "due": "2026-12-31",
+  "status": "open",
+  "detail": "The workbook and the owed to Umar figures use 20%. At 10% the 2026 charge is about $3,559.74, so the corporation owes Umar about $2,364 more at 23 September. Needs ~/Documents/Taxes, which is not on the personal MacBook.",
+  "sources": [
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390",
+   "2026/Corporate/Vehicle personal use 2026.xlsx"
   ]
  },
  {
@@ -49,7 +116,7 @@
   "scope": "corporate",
   "due": "2026-12-31",
   "status": "open",
-  "detail": "Projected tax about $15,243 against $10,500 of instalments after the Mercedes personal share was made non deductible (+$578). Either top up instalments by about $1,186 a month from September to December, or record more director funded expenses: the 23 September break even of $45,273 includes the $11,134 already tracked, so about $34,139 more (mileage is the obvious gap). Recheck in November.",
+  "detail": "Projected tax about $15,243 against $10,500 of instalments after the Mercedes personal share was made non deductible (+$578). Either top up instalments by about $1,186 a month from September to December, or record more director funded expenses: the 23 September break even of $45,273 includes the $11,134 already tracked, so about $34,139 more (mileage is the obvious gap). Recheck in November. At 90% the personal share adds about $289 of tax instead of $578, so the shortfall is about $4,454 until the workbook is redone.",
   "sources": [
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
@@ -63,7 +130,7 @@
   "owner": "Umar",
   "scope": "corporate",
   "status": "open",
-  "detail": "No log exists. The HST claim uses 80%; Umar's 2025 logs on his own car suggest about 52%; he stated 95% in August.",
+  "detail": "No log exists. The returns now use 90%; Umar's 2025 logs on his own car suggest about 52%; he stated 95% in August.",
   "sources": [
    "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
    "memory:mercedes-80-percent-business-use.md",
@@ -160,7 +227,7 @@
   "scope": "corporate",
   "due": "2027-02-01",
   "status": "open",
-  "detail": "After the December bank and card statements arrive. Mercedes at 80%, rent at 30%, Schedule 125 categories. Target moved from Sunday 31 January to Monday 1 February 2027.",
+  "detail": "After the December bank and card statements arrive. Mercedes at 90%, rent at 30%, Schedule 125 categories. Target moved from Sunday 31 January to Monday 1 February 2027.",
   "sources": [
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
    "memory:saira-next-package-full-year-2026.md",
@@ -623,14 +690,16 @@
   "owner": "Umar",
   "scope": "corporate",
   "due": "2026-11-16",
-  "status": "open",
-  "detail": "80% stands until decided. At 85%: personal charge $5,339.61 instead of $7,119.48, deductions up $1,201.63, 2026 tax gap about $4,596, and HST 2025-26 vehicle credits up about $112, which must be settled before Saira files.",
+  "status": "done",
+  "detail": "Decided 90% on 13 October, after Saira prepared the HST return at 90%.",
   "sources": [
    "2026/Corporate/Vehicle personal use 2026.xlsx",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
    "memory:mercedes-80-percent-business-use.md",
-   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md"
-  ]
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/DIRECTOR_FUNDED_EXPENSES.md",
+   "session:3f2e5a20-a6ca-4d1f-b36f-1c6c62f58390"
+  ],
+  "closed_on": "2026-10-13"
  },
  {
   "id": "oi-sign-vehicle-resolution",
@@ -639,7 +708,7 @@
   "scope": "both",
   "due": "2026-12-31",
   "status": "open",
-  "detail": "Drafted, unsigned. It records 80% business use and charges the 20% personal share ($7,119.48 for 2026) against what the corporation owes Umar. Replace the September to December estimates with actuals before booking it at 31 December.",
+  "detail": "Drafted, unsigned, and written for 80%. Redraft it for 90% business use with a 10% personal share (about $3,559.74 for 2026) charged against what the corporation owes Umar. Replace the September to December estimates with actuals before booking it at 31 December.",
   "sources": [
    "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx",
    "2026/Corporate/Vehicle personal use 2026.xlsx",
@@ -652,7 +721,7 @@
   "owner": "Saira",
   "scope": "corporate",
   "status": "open",
-  "detail": "On the filed T2 2025, Mercedes costs from 27 September to 31 December 2025 ($18,858.79) were deducted in full. At 80% the personal share would be $3,771.76, on top of the s.67.3 excess. Raise together with the lease cap item.",
+  "detail": "On the filed T2 2025, Mercedes costs from 27 September to 31 December 2025 ($18,858.79) were deducted in full. At 90% the personal share would be about $1,885.88, on top of the s.67.3 excess. Raise together with the lease cap item.",
   "sources": [
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/VEHICLE_2025_vs_2026.md",
    "memory:mercedes-80-percent-business-use.md"
@@ -671,14 +740,17 @@
  },
  {
   "id": "oi-hst-instalments-2026-27",
-  "title": "Pay quarterly HST instalments for 2026 to 2027",
+  "title": "Schedule the four HST instalments for 2026 to 2027 ($5,500 each)",
   "owner": "Umar",
   "scope": "corporate",
-  "due": "2026-12-14",
-  "status": "open",
-  "detail": "About $5,898.84 a quarter; the usual $6,500 covers it. Worked out from the CRA rule (within one month after each quarter): 14 December 2026, 15 March 2027, 14 June 2027, 14 September 2027. Check the dates and amounts with Saira.",
+  "due": "2026-11-14",
+  "status": "done",
+  "detail": "Done 14 October 2026: quarterly pre-authorized debit on RT0001 from BMO, $5,500 x 4 = $22,000, allocation 'Payment on filing and Interim balance', period end 2027-08-14, first debit 2026-11-14, last 2027-08-14. CRA's prior year minimum is $5,494.66.",
   "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CRA_MyBA_HST_PAD_2026-27_2026-10-14.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_2025-26_NETFILE_confirmation_573643.png",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/HST_RETURN_2025-26.md"
-  ]
+  ],
+  "closed_on": "2026-10-14"
  }
 ]
