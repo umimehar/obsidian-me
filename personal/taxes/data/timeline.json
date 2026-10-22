@@ -1193,6 +1193,20 @@
   ]
  },
  {
+  "id": "ev-2026-04-22-lazer-t4a-cancelled",
+  "date": "2026-04-22",
+  "scope": "personal",
+  "category": "correction",
+  "title": "Lazer cancels Umar's 2025 T4A of $82,791.46",
+  "detail": "Lazer filed the cancelled slip (marked Cancelled / Annulé, Umar's SIN, box 048 $82,791.46) with an amended T4A Summary in one submission, 31778159, received by CRA 22 April 2026, two days after Umar's T1. The summary repeats the cancelled slip's totals, which is why it still shows one slip.",
+  "amount": 82791.46,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/Lazer_T4A_2025_cancelled_slip_2026-04-22.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/Lazer_T4A_2025_Summary_amended_2026-04-22.pdf",
+   "session:119904bf-e9fb-407c-8082-18121b2e3760"
+  ]
+ },
+ {
   "id": "ev-2026-04-30-corp-instalment",
   "date": "2026-04-30",
   "scope": "corporate",
@@ -1263,11 +1277,12 @@
   "scope": "corporate",
   "category": "correction",
   "title": "Lazer T4A gap closed: Lazer revoked the T4A",
-  "detail": "The T4A showed $82,791.46 against $87,866.46 deposited ($5,075 gap) and carried Umar's SIN. Revocation date is not recorded.",
+  "detail": "The T4A showed $82,791.46 against $87,866.46 deposited ($5,075 gap) and carried Umar's SIN. Lazer cancelled it with CRA on 22 April 2026 (submission 31778159).",
   "amount": 5075,
   "sources": [
    "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
-   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md"
+   "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/Lazer_T4A_2025_cancelled_slip_2026-04-22.pdf"
   ]
  },
  {
@@ -2071,6 +2086,33 @@
   ]
  },
  {
+  "id": "ev-2026-10-22-t1-balance-owing",
+  "date": "2026-10-22",
+  "scope": "personal",
+  "category": "correspondence",
+  "title": "CRA My Account shows $39,118.81 owing on Umar's T1",
+  "detail": "The Manage balance screen lists 'Individual income tax (T1) - Amount owing' at $39,118.81. The notice of reassessment behind it adds the cancelled Lazer T4A to Umar's 2025 return.",
+  "amount": 39118.81,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Personal/CRA_MyAccount_T1_manage_balance_2026-10-22.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Personal/CRA_MyAccount_T1_manage_balance_options_2026-10-22.png",
+   "session:119904bf-e9fb-407c-8082-18121b2e3760"
+  ]
+ },
+ {
+  "id": "ev-2026-11-02-t1-2025-reassessed",
+  "date": "2026-11-02",
+  "scope": "personal",
+  "category": "correspondence",
+  "title": "CRA reassesses Umar's 2025 T1, adding the cancelled Lazer T4A: $39,118.81 due",
+  "detail": "Notice dated 2 November 2026, read in My Account on 22 October 2026. Adds $82,791 of T4A income from 2621956 ONTARIO INC. (almost certainly Lazer's payer account), the slip Lazer cancelled on 22 April 2026. Tax payable rises from $27,200.51 to $64,883.54; the $22,130.37 refund already paid is clawed back; $65.08 instalment interest and $1,370.70 arrears interest added.",
+  "amount": 39118.81,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/CRA_T1_2025_notice_of_reassessment_2026-11-02.pdf",
+   "session:119904bf-e9fb-407c-8082-18121b2e3760"
+  ]
+ },
+ {
   "id": "ev-2026-11-13-payroll-remittance",
   "date": "2026-11-13",
   "scope": "corporate",
@@ -2112,6 +2154,18 @@
   ]
  },
  {
+  "id": "ev-2026-11-23-t1-2025-pay-by",
+  "date": "2026-11-23",
+  "scope": "personal",
+  "category": "deadline",
+  "title": "Pay-by date on the 2025 T1 reassessment, $39,118.81",
+  "detail": "Interest keeps running on any unpaid part after this date. An objection stops collection but not interest; if the objection succeeds, the interest on the T4A part is reversed too.",
+  "amount": 39118.81,
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/CRA_T1_2025_notice_of_reassessment_2026-11-02.pdf"
+  ]
+ },
+ {
   "id": "ev-2026-12-04-payroll-remittance",
   "date": "2026-12-04",
   "scope": "corporate",
@@ -2135,6 +2189,17 @@
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/2026_YTD_STATUS.md",
    "vault:obsidian-me/personal/taxes/workpapers/2026/Corporate/CORP_TAX_INSTALMENTS_2026.md",
    "2026/Corporate/[Pending]Vehicle_Personal_Use_Resolution_2026.docx"
+  ]
+ },
+ {
+  "id": "ev-2027-01-20-t1-2025-objection-deadline",
+  "date": "2027-01-20",
+  "scope": "personal",
+  "category": "deadline",
+  "title": "Object to the 2025 T1 reassessment by this date",
+  "detail": "90 days counted from 22 October 2026, the day the notice was seen, because its printed date (2 November 2026) is later than that. Counting from the printed date gives 31 January 2027; use the earlier one.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/CRA_T1_2025_notice_of_reassessment_2026-11-02.pdf"
   ]
  },
  {

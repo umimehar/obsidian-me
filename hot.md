@@ -2,7 +2,7 @@
 title: Hot — Active Context
 tags: [meta/system]
 created: 2026-07-13
-updated: 2026-10-14
+updated: 2026-10-22
 status: active
 type: reference
 ---
@@ -13,7 +13,7 @@ Scannable cache of active endeavors and recent session context. Read this first.
 
 ## Active endeavors
 
-- **[[personal/taxes/README|taxes]]** — **2026-10-14:** HST 2025-26 **filed** 2026-10-13 (confirmation 573643), net tax $21,978.66 with line 110 at $0; expect CRA to apply the $26,000 of instalments and refund ~$4,021.34, check the RT balance early November and do not pay. HST 2026-27 instalments set as a quarterly PAD of **$5,500** (CRA minimum $5,494.66) on 14 Nov, 14 Feb, 14 May, 14 Aug, calendar reminder in place. Corporate RC0001 $900 a month kept (2026 still ~$4,454 short). CRA confirms all five payroll remittances to August pay. Found a one day 2023-08-14 HST stub return the vault never had. Still waiting on Umar: vehicle resolution at 90%, mileage log, insurer, vehicle workbook at 10%. See `personal/taxes/log/2026-10-14.md`.
+- **[[personal/taxes/README|taxes]]** — **2026-10-22:** CRA reassessed Umar's **2025 T1** (notice dated 2026-11-02) adding the $82,791.46 Lazer T4A that Lazer cancelled on 2026-04-22 (submission 31778159): **$39,118.81** due by 2026-11-23, including the reversed $22,130.37 refund. Plan: notice of objection in My Account by **2027-01-20** with the cancelled slip and amended summary; ask Lazer to confirm CRA processed the cancellation; don't pay the T4A part. Still open from 10-14: confirm CRA applies the $26,000 HST instalments (~$4,021.34 refund) in early November, HST PAD $5,500 a quarter from 14 Nov, vehicle resolution at 90%, mileage log, insurer. See `personal/taxes/log/2026-10-22.md`.
 
 - **[[personal/investments/README|investments]]** — **2026-10-09:** RRSP VFV sold (~$7,000 CAD) and converted by Norbert's gambit: 485.8378 DLR journaled to DLR.U, ~$4,902.10 USD, ready 2026-10-14, then sell DLR.U after 10:00 ET with a limit at the bid. Procedure in `personal/investments/notes/norberts-gambit.md`. 2026-10-01 plan set, see `personal/investments/notes/2026-10-01-allocation-and-rrsp-plan.md`: direct indexing 70% U.S. Market, 30% U.S. Innovation, filled by deposits; GOLD sold for a ~$458 loss (no GOLD buys through 2026-11-01); payroll phase 2 on 2026-11-02 pauses RRSP and sends $2,400 to direct indexing, phase 3 on 2027-01-04 restores it and files a T1213; 2026 RRSP deduction $53,500 to land at the $181,440 bracket top; Corporate (self) switches XEQT to HXS and buys $500 HXS + $500 HXQ biweekly. Dashboard now has eleven tabs: the Flow tab from 2026-09-29 (a four column Sankey of where money came from and where it sits, own account transfers paired; all time $253,609.43 paid in from outside, $226,113.40 invested net of sales), a Plan panel on Future, plus Non-registered and Corporate tabs that open with the year's tax picture (return lines, estimated tax), a needs attention list, account cards, then collapsed detail (holdings, sale ledger, superficial losses, claimable, T1135, history with loss carryforward); rates per year in `data/tax.json`. 2084 tests after merging both branches on 2026-10-05. Contrast AA passes on every tab, but the Flow Sankey hover guard fails since commit 4c8e179, so `bun run contrast` exits red. Lessons in `personal/investments/notes/advice-lessons.md`. App checkpoint for 2026-10-01 recorded to reconcile on the September import. **Waiting on Umar:** the Obsidian Git auto backup is back on (interval 5, after file change true) and pushed mid edit app code seven times; decide whether to turn it off. Still open from before: TCK-0006 review, TCK-0009 triage, the hyphenated registry labels. See `personal/investments/log/2026-10-01.md` and `log/2026-10-02.md`.
 
@@ -22,6 +22,8 @@ Scannable cache of active endeavors and recent session context. Read this first.
 - **[[personal/govt-tenders/README|govt-tenders]]** — bidding on Canadian public sector website work. Market scanned 2026-08-10: the CanadaBuys search for "website" returns 242 open notices of which **10 are about a website**, all municipal, academic or provincial, none federal. Ottawa runs 893 open notices with three touching the web and routes the rest through the TBIPS and SBIPS supply arrangements (qualification open until 2028-07-04). The `tender-digest` skill now emails a title-filtered digest Mon/Wed/Fri at 08:12. Next: register on BC Bid, APC, MERX, bids&tenders and Biddingo, then clear the qualification gates in `personal/govt-tenders/tracking.md`. See `personal/govt-tenders/log/2026-08-10.md`.
 
 ## Recent sessions
+
+- **2026-10-22** — $39,118.81 T1 balance traced to a 2025 reassessment that added Lazer's cancelled T4A; cancelled slip, amended summary and notice saved; objection due 2027-01-20. See `personal/taxes/log/2026-10-22.md`.
 
 - **2026-10-14** — HST 2025-26 filed (573643) and CRA's account views recorded; HST 2026-27 PAD of $5,500 a quarter set up with a calendar reminder; payroll remittances to August confirmed. See `personal/taxes/log/2026-10-14.md`.
 

@@ -1,5 +1,22 @@
 [
  {
+  "id": "oi-t1-balance-39118",
+  "title": "Dispute the 2025 T1 reassessment that added the cancelled Lazer T4A ($39,118.81)",
+  "owner": "Umar",
+  "scope": "personal",
+  "status": "open",
+  "detail": "CRA reassessed 2025 (notice dated 2 November 2026) adding $82,791 of T4A income from 2621956 ONTARIO INC., almost certainly Lazer's payer account; Lazer cancelled that slip on 22 April 2026, submission 31778159. File a notice of objection in My Account (Register a formal dispute) by 20 January 2027, attaching the cancelled slip, the amended summary with CRA's confirmation of receipt, and a short note that the fees were paid to 15248132 Canada Inc. and reported on its T2 2025. Ask Lazer (Sarah Kassam) to confirm with CRA that the cancellation was processed. Do not pay the T4A part; about $65 instalment interest and the spouse amount change are separate and likely stand. The $22,130.37 refund was paid, per the notice.",
+  "sources": [
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Personal/CRA_MyAccount_T1_manage_balance_2026-10-22.png",
+   "vault:obsidian-me/personal/taxes/workpapers/2026/Personal/CRA_MyAccount_T1_manage_balance_options_2026-10-22.png",
+   "2025/Corporate/Lazer - T4A.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/Lazer_T4A_2025_Summary_amended_2026-04-22.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/Lazer_T4A_2025_cancelled_slip_2026-04-22.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/CRA_T1_2025_notice_of_reassessment_2026-11-02.pdf"
+  ],
+  "due": "2027-01-20"
+ },
+ {
   "id": "oi-hst-2025-26-file",
   "title": "File the HST return for 2025 to 2026",
   "owner": "Saira",
@@ -511,14 +528,15 @@
   "owner": "Lazer Technologies",
   "scope": "corporate",
   "status": "done",
-  "detail": "T4A $82,791.46 against $87,866.46 deposited ($5,075 gap), and it carried Umar's SIN. Lazer revoked the slip. No written confirmation is in the folder.",
+  "detail": "T4A $82,791.46 against $87,866.46 deposited ($5,075 gap), and it carried Umar's SIN. Lazer cancelled the slip with CRA on 22 April 2026, submission 31778159; the cancelled slip and amended summary are in workpapers/2025/Personal.",
   "closed_on": "2026-05-14",
   "sources": [
    "CLAUDE.md",
    "vault:obsidian-me/personal/taxes/workpapers/2025/Corporate/ACCOUNTANT_REVIEW_2026-05-14.md",
    "vault:obsidian-me/personal/taxes/workpapers/INDEX.md",
    "2025/Corporate/Lazer - T4A.pdf",
-   "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf"
+   "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/Lazer_T4A_2025_cancelled_slip_2026-04-22.pdf"
   ]
  },
  {

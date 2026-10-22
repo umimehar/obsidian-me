@@ -65,6 +65,14 @@ Why:
 
 ALWAYS `rg` the endeavor's `data/` and `workpapers/` (scripts included) for the section number or figure before writing "ask X whether…". If an answer exists, state it as our position with its source file, and ask only what is genuinely open.
 
+### a slip a payer says it cancelled is not closed until CRA's records agree (2026-10-22)
+
+Why:
+- The vault closed the Lazer T4A item on 2026-05-14 on Lazer's word, with no document. Lazer had in fact filed the cancellation on 2026-04-22 (submission 31778159), yet CRA reassessed Umar's 2025 T1 with that $82,791.46 slip anyway and asked for $39,118.81. See `personal/taxes/log/2026-10-22.md`.
+- A cancellation filing carries an amended summary that still totals the cancelled slip, so the summary alone reads as if the slip is live; only the slip marked Cancelled / Annulé proves it.
+
+NEVER mark a revoked or cancelled information slip as done without the cancelled slip itself and the payer's CRA submission number on file. Keep the item open until the recipient's notice of assessment shows the income excluded.
+
 ## Sensitive data
 
 ### never paste a real identifier into a doc as an example (2026-08-05)
