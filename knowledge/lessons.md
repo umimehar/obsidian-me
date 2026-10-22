@@ -63,6 +63,8 @@ Why:
 - On 2026-10-13 Claude drafted two questions for the accountant (the s.67.3 $1,100 versus list price limit, and the ETA s.235 lease ITC cap) that the 23 September workpaper had already worked out in full; Umar had to point it out.
 - Asking an advisor something already settled costs a round trip and hides the position we already hold.
 
+- Again on 2026-10-22: Claude named Ejaz to file a T1 objection although `timeline.json` already recorded the switch back to Saira; Umar had to say so.
+
 ALWAYS `rg` the endeavor's `data/` and `workpapers/` (scripts included) for the section number or figure before writing "ask X whether…". If an answer exists, state it as our position with its source file, and ask only what is genuinely open.
 
 ### a slip a payer says it cancelled is not closed until CRA's records agree (2026-10-22)
@@ -72,6 +74,13 @@ Why:
 - A cancellation filing carries an amended summary that still totals the cancelled slip, so the summary alone reads as if the slip is live; only the slip marked Cancelled / Annulé proves it.
 
 NEVER mark a revoked or cancelled information slip as done without the cancelled slip itself and the payer's CRA submission number on file. Keep the item open until the recipient's notice of assessment shows the income excluded.
+
+### recompute a reassessment's side changes before calling them separate (2026-10-22)
+
+Why:
+- On 2026-10-22 Claude told Umar the spouse amount going to $0 on his 2025 reassessment was a separate, correct change. It was caused by the added T4A: higher net income shrinks the basic personal amount, which is the spouse amount base. Umar asked what it meant, and only then did the recomputation (federal credits down $107) show it. See `personal/taxes/log/2026-10-22.md`.
+
+ALWAYS recompute each secondary change on a notice of reassessment against the original income before telling anyone it stands on its own. Credits that phase out with income (basic personal amount, spouse amount, CCB) move with the disputed item.
 
 ## Sensitive data
 
