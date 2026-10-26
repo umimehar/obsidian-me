@@ -854,12 +854,12 @@
   "filed_on": "2026-04-20",
   "filed_by": "Ejaz Pirwani, Fintax Associate Inc. (EFILE V3102)",
   "confirmation": "Document control V31022592K8HK",
-  "status": "filed",
+  "status": "assessed",
   "result": {
    "kind": "refund",
    "amount": 22130.37
   },
-  "plain": "Umar's 2025 personal return. His Lazer job paid $142,011.53 with $46,867.74 of tax already taken off, so after RRSP and FHSA deductions he is owed a refund of $22,130.37.",
+  "plain": "Umar's 2025 personal return. Filed with a $22,130.37 refund, which CRA paid. CRA then reassessed it, adding the $82,791.46 Lazer T4A that Lazer had already cancelled, and now asks for $39,118.81. That reassessment is being disputed.",
   "lines": [
    {
     "label": "Line 10100 Employment income (Lazer T4)",
@@ -923,8 +923,9 @@
    }
   ],
   "notes": [
+   "Reassessed: notice dated 2 November 2026 (seen in My Account on 22 October 2026). Total income $225,006 (+$82,791, T4A from 2621956 ONTARIO INC., almost certainly the legal name behind Lazer's payer account (same amount; not yet confirmed with Lazer)), total payable $64,883.54, subtotal $15,552.66 owing, plus reversal of the $22,130.37 refund already paid ($37,683.03 change), $65.08 instalment interest and $1,370.70 arrears interest: $39,118.81 due by 23 November 2026.",
+   "CRA says $4,926 of 2025 instalments were required against $2,463.14 paid; that $65.08 of instalment interest is separate from the T4A and likely stands. The spouse amount at $0 is caused by the T4A: higher net income shrinks the basic personal amount, which is also the spouse amount base (about $16,129 at $118,142, about $15,644 at $200,932), so with Maham's $15,875 the claim of about $254 fell to $0. Together with the smaller basic personal amount that is the $107 drop in federal credits (3,244 to 3,137); both reverse if the T4A comes off.",
    "The tax summary printed earlier the same day shows a $22,110 refund; the signed T183 adds the $90 donation credit and shows $22,130.37.",
-   "No notice of assessment is in the folder, so whether the refund arrived is not confirmed.",
    "The Lazer T4A ($82,791.46) carried Umar's SIN; Lazer revoked it so it would not be added to this return.",
    "Line 12100 shows $204, but the T5 and T3 slips add to $180.48 ($118.77 + $57.38 + $1.62 + $2.71); the $23.54 difference is not explained in the sources.",
    "Net income and taxable income are the same here ($118,141.55, from the T183); the tax summary rounds them to $118,142."
@@ -933,7 +934,9 @@
    "2025/Personal/accountant docs/T-183 2025 - Umar Farooq Aslam.pdf",
    "2025/Personal/accountant docs/Tax Summary 2025 - Umar Farooq Aslam.pdf",
    "2025/Personal/2025_Personal_Tax_Analysis_Report.pdf",
-   "2025/Personal/T4s/Lazer_2025_T4.pdf"
+   "2025/Personal/T4s/Lazer_2025_T4.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/CRA_T1_2025_notice_of_reassessment_2026-11-02.pdf",
+   "vault:obsidian-me/personal/taxes/workpapers/2025/Personal/Lazer_T4A_2025_cancelled_slip_2026-04-22.pdf"
   ]
  },
  {
