@@ -2,7 +2,7 @@
 title: Hot — Active Context
 tags: [meta/system]
 created: 2026-07-13
-updated: 2026-10-14
+updated: 2026-10-25
 status: active
 type: reference
 ---
@@ -21,7 +21,11 @@ Scannable cache of active endeavors and recent session context. Read this first.
 
 - **[[personal/govt-tenders/README|govt-tenders]]** — bidding on Canadian public sector website work. Market scanned 2026-08-10: the CanadaBuys search for "website" returns 242 open notices of which **10 are about a website**, all municipal, academic or provincial, none federal. Ottawa runs 893 open notices with three touching the web and routes the rest through the TBIPS and SBIPS supply arrangements (qualification open until 2028-07-04). The `tender-digest` skill now emails a title-filtered digest Mon/Wed/Fri at 08:12. Next: register on BC Bid, APC, MERX, bids&tenders and Biddingo, then clear the qualification gates in `personal/govt-tenders/tracking.md`. See `personal/govt-tenders/log/2026-08-10.md`.
 
+- **[[personal/certifications/README|certifications]]** — CCA Foundations passed 2026-10-25 with 797 of 720 needed, weakest on structured output, `tool_choice` and orchestration choice; exam notes in `personal/certifications/log/2026-10-25.md`.
+
 ## Recent sessions
+
+- **2026-10-25** — Passed CCA Foundations. Many questions came from the Agent SDK, not the uploaded study docs. CI structured output answer recorded: `--json-schema`, read `structured_output`. See `personal/certifications/log/2026-10-25.md`.
 
 - **2026-10-14** — HST 2025-26 filed (573643) and CRA's account views recorded; HST 2026-27 PAD of $5,500 a quarter set up with a calendar reminder; payroll remittances to August confirmed. See `personal/taxes/log/2026-10-14.md`.
 
