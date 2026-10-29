@@ -2,7 +2,7 @@
 title: Hot — Active Context
 tags: [meta/system]
 created: 2026-07-13
-updated: 2026-10-28
+updated: 2026-10-29
 status: active
 type: reference
 ---
@@ -13,7 +13,9 @@ Scannable cache of active endeavors and recent session context. Read this first.
 
 ## Active endeavors
 
-- **[[personal/taxes/README|taxes]]** — **2026-10-28:** CRA agent (Saira's call, 27 October) says the $39,118.81 clears only once CRA processes amended T4A 32114692, about six months (around April 2027); Saira says no action needed; the 2026 refund would be held while the balance stands. Fallback: file the objection if collections makes contact, recheck mid January before the 20 January 2027 deadline. The balance does not affect the citizenship application (filing requirement only). **2026-10-23:** Lazer amended the 2025 T4A on CRA's advice (submission 32114692): SIN box blank, box 013 the corporation's BN, and the recipient name still reads Umar (left as is by decision on 10-28). The $39,118.81 reassessment stands until the objection: Saira already authorized, objection ideally before the 23 November due date (deadline 20 January 2027), don't pay the T4A part or use Change my return, watch My Account slips for the T4A to drop off. Still open from 10-14: confirm CRA applies the $26,000 HST instalments (~$4,021.34 refund) in early November, HST PAD $5,500 a quarter from 14 Nov, vehicle resolution at 90%, mileage log, insurer. See `personal/taxes/log/2026-10-23.md`.
+- **[[personal/taxes/README|taxes]]** — **2026-10-29:** CRA XML and Service Canada T4E emails require no immediate action; EI receipt unconfirmed. Personal reminder: Jan 5, 2027, 10:00–10:15 Eastern, 30-minute alert; T4E available from February if applicable. Maham’s T4 stays with Saira, due March 1. See [[personal/taxes/log/2026-10-29]].
+  - **2026-10-28:** Saira advises waiting for Lazer’s amended T4A processing (around April 2027); personal refund held meanwhile. Objection fallback if collections contacts Umar; recheck mid January before Jan 20 deadline. See [[personal/taxes/log/2026-10-28]] and [[personal/taxes/log/2026-10-23]].
+  - Earlier open items: HST instalments/refund confirmation, quarterly PAD, vehicle resolution/mileage/insurer. See [[personal/taxes/tracking]] and [[personal/taxes/log/2026-10-14]].
 
 - **[[personal/investments/README|investments]]** — **2026-10-09:** RRSP VFV sold (~$7,000 CAD) and converted by Norbert's gambit: 485.8378 DLR journaled to DLR.U, ~$4,902.10 USD, ready 2026-10-14, then sell DLR.U after 10:00 ET with a limit at the bid. Procedure in `personal/investments/notes/norberts-gambit.md`. 2026-10-01 plan set, see `personal/investments/notes/2026-10-01-allocation-and-rrsp-plan.md`: direct indexing 70% U.S. Market, 30% U.S. Innovation, filled by deposits; GOLD sold for a ~$458 loss (no GOLD buys through 2026-11-01); payroll phase 2 on 2026-11-02 pauses RRSP and sends $2,400 to direct indexing, phase 3 on 2027-01-04 restores it and files a T1213; 2026 RRSP deduction $53,500 to land at the $181,440 bracket top; Corporate (self) switches XEQT to HXS and buys $500 HXS + $500 HXQ biweekly. Dashboard now has eleven tabs: the Flow tab from 2026-09-29 (a four column Sankey of where money came from and where it sits, own account transfers paired; all time $253,609.43 paid in from outside, $226,113.40 invested net of sales), a Plan panel on Future, plus Non-registered and Corporate tabs that open with the year's tax picture (return lines, estimated tax), a needs attention list, account cards, then collapsed detail (holdings, sale ledger, superficial losses, claimable, T1135, history with loss carryforward); rates per year in `data/tax.json`. 2084 tests after merging both branches on 2026-10-05. Contrast AA passes on every tab, but the Flow Sankey hover guard fails since commit 4c8e179, so `bun run contrast` exits red. Lessons in `personal/investments/notes/advice-lessons.md`. App checkpoint for 2026-10-01 recorded to reconcile on the September import. **Waiting on Umar:** the Obsidian Git auto backup is back on (interval 5, after file change true) and pushed mid edit app code seven times; decide whether to turn it off. Still open from before: TCK-0006 review, TCK-0009 triage, the hyphenated registry labels. See `personal/investments/log/2026-10-01.md` and `log/2026-10-02.md`.
 
@@ -23,6 +25,8 @@ Scannable cache of active endeavors and recent session context. Read this first.
 - **[[personal/certifications/README|certifications]]** — CCA Foundations passed 2026-10-25 with 797 (pass mark 720), weakest on structured output, `tool_choice` and orchestration choice; exam notes in `personal/certifications/log/2026-10-25.md`. Announced on LinkedIn the same day; open: the post's hashtags are not linking.
 
 ## Recent sessions
+
+- **2026-10-29** — Reviewed CRA 2027 XML notice and personal T4E reminder; saved January 5 calendar event. See [[personal/taxes/log/2026-10-29]].
 
 - **2026-10-28** — Saira's CRA call: the Lazer T4A balance waits on processing of the amended slip, roughly six months; Saira advises waiting; objection kept as a fallback; no effect on citizenship. See `personal/taxes/log/2026-10-28.md`.
 
